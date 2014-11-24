@@ -1,0 +1,4 @@
+# all wiki pages
+*.md
+# the page index
+pageindex.json
