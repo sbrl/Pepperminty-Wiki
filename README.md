@@ -2,7 +2,7 @@ Pepperminty-Wiki
 ================
 A wiki in a box
 
-Pepperminty wiki is a complete wiki in a box and is inspired by @am2064's Minty wiki, which can be found here: https://github.com/am2064/Minty-Wiki
+Pepperminty wiki is a complete wiki in a box inspired by @am2064's Minty wiki, which can be found here: https://github.com/am2064/Minty-Wiki
 
 Downloading / Installing
 ------------------------
