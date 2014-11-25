@@ -12,6 +12,6 @@ If you prefer, you can clone this repository or use the "Download Zip" button to
 
 Configuring
 -----------
-To configure it, open your downloaded copy of `index.php` in your favourite editor - the settings can be configured at the top of the file. There are extensive comments that explain what each option does. If you need more help, don't hesitate to open an issue on this repository or contact me.
+To configure it, open your downloaded copy of `index.php` in your favourite editor - the settings can be configured at the top of the file. There are extensive comments that explain what each option does. Make sure that you change the allowed usernames and passwords! If you need more help, don't hesitate to open an issue on this repository or contact me.
 
 --Starbeamrainbowlabs
