@@ -529,7 +529,7 @@ switch($_GET["action"])
 			<th>Page Name</th>
 			<th>Size</th>
 			<th>Last Editor</th>
-			<th>Lasted Edit</th>
+			<th>Last Edited</th>
 			<th>Time Since Last Edit</th>
 		</tr>\n";
 		foreach($pageindex as $pagename => $pagedetails)
