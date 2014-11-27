@@ -615,8 +615,7 @@ switch($_GET["action"])
 	case "credits":
 		$title = "Credits - $sitename";
 		$content = "<h1>$sitename credits</h1>
-	<p>$sitename is powered by Pepperminty Wiki - An entire wiki packed inside a single file.</p>
-	<p>This wiki is powered by Pepperminty Wiki, which was built by <a href='//starbeamrainboowlabs.com'>Starbeamrainbowlabs</a>, and can be found <a href='//github.com/sbrl/Pepperminty-Wiki/'>on github</a>.</p>
+	<p>$sitename is powered by Pepperminty Wiki - An entire wiki packed inside a single file, which was built by <a href='//starbeamrainboowlabs.com'>Starbeamrainbowlabs</a>, and can be found <a href='//github.com/sbrl/Pepperminty-Wiki/'>on github</a>.</p>
 	<p>A slightly modified version of slimdown is used to parse text source into HTML. Slimdown is by <a href='https://github.com/jbroadway'>Johnny Broadway</a>, which can be found <a href='https://gist.github.com/jbroadway/2836900'>on github</a>.</p>
 	<p>The default favicon is from <a href='//openclipart.org'>Open Clipart</a> by bluefrog23, and can be found <a href='https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23'>here</a>.</p>";
 		exit(renderpage($title, $content));
