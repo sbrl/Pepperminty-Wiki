@@ -417,7 +417,7 @@ function human_time_since($time)
 	);
 	foreach ($tokens as $unit => $text) {
 		if ($timediff < $unit) continue;
-		$numberOfUnits = floor($timdiffe / $unit);
+		$numberOfUnits = floor($timediff / $unit);
 		return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':'').' ago';
 	}
 }
