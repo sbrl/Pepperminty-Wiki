@@ -267,7 +267,7 @@ function renderpage($title, $content, $minimal = false)
 	$content
 	<hr class='footerdivider' />
 	<footer>
-		<p>Powered by Pepperminty Wiki, which was built by <a href='//starbeamrainbowlabs'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com'.</p>
+		<p>Powered by Pepperminty Wiki, which was built by <a href='//starbeamrainbowlabs'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or open an issue <a href='//github.com/sbrl/Pepperminty-Wiki'>on github</a>.</p>
 		<p>This wiki is managed by <a href='mailto:" . hide_email($admindetails["email"]) . "'>" . $admindetails["name"] . "</a>.</p>
 	</footer>
 	<datalist id='allpages'>\n";
