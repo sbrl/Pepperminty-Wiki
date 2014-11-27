@@ -402,6 +402,25 @@ function human_filesize($bytes, $decimals = 2)
 	$factor = floor((strlen($bytes) - 1) / 3);
 	return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
 }
+//from http://snippets.pro/snippet/137-php-convert-the-timestamp-to-human-readable-format/
+function human_time_since($time)
+{
+	$timediff = time() - $time;
+	$tokens = array (
+		31536000 => 'year',
+		2592000 => 'month',
+		604800 => 'week',
+		86400 => 'day',
+		3600 => 'hour',
+		60 => 'minute',
+		1 => 'second'
+	);
+	foreach ($tokens as $unit => $text) {
+		if ($timediff < $unit) continue;
+		$numberOfUnits = floor($timdiffe / $unit);
+		return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':'').' ago';
+	}
+}
 ///////////////////////////////////////////
 
 switch($_GET["action"])
@@ -511,6 +530,7 @@ switch($_GET["action"])
 			<th>Size</th>
 			<th>Last Editor</th>
 			<th>Lasted Modified</th>
+			<th>Time Since</th>
 		</tr>\n";
 		foreach($pageindex as $pagename => $pagedetails)
 		{
@@ -519,6 +539,7 @@ switch($_GET["action"])
 			<td>" . human_filesize($pagedetails->size) . "</td>
 			<td>$pagedetails->lasteditor</td>
 			<td>" . date("l jS \of F Y \a\\t h:ia T", $pagedetails->lastmodified) . "</td>
+			<td>" . human_time_since($pagedetails->lastmodified) . "</td>
 		</tr>\n";
 		}
 		$content .= "	</table>";
