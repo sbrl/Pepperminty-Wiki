@@ -19,7 +19,7 @@ $editing = true;
 //the maximum number of characters allowed in a single page
 $maxpagesize = 135000; //135,000 characters, or 50 pages
 
-//whether you need an account to edit
+//whether user who aren't logged in are allowed to edit
 $anonedits = false;
 
 //the name of the page that will act as the home pae for the wiki. This page will be served if the user didn't specify a page.
