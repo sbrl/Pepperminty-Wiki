@@ -672,7 +672,7 @@ switch($_GET["action"])
 			{
 				//editing is disabled, show an error message
 				http_response_code(404);
-				exit(renderpage("<p>" . $_GET["page"] . " - $sitename", $_GET["page"] . " does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
+				exit(renderpage("" . $_GET["page"] . " - 404 - $sitename", "<p>" . $_GET["page"] . " does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
 			}
 		}
 		$title = $_GET["page"] . " - $sitename";
