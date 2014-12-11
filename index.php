@@ -554,6 +554,14 @@ switch($_GET["action"])
 		exit(renderpage("$title - $sitename", $content));
 		break;
 	
+	case "delete":
+		exit(renderpage("Deleting $pagename - $sitename", "Coming soon..."));
+		break;
+	
+	case "dodelete":
+		exit("Coming soon...");
+		break;
+	
 	case "help":
 		$title = "Help - $sitename";
 		$content = "	<h1>$sitename Help</h1>
