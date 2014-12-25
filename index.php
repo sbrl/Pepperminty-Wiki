@@ -13,6 +13,14 @@ $start_time = time(true);
 //the site's name
 $sitename = "Pepperminty Wiki";
 
+//the url from which to fetch updates. Defaults to the master (development) branch If there is sufficient demand, a separate stable branch will be created.
+//currently not implemented (yet).
+$updateurl = "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/master/index.php";
+
+//the secret key used to perform 'dangerous' actions, like updating the wiki, and deleting pages. It is strongly advised that you change this!
+//note that neither of these features have been added yet.
+$sitesecret = "ed420502615bac9037f8f12abd4c9f02";
+
 //whether people can edit the site
 $editing = true;
 
@@ -544,6 +552,14 @@ switch($_GET["action"])
 		}
 		$content .= "	</table>";
 		exit(renderpage("$title - $sitename", $content));
+		break;
+	
+	case "delete":
+		exit(renderpage("Deleting $pagename - $sitename", "Coming soon..."));
+		break;
+	
+	case "dodelete":
+		exit("Coming soon...");
 		break;
 	
 	case "help":
