@@ -5,13 +5,21 @@ $start_time = time(true);
  * ================
  * Inspired by Minty Wiki by am2064:
 	* Link: https://github.com/am2064/Minty-Wiki
- *
+ * 
  * Credits:
 	* Slimdown - by Johnny Broadway from https://gist.github.com/jbroadway/2836900
  */
 
 //the site's name
 $sitename = "Pepperminty Wiki";
+
+//the url from which to fetch updates. Defaults to the master (development) branch If there is sufficient demand, a separate stable branch will be created.
+//currently not implemented (yet).
+$updateurl = "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/master/index.php";
+
+//the secret key used to perform 'dangerous' actions, like updating the wiki, and deleting pages. It is strongly advised that you change this!
+//note that neither of these features have been added yet.
+$sitesecret = "ed420502615bac9037f8f12abd4c9f02";
 
 //whether people can edit the site
 $editing = true;
@@ -151,14 +159,14 @@ else
 }
 /*
  * @summary makes a path safe
- *
+ * 
  * @details paths may only contain alphanumeric characters, spaces, underscores, and dashes
  */
 function makepathsafe($string) { return preg_replace("/[^0-9a-zA-Z\_\-\ ]/i", "", $string); }
 
 /*
  * @summary Hides an email address from bots by adding random html entities.
- *
+ * 
  * @returns The mangled email address.
  */
 function hide_email($str)
@@ -176,7 +184,7 @@ function hide_email($str)
 		else
 			$hidden_email .= "&#" . ord($str[$i]) . ";";
 	}
-
+	
 	return $hidden_email;
 }
 
@@ -214,18 +222,24 @@ if(makepathsafe($_GET["page"]) !== $_GET["page"])
 function renderpage($title, $content, $minimal = false)
 {
 	global $sitename, $css, $favicon, $user, $isloggedin, $navlinks, $admindetails, $start_time, $pageindex;
-
+	
 	$html = "<!DOCTYPE HTML>
 <html><head>
 	<meta charset='utf-8' />
 	<title>$title</title>
-	<link rel='shortcut icon' href='$favicon' />
-	<style>$css</style>
-</head><body>
-	";
-
+	<link rel='shortcut icon' href='$favicon' />";
+	if(preg_match("/^[^\/]*\/\/|^\//", $cs))
+	{
+		$html .= "\n\t\t<link rel='stylesheet' href='$css' />\n";
+	}
+	else
+	{
+		$html .= "\n\t\t<style>$css</style>\n";
+	}
+	$html .= "</head><body>\n";
+	
 	//////////
-
+	
 	if($minimal)
 	{
 		$html .= "$content
@@ -237,7 +251,7 @@ function renderpage($title, $content, $minimal = false)
 	else
 	{
 		$html .= "<nav>\n";
-
+	
 		if($isloggedin)
 			$html .= "\t\tLogged in as $user. <a href='index.php?action=logout'>Logout</a>. | \n";
 		else
@@ -261,7 +275,7 @@ function renderpage($title, $content, $minimal = false)
 				$html .= "\t\t<a href='" . str_replace("{page}", $_GET["page"], $url) . "'>$display</a>\n";
 			}
 		}
-
+	
 		$html .= "	</nav>
 	<h1 class='sitename'>$sitename</h1>
 	$content
@@ -271,19 +285,19 @@ function renderpage($title, $content, $minimal = false)
 		<p>This wiki is managed by <a href='mailto:" . hide_email($admindetails["email"]) . "'>" . $admindetails["name"] . "</a>.</p>
 	</footer>
 	<datalist id='allpages'>\n";
-
+		
 		foreach($pageindex as $pagename => $pagedetails)
 		{
 			$html .= "\t\t<option value='$pagename' />\n";
 		}
 		$html .= "\t</datalist>";
 	}
-
+	
 	//////////
 	$gentime = microtime(true) - $start_time;
 	$html .= "\n\t<!-- Took $gentime seconds to generate -->
 </head></html>";
-
+	
 	return $html;
 }
 
@@ -314,7 +328,7 @@ function renderpage($title, $content, $minimal = false)
 
 /**
  * Modified by Starbeamrainbowlabs (starbeamrainbowlabs)
- *
+ * 
  	* Changed bold to use single asterisks
  	* Changed italics to use single underscores
  	* Added one to add the heading levels (no <h1> tags allowed)
@@ -431,7 +445,7 @@ switch($_GET["action"])
 			http_response_code(203);
 			header("location: index.php?page=" . $_GET["page"]);
 		}
-
+		
 		if(!$isloggedin and !$anonedits)
 		{
 			//future let the user view the page source instead
@@ -450,14 +464,14 @@ switch($_GET["action"])
 		{
 			$title = "Editing " . $_GET["page"];
 		}
-
-
+		
+		
 		$pagetext = "";
 		if(isset($pageindex->$_GET["page"]))
 		{
 			$pagetext = file_get_contents($filename);
 		}
-
+		
 		$content = "<h1>$title</h1>";
 		if(!$isloggedin and $anonedits)
 		{
@@ -469,7 +483,7 @@ switch($_GET["action"])
 	</form>";
 		exit(renderpage("$title - $sitename", $content));
 		break;
-
+	
 	case "save":
 		if(!$editing)
 		{
@@ -502,14 +516,14 @@ switch($_GET["action"])
 				$pageindex->$_GET["page"]->lasteditor = utf8_encode($user);
 			else
 				$pageindex->$_GET["page"]->lasteditor = utf8_encode("anonymous");
-
+			
 			file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
-
+			
 			if(isset($_GET["newpage"]))
 				http_response_code(201);
 			else
 				http_response_code(200);
-
+			
 			header("location: index.php?page=" . $_GET["page"]);
 			exit();
 		}
@@ -520,7 +534,7 @@ switch($_GET["action"])
 			<p>Please tell the administrator of this wiki (" . $admindetails["name"] . ") about this problem.</p>"));
 		}
 		break;
-
+	
 	case "list":
 		$title = "All Pages";
 		$content = "	<h1>$title on $sitename</h1>
@@ -545,7 +559,15 @@ switch($_GET["action"])
 		$content .= "	</table>";
 		exit(renderpage("$title - $sitename", $content));
 		break;
-
+	
+	case "delete":
+		exit(renderpage("Deleting $pagename - $sitename", "Coming soon..."));
+		break;
+	
+	case "dodelete":
+		exit("Coming soon...");
+		break;
+	
 	case "help":
 		$title = "Help - $sitename";
 		$content = "	<h1>$sitename Help</h1>
@@ -573,7 +595,7 @@ switch($_GET["action"])
 	</table>";
 		exit(renderpage($title, $content));
 		break;
-
+	
 	case "login":
 		$title = "Login to $sitename";
 		$content = "<h1>Login to $sitename</h1>\n";
@@ -588,7 +610,7 @@ switch($_GET["action"])
 		</form>";
 		exit(renderpage($title, $content));
 		break;
-
+	
 	case "checklogin":
 		if(isset($_POST["user"]) and isset($_POST["pass"]))
 		{
@@ -623,7 +645,7 @@ switch($_GET["action"])
 			exit();
 		}
 		break;
-
+	
 	case "logout":
 		$isloggedin = false;
 		unset($user);
@@ -633,7 +655,7 @@ switch($_GET["action"])
 		exit(renderpage("Logout Successful", "<h1>Logout Successful</h1>
 	<p>Logout Successful. You can login again <a href='index.php?action=login'>here</a>.</p>"));
 		break;
-
+	
 	case "credits":
 		$title = "Credits - $sitename";
 		$content = "<h1>$sitename credits</h1>
@@ -642,7 +664,7 @@ switch($_GET["action"])
 	<p>The default favicon is from <a href='//openclipart.org'>Open Clipart</a> by bluefrog23, and can be found <a href='https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23'>here</a>.</p>";
 		exit(renderpage($title, $content));
 		break;
-
+	
 	case "hash":
 		if(!isset($_GET["string"]))
 		{
@@ -655,7 +677,7 @@ switch($_GET["action"])
 			exit(renderpage("Hashed string", "<p><code>" . $_GET["string"] . "</code> → <code>" . hash("sha256", $_GET["string"] . "</code></p>")));
 		}
 		break;
-
+	
 	case "view":
 	default:
 		//check to make sure that the page exists
@@ -677,13 +699,13 @@ switch($_GET["action"])
 		}
 		$title = $_GET["page"] . " - $sitename";
 		$content = "<h1>" . $_GET["page"] . "</h1>";
-
+		
 		$slimdown_start = microtime(true);
-
+		
 		$content .= Slimdown::render(file_get_contents($_GET["page"] . ".md"));
-
+		
 		$content .= "\n\t<!-- Took " . (microtime(true) - $slimdown_start) . " seconds to parse markdown -->\n";
-
+		
 		if(isset($_GET["printable"]) and $_GET["printable"] === "yes")
 			$minimal = true;
 		else
