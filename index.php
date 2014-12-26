@@ -1,12 +1,13 @@
 <?php
 $start_time = time(true);
 
+
 /*
  * Pepperminty Wiki
  * ================
  * Inspired by Minty Wiki by am2064:
 	* Link: https://github.com/am2064/Minty-Wiki
- * 
+ *
  * Credits:
 	* Slimdown - by Johnny Broadway from https://gist.github.com/jbroadway/2836900
  */
@@ -101,6 +102,7 @@ Actions:
 	help - get help
 	credits - view the credits
 */
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////// Do not edit below this line unless you know what you are doing! ///////////////

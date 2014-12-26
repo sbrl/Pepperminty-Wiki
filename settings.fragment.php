@@ -1,3 +1,4 @@
+<?php
 /*
  * Pepperminty Wiki
  * ================
@@ -98,3 +99,4 @@ Actions:
 	help - get help
 	credits - view the credits
 */
+?>
