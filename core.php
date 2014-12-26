@@ -352,15 +352,7 @@ switch($_GET["action"])
 			http_response_code(203);
 			header("location: index.php?page=" . $_GET["page"]);
 		}
-		
-		if(!$isloggedin and !$anonedits)
-		{
-			//future let the user view the page source instead
-			http_response_code(403);
-			header("refresh: 5; url=index.php?page=" . $_GET["page"]);
-			header("content-type: text/plain");
-			exit("You must be logged in to edit $sitename. Redirecting to page view in 5 seconds....");
-		}
+
 		$filename = $_GET["page"] . ".md";
 		$creatingpage = !isset($pageindex->$_GET["page"]);
 		if((isset($_GET["newpage"]) and $_GET["newpage"] == "true") or $creatingpage)
@@ -371,14 +363,27 @@ switch($_GET["action"])
 		{
 			$title = "Editing " . $_GET["page"];
 		}
-		
-		
+
 		$pagetext = "";
 		if(isset($pageindex->$_GET["page"]))
 		{
 			$pagetext = file_get_contents($filename);
 		}
 		
+		if((!$isloggedin and !$anonedits) or !$editing)
+		{
+			if(!$creatingpage)
+			{
+				//the page already exists - let the user view the page source
+				exit(renderpage("Viewing source for " . $_GET["page"], "<textarea readonly>$pagetext</textarea>"));
+			}
+			else
+			{
+				http_response_code(404);
+				exit(renderpage("404 - " . $_GET["page"], "<p>The page <code>" . $_GET["page"] . "</code> does not exist, but you do not have permission to create it.</p><p>If you haven't already, perhaps you should try <a href='index.php?action=login'>logging in</a>.</p>"));
+			}
+		}
+
 		$content = "<h1>$title</h1>";
 		if(!$isloggedin and $anonedits)
 		{
