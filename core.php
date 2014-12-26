@@ -159,25 +159,30 @@ function renderpage($title, $content, $minimal = false)
 		else
 			$html .= "\t\tBrowsing as Anonymous. <a href='index.php?action=login'>Login</a>. | \n";
 
-		foreach($navlinks as $display => $url)
+		foreach($navlinks as $item)
 		{
-			if($display == "{search}")
+			if(is_string($item))
 			{
-				//output a search bar
-				$html .= "<form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /></form>";
-			}
-			else if(strlen($url) === 0)
-			{
-				//the url has not been set, output $display directly
-				$html .= " " . trim($display) . " ";
+				//the item is a string
+				switch($item)
+				{
+					//keywords
+					case "search": //displays a search bar
+						$html .= "<form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /></form>";
+						break;
+
+					//it isn't a keyword, so just output it directly
+					default:
+						$html .= $item;
+				}
 			}
 			else
 			{
 				//output the display as a link to the url
-				$html .= "\t\t<a href='" . str_replace("{page}", $_GET["page"], $url) . "'>$display</a>\n";
+				$html .= "\t\t<a href='" . str_replace("{page}", $_GET["page"], $item[1]) . "'>$item[0]</a>\n";
 			}
 		}
-	
+
 		$html .= "	</nav>
 	<h1 class='sitename'>$sitename</h1>
 	$content

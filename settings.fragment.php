@@ -42,19 +42,19 @@ $users = [
 
 //array of links and display text to display at the top of the site
 $navlinks = [
-	"Home" => "index.php",
-	"Login" => "index.php?action=login",
-	" | " => "",
-	"{search}" => "",
-	" |  " => "",
-	"Read" => "index.php?page={page}",
-	"Edit" => "index.php?action=edit&page={page}",
-	"Printable" => "index.php?action=view&printable=yes&page={page}",
-	"  |  " => "",
-	"All Pages" => "index.php?action=list",
-	"  |  " => "",
-	"Credits" => "index.php?action=credits",
-	"Help" => "index.php?action=help"
+	[ "Home", "index.php" ],
+	[ "Login", "index.php?action=login" ],
+	" | ",
+	"search",
+	" | ",
+	[ "Read", "index.php?page={page}" ],
+	[ "Edit", "index.php?action=edit&page={page}" ],
+	[ "Printable", "index.php?action=view&printable=yes&page={page}" ],
+	" | ",
+	[ "All Pages", "index.php?action=list" ],
+	" | ",
+	[ "Credits", "index.php?action=credits" ],
+	[ "Help", "index.php?action=help" ]
 ];
 
 //contact details for the site administrator. Since user can only be added by editing this file, people will need a contact address to use to ask for an account. Displayed at the bottom of the page, and will be appropriatly obfusticateed to  deter spammers.
