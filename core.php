@@ -136,7 +136,7 @@ if(makepathsafe($_GET["page"]) !== $_GET["page"])
 ////////////////////////////////////////////////////////////////////////////////////////////
 function renderpage($title, $content, $minimal = false)
 {
-	global $sitename, $css, $favicon, $user, $isloggedin, $isadmin, $admindisplaychar, $navlinks, $admindetails, $start_time, $pageindex;
+	global $sitename, $css, $favicon, $user, $isloggedin, $isadmin, $admins, $admindisplaychar, $navlinks, $admindetails, $start_time, $pageindex;
 	
 	$html = "<!DOCTYPE HTML>
 <html><head>
@@ -208,6 +208,7 @@ function renderpage($title, $content, $minimal = false)
 	<hr class='footerdivider' />
 	<footer>
 		<p>Powered by Pepperminty Wiki, which was built by <a href='//starbeamrainbowlabs'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or open an issue <a href='//github.com/sbrl/Pepperminty-Wiki'>on github</a>.</p>
+		<p>Your local friendly administrators are " . implode(", ", $admins) . ".
 		<p>This wiki is managed by <a href='mailto:" . hide_email($admindetails["email"]) . "'>" . $admindetails["name"] . "</a>.</p>
 	</footer>
 	<datalist id='allpages'>\n";
