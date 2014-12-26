@@ -1,5 +1,6 @@
 <?php
 $start_time = time(true);
+
 /*
  * Pepperminty Wiki
  * ================

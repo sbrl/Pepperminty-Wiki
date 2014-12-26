@@ -1,15 +1,45 @@
 <?php
+$start_time = microtime(true);
+function logstr($str, $newline = true, $showtime = true)
+{
+	global $start_time;
+	if($showtime)
+		echo("[ " . round(microtime(true) - $start_time, 4) . " ] ");
+	echo($str);
+	if($newline)
+		echo("\n");
+}
+
 header("content-type: text/plain");
-echo("Checking for existing build....");
+
+logstr("Checking for existing build....", false);
 if(file_exists("index.php"))
-	exit("fail!\nA build already exists in this directory.\nPlease delete it and then run this script again.");
+{
+	log_str("fail!", true, false);
+	log_str("A build already exists in this directory.");
+	log_str("Please delete it and then run this script again.");
 
-echo("pass - no other builds were found.\n");
+	exit();
+}
 
-echo("Reading core.php...");
+logstr("pass - no other builds were found.", true, false);
+
+logstr("Reading `core.php`...", false);
 $build = file_get_contents("core.php");
-echo("done\n");
+logstr("done", true, false);
+logstr("Reading `settings.fragment.php`...", false);
+$settings = file_get_contents("settings.fragment.php");
+logstr("done", true, false);
 
-echo("Writing build....");
+logstr("Building.....", false);
+$build = str_replace([
+	"{settings}"
+], [
+	$settings
+], $build);
+logstr("done", true, false);
+
+logstr("Writing build....", false);
 file_put_contents("index.php", $build);
-echo("done!\n*** Build Completed ***\n");
+logstr("done!", true, false);
+logstr("*** Build Completed ***");
