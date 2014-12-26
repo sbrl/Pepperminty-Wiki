@@ -1,4 +1,7 @@
 # all wiki pages
 *.md
+# include the README
+!README.md
+
 # the page index
 pageindex.json
