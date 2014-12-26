@@ -231,7 +231,7 @@ function renderpage($title, $content, $minimal = false)
 	<meta charset='utf-8' />
 	<title>$title</title>
 	<link rel='shortcut icon' href='$favicon' />";
-	if(preg_match("/^[^\/]*\/\/|^\//", $cs))
+	if(preg_match("/^[^\/]*\/\/|^\//", $css))
 	{
 		$html .= "\n\t\t<link rel='stylesheet' href='$css' />\n";
 	}
