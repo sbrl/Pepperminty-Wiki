@@ -6,6 +6,7 @@
 	* Link: https://github.com/am2064/Minty-Wiki
  *
  * Credits:
+	* Code by @Starbeamrainbowlabs
 	* Slimdown - by Johnny Broadway from https://gist.github.com/jbroadway/2836900
  */
 
@@ -39,6 +40,13 @@ $users = [
 	"admin" => "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", //password
 	"user" => "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34" //cheese
 ];
+
+//array of usernames that are administrators.
+//administrators can delete and move pages, though this functionality hasn't been added yet.
+$admins = [ "admin" ];
+
+//The string that is prepended before an admin's name on the nav bar. defaults to a diamond shape (&#9670;).
+$admindisplaychar = "&#9670;";
 
 //contact details for the site administrator. Since user can only be added by editing this file, people will need a contact address to use to ask for an account. Displayed at the bottom of the page, and will be appropriatly obfusticateed to  deter spammers.
 $admindetails = [

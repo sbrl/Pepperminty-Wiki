@@ -34,6 +34,19 @@ else
 		setcookie($cookieprefix . "-pass", null, -1, "/");
 	}
 }
+//check to see if the currently logged in user is an admin
+$isadmin = false;
+if($isloggedin)
+{
+	foreach($admins as $admin_username)
+	{
+		if($admin_username == $user)
+		{
+			$isadmin = true;
+			break;
+		}
+	}
+}
 /////// Login System End ///////
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -123,7 +136,7 @@ if(makepathsafe($_GET["page"]) !== $_GET["page"])
 ////////////////////////////////////////////////////////////////////////////////////////////
 function renderpage($title, $content, $minimal = false)
 {
-	global $sitename, $css, $favicon, $user, $isloggedin, $navlinks, $admindetails, $start_time, $pageindex;
+	global $sitename, $css, $favicon, $user, $isloggedin, $isadmin, $admindisplaychar, $navlinks, $admindetails, $start_time, $pageindex;
 	
 	$html = "<!DOCTYPE HTML>
 <html><head>
@@ -155,7 +168,13 @@ function renderpage($title, $content, $minimal = false)
 		$html .= "<nav>\n";
 	
 		if($isloggedin)
-			$html .= "\t\tLogged in as $user. <a href='index.php?action=logout'>Logout</a>. | \n";
+		{
+			$html .= "\t\tLogged in as ";
+			if($isadmin)
+				$html .= $admindisplaychar;
+			$html .= "$user. <a href='index.php?action=logout'>Logout</a>. | \n";
+
+		}
 		else
 			$html .= "\t\tBrowsing as Anonymous. <a href='index.php?action=login'>Login</a>. | \n";
 

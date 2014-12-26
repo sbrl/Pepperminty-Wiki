@@ -9,6 +9,7 @@ $start_time = time(true);
 	* Link: https://github.com/am2064/Minty-Wiki
  *
  * Credits:
+	* Code by @Starbeamrainbowlabs
 	* Slimdown - by Johnny Broadway from https://gist.github.com/jbroadway/2836900
  */
 
@@ -43,6 +44,19 @@ $users = [
 	"user" => "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34" //cheese
 ];
 
+//array of usernames that are administrators.
+//administrators can delete and move pages, though this functionality hasn't been added yet.
+$admins = [ "admin" ];
+
+//The string that is prepended before an admin's name on the nav bar. defaults to a diamond shape (&#9670;).
+$admindisplaychar = "&#9670;";
+
+//contact details for the site administrator. Since user can only be added by editing this file, people will need a contact address to use to ask for an account. Displayed at the bottom of the page, and will be appropriatly obfusticateed to  deter spammers.
+$admindetails = [
+	"name" => "Administrator",
+	"email" => "admin@localhost"
+];
+
 //array of links and display text to display at the top of the site
 $navlinks = [
 	[ "Home", "index.php" ],
@@ -58,12 +72,6 @@ $navlinks = [
 	" | ",
 	[ "Credits", "index.php?action=credits" ],
 	[ "Help", "index.php?action=help" ]
-];
-
-//contact details for the site administrator. Since user can only be added by editing this file, people will need a contact address to use to ask for an account. Displayed at the bottom of the page, and will be appropriatly obfusticateed to  deter spammers.
-$admindetails = [
-	"name" => "Administrator",
-	"email" => "admin@localhost"
 ];
 
 //string of css to include
@@ -133,6 +141,19 @@ else
 		unset($pass);
 		setcookie($cookieprefix . "-user", null, -1, "/");
 		setcookie($cookieprefix . "-pass", null, -1, "/");
+	}
+}
+//check to see if the currently logged in user is an admin
+$isadmin = false;
+if($isloggedin)
+{
+	foreach($admins as $admin_username)
+	{
+		if($admin_username == $user)
+		{
+			$isadmin = true;
+			break;
+		}
 	}
 }
 /////// Login System End ///////
@@ -224,7 +245,7 @@ if(makepathsafe($_GET["page"]) !== $_GET["page"])
 ////////////////////////////////////////////////////////////////////////////////////////////
 function renderpage($title, $content, $minimal = false)
 {
-	global $sitename, $css, $favicon, $user, $isloggedin, $navlinks, $admindetails, $start_time, $pageindex;
+	global $sitename, $css, $favicon, $user, $isloggedin, $isadmin, $admindisplaychar, $navlinks, $admindetails, $start_time, $pageindex;
 	
 	$html = "<!DOCTYPE HTML>
 <html><head>
@@ -256,7 +277,13 @@ function renderpage($title, $content, $minimal = false)
 		$html .= "<nav>\n";
 	
 		if($isloggedin)
-			$html .= "\t\tLogged in as $user. <a href='index.php?action=logout'>Logout</a>. | \n";
+		{
+			$html .= "\t\tLogged in as ";
+			if($isadmin)
+				$html .= $admindisplaychar;
+			$html .= "$user. <a href='index.php?action=logout'>Logout</a>. | \n";
+
+		}
 		else
 			$html .= "\t\tBrowsing as Anonymous. <a href='index.php?action=login'>Login</a>. | \n";
 
