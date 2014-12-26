@@ -6,9 +6,17 @@ Pepperminty wiki is a complete wiki in a box inspired by @am2064's Minty wiki, w
 
 Downloading / Installing
 ------------------------
+### Quickstart
 All you need to do is download `index.php` in this repository and put it in a folder on your web server. You need to make sure that PHP can write to that folder though. However, you can deny write access to the file itself since there is no automatic updating function built in yet.
 
 If you prefer, you can clone this repository or use the "Download Zip" button to the right.
+
+### Building
+Pepperminty Wiki uses a simple PHP based build script. If you want to run this script yourself (for whatever reason), follow these instructions:
+
+1. Clone this repository
+2. Delete `index.php`.
+3. Run `php build.php`.
 
 Configuring
 -----------
