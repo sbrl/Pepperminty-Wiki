@@ -10,8 +10,17 @@ function logstr($str, $newline = true, $showtime = true)
 		echo("\n");
 }
 
+function removeouterphptag($phpcode)
+{
+	$firstindex = strpos($phpcode, "\n", strpos($phpcode, "<?php"));
+	$lastindex = strrpos($phpcode, "?>");
+
+	return substr($phpcode, $firstindex, $lastindex - $firstindex);
+}
+
 header("content-type: text/plain");
 
+// Protects against users wiping the settings if run via CGI
 logstr("Checking for existing build....", false);
 if(file_exists("index.php"))
 {
@@ -28,7 +37,7 @@ logstr("Reading `core.php`...", false);
 $build = file_get_contents("core.php");
 logstr("done", true, false);
 logstr("Reading `settings.fragment.php`...", false);
-$settings = file_get_contents("settings.fragment.php");
+$settings = removeouterphptag(file_get_contents("settings.fragment.php"));
 logstr("done", true, false);
 
 logstr("Building.....", false);
