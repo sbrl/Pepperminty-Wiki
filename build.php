@@ -37,7 +37,11 @@ logstr("Reading `core.php`...", false);
 $build = file_get_contents("core.php");
 logstr("done", true, false);
 logstr("Reading `settings.fragment.php`...", false);
+<<<<<<< HEAD
 $settings = removeouterphptags(file_get_contents("settings.fragment.php"));
+=======
+$settings = removeouterphptag(file_get_contents("settings.fragment.php"));
+>>>>>>> 582dcc5c5355ee8126911ad537f18c3d1c4933a6
 logstr("done", true, false);
 
 logstr("Building.....", false);
