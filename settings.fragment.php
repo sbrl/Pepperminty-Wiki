@@ -72,6 +72,7 @@ $navlinks = [
 ];
 
 //string of css to include
+//may be a url - urls will be referenced via a <link rel='stylesheet' /> tag
 $css = "body { font-family: sans-serif; color: #333333; background: #f3f3f3; }
 textarea[name=content] { display: block; width: 100%; height: 35rem; }
 input[name=page] { width: 16rem; }
