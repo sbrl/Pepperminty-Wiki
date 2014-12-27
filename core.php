@@ -366,6 +366,14 @@ function human_time_since($time)
 
 switch($_GET["action"])
 {
+	/*
+	 *           _ _ _
+	 *   ___  __| (_) |_
+	 *  / _ \/ _` | | __|
+	 * |  __/ (_| | | |_
+	 *  \___|\__,_|_|\__|
+	 *             %edit%
+	 */
 	case "edit":
 		if(!$editing)
 		{
@@ -416,6 +424,14 @@ switch($_GET["action"])
 		exit(renderpage("$title - $sitename", $content));
 		break;
 	
+	/*
+	 *
+	 *  ___  __ ___   _____
+	 * / __|/ _` \ \ / / _ \
+	 * \__ \ (_| |\ V /  __/
+	 * |___/\__,_| \_/ \___|
+	 *                %save%
+	 */
 	case "save":
 		if(!$editing)
 		{
@@ -467,6 +483,14 @@ switch($_GET["action"])
 		}
 		break;
 	
+	/*
+	 *  _ _     _
+	 * | (_)___| |_
+	 * | | / __| __|
+	 * | | \__ \ |_
+	 * |_|_|___/\__|
+	 *        %list%
+	 */
 	case "list":
 		$title = "All Pages";
 		$content = "	<h1>$title on $sitename</h1>
@@ -492,14 +516,26 @@ switch($_GET["action"])
 		exit(renderpage("$title - $sitename", $content));
 		break;
 	
+	/*
+	 *      _      _      _
+	 *   __| | ___| | ___| |_ ___
+	 *  / _` |/ _ \ |/ _ \ __/ _ \
+	 * | (_| |  __/ |  __/ ||  __/
+	 *  \__,_|\___|_|\___|\__\___|
+	 *                    %delete%
+	 */
 	case "delete":
 		exit(renderpage("Deleting $pagename - $sitename", "Coming soon..."));
 		break;
 	
-	case "dodelete":
-		exit("Coming soon...");
-		break;
-	
+	/*
+	 *  _          _
+	 * | |__   ___| |_ __
+	 * | '_ \ / _ \ | '_ \
+	 * | | | |  __/ | |_) |
+	 * |_| |_|\___|_| .__/
+	 *   %help%     |_|
+	 */
 	case "help":
 		$title = "Help - $sitename";
 		$content = "	<h1>$sitename Help</h1>
@@ -528,6 +564,14 @@ switch($_GET["action"])
 		exit(renderpage($title, $content));
 		break;
 	
+	/*
+	 *  _             _
+	 * | | ___   __ _(_)_ __
+	 * | |/ _ \ / _` | | '_ \
+	 * | | (_) | (_| | | | | |
+	 * |_|\___/ \__, |_|_| |_|
+	 *          |___/  %login%
+	 */
 	case "login":
 		$title = "Login to $sitename";
 		$content = "<h1>Login to $sitename</h1>\n";
@@ -543,6 +587,14 @@ switch($_GET["action"])
 		exit(renderpage($title, $content));
 		break;
 	
+	/*
+	 *       _               _    _             _
+	 *   ___| |__   ___  ___| | _| | ___   __ _(_)_ __
+	 *  / __| '_ \ / _ \/ __| |/ / |/ _ \ / _` | | '_ \
+	 * | (__| | | |  __/ (__|   <| | (_) | (_| | | | | |
+	 *  \___|_| |_|\___|\___|_|\_\_|\___/ \__, |_|_| |_|
+	 *     %checklogin%                   |___/
+	 */
 	case "checklogin":
 		if(isset($_POST["user"]) and isset($_POST["pass"]))
 		{
@@ -578,6 +630,14 @@ switch($_GET["action"])
 		}
 		break;
 	
+	/*
+	 *  _                         _
+	 * | | ___   __ _  ___  _   _| |_
+	 * | |/ _ \ / _` |/ _ \| | | | __|
+	 * | | (_) | (_| | (_) | |_| | |_
+	 * |_|\___/ \__, |\___/ \__,_|\__|
+	 *          |___/         %logout%
+	 */
 	case "logout":
 		$isloggedin = false;
 		unset($user);
@@ -588,6 +648,14 @@ switch($_GET["action"])
 	<p>Logout Successful. You can login again <a href='index.php?action=login'>here</a>.</p>"));
 		break;
 	
+	/*
+	 *                    _ _ _
+	 *   ___ _ __ ___  __| (_) |_ ___
+	 *  / __| '__/ _ \/ _` | | __/ __|
+	 * | (__| | |  __/ (_| | | |_\__ \
+	 *  \___|_|  \___|\__,_|_|\__|___/
+	 *                       %credits%
+	 */
 	case "credits":
 		$title = "Credits - $sitename";
 		$content = "<h1>$sitename credits</h1>
@@ -597,6 +665,14 @@ switch($_GET["action"])
 		exit(renderpage($title, $content));
 		break;
 	
+	/*
+	 *  _               _
+	 * | |__   __ _ ___| |__
+	 * | '_ \ / _` / __| '_ \
+	 * | | | | (_| \__ \ | | |
+	 * |_| |_|\__,_|___/_| |_|
+	 *                  %hash%
+	 */
 	case "hash":
 		if(!isset($_GET["string"]))
 		{
@@ -610,6 +686,14 @@ switch($_GET["action"])
 		}
 		break;
 	
+	/*
+	 *        _
+	 * __   _(_) _____      __
+	 * \ \ / / |/ _ \ \ /\ / /
+	 *  \ V /| |  __/\ V  V /
+	 *   \_/ |_|\___| \_/\_/
+	 *                  %view%
+	 */
 	case "view":
 	default:
 		//check to make sure that the page exists
