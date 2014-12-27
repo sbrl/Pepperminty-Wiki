@@ -127,6 +127,7 @@ if(makepathsafe($_GET["page"]) !== $_GET["page"])
 	header("x-actual-page: " . makepathsafe($_GET["page"]));
 	exit();
 }
+$page = $_GET["page"];
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -136,7 +137,7 @@ if(makepathsafe($_GET["page"]) !== $_GET["page"])
 ////////////////////////////////////////////////////////////////////////////////////////////
 function renderpage($title, $content, $minimal = false)
 {
-	global $sitename, $css, $favicon, $user, $isloggedin, $isadmin, $admins, $admindisplaychar, $navlinks, $admindetails, $start_time, $pageindex;
+	global $sitename, $page, $css, $favicon, $user, $isloggedin, $isadmin, $admins, $admindisplaychar, $navlinks, $admindetails, $start_time, $pageindex;
 	
 	$html = "<!DOCTYPE HTML>
 <html><head>
@@ -198,7 +199,7 @@ function renderpage($title, $content, $minimal = false)
 			else
 			{
 				//output the display as a link to the url
-				$html .= "\t\t<a href='" . str_replace("{page}", $_GET["page"], $item[1]) . "'>$item[0]</a>\n";
+				$html .= "\t\t<a href='" . str_replace("{page}", $page, $item[1]) . "'>$item[0]</a>\n";
 			}
 		}
 
@@ -378,22 +379,22 @@ switch($_GET["action"])
 		if(!$editing)
 		{
 			http_response_code(203);
-			header("location: index.php?page=" . $_GET["page"]);
+			header("location: index.php?page=$page");
 		}
 
-		$filename = $_GET["page"] . ".md";
-		$creatingpage = !isset($pageindex->$_GET["page"]);
+		$filename = "$page.md";
+		$creatingpage = !isset($pageindex->$page);
 		if((isset($_GET["newpage"]) and $_GET["newpage"] == "true") or $creatingpage)
 		{
-			$title = "Creating " . $_GET["page"];
+			$title = "Creating $page";
 		}
 		else
 		{
-			$title = "Editing " . $_GET["page"];
+			$title = "Editing $page";
 		}
 
 		$pagetext = "";
-		if(isset($pageindex->$_GET["page"]))
+		if(isset($pageindex->$page))
 		{
 			$pagetext = file_get_contents($filename);
 		}
@@ -403,12 +404,12 @@ switch($_GET["action"])
 			if(!$creatingpage)
 			{
 				//the page already exists - let the user view the page source
-				exit(renderpage("Viewing source for " . $_GET["page"], "<textarea readonly>$pagetext</textarea>"));
+				exit(renderpage("Viewing source for $page", "<textarea readonly>$pagetext</textarea>"));
 			}
 			else
 			{
 				http_response_code(404);
-				exit(renderpage("404 - " . $_GET["page"], "<p>The page <code>" . $_GET["page"] . "</code> does not exist, but you do not have permission to create it.</p><p>If you haven't already, perhaps you should try <a href='index.php?action=login'>logging in</a>.</p>"));
+				exit(renderpage("404 - $page", "<p>The page <code>$page</code> does not exist, but you do not have permission to create it.</p><p>If you haven't already, perhaps you should try <a href='index.php?action=login'>logging in</a>.</p>"));
 			}
 		}
 
@@ -417,7 +418,7 @@ switch($_GET["action"])
 		{
 			$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
 		}
-		$content .= "<form method='post' action='index.php?action=save&page=" . rawurlencode($_GET["page"]) . "&action=save'>
+		$content .= "<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save'>
 		<textarea name='content'>$pagetext</textarea>
 		<input type='submit' value='Save Page' />
 	</form>";
@@ -435,35 +436,35 @@ switch($_GET["action"])
 	case "save":
 		if(!$editing)
 		{
-			header("location: index.php?page=" . $_GET["page"]);
+			header("location: index.php?page=$page");
 			exit(renderpage("Error saving edit", "<p>Editing is currently disabled on this wiki.</p>"));
 		}
 		if(!$isloggedin and !$anonedits)
 		{
 			http_response_code(403);
-			header("refresh: 5; url=index.php?page=" . $_GET["page"]);
+			header("refresh: 5; url=index.php?page=$page");
 			exit("You are not logged in, so you are not allowed to save pages on $sitename. Redirecting in 5 seconds....");
 		}
 		if(!isset($_POST["content"]))
 		{
 			http_response_code(400);
-			header("refresh: 5; url=index.php?page=" . $_GET["page"]);
+			header("refresh: 5; url=index.php?page=$page");
 			exit("Bad request: No content specified.");
 		}
-		if(file_put_contents($_GET["page"] . ".md", htmlentities($_POST["content"]), ENT_QUOTES) !== false)
+		if(file_put_contents("$page.md", htmlentities($_POST["content"]), ENT_QUOTES) !== false)
 		{
 			//update the page index
-			if(!isset($pageindex->$_GET["page"]))
+			if(!isset($pageindex->$page))
 			{
-				$pageindex->$_GET["page"] = new stdClass();
-				$pageindex->$_GET["page"]->filename = $_GET["page"] . ".md";
+				$pageindex->$page = new stdClass();
+				$pageindex->$page->filename = "$page.md";
 			}
-			$pageindex->$_GET["page"]->size = strlen($_POST["content"]);
-			$pageindex->$_GET["page"]->lastmodified = time();
+			$pageindex->$page->size = strlen($_POST["content"]);
+			$pageindex->$page->lastmodified = time();
 			if($isloggedin)
-				$pageindex->$_GET["page"]->lasteditor = utf8_encode($user);
+				$pageindex->$page->lasteditor = utf8_encode($user);
 			else
-				$pageindex->$_GET["page"]->lasteditor = utf8_encode("anonymous");
+				$pageindex->$page->lasteditor = utf8_encode("anonymous");
 			
 			file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
 			
@@ -472,7 +473,7 @@ switch($_GET["action"])
 			else
 				http_response_code(200);
 			
-			header("location: index.php?page=" . $_GET["page"]);
+			header("location: index.php?page=$page");
 			exit();
 		}
 		else
@@ -525,6 +526,21 @@ switch($_GET["action"])
 	 *                    %delete%
 	 */
 	case "delete":
+		if(!$isadmin)
+		{
+			exit(renderpage("Deleting $page - error", "<p>You tried to delete $page, but you are not an admin so you don't have permission to do that.</p>
+			<p>You should try <a href='index.php?action=login'>logging in</a> as an admin.</p>"));
+		}
+		if(!isset($_GET["delete"]) or $_GET["delete"] !== "yes")
+		{
+			exit(renderpage("Deleting $page", "<p>You are about to <strong>delete</strong> $page. You can't undo this!</p>
+			<p><a href='index.php?action=delete&page=$page&delete=yes'>Click here to delete $page.</a></p>
+			<p><a href='index.php?action=view&page=$page'>Click here to go back.</a>"));
+		}
+		unset($pageindex->$page); //delete the page from the page index
+		file_put_contents("./pageindex.json", json_encode($pageindex)); //save the new page index
+		unlink("./$page.md"); //delete the page from the disk
+
 		exit(renderpage("Deleting $pagename - $sitename", "Coming soon..."));
 		break;
 	
@@ -697,28 +713,28 @@ switch($_GET["action"])
 	case "view":
 	default:
 		//check to make sure that the page exists
-		if(!isset($pageindex->$_GET["page"]))
+		if(!isset($pageindex->$page))
 		{
 			if($editing)
 			{
 				//editing is enabled, redirect to the editing page
 				http_response_code(307); //temporary redirect
-				header("location: index.php?action=edit&newpage=yes&page=" . rawurlencode($_GET["page"]));
+				header("location: index.php?action=edit&newpage=yes&page=" . rawurlencode($page));
 				exit();
 			}
 			else
 			{
 				//editing is disabled, show an error message
 				http_response_code(404);
-				exit(renderpage("" . $_GET["page"] . " - 404 - $sitename", "<p>" . $_GET["page"] . " does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
+				exit(renderpage("$page - 404 - $sitename", "<p>$page does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
 			}
 		}
-		$title = $_GET["page"] . " - $sitename";
-		$content = "<h1>" . $_GET["page"] . "</h1>";
+		$title = "$page - $sitename";
+		$content = "<h1>$page</h1>";
 		
 		$slimdown_start = microtime(true);
 		
-		$content .= Slimdown::render(file_get_contents($_GET["page"] . ".md"));
+		$content .= Slimdown::render(file_get_contents("$page.md"));
 		
 		$content .= "\n\t<!-- Took " . (microtime(true) - $slimdown_start) . " seconds to parse markdown -->\n";
 		
