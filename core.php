@@ -545,6 +545,18 @@ switch($_GET["action"])
 		break;
 	
 	/*
+	 *  __  __
+	 * |  \/  | _____   _____
+	 * | |\/| |/ _ \ \ / / _ \
+	 * | |  | | (_) \ V /  __/
+	 * |_|  |_|\___/ \_/ \___|
+	 *                  %move%
+	 */
+	case "move":
+		exit(renderpage("Moving $page", "<p>Coming soon...</p>"));
+		break;
+
+	/*
 	 *  _          _
 	 * | |__   ___| |_ __
 	 * | '_ \ / _ \ | '_ \

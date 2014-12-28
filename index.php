@@ -33,12 +33,10 @@ $maxpagesize = 135000; //135,000 characters, or 50 pages
 //whether users who aren't logged in are allowed to edit
 $anonedits = false;
 
-//the name of the page that will act as the home pae for the wiki. This page will be served if the user didn't specify a page.
+//the name of the page that will act as the home page for the wiki. This page will be served if the user didn't specify a page.
 $defaultpage = "Main Page";
 
 //usernames and passwords - passwords should be hashed with sha256
-//even though there is an account with the name admin here it doesn't actually get any special privileges, so feel free to change / remove it - this will help to stop spambots
-//the same goes for the account with the name user
 $users = [
 	"admin" => "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", //password
 	"user" => "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34" //cheese
@@ -659,6 +657,18 @@ switch($_GET["action"])
 		exit(renderpage("Deleting $page - $sitename", "<p>$page has been deleted. <a href='index.php'>Go back to the main page</a>.</p>"));
 		break;
 	
+	/*
+	 *  __  __
+	 * |  \/  | _____   _____
+	 * | |\/| |/ _ \ \ / / _ \
+	 * | |  | | (_) \ V /  __/
+	 * |_|  |_|\___/ \_/ \___|
+	 *                  %move%
+	 */
+	case "move":
+		exit(renderpage("Moving $page", "<p>Coming soon...</p>"));
+		break;
+
 	/*
 	 *  _          _
 	 * | |__   ___| |_ __
