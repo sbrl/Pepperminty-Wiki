@@ -538,7 +538,7 @@ switch($_GET["action"])
 			<p><a href='index.php?action=view&page=$page'>Click here to go back.</a>"));
 		}
 		unset($pageindex->$page); //delete the page from the page index
-		file_put_contents("./pageindex.json", json_encode($pageindex)); //save the new page index
+		file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT)); //save the new page index
 		unlink("./$page.md"); //delete the page from the disk
 
 		exit(renderpage("Deleting $page - $sitename", "<p>$page has been deleted. <a href='index.php'>Go back to the main page</a>.</p>"));
