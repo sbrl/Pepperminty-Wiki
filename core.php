@@ -541,7 +541,7 @@ switch($_GET["action"])
 		file_put_contents("./pageindex.json", json_encode($pageindex)); //save the new page index
 		unlink("./$page.md"); //delete the page from the disk
 
-		exit(renderpage("Deleting $pagename - $sitename", "Coming soon..."));
+		exit(renderpage("Deleting $page - $sitename", "<p>$page has been deleted. <a href='index.php'>Go back to the main page</a>.</p>"));
 		break;
 	
 	/*

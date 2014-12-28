@@ -65,6 +65,8 @@ $navlinks = [
 	[ "Edit", "index.php?action=edit&page={page}" ],
 	[ "Printable", "index.php?action=view&printable=yes&page={page}" ],
 	" | ",
+	[ $admindisplaychar . "Delete", "index.php?action=delete&page={page}" ],
+	" | ",
 	[ "All Pages", "index.php?action=list" ],
 	" | ",
 	[ "Credits", "index.php?action=credits" ],
@@ -92,12 +94,12 @@ $cookieprefix = preg_replace("/[^0-9a-z]/i", "", strtolower($sitename));
 /*
 Actions:
 	view - view a page
-		page - path to page
+		page - page name
 		printable=[yes/no] - make output printable
 	edit - open editor for page
-		page - path to page
+		page - page name
 	save - save edits to page
-		page - path to page
+		page - page name
 	list - list pages
 		category - the category to list [optional]
 	login - login to the site
@@ -107,5 +109,8 @@ Actions:
 		string - string to hash
 	help - get help
 	credits - view the credits
+	delete - delete a page
+		page - page name
+		delete=yes - actually do the deletion (otherwise we display a prompt)
 */
 ?>
