@@ -347,7 +347,7 @@ function renderpage($title, $content, $minimal = false)
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////// Slimdown /////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////// %slimdown% //
 ////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * Slimdown - A very basic regex-based Markdown parser. Supports the
@@ -390,7 +390,7 @@ class Slimdown {
 		'/\~\~(.*?)\~\~/' => '<del>\1</del>',						// del
 		'/\:\"(.*?)\"\:/' => '<q>\1</q>',							// quote
 		'/`(.*?)`/' => '<code>\1</code>',							// inline code
-		'/\n\*(.*)/' => 'self::ul_list',							// ul lists
+		'/\n\s*(\*|-)(.*)/' => 'self::ul_list',							// ul lists
 		'/\n[0-9]+\.(.*)/' => 'self::ol_list',						// ol lists
 		'/\n(&gt;|\>)(.*)/' => 'self::blockquote',					// blockquotes
 		'/\n-{3,}/' => "\n<hr />",									// horizontal rule
@@ -408,7 +408,7 @@ class Slimdown {
 		return sprintf ("\n<p>%s</p>\n", $trimmed);
 	}
 	private static function ul_list ($regs) {
-		$item = $regs[1];
+		$item = $regs[2];
 		return sprintf ("\n<ul>\n\t<li>%s</li>\n</ul>", trim($item));
 	}
 	private static function ol_list ($regs) {

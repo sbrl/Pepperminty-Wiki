@@ -39,7 +39,7 @@ Wanted: Themes! If you have a cool theme, simply open an issue on the bug tracke
  * Add page history somehow
  * Allow users to change their passwords
  * Add auto updating system that doesn't wipe your settings
- * Add page deletion mechanism
- * .... (open an issue if you have any suggestions)
+ * Make links to non existant pages red
+ * .... (open an issue if you have any suggestions!)
 
 --Starbeamrainbowlabs
