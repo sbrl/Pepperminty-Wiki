@@ -339,7 +339,7 @@ function renderpage($title, $content, $minimal = false)
 	//////////
 	$gentime = microtime(true) - $start_time;
 	$html .= "\n\t<!-- Took $gentime seconds to generate -->
-</head></html>";
+</body></html>";
 	
 	return $html;
 }
