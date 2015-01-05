@@ -208,7 +208,7 @@ function renderpage($title, $content, $minimal = false)
 	$content
 	<hr class='footerdivider' />
 	<footer>
-		<p>Powered by Pepperminty Wiki, which was built by <a href='//starbeamrainbowlabs'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or open an issue <a href='//github.com/sbrl/Pepperminty-Wiki'>on github</a>.</p>
+		<p>Powered by Pepperminty Wiki, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or open an issue <a href='//github.com/sbrl/Pepperminty-Wiki'>on github</a>.</p>
 		<p>Your local friendly administrators are " . implode(", ", $admins) . ".
 		<p>This wiki is managed by <a href='mailto:" . hide_email($admindetails["email"]) . "'>" . $admindetails["name"] . "</a>.</p>
 	</footer>
@@ -526,6 +526,13 @@ switch($_GET["action"])
 	 *                    %delete%
 	 */
 	case "delete":
+		if(!$editing)
+		{
+			exit(renderpage("Deleting $page - error", "<p>You tried to delete $page, but editing is disabled on this wiki.</p>
+			<p>If you wish to delete this page, please re-enable editing on this wiki first.</p>
+			<p><a href='index.php?page=$page'>Go back to $page</a>.</p>
+			<p>Nothing has been changed.</p>"));
+		}
 		if(!$isadmin)
 		{
 			exit(renderpage("Deleting $page - error", "<p>You tried to delete $page, but you are not an admin so you don't have permission to do that.</p>
@@ -553,9 +560,18 @@ switch($_GET["action"])
 	 *                  %move%
 	 */
 	case "move":
+		if(!$editing)
+		{
+			exit(renderpage("Moving $page - error", "<p>You tried to move $page, but editing is disabled on this wiki.</p>
+			<p>If you wish to move this page, please re-enable editing on this wiki first.</p>
+			<p><a href='index.php?page=$page'>Go back to $page</a>.</p>
+			<p>Nothing has been changed.</p>"));
+		}
 		if(!$isadmin)
+		{
 			exit(renderpage("Moving $page - Error", "<p>You tried to move $page, but you do not have permission to do that.</p>
 			<p>You should try <a href='index.php?action=login'>logging in</a> as an admin.</p>"));
+		}
 
 		if(!isset($_GET["new_name"]) or strlen($_GET["new_name"]) == 0)
 			exit(renderpage("Moving $page", "<h2>Moving $page</h2>
