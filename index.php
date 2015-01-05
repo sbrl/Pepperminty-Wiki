@@ -11,6 +11,8 @@ $start_time = time(true);
  * Credits:
 	* Code by @Starbeamrainbowlabs
 	* Slimdown - by Johnny Broadway from https://gist.github.com/jbroadway/2836900
+ * Bug reports:
+	* #1 - Incorrect closing tag - nibreh <https://github.com/nibreh/> 
  */
 
 //the site's name
