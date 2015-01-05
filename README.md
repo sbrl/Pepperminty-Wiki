@@ -7,7 +7,7 @@ Pepperminty wiki is a complete wiki in a box inspired by @am2064's Minty wiki, w
 ![Screenshot of Pepperminty Wiki](http://i.imgur.com/xOfCSEx.png)
 Above is the main page of the demo over at https://starbeamrainbowlabs.com/labs/peppermint.
 
-## Democ
+## Demo
 A live demo (with editing disabled) can be found over at https://starbeamrainbowlabs.com/labs/peppermint.
 
 ## Features
