@@ -56,6 +56,24 @@ th { text-align: left; }
 .footerdivider { margin-top: 4rem; }
 ```
 
+### Simple Blue
+A quick blue theme I put together to give people a choice of more than just one theme.
+
+```css
+body { font-family: sans-serif; color: #3765ff; background: #cee6ff; }
+label { display: inline-block; min-width: 10rem; }
+a:active { color: #95aeff; }
+textarea[name=content] { display: block; width: 100%; height: 35rem; }
+input:not([type=button]):not([type=submit]), textarea { padding: 5px 8px; color: #2c49c6; background: rgba(42, 146, 255, 0.57); border: 0; border-radius: 5px; }
+input[type=submit], input[type=button], button { margin-top: 8px; padding: 5px 8px; }
+::-webkit-input-placeholder { color: #2c49c6; }
+nav { position: absolute; top: 5px; right: 5px; }
+nav input { width: 15.2rem; }
+th { text-align: left; }
+.sitename { text-align: center; font-size: 2.5rem; color: #385fe2; }
+.footerdivider { margin-top: 4rem; }
+```
+
 ## Todo
  * Add page history somehow
  * Allow users to change their passwords
