@@ -42,6 +42,20 @@ To configure it, open your downloaded copy of `index.php` in your favourite edit
 ## Themes (aka strings of CSS)
 Wanted: Themes! If you have a cool theme, simply open an issue on the bug tracker in this repository to share your theme. If you don't have a github account, no problem! Simply email me with your code instead.
 
+### Default
+This is the default theme Pepperminty Wiki currently comes with.
+
+```css
+body { font-family: sans-serif; color: #333333; background: #f3f3f3; }
+label { display: inline-block; min-width: 10rem; }
+textarea[name=content] { display: block; width: 100%; height: 35rem; }
+/*input[name=page] { width: 16rem; }*/
+nav { position: absolute; top: 5px; right: 5px; }
+th { text-align: left; }
+.sitename { text-align: center; font-size: 2.5rem; color: #222222; }
+.footerdivider { margin-top: 4rem; }
+```
+
 ## Todo
  * Add page history somehow
  * Allow users to change their passwords
