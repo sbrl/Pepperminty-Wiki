@@ -6,18 +6,27 @@ $start_time = time(true);
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////// Do not edit below this line unless you know what you are doing! ///////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-$version = "0.5";
+session_start();
 ///////// Login System /////////
-if(!isset($_COOKIE[$cookieprefix . "-user"]) and
-  !isset($_COOKIE[$cookieprefix . "-pass"]))
+//clear expired sessions
+if(isset($_SESSION["$sessionprefix-expiretime"]) and
+   $_SESSION["$sessionprefix-expiretime"] < time())
+{
+	//clear the session variables
+	$_SESSION = [];
+	session_destroy();
+}
+
+if(!isset($_SESSION[$sessionprefix . "-user"]) and
+  !isset($_SESSION[$sessionprefix . "-pass"]))
 {
 	//the user is not logged in
 	$isloggedin = false;
 }
 else
 {
-	$user = $_COOKIE[$cookieprefix . "-user"];
-	$pass = $_COOKIE[$cookieprefix . "-pass"];
+	$user = $_SESSION[$sessionprefix . "-user"];
+	$pass = $_SESSION[$sessionprefix . "-pass"];
 	if($users[$user] == $pass)
 	{
 		//the user is logged in
@@ -26,12 +35,13 @@ else
 	else
 	{
 		//the user's login details are invalid (what is going on here?)
-		//unset the cookie and the variables, treat them as an anonymous user, and get out of here
+		//unset the session variables, treat them as an anonymous user, and get out of here
 		$isloggedin = false;
 		unset($user);
 		unset($pass);
-		setcookie($cookieprefix . "-user", null, -1, "/");
-		setcookie($cookieprefix . "-pass", null, -1, "/");
+		//clear the session data
+		$_SESSION = []; //delete al lthe variables
+		session_destroy(); //destroy the session
 	}
 }
 //check to see if the currently logged in user is an admin
@@ -680,6 +690,7 @@ switch($_GET["action"])
 	 *     %checklogin%                   |___/
 	 */
 	case "checklogin":
+		//actually do the login
 		if(isset($_POST["user"]) and isset($_POST["pass"]))
 		{
 			//the user wants to log in
@@ -689,8 +700,9 @@ switch($_GET["action"])
 			{
 				$isloggedin = true;
 				$expiretime = time() + 60*60*24*30; //30 days from now
-				setcookie($cookieprefix . "-user", $user, $expiretime, "/");
-				setcookie($cookieprefix . "-pass", hash("sha256", $pass), $expiretime, "/");
+				$_SESSION["$sessionprefix-user"] = $user;
+				$_SESSION["$sessionprefix-pass"] = hash("sha256", $pass);
+				$_SESSION["$sessionprefix-expiretime"] = $expiretime;
 				//redirect to wherever the user was going
 				http_response_code(302);
 				if(isset($_POST["goto"]))
@@ -726,8 +738,10 @@ switch($_GET["action"])
 		$isloggedin = false;
 		unset($user);
 		unset($pass);
-		setcookie($cookieprefix . "-user", null, -1, "/");
-		setcookie($cookieprefix . "-pass", null, -1, "/");
+		//clear the session variables
+		$_SESSION = [];
+		session_destroy();
+		
 		exit(renderpage("Logout Successful", "<h1>Logout Successful</h1>
 	<p>Logout Successful. You can login again <a href='index.php?action=login'>here</a>.</p>"));
 		break;
