@@ -24,6 +24,11 @@ A live demo (with editing disabled) can be found over at https://starbeamrainbow
 
 ## Downloading / Installing
 
+### Requirements
+Any PHP enabled webserver will do. You need to make sure that it has **session support** though, as they are used to allow users to log in. If your php server does not have session support, you will know about it quite quickly since it won't remember you logging in.
+
+Information about configuring PHP sessions can be found here: https://php.net/manual/en/session.installation.php
+
 ### Quickstart
 All you need to do is download `index.php` in this repository and put it in a folder on your web server. You need to make sure that PHP can write to that folder though. However, you can deny write access to the file itself since there is no automatic updating function built in yet.
 
