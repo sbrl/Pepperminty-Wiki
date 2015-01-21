@@ -504,12 +504,6 @@ switch($_GET["action"])
 	 *             %edit%
 	 */
 	case "edit":
-		if(!$editing)
-		{
-			http_response_code(203);
-			header("location: index.php?page=$page");
-		}
-
 		$filename = "$page.md";
 		$creatingpage = !isset($pageindex->$page);
 		if((isset($_GET["newpage"]) and $_GET["newpage"] == "true") or $creatingpage)
