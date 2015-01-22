@@ -29,6 +29,8 @@ Any PHP enabled webserver will do. You need to make sure that it has **session s
 
 Information about configuring PHP sessions can be found here: https://php.net/manual/en/session.installation.php
 
+More detailed information about installing Pepperminty Wiki can be found on [this repository's wiki](https://github.com/sbrl/Pepperminty-Wiki/wiki/Installing).
+
 ### Quick Installation
 All you need to do is download `index.php` in this repository and put it in a folder on your web server. You need to make sure that PHP can write to that folder though. However, you can deny write access to the file itself since there is no automatic updating function built in yet.
 
