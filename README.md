@@ -87,6 +87,25 @@ nav input { width: 15.2rem; }
 th { text-align: left; }
 .sitename { text-align: center; font-size: 2.5rem; color: #385fe2; }
 .footerdivider { margin-top: 4rem; }
+
+### Microsoft-esque
+Another quick theme based on the microsoft website.
+
+```css
+body { font-family: 'Segoe UI', sans-serif; color: black; background: white; padding: 5px; }
+h1 { margin-top: 1.5em; }
+label { display: inline-block; min-width: 10rem; }
+textarea[name=content] { display: block; width: 100%; height: 35rem; }
+nav { position: fixed; top: 0; left: 0; right: 0; padding: 10px 10px; background: #0073c6; color: white; }
+nav a { color: white; font-weight: bold; transition: all 0.25s; }
+nav a:active { color: #eeeeee; }
+input { border: 2px solid #d2d2d2; padding: 5px; font-family: 'Segoe UI', sans-serif; }
+input[type=search] { width: 18rem; }
+button, input[type=submit] { margin: 10px 2px; cursor: pointer; transition: all 0.25s; }
+button:active, input[type=submit]:active { background: #c2c2c2; }
+th { text-align: left; }
+.sitename { text-align: center; font-size: 2.5rem; }
+.footerdivider { margin-top: 4rem; }
 ```
 
 ## Todo
