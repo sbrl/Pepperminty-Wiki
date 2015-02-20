@@ -87,6 +87,7 @@ nav input { width: 15.2rem; }
 th { text-align: left; }
 .sitename { text-align: center; font-size: 2.5rem; color: #385fe2; }
 .footerdivider { margin-top: 4rem; }
+```
 
 ### Microsoft-esque
 Another quick theme based on the microsoft website.
