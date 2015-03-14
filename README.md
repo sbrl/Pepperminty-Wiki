@@ -61,6 +61,8 @@ To configure it, open your downloaded copy of `index.php` in your favourite edit
 ## Themes (aka strings of CSS)
 Wanted: Themes! If you have a cool theme, simply open an issue on the bug tracker in this repository to share your theme. If you don't have a github account, no problem! Simply email me with your code instead.
 
+A theme gallery can be found here: [Theme Gallery](https://github.com/sbrl/Pepperminty-Wiki/wiki/Theme-Gallery)
+
 ### Default
 This is the default theme Pepperminty Wiki currently comes with.
 
