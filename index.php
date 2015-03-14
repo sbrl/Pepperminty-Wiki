@@ -276,6 +276,7 @@ function renderpage($title, $content, $minimal = false)
 <html><head>
 	<meta charset='utf-8' />
 	<title>$title</title>
+	<meta name=viewport content='width=device-width, initial-scale=1' />
 	<link rel='shortcut icon' href='$favicon' />";
 	if(preg_match("/^[^\/]*\/\/|^\//", $css))
 	{
@@ -777,7 +778,8 @@ switch($_GET["action"])
 	</table>
 	<h2>Administrator Actions</h2>
 	<p>By default, the <code>delete</code> and <code>move</code> actions are shown on the nav bar. These can be used by administrators to delete or move pages.</p>
-	<p>The other thing admininistrators can do is update the wiki (provided they know the site's secret). This page can be found here: <a href='?action=update'>Update $sitename</a>.</p>";
+	<p>The other thing admininistrators can do is update the wiki (provided they know the site's secret). This page can be found here: <a href='?action=update'>Update $sitename</a>.</p>
+	<p>$sitename is currently running on Pepperminty Wiki <code>$version</code></p>";
 		exit(renderpage($title, $content));
 		break;
 	
@@ -882,7 +884,9 @@ switch($_GET["action"])
 		$content = "<h1>$sitename credits</h1>
 	<p>$sitename is powered by Pepperminty Wiki - an entire wiki packed inside a single file, which was built by <a href='//starbeamrainboowlabs.com'>Starbeamrainbowlabs</a>, and can be found <a href='//github.com/sbrl/Pepperminty-Wiki/'>on github</a>.</p>
 	<p>A slightly modified version of slimdown is used to parse text source into HTML. Slimdown is by <a href='https://github.com/jbroadway'>Johnny Broadway</a>, which can be found <a href='https://gist.github.com/jbroadway/2836900'>on github</a>.</p>
-	<p>The default favicon is from <a href='//openclipart.org'>Open Clipart</a> by bluefrog23, and can be found <a href='https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23'>here</a>.</p>";
+	<p>The default favicon is from <a href='//openclipart.org'>Open Clipart</a> by bluefrog23, and can be found <a href='https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23'>here</a>.</p>
+	<p>Administrators can update $sitename here: <a href='?action=update'>Update $sitename</a>.</p>
+	<p>$sitename is currently running on Pepperminty Wiki <code>$version</code></p>";
 		exit(renderpage($title, $content));
 		break;
 	
