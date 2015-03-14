@@ -6,6 +6,7 @@ $start_time = time(true);
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////// Do not edit below this line unless you know what you are doing! ///////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
+$version = "0.4-dev";
 session_start();
 ///////// Login System /////////
 //clear expired sessions
@@ -648,7 +649,13 @@ switch($_GET["action"])
 		<tr><td><code>
 	---
 	</code></td><td><hr /></td></tr>
-	</table>";
+		<tr><tds><code> - One
+ - Two
+ - Three</code></td><td><ul><li>One</li><li>Two</li><li>Three</li></ul></td></tr>
+	</table>
+	<h2>Administrator Actions</h2>
+	<p>By default, the <code>delete</code> and <code>move</code> actions are shown on the nav bar. These can be used by administrators to delete or move pages.</p>
+	<p>The other thing admininistrators can do is update the wiki (provided they know the site's secret). This page can be found here: <a href='?action=update'>Update $sitename</a>.</p>";
 		exit(renderpage($title, $content));
 		break;
 	
@@ -755,6 +762,67 @@ switch($_GET["action"])
 	<p>A slightly modified version of slimdown is used to parse text source into HTML. Slimdown is by <a href='https://github.com/jbroadway'>Johnny Broadway</a>, which can be found <a href='https://gist.github.com/jbroadway/2836900'>on github</a>.</p>
 	<p>The default favicon is from <a href='//openclipart.org'>Open Clipart</a> by bluefrog23, and can be found <a href='https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23'>here</a>.</p>";
 		exit(renderpage($title, $content));
+		break;
+	
+	/*
+	 *                _      _       
+	 *  _  _ _ __  __| |__ _| |_ ___ 
+	 * | || | '_ \/ _` / _` |  _/ -_)
+	 *  \_,_| .__/\__,_\__,_|\__\___|
+	 *      |_|              %update%
+	 */
+	case "update":
+		if(!$isadmin)
+		{
+			http_response_code(401);
+			exit(renderpage("Update - Error", "<p>You must be an administrator to do that.</p>"));
+		}
+		
+		if(!isset($_GET["do"]) or $_GET["do"] !== "true")
+		{
+			exit(renderpage("Update $sitename", "<p>This page allows you to update $sitename.</p>
+			<p>Currently, $sitename is using $version of Pepperminty Wiki.</p>
+			<p>This script will automatically download and install the latest version of Pepperminty Wiki from the url of your choice (see settings), regardless of whether an update is acutally needed (version checking isn't implemented yet).</p>
+			<p>To update $sitename, fill out the form below and click click the update button.</p>
+			<form method='get' action=''>
+				<input type='hidden' name='action' value='update' />
+				<input type='hidden' name='do' value='true' />
+				<label for='secret'>$sitename's secret code</label>
+				<input type='text' name='secret' value='' />
+				<input type='submit' value='Update' />
+			</form>"));
+		}
+		
+		if(!isset($_GET["secret"]) or $_GET["secret"] !== $sitesecret)
+		{
+			exit(renderpage("Update $sitename - Error", "<p>You forgot to enter $sitename's secret code or entered it incorrectly. $sitename's secret can be found in the settings portion of <code>index.php</code>.</p>"));
+		}
+		
+		$settings_separator = "/////////////// Do not edit below this line unless you know what you are doing! ///////////////";
+		
+		$log = "Beginning update...\n";
+		
+		$log .= "I am <code>" . __FILE__ . "</code>.\n";
+		$oldcode = file_get_contents(__FILE__);
+		$log .= "Fetching new code...";
+		$newcode = file_get_contents($updateurl);
+		$log .= "done.\n";
+		
+		$log .= "Rewriting <code>" . __FILE__ . "</code>...";
+		$settings = substr($oldcode, 0, strpos($oldcode, $settings_separator));
+		$code = substr($newcode, strpos($newcode, $settings_separator));
+		$result = $settings . $code;
+		$log .= "done.\n";
+		
+		$log .= "Saving...";
+		file_put_contents(__FILE__, $result);
+		$log .= "done.\n";
+		
+		$log .= "Update complete. I am now running on the latest version of $sitename.";
+		$log .= "The version number that I have updated to can be found on the credits or help ages."
+		
+		exit(renderpage("Update - Success", "<ul><li>" . implode("</li><li>", explode("\n", $log)) . "</li></ul>"));
+		
 		break;
 	
 	/*

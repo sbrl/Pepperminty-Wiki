@@ -43,6 +43,10 @@ If you prefer, you can clone this repository or use the "Download Zip" button to
 3. Open both files for editing
 4. Copy your settings over the new settings (making sure that you don't delete any new settings - it will be obvious if you do this if you have error reporting enabled)
 
+### Breaking Changes
+From time to time breaking changes will be made. By this I mean additions and / or deletions to the settings that can be found at the top of your wiki's `index.php`. They will be listed here so you can manually update your settings if required.
+
+ * (no breaking changes have been made yet)
 
 ### Building
 Pepperminty Wiki uses a simple PHP based build script. If you want to run this script yourself (for whatever reason), follow these instructions:
