@@ -935,9 +935,15 @@ switch($_GET["action"])
 		$code = substr($newcode, strpos($newcode, $settings_separator));
 		$result = $settings . $code;
 		$log .= "done.\n";
-		header("content-type: text/php");
-		echo("$log\n\n");
-		exit($result);
+		
+		$log .= "Saving...";
+		file_put_contents(__FILE__, $result);
+		$log .= "done.\n";
+		
+		$log .= "Update complete. I am now running on the latest version of $sitename.";
+		$log .= "The version number that I have updated to can be found on the credits or help ages.";
+		
+		exit(renderpage("Update - Success", "<ul><li>" . implode("</li><li>", explode("\n", $log)) . "</li></ul>"));
 		
 		break;
 	

@@ -819,7 +819,7 @@ switch($_GET["action"])
 		$log .= "done.\n";
 		
 		$log .= "Update complete. I am now running on the latest version of $sitename.";
-		$log .= "The version number that I have updated to can be found on the credits or help ages."
+		$log .= "The version number that I have updated to can be found on the credits or help ages.";
 		
 		exit(renderpage("Update - Success", "<ul><li>" . implode("</li><li>", explode("\n", $log)) . "</li></ul>"));
 		
