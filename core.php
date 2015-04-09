@@ -786,7 +786,7 @@ switch($_GET["action"])
 		{
 			exit(renderpage("Update $sitename", "<p>This page allows you to update $sitename.</p>
 			<p>Currently, $sitename is using $version of Pepperminty Wiki.</p>
-			<p>This script will automatically download and install the latest version of Pepperminty Wiki from the url of your choice (see settings), regardless of whether an update is acutally needed (version checking isn't implemented yet).</p>
+			<p>This script will automatically download and install the latest version of Pepperminty Wiki from the url of your choice (see settings), regardless of whether an update is actually needed (version checking isn't implemented yet).</p>
 			<p>To update $sitename, fill out the form below and click click the update button.</p>
 			<form method='get' action=''>
 				<input type='hidden' name='action' value='update' />
