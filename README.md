@@ -120,6 +120,9 @@ th { text-align: left; }
  * Allow users to change their passwords
  * Add auto updating system that doesn't wipe your settings
  * Make links to non existant pages red
+ * Make this thing module based so we can have extensions (this also helps to organise the code!)
+	 * Convert settings to array / object
+	 * Move each action to it's own function
  * .... (open an issue if you have any suggestions!)
 
 --Starbeamrainbowlabs
