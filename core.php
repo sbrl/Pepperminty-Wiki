@@ -353,7 +353,7 @@ class Slimdown {
 //from http://php.net/manual/en/function.filesize.php#106569
 function human_filesize($bytes, $decimals = 2)
 {
-	$sz = 'BKMGTPEYZ';
+	$sz = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "YB", "ZB"];
 	$factor = floor((strlen($bytes) - 1) / 3);
 	return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
 }
