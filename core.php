@@ -351,6 +351,7 @@ class Slimdown {
 //////////////// Functions ////////////////
 ///////////////////////////////////////////
 //from http://php.net/manual/en/function.filesize.php#106569
+//edited by Starbeamrainbowlabs
 function human_filesize($bytes, $decimals = 2)
 {
 	$sz = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "YB", "ZB"];
@@ -507,8 +508,7 @@ switch($_GET["action"])
 			<th>Page Name</th>
 			<th>Size</th>
 			<th>Last Editor</th>
-			<th>Last Edited</th>
-			<th>Time Since Last Edit</th>
+			<th>Last Edit Time</th>
 		</tr>\n";
 		foreach($pageindex as $pagename => $pagedetails)
 		{
@@ -516,8 +516,8 @@ switch($_GET["action"])
 			<td><a href='index.php?page=$pagename'>$pagename</a></td>
 			<td>" . human_filesize($pagedetails->size) . "</td>
 			<td>$pagedetails->lasteditor</td>
-			<td>" . date("l jS \of F Y \a\\t h:ia T", $pagedetails->lastmodified) . "</td>
-			<td>" . human_time_since($pagedetails->lastmodified) . "</td>
+			<td>" . human_time_since($pagedetails->lastmodified) . " <small>(" . date("l jS \of F Y \a\\t h:ia T", $pagedetails->lastmodified) . ")</small></td>
+			
 		</tr>\n";
 		}
 		$content .= "	</table>";
