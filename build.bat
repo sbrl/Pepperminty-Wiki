@@ -1,2 +1,2 @@
 del index.php
-php build.php 
+php build.old.php 
