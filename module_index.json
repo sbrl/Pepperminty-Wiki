@@ -5,7 +5,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a utility action (that anyone can use) called hash that hashes a given string. Useful when changing a user's password.",
         "id": "action-hash",
-        "lastmodified": 1429968727
+        "lastupdate": 1429968727
     },
     {
         "name": "Credits",
@@ -13,7 +13,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
-        "lastmodified": 1428760042
+        "lastupdate": 1428760042
     },
     {
         "name": "Page deleter",
@@ -21,7 +21,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to delete pages.",
         "id": "page-delete",
-        "lastmodified": 1428759115
+        "lastupdate": 1428759115
     },
     {
         "name": "Page editor",
@@ -29,7 +29,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastmodified": 1428758936
+        "lastupdate": 1428758936
     },
     {
         "name": "Help page",
@@ -37,7 +37,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the help action. You really want this one.",
         "id": "page-help",
-        "lastmodified": 1428759307
+        "lastupdate": 1428759307
     },
     {
         "name": "Page list",
@@ -45,7 +45,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index long with their metadata.",
         "id": "page-list",
-        "lastmodified": 1428758608
+        "lastupdate": 1428758608
     },
     {
         "name": "Login",
@@ -53,7 +53,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastmodified": 1428759587
+        "lastupdate": 1428759587
     },
     {
         "name": "Logout",
@@ -61,7 +61,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to let users user out. For security reasons it is wise to add this module since logging in automatically opens a session that is valid for 30 days.",
         "id": "page-logout",
-        "lastmodified": 1428760035
+        "lastupdate": 1428760035
     },
     {
         "name": "Page mover",
@@ -69,7 +69,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
         "id": "page-move",
-        "lastmodified": 1428760214
+        "lastupdate": 1428760214
     },
     {
         "name": "Update",
@@ -77,7 +77,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an update page that downloads the latest stable version of Pepperminty Wiki. This module is currently outdated as it doesn't save your module preferences.",
         "id": "page-update",
-        "lastmodified": 1428760319
+        "lastupdate": 1428760319
     },
     {
         "name": "Page viewer",
@@ -85,6 +85,6 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You should include this one.",
         "id": "page-view",
-        "lastmodified": 1428757674
+        "lastupdate": 1428757674
     }
 ]

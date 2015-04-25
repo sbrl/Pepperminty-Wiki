@@ -11,7 +11,7 @@ function register_module($settings)
 		"author" => $settings["author"],
 		"description" => $settings["description"],
 		"id" => $settings["id"],
-		"lastmodified" => filemtime("modules/" . $settings["id"] . ".php")
+		"lastupdate" => filemtime("modules/" . $settings["id"] . ".php")
 	];
 	$module_index[] = $newmodule;
 }
