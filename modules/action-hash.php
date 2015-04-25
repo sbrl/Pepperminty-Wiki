@@ -4,7 +4,7 @@ register_module([
 	"version" => "0.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a utility action (that anyone can use) called hash that hashes a given string. Useful when changing a user's password.",
-	"id" => "page-hash",
+	"id" => "action-hash",
 	"code" => function() {
 		add_action("hash", function() {
 			if(!isset($_GET["string"]))
