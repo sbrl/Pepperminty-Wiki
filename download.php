@@ -11,6 +11,11 @@
 		<h2>Module selector</h2>
 		<p>Choose the modules that you want to include in your installation of Pepperminty Wiki.</p>
 		
+		<p>
+			<button onclick="select(true);">Select All</button>
+			<button onclick="select(false);">Select None</button>
+		</p>
+		
 		<table>
 			<tr>
 				<th></th>
@@ -18,30 +23,58 @@
 				<th>Description</th>
 				<th>Author</th>
 				<th>Version</th>
-				<th>Last Updated</th>
+				<th style="width: 9rem;">Last Updated</th>
 			</tr>
 			<?php
 			$module_index = json_decode(file_get_contents("module_index.json"));
 			foreach($module_index as $module)
 			{
 			echo("<tr>
-				<td><input type='checkbox' id='$module->id' /></td>
+				<td><input type='checkbox' id='$module->id' checked /></td>
 				<td><label for='$module->id'>$module->name</label></td>
 				<td>$module->description</td>
 				<td>$module->author</td>
 				<td>$module->version</td>
-				<td>" . date("r", $module->lastupdate) . "</td>
+				<td>" . date("D jS M Y", $module->lastupdate) . "</td>
 			</tr>");
 				
 			}
 			?>
 		</table>
 		
-		<script>
-			document.getElementById("download_button").addEventListener("click", function(event) {
-				
-			});
-		</script>
+		<br />
+		<br />
+		
+		<button onclick="download()" class="largebutton">Download</button>
+		
+		<hr />
+		
+		<p>
+			Pepperminty Wiki was built by <a href="//starbeamrainbowlabs.com/">Starbeamrainbowlabs</a>. The code is available on <a href="//github.com/sbrl/pepperminty-wiki">GitHub</a>.
+		</p>
+		<p>
+			Other contributors: (none yet! Contribute and I will put your name here)
+		</p>
+		
+		<!------------------->
 		<link rel="stylesheet" href="//starbeamrainbowlabs.com/theme/basic.css" />
+		<style>
+			body			{ padding: 1rem;	} /* syntaxtic gets confused sometimes */
+			.largebutton	{ font-size: 2rem;	}
+		</style>
+		
+		<script>
+			function select(state)
+			{
+				var checkboxes = document.querySelectorAll("input[type=checkbox]");
+				for(var i = 0; i < checkboxes.length; i++)
+				{
+					checkboxes[i].checked = state;
+				}
+			}
+			
+			
+		</script>
+		
 	</body>
 </html>
