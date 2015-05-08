@@ -73,7 +73,16 @@
 				}
 			}
 			
-			
+			function download()
+			{
+				var url = "build.php?web=true&modules=",
+					checkboxes = document.querySelectorAll("input[type=checkbox]");
+				for(var i = 0; i < checkboxes.length; i++)
+				{
+					url += encodeURIComponent(checkboxes[i].id);
+				}
+				location.href = url;
+			}
 		</script>
 		
 	</body>
