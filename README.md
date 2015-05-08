@@ -36,24 +36,29 @@ All you need to do is download `index.php` in this repository and put it in a fo
 
 If you prefer, you can clone this repository or use the "Download Zip" button to the right.
 
+### Custom Installation
+Since Peppermitny Wiki now uses a module based system, you will probably want to be able to choose which modules are installed. This repository comes with a special downloader, which can be found live at this url:
+
+https://starbeamrainbowlabs.com/labs/peppermint/download.php
 
 ### Updating
 1. Rename your old `index.php` to `index.old.php` temporarily
-2. Download the new version
+2. Obtain the new version (see above - or below to build your own)
 3. Open both files for editing
 4. Copy your settings over the new settings (making sure that you don't delete any new settings - it will be obvious if you do this if you have error reporting enabled)
 
 ### Breaking Changes
 From time to time breaking changes will be made. By this I mean additions and / or deletions to the settings that can be found at the top of your wiki's `index.php`. They will be listed here so you can manually update your settings if required.
 
- * (no breaking changes have been made yet)
+ * Everything has been changed! Pepperminty wiki is now using a module based system.
 
 ### Building
-Pepperminty Wiki uses a simple PHP based build script. If you want to run this script yourself (for whatever reason), follow these instructions:
+Pepperminty Wiki uses a (kind of) simple PHP based build script. If you want to run this script yourself, follow these instructions:
 
 1. Clone this repository
 2. Delete `index.php`.
-3. Run `php build.php`.
+3. Run `php rebuild_module_index.php`.
+4. Run `php build.php`.
 
 ## Configuring
 To configure it, open your downloaded copy of `index.php` in your favourite editor - the settings can be configured at the top of the file. There are extensive comments that explain what each option does. Make sure that you change the allowed usernames and passwords! If you need more help, don't hesitate to open an issue on this repository or contact me.
