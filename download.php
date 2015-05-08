@@ -79,7 +79,7 @@
 					checkboxes = document.querySelectorAll("input[type=checkbox]");
 				for(var i = 0; i < checkboxes.length; i++)
 				{
-					url += encodeURIComponent(checkboxes[i].id);
+					url += encodeURIComponent(checkboxes[i].id) + ",";
 				}
 				location.href = url;
 			}

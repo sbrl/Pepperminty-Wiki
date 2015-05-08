@@ -41,6 +41,9 @@ $settings->anonedits = false;
 // the name of the page that will act as the home page for the wiki. This page will be served if the user didn't specify a page.
 $settings->defaultpage = "Main Page";
 
+// the default action. This action will be performed if no other action is specified.
+$settings->defaultaction = "view";
+
 // usernames and passwords - passwords should be hashed with sha256
 $settings->users = [
 	"admin" => "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", //password
@@ -125,6 +128,7 @@ Actions:
 		page - page name
 		delete=yes - actually do the deletion (otherwise we display a prompt)
 */
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -243,7 +247,7 @@ function hide_email($str)
 if(!isset($_GET["action"]) and !isset($_GET["page"]))
 {
 	http_response_code(302);
-	header("location: index.php?action=view&page=$defaultpage");
+	header("location: index.php?action=$settings->defaultaction&page=$defaultpage");
 	exit();
 }
 
@@ -503,257 +507,262 @@ function human_time_since($time)
 }
 ///////////////////////////////////////////
 
-switch($_GET["action"])
+//////////////////////////
+///  Module functions  ///
+//////////////////////////
+// These functions are	//
+// used by modules to	//
+// register themselves	//
+// or new pages.		//
+//////////////////////////
+$modules = []; // list that contains all the loaded modules
+// function to register a module
+function register_module($moduledata)
 {
-	/*
-	 *           _ _ _
-	 *   ___  __| (_) |_
-	 *  / _ \/ _` | | __|
-	 * |  __/ (_| | | |_
-	 *  \___|\__,_|_|\__|
-	 *             %edit%
-	 */
-	case "edit":
-		$filename = "$page.md";
-		$creatingpage = !isset($pageindex->$page);
-		if((isset($_GET["newpage"]) and $_GET["newpage"] == "true") or $creatingpage)
-		{
-			$title = "Creating $page";
-		}
-		else
-		{
-			$title = "Editing $page";
-		}
+	$modules[] = $moduledata;
+}
 
-		$pagetext = "";
-		if(isset($pageindex->$page))
-		{
-			$pagetext = file_get_contents($filename);
-		}
-		
-		if((!$isloggedin and !$settings->anonedits) or !$settings->editing)
-		{
-			if(!$creatingpage)
+// function to register an action handler
+$actions = new stdClass();
+function add_action($action_name, $func)
+{
+	$actions->$action_name = $func;
+}
+
+//////////////////////////////////////////////////////////////////
+
+
+
+register_module([
+	"name" => "Password hashing action",
+	"version" => "0.4",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds a utility action (that anyone can use) called hash that hashes a given string. Useful when changing a user's password.",
+	"id" => "action-hash",
+	"code" => function() {
+		add_action("hash", function() {
+			if(!isset($_GET["string"]))
 			{
-				//the page already exists - let the user view the page source
-				exit(renderpage("Viewing source for $page", "<textarea readonly>$pagetext</textarea>"));
+				http_response_code(422);
+				exit(renderpage("Missing parameter", "<p>The <code>GET</code> parameter <code>string</code> must be specified.</p>
+		<p>It is strongly recommended that you utilise this page via a private or incognito window in order to prevent your password from appearing in your browser history.</p>"));
 			}
 			else
 			{
-				http_response_code(404);
-				exit(renderpage("404 - $page", "<p>The page <code>$page</code> does not exist, but you do not have permission to create it.</p><p>If you haven't already, perhaps you should try <a href='index.php?action=login'>logging in</a>.</p>"));
+				exit(renderpage("Hashed string", "<p><code>" . $_GET["string"] . "</code> → <code>" . hash("sha256", $_GET["string"] . "</code></p>")));
 			}
-		}
-		
-		$content = "<h1>$title</h1>";
-		if(!$isloggedin and $settings->anonedits)
-		{
-			$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
-		}
-		$content .= "<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save'>
-		<textarea name='content'>$pagetext</textarea>
-		<input type='submit' value='Save Page' />
-	</form>";
-		exit(renderpage("$title - $settings->sitename", $content));
-		break;
-	
-	/*
-	 *
-	 *  ___  __ ___   _____
-	 * / __|/ _` \ \ / / _ \
-	 * \__ \ (_| |\ V /  __/
-	 * |___/\__,_| \_/ \___|
-	 *                %save%
-	 */
-	case "save":
-		if(!$settings->editing)
-		{
-			header("location: index.php?page=$page");
-			exit(renderpage("Error saving edit", "<p>Editing is currently disabled on this wiki.</p>"));
-		}
-		if(!$isloggedin and !$settings->anonedits)
-		{
-			http_response_code(403);
-			header("refresh: 5; url=index.php?page=$page");
-			exit("You are not logged in, so you are not allowed to save pages on $settings->sitename. Redirecting in 5 seconds....");
-		}
-		if(!isset($_POST["content"]))
-		{
-			http_response_code(400);
-			header("refresh: 5; url=index.php?page=$page");
-			exit("Bad request: No content specified.");
-		}
-		if(file_put_contents("$page.md", htmlentities($_POST["content"]), ENT_QUOTES) !== false)
-		{
-			//update the page index
-			if(!isset($pageindex->$page))
+		});
+	}
+]);
+
+
+
+
+register_module([
+	"name" => "Credits",
+	"version" => "0.4",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds the credits page. You *must* have this module :D",
+	"id" => "page-credits",
+	"code" => function() {
+		add_action("credits", function() {
+			global $settings, $version;
+			
+			$title = "Credits - $settings->sitename";
+			$content = "<h1>$settings->sitename credits</h1>
+	<p>$settings->sitename is powered by Pepperminty Wiki - an entire wiki packed inside a single file, which was built by <a href='//starbeamrainboowlabs.com'>Starbeamrainbowlabs</a>, and can be found <a href='//github.com/sbrl/Pepperminty-Wiki/'>on github</a> (contributors will ablso be listed here in the future).</p>
+	<p>A slightly modified version of slimdown is used to parse text source into HTML. Slimdown is by <a href='https://github.com/jbroadway'>Johnny Broadway</a>, which can be found <a href='https://gist.github.com/jbroadway/2836900'>on github</a>.</p>
+	<p>The default favicon is from <a href='//openclipart.org'>Open Clipart</a> by bluefrog23, and can be found <a href='https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23'>here</a>.</p>
+	<p>Administrators can update $settings->sitename here: <a href='?action=update'>Update $settings->sitename</a>.</p>
+	<p>$settings->sitename is currently running on Pepperminty Wiki <code>$version</code></p>";
+			exit(renderpage($title, $content));
+		});
+	}
+]);
+
+
+
+
+register_module([
+	"name" => "Page deleter",
+	"version" => "0.4",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds an action to allow administrators to delete pages.",
+	"id" => "page-delete",
+	"code" => function() {
+		add_action("delete", function() {
+			global $pageindex, $settings, $page, $isadmin;
+			if(!$settings->editing)
 			{
-				$pageindex->$page = new stdClass();
-				$pageindex->$page->filename = "$page.md";
+				exit(renderpage("Deleting $page - error", "<p>You tried to delete $page, but editing is disabled on this wiki.</p>
+				<p>If you wish to delete this page, please re-enable editing on this wiki first.</p>
+				<p><a href='index.php?page=$page'>Go back to $page</a>.</p>
+				<p>Nothing has been changed.</p>"));
 			}
-			$pageindex->$page->size = strlen($_POST["content"]);
-			$pageindex->$page->lastmodified = time();
-			if($isloggedin)
-				$pageindex->$page->lasteditor = utf8_encode($user);
+			if(!$isadmin)
+			{
+				exit(renderpage("Deleting $page - error", "<p>You tried to delete $page, but you are not an admin so you don't have permission to do that.</p>
+				<p>You should try <a href='index.php?action=login'>logging in</a> as an admin.</p>"));
+			}
+			if(!isset($_GET["delete"]) or $_GET["delete"] !== "yes")
+			{
+				exit(renderpage("Deleting $page", "<p>You are about to <strong>delete</strong> $page. You can't undo this!</p>
+				<p><a href='index.php?action=delete&page=$page&delete=yes'>Click here to delete $page.</a></p>
+				<p><a href='index.php?action=view&page=$page'>Click here to go back.</a>"));
+			}
+			unset($pageindex->$page); //delete the page from the page index
+			file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT)); //save the new page index
+			unlink("./$page.md"); //delete the page from the disk
+
+			exit(renderpage("Deleting $page - $settings->sitename", "<p>$page has been deleted. <a href='index.php'>Go back to the main page</a>.</p>"));
+		});
+	}
+]);
+
+
+
+
+register_module([
+	"name" => "Page editor",
+	"version" => "0.4",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
+	"id" => "page-edit",
+	
+	"code" => function() {
+		
+		/*
+		 *
+		 *  ___  __ ___   _____
+		 * / __|/ _` \ \ / / _ \
+		 * \__ \ (_| |\ V /  __/
+		 * |___/\__,_| \_/ \___|
+		 *                %save%
+		 */
+		add_action("edit", function() {
+			global $pageindex, $settings, $page, $isloggedin;
+			
+			$filename = "$page.md";
+			$creatingpage = !isset($pageindex->$page);
+			if((isset($_GET["newpage"]) and $_GET["newpage"] == "true") or $creatingpage)
+			{
+				$title = "Creating $page";
+			}
 			else
-				$pageindex->$page->lasteditor = utf8_encode("anonymous");
+			{
+				$title = "Editing $page";
+			}
 			
-			file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+			$pagetext = "";
+			if(isset($pageindex->$page))
+			{
+				$pagetext = file_get_contents($filename);
+			}
 			
-			if(isset($_GET["newpage"]))
-				http_response_code(201);
+			if((!$isloggedin and !$settings->anonedits) or !$settings->editing)
+			{
+				if(!$creatingpage)
+				{
+					//the page already exists - let the user view the page source
+					exit(renderpage("Viewing source for $page", "<textarea readonly>$pagetext</textarea>"));
+				}
+				else
+				{
+					http_response_code(404);
+					exit(renderpage("404 - $page", "<p>The page <code>$page</code> does not exist, but you do not have permission to create it.</p><p>If you haven't already, perhaps you should try <a href='index.php?action=login'>logging in</a>.</p>"));
+				}
+			}
+			
+			$content = "<h1>$title</h1>";
+			if(!$isloggedin and $settings->anonedits)
+			{
+				$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
+			}
+			$content .= "<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save'>
+			<textarea name='content'>$pagetext</textarea>
+			<input type='submit' value='Save Page' />
+		</form>";
+			exit(renderpage("$title - $settings->sitename", $content));
+		});
+		
+		
+		/*
+		 *           _ _ _
+		 *   ___  __| (_) |_
+		 *  / _ \/ _` | | __|
+		 * |  __/ (_| | | |_
+		 *  \___|\__,_|_|\__|
+		 *             %edit%
+		 */
+		add_action("save", function() {
+			global $pageindex, $settings, $page, $isloggedin, $user;
+			if(!$settings->editing)
+			{
+				header("location: index.php?page=$page");
+				exit(renderpage("Error saving edit", "<p>Editing is currently disabled on this wiki.</p>"));
+			}
+			if(!$isloggedin and !$settings->anonedits)
+			{
+				http_response_code(403);
+				header("refresh: 5; url=index.php?page=$page");
+				exit("You are not logged in, so you are not allowed to save pages on $settings->sitename. Redirecting in 5 seconds....");
+			}
+			if(!isset($_POST["content"]))
+			{
+				http_response_code(400);
+				header("refresh: 5; url=index.php?page=$page");
+				exit("Bad request: No content specified.");
+			}
+			if(file_put_contents("$page.md", htmlentities($_POST["content"]), ENT_QUOTES) !== false)
+			{
+				//update the page index
+				if(!isset($pageindex->$page))
+				{
+					$pageindex->$page = new stdClass();
+					$pageindex->$page->filename = "$page.md";
+				}
+				$pageindex->$page->size = strlen($_POST["content"]);
+				$pageindex->$page->lastmodified = time();
+				if($isloggedin)
+					$pageindex->$page->lasteditor = utf8_encode($user);
+				else
+					$pageindex->$page->lasteditor = utf8_encode("anonymous");
+				
+				file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+				
+				if(isset($_GET["newpage"]))
+					http_response_code(201);
+				else
+					http_response_code(200);
+
+				header("location: index.php?page=$page");
+				exit();
+			}
 			else
-				http_response_code(200);
+			{
+				http_response_code(507);
+				exit(renderpage("Error saving page - $settings->sitename", "<p>$settings->sitename failed to write your changes to the disk. Your changes have not been saved, but you might be able to recover your edit by pressing the back button in your browser.</p>
+				<p>Please tell the administrator of this wiki (" . $settings->admindetails["name"] . ") about this problem.</p>"));
+			}
+		});
+	}
+]);
+
+
+
+
+register_module([
+	"name" => "Help page",
+	"version" => "0.4",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds the help action. You really want this one.",
+	"id" => "page-help",
+	"code" => function() {
+		add_action("help", function() {
+			global $settings, $version;
 			
-			header("location: index.php?page=$page");
-			exit();
-		}
-		else
-		{
-			http_response_code(507);
-			exit(renderpage("Error saving page - $settings->sitename", "<p>$settings->sitename failed to write your changes to the disk. Your changes have not been saved, but you might be able to recover your edit by pressing the back button in your browser.</p>
-			<p>Please tell the administrator of this wiki (" . $settings->admindetails["name"] . ") about this problem.</p>"));
-		}
-		break;
-	
-	/*
-	 *  _ _     _
-	 * | (_)___| |_
-	 * | | / __| __|
-	 * | | \__ \ |_
-	 * |_|_|___/\__|
-	 *        %list%
-	 */
-	case "list":
-		$title = "All Pages";
-		$content = "	<h1>$title on $settings->sitename</h1>
-	<table>
-		<tr>
-			<th>Page Name</th>
-			<th>Size</th>
-			<th>Last Editor</th>
-			<th>Last Edit Time</th>
-		</tr>\n";
-		foreach($pageindex as $pagename => $pagedetails)
-		{
-			$content .= "\t\t<tr>
-			<td><a href='index.php?page=$pagename'>$pagename</a></td>
-			<td>" . human_filesize($pagedetails->size) . "</td>
-			<td>$pagedetails->lasteditor</td>
-			<td>" . human_time_since($pagedetails->lastmodified) . " <small>(" . date("l jS \of F Y \a\\t h:ia T", $pagedetails->lastmodified) . ")</small></td>
-			
-		</tr>\n";
-		}
-		$content .= "	</table>";
-		exit(renderpage("$title - $settings->sitename", $content));
-		break;
-	
-	/*
-	 *      _      _      _
-	 *   __| | ___| | ___| |_ ___
-	 *  / _` |/ _ \ |/ _ \ __/ _ \
-	 * | (_| |  __/ |  __/ ||  __/
-	 *  \__,_|\___|_|\___|\__\___|
-	 *                    %delete%
-	 */
-	case "delete":
-		if(!$settings->editing)
-		{
-			exit(renderpage("Deleting $page - error", "<p>You tried to delete $page, but editing is disabled on this wiki.</p>
-			<p>If you wish to delete this page, please re-enable editing on this wiki first.</p>
-			<p><a href='index.php?page=$page'>Go back to $page</a>.</p>
-			<p>Nothing has been changed.</p>"));
-		}
-		if(!$isadmin)
-		{
-			exit(renderpage("Deleting $page - error", "<p>You tried to delete $page, but you are not an admin so you don't have permission to do that.</p>
-			<p>You should try <a href='index.php?action=login'>logging in</a> as an admin.</p>"));
-		}
-		if(!isset($_GET["delete"]) or $_GET["delete"] !== "yes")
-		{
-			exit(renderpage("Deleting $page", "<p>You are about to <strong>delete</strong> $page. You can't undo this!</p>
-			<p><a href='index.php?action=delete&page=$page&delete=yes'>Click here to delete $page.</a></p>
-			<p><a href='index.php?action=view&page=$page'>Click here to go back.</a>"));
-		}
-		unset($pageindex->$page); //delete the page from the page index
-		file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT)); //save the new page index
-		unlink("./$page.md"); //delete the page from the disk
-
-		exit(renderpage("Deleting $page - $settings->sitename", "<p>$page has been deleted. <a href='index.php'>Go back to the main page</a>.</p>"));
-		break;
-	
-	/*
-	 *  __  __
-	 * |  \/  | _____   _____
-	 * | |\/| |/ _ \ \ / / _ \
-	 * | |  | | (_) \ V /  __/
-	 * |_|  |_|\___/ \_/ \___|
-	 *                  %move%
-	 */
-	case "move":
-		if(!$settings->editing)
-		{
-			exit(renderpage("Moving $page - error", "<p>You tried to move $page, but editing is disabled on this wiki.</p>
-			<p>If you wish to move this page, please re-enable editing on this wiki first.</p>
-			<p><a href='index.php?page=$page'>Go back to $page</a>.</p>
-			<p>Nothing has been changed.</p>"));
-		}
-		if(!$isadmin)
-		{
-			exit(renderpage("Moving $page - Error", "<p>You tried to move $page, but you do not have permission to do that.</p>
-			<p>You should try <a href='index.php?action=login'>logging in</a> as an admin.</p>"));
-		}
-
-		if(!isset($_GET["new_name"]) or strlen($_GET["new_name"]) == 0)
-			exit(renderpage("Moving $page", "<h2>Moving $page</h2>
-			<form method='get' action='index.php'>
-				<input type='hidden' name='action' value='move' />
-				<label for='old_name'>Old Name:</label>
-				<input type='text' name='page' value='$page' readonly />
-				<br />
-				<label for='new_name'>New Name:</label>
-				<input type='text' name='new_name' />
-				<br />
-				<input type='submit' value='Move Page' />
-			</form>"));
-
-		$new_name = makepathsafe($_GET["new_name"]);
-
-		if(!isset($pageindex->$page))
-			exit(renderpage("Moving $page - Error", "<p>You tried to move $page to $new_name, but the page with the name $page does not exist in the first place.</p>
-			<p>Nothing has been changed.</p>"));
-
-		if($page == $new_name)
-			exit(renderpage("Moving $page - Error", "<p>You tried to move $page, but the new name you gave is the same as it's current name.</p>
-			<p>It is possible that you tried to use some characters in the new name that are not allowed and were removed.</p>
-			<p>Page names may only contain alphanumeric characters, dashes, and underscores.</p>"));
-		
-		//move the page in the page index
-		$pageindex->$new_name = new stdClass();
-		foreach($pageindex->$page as $key => $value)
-		{
-			$pageindex->$new_name->$key = $value;
-		}
-		unset($pageindex->$page);
-		file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
-		
-		//move the page on the disk
-		rename("$page.md", "$new_name.md");
-		
-		exit(renderpage("Moving $page", "<p><a href='index.php?page=$page'>$page</a> has been moved to <a href='index.php?page=$new_name'>$new_name</a> successfully.</p>"));
-		break;
-
-	/*
-	 *  _          _
-	 * | |__   ___| |_ __
-	 * | '_ \ / _ \ | '_ \
-	 * | | | |  __/ | |_) |
-	 * |_| |_|\___|_| .__/
-	 *   %help%     |_|
-	 */
-	case "help":
-		$title = "Help - $settings->sitename";
-		$content = "	<h1>$settings->sitename Help</h1>
+			$title = "Help - $settings->sitename";
+			$content = "	<h1>$settings->sitename Help</h1>
 	<p>Welcome to $settings->sitename!</p>
 	<p>$settings->sitename is powered by Pepperminty wiki, a complete wiki in a box you can drop into your server.</p>
 	<h2>Navigating</h2>
@@ -783,240 +792,360 @@ switch($_GET["action"])
 	<p>By default, the <code>delete</code> and <code>move</code> actions are shown on the nav bar. These can be used by administrators to delete or move pages.</p>
 	<p>The other thing admininistrators can do is update the wiki (provided they know the site's secret). This page can be found here: <a href='?action=update'>Update $settings->sitename</a>.</p>
 	<p>$settings->sitename is currently running on Pepperminty Wiki <code>$version</code></p>";
-		exit(renderpage($title, $content));
-		break;
-	
-	/*
-	 *  _             _
-	 * | | ___   __ _(_)_ __
-	 * | |/ _ \ / _` | | '_ \
-	 * | | (_) | (_| | | | | |
-	 * |_|\___/ \__, |_|_| |_|
-	 *          |___/  %login%
-	 */
-	case "login":
-		$title = "Login to $settings->sitename";
-		$content = "<h1>Login to $settings->sitename</h1>\n";
-		if(isset($_GET["failed"]))
-			$content .= "\t\t<p><em>Login failed.</em></p>\n";
-		$content .= "\t\t<form method='post' action='index.php?action=checklogin&returnto=" . rawurlencode($_SERVER['REQUEST_URI']) . "'><label for='user'>Username:</label>
-			<input type='text' name='user' />
-			<br />
-			<label for='pass'>Password:</label>
-			<input type='password' name='pass' />
-			<input type='submit' value='Login' />
-		</form>";
-		exit(renderpage($title, $content));
-		break;
-	
-	/*
-	 *       _               _    _             _
-	 *   ___| |__   ___  ___| | _| | ___   __ _(_)_ __
-	 *  / __| '_ \ / _ \/ __| |/ / |/ _ \ / _` | | '_ \
-	 * | (__| | | |  __/ (__|   <| | (_) | (_| | | | | |
-	 *  \___|_| |_|\___|\___|_|\_\_|\___/ \__, |_|_| |_|
-	 *     %checklogin%                   |___/
-	 */
-	case "checklogin":
-		//actually do the login
-		if(isset($_POST["user"]) and isset($_POST["pass"]))
+			exit(renderpage($title, $content));
+		});
+	}
+]);
+
+
+
+
+register_module([
+	"name" => "Page list",
+	"version" => "0.4",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds a page that lists all the pages in the index long with their metadata.",
+	"id" => "page-list",
+	"code" => function() {
+		add_action("list", function() {
+			global $pageindex, $settings;
+			$title = "All Pages";
+			$content = "	<h1>$title on $settings->sitename</h1>
+	<table>
+		<tr>
+			<th>Page Name</th>
+			<th>Size</th>
+			<th>Last Editor</th>
+			<th>Last Edit Time</th>
+		</tr>\n";
+		foreach($pageindex as $pagename => $pagedetails)
 		{
-			//the user wants to log in
-			$user = $_POST["user"];
-			$pass = $_POST["pass"];
-			if($settings->users[$user] == hash("sha256", $pass))
+			$content .= "\t\t<tr>
+			<td><a href='index.php?page=$pagename'>$pagename</a></td>
+			<td>" . human_filesize($pagedetails->size) . "</td>
+			<td>$pagedetails->lasteditor</td>
+			<td>" . human_time_since($pagedetails->lastmodified) . " <small>(" . date("l jS \of F Y \a\\t h:ia T", $pagedetails->lastmodified) . ")</small></td>
+
+		</tr>\n";
+			}
+			$content .= "	</table>";
+			exit(renderpage("$title - $settings->sitename", $content));
+		});
+	}
+]);
+
+
+
+
+register_module([
+	"name" => "Login",
+	"version" => "0.4",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
+	"id" => "page-login",
+	"code" => function() {
+		/*
+		 *  _             _
+		 * | | ___   __ _(_)_ __
+		 * | |/ _ \ / _` | | '_ \
+		 * | | (_) | (_| | | | | |
+		 * |_|\___/ \__, |_|_| |_|
+		 *          |___/  %login%
+		 */
+		add_action("login", function() {
+			global $settings;
+			$title = "Login to $settings->sitename";
+			$content = "<h1>Login to $settings->sitename</h1>\n";
+			if(isset($_GET["failed"]))
+				$content .= "\t\t<p><em>Login failed.</em></p>\n";
+			$content .= "\t\t<form method='post' action='index.php?action=checklogin&returnto=" . rawurlencode($_SERVER['REQUEST_URI']) . "'><label for='user'>Username:</label>
+				<input type='text' name='user' />
+				<br />
+				<label for='pass'>Password:</label>
+				<input type='password' name='pass' />
+				<input type='submit' value='Login' />
+			</form>";
+			exit(renderpage($title, $content));
+		});
+		
+		/*
+		 *       _               _    _             _
+		 *   ___| |__   ___  ___| | _| | ___   __ _(_)_ __
+		 *  / __| '_ \ / _ \/ __| |/ / |/ _ \ / _` | | '_ \
+		 * | (__| | | |  __/ (__|   <| | (_) | (_| | | | | |
+		 *  \___|_| |_|\___|\___|_|\_\_|\___/ \__, |_|_| |_|
+		 *     %checklogin%                   |___/
+		 */
+		add_action("checklogin", function() {
+			global $settings;
+			
+			//actually do the login
+			if(isset($_POST["user"]) and isset($_POST["pass"]))
 			{
-				$isloggedin = true;
-				$expiretime = time() + 60*60*24*30; //30 days from now
-				$_SESSION["$settings->sessionprefix-user"] = $user;
-				$_SESSION["$settings->sessionprefix-pass"] = hash("sha256", $pass);
-				$_SESSION["$settings->sessionprefix-expiretime"] = $expiretime;
-				//redirect to wherever the user was going
-				http_response_code(302);
-				if(isset($_POST["goto"]))
-					header("location: " . $_POST["returnto"]);
+				//the user wants to log in
+				$user = $_POST["user"];
+				$pass = $_POST["pass"];
+				if($settings->users[$user] == hash("sha256", $pass))
+				{
+					$isloggedin = true;
+					$expiretime = time() + 60*60*24*30; //30 days from now
+					$_SESSION["$settings->sessionprefix-user"] = $user;
+					$_SESSION["$settings->sessionprefix-pass"] = hash("sha256", $pass);
+					$_SESSION["$settings->sessionprefix-expiretime"] = $expiretime;
+					//redirect to wherever the user was going
+					http_response_code(302);
+					if(isset($_POST["goto"]))
+						header("location: " . $_POST["returnto"]);
+					else
+						header("location: index.php");
+					exit();
+				}
 				else
-					header("location: index.php");
-				exit();
+				{
+					http_response_code(302);
+					header("location: index.php?action=login&failed=yes");
+					exit();
+				}
 			}
 			else
 			{
 				http_response_code(302);
-				header("location: index.php?action=login&failed=yes");
+				header("location: index.php?action=login&failed=yes&badrequest=yes");
 				exit();
 			}
-		}
-		else
-		{
-			http_response_code(302);
-			header("location: index.php?action=login&failed=yes&badrequest=yes");
-			exit();
-		}
-		break;
-	
-	/*
-	 *  _                         _
-	 * | | ___   __ _  ___  _   _| |_
-	 * | |/ _ \ / _` |/ _ \| | | | __|
-	 * | | (_) | (_| | (_) | |_| | |_
-	 * |_|\___/ \__, |\___/ \__,_|\__|
-	 *          |___/         %logout%
-	 */
-	case "logout":
-		$isloggedin = false;
-		unset($user);
-		unset($pass);
-		//clear the session variables
-		$_SESSION = [];
-		session_destroy();
-		
-		exit(renderpage("Logout Successful", "<h1>Logout Successful</h1>
-	<p>Logout Successful. You can login again <a href='index.php?action=login'>here</a>.</p>"));
-		break;
-	
-	/*
-	 *                    _ _ _
-	 *   ___ _ __ ___  __| (_) |_ ___
-	 *  / __| '__/ _ \/ _` | | __/ __|
-	 * | (__| | |  __/ (_| | | |_\__ \
-	 *  \___|_|  \___|\__,_|_|\__|___/
-	 *                       %credits%
-	 */
-	case "credits":
-		$title = "Credits - $settings->sitename";
-		$content = "<h1>$settings->sitename credits</h1>
-	<p>$settings->sitename is powered by Pepperminty Wiki - an entire wiki packed inside a single file, which was built by <a href='//starbeamrainboowlabs.com'>Starbeamrainbowlabs</a>, and can be found <a href='//github.com/sbrl/Pepperminty-Wiki/'>on github</a>.</p>
-	<p>A slightly modified version of slimdown is used to parse text source into HTML. Slimdown is by <a href='https://github.com/jbroadway'>Johnny Broadway</a>, which can be found <a href='https://gist.github.com/jbroadway/2836900'>on github</a>.</p>
-	<p>The default favicon is from <a href='//openclipart.org'>Open Clipart</a> by bluefrog23, and can be found <a href='https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23'>here</a>.</p>
-	<p>Administrators can update $settings->sitename here: <a href='?action=update'>Update $settings->sitename</a>.</p>
-	<p>$settings->sitename is currently running on Pepperminty Wiki <code>$version</code></p>";
-		exit(renderpage($title, $content));
-		break;
-	
-	/*
-	 *                _      _       
-	 *  _  _ _ __  __| |__ _| |_ ___ 
-	 * | || | '_ \/ _` / _` |  _/ -_)
-	 *  \_,_| .__/\__,_\__,_|\__\___|
-	 *      |_|              %update%
-	 */
-	case "update":
-		if(!$settings->isadmin)
-		{
-			http_response_code(401);
-			exit(renderpage("Update - Error", "<p>You must be an administrator to do that.</p>"));
-		}
-		
-		if(!isset($_GET["do"]) or $_GET["do"] !== "true")
-		{
-			exit(renderpage("Update $settings->sitename", "<p>This page allows you to update $settings->sitename.</p>
-			<p>Currently, $settings->sitename is using $settings->version of Pepperminty Wiki.</p>
-			<p>This script will automatically download and install the latest version of Pepperminty Wiki from the url of your choice (see settings), regardless of whether an update is actually needed (version checking isn't implemented yet).</p>
-			<p>To update $settings->sitename, fill out the form below and click click the update button.</p>
-			<form method='get' action=''>
-				<input type='hidden' name='action' value='update' />
-				<input type='hidden' name='do' value='true' />
-				<label for='secret'>$settings->sitename's secret code</label>
-				<input type='text' name='secret' value='' />
-				<input type='submit' value='Update' />
-			</form>"));
-		}
-		
-		if(!isset($_GET["secret"]) or $_GET["secret"] !== $settings->sitesecret)
-		{
-			exit(renderpage("Update $settings->sitename - Error", "<p>You forgot to enter $settings->sitename's secret code or entered it incorrectly. $settings->sitename's secret can be found in the settings portion of <code>index.php</code>.</p>"));
-		}
-		
-		$settings_separator = "/////////////// Do not edit below this line unless you know what you are doing! ///////////////";
-		
-		$log = "Beginning update...\n";
-		
-		$log .= "I am <code>" . __FILE__ . "</code>.\n";
-		$oldcode = file_get_contents(__FILE__);
-		$log .= "Fetching new code...";
-		$newcode = file_get_contents($updateurl);
-		$log .= "done.\n";
-		
-		$log .= "Rewriting <code>" . __FILE__ . "</code>...";
-		$settings = substr($oldcode, 0, strpos($oldcode, $settings_separator));
-		$code = substr($newcode, strpos($newcode, $settings_separator));
-		$result = $settings . $code;
-		$log .= "done.\n";
-		
-		$log .= "Saving...";
-		file_put_contents(__FILE__, $result);
-		$log .= "done.\n";
-		
-		$log .= "Update complete. I am now running on the latest version of Pepperminty Wiki.";
-		$log .= "The version number that I have updated to can be found on the credits or help ages.";
-		
-		exit(renderpage("Update - Success", "<ul><li>" . implode("</li><li>", explode("\n", $log)) . "</li></ul>"));
-		
-		break;
-	
-	/*
-	 *  _               _
-	 * | |__   __ _ ___| |__
-	 * | '_ \ / _` / __| '_ \
-	 * | | | | (_| \__ \ | | |
-	 * |_| |_|\__,_|___/_| |_|
-	 *                  %hash%
-	 */
-	case "hash":
-		if(!isset($_GET["string"]))
-		{
-			http_response_code(400);
-			exit(renderpage("Bad request", "<p>The <code>GET</code> parameter <code>string</code> must be specified.</p>
-	<p>It is strongly recommended that you utilise this page via a private or incognito window in order to prevent your password from appearing in your browser history.</p>"));
-		}
-		else
-		{
-			exit(renderpage("Hashed string", "<p><code>" . $_GET["string"] . "</code> → <code>" . hash("sha256", $_GET["string"] . "</code></p>")));
-		}
-		break;
-	
-	/*
-	 *        _
-	 * __   _(_) _____      __
-	 * \ \ / / |/ _ \ \ /\ / /
-	 *  \ V /| |  __/\ V  V /
-	 *   \_/ |_|\___| \_/\_/
-	 *                  %view%
-	 */
-	case "view":
-	default:
-		//check to make sure that the page exists
-		if(!isset($pageindex->$page))
-		{
-			// todo make this intelligent so we only redirect if the user is acutally able to create the page
-			if($settings->editing)
+		});
+	}
+]);
+
+
+
+register_module([
+	"name" => "Logout",
+	"version" => "0.4",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds an action to let users user out. For security reasons it is wise to add this module since logging in automatically opens a session that is valid for 30 days.",
+	"id" => "page-logout",
+	"code" => function() {
+		add_action("logout", function() {
+			global $user, $pass, $isloggedin;
+			$isloggedin = false;
+			unset($user);
+			unset($pass);
+			//clear the session variables
+			$_SESSION = [];
+			session_destroy();
+			
+			exit(renderpage("Logout Successful", "<h1>Logout Successful</h1>
+		<p>Logout Successful. You can login again <a href='index.php?action=login'>here</a>.</p>"));
+		});
+	}
+]);
+
+
+
+
+register_module([
+	"name" => "Page mover",
+	"version" => "0.4",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds an action to allow administrators to move pages.",
+	"id" => "page-move",
+	"code" => function() {
+		add_action("move", function() {
+			global $pageindex, $settings, $page, $isadmin;
+			if(!$settings->editing)
 			{
-				//editing is enabled, redirect to the editing page
-				http_response_code(307); //temporary redirect
-				header("location: index.php?action=edit&newpage=yes&page=" . rawurlencode($page));
-				exit();
+				exit(renderpage("Moving $page - error", "<p>You tried to move $page, but editing is disabled on this wiki.</p>
+				<p>If you wish to move this page, please re-enable editing on this wiki first.</p>
+				<p><a href='index.php?page=$page'>Go back to $page</a>.</p>
+				<p>Nothing has been changed.</p>"));
 			}
+			if(!$isadmin)
+			{
+				exit(renderpage("Moving $page - Error", "<p>You tried to move $page, but you do not have permission to do that.</p>
+				<p>You should try <a href='index.php?action=login'>logging in</a> as an admin.</p>"));
+			}
+			
+			if(!isset($_GET["new_name"]) or strlen($_GET["new_name"]) == 0)
+				exit(renderpage("Moving $page", "<h2>Moving $page</h2>
+				<form method='get' action='index.php'>
+					<input type='hidden' name='action' value='move' />
+					<label for='old_name'>Old Name:</label>
+					<input type='text' name='page' value='$page' readonly />
+					<br />
+					<label for='new_name'>New Name:</label>
+					<input type='text' name='new_name' />
+					<br />
+					<input type='submit' value='Move Page' />
+				</form>"));
+			
+			$new_name = makepathsafe($_GET["new_name"]);
+			
+			if(!isset($pageindex->$page))
+				exit(renderpage("Moving $page - Error", "<p>You tried to move $page to $new_name, but the page with the name $page does not exist in the first place.</p>
+				<p>Nothing has been changed.</p>"));
+			
+			if($page == $new_name)
+				exit(renderpage("Moving $page - Error", "<p>You tried to move $page, but the new name you gave is the same as it's current name.</p>
+				<p>It is possible that you tried to use some characters in the new name that are not allowed and were removed.</p>
+				<p>Page names may only contain alphanumeric characters, dashes, and underscores.</p>"));
+			
+			//move the page in the page index
+			$pageindex->$new_name = new stdClass();
+			foreach($pageindex->$page as $key => $value)
+			{
+				$pageindex->$new_name->$key = $value;
+			}
+			unset($pageindex->$page);
+			file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+			
+			//move the page on the disk
+			rename("$page.md", "$new_name.md");
+			
+			exit(renderpage("Moving $page", "<p><a href='index.php?page=$page'>$page</a> has been moved to <a href='index.php?page=$new_name'>$new_name</a> successfully.</p>"));
+		});
+	}
+]);
+
+
+
+register_module([
+	"name" => "Update",
+	"version" => "0.4",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds an update page that downloads the latest stable version of Pepperminty Wiki. This module is currently outdated as it doesn't save your module preferences.",
+	"id" => "page-update",
+	"code" => function() {
+		add_action("update", function() {
+			global $settings, $isadmin;
+			
+			if(!$isadmin)
+			{
+				http_response_code(401);
+				exit(renderpage("Update - Error", "<p>You must be an administrator to do that.</p>"));
+			}
+			
+			if(!isset($_GET["do"]) or $_GET["do"] !== "true")
+			{
+				exit(renderpage("Update $settings->sitename", "<p>This page allows you to update $settings->sitename.</p>
+				<p>Currently, $settings->sitename is using $settings->version of Pepperminty Wiki.</p>
+				<p>This script will automatically download and install the latest version of Pepperminty Wiki from the url of your choice (see settings), regardless of whether an update is actually needed (version checking isn't implemented yet).</p>
+				<p>To update $settings->sitename, fill out the form below and click click the update button.</p>
+				<form method='get' action=''>
+					<input type='hidden' name='action' value='update' />
+					<input type='hidden' name='do' value='true' />
+					<label for='secret'>$settings->sitename's secret code</label>
+					<input type='text' name='secret' value='' />
+					<input type='submit' value='Update' />
+				</form>"));
+			}
+			
+			if(!isset($_GET["secret"]) or $_GET["secret"] !== $settings->sitesecret)
+			{
+				exit(renderpage("Update $settings->sitename - Error", "<p>You forgot to enter $settings->sitename's secret code or entered it incorrectly. $settings->sitename's secret can be found in the settings portion of <code>index.php</code>.</p>"));
+			}
+			
+			$settings_separator = "/////////////// Do not edit below this line unless you know what you are doing! ///////////////";
+			
+			$log = "Beginning update...\n";
+			
+			$log .= "I am <code>" . __FILE__ . "</code>.\n";
+			$oldcode = file_get_contents(__FILE__);
+			$log .= "Fetching new code...";
+			$newcode = file_get_contents($settings->updateurl);
+			$log .= "done.\n";
+			
+			$log .= "Rewriting <code>" . __FILE__ . "</code>...";
+			$settings = substr($oldcode, 0, strpos($oldcode, $settings_separator));
+			$code = substr($newcode, strpos($newcode, $settings_separator));
+			$result = $settings . $code;
+			$log .= "done.\n";
+			
+			$log .= "Saving...";
+			file_put_contents(__FILE__, $result);
+			$log .= "done.\n";
+			
+			$log .= "Update complete. I am now running on the latest version of Pepperminty Wiki.";
+			$log .= "The version number that I have updated to can be found on the credits or help ages.";
+			
+			exit(renderpage("Update - Success", "<ul><li>" . implode("</li><li>", explode("\n", $log)) . "</li></ul>"));
+		});
+	}
+]);
+
+
+
+register_module([
+	"name" => "Page viewer",
+	"version" => "0.4",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Allows you to view pages. You should include this one.",
+	"id" => "page-view",
+	"code" => function() {
+		add_action("view", function() {
+			global $pageindex, $settings, $page;
+			
+			//check to make sure that the page exists
+			if(!isset($pageindex->$page))
+			{
+				// todo make this intelligent so we only redirect if the user is acutally able to create the page
+				if($settings->editing)
+				{
+					//editing is enabled, redirect to the editing page
+					http_response_code(307); //temporary redirect
+					header("location: index.php?action=edit&newpage=yes&page=" . rawurlencode($page));
+					exit();
+				}
+				else
+				{
+					//editing is disabled, show an error message
+					http_response_code(404);
+					exit(renderpage("$page - 404 - $settings->sitename", "<p>$page does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
+				}
+			}
+			$title = "$page - $settings->sitename";
+			$content = "<h1>$page</h1>";
+			
+			$slimdown_start = microtime(true);
+			
+			$content .= Slimdown::render(file_get_contents("$page.md"));
+			
+			$content .= "\n\t<!-- Took " . (microtime(true) - $slimdown_start) . " seconds to parse markdown -->\n";
+			
+			if(isset($_GET["printable"]) and $_GET["printable"] === "yes")
+				$minimal = true;
 			else
-			{
-				//editing is disabled, show an error message
-				http_response_code(404);
-				exit(renderpage("$page - 404 - $settings->sitename", "<p>$page does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
-			}
-		}
-		$title = "$page - $settings->sitename";
-		$content = "<h1>$page</h1>";
-		
-		$slimdown_start = microtime(true);
-		
-		$content .= Slimdown::render(file_get_contents("$page.md"));
-		
-		$content .= "\n\t<!-- Took " . (microtime(true) - $slimdown_start) . " seconds to parse markdown -->\n";
-		
-		if(isset($_GET["printable"]) and $_GET["printable"] === "yes")
-			$minimal = true;
-		else
-			$minimal = false;
-		exit(renderpage($title, $content, $minimal));
-		break;
+				$minimal = false;
+			exit(renderpage($title, $content, $minimal));
+		});
+	}
+]);
+
+
+
+// %next_module% //
+
+
+// execute each module's code
+foreach($modules as $moduledata)
+{
+	$moduledata["code"]();
+}
+// make sure that the credits page exists
+if(!isset($actions["credits"]))
+{
+	exit(renderpage("Error - $settings->$sitename", "<p>No credits page detected. The credits page is a required module!</p>"))
+}
+
+// Perform the appropriate action
+if(isset($actions[strtolower($_GET["action"])]))
+{
+	$req_action = strtolower($_GET["action"]);
+	$req_action_data = $action_name->$req_action;
+	$req_action_data["code"]();
+}
+else
+{
+	exit(renderpage("Error - $settings->sitename", ",p>No action called " . strtolower($_GET["action"]) ." has been registered. Perhaps you are missing a module?</p>"));
 }
 ?>
