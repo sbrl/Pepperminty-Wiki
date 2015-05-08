@@ -19,7 +19,7 @@ $settings->sitename = "Pepperminty Wiki";
 
 // the url from which to fetch updates. Defaults to the master (development) branch If there is sufficient demand, a separate stable branch will be created.
 //currently not implemented (yet).
-// MAKE SURE THAT THIS POINTS TO A HTTP URL, OTHERWISE SOMEONE COULD INJECT A VIRUS INTO YOUR WIKI
+// MAKE SURE THAT THIS POINTS TO A HTTPS URL, OTHERWISE SOMEONE COULD INJECT A VIRUS INTO YOUR WIKI
 $settings->updateurl = "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/master/index.php";
 
 // the secret key used to perform 'dangerous' actions, like updating the wiki, and deleting pages. It is strongly advised that you change this!
