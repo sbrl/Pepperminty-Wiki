@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.4",
+	"version" => "0.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -41,7 +41,7 @@ register_module([
 				if(!$creatingpage)
 				{
 					//the page already exists - let the user view the page source
-					exit(renderpage("Viewing source for $page", "<textarea readonly>$pagetext</textarea>"));
+					exit(renderpage("Viewing source for $page", "<p>$settings->sitename does not allow anonymous users to make edits. You can view the source of $page below, but you can't edit it.</p><textarea name='content' readonly>$pagetext</textarea>"));
 				}
 				else
 				{

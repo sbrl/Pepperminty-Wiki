@@ -519,6 +519,9 @@ $modules = []; // list that contains all the loaded modules
 // function to register a module
 function register_module($moduledata)
 {
+	global $modules;
+	//echo("registering module\n");
+	//var_dump($moduledata);
 	$modules[] = $moduledata;
 }
 
@@ -526,6 +529,8 @@ function register_module($moduledata)
 $actions = new stdClass();
 function add_action($action_name, $func)
 {
+	global $actions;
+	//echo("adding $action_name\n");
 	$actions->$action_name = $func;
 }
 
@@ -624,7 +629,7 @@ register_module([
 
 register_module([
 	"name" => "Page editor",
-	"version" => "0.4",
+	"version" => "0.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -664,7 +669,7 @@ register_module([
 				if(!$creatingpage)
 				{
 					//the page already exists - let the user view the page source
-					exit(renderpage("Viewing source for $page", "<textarea readonly>$pagetext</textarea>"));
+					exit(renderpage("Viewing source for $page", "<p>$settings->sitename does not allow anonymous users to make edits. You can view the source of $page below, but you can't edit it.</p><textarea name='content' readonly>$pagetext</textarea>"));
 				}
 				else
 				{
@@ -1132,17 +1137,17 @@ foreach($modules as $moduledata)
 	$moduledata["code"]();
 }
 // make sure that the credits page exists
-if(!isset($actions["credits"]))
+if(!isset($actions->credits))
 {
-	exit(renderpage("Error - $settings->$sitename", "<p>No credits page detected. The credits page is a required module!</p>"))
+	exit(renderpage("Error - $settings->$sitename", "<p>No credits page detected. The credits page is a required module!</p>"));
 }
 
 // Perform the appropriate action
-if(isset($actions[strtolower($_GET["action"])]))
+$action_name = strtolower($_GET["action"]);
+if(isset($actions->$action_name))
 {
-	$req_action = strtolower($_GET["action"]);
-	$req_action_data = $action_name->$req_action;
-	$req_action_data["code"]();
+	$req_action_data = $actions->$action_name;
+	$req_action_data();
 }
 else
 {
