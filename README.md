@@ -65,6 +65,8 @@ If you are on Windows, you can run the `build.bat` batch file I wrote instead of
 3. Tick the boxes of the modules you want
 4. Click the download button
 
+## Configuring
+To configure it, open your downloaded copy of `index.php` in your favourite editor - the settings can be configured at the top of the file. There are extensive comments that explain what each option does. Make sure that you change the allowed usernames and passwords! If you need more help, don't hesitate to open an issue on this repository or contact me.
 
 ## Updating
 1. Rename your old `index.php` to `index.old.php` temporarily
@@ -76,9 +78,6 @@ If you are on Windows, you can run the `build.bat` batch file I wrote instead of
 From time to time breaking changes will be made. By this I mean additions and / or deletions to the settings that can be found at the top of your wiki's `index.php`. They will be listed here so you can manually update your settings if required.
 
  * Everything has been changed! Pepperminty wiki is now using a module based system.
-
-## Configuring
-To configure it, open your downloaded copy of `index.php` in your favourite editor - the settings can be configured at the top of the file. There are extensive comments that explain what each option does. Make sure that you change the allowed usernames and passwords! If you need more help, don't hesitate to open an issue on this repository or contact me.
 
 ## Real World Usage
  * (none yet! Contact me by email, [twitter](https://twitter.com/SBRLabs), or open an issue and I'll add a link here!)
