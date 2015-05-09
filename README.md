@@ -25,7 +25,7 @@ A live demo (with editing disabled) can be found over at https://starbeamrainbow
 ## Downloading / Installing
 
 ### Requirements
-Any PHP enabled webserver will do. You need to make sure that it has **session support** though, as they are used to allow users to log in. If your php server does not have session support, you will know about it quite quickly since it won't remember you logging in.
+Any PHP enabled web server will do. You need to make sure that it has **session support** though, as they are used to allow users to log in. If your PHP server does not have session support, you will know about it quite quickly since it won't remember you logging in.
 
 Information about configuring PHP sessions can be found here: https://php.net/manual/en/session.installation.php
 
@@ -34,7 +34,7 @@ You must also make sure that PHP can write to the folder that you are going to i
 More detailed information about installing Pepperminty Wiki can be found on [this repository's wiki](https://github.com/sbrl/Pepperminty-Wiki/wiki/Installing) (CATION: OUTDATED - SEE BELOW).
 
 ### Getting Your Copy
-Pepperminty Wiki is made up o fa single file: `index.php`. You can get it in 3 different ways:
+Pepperminty Wiki is made up of a single file: `index.php`. You can get it in 3 different ways:
 
 #### From this repository
 The fastet way is to download the `index.php` file located in the repository. This is the development release, and should _mostly_ work. It comes pre-packaged with all the latest modules, too!
@@ -43,7 +43,7 @@ The fastet way is to download the `index.php` file located in the repository. Th
 The repository also has (semi) regular releases that are (mostly) guaranteed to be stable. You can get the latest one from the [releases page](https://github.com/sbrl/Pepperminty-Wiki/releases). The latest release comes with all the latest plugin releases too!
 
 #### From the downloader
-If you want to choose which modules you want in your wiki, you can use the downloader. This lets you choose the modules you want - the system will automatically build the a customised copy just for you! The downloader will be updated on each release (if it hasn't been upadted please open an issue).
+If you want to choose which modules you want in your wiki, you can use the downloader. This lets you choose the modules you want - the system will automatically build the a customised copy just for you! The downloader will be updated on each release (if it hasn't been updated please open an issue).
 
 You can find it here: [Pepperminty Wiki Downloader](https://starbeamrainbowlabs.com/labs/peppermint/download.php)
 
@@ -62,8 +62,8 @@ If you are on Windows, you can run the `build.bat` batch file I wrote instead of
 ##### From the web
 1. Start a local web server in the root of the cloned repository
 2. Navigate to `download.php` in your web browser on the local web server
-3. Tick the boxes fo the modules you want
-4. Click the downlaod button
+3. Tick the boxes of the modules you want
+4. Click the download button
 
 
 ## Updating
@@ -121,7 +121,7 @@ th { text-align: left; }
 ```
 
 ### Microsoft-esque
-Another quick theme based on the microsoft website.
+Another quick theme based on the Microsoft website.
 
 ```css
 body { font-family: 'Segoe UI', sans-serif; color: black; background: white; padding: 5px; }
@@ -144,7 +144,7 @@ th { text-align: left; }
  * Add page history somehow
  * Allow users to change their passwords
  * Add auto updating system that doesn't wipe your settings and modules
- * Make links to non existant pages red
+ * Make links to non existent pages red
  * .... (open an issue if you have any suggestions!)
 
 --Starbeamrainbowlabs
