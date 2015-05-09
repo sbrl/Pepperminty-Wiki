@@ -80,6 +80,9 @@ From time to time breaking changes will be made. By this I mean additions and / 
 ## Configuring
 To configure it, open your downloaded copy of `index.php` in your favourite editor - the settings can be configured at the top of the file. There are extensive comments that explain what each option does. Make sure that you change the allowed usernames and passwords! If you need more help, don't hesitate to open an issue on this repository or contact me.
 
+## Real World Usage
+ * (none yet! Contact me by email, [twitter](https://twitter.com/SBRLabs), or open an issue and I'll add a link here!)
+
 ## Themes (aka strings of CSS)
 Wanted: Themes! If you have a cool theme, simply open an issue on the bug tracker in this repository to share your theme. If you don't have a github account, no problem! Simply email me with your code instead.
 
