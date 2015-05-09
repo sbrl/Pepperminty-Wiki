@@ -29,21 +29,46 @@ Any PHP enabled webserver will do. You need to make sure that it has **session s
 
 Information about configuring PHP sessions can be found here: https://php.net/manual/en/session.installation.php
 
-More detailed information about installing Pepperminty Wiki can be found on [this repository's wiki](https://github.com/sbrl/Pepperminty-Wiki/wiki/Installing).
+You must also make sure that PHP can write to the folder that you are going to install Pepperminty Wiki in.
 
-### Quick Installation
-All you need to do is download `index.php` in this repository and put it in a folder on your web server. You need to make sure that PHP can write to that folder though. However, you can deny write access to the file itself since there is no automatic updating function built in yet.
+More detailed information about installing Pepperminty Wiki can be found on [this repository's wiki](https://github.com/sbrl/Pepperminty-Wiki/wiki/Installing) (CATION: OUTDATED - SEE BELOW).
 
-If you prefer, you can clone this repository or use the "Download Zip" button to the right.
+### Getting Your Copy
+Pepperminty Wiki is made up o fa single file: `index.php`. You can get it in 3 different ways:
 
-### Custom Installation
-Since Peppermitny Wiki now uses a module based system, you will probably want to be able to choose which modules are installed. This repository comes with a special downloader, which can be found live at this url:
+#### From this repository
+The fastet way is to download the `index.php` file located in the repository. This is the development release, and should _mostly_ work. It comes pre-packaged with all the latest modules, too!
 
-https://starbeamrainbowlabs.com/labs/peppermint/download.php
+#### From the latest release
+The repository also has (semi) regular releases that are (mostly) guaranteed to be stable. You can get the latest one from the [releases page](https://github.com/sbrl/Pepperminty-Wiki/releases). The latest release comes with all the latest plugin releases too!
 
-### Updating
+#### From the downloader
+If you want to choose which modules you want in your wiki, you can use the downloader. This lets you choose the modules you want - the system will automatically build the a customised copy just for you! The downloader will be updated on each release (if it hasn't been upadted please open an issue).
+
+You can find it here: [Pepperminty Wiki Downloader](https://starbeamrainbowlabs.com/labs/peppermint/download.php)
+
+
+#### From source
+If you want to build Pepperminty Wiki from source, you can do this in 2 ways. Start by cloning this repository, and then follow the instructions below. If you don't have git installed, simply click the "Download Zip" button to the right.
+
+##### From the command line
+1. Delete the modules you don't want installed in the `modules/` folder
+2. Run `php rebuild_module_index.php`
+3. Delete `index.php` if it exists
+4. Run `php build.php`
+
+If you are on Windows, you can run the `build.bat` batch file I wrote instead of steps 2-4.
+
+##### From the web
+1. Start a local web server in the root of the cloned repository
+2. Navigate to `download.php` in your web browser on the local web server
+3. Tick the boxes fo the modules you want
+4. Click the downlaod button
+
+
+## Updating
 1. Rename your old `index.php` to `index.old.php` temporarily
-2. Obtain the new version (see above - or below to build your own)
+2. Obtain the new version (see above)
 3. Open both files for editing
 4. Copy your settings over the new settings (making sure that you don't delete any new settings - it will be obvious if you do this if you have error reporting enabled)
 
@@ -51,14 +76,6 @@ https://starbeamrainbowlabs.com/labs/peppermint/download.php
 From time to time breaking changes will be made. By this I mean additions and / or deletions to the settings that can be found at the top of your wiki's `index.php`. They will be listed here so you can manually update your settings if required.
 
  * Everything has been changed! Pepperminty wiki is now using a module based system.
-
-### Building
-Pepperminty Wiki uses a (kind of) simple PHP based build script. If you want to run this script yourself, follow these instructions:
-
-1. Clone this repository
-2. Delete `index.php`.
-3. Run `php rebuild_module_index.php`.
-4. Run `php build.php`.
 
 ## Configuring
 To configure it, open your downloaded copy of `index.php` in your favourite editor - the settings can be configured at the top of the file. There are extensive comments that explain what each option does. Make sure that you change the allowed usernames and passwords! If you need more help, don't hesitate to open an issue on this repository or contact me.
@@ -123,11 +140,8 @@ th { text-align: left; }
 ## Todo
  * Add page history somehow
  * Allow users to change their passwords
- * Add auto updating system that doesn't wipe your settings
+ * Add auto updating system that doesn't wipe your settings and modules
  * Make links to non existant pages red
- * Make this thing module based so we can have extensions (this also helps to organise the code!)
-	 * Convert settings to array / object
-	 * Move each action to it's own function
  * .... (open an issue if you have any suggestions!)
 
 --Starbeamrainbowlabs
