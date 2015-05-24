@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Credits",
-	"version" => "0.4",
+	"version" => "0.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
@@ -16,7 +16,7 @@ register_module([
 	<p>The default favicon is from <a href='//openclipart.org'>Open Clipart</a> by bluefrog23, and can be found <a href='https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23'>here</a>.</p>
 	<p>Administrators can update $settings->sitename here: <a href='?action=update'>Update $settings->sitename</a>.</p>
 	<p>$settings->sitename is currently running on Pepperminty Wiki <code>$version</code></p>";
-			exit(renderpage($title, $content));
+			exit(page_renderer::render_main($title, $content));
 		});
 	}
 ]);

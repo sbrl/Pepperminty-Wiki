@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Update",
-	"version" => "0.4",
+	"version" => "0.6",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an update page that downloads the latest stable version of Pepperminty Wiki. This module is currently outdated as it doesn't save your module preferences.",
 	"id" => "page-update",
@@ -12,15 +12,16 @@ register_module([
 			if(!$isadmin)
 			{
 				http_response_code(401);
-				exit(renderpage("Update - Error", "<p>You must be an administrator to do that.</p>"));
+				exit(page_renderer::render_main("Update - Error", "<p>You must be an administrator to do that.</p>"));
 			}
 			
 			if(!isset($_GET["do"]) or $_GET["do"] !== "true")
 			{
-				exit(renderpage("Update $settings->sitename", "<p>This page allows you to update $settings->sitename.</p>
+				exit(page_renderer::render_main("Update $settings->sitename", "<p>This page allows you to update $settings->sitename.</p>
 				<p>Currently, $settings->sitename is using $settings->version of Pepperminty Wiki.</p>
 				<p>This script will automatically download and install the latest version of Pepperminty Wiki from the url of your choice (see settings), regardless of whether an update is actually needed (version checking isn't implemented yet).</p>
 				<p>To update $settings->sitename, fill out the form below and click click the update button.</p>
+				<p>Note that a backup system has not been implemented yet! If this script fails you will loose your wiki's code and have to re-build it.</p>
 				<form method='get' action=''>
 					<input type='hidden' name='action' value='update' />
 					<input type='hidden' name='do' value='true' />
@@ -32,7 +33,7 @@ register_module([
 			
 			if(!isset($_GET["secret"]) or $_GET["secret"] !== $settings->sitesecret)
 			{
-				exit(renderpage("Update $settings->sitename - Error", "<p>You forgot to enter $settings->sitename's secret code or entered it incorrectly. $settings->sitename's secret can be found in the settings portion of <code>index.php</code>.</p>"));
+				exit(page_renderer::render_main("Update $settings->sitename - Error", "<p>You forgot to enter $settings->sitename's secret code or entered it incorrectly. $settings->sitename's secret can be found in the settings portion of <code>index.php</code>.</p>"));
 			}
 			
 			$settings_separator = "/////////////// Do not edit below this line unless you know what you are doing! ///////////////";
@@ -58,7 +59,7 @@ register_module([
 			$log .= "Update complete. I am now running on the latest version of Pepperminty Wiki.";
 			$log .= "The version number that I have updated to can be found on the credits or help ages.";
 			
-			exit(renderpage("Update - Success", "<ul><li>" . implode("</li><li>", explode("\n", $log)) . "</li></ul>"));
+			exit(page_renderer::render_main("Update - Success", "<ul><li>" . implode("</li><li>", explode("\n", $log)) . "</li></ul>"));
 		});
 	}
 ]);

@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.5",
+	"version" => "0.6",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -41,12 +41,12 @@ register_module([
 				if(!$creatingpage)
 				{
 					//the page already exists - let the user view the page source
-					exit(renderpage("Viewing source for $page", "<p>$settings->sitename does not allow anonymous users to make edits. You can view the source of $page below, but you can't edit it.</p><textarea name='content' readonly>$pagetext</textarea>"));
+					exit(page_renderer::render_main("Viewing source for $page", "<p>$settings->sitename does not allow anonymous users to make edits. You can view the source of $page below, but you can't edit it.</p><textarea name='content' readonly>$pagetext</textarea>"));
 				}
 				else
 				{
 					http_response_code(404);
-					exit(renderpage("404 - $page", "<p>The page <code>$page</code> does not exist, but you do not have permission to create it.</p><p>If you haven't already, perhaps you should try <a href='index.php?action=login'>logging in</a>.</p>"));
+					exit(page_renderer::render_main("404 - $page", "<p>The page <code>$page</code> does not exist, but you do not have permission to create it.</p><p>If you haven't already, perhaps you should try <a href='index.php?action=login'>logging in</a>.</p>"));
 				}
 			}
 			
@@ -59,7 +59,7 @@ register_module([
 			<textarea name='content'>$pagetext</textarea>
 			<input type='submit' value='Save Page' />
 		</form>";
-			exit(renderpage("$title - $settings->sitename", $content));
+			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});
 		
 		
@@ -76,7 +76,7 @@ register_module([
 			if(!$settings->editing)
 			{
 				header("location: index.php?page=$page");
-				exit(renderpage("Error saving edit", "<p>Editing is currently disabled on this wiki.</p>"));
+				exit(page_renderer::render_main("Error saving edit", "<p>Editing is currently disabled on this wiki.</p>"));
 			}
 			if(!$isloggedin and !$settings->anonedits)
 			{
@@ -112,13 +112,13 @@ register_module([
 				else
 					http_response_code(200);
 
-				header("location: index.php?page=$page");
+				header("location: index.php?page=$page&edit_status=success");
 				exit();
 			}
 			else
 			{
 				http_response_code(507);
-				exit(renderpage("Error saving page - $settings->sitename", "<p>$settings->sitename failed to write your changes to the disk. Your changes have not been saved, but you might be able to recover your edit by pressing the back button in your browser.</p>
+				exit(page_renderer::render_main("Error saving page - $settings->sitename", "<p>$settings->sitename failed to write your changes to the disk. Your changes have not been saved, but you might be able to recover your edit by pressing the back button in your browser.</p>
 				<p>Please tell the administrator of this wiki (" . $settings->admindetails["name"] . ") about this problem.</p>"));
 			}
 		});

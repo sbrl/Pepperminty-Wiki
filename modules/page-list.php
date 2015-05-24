@@ -1,9 +1,9 @@
 <?php
 register_module([
 	"name" => "Page list",
-	"version" => "0.4",
+	"version" => "0.5",
 	"author" => "Starbeamrainbowlabs",
-	"description" => "Adds a page that lists all the pages in the index long with their metadata.",
+	"description" => "Adds a page that lists all the pages in the index along with their metadata.",
 	"id" => "page-list",
 	"code" => function() {
 		add_action("list", function() {
@@ -28,7 +28,7 @@ register_module([
 		</tr>\n";
 			}
 			$content .= "	</table>";
-			exit(renderpage("$title - $settings->sitename", $content));
+			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});
 	}
 ]);

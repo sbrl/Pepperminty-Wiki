@@ -486,7 +486,7 @@ foreach($modules as $moduledata)
 // make sure that the credits page exists
 if(!isset($actions->credits))
 {
-	exit(pagerenderer::render_main("Error - $settings->$sitename", "<p>No credits page detected. The credits page is a required module!</p>"));
+	exit(page_renderer::render_main("Error - $settings->$sitename", "<p>No credits page detected. The credits page is a required module!</p>"));
 }
 
 // Perform the appropriate action
@@ -498,6 +498,6 @@ if(isset($actions->$action_name))
 }
 else
 {
-	exit(pagerenderer::render_main("Error - $settings->sitename", "<p>No action called " . strtolower($_GET["action"]) ." has been registered. Perhaps you are missing a module?</p>"));
+	exit(page_renderer::render_main("Error - $settings->sitename", "<p>No action called " . strtolower($_GET["action"]) ." has been registered. Perhaps you are missing a module?</p>"));
 }
 ?>

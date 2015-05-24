@@ -24,7 +24,7 @@ register_module([
 				{
 					//editing is disabled, show an error message
 					http_response_code(404);
-					exit(renderpage("$page - 404 - $settings->sitename", "<p>$page does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
+					exit(page_renderer::render_main("$page - 404 - $settings->sitename", "<p>$page does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
 				}
 			}
 			$title = "$page - $settings->sitename";
@@ -37,10 +37,9 @@ register_module([
 			$content .= "\n\t<!-- Took " . (microtime(true) - $slimdown_start) . " seconds to parse markdown -->\n";
 			
 			if(isset($_GET["printable"]) and $_GET["printable"] === "yes")
-				$minimal = true;
+				exit(page_renderer::render_minimal($title, $content, $minimal));
 			else
-				$minimal = false;
-			exit(renderpage($title, $content, $minimal));
+				exit(page_renderer::render_main($title, $content, $minimal));
 		});
 	}
 ]);

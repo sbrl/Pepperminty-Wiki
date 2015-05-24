@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Help page",
-	"version" => "0.4",
+	"version" => "0.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the help action. You really want this one.",
 	"id" => "page-help",
@@ -40,7 +40,7 @@ register_module([
 	<p>By default, the <code>delete</code> and <code>move</code> actions are shown on the nav bar. These can be used by administrators to delete or move pages.</p>
 	<p>The other thing admininistrators can do is update the wiki (provided they know the site's secret). This page can be found here: <a href='?action=update'>Update $settings->sitename</a>.</p>
 	<p>$settings->sitename is currently running on Pepperminty Wiki <code>$version</code></p>";
-			exit(renderpage($title, $content));
+			exit(page_renderer::render_main($title, $content));
 		});
 	}
 ]);

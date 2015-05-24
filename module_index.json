@@ -1,83 +1,83 @@
 [
     {
         "name": "Password hashing action",
-        "version": "0.4",
+        "version": "0.5",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a utility action (that anyone can use) called hash that hashes a given string. Useful when changing a user's password.",
         "id": "action-hash",
-        "lastupdate": 1429968727
+        "lastupdate": 1432497591
     },
     {
         "name": "Credits",
-        "version": "0.4",
+        "version": "0.5",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
-        "lastupdate": 1428760042
+        "lastupdate": 1432497591
     },
     {
         "name": "Page deleter",
-        "version": "0.4",
+        "version": "0.5",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to delete pages.",
         "id": "page-delete",
-        "lastupdate": 1428759115
+        "lastupdate": 1432497591
     },
     {
         "name": "Page editor",
-        "version": "0.5",
+        "version": "0.6",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1431113232
+        "lastupdate": 1432497592
     },
     {
         "name": "Help page",
-        "version": "0.4",
+        "version": "0.5",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the help action. You really want this one.",
         "id": "page-help",
-        "lastupdate": 1428759307
+        "lastupdate": 1432497592
     },
     {
         "name": "Page list",
-        "version": "0.4",
+        "version": "0.5",
         "author": "Starbeamrainbowlabs",
-        "description": "Adds a page that lists all the pages in the index long with their metadata.",
+        "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1428758608
+        "lastupdate": 1432497592
     },
     {
         "name": "Login",
-        "version": "0.4",
+        "version": "0.5",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastupdate": 1428759587
+        "lastupdate": 1432497592
     },
     {
         "name": "Logout",
-        "version": "0.4",
+        "version": "0.5",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to let users user out. For security reasons it is wise to add this module since logging in automatically opens a session that is valid for 30 days.",
         "id": "page-logout",
-        "lastupdate": 1428760035
+        "lastupdate": 1432497592
     },
     {
         "name": "Page mover",
-        "version": "0.4",
+        "version": "0.5",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
         "id": "page-move",
-        "lastupdate": 1428760214
+        "lastupdate": 1432497592
     },
     {
         "name": "Update",
-        "version": "0.4",
+        "version": "0.6",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an update page that downloads the latest stable version of Pepperminty Wiki. This module is currently outdated as it doesn't save your module preferences.",
         "id": "page-update",
-        "lastupdate": 1428760319
+        "lastupdate": 1432497592
     },
     {
         "name": "Page viewer",
@@ -85,6 +85,6 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You should include this one.",
         "id": "page-view",
-        "lastupdate": 1428757674
+        "lastupdate": 1432497592
     }
 ]

@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Login",
-	"version" => "0.4",
+	"version" => "0.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
@@ -27,7 +27,7 @@ register_module([
 				<input type='password' name='pass' />
 				<input type='submit' value='Login' />
 			</form>";
-			exit(renderpage($title, $content));
+			exit(page_renderer::render_main($title, $content));
 		});
 		
 		/*
