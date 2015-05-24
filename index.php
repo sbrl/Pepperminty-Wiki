@@ -253,8 +253,8 @@ if(!isset($_GET["action"]) and !isset($_GET["page"]))
 
 //make sure that the action is set
 if(!isset($_GET["action"]))
-	$_GET["action"] = "view";
-
+	$_GET["action"] = $settings->defaultaction;
+//make sure that the page is set
 if(!isset($_GET["page"]) or strlen($_GET["page"]) === 0)
 	$_GET["page"] = $settings->defaultpage;
 
@@ -331,7 +331,7 @@ function renderpage($title, $content, $minimal = false)
 					case "search": //displays a search bar
 						$html .= "<form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /></form>";
 						break;
-
+					
 					//it isn't a keyword, so just output it directly
 					default:
 						$html .= $item;
@@ -343,7 +343,7 @@ function renderpage($title, $content, $minimal = false)
 				$html .= "\t\t<a href='" . str_replace("{page}", $page, $item[1]) . "'>$item[0]</a>\n";
 			}
 		}
-
+		
 		$html .= "	</nav>
 	<h1 class='sitename'>$settings->sitename</h1>
 	$content
@@ -450,14 +450,13 @@ class Slimdown {
 		$level = strlen ($chars);
 		return sprintf ('<h%d>%s</h%d>', $level + 1, trim($header), $level + 1);
 	}
-
+	
 	/**
 	 * Add a rule.
 	 */
 	public static function add_rule ($regex, $replacement) {
 		self::$rules[$regex] = $replacement;
 	}
-
 	/**
 	 * Render some Markdown into HTML.
 	 */
