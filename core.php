@@ -171,7 +171,7 @@ class page_renderer
 		<footer>
 			<p>Powered by Pepperminty Wiki, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or open an issue <a href='//github.com/sbrl/Pepperminty-Wiki'>on github</a>.</p>
 			<p>Your local friendly administrators are {admins-name-list}.
-			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-list}</a>.</p>
+			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
 		</footer>
 		{all-pages-datalist}";
 	public static $minimal_content_template = "{content}
