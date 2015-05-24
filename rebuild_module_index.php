@@ -1,4 +1,5 @@
 <?php
+echo("Rebuilding module index...\n");
 $modules = glob("modules/*.php");
 $module_index = [];
 
