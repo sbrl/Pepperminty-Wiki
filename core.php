@@ -147,51 +147,116 @@ $page = $_GET["page"];
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////// HTML fragments //////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
-function renderpage($title, $content, $minimal = false)
+class page_renderer
 {
-	global $settings, $page, $user, $isloggedin, $isadmin, $start_time, $pageindex;
+	public static $html_template = "<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8' />
+		<title>{title}</title>
+		<meta name='viewport' content='width=device-width, initial-scale=1' />
+		<link rel='shortcut-icon' href='{favicon-url} />
+		{header-html}
+	</head>
+	<body>
+		{body}
+		<!-- Took {generation-time-taken} seconds to generate -->
+	</body>
+</html>
+";
 	
-	$html = "<!DOCTYPE HTML>
-<html><head>
-	<meta charset='utf-8' />
-	<title>$title</title>
-	<meta name=viewport content='width=device-width, initial-scale=1' />
-	<link rel='shortcut icon' href='$settings->favicon' />";
-	if(preg_match("/^[^\/]*\/\/|^\//", $settings->css))
+	public static $main_content_template = "{navigation-bar}
+		<h1 class='sitename'>{sitename}</h1>
+		{content}
+		<footer>
+			<p>Powered by Pepperminty Wiki, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or open an issue <a href='//github.com/sbrl/Pepperminty-Wiki'>on github</a>.</p>
+			<p>Your local friendly administrators are {admins-name-list}.
+			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-list}</a>.</p>
+		</footer>
+		{all-pages-datalist}";
+	public static $minimal_content_template = "{content}
+		<hr class='footerdivider' />
+		<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
+		<p><em>Timed at {generation-date}</em>
+		<p><em>Powered by Pepperminty Wiki.</em></p>";
+	
+	public static function render($title, $content, $body_template)
 	{
-		$html .= "\n\t\t<link rel='stylesheet' href='$settings->css' />\n";
+		global $settings, $start_time;
+		
+		$result = self::$html_template;
+		$result = str_replace("{body}", $body_template, $result);
+		$result = str_replace([
+			"{sitename}",
+			"{favicon-url}",
+			"{header-html}",
+			
+			"{navigation-bar}",
+			
+			"{admin-details-name}",
+			"{admin-details-email}",
+			
+			"{admins-name-list}",
+			
+			"{generation-date}",
+			
+			"{all-pages-datalist}"
+		], [
+			$settings->sitename,
+			$settings->favicon,
+			self::get_css_as_html(),
+			
+			self::render_navigation_bar(),
+			
+			$settings->admindetails["name"],
+			$settings->admindetails["email"],
+			
+			implode(", ", $settings->admins),
+			
+			date("l jS \of F Y \a\\t h:ia T"),
+			
+			self::generate_all_pages_datalist()
+		], $result);
+		
+		$result = str_replace("{content}", $content, $result);
+		
+		$result = str_replace("{generation-time-taken}", microtime(true) - $start_time, $result);
+		return result;
 	}
-	else
+	public static function render_main($title, $content)
 	{
-		$html .= "\n\t\t<style>$settings->css</style>\n";
+		return render($title, $content, self::$main_content_template);
 	}
-	$html .= "</head><body>\n";
-	
-	//////////
-	
-	if($minimal)
+	public static function render_minimal($title, $content)
 	{
-		$html .= "$content
-	<hr class='footerdivider' />
-	<p><em>From $settings->sitename, which is managed by " . $settings->admindetails["name"] . ".</em></p>
-	<p><em>Timed at " . date("l jS \of F Y \a\\t h:ia T") . ".</em></p>
-	<p><em>Powered by Pepperminty Wiki</em></p>";
+		return render($title, $content, self::$minimal_content_template);
 	}
-	else
-	{
-		$html .= "<nav>\n";
 	
+	
+	public static function get_css_as_html()
+	{
+		global $settings;
+		
+		if(preg_match("/^[^\/]*\/\/|^\//", $settings->css))
+			return "<link rel='stylesheet' href='$settings->css' />";
+		else
+			return "<style>$settings->css</style>";
+	}
+	
+	public static function render_navigation_bar()
+	{
+		global $settings, $user, $page;
+		$result = "<nav>\n";
+		
 		if($isloggedin)
 		{
-			$html .= "\t\tLogged in as ";
-			if($isadmin)
-				$html .= $settings->admindisplaychar;
-			$html .= "$user. <a href='index.php?action=logout'>Logout</a>. | \n";
-
+			$result .= "\t\t\tLogged in as " . render_username($user) . ". ";
+			$result .= "<a href='index.php?action=logout'>Logout</a>. | \n";
 		}
 		else
-			$html .= "\t\tBrowsing as Anonymous. <a href='index.php?action=login'>Login</a>. | \n";
-
+			$html .= "\t\t\tBrowsing as Anonymous. <a href='index.php?action=login'>Login</a>. | \n";
+		
+		// loop over all the navigation links
 		foreach($settings->navlinks as $item)
 		{
 			if(is_string($item))
@@ -201,45 +266,47 @@ function renderpage($title, $content, $minimal = false)
 				{
 					//keywords
 					case "search": //displays a search bar
-						$html .= "<form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /></form>";
+						$result .= "\t\t\t<form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /></form>\n";
 						break;
 					
 					//it isn't a keyword, so just output it directly
 					default:
-						$html .= $item;
+						$result .= "\t\t\t$item\n";
 				}
 			}
 			else
 			{
-				//output the display as a link to the url
-				$html .= "\t\t<a href='" . str_replace("{page}", $page, $item[1]) . "'>$item[0]</a>\n";
+				//output the item as a link to a url
+				$result .= "\t\t\t<a href='" . str_replace("{page}", $page, $item[1]) . "'>$item[0]</a>\n";
 			}
 		}
 		
-		$html .= "	</nav>
-	<h1 class='sitename'>$settings->sitename</h1>
-	$content
-	<hr class='footerdivider' />
-	<footer>
-		<p>Powered by Pepperminty Wiki, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or open an issue <a href='//github.com/sbrl/Pepperminty-Wiki'>on github</a>.</p>
-		<p>Your local friendly administrators are " . implode(", ", $settings->admins) . ".
-		<p>This wiki is managed by <a href='mailto:" . hide_email($settings->admindetails["email"]) . "'>" . $settings->admindetails["name"] . "</a>.</p>
-	</footer>
-	<datalist id='allpages'>\n";
+		$result .= "\t\t</nav>";
+		return result;
+	}
+	public static function render_username($name)
+	{
+		$result = "";
+		if(in_array($name, $settings->admins))
+			$result .= $settings->admindisplaychar;
+		$result .= $name;
 		
-		foreach($pageindex as $pagename => $pagedetails)
-		{
-			$html .= "\t\t<option value='$pagename' />\n";
-		}
-		$html .= "\t</datalist>";
+		return $result;
 	}
 	
-	//////////
-	$gentime = microtime(true) - $start_time;
-	$html .= "\n\t<!-- Took $gentime seconds to generate -->
-</body></html>";
-	
-	return $html;
+	public static function generate_all_pages_datalist()
+	{
+		global $pageindex;
+		
+		$result = "<datalist id='allpages'>\n";
+		foreach($pageindex as $pagename => $pagedetails)
+		{
+			$html .= "\t\t\t<option value='$pagename' />\n";
+		}
+		$result = "\t\t</datalist>";
+		
+		return $result;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -419,7 +486,7 @@ foreach($modules as $moduledata)
 // make sure that the credits page exists
 if(!isset($actions->credits))
 {
-	exit(renderpage("Error - $settings->$sitename", "<p>No credits page detected. The credits page is a required module!</p>"));
+	exit(pagerenderer::render_main("Error - $settings->$sitename", "<p>No credits page detected. The credits page is a required module!</p>"));
 }
 
 // Perform the appropriate action
@@ -431,6 +498,6 @@ if(isset($actions->$action_name))
 }
 else
 {
-	exit(renderpage("Error - $settings->sitename", ",p>No action called " . strtolower($_GET["action"]) ." has been registered. Perhaps you are missing a module?</p>"));
+	exit(pagerenderer::render_main("Error - $settings->sitename", "<p>No action called " . strtolower($_GET["action"]) ." has been registered. Perhaps you are missing a module?</p>"));
 }
 ?>
