@@ -81,10 +81,10 @@
     },
     {
         "name": "Page viewer",
-        "version": "0.4",
+        "version": "0.6",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You should include this one.",
         "id": "page-view",
-        "lastupdate": 1432497592
+        "lastupdate": 1432497918
     }
 ]

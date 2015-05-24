@@ -283,7 +283,7 @@ class page_renderer
 		<meta charset='utf-8' />
 		<title>{title}</title>
 		<meta name='viewport' content='width=device-width, initial-scale=1' />
-		<link rel='shortcut-icon' href='{favicon-url} />
+		<link rel='shortcut-icon' href='{favicon-url}' />
 		{header-html}
 	</head>
 	<body>
@@ -346,10 +346,16 @@ class page_renderer
 			self::generate_all_pages_datalist()
 		], $result);
 		
-		$result = str_replace("{content}", $content, $result);
+		$result = str_replace([
+			"{title}",
+			"{content}"
+		], [
+			$title,
+			$content
+		], $result);
 		
 		$result = str_replace("{generation-time-taken}", microtime(true) - $start_time, $result);
-		return result;
+		return $result;
 	}
 	public static function render_main($title, $content)
 	{
@@ -373,7 +379,7 @@ class page_renderer
 	
 	public static function render_navigation_bar()
 	{
-		global $settings, $user, $page;
+		global $settings, $user, $isloggedin, $page;
 		$result = "<nav>\n";
 		
 		if($isloggedin)
@@ -382,7 +388,7 @@ class page_renderer
 			$result .= "<a href='index.php?action=logout'>Logout</a>. | \n";
 		}
 		else
-			$html .= "\t\t\tBrowsing as Anonymous. <a href='index.php?action=login'>Login</a>. | \n";
+			$result .= "\t\t\tBrowsing as Anonymous. <a href='index.php?action=login'>Login</a>. | \n";
 		
 		// loop over all the navigation links
 		foreach($settings->navlinks as $item)
@@ -410,10 +416,11 @@ class page_renderer
 		}
 		
 		$result .= "\t\t</nav>";
-		return result;
+		return $result;
 	}
 	public static function render_username($name)
 	{
+		global $settings;
 		$result = "";
 		if(in_array($name, $settings->admins))
 			$result .= $settings->admindisplaychar;
@@ -429,7 +436,7 @@ class page_renderer
 		$result = "<datalist id='allpages'>\n";
 		foreach($pageindex as $pagename => $pagedetails)
 		{
-			$html .= "\t\t\t<option value='$pagename' />\n";
+			$result .= "\t\t\t<option value='$pagename' />\n";
 		}
 		$result = "\t\t</datalist>";
 		
@@ -1149,7 +1156,7 @@ register_module([
 
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.4",
+	"version" => "0.6",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You should include this one.",
 	"id" => "page-view",
@@ -1185,9 +1192,9 @@ register_module([
 			$content .= "\n\t<!-- Took " . (microtime(true) - $slimdown_start) . " seconds to parse markdown -->\n";
 			
 			if(isset($_GET["printable"]) and $_GET["printable"] === "yes")
-				exit(page_renderer::render_minimal($title, $content, $minimal));
+				exit(page_renderer::render_minimal($title, $content));
 			else
-				exit(page_renderer::render_main($title, $content, $minimal));
+				exit(page_renderer::render_main($title, $content));
 		});
 	}
 ]);
