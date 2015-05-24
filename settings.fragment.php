@@ -18,7 +18,7 @@ $settings = new stdClass();
 $settings->sitename = "Pepperminty Wiki";
 
 // the url from which to fetch updates. Defaults to the master (development) branch If there is sufficient demand, a separate stable branch will be created.
-//currently not implemented (yet).
+// note that if you use the automatic updater currently it won't save your module choices.
 // MAKE SURE THAT THIS POINTS TO A HTTPS URL, OTHERWISE SOMEONE COULD INJECT A VIRUS INTO YOUR WIKI
 $settings->updateurl = "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/master/index.php";
 
