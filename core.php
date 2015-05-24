@@ -225,11 +225,11 @@ class page_renderer
 	}
 	public static function render_main($title, $content)
 	{
-		return render($title, $content, self::$main_content_template);
+		return self::render($title, $content, self::$main_content_template);
 	}
 	public static function render_minimal($title, $content)
 	{
-		return render($title, $content, self::$minimal_content_template);
+		return self::render($title, $content, self::$minimal_content_template);
 	}
 	
 	
