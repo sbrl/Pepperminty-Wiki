@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.4",
+	"version" => "0.6",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You should include this one.",
 	"id" => "page-view",
@@ -37,9 +37,9 @@ register_module([
 			$content .= "\n\t<!-- Took " . (microtime(true) - $slimdown_start) . " seconds to parse markdown -->\n";
 			
 			if(isset($_GET["printable"]) and $_GET["printable"] === "yes")
-				exit(page_renderer::render_minimal($title, $content, $minimal));
+				exit(page_renderer::render_minimal($title, $content));
 			else
-				exit(page_renderer::render_main($title, $content, $minimal));
+				exit(page_renderer::render_main($title, $content));
 		});
 	}
 ]);
