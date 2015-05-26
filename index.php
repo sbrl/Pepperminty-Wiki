@@ -511,6 +511,8 @@ class Slimdown {
 		'/(\*)(.*?)\1/' => '<strong>\2</strong>',					// bold
 		
 		// todo test these
+		'/!\[(.*)\]\(([^\s]+)\s(\d+.+)\s(left|right)\)/' => '<img src="\2" alt="\1" style="max-width: \3; float: \4;" />',		// images with size
+		'/!\[(.*)\]\(([^\s]+)\s(\d+.+)\)/' => '<img src="\2" alt="\1" style="max-width: \3;" />',		// images with size
 		'/!\[(.*)\]\((.*)\)/' => '<img src="\2" alt="\1" />',		// basic images
 		// todo end
 		
