@@ -14,56 +14,75 @@ $start_time = time(true);
  * Bug reports:
 	* #1 - Incorrect closing tag - nibreh <https://github.com/nibreh/>
  */
-
+// Initialises a new object to store your wiki's settings in. Please don't touch this.
 $settings = new stdClass();
 
-// the site's name
+// The site's name. Used all over the place.
+// Note that by default the session cookie is perfixed with a variant of the sitename so changing this will log everyone out!
 $settings->sitename = "Pepperminty Wiki";
 
-// the url from which to fetch updates. Defaults to the master (development) branch If there is sufficient demand, a separate stable branch will be created.
-// note that if you use the automatic updater currently it won't save your module choices.
-// MAKE SURE THAT THIS POINTS TO A HTTPS URL, OTHERWISE SOMEONE COULD INJECT A VIRUS INTO YOUR WIKI
+// The url from which to fetch updates. Defaults to the master (development)
+// branch If there is sufficient demand, a separate stable branch will be
+// created. Note that if you use the automatic updater currently it won't save
+// your module choices.
+// MAKE SURE THAT THIS POINTS TO A *HTTPS* URL, OTHERWISE SOMEONE COULD INJECT A VIRUS INTO YOUR WIKI
 $settings->updateurl = "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/master/index.php";
 
-// the secret key used to perform 'dangerous' actions, like updating the wiki, and deleting pages. It is strongly advised that you change this!
-// note that (semi)automatic updating of your wiki has not been added yet.
+// The secret key used to perform 'dangerous' actions, like updating the wiki,
+// and deleting pages. It is strongly advised that you change this!
 $settings->sitesecret = "ed420502615bac9037f8f12abd4c9f02";
 
-// whether people can edit the site
+// Determined whether edit is enabled. Set to false to disable disting for all
+// users (anonymous or otherwise).
 $settings->editing = true;
 
-// the maximum number of characters allowed in a single page
-$settings->maxpagesize = 135000; //135,000 characters, or 50 pages
+// The maximum number of characters allowed in a single page. The default is
+// 135,000 characters, which is about 50 pages.
+$settings->maxpagesize = 135000;
 
-// whether users who aren't logged in are allowed to edit
+// Determined whether users who aren't logged in are allowed to edit your wiki.
+// Set to true to allow anonymous users to log in.
 $settings->anonedits = false;
 
-// the name of the page that will act as the home page for the wiki. This page will be served if the user didn't specify a page.
+// The name of the page that will act as the home page for the wiki. This page
+// will be served if the user didn't specify a page.
 $settings->defaultpage = "Main Page";
 
-// the default action. This action will be performed if no other action is specified.
+// The default action. This action will be performed if no other action is
+// specified. It is recommended you set this to "view" - that way the user
+// automatically views the default page (see above).
 $settings->defaultaction = "view";
 
-// usernames and passwords - passwords should be hashed with sha256
+// An array of usernames and passwords - passwords should be hashed with
+// sha256. Put one user / password on each line, remembering the comma at the
+// end. The last user in the list doesn't need a comma after their details though.
 $settings->users = [
 	"admin" => "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", //password
 	"user" => "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34" //cheese
 ];
 
-// array of usernames that are administrators.
-// administrators can delete and move pages, though this functionality hasn't been added yet.
+// An array of usernames that are administrators. Administrators can delete and
+// move pages.
 $settings->admins = [ "admin" ];
 
-// The string that is prepended before an admin's name on the nav bar. defaults to a diamond shape (&#9670;).
+// The string that is prepended before an admin's name on the nav bar. Defaults
+// to a diamond shape (&#9670;).
 $settings->admindisplaychar = "&#9670;";
 
-// contact details for the site administrator. Since user can only be added by editing this file, people will need a contact address to use to ask for an account. Displayed at the bottom of the page, and will be appropriatly obfusticated to  deter spammers.
+// Contact details for the site administrator. Since users can only be added by
+// editing this file, people will need a contact address to use to ask for an
+// account. Displayed at the bottom of the page, and will be appropriately
+// obfusticated to deter spammers.
 $settings->admindetails = [
 	"name" => "Administrator",
 	"email" => "admin@localhost"
 ];
 
-// array of links and display text to display at the top of the site
+// Array of links and display text to display at the top of the site.
+// Format:
+//		[ "Display Text", "Link" ]
+// You can also use strings here and they will be printed as-is, except the following special strings:
+//		search: Expands to a search box.
 $settings->navlinks = [
 	[ "Home", "index.php" ],
 	[ "Login", "index.php?action=login" ],
@@ -83,8 +102,9 @@ $settings->navlinks = [
 	[ "Help", "index.php?action=help" ]
 ];
 
-// string of css to include
-// may be a url - urls will be referenced via a <link rel='stylesheet' /> tag
+// A string of css to include. Will be included in the <head> of every page
+// inside a <style> tag. This may also be a url - urls will be referenced via a
+// <link rel='stylesheet' /> tag.
 $settings->css = "body { font-family: sans-serif; color: #333333; background: #f8f8f8; }
 label { display: inline-block; min-width: 10rem; }
 textarea[name=content] { display: block; width: 100%; height: 35rem; }
@@ -93,14 +113,20 @@ nav { position: absolute; top: 5px; right: 5px; }
 th { text-align: left; }
 .sitename { text-align: center; font-size: 2.5rem; color: #222222; }
 .footerdivider { margin-top: 4rem; }";
-// the favicon
-// default: peppermint from https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23
+
+// A url that points to the favicon you want to use for your wiki. By default
+// this is set to a data: url of a Peppermint.
+// Default favicon credit: Peppermint by bluefrog23
+//	Link: https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23
 $settings->favicon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAB3VBMVEXhERHbKCjeVVXjb2/kR0fhKirdHBziDg6qAADaHh7qLy/pdXXUNzfMAADYPj7ZPDzUNzfbHx/fERHpamrqMTHgExPdHx/bLCzhLS3fVFTjT0/ibm7kRkbiLi7aKirdISHeFBTqNDTpeHjgERHYJCTVODjYQkLaPj6/AADVOTnpbW3cIyPdFRXcJCThMjLiTU3ibW3fVVXaKyvcERH4ODj+8fH/////fHz+Fxf4KSn0UFD/CAj/AAD/Xl7/wMD/EhL//v70xMT/+Pj/iYn/HBz/g4P/IyP/Kyv/7Oz0QUH/9PT/+vr/ior/Dg7/vr7/aGj/QED/bGz/AQH/ERH/Jib/R0f/goL/0dH/qan/YWH/7e3/Cwv4R0f/MTH/enr/vLz/u7v/cHD/oKD/n5//aWn+9/f/k5P/0tL/trb/QUH/cXH/dHT/wsL/DQ3/p6f/DAz/1dX/XV3/kpL/i4v/Vlb/2Nj/9/f/pKT+7Oz/V1f/iIj/jIz/r6//Zmb/lZX/j4//T0//Dw/4MzP/GBj/+fn/o6P/TEz/xMT/b2//Tk7/OTn/HR3/hIT/ODj/Y2P/CQn/ZGT/6Oj0UlL/Gxv//f3/Bwf/YmL/6+v0w8P/Cgr/tbX0QkL+9fX4Pz/qNzd0dFHLAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfeCxINNSdmw510AAAA5ElEQVQYGQXBzSuDAQCA8eexKXOwmSZepa1JiPJxsJOrCwcnuchBjg4O/gr7D9zk4uAgJzvuMgcTpYxaUZvSm5mUj7TX7ycAqvoLIJBwStVbP0Hom1Z/ejoxrbaR1Jz6nWinbKWttGRgMSSjanPktRY6mB9WtRNTn7Ilh7LxnNpKq2/x5LnBitfz+hx0qxUaxhZ6vwqq9bx6f2XXvuUl9SVQS38NR7cvln3v15tZ9bQpuWDtZN3Lgh5DWJex3Y+z1KrVhw21+CiM74WZo83DiXq0dVBDYNJkFEU7WrwDAZhRtQrwDzwKQbT6GboLAAAAAElFTkSuQmCC";
 
-// the prefix that should be used in the names of the session variables.
-// defaults to an all lower case version of the site name with all non alphanumeric characters removed
-// remember that changing this will log everyone out since the session varibles' name will have changed
-// normally you wouldn't have to change this - this setting is left over from when we used a cookie to store login details
+// The prefix that should be used in the names of the session variables.
+// Defaults to an all lower case version of the site name with all non
+// alphanumeric characters removed. Remember that changing this will log
+// everyone out since the session variable's name will have changed.
+// Normally you won't have to change this - This setting is left over from when
+// we used a cookie to store login details.
+// By default this is set to a safe variant on your site name.
 $settings->sessionprefix = preg_replace("/[^0-9a-z]/i", "", strtolower($settings->sitename));
 
 /*
