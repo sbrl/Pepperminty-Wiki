@@ -898,9 +898,9 @@ register_module([
 		<tr><td><code>
 	---
 	</code></td><td><hr /></td></tr>
-		<tr><tds><code> - One
+		<!--<tr><tds><code> - One
  - Two
- - Three</code></td><td><ul><li>One</li><li>Two</li><li>Three</li></ul></td></tr>
+ - Three</code></td><td><ul><li>One</li><li>Two</li><li>Three</li></ul></td></tr>-->
 		<tr><td><code>![Alt text](//starbeamrainbowlabs.com/favicon-small.png)</code></td><td><img src='//starbeamrainbowlabs.com/favicon-small.png' alt='Alt text' /></td></code>
 	</table>
 	
