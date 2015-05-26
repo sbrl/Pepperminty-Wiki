@@ -355,6 +355,7 @@ class Slimdown {
 		'/\r\n/' => "\n",											// new line normalisation
 		'/(#+)(.*)/' => 'self::header',								// headers
 		'/(\*)(.*?)\1/' => '<strong>\2</strong>',					// bold
+		'/(_)(.*?)\1/' => '<em>\2</em>',							// emphasis
 		
 		// todo test these
 		'/!\[(.*)\]\(([^\s]+)\s(\d+.+)\s(left|right)\)/' => '<img src="\2" alt="\1" style="max-width: \3; float: \4;" />',		// images with size
@@ -362,7 +363,6 @@ class Slimdown {
 		'/!\[(.*)\]\((.*)\)/' => '<img src="\2" alt="\1" />',		// basic images
 		// todo end
 		
-		'/(_)(.*?)\1/' => '<em>\2</em>',							// emphasis
 		'/\[\[([a-zA-Z0-9\_\- ]+)\|([a-zA-Z0-9\_\- ]+)\]\]/' => '<a href=\'index.php?page=\1\'>\2</a>',	//internal links with display text
 		'/\[\[([a-zA-Z0-9\_\- ]+)\]\]/' => '<a href=\'index.php?page=\1\'>\1</a>',	//internal links
 		'/\[([^\[]+)\]\(([^\)]+)\)/' => '<a href=\'\2\' target=\'_blank\'>\1</a>',	// links
