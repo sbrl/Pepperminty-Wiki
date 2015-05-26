@@ -410,7 +410,7 @@ class page_renderer
 		
 		if($isloggedin)
 		{
-			$result .= "\t\t\tLogged in as " . render_username($user) . ". ";
+			$result .= "\t\t\tLogged in as " . self::render_username($user) . ". ";
 			$result .= "<a href='index.php?action=logout'>Logout</a>. | \n";
 		}
 		else
@@ -509,6 +509,11 @@ class Slimdown {
 		'/\r\n/' => "\n",											// new line normalisation
 		'/(#+)(.*)/' => 'self::header',								// headers
 		'/(\*)(.*?)\1/' => '<strong>\2</strong>',					// bold
+		
+		// todo test these
+		'/!\[(.*)\]\((.*)\)/' => '<img src="\2" alt="\1" />',		// basic images
+		// todo end
+		
 		'/(_)(.*?)\1/' => '<em>\2</em>',							// emphasis
 		'/\[\[([a-zA-Z0-9\_\- ]+)\|([a-zA-Z0-9\_\- ]+)\]\]/' => '<a href=\'index.php?page=\1\'>\2</a>',	//internal links with display text
 		'/\[\[([a-zA-Z0-9\_\- ]+)\]\]/' => '<a href=\'index.php?page=\1\'>\1</a>',	//internal links
