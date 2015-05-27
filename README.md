@@ -31,13 +31,13 @@ Information about configuring PHP sessions can be found here: https://php.net/ma
 
 You must also make sure that PHP can write to the folder that you are going to install Pepperminty Wiki in.
 
-More detailed information about installing Pepperminty Wiki can be found on [this repository's wiki](https://github.com/sbrl/Pepperminty-Wiki/wiki/Installing) (CATION: OUTDATED - SEE BELOW).
+More detailed information about installing Pepperminty Wiki can be found on [this repository's wiki](https://github.com/sbrl/Pepperminty-Wiki/wiki/Installing) (CAUTION: OUTDATED - SEE BELOW).
 
 ### Getting Your Copy
 Pepperminty Wiki is made up of a single file: `index.php`. You can get it in 3 different ways:
 
 #### From this repository
-The fastet way is to download the `index.php` file located in the repository. This is the development release, and should _mostly_ work. It comes pre-packaged with all the latest modules, too!
+The fastest way is to download the `index.php` file located in the repository. This is the development release, and should _mostly_ work. It comes pre-packaged with all the latest modules, too!
 
 #### From the latest release
 The repository also has (semi) regular releases that are (mostly) guaranteed to be stable. You can get the latest one from the [releases page](https://github.com/sbrl/Pepperminty-Wiki/releases). The latest release comes with all the latest plugin releases too!
