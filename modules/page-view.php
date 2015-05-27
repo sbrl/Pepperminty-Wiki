@@ -1,13 +1,13 @@
 <?php
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.6",
+	"version" => "0.7",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You should include this one.",
 	"id" => "page-view",
 	"code" => function() {
 		add_action("view", function() {
-			global $pageindex, $settings, $page;
+			global $pageindex, $settings, $page, $parse_page_source;
 			
 			//check to make sure that the page exists
 			if(!isset($pageindex->$page))
@@ -30,11 +30,11 @@ register_module([
 			$title = "$page - $settings->sitename";
 			$content = "<h1>$page</h1>";
 			
-			$slimdown_start = microtime(true);
+			$parsing_start = microtime(true);
 			
-			$content .= Slimdown::render(file_get_contents("$page.md"));
+			$content .= $parse_page_source(file_get_contents("$page.md"));
 			
-			$content .= "\n\t<!-- Took " . (microtime(true) - $slimdown_start) . " seconds to parse markdown -->\n";
+			$content .= "\n\t\t<!-- Took " . (microtime(true) - $parsing_start) . " seconds to parse page source -->\n";
 			
 			if(isset($_GET["printable"]) and $_GET["printable"] === "yes")
 				exit(page_renderer::render_minimal($title, $content));

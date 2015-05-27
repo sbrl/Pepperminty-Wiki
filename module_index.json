@@ -81,10 +81,18 @@
     },
     {
         "name": "Page viewer",
-        "version": "0.6",
+        "version": "0.7",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You should include this one.",
         "id": "page-view",
-        "lastupdate": 1432497918
+        "lastupdate": 1432719098
+    },
+    {
+        "name": "Deault Parser",
+        "version": "0.7",
+        "author": "Johnny Broadway & Starbeamrainbowlabs",
+        "description": "The default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page.",
+        "id": "parser-default",
+        "lastupdate": 1432718472
     }
 ]
