@@ -310,7 +310,7 @@ class page_renderer
 		{
 			$result .= "\t\t\t<option value='$pagename' />\n";
 		}
-		$result = "\t\t</datalist>";
+		$result .= "\t\t</datalist>";
 		
 		return $result;
 	}
