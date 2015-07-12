@@ -89,7 +89,10 @@ else
  * 
  * @details paths may only contain alphanumeric characters, spaces, underscores, and dashes
  */
-function makepathsafe($string) { return preg_replace("/[^0-9a-zA-Z\_\-\ ]/i", "", $string); }
+function makepathsafe($string)
+{
+	return preg_replace("/[^0-9a-zA-Z\_\-\ \/]/i", "", $string);
+}
 
 /*
  * @summary Hides an email address from bots by adding random html entities.
