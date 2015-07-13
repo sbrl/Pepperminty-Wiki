@@ -114,6 +114,8 @@ register_module([
 				
 				file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
 				
+				// todo update the parent page entries in the page index if they exist
+				
 				if(isset($_GET["newpage"]))
 					http_response_code(201);
 				else
