@@ -65,16 +65,78 @@ if($isloggedin)
 ///////////////////////////////////////////////////////////////////////////////////////////
 if(!file_exists("./pageindex.json"))
 {
-	$existingpages = glob("*.md");
-	$pageindex = new stdClass();
-	foreach($existingpages as $pagefilename)
+	// From http://in.php.net/manual/en/function.glob.php#106595
+	function glob_recursive($pattern, $flags = 0)
 	{
+		$files = glob($pattern, $flags);
+		foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir)
+		{
+			$prefix = "$dir/";
+			// Remove the "./" from the beginning if it exists
+			if(substr($prefix, 0, 2) == "./") $prefix = substr($prefix, 2);
+			$files = array_merge($files, glob_recursive($prefix . basename($pattern), $flags));
+		}
+		return $files;
+	}
+	$existingpages = glob_recursive("*.md");
+	$pageindex = new stdClass();
+	// We use a for loop here because foreach doesn't loop over new values inserted
+	// while we were looping
+	for($i = 0; $i < count($existingpages); $i++)
+	{
+		$pagefilename = $existingpages[$i];
+		
+		// Create a new entry
 		$newentry = new stdClass();
-		$newentry->filename = utf8_encode($pagefilename);
-		$newentry->size = filesize($pagefilename);
-		$newentry->lastmodified = filemtime($pagefilename);
-		$newentry->lasteditor = utf8_encode("unknown");
+		$newentry->filename = utf8_encode($pagefilename); // Store the filename
+		$newentry->size = filesize($pagefilename); // Store the page size
+		$newentry->lastmodified = filemtime($pagefilename); // Store the date last modified
+		// Todo find a way to keep the last editor independent to the page index
+		$newentry->lasteditor = utf8_encode("unknown"); // Set the editor to "unknown"
+		// Extract the name of the (sub)page without the ".md"
 		$pagekey = utf8_encode(substr($pagefilename, 0, -3));
+		
+		/// Sub Page finder ///
+		$newentry->subpages = new stdClass();
+		// Construct the stem to be used for finding sub pages
+		$stem = "$pagekey/";
+		$stem_length = strlen($stem);
+		foreach($existingpages as $item)
+		{
+			// note We *may* need to make this case insensitive on windows systems
+			if(substr($item, 0, $stem_length) == $stem)
+			{
+				// We have found a sub page of the current page!
+				
+				// Extract the subpage's key
+				$subpage_relative_key = substr($item, $stem_length, -3);
+				// Calculate how many times removed the current subpage is from the current page. 0 = direct descendant.
+				$times_removed = substr_count($subpage_relative_key, "/");
+				$subpage_full_key = substr($item, 0, -3);
+				// Store the name of the subpage we found in the subpage object of the current page
+				$newentry->subpages->$subpage_full_key = $times_removed;
+			}
+		}
+		
+		if(strpos($pagekey, "/") !== false)
+		{
+			// We have a sub page people
+			// Work out what our direct parent's key must be in order to check to
+			// make sure that it actually exists. If it doesn't, then we need to
+			// create it.
+			$subpage_parent_key = substr($pagekey, 0, strrpos($pagekey, "/"));
+			$subpage_parent_filename = "$subpage_parent_key.md";
+			if(array_search($subpage_parent_filename, $existingpages) === false)
+			{
+				// Our parent page doesn't acutally exist - create it
+				touch($subpage_parent_filename, 0);
+				// Furthermore, we should add this page to the list of existing pages
+				// in order for it to be indexed
+				$existingpages[] = $subpage_parent_filename;
+			}
+		}
+		
+		// Store the new entry in the new page index
 		$pageindex->$pagekey = $newentry;
 	}
 	file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
