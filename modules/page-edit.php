@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.6",
+	"version" => "0.7",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -9,12 +9,12 @@ register_module([
 	"code" => function() {
 		
 		/*
-		 *
-		 *  ___  __ ___   _____
-		 * / __|/ _` \ \ / / _ \
-		 * \__ \ (_| |\ V /  __/
-		 * |___/\__,_| \_/ \___|
-		 *                %save%
+		 *           _ _ _
+		 *   ___  __| (_) |_
+		 *  / _ \/ _` | | __|
+		 * |  __/ (_| | | |_
+		 *  \___|\__,_|_|\__|
+		 *             %edit%
 		 */
 		add_action("edit", function() {
 			global $pageindex, $settings, $page, $isloggedin;
@@ -62,14 +62,13 @@ register_module([
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});
 		
-		
 		/*
-		 *           _ _ _
-		 *   ___  __| (_) |_
-		 *  / _ \/ _` | | __|
-		 * |  __/ (_| | | |_
-		 *  \___|\__,_|_|\__|
-		 *             %edit%
+		 *
+		 *  ___  __ ___   _____
+		 * / __|/ _` \ \ / / _ \
+		 * \__ \ (_| |\ V /  __/
+		 * |___/\__,_| \_/ \___|
+		 *                %save%
 		 */
 		add_action("save", function() {
 			global $pageindex, $settings, $page, $isloggedin, $user;
@@ -90,6 +89,14 @@ register_module([
 				header("refresh: 5; url=index.php?page=$page");
 				exit("Bad request: No content specified.");
 			}
+			
+			// Make sure that the directory in which the page needs to be saved exists
+			if(!is_dir(dirname("$page.md")))
+			{
+				// Recursively create the directory if needed
+				mkdir(dirname("$page.md"), null, true);
+			}
+			
 			if(file_put_contents("$page.md", htmlentities($_POST["content"]), ENT_QUOTES) !== false)
 			{
 				//update the page index

@@ -25,11 +25,11 @@
     },
     {
         "name": "Page editor",
-        "version": "0.6",
+        "version": "0.7",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1432497592
+        "lastupdate": 1436797312
     },
     {
         "name": "Help page",
@@ -45,7 +45,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1432497592
+        "lastupdate": 1436796812
     },
     {
         "name": "Login",
