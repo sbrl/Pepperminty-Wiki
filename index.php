@@ -217,6 +217,40 @@ if($isloggedin)
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////// Security and Consistency Measures ////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
+/*
+ * @summary Gets a list of all the sub pagess of the current page.
+ * 
+ * @param $pageindex - The pageindex to use to search.
+ * @param $pagename - The name of the page to list the sub pages of.
+ * 
+ * @returns An objectt containing all the subpages, and their respective distances from the given page name in the pageindex tree.
+ */
+function get_subpages($pageindex, $pagename)
+{
+	$pagenames = get_object_vars($pageindex);
+	$result = new stdClass();
+	
+	$stem = "$pagename/";
+	$stem_length = stelen($stem);
+	foreach($pagenames as $entry)
+	{
+		if(substr($entry, 0, $stem_length) == $stem)
+		{
+			// We found a subpage
+			
+			// Extract the subpage's key relative to the page that we are searching for
+			$subpage_relative_key = substr($item, $stem_length, -3);
+			// Calculate how many times removed the current subpage is from the current page. 0 = direct descendant.
+			$times_removed = substr_count($subpage_relative_key, "/");
+			$subpage_full_key = substr($item, 0, -3);
+			// Store the name of the subpage we found
+			$result->$subpage_full_key = $times_removed;
+		}
+	}
+	
+	return $result;
+}
+
 if(!file_exists("./pageindex.json"))
 {
 	// From http://in.php.net/manual/en/function.glob.php#106595
@@ -250,28 +284,7 @@ if(!file_exists("./pageindex.json"))
 		// Extract the name of the (sub)page without the ".md"
 		$pagekey = utf8_encode(substr($pagefilename, 0, -3));
 		
-		/// Sub Page finder ///
-		$newentry->subpages = new stdClass();
-		// Construct the stem to be used for finding sub pages
-		$stem = "$pagekey/";
-		$stem_length = strlen($stem);
-		foreach($existingpages as $item)
-		{
-			// note We *may* need to make this case insensitive on windows systems
-			if(substr($item, 0, $stem_length) == $stem)
-			{
-				// We have found a sub page of the current page!
-				
-				// Extract the subpage's key
-				$subpage_relative_key = substr($item, $stem_length, -3);
-				// Calculate how many times removed the current subpage is from the current page. 0 = direct descendant.
-				$times_removed = substr_count($subpage_relative_key, "/");
-				$subpage_full_key = substr($item, 0, -3);
-				// Store the name of the subpage we found in the subpage object of the current page
-				$newentry->subpages->$subpage_full_key = $times_removed;
-			}
-		}
-		
+		// Subpage parent checker
 		if(strpos($pagekey, "/") !== false)
 		{
 			// We have a sub page people
@@ -812,6 +825,8 @@ register_module([
 					$pageindex->$page->lasteditor = utf8_encode("anonymous");
 				
 				file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+				
+				// todo update the parent page entries in the page index if they exist
 				
 				if(isset($_GET["newpage"]))
 					http_response_code(201);
