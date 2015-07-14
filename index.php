@@ -423,6 +423,7 @@ class page_renderer
 		<title>{title}</title>
 		<meta name='viewport' content='width=device-width, initial-scale=1' />
 		<link rel='shortcut-icon' href='{favicon-url}' />
+		<link rel='icon' href='{favicon-url}' />
 		{header-html}
 	</head>
 	<body>
