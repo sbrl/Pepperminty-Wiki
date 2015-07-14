@@ -833,7 +833,7 @@ register_module([
 			{
 				if(!$creatingpage)
 				{
-					//the page already exists - let the user view the page source
+					// The page already exists - let the user view the page source
 					exit(page_renderer::render_main("Viewing source for $page", "<p>$settings->sitename does not allow anonymous users to make edits. You can view the source of $page below, but you can't edit it.</p><textarea name='content' readonly>$pagetext</textarea>"));
 				}
 				else
@@ -911,7 +911,7 @@ register_module([
 				
 				file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
 				
-				// todo update the parent page entries in the page index if they exist
+				// Todo Update the parent page entries in the page index if they exist
 				
 				if(isset($_GET["newpage"]))
 					http_response_code(201);
@@ -1283,20 +1283,20 @@ register_module([
 		add_action("view", function() {
 			global $pageindex, $settings, $page, $parse_page_source;
 			
-			//check to make sure that the page exists
+			// Check to make sure that the page exists
 			if(!isset($pageindex->$page))
 			{
 				// todo make this intelligent so we only redirect if the user is acutally able to create the page
 				if($settings->editing)
 				{
-					//editing is enabled, redirect to the editing page
+					// Editing is enabled, redirect to the editing page
 					http_response_code(307); // Temporary redirect
 					header("location: index.php?action=edit&newpage=yes&page=" . rawurlencode($page));
 					exit();
 				}
 				else
 				{
-					//editing is disabled, show an error message
+					// Editing is disabled, show an error message
 					http_response_code(404);
 					exit(page_renderer::render_main("$page - 404 - $settings->sitename", "<p>$page does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
 				}

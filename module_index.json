@@ -29,7 +29,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1436885187
+        "lastupdate": 1436889893
     },
     {
         "name": "Help page",
@@ -85,7 +85,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You should include this one.",
         "id": "page-view",
-        "lastupdate": 1436889549
+        "lastupdate": 1436889857
     },
     {
         "name": "Default Parser",
