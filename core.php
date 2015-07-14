@@ -94,7 +94,42 @@ function get_subpages($pageindex, $pagename)
 		}
 	}
 	
+	unset($pagenames);
 	return $result;
+}
+
+/*
+ * @summary Makes sure that a subpage's parents exist. Note this doesn't check the pagename itself.
+ * 
+ * @param The pagename to check.
+ * 
+ */
+function check_subpage_parents($pagename)
+{
+	global $pageindex;
+	// Save the new pageindex and return if there aren't any more parent pages to check
+	if(strpos($pagename, "/") === false)
+	{
+		file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+		return;
+	}
+	
+	$parent_pagename = substr($pagename, 0, strrpos($pagename, "/"));
+	$parent_page_filename = "$parent_pagename.md";
+	if(!file_exists($parent_page_filename))
+	{
+		// This parent page doesn't exist! Create it and add it to the page index.
+		touch($parent_page_filename, 0);
+		
+		$newentry = new stdClass();
+		$newentry->filename = $parent_page_filename;
+		$newentry->size = 0;
+		$newentry->lastmodified = 0;
+		$newentry->lasteditor = "none";
+		$pageindex->$parent_pagename = $newentry;
+	}
+	
+	check_subpage_parents($parent_pagename);
 }
 
 if(!file_exists("./pageindex.json"))
@@ -125,7 +160,7 @@ if(!file_exists("./pageindex.json"))
 		$newentry->filename = utf8_encode($pagefilename); // Store the filename
 		$newentry->size = filesize($pagefilename); // Store the page size
 		$newentry->lastmodified = filemtime($pagefilename); // Store the date last modified
-		// Todo find a way to keep the last editor independent to the page index
+		// Todo find a way to keep the last editor independent of the page index
 		$newentry->lasteditor = utf8_encode("unknown"); // Set the editor to "unknown"
 		// Extract the name of the (sub)page without the ".md"
 		$pagekey = utf8_encode(substr($pagefilename, 0, -3));

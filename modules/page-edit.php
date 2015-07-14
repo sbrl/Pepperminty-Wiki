@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.7",
+	"version" => "0.8",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -97,8 +97,12 @@ register_module([
 				mkdir(dirname("$page.md"), null, true);
 			}
 			
+			
 			if(file_put_contents("$page.md", htmlentities($_POST["content"]), ENT_QUOTES) !== false)
 			{
+				// Make sure that this page's parents exist
+				check_subpage_parents($page);
+				
 				//update the page index
 				if(!isset($pageindex->$page))
 				{
