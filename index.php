@@ -12,7 +12,8 @@ $start_time = time(true);
 	* Code by @Starbeamrainbowlabs
 	* Slimdown - by Johnny Broadway from https://gist.github.com/jbroadway/2836900
  * Bug reports:
-	* #1 - Incorrect closing tag - nibreh <https://github.com/nibreh/>
+	* #2 - Incorrect closing tag - nibreh <https://github.com/nibreh/>
+	* #8 - Rogue <datalist /> tag - nibreh <https://github.com/nibreh/>
  */
 // Initialises a new object to store your wiki's settings in. Please don't touch this.
 $settings = new stdClass();
@@ -382,7 +383,7 @@ function hide_email($str)
 	return $hidden_email;
 }
 
-//Work around an Opera + Syntastic bug where there is no margin at the left hand side if there isn't a query string when accessing a .php file
+// Work around an Opera + Syntastic bug where there is no margin at the left hand side if there isn't a query string when accessing a .php file
 if(!isset($_GET["action"]) and !isset($_GET["page"]))
 {
 	http_response_code(302);
@@ -390,14 +391,14 @@ if(!isset($_GET["action"]) and !isset($_GET["page"]))
 	exit();
 }
 
-//make sure that the action is set
+// Make sure that the action is set
 if(!isset($_GET["action"]))
 	$_GET["action"] = $settings->defaultaction;
-//make sure that the page is set
+// Make sure that the page is set
 if(!isset($_GET["page"]) or strlen($_GET["page"]) === 0)
 	$_GET["page"] = $settings->defaultpage;
 
-//redirect the user to the safe version of the path if they entered an unsafe character
+// Redirect the user to the safe version of the path if they entered an unsafe character
 if(makepathsafe($_GET["page"]) !== $_GET["page"])
 {
 	http_response_code(301);
@@ -530,12 +531,12 @@ class page_renderer
 		else
 			$result .= "\t\t\tBrowsing as Anonymous. <a href='index.php?action=login'>Login</a>. | \n";
 		
-		// loop over all the navigation links
+		// Loop over all the navigation links
 		foreach($settings->navlinks as $item)
 		{
 			if(is_string($item))
 			{
-				//the item is a string
+				// The item is a string
 				switch($item)
 				{
 					//keywords
@@ -543,14 +544,14 @@ class page_renderer
 						$result .= "\t\t\t<form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /></form>\n";
 						break;
 					
-					//it isn't a keyword, so just output it directly
+					// It isn't a keyword, so just output it directly
 					default:
 						$result .= "\t\t\t$item\n";
 				}
 			}
 			else
 			{
-				//output the item as a link to a url
+				// Output the item as a link to a url
 				$result .= "\t\t\t<a href='" . str_replace("{page}", $page, $item[1]) . "'>$item[0]</a>\n";
 			}
 		}
@@ -624,8 +625,8 @@ function human_time_since($time)
 // register themselves	//
 // or new pages.		//
 //////////////////////////
-$modules = []; // list that contains all the loaded modules
-// function to register a module
+$modules = []; // List that contains all the loaded modules
+// Function to register a module
 function register_module($moduledata)
 {
 	global $modules;
@@ -634,7 +635,7 @@ function register_module($moduledata)
 	$modules[] = $moduledata;
 }
 
-// function to register an action handler
+// Function to register an action handler
 $actions = new stdClass();
 function add_action($action_name, $func)
 {
@@ -685,21 +686,59 @@ register_module([
 
 register_module([
 	"name" => "Credits",
-	"version" => "0.5",
+	"version" => "0.6",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
 	"code" => function() {
 		add_action("credits", function() {
-			global $settings, $version;
+			global $settings, $version, $pageindex, $modules;
+			
+			
+			$credits = [
+				"Code" => [
+					"author" => "Starbeamrainbowlabs",
+					"author_url" => "https://starbeamrmainbowlabs.com/",
+					"thing_url" => "https://github.com/sbrl/Pepprminty-Wiki"
+				],
+				"Slightly modified version of Slimdown" => [
+					"author" => "Johnny Broadway",
+					"author_url" => "https://github.com/jbroadway",
+					"thing_url" => "https://gist.github.com/jbroadway/2836900"
+				],
+				"Default Favicon" => [
+					"author" => "bluefrog23",
+					"author_url" => "https://openclipart.org/user-detail/bluefrog23/",
+					"thing_url" => "https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23"
+				],
+				"Bug Reports" => [
+					"author" => "nibreh",
+					"author_url" => "https://github.com/nibreh/",
+					"thing_url" => ""
+				]
+			];
+			$credits_html = "<ul>\n";
+			foreach($credits as $thing => $author_details)
+			{
+				$credits_html .= "	<li>";
+				$credits_html .= "<a href='" . $author_details["thing_url"] . "'>$thing</a> by ";
+				$credits_html .= "<a href='" . $author_details["author_url"] . "'>" . $author_details["author"] . "</a>";
+				$credits_html .= "</li>\n";
+			}
+			$credits_html .= "</ul>";
 			
 			$title = "Credits - $settings->sitename";
 			$content = "<h1>$settings->sitename credits</h1>
-	<p>$settings->sitename is powered by Pepperminty Wiki - an entire wiki packed inside a single file, which was built by <a href='//starbeamrainboowlabs.com'>Starbeamrainbowlabs</a>, and can be found <a href='//github.com/sbrl/Pepperminty-Wiki/'>on github</a> (contributors will ablso be listed here in the future).</p>
-	<p>A slightly modified version of slimdown is used to parse text source into HTML. Slimdown is by <a href='https://github.com/jbroadway'>Johnny Broadway</a>, which can be found <a href='https://gist.github.com/jbroadway/2836900'>on github</a>.</p>
-	<p>The default favicon is from <a href='//openclipart.org'>Open Clipart</a> by bluefrog23, and can be found <a href='https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23'>here</a>.</p>
-	<p>Administrators can update $settings->sitename here: <a href='?action=update'>Update $settings->sitename</a>.</p>
-	<p>$settings->sitename is currently running on Pepperminty Wiki <code>$version</code></p>";
+	<p>$settings->sitename is powered by Pepperminty Wiki - an entire wiki packed inside a single file, which was built by <a href='//starbeamrainbowlabs.com'>Starbeamrainbowlabs</a>, and can be found <a href='//github.com/sbrl/Pepperminty-Wiki/'>on github</a> (contributors will ablso be listed here in the future).</p>
+	<h2>Main Credits</h2>
+	$credits_html
+	<h2>Site status</h2>
+	<table>
+		<tr><th>Site name:</th><td>$settings->sitename (<a href='?action=update'>Update - Administrators only</a>)</td></tr>
+		<tr><th>Pepperminty Wiki version:</th><td>$version</td></tr>
+		<tr><th>Number of pages:</th><td>" . count(get_object_vars($pageindex)) . "</td></tr>
+		<tr><th>Number of modules:</th><td>" . count($modules) . "</td></tr>
+	</table>";
 			exit(page_renderer::render_main($title, $content));
 		});
 	}
@@ -1406,12 +1445,12 @@ class Slimdown {
 // %next_module% //
 
 
-// execute each module's code
+// Execute each module's code
 foreach($modules as $moduledata)
 {
 	$moduledata["code"]();
 }
-// make sure that the credits page exists
+// Make sure that the credits page exists
 if(!isset($actions->credits))
 {
 	exit(page_renderer::render_main("Error - $settings->$sitename", "<p>No credits page detected. The credits page is a required module!</p>"));

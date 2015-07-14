@@ -9,11 +9,11 @@
     },
     {
         "name": "Credits",
-        "version": "0.5",
+        "version": "0.6",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
-        "lastupdate": 1432497591
+        "lastupdate": 1436886691
     },
     {
         "name": "Page deleter",

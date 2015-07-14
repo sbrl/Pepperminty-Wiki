@@ -9,7 +9,8 @@
 	* Code by @Starbeamrainbowlabs
 	* Slimdown - by Johnny Broadway from https://gist.github.com/jbroadway/2836900
  * Bug reports:
-	* #1 - Incorrect closing tag - nibreh <https://github.com/nibreh/>
+	* #2 - Incorrect closing tag - nibreh <https://github.com/nibreh/>
+	* #8 - Rogue <datalist /> tag - nibreh <https://github.com/nibreh/>
  */
 // Initialises a new object to store your wiki's settings in. Please don't touch this.
 $settings = new stdClass();

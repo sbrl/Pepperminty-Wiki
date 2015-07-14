@@ -228,7 +228,7 @@ function hide_email($str)
 	return $hidden_email;
 }
 
-//Work around an Opera + Syntastic bug where there is no margin at the left hand side if there isn't a query string when accessing a .php file
+// Work around an Opera + Syntastic bug where there is no margin at the left hand side if there isn't a query string when accessing a .php file
 if(!isset($_GET["action"]) and !isset($_GET["page"]))
 {
 	http_response_code(302);
@@ -236,14 +236,14 @@ if(!isset($_GET["action"]) and !isset($_GET["page"]))
 	exit();
 }
 
-//make sure that the action is set
+// Make sure that the action is set
 if(!isset($_GET["action"]))
 	$_GET["action"] = $settings->defaultaction;
-//make sure that the page is set
+// Make sure that the page is set
 if(!isset($_GET["page"]) or strlen($_GET["page"]) === 0)
 	$_GET["page"] = $settings->defaultpage;
 
-//redirect the user to the safe version of the path if they entered an unsafe character
+// Redirect the user to the safe version of the path if they entered an unsafe character
 if(makepathsafe($_GET["page"]) !== $_GET["page"])
 {
 	http_response_code(301);
@@ -376,12 +376,12 @@ class page_renderer
 		else
 			$result .= "\t\t\tBrowsing as Anonymous. <a href='index.php?action=login'>Login</a>. | \n";
 		
-		// loop over all the navigation links
+		// Loop over all the navigation links
 		foreach($settings->navlinks as $item)
 		{
 			if(is_string($item))
 			{
-				//the item is a string
+				// The item is a string
 				switch($item)
 				{
 					//keywords
@@ -389,14 +389,14 @@ class page_renderer
 						$result .= "\t\t\t<form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /></form>\n";
 						break;
 					
-					//it isn't a keyword, so just output it directly
+					// It isn't a keyword, so just output it directly
 					default:
 						$result .= "\t\t\t$item\n";
 				}
 			}
 			else
 			{
-				//output the item as a link to a url
+				// Output the item as a link to a url
 				$result .= "\t\t\t<a href='" . str_replace("{page}", $page, $item[1]) . "'>$item[0]</a>\n";
 			}
 		}
@@ -470,8 +470,8 @@ function human_time_since($time)
 // register themselves	//
 // or new pages.		//
 //////////////////////////
-$modules = []; // list that contains all the loaded modules
-// function to register a module
+$modules = []; // List that contains all the loaded modules
+// Function to register a module
 function register_module($moduledata)
 {
 	global $modules;
@@ -480,7 +480,7 @@ function register_module($moduledata)
 	$modules[] = $moduledata;
 }
 
-// function to register an action handler
+// Function to register an action handler
 $actions = new stdClass();
 function add_action($action_name, $func)
 {
@@ -506,12 +506,12 @@ function add_parser($parser_code)
 // %next_module% //
 
 
-// execute each module's code
+// Execute each module's code
 foreach($modules as $moduledata)
 {
 	$moduledata["code"]();
 }
-// make sure that the credits page exists
+// Make sure that the credits page exists
 if(!isset($actions->credits))
 {
 	exit(page_renderer::render_main("Error - $settings->$sitename", "<p>No credits page detected. The credits page is a required module!</p>"));
