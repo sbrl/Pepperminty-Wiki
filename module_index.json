@@ -13,7 +13,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
-        "lastupdate": 1436886691
+        "lastupdate": 1436886734
     },
     {
         "name": "Page deleter",
@@ -81,11 +81,11 @@
     },
     {
         "name": "Page viewer",
-        "version": "0.7",
+        "version": "0.8",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You should include this one.",
         "id": "page-view",
-        "lastupdate": 1432719098
+        "lastupdate": 1436889549
     },
     {
         "name": "Default Parser",

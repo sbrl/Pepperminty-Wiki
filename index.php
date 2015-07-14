@@ -54,6 +54,13 @@ $settings->defaultpage = "Main Page";
 // automatically views the default page (see above).
 $settings->defaultaction = "view";
 
+// Whether to show a list of subpages at the bottom of the page.
+$settings->show_subpages = true;
+
+// The depth to which we should display when listing subpages at the bottom of
+// the page.
+$settings->subpages_display_depth = 3;
+
 // An array of usernames and passwords - passwords should be hashed with
 // sha256. Put one user / password on each line, remembering the comma at the
 // end. The last user in the list doesn't need a comma after their details though.
@@ -232,20 +239,19 @@ function get_subpages($pageindex, $pagename)
 	$result = new stdClass();
 	
 	$stem = "$pagename/";
-	$stem_length = stelen($stem);
-	foreach($pagenames as $entry)
+	$stem_length = strlen($stem);
+	foreach($pagenames as $entry => $value)
 	{
 		if(substr($entry, 0, $stem_length) == $stem)
 		{
 			// We found a subpage
 			
 			// Extract the subpage's key relative to the page that we are searching for
-			$subpage_relative_key = substr($item, $stem_length, -3);
+			$subpage_relative_key = substr($entry, $stem_length, -3);
 			// Calculate how many times removed the current subpage is from the current page. 0 = direct descendant.
 			$times_removed = substr_count($subpage_relative_key, "/");
-			$subpage_full_key = substr($item, 0, -3);
 			// Store the name of the subpage we found
-			$result->$subpage_full_key = $times_removed;
+			$result->$entry = $times_removed;
 		}
 	}
 	
@@ -437,6 +443,7 @@ class page_renderer
 	public static $main_content_template = "{navigation-bar}
 		<h1 class='sitename'>{sitename}</h1>
 		{content}
+		<hr />
 		<footer>
 			<p>Powered by Pepperminty Wiki, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or open an issue <a href='//github.com/sbrl/Pepperminty-Wiki'>on github</a>.</p>
 			<p>Your local friendly administrators are {admins-name-list}.
@@ -693,7 +700,6 @@ register_module([
 	"code" => function() {
 		add_action("credits", function() {
 			global $settings, $version, $pageindex, $modules;
-			
 			
 			$credits = [
 				"Code" => [
@@ -1269,7 +1275,7 @@ register_module([
 
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.7",
+	"version" => "0.8",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You should include this one.",
 	"id" => "page-view",
@@ -1284,7 +1290,7 @@ register_module([
 				if($settings->editing)
 				{
 					//editing is enabled, redirect to the editing page
-					http_response_code(307); //temporary redirect
+					http_response_code(307); // Temporary redirect
 					header("location: index.php?action=edit&newpage=yes&page=" . rawurlencode($page));
 					exit();
 				}
@@ -1301,6 +1307,26 @@ register_module([
 			$parsing_start = microtime(true);
 			
 			$content .= $parse_page_source(file_get_contents("$page.md"));
+			
+			if($settings->show_subpages)
+			{
+				$subpages = get_object_vars(get_subpages($pageindex, $page));
+				
+				if(count($subpages) > 0)
+				{
+					$content .= "<hr />";
+					$content .= "Subpages: ";
+					foreach($subpages as $subpage => $times_removed)
+					{
+						if($times_removed <= $settings->subpages_display_depth)
+						{
+							$content .= "<a href='?action=view&page=" . rawurlencode($subpage) . "'>$subpage</a>, ";
+						}
+					}
+					// Remove the last comma from the content
+					$content = substr($content, 0, -2);
+				}
+			}
 			
 			$content .= "\n\t\t<!-- Took " . (microtime(true) - $parsing_start) . " seconds to parse page source -->\n";
 			

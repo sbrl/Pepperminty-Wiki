@@ -77,20 +77,19 @@ function get_subpages($pageindex, $pagename)
 	$result = new stdClass();
 	
 	$stem = "$pagename/";
-	$stem_length = stelen($stem);
-	foreach($pagenames as $entry)
+	$stem_length = strlen($stem);
+	foreach($pagenames as $entry => $value)
 	{
 		if(substr($entry, 0, $stem_length) == $stem)
 		{
 			// We found a subpage
 			
 			// Extract the subpage's key relative to the page that we are searching for
-			$subpage_relative_key = substr($item, $stem_length, -3);
+			$subpage_relative_key = substr($entry, $stem_length, -3);
 			// Calculate how many times removed the current subpage is from the current page. 0 = direct descendant.
 			$times_removed = substr_count($subpage_relative_key, "/");
-			$subpage_full_key = substr($item, 0, -3);
 			// Store the name of the subpage we found
-			$result->$subpage_full_key = $times_removed;
+			$result->$entry = $times_removed;
 		}
 	}
 	
@@ -282,6 +281,7 @@ class page_renderer
 	public static $main_content_template = "{navigation-bar}
 		<h1 class='sitename'>{sitename}</h1>
 		{content}
+		<hr />
 		<footer>
 			<p>Powered by Pepperminty Wiki, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or open an issue <a href='//github.com/sbrl/Pepperminty-Wiki'>on github</a>.</p>
 			<p>Your local friendly administrators are {admins-name-list}.

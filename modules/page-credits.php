@@ -9,7 +9,6 @@ register_module([
 		add_action("credits", function() {
 			global $settings, $version, $pageindex, $modules;
 			
-			
 			$credits = [
 				"Code" => [
 					"author" => "Starbeamrainbowlabs",

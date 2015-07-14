@@ -51,6 +51,13 @@ $settings->defaultpage = "Main Page";
 // automatically views the default page (see above).
 $settings->defaultaction = "view";
 
+// Whether to show a list of subpages at the bottom of the page.
+$settings->show_subpages = true;
+
+// The depth to which we should display when listing subpages at the bottom of
+// the page.
+$settings->subpages_display_depth = 3;
+
 // An array of usernames and passwords - passwords should be hashed with
 // sha256. Put one user / password on each line, remembering the comma at the
 // end. The last user in the list doesn't need a comma after their details though.
