@@ -89,23 +89,32 @@ $settings->admindetails = [
 // Array of links and display text to display at the top of the site.
 // Format:
 //		[ "Display Text", "Link" ]
-// You can also use strings here and they will be printed as-is, except the following special strings:
+// You can also use strings here and they will be printed as-is, except the
+// following special strings:
 //		search: Expands to a search box.
+//		divider: Expands to a divider to separate links.
+//		more: Expands to the "More..." submenu.
 $settings->navlinks = [
 	[ "Home", "index.php" ],
 	[ "Login", "index.php?action=login" ],
-	" | ",
 	"search",
-	" | ",
 	[ "Read", "index.php?page={page}" ],
 	[ "Edit", "index.php?action=edit&page={page}" ],
 	[ "Printable", "index.php?action=view&printable=yes&page={page}" ],
-	" | ",
+	//"divider",
+	[ "All&nbsp;Pages", "index.php?action=list" ],
+	"menu"
+];
+// An array of additional links in the above format that will be shown under
+// "More" subsection.
+$settings->nav_links_extra = [
 	[ $settings->admindisplaychar . "Delete", "index.php?action=delete&page={page}" ],
-	[ $settings->admindisplaychar . "Move", "index.php?action=move&page={page}" ],
-	" | ",
-	[ "All Pages", "index.php?action=list" ],
-	" | ",
+	[ $settings->admindisplaychar . "Move", "index.php?action=move&page={page}" ]
+];
+
+// An array of links in the above format that will be shown at the bottom of
+// the page.
+$settings->nav_links_bottom = [
 	[ "Credits", "index.php?action=credits" ],
 	[ "Help", "index.php?action=help" ]
 ];
@@ -113,14 +122,21 @@ $settings->navlinks = [
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a
 // <link rel='stylesheet' /> tag.
-$settings->css = "body { font-family: sans-serif; color: #333333; background: #f8f8f8; }
-label { display: inline-block; min-width: 10rem; }
-textarea[name=content] { display: block; width: 100%; height: 35rem; }
-/*input[name=page] { width: 16rem; }*/
-nav { position: absolute; top: 5px; right: 5px; }
-th { text-align: left; }
-.sitename { text-align: center; font-size: 2.5rem; color: #222222; }
-.footerdivider { margin-top: 4rem; }";
+$settings->css = "body { margin: 2rem 0; font-family: sans-serif; color: #111111; background: #eee8f2; }
+nav { position: absolute; top: 0; left: 0; right: 0; display: flex; background-color: #8a62a7; color: #ffa74d; box-shadow: inset 0 -0.6rem 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
+nav > span { flex: 1; text-align: center; line-height: 2; display: inline-block; margin: 0; padding: 0.3rem 0.5rem; transition: all 0.25s; border-left: 3px solid #442772; border-right: 3px solid #442772; }
+nav > span:not(.inflexible):hover { transform: scale(1.1); }
+nav a { text-decoration: none; font-weight: bolder; color: inherit; }
+.nav-divider { color: transparent; }
+.nav-more { background-color: #442772; }
+.inflexible { flex: none; }
+input[type=search] { width: 14rem; padding: 0.3rem 0.4rem; font-size: 1rem; background: rgba(255, 255, 255, 0.4); border: 0; border-radius: 0.3rem; }
+input[type=search]::-webkit-input-placeholder { color : white; }
+h1 { text-align: center; }
+.sitename { margin-top: 5rem; margin-bottom: 3rem; font-size: 2.5rem; }
+main { padding: 2rem; background: #faf8fb; box-shadow: 0 0.2rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
+footer { padding: 2rem; }
+";
 
 // A url that points to the favicon you want to use for your wiki. By default
 // this is set to a data: url of a Peppermint.
@@ -442,8 +458,10 @@ class page_renderer
 	
 	public static $main_content_template = "{navigation-bar}
 		<h1 class='sitename'>{sitename}</h1>
+		<main>
 		{content}
-		<hr />
+		</main>
+		
 		<footer>
 			<p>Powered by Pepperminty Wiki, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or open an issue <a href='//github.com/sbrl/Pepperminty-Wiki'>on github</a>.</p>
 			<p>Your local friendly administrators are {admins-name-list}.
@@ -525,6 +543,8 @@ class page_renderer
 			return "<style>$settings->css</style>";
 	}
 	
+	public static $nav_divider = "<span class='nav-divider inflexible'> | </span>";
+	
 	public static function render_navigation_bar()
 	{
 		global $settings, $user, $isloggedin, $page;
@@ -532,11 +552,12 @@ class page_renderer
 		
 		if($isloggedin)
 		{
-			$result .= "\t\t\tLogged in as " . self::render_username($user) . ". ";
-			$result .= "<a href='index.php?action=logout'>Logout</a>. | \n";
+			$result .= "<span class='inflexible'>Logged in as " . self::render_username($user) . ".</span> "/* . page_renderer::$nav_divider*/;
+			$result .= "<span><a href='index.php?action=logout'>Logout</a></span>";
+			$result .= page_renderer::$nav_divider;
 		}
 		else
-			$result .= "\t\t\tBrowsing as Anonymous. <a href='index.php?action=login'>Login</a>. | \n";
+			$result .= "<span class='inflexible'>Browsing as Anonymous.</span>" . /*page_renderer::$nav_divider . */"<span><a href='index.php?action=login'>Login</a></span>" . page_renderer::$nav_divider;
 		
 		// Loop over all the navigation links
 		foreach($settings->navlinks as $item)
@@ -547,23 +568,32 @@ class page_renderer
 				switch($item)
 				{
 					//keywords
-					case "search": //displays a search bar
-						$result .= "\t\t\t<form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /></form>\n";
+					case "search": // Displays a search bar
+						$result .= "<span class='inflexible'><form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /></form></span>";
+						break;
+					
+					case "divider": // Displays a divider
+						$result .= page_renderer::$nav_divider;
+						break;
+					
+					case "menu":
+						$result .= "<span class='inflexible nav-more'>More...</span>";
+						// todo Add the submenu
 						break;
 					
 					// It isn't a keyword, so just output it directly
 					default:
-						$result .= "\t\t\t$item\n";
+						$result .= "<span>$item</span>";
 				}
 			}
 			else
 			{
 				// Output the item as a link to a url
-				$result .= "\t\t\t<a href='" . str_replace("{page}", $page, $item[1]) . "'>$item[0]</a>\n";
+				$result .= "<span><a href='" . str_replace("{page}", $page, $item[1]) . "'>$item[0]</a></span>";
 			}
 		}
 		
-		$result .= "\t\t</nav>";
+		$result .= "</nav>";
 		return $result;
 	}
 	public static function render_username($name)
