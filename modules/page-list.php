@@ -1,13 +1,16 @@
 <?php
 register_module([
 	"name" => "Page list",
-	"version" => "0.5",
+	"version" => "0.6",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that lists all the pages in the index along with their metadata.",
 	"id" => "page-list",
 	"code" => function() {
 		add_action("list", function() {
 			global $pageindex, $settings;
+			
+			$sorted_pageindex = get_object_vars($pageindex);
+			ksort($sorted_pageindex, SORT_NATURAL);
 			$title = "All Pages";
 			$content = "	<h1>$title on $settings->sitename</h1>
 	<table>
@@ -18,7 +21,7 @@ register_module([
 			<th>Last Edit Time</th>
 		</tr>\n";
 			// todo list the pages in alphabetical order
-		foreach($pageindex as $pagename => $pagedetails)
+		foreach($sorted_pageindex as $pagename => $pagedetails)
 		{
 			$content .= "\t\t<tr>
 			<td><a href='index.php?page=$pagename'>$pagename</a></td>

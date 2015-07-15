@@ -41,11 +41,11 @@
     },
     {
         "name": "Page list",
-        "version": "0.5",
+        "version": "0.6",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1436796812
+        "lastupdate": 1436976553
     },
     {
         "name": "Login",
