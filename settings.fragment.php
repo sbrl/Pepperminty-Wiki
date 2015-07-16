@@ -91,7 +91,7 @@ $settings->admindetails = [
 //		search: Expands to a search box.
 //		divider: Expands to a divider to separate links.
 //		more: Expands to the "More..." submenu.
-$settings->navlinks = [
+$settings->nav_links = [
 	[ "Home", "index.php" ],
 	[ "Login", "index.php?action=login" ],
 	"search",

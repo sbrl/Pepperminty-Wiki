@@ -118,13 +118,11 @@ register_module([
 				
 				file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
 				
-				// Todo Update the parent page entries in the page index if they exist
-				
 				if(isset($_GET["newpage"]))
 					http_response_code(201);
 				else
 					http_response_code(200);
-
+				
 				header("location: index.php?page=$page&edit_status=success");
 				exit();
 			}

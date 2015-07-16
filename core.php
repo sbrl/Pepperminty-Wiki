@@ -288,6 +288,7 @@ class page_renderer
 			<p>Powered by Pepperminty Wiki, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or open an issue <a href='//github.com/sbrl/Pepperminty-Wiki'>on github</a>.</p>
 			<p>Your local friendly administrators are {admins-name-list}.
 			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
+			{nav-bottom}
 		</footer>
 		{all-pages-datalist}";
 	public static $minimal_content_template = "{content}
@@ -322,7 +323,7 @@ class page_renderer
 			$settings->favicon,
 			self::get_css_as_html(),
 			
-			self::render_navigation_bar(),
+			self::render_navigation_bar($settings->navlinks),
 			
 			$settings->admindetails["name"],
 			$settings->admindetails["email"],
@@ -367,7 +368,7 @@ class page_renderer
 	
 	public static $nav_divider = "<span class='nav-divider inflexible'> | </span>";
 	
-	public static function render_navigation_bar()
+	public static function render_navigation_bar($nav_links)
 	{
 		global $settings, $user, $isloggedin, $page;
 		$result = "<nav>\n";
@@ -382,7 +383,7 @@ class page_renderer
 			$result .= "<span class='inflexible'>Browsing as Anonymous.</span>" . /*page_renderer::$nav_divider . */"<span><a href='index.php?action=login'>Login</a></span>" . page_renderer::$nav_divider;
 		
 		// Loop over all the navigation links
-		foreach($settings->navlinks as $item)
+		foreach($nav_links as $item)
 		{
 			if(is_string($item))
 			{

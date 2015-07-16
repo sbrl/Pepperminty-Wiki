@@ -947,7 +947,7 @@ register_module([
 					http_response_code(201);
 				else
 					http_response_code(200);
-
+				
 				header("location: index.php?page=$page&edit_status=success");
 				exit();
 			}
