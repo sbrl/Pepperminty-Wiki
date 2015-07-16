@@ -61,8 +61,49 @@ if($isloggedin)
 /////// Login System End ///////
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////// Security and Consistency Measures ////////////////////////////
+//////////////////////////////////////// Functions ////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+ * @summary	Converts a filesize into a human-readable string.
+ * @source	http://php.net/manual/en/function.filesize.php#106569
+ * @editor	Starbeamrainbowlabs
+ * 
+ * @param	$bytes		 - The number of bytes to convert.
+ * @param	$decimals	 - The number of decimal places to preserve.
+ */
+function human_filesize($bytes, $decimals = 2)
+{
+	$sz = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "YB", "ZB"];
+	$factor = floor((strlen($bytes) - 1) / 3);
+	return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+}
+/*
+ * @summary	Calculates the time sincce a particular timestamp and returns a
+ * 			human-readable result.
+ * @source	http://snippets.pro/snippet/137-php-convert-the-timestamp-to-human-readable-format/
+ * 
+ * @param $time - The timestamp to convert.
+ */
+function human_time_since($time)
+{
+	$timediff = time() - $time;
+	$tokens = array (
+		31536000 => 'year',
+		2592000 => 'month',
+		604800 => 'week',
+		86400 => 'day',
+		3600 => 'hour',
+		60 => 'minute',
+		1 => 'second'
+	);
+	foreach ($tokens as $unit => $text) {
+		if ($timediff < $unit) continue;
+		$numberOfUnits = floor($timediff / $unit);
+		return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':'').' ago';
+	}
+}
+
 /*
  * @summary Gets a list of all the sub pagess of the current page.
  * 
@@ -131,6 +172,50 @@ function check_subpage_parents($pagename)
 	check_subpage_parents($parent_pagename);
 }
 
+/*
+ * @summary makes a path safe
+ * 
+ * @details paths may only contain alphanumeric characters, spaces, underscores, and dashes
+ */
+function makepathsafe($string)
+{
+	return preg_replace("/[^0-9a-zA-Z\_\-\ \/]/i", "", $string);
+}
+
+/*
+ * @summary Hides an email address from bots by adding random html entities.
+ * 
+ * @returns The mangled email address.
+ */
+function hide_email($str)
+{
+	$hidden_email = "";
+	for($i = 0; $i < strlen($str); $i++)
+	{
+		if($str[$i] == "@")
+		{
+			$hidden_email .= "&#" . ord("@") . ";";
+			continue;
+		}
+		if(rand(0, 1) == 0)
+			$hidden_email .= $str[$i];
+		else
+			$hidden_email .= "&#" . ord($str[$i]) . ";";
+	}
+	
+	return $hidden_email;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////// Security and Consistency Measures ////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+ * Sort out the pageindex. We create it if it doesn't exist, and load and parse
+ * it if it does.
+ */
 if(!file_exists("./pageindex.json"))
 {
 	// From http://in.php.net/manual/en/function.glob.php#106595
@@ -192,39 +277,6 @@ if(!file_exists("./pageindex.json"))
 else
 {
 	$pageindex = json_decode(file_get_contents("./pageindex.json"));
-}
-/*
- * @summary makes a path safe
- * 
- * @details paths may only contain alphanumeric characters, spaces, underscores, and dashes
- */
-function makepathsafe($string)
-{
-	return preg_replace("/[^0-9a-zA-Z\_\-\ \/]/i", "", $string);
-}
-
-/*
- * @summary Hides an email address from bots by adding random html entities.
- * 
- * @returns The mangled email address.
- */
-function hide_email($str)
-{
-	$hidden_email = "";
-	for($i = 0; $i < strlen($str); $i++)
-	{
-		if($str[$i] == "@")
-		{
-			$hidden_email .= "&#" . ord("@") . ";";
-			continue;
-		}
-		if(rand(0, 1) == 0)
-			$hidden_email .= $str[$i];
-		else
-			$hidden_email .= "&#" . ord($str[$i]) . ";";
-	}
-	
-	return $hidden_email;
 }
 
 // Work around an Opera + Syntastic bug where there is no margin at the left hand side if there isn't a query string when accessing a .php file
@@ -288,8 +340,8 @@ class page_renderer
 			<p>Powered by Pepperminty Wiki, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or open an issue <a href='//github.com/sbrl/Pepperminty-Wiki'>on github</a>.</p>
 			<p>Your local friendly administrators are {admins-name-list}.
 			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
-			{nav-bottom}
 		</footer>
+		{navigation-bar-bottom}
 		{all-pages-datalist}";
 	public static $minimal_content_template = "{content}
 		<hr class='footerdivider' />
@@ -309,6 +361,7 @@ class page_renderer
 			"{header-html}",
 			
 			"{navigation-bar}",
+			"{navigation-bar-bottom}",
 			
 			"{admin-details-name}",
 			"{admin-details-email}",
@@ -323,7 +376,8 @@ class page_renderer
 			$settings->favicon,
 			self::get_css_as_html(),
 			
-			self::render_navigation_bar($settings->navlinks),
+			self::render_navigation_bar($settings->nav_links, $settings->nav_links_extra, "top"),
+			self::render_navigation_bar($settings->nav_links_bottom, [], "bottom"),
 			
 			$settings->admindetails["name"],
 			$settings->admindetails["email"],
@@ -368,19 +422,18 @@ class page_renderer
 	
 	public static $nav_divider = "<span class='nav-divider inflexible'> | </span>";
 	
-	public static function render_navigation_bar($nav_links)
+	/*
+	 * @summary Function to render a navigation bar from an array of links. See
+	 * 			$settings->nav_links for format information.
+	 * 
+	 * @param $nav_links - The links to add to the navigation bar.
+	 * @param $nav_links_extra - The extra nav links to add to the "More..."
+	 * 							 menu.
+	 */
+	public static function render_navigation_bar($nav_links, $nav_links_extra, $class = "")
 	{
 		global $settings, $user, $isloggedin, $page;
-		$result = "<nav>\n";
-		
-		if($isloggedin)
-		{
-			$result .= "<span class='inflexible'>Logged in as " . self::render_username($user) . ".</span> "/* . page_renderer::$nav_divider*/;
-			$result .= "<span><a href='index.php?action=logout'>Logout</a></span>";
-			$result .= page_renderer::$nav_divider;
-		}
-		else
-			$result .= "<span class='inflexible'>Browsing as Anonymous.</span>" . /*page_renderer::$nav_divider . */"<span><a href='index.php?action=login'>Login</a></span>" . page_renderer::$nav_divider;
+		$result = "<nav class='$class'>\n";
 		
 		// Loop over all the navigation links
 		foreach($nav_links as $item)
@@ -391,6 +444,17 @@ class page_renderer
 				switch($item)
 				{
 					//keywords
+					case "user-status":
+						if($isloggedin)
+						{
+							$result .= "<span class='inflexible'>Logged in as " . self::render_username($user) . ".</span> "/* . page_renderer::$nav_divider*/;
+							$result .= "<span><a href='index.php?action=logout'>Logout</a></span>";
+							$result .= page_renderer::$nav_divider;
+						}
+						else
+							$result .= "<span class='inflexible'>Browsing as Anonymous.</span>" . /*page_renderer::$nav_divider . */"<span><a href='index.php?action=login'>Login</a></span>" . page_renderer::$nav_divider;
+						break;
+					
 					case "search": // Displays a search bar
 						$result .= "<span class='inflexible'><form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /></form></span>";
 						break;
@@ -401,7 +465,7 @@ class page_renderer
 					
 					case "menu":
 						$result .= "<span class='inflexible nav-more'>More...</span>";
-						// todo Add the submenu
+						// todo Add the submenu with $nav_links_extra
 						break;
 					
 					// It isn't a keyword, so just output it directly
@@ -444,38 +508,6 @@ class page_renderer
 		return $result;
 	}
 }
-
-///////////////////////////////////////////
-//////////////// Functions ////////////////
-///////////////////////////////////////////
-//from http://php.net/manual/en/function.filesize.php#106569
-//edited by Starbeamrainbowlabs
-function human_filesize($bytes, $decimals = 2)
-{
-	$sz = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "YB", "ZB"];
-	$factor = floor((strlen($bytes) - 1) / 3);
-	return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
-}
-//from http://snippets.pro/snippet/137-php-convert-the-timestamp-to-human-readable-format/
-function human_time_since($time)
-{
-	$timediff = time() - $time;
-	$tokens = array (
-		31536000 => 'year',
-		2592000 => 'month',
-		604800 => 'week',
-		86400 => 'day',
-		3600 => 'hour',
-		60 => 'minute',
-		1 => 'second'
-	);
-	foreach ($tokens as $unit => $text) {
-		if ($timediff < $unit) continue;
-		$numberOfUnits = floor($timediff / $unit);
-		return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':'').' ago';
-	}
-}
-///////////////////////////////////////////
 
 //////////////////////////
 ///  Module functions  ///
