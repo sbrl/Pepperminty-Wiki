@@ -88,10 +88,17 @@ $settings->admindetails = [
 //		[ "Display Text", "Link" ]
 // You can also use strings here and they will be printed as-is, except the
 // following special strings:
-//		search: Expands to a search box.
-//		divider: Expands to a divider to separate links.
-//		more: Expands to the "More..." submenu.
+// 		user-status		Expands to the user's login information
+//						e.g. "Logged in as {name}. | Logout".
+//						e.g. "Browsing as Anonymous. | Login".
+//		
+//		search			Expands to a search box.
+//		
+//		divider			Expands to a divider to separate stuff.
+//		
+//		more			Expands to the "More..." submenu.
 $settings->nav_links = [
+	"user-status",
 	[ "Home", "index.php" ],
 	[ "Login", "index.php?action=login" ],
 	"search",
@@ -120,7 +127,9 @@ $settings->nav_links_bottom = [
 // inside a <style> tag. This may also be a url - urls will be referenced via a
 // <link rel='stylesheet' /> tag.
 $settings->css = "body { margin: 2rem 0; font-family: sans-serif; color: #111111; background: #eee8f2; }
-nav { position: absolute; top: 0; left: 0; right: 0; display: flex; background-color: #8a62a7; color: #ffa74d; box-shadow: inset 0 -0.6rem 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
+nav.top { position: absolute; top: 0; left: 0; right: 0; box-shadow: inset 0 -0.6rem 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
+nav.bottom { position: absolute; left: 0; right: 0; box-shadow: inset 0 0.8rem 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
+nav { display: flex; background-color: #8a62a7; color: #ffa74d;  }
 nav > span { flex: 1; text-align: center; line-height: 2; display: inline-block; margin: 0; padding: 0.3rem 0.5rem; transition: all 0.25s; border-left: 3px solid #442772; border-right: 3px solid #442772; }
 nav > span:not(.inflexible):hover { transform: scale(1.1); }
 nav a { text-decoration: none; font-weight: bolder; color: inherit; }
