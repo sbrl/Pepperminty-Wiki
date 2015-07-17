@@ -127,22 +127,35 @@ $settings->nav_links_bottom = [
 // inside a <style> tag. This may also be a url - urls will be referenced via a
 // <link rel='stylesheet' /> tag.
 $settings->css = "body { margin: 2rem 0; font-family: sans-serif; color: #111111; background: #eee8f2; }
+
+nav { display: flex; background-color: #8a62a7; color: #ffa74d;  }
 nav.top { position: absolute; top: 0; left: 0; right: 0; box-shadow: inset 0 -0.6rem 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
 nav.bottom { position: absolute; left: 0; right: 0; box-shadow: inset 0 0.8rem 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
-nav { display: flex; background-color: #8a62a7; color: #ffa74d;  }
+
 nav > span { flex: 1; text-align: center; line-height: 2; display: inline-block; margin: 0; padding: 0.3rem 0.5rem; border-left: 3px solid #442772; border-right: 3px solid #442772; }
-nav a { text-decoration: none; font-weight: bolder; color: inherit; }
+nav:not(.nav-more-menu) a { text-decoration: none; font-weight: bolder; color: inherit; }
 .nav-divider { color: transparent; }
-.nav-more { background-color: #442772; }
+
+.nav-more { position: relative; background-color: #442772; }
+.nav-more label { cursor: pointer; }
+.nav-more-menu { display: none; position: absolute; flex-direction: column; top: 2.6rem; right: -0.2rem; background-color: #8a62a7; border-top: 3px solid #442772; border-bottom: 3px solid #442772;}
+input[type=checkbox]:checked ~ .nav-more-menu { display: block; box-shadow: 0.4rem 0.4rem 1rem 0 rgba(50, 50, 50, 0.5); }
+.nav-more-menu span { min-width: 8rem; }
+
 .inflexible { flex: none; }
+.off-screen { position: absolute; top: -1000px; left: -1000px;}
+
 input[type=search] { width: 14rem; padding: 0.3rem 0.4rem; font-size: 1rem; color: white; background: rgba(255, 255, 255, 0.4); border: 0; border-radius: 0.3rem; }
 input[type=search]::-webkit-input-placeholder { color : rgba(255, 255, 255, 0.75); }
+input[type=button], input[type=submit] { cursor: pointer; }
+
 h1 { text-align: center; }
 .sitename { margin-top: 5rem; margin-bottom: 3rem; font-size: 2.5rem; }
 main { padding: 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
+
 textarea { width: 100%; min-height: 35rem; }
 textarea ~ input[type=submit] { width: calc(100% + 0.5rem); padding: 0.5rem; font-weight: bolder; }
-input[type=button], input[type=submit] { cursor: pointer; }
+
 footer { padding: 2rem; }
 ";
 

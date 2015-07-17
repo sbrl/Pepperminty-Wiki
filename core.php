@@ -464,8 +464,10 @@ class page_renderer
 						break;
 					
 					case "menu":
-						$result .= "<span class='inflexible nav-more'>More...</span>";
-						// todo Add the submenu with $nav_links_extra
+						$result .= "<span class='inflexible nav-more'><label for='more-menu-toggler'>More...</label>
+<input type='checkbox' class='off-screen' id='more-menu-toggler' />";
+						$result .= page_renderer::render_navigation_bar($nav_links_extra, [], "nav-more-menu");
+						$result .= "</span>";
 						break;
 					
 					// It isn't a keyword, so just output it directly
