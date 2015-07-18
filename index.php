@@ -86,6 +86,10 @@ $settings->admindetails = [
 	"email" => "admin@localhost"
 ];
 
+// Whether to only allow adminstrators to export the your wiki as a zip using
+// the page-export module.
+$settings->export_allow_only_admins = false;
+
 // Array of links and display text to display at the top of the site.
 // Format:
 //		[ "Display Text", "Link" ]
@@ -286,6 +290,8 @@ function human_filesize($bytes, $decimals = 2)
  * @source	http://snippets.pro/snippet/137-php-convert-the-timestamp-to-human-readable-format/
  * 
  * @param $time - The timestamp to convert.
+ * 
+ * @returns {string} - The time since the given timestamp pas a human-readable string.
  */
 function human_time_since($time)
 {
@@ -304,6 +310,28 @@ function human_time_since($time)
 		$numberOfUnits = floor($timediff / $unit);
 		return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':'').' ago';
 	}
+}
+
+/*
+ * @summary A recursive glob() function.
+ * 
+ * @param $pattern - The glob pattern to use to find filenames.
+ * @param $flags - The glob flags to use when finding filenames.
+ * 
+ * @returns {array} - An array of the filepaths that match the given glob.
+ */
+// From http://in.php.net/manual/en/function.glob.php#106595
+function glob_recursive($pattern, $flags = 0)
+{
+	$files = glob($pattern, $flags);
+	foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir)
+	{
+		$prefix = "$dir/";
+		// Remove the "./" from the beginning if it exists
+		if(substr($prefix, 0, 2) == "./") $prefix = substr($prefix, 2);
+		$files = array_merge($files, glob_recursive($prefix . basename($pattern), $flags));
+	}
+	return $files;
 }
 
 /*
@@ -420,19 +448,6 @@ function hide_email($str)
  */
 if(!file_exists("./pageindex.json"))
 {
-	// From http://in.php.net/manual/en/function.glob.php#106595
-	function glob_recursive($pattern, $flags = 0)
-	{
-		$files = glob($pattern, $flags);
-		foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir)
-		{
-			$prefix = "$dir/";
-			// Remove the "./" from the beginning if it exists
-			if(substr($prefix, 0, 2) == "./") $prefix = substr($prefix, 2);
-			$files = array_merge($files, glob_recursive($prefix . basename($pattern), $flags));
-		}
-		return $files;
-	}
 	$existingpages = glob_recursive("*.md");
 	$pageindex = new stdClass();
 	// We use a for loop here because foreach doesn't loop over new values inserted
@@ -551,9 +566,12 @@ class page_renderer
 		<p><em>Timed at {generation-date}</em>
 		<p><em>Powered by Pepperminty Wiki.</em></p>";
 	
-	public static function render($title, $content, $body_template)
+	public static function render($title, $content, $body_template = false)
 	{
 		global $settings, $start_time;
+		
+		if($body_template === false)
+			$body_template = page_renderer::$main_content_template;
 		
 		$result = self::$html_template;
 		$result = str_replace("{body}", $body_template, $result);
@@ -1014,6 +1032,58 @@ register_module([
 				exit(page_renderer::render_main("Error saving page - $settings->sitename", "<p>$settings->sitename failed to write your changes to the disk. Your changes have not been saved, but you might be able to recover your edit by pressing the back button in your browser.</p>
 				<p>Please tell the administrator of this wiki (" . $settings->admindetails["name"] . ") about this problem.</p>"));
 			}
+		});
+	}
+]);
+
+
+
+
+register_module([
+	"name" => "Export",
+	"version" => "0.1",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds a page that you can use to export your wiki as a .zip file. Uses \$settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
+	"id" => "page-export",
+	"code" => function() {
+		add_action("export", function() {
+			global $settings, $pageindex, $isadmin;
+			
+			if($settings->export_allow_only_admins && !$isadmin)
+			{
+				http_response_code(401);
+				exit(page_renderer::render("Export error - $settings->sitename", "Only administrators of $settings->sitename are allowed to export the wiki as a zip. <a href='?action=$settings->defaultaction&page='>Return to the $settings->defaultpage</a>."));
+			}
+			
+			$tmpfilename = tempnam(sys_get_temp_dir(), "pepperminty-wiki-");
+			
+			$zip = new ZipArchive();
+			
+			if($zip->open($tmpfilename, ZipArchive::CREATE) !== true)
+			{
+				http_response_code(507);
+				exit(page_renderer::render("Export error - $settings->sitename", "Pepperminty Wiki was unable to open a temporary file to store the exported data in. Please contact $settings->sitename's administrator (" . $settings->admindetails["name"] . " at " . hide_email($settings->admindetails["email"]) . ") for assistance."));
+			}
+			
+			foreach($pageindex as $entry)
+			{
+				$zip->addFile("./$entry->filename", $entry->filename);
+			}
+			
+			if($zip->close() !== true)
+			{
+				http_response_code(500);
+				exit(page_renderer::render("Export error - $settings->sitename", "Pepperminty wiki was unable to close the temporary zip file after creating it. Please contact $settings->sitename's administrator (" . $settings->admindetails["name"] . " at " . hide_email($settings->admindetails["email"]) . ") for assistance."));
+			}
+			
+			header("content-type: application/zip");
+			header("content-disposition: attachment; filename=$settings->sitename-export.zip");
+			header("content-length: " . filesize($tmpfilename));
+			
+			$zip_handle = fopen($tmpfilename, "rb");
+			fpassthru($zip_handle);
+			fclose($zip_handle);
+			unlink($tmpfilename);
 		});
 	}
 ]);

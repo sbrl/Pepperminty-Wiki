@@ -84,6 +84,8 @@ function human_filesize($bytes, $decimals = 2)
  * @source	http://snippets.pro/snippet/137-php-convert-the-timestamp-to-human-readable-format/
  * 
  * @param $time - The timestamp to convert.
+ * 
+ * @returns {string} - The time since the given timestamp pas a human-readable string.
  */
 function human_time_since($time)
 {
@@ -102,6 +104,28 @@ function human_time_since($time)
 		$numberOfUnits = floor($timediff / $unit);
 		return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':'').' ago';
 	}
+}
+
+/*
+ * @summary A recursive glob() function.
+ * 
+ * @param $pattern - The glob pattern to use to find filenames.
+ * @param $flags - The glob flags to use when finding filenames.
+ * 
+ * @returns {array} - An array of the filepaths that match the given glob.
+ */
+// From http://in.php.net/manual/en/function.glob.php#106595
+function glob_recursive($pattern, $flags = 0)
+{
+	$files = glob($pattern, $flags);
+	foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir)
+	{
+		$prefix = "$dir/";
+		// Remove the "./" from the beginning if it exists
+		if(substr($prefix, 0, 2) == "./") $prefix = substr($prefix, 2);
+		$files = array_merge($files, glob_recursive($prefix . basename($pattern), $flags));
+	}
+	return $files;
 }
 
 /*
@@ -218,19 +242,6 @@ function hide_email($str)
  */
 if(!file_exists("./pageindex.json"))
 {
-	// From http://in.php.net/manual/en/function.glob.php#106595
-	function glob_recursive($pattern, $flags = 0)
-	{
-		$files = glob($pattern, $flags);
-		foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir)
-		{
-			$prefix = "$dir/";
-			// Remove the "./" from the beginning if it exists
-			if(substr($prefix, 0, 2) == "./") $prefix = substr($prefix, 2);
-			$files = array_merge($files, glob_recursive($prefix . basename($pattern), $flags));
-		}
-		return $files;
-	}
 	$existingpages = glob_recursive("*.md");
 	$pageindex = new stdClass();
 	// We use a for loop here because foreach doesn't loop over new values inserted
@@ -349,9 +360,12 @@ class page_renderer
 		<p><em>Timed at {generation-date}</em>
 		<p><em>Powered by Pepperminty Wiki.</em></p>";
 	
-	public static function render($title, $content, $body_template)
+	public static function render($title, $content, $body_template = false)
 	{
 		global $settings, $start_time;
+		
+		if($body_template === false)
+			$body_template = page_renderer::$main_content_template;
 		
 		$result = self::$html_template;
 		$result = str_replace("{body}", $body_template, $result);

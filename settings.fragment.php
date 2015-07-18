@@ -83,6 +83,10 @@ $settings->admindetails = [
 	"email" => "admin@localhost"
 ];
 
+// Whether to only allow adminstrators to export the your wiki as a zip using
+// the page-export module.
+$settings->export_allow_only_admins = false;
+
 // Array of links and display text to display at the top of the site.
 // Format:
 //		[ "Display Text", "Link" ]
