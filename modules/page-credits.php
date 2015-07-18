@@ -43,12 +43,12 @@ register_module([
 			
 			$title = "Credits - $settings->sitename";
 			$content = "<h1>$settings->sitename credits</h1>
-	<p>$settings->sitename is powered by Pepperminty Wiki - an entire wiki packed inside a single file, which was built by <a href='//starbeamrainbowlabs.com'>Starbeamrainbowlabs</a>, and can be found <a href='//github.com/sbrl/Pepperminty-Wiki/'>on github</a> (contributors will ablso be listed here in the future).</p>
+	<p>$settings->sitename is powered by Pepperminty Wiki - an entire wiki packed inside a single file, which was built by <a href='//starbeamrainbowlabs.com'>Starbeamrainbowlabs</a>, and can be found <a href='//github.com/sbrl/Pepperminty-Wiki/'>on GitHub</a> (contributors will ablso be listed here in the future).</p>
 	<h2>Main Credits</h2>
 	$credits_html
 	<h2>Site status</h2>
 	<table>
-		<tr><th>Site name:</th><td>$settings->sitename (<a href='?action=update'>Update - Administrators only</a>)</td></tr>
+		<tr><th>Site name:</th><td>$settings->sitename (<a href='?action=update'>Update - Administrators only</a>, <a href='?action=export'>Export as zip - Check for permission first</a>)</td></tr>
 		<tr><th>Pepperminty Wiki version:</th><td>$version</td></tr>
 		<tr><th>Number of pages:</th><td>" . count(get_object_vars($pageindex)) . "</td></tr>
 		<tr><th>Number of modules:</th><td>" . count($modules) . "</td></tr>
