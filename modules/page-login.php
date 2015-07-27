@@ -20,11 +20,13 @@ register_module([
 			$content = "<h1>Login to $settings->sitename</h1>\n";
 			if(isset($_GET["failed"]))
 				$content .= "\t\t<p><em>Login failed.</em></p>\n";
-			$content .= "\t\t<form method='post' action='index.php?action=checklogin&returnto=" . rawurlencode($_SERVER['REQUEST_URI']) . "'><label for='user'>Username:</label>
-				<input type='text' name='user' />
+			$content .= "\t\t<form method='post' action='index.php?action=checklogin&returnto=" . rawurlencode($_SERVER['REQUEST_URI']) . "'>
+				<label for='user'>Username:</label>
+				<input type='text' name='user' id='user' />
 				<br />
 				<label for='pass'>Password:</label>
-				<input type='password' name='pass' />
+				<input type='password' name='pass' id='pass' />
+				<br />
 				<input type='submit' value='Login' />
 			</form>";
 			exit(page_renderer::render_main($title, $content));

@@ -157,8 +157,10 @@ h1 { text-align: center; }
 .sitename { margin-top: 5rem; margin-bottom: 3rem; font-size: 2.5rem; }
 main { padding: 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 
-textarea { width: 100%; min-height: 35rem; }
-textarea ~ input[type=submit] { width: calc(100% + 0.5rem); padding: 0.5rem; font-weight: bolder; }
+label { display: inline-block; min-width: 7rem; }
+input[type=text], input[type=password], textarea { margin: 0.5rem 0.8rem; padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
+textarea { width: calc(100% - 2rem); min-height: 35rem; font-size: 1.25rem; }
+textarea ~ input[type=submit] { width: calc(100% - 0.3rem); margin: 0.5rem 0.8rem; padding: 0.5rem; font-weight: bolder; }
 
 footer { padding: 2rem; }
 ";
