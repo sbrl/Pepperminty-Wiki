@@ -166,7 +166,7 @@ textarea { width: calc(100% - 2rem); min-height: 35rem; font-size: 1.25rem; }
 textarea ~ input[type=submit] { width: calc(100% - 0.3rem); margin: 0.5rem 0.8rem; padding: 0.5rem; font-weight: bolder; }
 
 footer { padding: 2rem; }
-";
+/* #ffdb6d #36962c */";
 
 // A url that points to the favicon you want to use for your wiki. By default
 // this is set to a data: url of a Peppermint.
@@ -568,48 +568,65 @@ class page_renderer
 		<p><em>Timed at {generation-date}</em>
 		<p><em>Powered by Pepperminty Wiki.</em></p>";
 	
+	// An array of functions that have been registered to process the
+	// find / replace array before the page is rendered. Note that the function
+	// should take a *reference* to an array as its only argument.
+	protected static $part_processors = [];
+	
+	// Registers a function as a part post processor.
+	public static function register_part_preprocessor($function)
+	{
+		// Make sure that the function we are about to register is valid
+		if(!is_callable($function))
+		{
+			http_response_code(500);
+			$admin_name = $settings->admindetails["name"];
+			$admin_email = hide_email($settings->admindetails["email"]);
+			exit(page_renderer::render("$settings->sitename - Module Error", "<p>$settings->sitename has got a misbehaving module installed that tried to register an invalid HTML handler with the page renderer. Please contact $settings->sitename's administrator $admin_name at <a href='mailto:$admin_email'>$admin_email</a>."));
+		}
+		
+		self::$part_processors[] = $function;
+		
+		return true;
+	}
+	
 	public static function render($title, $content, $body_template = false)
 	{
 		global $settings, $start_time;
 		
 		if($body_template === false)
-			$body_template = page_renderer::$main_content_template;
+			$body_template = self::$main_content_template;
+		
+		$parts = [
+			"{body}" => $body_template,
+			
+			"{sitename}" => $settings->sitename,
+			"{favicon-url}" => $settings->favicon,
+			"{header-html}" => self::get_css_as_html(),
+			
+			"{navigation-bar}" => self::render_navigation_bar($settings->nav_links, $settings->nav_links_extra, "top"),
+			"{navigation-bar-bottom}" => self::render_navigation_bar($settings->nav_links_bottom, [], "bottom"),
+			
+			"{admin-details-name}" => $settings->admindetails["name"],
+			"{admin-details-email}" => $settings->admindetails["email"],
+			
+			"{admins-name-list}" => implode(", ", $settings->admins),
+			
+			"{generation-date}" => date("l jS \of F Y \a\\t h:ia T"),
+			
+			"{all-pages-datalist}" => self::generate_all_pages_datalist()
+		];
+		
+		// Pass the parts through the part processors
+		foreach(self::$part_processors as $function)
+		{
+			$function($parts);
+		}
 		
 		$result = self::$html_template;
-		$result = str_replace("{body}", $body_template, $result);
-		$result = str_replace([
-			"{sitename}",
-			"{favicon-url}",
-			"{header-html}",
-			
-			"{navigation-bar}",
-			"{navigation-bar-bottom}",
-			
-			"{admin-details-name}",
-			"{admin-details-email}",
-			
-			"{admins-name-list}",
-			
-			"{generation-date}",
-			
-			"{all-pages-datalist}"
-		], [
-			$settings->sitename,
-			$settings->favicon,
-			self::get_css_as_html(),
-			
-			self::render_navigation_bar($settings->nav_links, $settings->nav_links_extra, "top"),
-			self::render_navigation_bar($settings->nav_links_bottom, [], "bottom"),
-			
-			$settings->admindetails["name"],
-			$settings->admindetails["email"],
-			
-			implode(", ", $settings->admins),
-			
-			date("l jS \of F Y \a\\t h:ia T"),
-			
-			self::generate_all_pages_datalist()
-		], $result);
+		$result = str_replace("{body}", $parts["{body}"], $result);
+		
+		$result = str_replace(array_keys($parts), array_values($parts), $result);
 		
 		$result = str_replace([
 			"{title}",
@@ -792,6 +809,58 @@ register_module([
 			else
 			{
 				exit(page_renderer::render_main("Hashed string", "<p><code>" . $_GET["string"] . "</code> → <code>" . hash("sha256", $_GET["string"] . "</code></p>")));
+			}
+		});
+	}
+]);
+
+
+
+
+register_module([
+	"name" => "Sidebar",
+	"version" => "0.1",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "",
+	"id" => "extra-sidebar",
+	"code" => function() {
+		$show_sidebar = false;
+		
+		// Show the sidebar if it is enabled in the settings
+		if(isset($settings->sidebar_show) && $settings->sidebar_show === true)
+			$show_sidebar = true;
+		
+		// Also show and persist the sidebar if the special GET parameter
+		// sidebar is seet
+		if(!$show_sidebar && isset($_GET["sidebar"]))
+		{
+			$show_sidebar = true;
+			// Set a cookie to persist the display of the sidebar
+			setcookie("sidebar_show", "true", 60 * 60 * 24 * 30);
+		}
+		
+		// Show the sidebar if the cookie is set
+		if(!$show_sidebar && isset($_COOKIE["sidebar_show"]))
+			$show_sidebar = true;
+		
+		// Delete the cookie and hide the sidebar if the special GET paramter
+		// nosidebar is set
+		if(isset($_GET["nosidebar"]))
+		{
+			$show_sidebar = false;
+			unset($_COOKIE["sidebar_show"]);
+			setcookie("sidebar_show", null, time() - 3600);
+		}
+		
+		page_renderer::register_part_preprocessor(function(&$parts) use ($show_sidebar) {
+			global $settings;
+			
+			if($show_sidebar)
+			{
+				// Show the sidebar
+				$sidebar_contents = "Testing";
+				$parts["{body}"] = "<aside class='sidebar'>$sidebar_contents</aside>
+<div>" . $parts["{body}"] . "</div>";
 			}
 		});
 	}

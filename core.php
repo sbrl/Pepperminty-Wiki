@@ -360,48 +360,65 @@ class page_renderer
 		<p><em>Timed at {generation-date}</em>
 		<p><em>Powered by Pepperminty Wiki.</em></p>";
 	
+	// An array of functions that have been registered to process the
+	// find / replace array before the page is rendered. Note that the function
+	// should take a *reference* to an array as its only argument.
+	protected static $part_processors = [];
+	
+	// Registers a function as a part post processor.
+	public static function register_part_preprocessor($function)
+	{
+		// Make sure that the function we are about to register is valid
+		if(!is_callable($function))
+		{
+			http_response_code(500);
+			$admin_name = $settings->admindetails["name"];
+			$admin_email = hide_email($settings->admindetails["email"]);
+			exit(page_renderer::render("$settings->sitename - Module Error", "<p>$settings->sitename has got a misbehaving module installed that tried to register an invalid HTML handler with the page renderer. Please contact $settings->sitename's administrator $admin_name at <a href='mailto:$admin_email'>$admin_email</a>."));
+		}
+		
+		self::$part_processors[] = $function;
+		
+		return true;
+	}
+	
 	public static function render($title, $content, $body_template = false)
 	{
 		global $settings, $start_time;
 		
 		if($body_template === false)
-			$body_template = page_renderer::$main_content_template;
+			$body_template = self::$main_content_template;
+		
+		$parts = [
+			"{body}" => $body_template,
+			
+			"{sitename}" => $settings->sitename,
+			"{favicon-url}" => $settings->favicon,
+			"{header-html}" => self::get_css_as_html(),
+			
+			"{navigation-bar}" => self::render_navigation_bar($settings->nav_links, $settings->nav_links_extra, "top"),
+			"{navigation-bar-bottom}" => self::render_navigation_bar($settings->nav_links_bottom, [], "bottom"),
+			
+			"{admin-details-name}" => $settings->admindetails["name"],
+			"{admin-details-email}" => $settings->admindetails["email"],
+			
+			"{admins-name-list}" => implode(", ", $settings->admins),
+			
+			"{generation-date}" => date("l jS \of F Y \a\\t h:ia T"),
+			
+			"{all-pages-datalist}" => self::generate_all_pages_datalist()
+		];
+		
+		// Pass the parts through the part processors
+		foreach(self::$part_processors as $function)
+		{
+			$function($parts);
+		}
 		
 		$result = self::$html_template;
-		$result = str_replace("{body}", $body_template, $result);
-		$result = str_replace([
-			"{sitename}",
-			"{favicon-url}",
-			"{header-html}",
-			
-			"{navigation-bar}",
-			"{navigation-bar-bottom}",
-			
-			"{admin-details-name}",
-			"{admin-details-email}",
-			
-			"{admins-name-list}",
-			
-			"{generation-date}",
-			
-			"{all-pages-datalist}"
-		], [
-			$settings->sitename,
-			$settings->favicon,
-			self::get_css_as_html(),
-			
-			self::render_navigation_bar($settings->nav_links, $settings->nav_links_extra, "top"),
-			self::render_navigation_bar($settings->nav_links_bottom, [], "bottom"),
-			
-			$settings->admindetails["name"],
-			$settings->admindetails["email"],
-			
-			implode(", ", $settings->admins),
-			
-			date("l jS \of F Y \a\\t h:ia T"),
-			
-			self::generate_all_pages_datalist()
-		], $result);
+		$result = str_replace("{body}", $parts["{body}"], $result);
+		
+		$result = str_replace(array_keys($parts), array_values($parts), $result);
 		
 		$result = str_replace([
 			"{title}",

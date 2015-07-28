@@ -144,6 +144,9 @@ th { text-align: left; }
  * Allow users to change their passwords
  * Add auto updating system that doesn't wipe your settings and modules
  * Make links to non existent pages red
+ * Optional module support (modules that aren't selected by default in the downloader & builder)
+ * Add an optional sidebar (as a module maybe?)
+ * Add redirect pages (as a module?)
  * .... (open an issue if you have any suggestions!)
 
 --Starbeamrainbowlabs

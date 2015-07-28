@@ -163,7 +163,7 @@ textarea { width: calc(100% - 2rem); min-height: 35rem; font-size: 1.25rem; }
 textarea ~ input[type=submit] { width: calc(100% - 0.3rem); margin: 0.5rem 0.8rem; padding: 0.5rem; font-weight: bolder; }
 
 footer { padding: 2rem; }
-";
+/* #ffdb6d #36962c */";
 
 // A url that points to the favicon you want to use for your wiki. By default
 // this is set to a data: url of a Peppermint.
