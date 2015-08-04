@@ -54,11 +54,6 @@ register_module([
 		<style>
 			body { display: flex; }
 			.main-container { flex: 1; }
-			
-			.sidebar { position: relative; z-index: 100; margin-top: 0.6rem; padding: 1rem 3rem 2rem 0.4rem; }
-			.sidebar ul { position: relative; margin: 0.3rem 0.3rem 0.3rem 1rem; padding: 0.3rem 0.3rem 0.3rem 1rem; list-style-type: none; }
-			.sidebar li { position: relative; margin: 0.3rem; padding: 0.3rem; }
-			
 		</style>";
 			}
 		});
