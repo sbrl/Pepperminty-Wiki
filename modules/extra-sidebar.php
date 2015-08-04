@@ -35,17 +35,77 @@ register_module([
 		}
 		
 		page_renderer::register_part_preprocessor(function(&$parts) use ($show_sidebar) {
-			global $settings;
+			global $settings, $pageindex;
 			
 			if($show_sidebar)
 			{
 				// Show the sidebar
-				$sidebar_contents = "Testing";
-				$parts["{body}"] = "<aside class='sidebar'>$sidebar_contents</aside>
-<div>" . $parts["{body}"] . "</div>";
+				$exec_start = microtime(true);
+				
+				$sidebar_contents = "";
+				$sidebar_contents .= render_sidebar($pageindex);
+				
+				$parts["{body}"] = "<aside class='sidebar'>
+			$sidebar_contents
+			<!-- Sidebar rendered in " . (microtime(true) - $exec_start) . "s -->
+		</aside>
+		<div class='main-container'>" . $parts["{body}"] . "</div>
+		<!-------------->
+		<style>
+			body { display: flex; }
+			.main-container { flex: 1; }
+			
+			.sidebar-tree, .sidebar-tree ul { margin: 0; padding: 0; list-style-type: none; }
+			.sidebar-tree ul { position: relative; margin-left: 1rem; }
+			.sidebar-tree ul ul { margin-left: 0.5rem; }
+			.sidebar-tree ul:before { content: \"\"; display: block; width: 0; position: absolute; top: 0; left: 0; bottom: 0; border-left: 1px solid; }
+			.sidebar-tree li { position: relative; margin: 0; padding: 0;}
+		</style>";
 			}
 		});
 	}
 ]);
+
+/* 
+ * @summary Renders the sidebar for the given pageindex.
+ * 
+ * @param $pageindex {array} - The pageindex to renderthe sidebar for
+ * @param $root_pagename {string} - The pagename that should be considered the root of the rendering. You don't usually need to use this, it is used by the algorithm itself since it is recursive.
+ * 
+ * @returns {string} A HTML rendering of the sidebar for the given pageindex
+ */
+function render_sidebar($pageindex, $root_pagename = "")
+{
+	global $settings;
+	
+	$result = "<ul";
+	// If this is the very root of the tree, add an extra class to it
+	if($root_pagename == "") $result .= " class='sidebar-tree'";
+	$result .=">";
+	foreach ($pageindex as $pagename => $details)
+	{
+		// If we have a valid root pagename, and it isn't present at the
+		// beginning of the current pagename, skip it
+		if($root_pagename !== "" && strpos($pagename, $root_pagename) !== 0)
+			continue;
+		
+		// The current page is the same as the root page, skip it
+		if($pagename == $root_pagename)
+			continue;
+		
+		
+		// If the part of the current pagename that comes after the root
+		// pagename has a slash in it, skip it as it is a sub-sub page.
+		if(strpos(substr($pagename, strlen($root_pagename)), "/") !== false)
+			continue;
+		
+		$result .= "<li><a href='?action=$settings->defaultaction&page=$pagename'>$pagename</a>\n";
+		$result .= render_sidebar($pageindex, $pagename);
+		$result .= "</li>\n";
+	}
+	$result .= "</ul>\n";
+	
+	return $result == "<ul class='sidebar-tree'></ul>" ? "" : $result;
+}
 
 ?>

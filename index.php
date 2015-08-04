@@ -853,18 +853,69 @@ register_module([
 		}
 		
 		page_renderer::register_part_preprocessor(function(&$parts) use ($show_sidebar) {
-			global $settings;
+			global $settings, $pageindex;
 			
 			if($show_sidebar)
 			{
 				// Show the sidebar
-				$sidebar_contents = "Testing";
-				$parts["{body}"] = "<aside class='sidebar'>$sidebar_contents</aside>
-<div>" . $parts["{body}"] . "</div>";
+				$exec_start = microtime(true);
+				
+				$sidebar_contents = "";
+				$sidebar_contents .= render_sidebar($pageindex);
+				
+				$parts["{body}"] = "<aside class='sidebar'>
+			$sidebar_contents
+			<!-- Sidebar rendered in " . (microtime(true) - $exec_start) . "s -->
+		</aside>
+		<div class='main-container'>" . $parts["{body}"] . "</div>
+		<!-------------->
+		<style>
+			body { display: flex; }
+			.main-container { flex: 1; }
+		</style>";
 			}
 		});
 	}
 ]);
+
+/* 
+ * @summary Renders the sidebar for the given pageindex.
+ * 
+ * @param $pageindex {array} - The pageindex to renderthe sidebar for
+ * @param $root_pagename {string} - The pagename that should be considered the root of the rendering. You don't usually need to use this, it is used by the algorithm itself since it is recursive.
+ * 
+ * @returns {string} A HTML rendering of the sidebar for the given pageindex
+ */
+function render_sidebar($pageindex, $root_pagename = "")
+{
+	global $settings;
+	
+	$result = "<ul>";
+	foreach ($pageindex as $pagename => $details)
+	{
+		// If we have a valid root pagename, and it isn't present at the
+		// beginning of the current pagename, skip it
+		if($root_pagename !== "" && strpos($pagename, $root_pagename) !== 0)
+			continue;
+		
+		// The current page is the same as the root page, skip it
+		if($pagename == $root_pagename)
+			continue;
+		
+		
+		// If the part of the current pagename that comes after the root
+		// pagename has a slash in it, skip it as it is a sub-sub page.
+		if(strpos(substr($pagename, strlen($root_pagename)), "/") !== false)
+			continue;
+		
+		$result .= "<li><a href='?action=$settings->defaultaction&page=$pagename'>$pagename</a>\n";
+		$result .= render_sidebar($pageindex, $pagename);
+		$result .= "</li>";
+	}
+	$result .= "</ul>";
+	
+	return $result == "<ul></ul>" ? "" : $result;
+}
 
 
 
