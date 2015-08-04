@@ -3,7 +3,7 @@ register_module([
 	"name" => "Sidebar",
 	"version" => "0.1",
 	"author" => "Starbeamrainbowlabs",
-	"description" => "",
+	"description" => "Adds a sidebar to the left hand side of every page. Add '\$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
 	"id" => "extra-sidebar",
 	"code" => function() {
 		$show_sidebar = false;
@@ -18,7 +18,7 @@ register_module([
 		{
 			$show_sidebar = true;
 			// Set a cookie to persist the display of the sidebar
-			setcookie("sidebar_show", "true", 60 * 60 * 24 * 30);
+			setcookie("sidebar_show", "true", time() + (60 * 60 * 24 * 30));
 		}
 		
 		// Show the sidebar if the cookie is set
@@ -55,11 +55,10 @@ register_module([
 			body { display: flex; }
 			.main-container { flex: 1; }
 			
-			.sidebar-tree, .sidebar-tree ul { margin: 0; padding: 0; list-style-type: none; }
-			.sidebar-tree ul { position: relative; margin-left: 1rem; }
-			.sidebar-tree ul ul { margin-left: 0.5rem; }
-			.sidebar-tree ul:before { content: \"\"; display: block; width: 0; position: absolute; top: 0; left: 0; bottom: 0; border-left: 1px solid; }
-			.sidebar-tree li { position: relative; margin: 0; padding: 0;}
+			.sidebar { position: relative; z-index: 100; margin-top: 0.6rem; padding: 1rem 3rem 2rem 0.4rem; }
+			.sidebar ul { position: relative; margin: 0.3rem 0.3rem 0.3rem 1rem; padding: 0.3rem 0.3rem 0.3rem 1rem; list-style-type: none; }
+			.sidebar li { position: relative; margin: 0.3rem; padding: 0.3rem; }
+			
 		</style>";
 			}
 		});
@@ -105,7 +104,7 @@ function render_sidebar($pageindex, $root_pagename = "")
 	}
 	$result .= "</ul>\n";
 	
-	return $result == "<ul class='sidebar-tree'></ul>" ? "" : $result;
+	return $result == "<ul></ul>\n" ? "" : $result;
 }
 
 ?>

@@ -153,6 +153,12 @@ input[type=search] { width: 14rem; padding: 0.3rem 0.4rem; font-size: 1rem; colo
 input[type=search]::-webkit-input-placeholder { color : rgba(255, 255, 255, 0.75); }
 input[type=button], input[type=submit] { cursor: pointer; }
 
+.sidebar { background: #9e7eb4; box-shadow: inset -0.6rem 0 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
+.sidebar-tree { position: relative; }
+.sidebar ul:before { content: \"\"; position: absolute; top: 0; left: 0; height: 100%; border-left: 2px dashed rgba(50, 50, 50, 0.4); }
+.sidebar li:before { content: \"\"; position: absolute; width: 1rem; top: 0.8rem; left: -1.2rem; border-bottom: 2px dashed rgba(50, 50, 50, 0.4); }
+.sidebar a { color: #ffa74d; }
+
 h1 { text-align: center; }
 .sitename { margin-top: 5rem; margin-bottom: 3rem; font-size: 2.5rem; }
 main { padding: 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }

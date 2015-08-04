@@ -156,6 +156,12 @@ input[type=search] { width: 14rem; padding: 0.3rem 0.4rem; font-size: 1rem; colo
 input[type=search]::-webkit-input-placeholder { color : rgba(255, 255, 255, 0.75); }
 input[type=button], input[type=submit] { cursor: pointer; }
 
+.sidebar { background: #9e7eb4; box-shadow: inset -0.6rem 0 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
+.sidebar-tree { position: relative; }
+.sidebar ul:before { content: \"\"; position: absolute; top: 0; left: 0; height: 100%; border-left: 2px dashed rgba(50, 50, 50, 0.4); }
+.sidebar li:before { content: \"\"; position: absolute; width: 1rem; top: 0.8rem; left: -1.2rem; border-bottom: 2px dashed rgba(50, 50, 50, 0.4); }
+.sidebar a { color: #ffa74d; }
+
 h1 { text-align: center; }
 .sitename { margin-top: 5rem; margin-bottom: 3rem; font-size: 2.5rem; }
 main { padding: 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
@@ -821,7 +827,7 @@ register_module([
 	"name" => "Sidebar",
 	"version" => "0.1",
 	"author" => "Starbeamrainbowlabs",
-	"description" => "",
+	"description" => "Adds a sidebar to the left hand side of every page. Add '\$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
 	"id" => "extra-sidebar",
 	"code" => function() {
 		$show_sidebar = false;
@@ -836,7 +842,7 @@ register_module([
 		{
 			$show_sidebar = true;
 			// Set a cookie to persist the display of the sidebar
-			setcookie("sidebar_show", "true", 60 * 60 * 24 * 30);
+			setcookie("sidebar_show", "true", time() + (60 * 60 * 24 * 30));
 		}
 		
 		// Show the sidebar if the cookie is set
@@ -872,6 +878,11 @@ register_module([
 		<style>
 			body { display: flex; }
 			.main-container { flex: 1; }
+			
+			.sidebar { position: relative; z-index: 100; margin-top: 0.6rem; padding: 1rem 3rem 2rem 0.4rem; }
+			.sidebar ul { position: relative; margin: 0.3rem 0.3rem 0.3rem 1rem; padding: 0.3rem 0.3rem 0.3rem 1rem; list-style-type: none; }
+			.sidebar li { position: relative; margin: 0.3rem; padding: 0.3rem; }
+			
 		</style>";
 			}
 		});
@@ -890,7 +901,10 @@ function render_sidebar($pageindex, $root_pagename = "")
 {
 	global $settings;
 	
-	$result = "<ul>";
+	$result = "<ul";
+	// If this is the very root of the tree, add an extra class to it
+	if($root_pagename == "") $result .= " class='sidebar-tree'";
+	$result .=">";
 	foreach ($pageindex as $pagename => $details)
 	{
 		// If we have a valid root pagename, and it isn't present at the
@@ -910,11 +924,11 @@ function render_sidebar($pageindex, $root_pagename = "")
 		
 		$result .= "<li><a href='?action=$settings->defaultaction&page=$pagename'>$pagename</a>\n";
 		$result .= render_sidebar($pageindex, $pagename);
-		$result .= "</li>";
+		$result .= "</li>\n";
 	}
-	$result .= "</ul>";
+	$result .= "</ul>\n";
 	
-	return $result == "<ul></ul>" ? "" : $result;
+	return $result == "<ul></ul>\n" ? "" : $result;
 }
 
 
