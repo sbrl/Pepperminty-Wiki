@@ -1,152 +1,84 @@
-# Pepperminty-Wiki
-A wiki in a box
+# Pepperminty Wiki
+A Wiki in a box
 
-Pepperminty wiki is a complete wiki in a box inspired by @am2064's Minty wiki, which can be found here: https://github.com/am2064/Minty-Wiki
+Pepperminty Wiki is a complete wiki contained in a single file, inspired by @am2064's [Minty Wiki](https://github.com/am2064/Minty-Wiki).
 
 ## Screenshots
-![Screenshot of Pepperminty Wiki](http://i.imgur.com/xOfCSEx.png)
-Above is the main page of the demo over at https://starbeamrainbowlabs.com/labs/peppermint.
+![Main Page Example](https://github.com/am2064/Minty-Wiki)
 
-## Demo
-A live demo (with editing disabled) can be found over at https://starbeamrainbowlabs.com/labs/peppermint.
+Above: A Main Page with the sidebar enabled.
 
 ## Features
- * Configurable settings
- * User login system
- * Page Creation
- * Markdown pages
- * Printable page view
- * Internal Links
- * Customisable theme
- * Basic 'search' bar
- * List of all pages and their last editors, edit times, and sizes
- * Inbuilt help page
+- Configurable settings
+- User login system
+- Page creation
+- Sub pages
+- Markdown-powered syntax
+- Internal links
+- Printable page view
+- Customisable theme
+- Basic 'search' bar
+- (Optional) Sidebar with a tree of all the current pages
+- List of all pages & details
+- Inbuilt help page
 
-## Downloading / Installing
+## Demo
+A Live demo of the latest stable version can be found over at [my website](//starbeamrainbowlabs.com/labs/peppermint)
 
+## Getting Started
 ### Requirements
-Any PHP enabled web server will do. You need to make sure that it has **session support** though, as they are used to allow users to log in. If your PHP server does not have session support, you will know about it quite quickly since it won't remember you logging in.
+- PHP-enabled webserver
+- PHP session support (for logging in, see [here](https://php.net/manual/en/session.installation.php) for more information)
+- Write access to own folder (only for editing)
 
-Information about configuring PHP sessions can be found here: https://php.net/manual/en/session.installation.php
+### Getting your own copy
+Setting up your own copy of Pepperminty Wiki is easy. Since Pepperminty Wiki works on a module based system, all you need to do is choose the modules you want installed, and then configure your new installation so that it fits your needs. There are several ways to do this:
 
-You must also make sure that PHP can write to the folder that you are going to install Pepperminty Wiki in.
+#### Method 1: Using the online downloader
+Pepperminty Wiki has a downloader that you can use to select the modules you want to include in your install. You can find it [here](//starbeamrainbowlabs.com/labs/peppermint/download.php).
 
-More detailed information about installing Pepperminty Wiki can be found on [this repository's wiki](https://github.com/sbrl/Pepperminty-Wiki/wiki/Installing) (CAUTION: OUTDATED - SEE BELOW).
+#### Method 2: Using the downloader offline
+You can also you the downloader offline. Simply clone this repository and then point your web browser at `your.server/path/to/perppminty/wiki/download.php`.
 
-### Getting Your Copy
-Pepperminty Wiki is made up of a single file: `index.php`. You can get it in 3 different ways:
+#### Method 3: Building your own from source
+Pepperminty Wiki can also be built from source (and I do this all the time when testing). Start by cloning the repository. Then go into the `modules` folder and append `.disabled` to the names of any modules you don't want to be included (e.g. `modules/page-edit.php` would become `modules/page-edit.php.disabled`). Then follow the instructions for your platform:
 
-#### From this repository
-The fastest way is to download the `index.php` file located in the repository. This is the development release, and should _mostly_ work. It comes pre-packaged with all the latest modules, too!
+##### Windows
+Simply run the `build.bat` script in the root of the repository. It will handle everything for you.
 
-#### From the latest release
-The repository also has (semi) regular releases that are (mostly) guaranteed to be stable. You can get the latest one from the [releases page](https://github.com/sbrl/Pepperminty-Wiki/releases). The latest release comes with all the latest plugin releases too!
+##### Linux and Everyone Else
+Run the following commands from the root of the repository in order, adjusting them for your specific platform (these are for a standard Ubuntu Server install):
 
-#### From the downloader
-If you want to choose which modules you want in your wiki, you can use the downloader. This lets you choose the modules you want - the system will automatically build the a customised copy just for you! The downloader will be updated on each release (if it hasn't been updated please open an issue).
+```bash
+rm index.php
+php rebuild_module_index.php
+php build.php
+```
 
-You can find it here: [Pepperminty Wiki Downloader](https://starbeamrainbowlabs.com/labs/peppermint/download.php)
+Here's an explanation of what each command does:
 
+1. Deletes the old `index.php` that comes with the repository
+2. Rebuilds the module index that the build scripts uses to determine what modules it should include when building
+3. Actually builds Pepperminty Wiki. Outputs to `index.php`.
 
-#### From source
-If you want to build Pepperminty Wiki from source, you can do this in 2 ways. Start by cloning this repository, and then follow the instructions below. If you don't have git installed, simply click the "Download Zip" button to the right.
+### Configuring
+To configure your new install, open `index.php` in your favourite text editor and take a look at the comments. They should be self explanatory, but if you need any help, just contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new).
 
-##### From the command line
-1. Delete the modules you don't want installed in the `modules/` folder
-2. Run `php rebuild_module_index.php`
-3. Delete `index.php` if it exists
-4. Run `php build.php`
-
-If you are on Windows, you can run the `build.bat` batch file I wrote instead of steps 2-4.
-
-##### From the web
-1. Start a local web server in the root of the cloned repository
-2. Navigate to `download.php` in your web browser on the local web server
-3. Tick the boxes of the modules you want
-4. Click the download button
-
-## Configuring
-To configure it, open your downloaded copy of `index.php` in your favourite editor - the settings can be configured at the top of the file. There are extensive comments that explain what each option does. Make sure that you change the allowed usernames and passwords! If you need more help, don't hesitate to open an issue on this repository or contact me.
-
-## Updating
-1. Rename your old `index.php` to `index.old.php` temporarily
-2. Obtain the new version (see above)
-3. Open both files for editing
-4. Copy your settings over the new settings (making sure that you don't delete any new settings - it will be obvious if you do this if you have error reporting enabled)
-
-### Breaking Changes
-From time to time breaking changes will be made. By this I mean additions and / or deletions to the settings that can be found at the top of your wiki's `index.php`. They will be listed here so you can manually update your settings if required.
-
- * Everything has been changed! Pepperminty wiki is now using a module based system.
+## Reference
+At some point (soon I hope!), I am going to write a reference here for those who would like to build their own modules.
 
 ## Real World Usage
- * (none yet! Contact me by email, [twitter](https://twitter.com/SBRLabs), or open an issue and I'll add a link here!)
-
-## Themes (aka strings of CSS)
-Wanted: Themes! If you have a cool theme, simply open an issue on the bug tracker in this repository to share your theme. If you don't have a github account, no problem! Simply email me with your code instead.
-
-A theme gallery can be found here: [Theme Gallery](https://github.com/sbrl/Pepperminty-Wiki/wiki/Theme-Gallery)
-
-### Default
-This is the default theme Pepperminty Wiki currently comes with.
-
-```css
-body { font-family: sans-serif; color: #333333; background: #f3f3f3; }
-label { display: inline-block; min-width: 10rem; }
-textarea[name=content] { display: block; width: 100%; height: 35rem; }
-/*input[name=page] { width: 16rem; }*/
-nav { position: absolute; top: 5px; right: 5px; }
-th { text-align: left; }
-.sitename { text-align: center; font-size: 2.5rem; color: #222222; }
-.footerdivider { margin-top: 4rem; }
-```
-
-### Simple Blue
-A quick blue theme I put together to give people a choice of more than just one theme.
-
-```css
-body { font-family: sans-serif; color: #3765ff; background: #cee6ff; }
-label { display: inline-block; min-width: 10rem; }
-a:active { color: #95aeff; }
-textarea[name=content] { display: block; width: 100%; height: 35rem; }
-input:not([type=button]):not([type=submit]), textarea { padding: 5px 8px; color: #2c49c6; background: rgba(42, 146, 255, 0.57); border: 0; border-radius: 5px; }
-input[type=submit], input[type=button], button { margin-top: 8px; padding: 5px 8px; }
-::-webkit-input-placeholder { color: #2c49c6; }
-nav { position: absolute; top: 5px; right: 5px; }
-nav input { width: 15.2rem; }
-th { text-align: left; }
-.sitename { text-align: center; font-size: 2.5rem; color: #385fe2; }
-.footerdivider { margin-top: 4rem; }
-```
-
-### Microsoft-esque
-Another quick theme based on the Microsoft website.
-
-```css
-body { font-family: 'Segoe UI', sans-serif; color: black; background: white; padding: 5px; }
-h1 { margin-top: 1.5em; }
-label { display: inline-block; min-width: 10rem; }
-textarea[name=content] { display: block; width: 100%; height: 35rem; }
-nav { position: fixed; top: 0; left: 0; right: 0; padding: 10px 10px; background: #0073c6; color: white; }
-nav a { color: white; font-weight: bold; transition: all 0.25s; }
-nav a:active { color: #eeeeee; }
-input { border: 2px solid #d2d2d2; padding: 5px; font-family: 'Segoe UI', sans-serif; }
-input[type=search] { width: 18rem; }
-button, input[type=submit] { margin: 10px 2px; cursor: pointer; transition: all 0.25s; }
-button:active, input[type=submit]:active { background: #c2c2c2; }
-th { text-align: left; }
-.sitename { text-align: center; font-size: 2.5rem; }
-.footerdivider { margin-top: 4rem; }
-```
+None yet! Contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) and tell me about where you are using Pepperminty Wiki and I will add you to this section!
 
 ## Todo
- * Add page history somehow
- * Allow users to change their passwords
- * Add auto updating system that doesn't wipe your settings and modules
- * Make links to non existent pages red
- * Optional module support (modules that aren't selected by default in the downloader & builder)
- * Add an optional sidebar (as a module maybe?)
- * Add redirect pages (as a module?)
- * .... (open an issue if you have any suggestions!)
+Here's a list of things that I want to add at some point (please feel free to [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls) and help out!).
 
---Starbeamrainbowlabs
+- Page history
+- Password changing
+- Intelligent auto-updating system that doesn't wipe your settings / module choices
+- Make links to non-existent pages red
+- Optional module support
+- Redirect pages
+- ...?
+
+Is the feature you want to see not on this list? [Open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) or [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls)!
