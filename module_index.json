@@ -13,7 +13,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a sidebar to the left hand side of every page. Add '$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
         "id": "extra-sidebar",
-        "lastupdate": 1438775454
+        "lastupdate": 1438776654
     },
     {
         "name": "Credits",

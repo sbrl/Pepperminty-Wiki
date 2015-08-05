@@ -875,8 +875,12 @@ register_module([
 				// Show the sidebar
 				$exec_start = microtime(true);
 				
+				// Sort the pageindex
+				$sorted_pageindex = get_object_vars($pageindex);
+				ksort($sorted_pageindex, SORT_NATURAL);
+				
 				$sidebar_contents = "";
-				$sidebar_contents .= render_sidebar($pageindex);
+				$sidebar_contents .= render_sidebar($sorted_pageindex);
 				
 				$parts["{body}"] = "<aside class='sidebar'>
 			$sidebar_contents
@@ -894,9 +898,9 @@ register_module([
 ]);
 
 /* 
- * @summary Renders the sidebar for the given pageindex.
+ * @summary Renders the sidebar for a given pageindex.
  * 
- * @param $pageindex {array} - The pageindex to renderthe sidebar for
+ * @param $pageindex {array} - The pageindex to render the sidebar for
  * @param $root_pagename {string} - The pagename that should be considered the root of the rendering. You don't usually need to use this, it is used by the algorithm itself since it is recursive.
  * 
  * @returns {string} A HTML rendering of the sidebar for the given pageindex
