@@ -166,9 +166,12 @@ input[type=button], input[type=submit] { cursor: pointer; }
 .sidebar ul:before { content: \"\"; position: absolute; top: 0; left: 0; height: 100%; border-left: 2px dashed rgba(50, 50, 50, 0.4); }
 .sidebar li:before { content: \"\"; position: absolute; width: 1rem; top: 0.8rem; left: -1.2rem; border-bottom: 2px dashed rgba(50, 50, 50, 0.4); }
 
+
+.printable { padding: 2rem; }
+
 h1 { text-align: center; }
 .sitename { margin-top: 5rem; margin-bottom: 3rem; font-size: 2.5rem; }
-main { padding: 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
+main:not(.printable) { padding: 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 
 label { display: inline-block; min-width: 7rem; }
 input[type=text], input[type=password], textarea { margin: 0.5rem 0.8rem; padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
@@ -572,11 +575,13 @@ class page_renderer
 		</footer>
 		{navigation-bar-bottom}
 		{all-pages-datalist}";
-	public static $minimal_content_template = "{content}
-		<hr class='footerdivider' />
-		<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
-		<p><em>Timed at {generation-date}</em>
-		<p><em>Powered by Pepperminty Wiki.</em></p>";
+	public static $minimal_content_template = "<main class='printable'>{content}</main>
+		<footer class='printable'>
+			<hr class='footerdivider' />
+			<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
+			<p><em>Timed at {generation-date}</em>
+			<p><em>Powered by Pepperminty Wiki.</em></p>
+		</footer>";
 	
 	// An array of functions that have been registered to process the
 	// find / replace array before the page is rendered. Note that the function

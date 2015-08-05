@@ -354,11 +354,13 @@ class page_renderer
 		</footer>
 		{navigation-bar-bottom}
 		{all-pages-datalist}";
-	public static $minimal_content_template = "{content}
-		<hr class='footerdivider' />
-		<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
-		<p><em>Timed at {generation-date}</em>
-		<p><em>Powered by Pepperminty Wiki.</em></p>";
+	public static $minimal_content_template = "<main class='printable'>{content}</main>
+		<footer class='printable'>
+			<hr class='footerdivider' />
+			<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
+			<p><em>Timed at {generation-date}</em>
+			<p><em>Powered by Pepperminty Wiki.</em></p>
+		</footer>";
 	
 	// An array of functions that have been registered to process the
 	// find / replace array before the page is rendered. Note that the function
