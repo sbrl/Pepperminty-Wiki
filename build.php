@@ -58,15 +58,15 @@ foreach($module_list as $module_id)
 
 if(php_sapi_name() == "cli")
 {
-	if(file_exists("index.php"))
+	if(file_exists("build/index.php"))
 	{
-		echo("index.php already exists, exiting\n");
+		echo("index.php already exists in the build folder, exiting\n");
 		exit(1);
 	}
 	else
 	{
 		echo("Done. Saving to disk...");
-		file_put_contents("index.php", $result);
+		file_put_contents("build/index.php", $result);
 		echo("complete!\n");
 		echo("*** Build Completed ***\n");
 	}

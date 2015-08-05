@@ -34,11 +34,17 @@ A Live demo of the latest stable version can be found over at [my website](//sta
 ### Getting your own copy
 Setting up your own copy of Pepperminty Wiki is easy. Since Pepperminty Wiki works on a module based system, all you need to do is choose the modules you want installed, and then configure your new installation so that it fits your needs. There are several ways to do this:
 
-#### Method 1: Using the online downloader
-Pepperminty Wiki has a downloader that you can use to select the modules you want to include in your install. You can find it [here](//starbeamrainbowlabs.com/labs/peppermint/download.php).
+#### Method 1: Using the latest pre-built stable release
+If you want a pre-built stable version, then you can [use the latest release](https://github.com/sbrl/Pepperminty-Wiki/releases/latest). It has a changelog that tells you what has changed since the last release, along with a pre-built version with all the latest modules.
 
-#### Method 2: Using the downloader offline
-You can also you the downloader offline. Simply clone this repository and then point your web browser at `your.server/path/to/perppminty/wiki/download.php`.
+#### Method 2: Grabbing the pre-built verion from the repository
+If you're feeling lazy, you  can grab the bleeding-edge version from this respository, which comes with all the latest modules. You can get it [here](https://raw.githubusercontent.com/sbrl/Pepperminty-Wiki/master/build/index.php).
+
+#### Method 2: Using the online downloader
+Pepperminty Wiki has a downloader that you can use to select the modules you want to include in your install. The online downloader will give you the latest stable release. You can find it [here](//starbeamrainbowlabs.com/labs/peppermint/download.php).
+
+#### Method 2.5: Using the downloader offline
+You can also you the downloader offline. Simply clone this repository to your web server and then point your web browser at `your.server/path/to/perppminty/wiki/download.php`.
 
 #### Method 3: Building your own from source
 Pepperminty Wiki can also be built from source (and I do this all the time when testing). Start by cloning the repository. Then go into the `modules` folder and append `.disabled` to the names of any modules you don't want to be included (e.g. `modules/page-edit.php` would become `modules/page-edit.php.disabled`). Then follow the instructions for your platform:
@@ -50,14 +56,14 @@ Simply run the `build.bat` script in the root of the repository. It will handle 
 Run the following commands from the root of the repository in order, adjusting them for your specific platform (these are for a standard Ubuntu Server install):
 
 ```bash
-rm index.php
+rm build/index.php
 php rebuild_module_index.php
 php build.php
 ```
 
 Here's an explanation of what each command does:
 
-1. Deletes the old `index.php` that comes with the repository
+1. Deletes the old `index.php` in the build folder that comes with the repository
 2. Rebuilds the module index that the build scripts uses to determine what modules it should include when building
 3. Actually builds Pepperminty Wiki. Outputs to `index.php`.
 
