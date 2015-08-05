@@ -40,13 +40,13 @@ If you want a pre-built stable version, then you can [use the latest release](ht
 #### Method 2: Grabbing the pre-built verion from the repository
 If you're feeling lazy, you  can grab the bleeding-edge version from this respository, which comes with all the latest modules. You can get it [here](https://raw.githubusercontent.com/sbrl/Pepperminty-Wiki/master/build/index.php).
 
-#### Method 2: Using the online downloader
+#### Method 3: Using the online downloader
 Pepperminty Wiki has a downloader that you can use to select the modules you want to include in your install. The online downloader will give you the latest stable release. You can find it [here](//starbeamrainbowlabs.com/labs/peppermint/download.php).
 
-#### Method 2.5: Using the downloader offline
+#### Method 3.5: Using the downloader offline
 You can also you the downloader offline. Simply clone this repository to your web server and then point your web browser at `your.server/path/to/perppminty/wiki/download.php`.
 
-#### Method 3: Building your own from source
+#### Method 4: Building your own from source
 Pepperminty Wiki can also be built from source (and I do this all the time when testing). Start by cloning the repository. Then go into the `modules` folder and append `.disabled` to the names of any modules you don't want to be included (e.g. `modules/page-edit.php` would become `modules/page-edit.php.disabled`). Then follow the instructions for your platform:
 
 ##### Windows
