@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Sidebar",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a sidebar to the left hand side of every page. Add '\$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
 	"id" => "extra-sidebar",
@@ -37,7 +37,7 @@ register_module([
 		page_renderer::register_part_preprocessor(function(&$parts) use ($show_sidebar) {
 			global $settings, $pageindex;
 			
-			if($show_sidebar)
+			if($show_sidebar && !isset($_GET["printable"]))
 			{
 				// Show the sidebar
 				$exec_start = microtime(true);
