@@ -59,7 +59,8 @@
 		<!------------------->
 		<link rel="stylesheet" href="//starbeamrainbowlabs.com/theme/basic.css" />
 		<style>
-			body			{ padding: 1rem;	} /* syntaxtic gets confused sometimes */
+			body			{ padding: 1rem; color: #442772; background-colour: #eee8f2; } /* syntaxtic gets confused sometimes */
+			a 				{ color: #9e7eb4; }
 			.largebutton	{ font-size: 2rem;	}
 		</style>
 		
