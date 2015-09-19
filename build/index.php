@@ -515,7 +515,7 @@ else
 if(!isset($_GET["action"]) and !isset($_GET["page"]))
 {
 	http_response_code(302);
-	header("location: index.php?action=$settings->defaultaction&page=$defaultpage");
+	header("location: index.php?action=$settings->defaultaction&page=$settings->defaultpage");
 	exit();
 }
 
