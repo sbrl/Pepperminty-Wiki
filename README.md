@@ -84,9 +84,9 @@ Here's a list of things that I want to add at some point (please feel free to [s
 - Page history
 - Password changing
 - Intelligent auto-updating system that doesn't wipe your settings / module choices
-- Make links to non-existent pages red
-- Optional module support
-- Redirect pages
+- Make links to non-existent pages red  (#18)
+- Optional module support (#10)
+- Redirect pages (#14)
 - ...?
 
 Is the feature you want to see not on this list? [Open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) or [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls)!
