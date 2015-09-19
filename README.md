@@ -1,6 +1,8 @@
 # Pepperminty Wiki
 A Wiki in a box
 
+[![Build Status](https://travis-ci.org/sbrl/Pepperminty-Wiki.svg?branch=master)](https://travis-ci.org/sbrl/Pepperminty-Wiki)
+
 Pepperminty Wiki is a complete wiki contained in a single file, inspired by @am2064's [Minty Wiki](https://github.com/am2064/Minty-Wiki).
 
 ## Screenshots
