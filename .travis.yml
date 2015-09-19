@@ -5,6 +5,9 @@ php:
    - 5.6
    - nightly
 
-before_script: ./build.sh
+before_script:
+   - rm build/index.php
+   - php rebuild_module_index.php
+   - php build.php
 
 script: php -l build/index.php
