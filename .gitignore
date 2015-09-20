@@ -1,7 +1,9 @@
-# all wiki pages
+# All wiki pages
 *.md
-# include the README
+# Include the README
 !README.md
+# And the Module API Docs
+!Module_API_Docs.md
 
-# the page index
+# The page index
 pageindex.json
