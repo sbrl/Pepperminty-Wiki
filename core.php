@@ -418,7 +418,6 @@ class page_renderer
 		}
 		
 		$result = self::$html_template;
-		$result = str_replace("{body}", $parts["{body}"], $result);
 		
 		$result = str_replace(array_keys($parts), array_values($parts), $result);
 		
