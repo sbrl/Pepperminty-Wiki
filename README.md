@@ -73,7 +73,9 @@ Here's an explanation of what each command does:
 To configure your new install, open `index.php` in your favourite text editor and take a look at the comments. They should be self explanatory, but if you need any help, just contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new).
 
 ## Reference
-At some point (soon I hope!), I am going to write a reference here for those who would like to build their own modules.
+I have documented (most of) the current API that you can use to create your own modules. You can find it in the [Module_API_Docs.md](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Module_API_Docs.md) file in this repository.
+
+If you do create a module, I'd love to hear about it. Even better, [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls/new)!
 
 ## Real World Usage
 None yet! Contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) and tell me about where you are using Pepperminty Wiki and I will add you to this section!
