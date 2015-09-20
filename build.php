@@ -1,79 +1,54 @@
 <?php
 
-if(php_sapi_name() == "cli")
+echo("*** Preparing environment ***\n");
+
+$build_env = new stdClass();
+$build_env->target = "build/index.php";
+
+if(file_exists($build_env->target))
 {
-	echo("Beginning build...\n");
-	echo("Reading in module index...\n");
+	echo("Deleting old target...\n");
+	unlink($build_env->target);
 }
 
-$module_index = json_decode(file_get_contents("module_index.json"));
-$module_list = [];
-foreach($module_index as $module)
+//////////////////////////////////////////////////////////////////////
+//////////////////////// Rebuild Module Index ////////////////////////
+//////////////////////////////////////////////////////////////////////
+
+echo("*** Rebuilding module index ***\n");
+$modules = glob("modules/*.php");
+$module_index = [];
+
+function register_module($settings)
 {
-	$module_list[] = $module->id;
+	global $module_index;
+	$newmodule = [
+		"name" => $settings["name"],
+		"version" => $settings["version"],
+		"author" => $settings["author"],
+		"description" => $settings["description"],
+		"id" => $settings["id"],
+		"lastupdate" => filemtime("modules/" . $settings["id"] . ".php")
+	];
+	$module_index[] = $newmodule;
 }
 
-if(isset($_GET["modules"]))
+foreach($modules as $filename)
 {
-	$module_list = explode(",", $_GET["modules"]);
+	echo("Processing $filename\n");
+	require($filename);
 }
 
-if(php_sapi_name() != "cli")
-{
-	header("content-type: text/php");
-}
+echo("*** Processing complete ***\n");
 
-if(php_sapi_name() == "cli") echo("Reading in core files...");
+echo("Writing new module index to disk...");
+file_put_contents("module_index.json", json_encode($module_index, JSON_PRETTY_PRINT));
+echo("done\n");
 
-$core = file_get_contents("core.php");
-$settings = file_get_contents("settings.fragment.php");
-$settings = str_replace([ "<?php", "?>" ], "", $settings);
-$core = str_replace("{settings}", $settings, $core);
 
-$result = $core;
-
-foreach($module_list as $module_id)
-{
-	if($module_id == "") continue;
-	
-	if(php_sapi_name() == "cli") echo("Adding $module_id\n");
-	
-	$module_filepath = "modules/" . preg_replace("[^a-zA-Z0-9\-]", "", $module_id) . ".php";
-	
-	//echo("id: $module_id | filepath: $module_filepath\n");
-	
-	if(!file_exists($module_filepath))
-	{
-		http_response_code(400);
-		exit("Failed to load module with name: $module_filepath");
-	}
-	
-	$modulecode = file_get_contents($module_filepath);
-	$modulecode = str_replace([ "<?php", "?>" ], "", $modulecode);
-	$result = str_replace(
-		"// %next_module% //",
-		"$modulecode\n// %next_module% //",
-		$result);
-}
-
-if(php_sapi_name() == "cli")
-{
-	if(file_exists("build/index.php"))
-	{
-		echo("index.php already exists in the build folder, exiting\n");
-		exit(1);
-	}
-	else
-	{
-		echo("Done. Saving to disk...");
-		file_put_contents("build/index.php", $result);
-		echo("complete!\n");
-		echo("*** Build Completed ***\n");
-	}
-}
-else
-{
-	exit($result);
-}
+//////////////////////////////////////////////////////////////////////
+////////////////////////// Build New Target //////////////////////////
+//////////////////////////////////////////////////////////////////////
+require("pack.php");
 
 ?>

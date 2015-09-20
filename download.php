@@ -76,7 +76,7 @@
 			
 			function download()
 			{
-				var url = "build.php?web=true&modules=",
+				var url = "pack.php?web=true&modules=",
 					checkboxes = document.querySelectorAll("input[type=checkbox]");
 				for(var i = 0; i < checkboxes.length; i++)
 				{
