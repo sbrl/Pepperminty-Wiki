@@ -22,6 +22,11 @@ $module_index = [];
 function register_module($settings)
 {
 	global $module_index;
+	
+	// If the optional flag isn't set, then we should set it to false.
+	if(!isset($settings["optional"]) || !is_bool($settings["optional"]))
+		$settings["optional"] = false;
+	
 	$newmodule = [
 		"name" => $settings["name"],
 		"version" => $settings["version"],

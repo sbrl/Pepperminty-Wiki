@@ -5,6 +5,8 @@ php:
    - 5.6
    - nightly
 
-before_script: php build.php
+before_script:
+   - php build.php
+   - ls modules/*.php | xargs -n 1 php -l
 
 script: php -l build/index.php
