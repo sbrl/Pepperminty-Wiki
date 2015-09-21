@@ -2,8 +2,10 @@ Module API Documentation
 ========================
 The core of Pepperminty Wik exposes several global objects and functions that you can use to write your own modules. This page documents these objects and functions so that you can create your own modules more easily.
 
-`register_module($module_info)`
--------------------------------
+Functions
+---------
+
+### `register_module($module_info)`
 Register a new module with Pepperminty Wiki. This is the most important function. Here's an example:
 
 ```php
@@ -25,8 +27,7 @@ register_module([
 
 The function that you provide will be executed after the initial setup has been completed.
 
-`add_action($action_name, $code)`
----------------------------------
+### `add_action($action_name, $code)`
 Since Pepperminty Wiki works through actions via the GET parameter `action`, there is a function that lets you register a new handler for any given action. Note that you should call this inside the function you passed to `register_handler()`. Here's an example:
 
 ```php
@@ -50,11 +51,10 @@ register_module([
 
 The above adds an action called `action_name`, which, when requested, outputs the text `Hello, World!`.
 
-`page_renderer`
----------------
+### `page_renderer`
 You probably want your module to output a nice user-friendly page instead of a simple text-based one. Luckily, Pepperminty Wiki has a system to let you do that.
 
-### `page_renderer::render_main($title, $content)`
+#### `page_renderer::render_main($title, $content)`
 This is the main page rendering function you'll want to use. It renders and returns a page much the same as the default `view` action does. Here's an example:
 
 ```php
@@ -67,7 +67,7 @@ exit(page_renderer::render_main("Page title", "Page content"));
 ```
 
 
-### `page_renderer::render_minimal($title, $content)`
+#### `page_renderer::render_minimal($title, $content)`
 Similar to the above, but renders a printable page instead. For an example, click the "Printable" button at the top of any page on Pepperminty Wiki.
 
 ```php
@@ -79,7 +79,7 @@ exit(page_renderer::render_minimal("Page title", "Page content"));
 
 ```
 
-### `page_renderer::render_username($name)`
+#### `page_renderer::render_username($name)`
 Renders a username. Currently all this function does is prepend `$settings->admin_display_char` to the username if they are an admin. Example:
 
 ```php
@@ -90,7 +90,7 @@ exit(page_renderer::render_username("admin")); // Output would be something like
 ?>
 ```
 
-### `page_renderer::register_part_preprocessor($code)`
+#### `page_renderer::register_part_preprocessor($code)`
 This function's use is more complicated to explain. Pepperminty Wiki renders pages with a very simple templating system. For example, in the template a page's content is denoted by `{content}`. A function registered here will be passed all the components of a page _just_ before they are dropped into the template. Note that the function you pass in here should take a *reference* to the components, as the return value of the function passed is discarded. Here's an example:
 
 ```php
@@ -130,8 +130,7 @@ Key							| Purpose
 
 [Take a look at the code](https://github.com/sbrl/Pepperminty-Wiki/blob/master/core.php#L394) to see the very latest list of parts.
 
-`add_parser($code)`
--------------------
+### `add_parser($code)`
 This function adds a parser to Pepperminty Wiki. An example follows below, but please note that this will ~~probably~~ be changing soon so that the parser's name is attached to it when it is registered. This is so that the user can choose which of the registered parsers are used at any one time.
 
 ```php
@@ -152,3 +151,17 @@ register_module([
 ?>
 
 ```
+
+Variables
+---------
+There are a number of global variables floatign around that can give you a lot of information about the current request. I will be tidying them up into a single `$env` object soon. Below is a table of all the variables Pepperminty Wiki has lying around:
+
+Variable				| Description
+------------------------|------------------------------------------
+`$page`					| The current page name.
+`$settings`				| The settings object from the top of the file.
+`$pageindex`			| Contains a list of all the pages that Pepperminty Wiki currently knows about, along with information about each page. Exists to improve performance.
+`$isloggedin`			| Whether the current user is currently logged in.
+`$isadmin`				| Whether the current user is an administrator.
+`$user`					| The current user's name. Currently only set if the user is logged in.
+`$_GET["action"]`		| The current action.
