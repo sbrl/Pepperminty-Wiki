@@ -7,53 +7,63 @@ $start_time = time(true);
 /////////////// Do not edit below this line unless you know what you are doing! ///////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 $version = "0.7";
+$env = new stdClass();
+$env->action = $settings->defaultaction;
+$env->page = "";
+$env->user = "Anonymous";
+$env->is_logged_in = false;
+$env->is_admin = false;
+
 session_start();
 ///////// Login System /////////
-//clear expired sessions
+// Clear expired sessions
 if(isset($_SESSION["$settings->sessionprefix-expiretime"]) and
    $_SESSION["$settings->sessionprefix-expiretime"] < time())
 {
-	//clear the session variables
+	// Clear the session variables
 	$_SESSION = [];
 	session_destroy();
+	$env->is_logged_in = false;
+	$env->user = "Anonymous";
 }
 
 if(!isset($_SESSION[$settings->sessionprefix . "-user"]) and
   !isset($_SESSION[$settings->sessionprefix . "-pass"]))
 {
-	//the user is not logged in
-	$isloggedin = false;
+	// The user is not logged in
+	$env->is_logged_in = false;
 }
 else
 {
-	$user = $_SESSION[$settings->sessionprefix . "-user"];
+	$env->user = $_SESSION[$settings->sessionprefix . "-user"];
 	$pass = $_SESSION[$settings->sessionprefix . "-pass"];
 	if($settings->users[$user] == $pass)
 	{
-		//the user is logged in
-		$isloggedin = true;
+		// The user is logged in
+		$env->is_logged_in = true;
 	}
 	else
 	{
-		//the user's login details are invalid (what is going on here?)
-		//unset the session variables, treat them as an anonymous user, and get out of here
-		$isloggedin = false;
-		unset($user);
+		// The user's login details are invalid (what is going on here?)
+		// Unset the session variables, treat them as an anonymous user,
+		// and get out of here
+		$env->is_logged_in = false;
+		$env->user = "Anonymous";
 		unset($pass);
-		//clear the session data
+		// Clear the session data
 		$_SESSION = []; //delete al lthe variables
 		session_destroy(); //destroy the session
 	}
 }
 //check to see if the currently logged in user is an admin
-$isadmin = false;
-if($isloggedin)
+$env->is_admin = false;
+if($env->is_logged_in)
 {
 	foreach($settings->admins as $admin_username)
 	{
-		if($admin_username == $user)
+		if($admin_username == $env->user)
 		{
-			$isadmin = true;
+			$env->is_admin = true;
 			break;
 		}
 	}
@@ -314,7 +324,9 @@ if(makepathsafe($_GET["page"]) !== $_GET["page"])
 	header("x-actual-page: " . makepathsafe($_GET["page"]));
 	exit();
 }
-$page = $_GET["page"];
+
+$env->page = $_GET["page"];
+$env->action = strtolower($_GET["action"]);
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -370,6 +382,8 @@ class page_renderer
 	// Registers a function as a part post processor.
 	public static function register_part_preprocessor($function)
 	{
+		global $settings;
+		
 		// Make sure that the function we are about to register is valid
 		if(!is_callable($function))
 		{
@@ -464,7 +478,7 @@ class page_renderer
 	 */
 	public static function render_navigation_bar($nav_links, $nav_links_extra, $class = "")
 	{
-		global $settings, $user, $isloggedin, $page;
+		global $settings, $env;
 		$result = "<nav class='$class'>\n";
 		
 		// Loop over all the navigation links
@@ -477,7 +491,7 @@ class page_renderer
 				{
 					//keywords
 					case "user-status":
-						if($isloggedin)
+						if($env->is_logged_in)
 						{
 							$result .= "<span class='inflexible'>Logged in as " . self::render_username($user) . ".</span> "/* . page_renderer::$nav_divider*/;
 							$result .= "<span><a href='index.php?action=logout'>Logout</a></span>";
@@ -510,7 +524,7 @@ class page_renderer
 			else
 			{
 				// Output the item as a link to a url
-				$result .= "<span><a href='" . str_replace("{page}", $page, $item[1]) . "'>$item[0]</a></span>";
+				$result .= "<span><a href='" . str_replace("{page}", $env->page, $item[1]) . "'>$item[0]</a></span>";
 			}
 		}
 		
@@ -599,9 +613,9 @@ if(!isset($actions->credits))
 }
 
 // Perform the appropriate action
-$action_name = strtolower($_GET["action"]);
 if(isset($actions->$action_name))
 {
+	$action_name = $env->action;
 	$req_action_data = $actions->$action_name;
 	$req_action_data();
 }
@@ -609,4 +623,5 @@ else
 {
 	exit(page_renderer::render_main("Error - $settings->sitename", "<p>No action called " . strtolower($_GET["action"]) ." has been registered. Perhaps you are missing a module?</p>"));
 }
+
 ?>
