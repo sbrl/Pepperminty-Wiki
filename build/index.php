@@ -639,7 +639,6 @@ class page_renderer
 		}
 		
 		$result = self::$html_template;
-//		$result = str_replace("{body}", $parts["{body}"], $result);
 		
 		$result = str_replace(array_keys($parts), array_values($parts), $result);
 		
@@ -825,6 +824,28 @@ register_module([
 			{
 				exit(page_renderer::render_main("Hashed string", "<p><code>" . $_GET["string"] . "</code> → <code>" . hash("sha256", $_GET["string"] . "</code></p>")));
 			}
+		});
+	}
+]);
+
+
+
+
+register_module([
+	"name" => "Raw page source",
+	"version" => "0.2",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds a 'raw' action that shows you the raw source of a page.",
+	"id" => "action-raw",
+	"code" => function() {
+		add_action("raw", function() {
+			global $page;
+			
+			http_response_code(307);
+			header("x-filename: " . rawurlencode($page) . ".md");
+			header("content-type: text/markdown");
+			exit(file_get_contents("$page.md"));
+			exit();
 		});
 	}
 ]);

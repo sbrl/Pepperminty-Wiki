@@ -8,6 +8,14 @@
         "lastupdate": 1432497591
     },
     {
+        "name": "Raw page source",
+        "version": "0.2",
+        "author": "Starbeamrainbowlabs",
+        "description": "Adds a 'raw' action that shows you the raw source of a page.",
+        "id": "action-raw",
+        "lastupdate": 1442855075
+    },
+    {
         "name": "Sidebar",
         "version": "0.2",
         "author": "Starbeamrainbowlabs",
