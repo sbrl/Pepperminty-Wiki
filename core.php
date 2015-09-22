@@ -36,8 +36,8 @@ if(!isset($_SESSION[$settings->sessionprefix . "-user"]) and
 else
 {
 	$env->user = $_SESSION[$settings->sessionprefix . "-user"];
-	$pass = $_SESSION[$settings->sessionprefix . "-pass"];
-	if($settings->users[$user] == $pass)
+	$env->pass = $_SESSION[$settings->sessionprefix . "-pass"];
+	if($settings->users[$env->user] == $env->pass)
 	{
 		// The user is logged in
 		$env->is_logged_in = true;
