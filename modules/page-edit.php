@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.9",
+	"version" => "0.9.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -20,6 +20,7 @@ register_module([
 			global $pageindex, $settings, $env;
 			
 			$filename = "$env->page.md";
+			$page = $env->page;
 			$creatingpage = !isset($pageindex->$page);
 			if((isset($_GET["newpage"]) and $_GET["newpage"] == "true") or $creatingpage)
 			{
@@ -31,7 +32,6 @@ register_module([
 			}
 			
 			$pagetext = "";
-			$page = $env->$page;
 			if(isset($pageindex->$page))
 			{
 				$pagetext = file_get_contents($filename);

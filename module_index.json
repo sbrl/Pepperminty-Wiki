@@ -41,11 +41,11 @@
     },
     {
         "name": "Page editor",
-        "version": "0.9",
+        "version": "0.9.1",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1442903905
+        "lastupdate": 1442929698
     },
     {
         "name": "Export",
