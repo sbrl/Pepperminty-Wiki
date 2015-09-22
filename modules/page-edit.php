@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.8",
+	"version" => "0.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -17,20 +17,21 @@ register_module([
 		 *             %edit%
 		 */
 		add_action("edit", function() {
-			global $pageindex, $settings, $page, $isloggedin;
+			global $pageindex, $settings, $env;
 			
-			$filename = "$page.md";
+			$filename = "$env->page.md";
 			$creatingpage = !isset($pageindex->$page);
 			if((isset($_GET["newpage"]) and $_GET["newpage"] == "true") or $creatingpage)
 			{
-				$title = "Creating $page";
+				$title = "Creating $env->page";
 			}
 			else
 			{
-				$title = "Editing $page";
+				$title = "Editing $env->page";
 			}
 			
 			$pagetext = "";
+			$page = $env->$page;
 			if(isset($pageindex->$page))
 			{
 				$pagetext = file_get_contents($filename);
@@ -41,17 +42,17 @@ register_module([
 				if(!$creatingpage)
 				{
 					// The page already exists - let the user view the page source
-					exit(page_renderer::render_main("Viewing source for $page", "<p>$settings->sitename does not allow anonymous users to make edits. You can view the source of $page below, but you can't edit it.</p><textarea name='content' readonly>$pagetext</textarea>"));
+					exit(page_renderer::render_main("Viewing source for $env->page", "<p>$settings->sitename does not allow anonymous users to make edits. You can view the source of $env->page below, but you can't edit it.</p><textarea name='content' readonly>$pagetext</textarea>"));
 				}
 				else
 				{
 					http_response_code(404);
-					exit(page_renderer::render_main("404 - $page", "<p>The page <code>$page</code> does not exist, but you do not have permission to create it.</p><p>If you haven't already, perhaps you should try <a href='index.php?action=login'>logging in</a>.</p>"));
+					exit(page_renderer::render_main("404 - $env->page", "<p>The page <code>$env->page</code> does not exist, but you do not have permission to create it.</p><p>If you haven't already, perhaps you should try <a href='index.php?action=login'>logging in</a>.</p>"));
 				}
 			}
 			
 			$content = "<h1>$title</h1>";
-			if(!$isloggedin and $settings->anonedits)
+			if(!$env->is_logged_in and $settings->anonedits)
 			{
 				$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
 			}
@@ -71,35 +72,36 @@ register_module([
 		 *                %save%
 		 */
 		add_action("save", function() {
-			global $pageindex, $settings, $page, $isloggedin, $user;
+			global $pageindex, $settings, $env; 
 			if(!$settings->editing)
 			{
-				header("location: index.php?page=$page");
+				header("location: index.php?page=$env->page");
 				exit(page_renderer::render_main("Error saving edit", "<p>Editing is currently disabled on this wiki.</p>"));
 			}
-			if(!$isloggedin and !$settings->anonedits)
+			if(!$env->is_logged_in and !$settings->anonedits)
 			{
 				http_response_code(403);
-				header("refresh: 5; url=index.php?page=$page");
+				header("refresh: 5; url=index.php?page=$env->page");
 				exit("You are not logged in, so you are not allowed to save pages on $settings->sitename. Redirecting in 5 seconds....");
 			}
 			if(!isset($_POST["content"]))
 			{
 				http_response_code(400);
-				header("refresh: 5; url=index.php?page=$page");
+				header("refresh: 5; url=index.php?page=$env->page");
 				exit("Bad request: No content specified.");
 			}
 			
 			// Make sure that the directory in which the page needs to be saved exists
-			if(!is_dir(dirname("$page.md")))
+			if(!is_dir(dirname("$env->page.md")))
 			{
 				// Recursively create the directory if needed
-				mkdir(dirname("$page.md"), null, true);
+				mkdir(dirname("$env->page.md"), null, true);
 			}
 			
 			
-			if(file_put_contents("$page.md", htmlentities($_POST["content"]), ENT_QUOTES) !== false)
+			if(file_put_contents("$env->page.md", htmlentities($_POST["content"]), ENT_QUOTES) !== false)
 			{
+				$page = $env->page;
 				// Make sure that this page's parents exist
 				check_subpage_parents($page);
 				
@@ -107,12 +109,12 @@ register_module([
 				if(!isset($pageindex->$page))
 				{
 					$pageindex->$page = new stdClass();
-					$pageindex->$page->filename = "$page.md";
+					$pageindex->$page->filename = "$env->page.md";
 				}
 				$pageindex->$page->size = strlen($_POST["content"]);
 				$pageindex->$page->lastmodified = time();
 				if($isloggedin)
-					$pageindex->$page->lasteditor = utf8_encode($user);
+					$pageindex->$page->lasteditor = utf8_encode($env->user);
 				else
 					$pageindex->$page->lasteditor = utf8_encode("anonymous");
 				
@@ -123,7 +125,7 @@ register_module([
 				else
 					http_response_code(200);
 				
-				header("location: index.php?page=$page&edit_status=success");
+				header("location: index.php?page=$env->page&edit_status=success");
 				exit();
 			}
 			else

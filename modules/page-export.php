@@ -1,15 +1,15 @@
 <?php
 register_module([
 	"name" => "Export",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that you can use to export your wiki as a .zip file. Uses \$settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
 	"id" => "page-export",
 	"code" => function() {
 		add_action("export", function() {
-			global $settings, $pageindex, $isadmin;
+			global $settings, $pageindex, $env;
 			
-			if($settings->export_allow_only_admins && !$isadmin)
+			if($settings->export_allow_only_admins && !$env->is_admin)
 			{
 				http_response_code(401);
 				exit(page_renderer::render("Export error - $settings->sitename", "Only administrators of $settings->sitename are allowed to export the wiki as a zip. <a href='?action=$settings->defaultaction&page='>Return to the $settings->defaultpage</a>."));

@@ -1,16 +1,16 @@
 <?php
 register_module([
 	"name" => "Logout",
-	"version" => "0.5",
+	"version" => "0.6",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to let users user out. For security reasons it is wise to add this module since logging in automatically opens a session that is valid for 30 days.",
 	"id" => "page-logout",
 	"code" => function() {
 		add_action("logout", function() {
-			global $user, $pass, $isloggedin;
-			$isloggedin = false;
-			unset($user);
-			unset($pass);
+			global $env;
+			$env->is_logged_in = false;
+			unset($env->user);
+			unset($env->pass);
 			//clear the session variables
 			$_SESSION = [];
 			session_destroy();

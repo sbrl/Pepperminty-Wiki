@@ -1,15 +1,16 @@
 <?php
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.8",
+	"version" => "0.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You should include this one.",
 	"id" => "page-view",
 	"code" => function() {
 		add_action("view", function() {
-			global $pageindex, $settings, $page, $parse_page_source;
+			global $pageindex, $settings, $env, $parse_page_source;
 			
 			// Check to make sure that the page exists
+			$page = $env->page;
 			if(!isset($pageindex->$page))
 			{
 				// todo make this intelligent so we only redirect if the user is acutally able to create the page
@@ -17,26 +18,26 @@ register_module([
 				{
 					// Editing is enabled, redirect to the editing page
 					http_response_code(307); // Temporary redirect
-					header("location: index.php?action=edit&newpage=yes&page=" . rawurlencode($page));
+					header("location: index.php?action=edit&newpage=yes&page=" . rawurlencode($env->page));
 					exit();
 				}
 				else
 				{
 					// Editing is disabled, show an error message
 					http_response_code(404);
-					exit(page_renderer::render_main("$page - 404 - $settings->sitename", "<p>$page does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
+					exit(page_renderer::render_main("$env->page - 404 - $settings->sitename", "<p>$env->page does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
 				}
 			}
-			$title = "$page - $settings->sitename";
-			$content = "<h1>$page</h1>";
+			$title = "$env->page - $settings->sitename";
+			$content = "<h1>$env->page</h1>";
 			
 			$parsing_start = microtime(true);
 			
-			$content .= $parse_page_source(file_get_contents("$page.md"));
+			$content .= $parse_page_source(file_get_contents("$env->page.md"));
 			
 			if($settings->show_subpages)
 			{
-				$subpages = get_object_vars(get_subpages($pageindex, $page));
+				$subpages = get_object_vars(get_subpages($pageindex, $env->page));
 				
 				if(count($subpages) > 0)
 				{

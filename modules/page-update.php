@@ -1,15 +1,15 @@
 <?php
 register_module([
 	"name" => "Update",
-	"version" => "0.6",
+	"version" => "0.6.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an update page that downloads the latest stable version of Pepperminty Wiki. This module is currently outdated as it doesn't save your module preferences.",
 	"id" => "page-update",
 	"code" => function() {
 		add_action("update", function() {
-			global $settings, $isadmin;
+			global $settings, $env;
 			
-			if(!$isadmin)
+			if(!$env->is_admin)
 			{
 				http_response_code(401);
 				exit(page_renderer::render_main("Update - Error", "<p>You must be an administrator to do that.</p>"));

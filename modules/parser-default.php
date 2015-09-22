@@ -54,11 +54,9 @@ class Slimdown {
 		'/(\*)(.*?)\1/' => '<strong>\2</strong>',					// bold
 		'/(_)(.*?)\1/' => '<em>\2</em>',							// emphasis
 		
-		// todo test these
 		'/!\[(.*)\]\(([^\s]+)\s(\d+.+)\s(left|right)\)/' => '<img src="\2" alt="\1" style="max-width: \3; float: \4;" />',		// images with size
 		'/!\[(.*)\]\(([^\s]+)\s(\d+.+)\)/' => '<img src="\2" alt="\1" style="max-width: \3;" />',		// images with size
 		'/!\[(.*)\]\((.*)\)/' => '<img src="\2" alt="\1" />',		// basic images
-		// todo end
 		
 		'/\[\[([a-zA-Z0-9\_\- ]+)\|([a-zA-Z0-9\_\- ]+)\]\]/' => '<a href=\'index.php?page=\1\'>\2</a>',	//internal links with display text
 		'/\[\[([a-zA-Z0-9\_\- ]+)\]\]/' => '<a href=\'index.php?page=\1\'>\1</a>',	//internal links

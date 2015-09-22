@@ -49,9 +49,9 @@ else
 		// and get out of here
 		$env->is_logged_in = false;
 		$env->user = "Anonymous";
-		unset($pass);
+		$env->pass = "";
 		// Clear the session data
-		$_SESSION = []; //delete al lthe variables
+		$_SESSION = []; //delete all the variables
 		session_destroy(); //destroy the session
 	}
 }
