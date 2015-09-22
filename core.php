@@ -613,9 +613,9 @@ if(!isset($actions->credits))
 }
 
 // Perform the appropriate action
+$action_name = $env->action;
 if(isset($actions->$action_name))
 {
-	$action_name = $env->action;
 	$req_action_data = $actions->$action_name;
 	$req_action_data();
 }

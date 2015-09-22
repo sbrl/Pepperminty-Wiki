@@ -9,11 +9,11 @@
     },
     {
         "name": "Raw page source",
-        "version": "0.2",
+        "version": "0.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a 'raw' action that shows you the raw source of a page.",
         "id": "action-raw",
-        "lastupdate": 1442855075
+        "lastupdate": 1442903519
     },
     {
         "name": "Sidebar",
@@ -33,27 +33,27 @@
     },
     {
         "name": "Page deleter",
-        "version": "0.5",
+        "version": "0.6",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to delete pages.",
         "id": "page-delete",
-        "lastupdate": 1432497591
+        "lastupdate": 1442929182
     },
     {
         "name": "Page editor",
-        "version": "0.8",
+        "version": "0.9",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1437037997
+        "lastupdate": 1442903905
     },
     {
         "name": "Export",
-        "version": "0.1",
+        "version": "0.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that you can use to export your wiki as a .zip file. Uses $settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
         "id": "page-export",
-        "lastupdate": 1437213501
+        "lastupdate": 1442927946
     },
     {
         "name": "Help page",
@@ -73,43 +73,43 @@
     },
     {
         "name": "Login",
-        "version": "0.5",
+        "version": "0.6",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastupdate": 1438004499
+        "lastupdate": 1442928221
     },
     {
         "name": "Logout",
-        "version": "0.5",
+        "version": "0.6",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to let users user out. For security reasons it is wise to add this module since logging in automatically opens a session that is valid for 30 days.",
         "id": "page-logout",
-        "lastupdate": 1432497592
+        "lastupdate": 1442928225
     },
     {
         "name": "Page mover",
-        "version": "0.5",
+        "version": "0.6",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
         "id": "page-move",
-        "lastupdate": 1432497592
+        "lastupdate": 1442928409
     },
     {
         "name": "Update",
-        "version": "0.6",
+        "version": "0.6.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an update page that downloads the latest stable version of Pepperminty Wiki. This module is currently outdated as it doesn't save your module preferences.",
         "id": "page-update",
-        "lastupdate": 1432497592
+        "lastupdate": 1442928402
     },
     {
         "name": "Page viewer",
-        "version": "0.8",
+        "version": "0.9",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You should include this one.",
         "id": "page-view",
-        "lastupdate": 1436889857
+        "lastupdate": 1442928503
     },
     {
         "name": "Default Parser",
@@ -117,6 +117,6 @@
         "author": "Johnny Broadway & Starbeamrainbowlabs",
         "description": "The default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page.",
         "id": "parser-default",
-        "lastupdate": 1432720270
+        "lastupdate": 1442928533
     }
 ]
