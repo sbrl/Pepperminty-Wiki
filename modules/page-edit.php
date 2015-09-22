@@ -37,7 +37,7 @@ register_module([
 				$pagetext = file_get_contents($filename);
 			}
 			
-			if((!$isloggedin and !$settings->anonedits) or !$settings->editing)
+			if((!$env->is_logged_in and !$settings->anonedits) or !$settings->editing)
 			{
 				if(!$creatingpage)
 				{
