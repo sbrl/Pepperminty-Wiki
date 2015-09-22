@@ -5,7 +5,8 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a utility action (that anyone can use) called hash that hashes a given string. Useful when changing a user's password.",
         "id": "action-hash",
-        "lastupdate": 1432497591
+        "lastupdate": 1432497591,
+        "optional": false
     },
     {
         "name": "Raw page source",
@@ -13,7 +14,8 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a 'raw' action that shows you the raw source of a page.",
         "id": "action-raw",
-        "lastupdate": 1442903519
+        "lastupdate": 1442903519,
+        "optional": false
     },
     {
         "name": "Sidebar",
@@ -21,7 +23,8 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a sidebar to the left hand side of every page. Add '$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
         "id": "extra-sidebar",
-        "lastupdate": 1438776654
+        "lastupdate": 1438776654,
+        "optional": false
     },
     {
         "name": "Credits",
@@ -29,7 +32,8 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
-        "lastupdate": 1437213743
+        "lastupdate": 1437213743,
+        "optional": false
     },
     {
         "name": "Page deleter",
@@ -37,7 +41,8 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to delete pages.",
         "id": "page-delete",
-        "lastupdate": 1442929182
+        "lastupdate": 1442929182,
+        "optional": false
     },
     {
         "name": "Page editor",
@@ -45,7 +50,8 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1442929757
+        "lastupdate": 1442929757,
+        "optional": false
     },
     {
         "name": "Export",
@@ -53,7 +59,8 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that you can use to export your wiki as a .zip file. Uses $settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
         "id": "page-export",
-        "lastupdate": 1442927946
+        "lastupdate": 1442927946,
+        "optional": false
     },
     {
         "name": "Help page",
@@ -61,7 +68,8 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the help action. You really want this one.",
         "id": "page-help",
-        "lastupdate": 1432661123
+        "lastupdate": 1432661123,
+        "optional": false
     },
     {
         "name": "Page list",
@@ -69,7 +77,8 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1436976553
+        "lastupdate": 1436976553,
+        "optional": false
     },
     {
         "name": "Login",
@@ -77,7 +86,8 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastupdate": 1442928221
+        "lastupdate": 1442928221,
+        "optional": false
     },
     {
         "name": "Logout",
@@ -85,7 +95,8 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to let users user out. For security reasons it is wise to add this module since logging in automatically opens a session that is valid for 30 days.",
         "id": "page-logout",
-        "lastupdate": 1442928225
+        "lastupdate": 1442928225,
+        "optional": false
     },
     {
         "name": "Page mover",
@@ -93,7 +104,8 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
         "id": "page-move",
-        "lastupdate": 1442928409
+        "lastupdate": 1442928409,
+        "optional": false
     },
     {
         "name": "Update",
@@ -101,7 +113,8 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an update page that downloads the latest stable version of Pepperminty Wiki. This module is currently outdated as it doesn't save your module preferences.",
         "id": "page-update",
-        "lastupdate": 1442928402
+        "lastupdate": 1442928402,
+        "optional": false
     },
     {
         "name": "Page viewer",
@@ -109,7 +122,8 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You should include this one.",
         "id": "page-view",
-        "lastupdate": 1442928503
+        "lastupdate": 1442928503,
+        "optional": false
     },
     {
         "name": "Default Parser",
@@ -117,6 +131,7 @@
         "author": "Johnny Broadway & Starbeamrainbowlabs",
         "description": "The default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page.",
         "id": "parser-default",
-        "lastupdate": 1442928533
+        "lastupdate": 1442928533,
+        "optional": false
     }
 ]

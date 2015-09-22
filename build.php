@@ -33,7 +33,8 @@ function register_module($settings)
 		"author" => $settings["author"],
 		"description" => $settings["description"],
 		"id" => $settings["id"],
-		"lastupdate" => filemtime("modules/" . $settings["id"] . ".php")
+		"lastupdate" => filemtime("modules/" . $settings["id"] . ".php"),
+		"optional" => $settings["optional"]
 	];
 	$module_index[] = $newmodule;
 }
