@@ -714,7 +714,7 @@ class page_renderer
 					case "user-status":
 						if($env->is_logged_in)
 						{
-							$result .= "<span class='inflexible'>Logged in as " . self::render_username($user) . ".</span> "/* . page_renderer::$nav_divider*/;
+							$result .= "<span class='inflexible'>Logged in as " . self::render_username($env->user) . ".</span> "/* . page_renderer::$nav_divider*/;
 							$result .= "<span><a href='index.php?action=logout'>Logout</a></span>";
 							$result .= page_renderer::$nav_divider;
 						}
