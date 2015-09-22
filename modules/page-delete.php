@@ -26,7 +26,7 @@ register_module([
 				<p><a href='index.php?action=delete&page=$env->page&delete=yes'>Click here to delete $env->page.</a></p>
 				<p><a href='index.php?action=view&page=$env->page'>Click here to go back.</a>"));
 			}
-			$page = $env->page
+			$page = $env->page;
 			unset($pageindex->$page); //delete the page from the page index
 			file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT)); //save the new page index
 			unlink("./$env->page.md"); //delete the page from the disk
