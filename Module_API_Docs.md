@@ -154,14 +154,15 @@ register_module([
 
 Variables
 ---------
-There are a number of global variables floatign around that can give you a lot of information about the current request. I will be tidying them up into a single `$env` object soon. Below is a table of all the variables Pepperminty Wiki has lying around:
+There are a number of global variables floatign around that can give you a lot of information about the current request. ~~I will be tidying them up into a single `$env` object soon.~~ Most of the below have been tidied up into a single `$env` object now! Below is a table of all the variables Pepperminty Wiki has lying around:
 
 Variable				| Description
 ------------------------|------------------------------------------
-`$page`					| The current page name.
+`$env`					| An object that contains a _bunch_ of useful information about the current request.
+`$env->page`			| The current page name.
+`$env->is_logged_in`	| Whether the current user is currently logged in.
+`$env->is_admin`		| Whether the current user is an administrator.
+`$env->user`			| The current user's name. Currently only set if the user is logged in.
+`$env->action`			| The current action.
 `$settings`				| The settings object from the top of the file.
 `$pageindex`			| Contains a list of all the pages that Pepperminty Wiki currently knows about, along with information about each page. Exists to improve performance.
-`$isloggedin`			| Whether the current user is currently logged in.
-`$isadmin`				| Whether the current user is an administrator.
-`$user`					| The current user's name. Currently only set if the user is logged in.
-`$_GET["action"]`		| The current action.
