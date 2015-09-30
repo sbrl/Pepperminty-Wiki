@@ -1159,7 +1159,7 @@ register_module([
 
 register_module([
 	"name" => "Page editor",
-	"version" => "0.9.1",
+	"version" => "0.10",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -1195,12 +1195,15 @@ register_module([
 				$pagetext = file_get_contents($filename);
 			}
 			
-			if((!$env->is_logged_in and !$settings->anonedits) or !$settings->editing)
+			if((!$env->is_logged_in and !$settings->anonedits) or // if we aren't logged in  and anonymous edits are disbled
+			   !$settings->editing or// or editing is disabled
+			   ($pageindex->$page->protect and !$env->is_admin) // the page is protected and the user isn't an admin
+			  )
 			{
 				if(!$creatingpage)
 				{
 					// The page already exists - let the user view the page source
-					exit(page_renderer::render_main("Viewing source for $env->page", "<p>$settings->sitename does not allow anonymous users to make edits. You can view the source of $env->page below, but you can't edit it.</p><textarea name='content' readonly>$pagetext</textarea>"));
+					exit(page_renderer::render_main("Viewing source for $env->page", "<p>$settings->sitename does not allow anonymous users to make edits. If you are in fact logged in, then this page is probably protected, and you aren't an administrator or moderator. You can view the source of $env->page below, but you can't edit it.</p><textarea name='content' readonly>$pagetext</textarea>"));
 				}
 				else
 				{
@@ -1243,6 +1246,13 @@ register_module([
 				header("refresh: 5; url=index.php?page=$env->page");
 				exit("You are not logged in, so you are not allowed to save pages on $settings->sitename. Redirecting in 5 seconds....");
 			}
+			$page = $env->page;
+			if($pageindex->$page->protect and !$env->is_admin)
+			{
+				http_response_code(403);
+				header("refresh: 5; url=index.php?page=$env->page");
+				exit("$env->page is protected, and you aren't logged in as an administrastor or moderator. Your edit was not saved. Redirecting in 5 seconds...");
+			}
 			if(!isset($_POST["content"]))
 			{
 				http_response_code(400);
@@ -1279,7 +1289,7 @@ register_module([
 				}
 				$pageindex->$page->size = strlen($_POST["content"]);
 				$pageindex->$page->lastmodified = time();
-				if($isloggedin)
+				if($env->is_logged_in)
 					$pageindex->$page->lasteditor = utf8_encode($env->user);
 				else
 					$pageindex->$page->lasteditor = utf8_encode("anonymous");
