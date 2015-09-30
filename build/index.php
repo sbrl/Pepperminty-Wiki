@@ -130,6 +130,9 @@ $settings->nav_links_bottom = [
 	[ "Help", "index.php?action=help" ]
 ];
 
+// A message that will appear at the bottom of every page. May contain HTML.
+$settings->footer_message = "All content is under <a href='?page=License'>this license</a>.";
+
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a
 // <link rel='stylesheet' /> tag.
@@ -581,6 +584,7 @@ class page_renderer
 		</main>
 		
 		<footer>
+			<p>{footer-message}</p>
 			<p>Powered by Pepperminty Wiki, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or open an issue <a href='//github.com/sbrl/Pepperminty-Wiki'>on github</a>.</p>
 			<p>Your local friendly administrators are {admins-name-list}.
 			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
@@ -591,7 +595,8 @@ class page_renderer
 		<footer class='printable'>
 			<hr class='footerdivider' />
 			<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
-			<p><em>Timed at {generation-date}</em>
+			<p>{footer-message}</p>
+			<p><em>Timed at {generation-date}</em></p>
 			<p><em>Powered by Pepperminty Wiki.</em></p>
 		</footer>";
 	
@@ -643,7 +648,9 @@ class page_renderer
 			
 			"{generation-date}" => date("l jS \of F Y \a\\t h:ia T"),
 			
-			"{all-pages-datalist}" => self::generate_all_pages_datalist()
+			"{all-pages-datalist}" => self::generate_all_pages_datalist(),
+			
+			"{footer-message}" => $settings->footer_message
 		];
 		
 		// Pass the parts through the part processors

@@ -127,6 +127,9 @@ $settings->nav_links_bottom = [
 	[ "Help", "index.php?action=help" ]
 ];
 
+// A message that will appear at the bottom of every page. May contain HTML.
+$settings->footer_message = "All content is under <a href='?page=License'>this license</a>.";
+
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a
 // <link rel='stylesheet' /> tag.
