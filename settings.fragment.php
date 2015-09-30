@@ -74,6 +74,10 @@ $settings->admins = [ "admin" ];
 // to a diamond shape (&#9670;).
 $settings->admindisplaychar = "&#9670;";
 
+// The string that is prepended a page's name in the page title if it is
+// protected. Defaults to a lock symbol.
+$settings->protectedpagechar = "&#128274;";
+
 // Contact details for the site administrator. Since users can only be added by
 // editing this file, people will need a contact address to use to ask for an
 // account. Displayed at the bottom of the page, and will be appropriately
@@ -117,7 +121,8 @@ $settings->nav_links = [
 // "More" subsection.
 $settings->nav_links_extra = [
 	[ $settings->admindisplaychar . "Delete", "index.php?action=delete&page={page}" ],
-	[ $settings->admindisplaychar . "Move", "index.php?action=move&page={page}" ]
+	[ $settings->admindisplaychar . "Move", "index.php?action=move&page={page}" ],
+	[ $settings->admindisplaychar . "Toggle Protection", "index.php?action=protect&page={page}" ]
 ];
 
 // An array of links in the above format that will be shown at the bottom of

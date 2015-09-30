@@ -1,9 +1,9 @@
 <?php
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.9",
+	"version" => "0.10",
 	"author" => "Starbeamrainbowlabs",
-	"description" => "Allows you to view pages. You should include this one.",
+	"description" => "Allows you to view pages. You reallyshould include this one.",
 	"id" => "page-view",
 	"code" => function() {
 		add_action("view", function() {
@@ -29,6 +29,8 @@ register_module([
 				}
 			}
 			$title = "$env->page - $settings->sitename";
+			if(isset($pageindex->$page->protect) && $pageindex->$page->protect === true)
+				$title = $settings->protectedpagechar . $title;
 			$content = "<h1>$env->page</h1>";
 			
 			$parsing_start = microtime(true);

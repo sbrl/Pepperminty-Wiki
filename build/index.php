@@ -77,6 +77,10 @@ $settings->admins = [ "admin" ];
 // to a diamond shape (&#9670;).
 $settings->admindisplaychar = "&#9670;";
 
+// The string that is prepended a page's name in the page title if it is
+// protected. Defaults to a lock symbol.
+$settings->protectedpagechar = "&#128274;";
+
 // Contact details for the site administrator. Since users can only be added by
 // editing this file, people will need a contact address to use to ask for an
 // account. Displayed at the bottom of the page, and will be appropriately
@@ -120,7 +124,8 @@ $settings->nav_links = [
 // "More" subsection.
 $settings->nav_links_extra = [
 	[ $settings->admindisplaychar . "Delete", "index.php?action=delete&page={page}" ],
-	[ $settings->admindisplaychar . "Move", "index.php?action=move&page={page}" ]
+	[ $settings->admindisplaychar . "Move", "index.php?action=move&page={page}" ],
+	[ $settings->admindisplaychar . "Toggle Protection", "index.php?action=protect&page={page}" ]
 ];
 
 // An array of links in the above format that will be shown at the bottom of
@@ -131,11 +136,11 @@ $settings->nav_links_bottom = [
 ];
 
 // A message that will appear at the bottom of every page. May contain HTML.
-$settings->footer_message = "All content is under <a href='?page=License'>this license</a>. Please make sure that you read and understand the license, especially if you are thinking about copying some (or all) of this site's content, as it may restrict you from doing so.";
+$settings->footer_message = "All content is under <a href='?page=License' target='_blank'>this license</a>. Please make sure that you read and understand the license, especially if you are thinking about copying some (or all) of this site's content, as it may restrict you from doing so.";
 
 // A message that will appear just before the submit button on the editing
 // page. May contain HTML.
-$settings->editing_message = "By submitting your edit, you are agreeing to release your changes under <a href='?action=view&page=License'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!";
+$settings->editing_message = "By submitting your edit, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!";
 
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a
@@ -848,6 +853,59 @@ register_module([
 			else
 			{
 				exit(page_renderer::render_main("Hashed string", "<p><code>" . $_GET["string"] . "</code> → <code>" . hash("sha256", $_GET["string"] . "</code></p>")));
+			}
+		});
+	}
+]);
+
+
+
+
+register_module([
+	"name" => "Page protection",
+	"version" => "0.1",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Exposes Pepperminty Wiki's new page protection mechanism and makes the protect button in the 'More...' menu on the top bar work.",
+	"id" => "action-protect",
+	"code" => function() {
+		add_action("protect", function() {
+			global $env, $pageindex;
+			
+			// Make sure that the user is logged in as an admin / mod.
+			if($env->is_admin)
+			{
+				// They check out ok, toggle the page's protection.
+				$page = $env->page;
+				
+				$toggled = false;
+				if(!isset($pageindex->$page->protect))
+				{
+					$pageindex->$page->protect = true;
+					$toggled = true;
+				}
+				
+				if(!$toggled && $pageindex->$page->protect === true)
+				{
+					$pageindex->$page->protected = false;
+					$toggled = false;
+				}
+				
+				if(!$toggled && $pageindex->$page->protect === false)
+				{
+					$pageindex->$page->protected = true;
+					$toggled = true;
+				}
+				
+				// Save the pageindex
+				file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+				
+				$state = ($pageindex->$page->protect ? "enabled" : "disabled");
+				$title = "Page protection $state.";
+				exit(page_renderer::render_main($title, "<p>Page protection for $env->page has been $state.</p>"));
+			}
+			else
+			{
+				exit(page_renderer::render_main("Error protecting page", "<p>You are not allowed to protect pages because you are not logged in as a mod or admin. Please try logging out if you are logged in and then try logging in as an administrator.</p>"));
 			}
 		});
 	}
@@ -1633,9 +1691,9 @@ register_module([
 
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.9",
+	"version" => "0.10",
 	"author" => "Starbeamrainbowlabs",
-	"description" => "Allows you to view pages. You should include this one.",
+	"description" => "Allows you to view pages. You reallyshould include this one.",
 	"id" => "page-view",
 	"code" => function() {
 		add_action("view", function() {
@@ -1661,6 +1719,8 @@ register_module([
 				}
 			}
 			$title = "$env->page - $settings->sitename";
+			if(isset($pageindex->$page->protect) && $pageindex->$page->protect === true)
+				$title = $settings->protectedpagechar . $title;
 			$content = "<h1>$env->page</h1>";
 			
 			$parsing_start = microtime(true);

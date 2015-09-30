@@ -9,6 +9,15 @@
         "optional": false
     },
     {
+        "name": "Page protection",
+        "version": "0.1",
+        "author": "Starbeamrainbowlabs",
+        "description": "Exposes Pepperminty Wiki's new page protection mechanism and makes the protect button in the 'More...' menu on the top bar work.",
+        "id": "action-protect",
+        "lastupdate": 1443593181,
+        "optional": false
+    },
+    {
         "name": "Raw page source",
         "version": "0.3",
         "author": "Starbeamrainbowlabs",
@@ -118,11 +127,11 @@
     },
     {
         "name": "Page viewer",
-        "version": "0.9",
+        "version": "0.10",
         "author": "Starbeamrainbowlabs",
-        "description": "Allows you to view pages. You should include this one.",
+        "description": "Allows you to view pages. You reallyshould include this one.",
         "id": "page-view",
-        "lastupdate": 1442928503,
+        "lastupdate": 1443592985,
         "optional": false
     },
     {
