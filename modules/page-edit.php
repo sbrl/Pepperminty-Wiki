@@ -73,7 +73,7 @@ register_module([
 		 *                %save%
 		 */
 		add_action("save", function() {
-			global $pageindex, $settings, $env; 
+			global $pageindex, $settings, $env, $save_preprocessors; 
 			if(!$settings->editing)
 			{
 				header("location: index.php?page=$env->page");
@@ -99,8 +99,15 @@ register_module([
 				mkdir(dirname("$env->page.md"), null, true);
 			}
 			
+			$pagedata = htmlentities($_POST["content"], ENT_QUOTES);
 			
-			if(file_put_contents("$env->page.md", htmlentities($_POST["content"]), ENT_QUOTES) !== false)
+			// Execute all the preprocessors
+			foreach($save_preprocessors as $func)
+			{
+				$func($pagedata);
+			}
+			
+			if(file_put_contents("$env->page.md", $pagedata) !== false)
 			{
 				$page = $env->page;
 				// Make sure that this page's parents exist

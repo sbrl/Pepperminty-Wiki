@@ -599,6 +599,15 @@ function add_parser($parser_code)
 	$parse_page_source = $parser_code;
 }
 
+// Function to register a new proprocessor that will be executed just before
+// an edit is saved.
+$save_preprocessors = [];
+function register_save_preprocessor($func)
+{
+	global $save_preprocessors;
+	$save_processessors[] = $func;
+}
+
 //////////////////////////////////////////////////////////////////
 
 
