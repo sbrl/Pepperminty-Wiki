@@ -128,7 +128,11 @@ $settings->nav_links_bottom = [
 ];
 
 // A message that will appear at the bottom of every page. May contain HTML.
-$settings->footer_message = "All content is under <a href='?page=License'>this license</a>.";
+$settings->footer_message = "All content is under <a href='?page=License'>this license</a>. Please make sure that you read and understand the license, especially if you are thinking about copying some (or all) of this site's content, as it may restrict you from doing so.";
+
+// A message that will appear just before the submit button on the editing
+// page. May contain HTML.
+$settings->editing_message = "By submitting your edit, you are agreeing to release your changes under <a href='?action=view&page=License'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!";
 
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a

@@ -58,6 +58,7 @@ register_module([
 			}
 			$content .= "<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save'>
 			<textarea name='content'>$pagetext</textarea>
+			<p>$settings->editing_message</p>
 			<input type='submit' value='Save Page' />
 		</form>";
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
