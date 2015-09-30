@@ -300,7 +300,7 @@ else
 	$pageindex = json_decode(file_get_contents("./pageindex.json"));
 }
 
-// Work around an Opera + Syntastic bug where there is no margin at the left hand side if there isn't a query string when accessing a .php file
+// Work around an Opera + Syntaxtic bug where there is no margin at the left hand side if there isn't a query string when accessing a .php file
 if(!isset($_GET["action"]) and !isset($_GET["page"]))
 {
 	http_response_code(302);
