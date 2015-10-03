@@ -41,7 +41,7 @@ register_module([
 				{
 					// Todo send an explanatory page along with the redirect
 					http_response_code(307);
-					header("location: ?action=view&page=" . $pageindex->$page->redirect_target . "&redirected_from=$env->page");
+					header("location: ?action=$env->action&page=" . $pageindex->$page->redirect_target . "&redirected_from=$env->page");
 					exit();
 				}
 			}
