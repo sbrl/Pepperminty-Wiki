@@ -1,4 +1,5 @@
 <?php
+error_log("Initialising redirect page support");
 register_module([
 	"name" => "Redirect pages",
 	"version" => "0.1",
@@ -7,6 +8,7 @@ register_module([
 	"id" => "feature-redirect",
 	"code" => function() {
 		register_save_preprocessor(function(&$index_entry, &$pagedata) {
+			error_log("Running redirect check");
 			$matches = [];
 			if(preg_match("/^# ?REDIRECT ?\[\[([^\]]+)\]\]/i", $pagedata) === 1)
 			{
