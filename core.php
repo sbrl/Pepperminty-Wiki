@@ -605,7 +605,7 @@ $save_preprocessors = [];
 function register_save_preprocessor($func)
 {
 	global $save_preprocessors;
-	$save_processessors[] = $func;
+	$save_preprocessors[] = $func;
 }
 
 //////////////////////////////////////////////////////////////////
