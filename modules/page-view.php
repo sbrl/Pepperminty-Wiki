@@ -31,16 +31,19 @@ register_module([
 			
 			// Perform a redirect if the requested page is a redirect page
 			if(isset($pageindex->$page->redirect) &&
-			   $pageindex->$page->redirect === true &&
-			   ( // Make sure that the redirect GET paramter isn'tset to 'no'
-				   isset($_GET["redirect"]) &&
-				   $_GET["redirect"] !== "no"
-			   ))
+			   $pageindex->$page->redirect === true)
 			{
-				// Todo send an explanatory page along with the redirect
-				http_response_code(307);
-				header("location: ?action=view&page=" . $pageindex->$page->redirect_target . "&redirected_from=$env->page");
-				exit();
+				$send_redirect = true;
+				if(isset($_GET["redirect"]) && $_GET["redirect"] == "no")
+					$send_redirect = false;
+				
+				if($send_redirect)
+				{
+					// Todo send an explanatory page along with the redirect
+					http_response_code(307);
+					header("location: ?action=view&page=" . $pageindex->$page->redirect_target . "&redirected_from=$env->page");
+					exit();
+				}
 			}
 			
 			$title = "$env->page - $settings->sitename";

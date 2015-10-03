@@ -41,7 +41,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
         "id": "feature-redirect",
-        "lastupdate": 1443872212,
+        "lastupdate": 1443874989,
         "optional": false
     },
     {
@@ -68,7 +68,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1443872342,
+        "lastupdate": 1443874970,
         "optional": false
     },
     {
@@ -140,7 +140,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You reallyshould include this one.",
         "id": "page-view",
-        "lastupdate": 1443871241,
+        "lastupdate": 1443875269,
         "optional": false
     },
     {

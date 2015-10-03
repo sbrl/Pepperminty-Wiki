@@ -838,7 +838,7 @@ $save_preprocessors = [];
 function register_save_preprocessor($func)
 {
 	global $save_preprocessors;
-	$save_processessors[] = $func;
+	$save_preprocessors[] = $func;
 }
 
 //////////////////////////////////////////////////////////////////
@@ -1055,7 +1055,6 @@ function render_sidebar($pageindex, $root_pagename = "")
 
 
 
-error_log("Initialising redirect page support");
 register_module([
 	"name" => "Redirect pages",
 	"version" => "0.1",
@@ -1064,10 +1063,10 @@ register_module([
 	"id" => "feature-redirect",
 	"code" => function() {
 		register_save_preprocessor(function(&$index_entry, &$pagedata) {
-			error_log("Running redirect check");
 			$matches = [];
-			if(preg_match("/^# ?REDIRECT ?\[\[([^\]]+)\]\]/i", $pagedata) === 1)
+			if(preg_match("/^# ?REDIRECT ?\[\[([^\]]+)\]\]/i", $pagedata, $matches) === 1)
 			{
+				error_log("matches: " . var_export($matches, true));
 				// We have found a redirect page!
 				// Update the metadata to reflect this.
 				$index_entry->redirect = true;
@@ -1347,7 +1346,7 @@ register_module([
 				else
 					http_response_code(200);
 				
-				header("location: index.php?page=$env->page&edit_status=success");
+				header("location: index.php?page=$env->page&edit_status=success&redirect=no");
 				exit();
 			}
 			else
@@ -1793,16 +1792,19 @@ register_module([
 			
 			// Perform a redirect if the requested page is a redirect page
 			if(isset($pageindex->$page->redirect) &&
-			   $pageindex->$page->redirect === true &&
-			   ( // Make sure that the redirect GET paramter isn'tset to 'no'
-				   isset($_GET["redirect"]) &&
-				   $_GET["redirect"] !== "no"
-			   ))
+			   $pageindex->$page->redirect === true)
 			{
-				// Todo send an explanatory page along with the redirect
-				http_response_code(307);
-				header("location: ?action=view&page=" . $pageindex->$page->redirect_target . "&redirected_from=$env->page");
-				exit();
+				$send_redirect = true;
+				if(isset($_GET["redirect"]) && $_GET["redirect"] == "no")
+					$send_redirect = false;
+				
+				if($send_redirect)
+				{
+					// Todo send an explanatory page along with the redirect
+					http_response_code(307);
+					header("location: ?action=view&page=" . $pageindex->$page->redirect_target . "&redirected_from=$env->page");
+					exit();
+				}
 			}
 			
 			$title = "$env->page - $settings->sitename";
