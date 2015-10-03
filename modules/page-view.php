@@ -28,6 +28,21 @@ register_module([
 					exit(page_renderer::render_main("$env->page - 404 - $settings->sitename", "<p>$env->page does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
 				}
 			}
+			
+			// Perform a redirect if the requested page is a redirect page
+			if(isset($pageindex->$page->redirect) &&
+			   $pageindex->$page->redirect === true &&
+			   ( // Make sure that the redirect GET paramter isn'tset to 'no'
+				   isset($_GET["redirect"]) &&
+				   $_GET["redirect"] !== "no"
+			   ))
+			{
+				// Todo send an explanatory page along with the redirect
+				http_response_code(307);
+				header("location: ?action=view&page=" . $pageindex->$page->redirect_target . "&redirected_from=$env->page");
+				exit();
+			}
+			
 			$title = "$env->page - $settings->sitename";
 			if(isset($pageindex->$page->protect) && $pageindex->$page->protect === true)
 				$title = $settings->protectedpagechar . $title;
