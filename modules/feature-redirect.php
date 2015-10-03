@@ -10,8 +10,9 @@ register_module([
 		register_save_preprocessor(function(&$index_entry, &$pagedata) {
 			error_log("Running redirect check");
 			$matches = [];
-			if(preg_match("/^# ?REDIRECT ?\[\[([^\]]+)\]\]/i", $pagedata) === 1)
+			if(preg_match("/^# ?REDIRECT ?\[\[([^\]]+)\]\]/i", $pagedata, $matches) === 1)
 			{
+				error_log("matches: " . var_export($matches, true));
 				// We have found a redirect page!
 				// Update the metadata to reflect this.
 				$index_entry->redirect = true;
