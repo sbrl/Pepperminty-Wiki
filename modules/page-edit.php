@@ -143,7 +143,6 @@ register_module([
 				// Execute all the preprocessors
 				foreach($save_preprocessors as $func)
 				{
-					error_log("Executing handler");
 					$func($pageindex->$page, $pagedata);
 				}
 				
