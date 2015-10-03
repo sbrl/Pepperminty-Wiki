@@ -39,8 +39,12 @@ register_module([
 			
 			if((!$env->is_logged_in and !$settings->anonedits) or // if we aren't logged in  and anonymous edits are disbled
 			   !$settings->editing or// or editing is disabled
-			   ($pageindex->$page->protect and !$env->is_admin) // the page is protected and the user isn't an admin
-			  )
+			   (  // the page exists and is protected and the user isn't an admin
+				   isset($pageindex->$page) and
+				   $pageindex->$page->protect and
+				   !$env->is_admin
+			   )
+			)
 			{
 				if(!$creatingpage)
 				{

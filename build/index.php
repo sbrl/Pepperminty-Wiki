@@ -1056,6 +1056,39 @@ function render_sidebar($pageindex, $root_pagename = "")
 
 
 register_module([
+	"name" => "Redirect pages",
+	"version" => "0.1",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
+	"id" => "feature-redirect",
+	"code" => function() {
+		register_save_preprocessor(function(&$index_entry, &$pagedata) {
+			$matches = [];
+			if(preg_match("/^# ?REDIRECT ?\[\[([^\]]+)\]\]/i", $pagedata) === 1)
+			{
+				// We have found a redirect page!
+				// Update the metadata to reflect this.
+				$index_entry->redirect = true;
+				$index_entry->redirect_target = $matches[1];
+			}
+			else
+			{
+				// This page isn't a redirect. Unset the metadata just in case.
+				if(isseet($index_entry->redirect))
+					unset($index_entry->redirect);
+				if(isseet($index_entry->redirect_target))
+					unset($index_entry->redirect_target);
+			}
+		});
+		
+		// Todo register a function somewhere else to detect reedirects in the front end
+	}
+]);
+
+
+
+
+register_module([
 	"name" => "Credits",
 	"version" => "0.6",
 	"author" => "Starbeamrainbowlabs",
@@ -1197,8 +1230,12 @@ register_module([
 			
 			if((!$env->is_logged_in and !$settings->anonedits) or // if we aren't logged in  and anonymous edits are disbled
 			   !$settings->editing or// or editing is disabled
-			   ($pageindex->$page->protect and !$env->is_admin) // the page is protected and the user isn't an admin
-			  )
+			   (  // the page exists and is protected and the user isn't an admin
+				   isset($pageindex->$page) and
+				   $pageindex->$page->protect and
+				   !$env->is_admin
+			   )
+			)
 			{
 				if(!$creatingpage)
 				{
@@ -1269,12 +1306,6 @@ register_module([
 			
 			$pagedata = htmlentities($_POST["content"], ENT_QUOTES);
 			
-			// Execute all the preprocessors
-			foreach($save_preprocessors as $func)
-			{
-				$func($pagedata);
-			}
-			
 			if(file_put_contents("$env->page.md", $pagedata) !== false)
 			{
 				$page = $env->page;
@@ -1293,6 +1324,14 @@ register_module([
 					$pageindex->$page->lasteditor = utf8_encode($env->user);
 				else
 					$pageindex->$page->lasteditor = utf8_encode("anonymous");
+				
+				
+				// Execute all the preprocessors
+				foreach($save_preprocessors as $func)
+				{
+					$func($pageindex->$page, $pagedata);
+				}
+				
 				
 				file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
 				
@@ -1744,6 +1783,21 @@ register_module([
 					exit(page_renderer::render_main("$env->page - 404 - $settings->sitename", "<p>$env->page does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
 				}
 			}
+			
+			// Perform a redirect if the requested page is a redirect page
+			if(isset($pageindex->$page->redirect) &&
+			   $pageindex->$page->redirect === true &&
+			   ( // Make sure that the redirect GET paramter isn'tset to 'no'
+				   isset($_GET["redirect"]) &&
+				   $_GET["redirect"] !== "no"
+			   ))
+			{
+				// Todo send an explanatory page along with the redirect
+				http_response_code(307);
+				header("location: ?action=view&page=" . $pageindex->$page->redirect_target . "&redirected_from=$env->page");
+				exit();
+			}
+			
 			$title = "$env->page - $settings->sitename";
 			if(isset($pageindex->$page->protect) && $pageindex->$page->protect === true)
 				$title = $settings->protectedpagechar . $title;
