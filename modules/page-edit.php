@@ -140,7 +140,6 @@ register_module([
 					$pageindex->$page->lasteditor = utf8_encode("anonymous");
 				
 				
-				var_dump($save_preprocessors);
 				// Execute all the preprocessors
 				foreach($save_preprocessors as $func)
 				{
@@ -156,7 +155,7 @@ register_module([
 				else
 					http_response_code(200);
 				
-				header("location: index.php?page=$env->page&edit_status=success");
+				header("location: index.php?page=$env->page&edit_status=success&redirect=no");
 				exit();
 			}
 			else
