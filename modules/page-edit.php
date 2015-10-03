@@ -111,12 +111,6 @@ register_module([
 			
 			$pagedata = htmlentities($_POST["content"], ENT_QUOTES);
 			
-			// Execute all the preprocessors
-			foreach($save_preprocessors as $func)
-			{
-				$func($pagedata);
-			}
-			
 			if(file_put_contents("$env->page.md", $pagedata) !== false)
 			{
 				$page = $env->page;
@@ -135,6 +129,14 @@ register_module([
 					$pageindex->$page->lasteditor = utf8_encode($env->user);
 				else
 					$pageindex->$page->lasteditor = utf8_encode("anonymous");
+				
+				
+				// Execute all the preprocessors
+				foreach($save_preprocessors as $func)
+				{
+					$func($pageindex->$page, $pagedata);
+				}
+				
 				
 				file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
 				
