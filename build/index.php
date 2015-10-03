@@ -1810,7 +1810,11 @@ register_module([
 			$title = "$env->page - $settings->sitename";
 			if(isset($pageindex->$page->protect) && $pageindex->$page->protect === true)
 				$title = $settings->protectedpagechar . $title;
-			$content = "<h1>$env->page</h1>";
+			$content = "<h1>$env->page</h1>\n";
+			
+			// Add an extra message if the requested was redirected from another page
+			if(isset($_GET["redirected_from"]))
+				$content .= "<p><em>Redirected from <a href='?page=" . rawurlencode($_GET["redirected_from"]) . "&redirect=no'>" . $_GET["redirected_from"] . "</a>.</em></p>";
 			
 			$parsing_start = microtime(true);
 			
