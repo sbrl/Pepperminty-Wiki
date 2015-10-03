@@ -6,7 +6,7 @@ register_module([
 	"description" => "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
 	"id" => "feature-redirect",
 	"code" => function() {
-		register_save_preprocessor(function(&index_entry, &$pagedata) {
+		register_save_preprocessor(function(&$index_entry, &$pagedata) {
 			$matches = [];
 			if(preg_match("/^# ?REDIRECT ?\[\[([^\]]+)\]\]/i", $pagedata) === 1)
 			{
