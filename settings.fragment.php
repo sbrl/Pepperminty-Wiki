@@ -38,6 +38,13 @@ $settings->editing = true;
 // 135,000 characters, which is about 50 pages.
 $settings->maxpagesize = 135000;
 
+// Whether page sources should be cleaned of HTML before rendering. If set to
+// true any raw HTML will be escaped before rendering. Note that this shouldn't
+// affect code blocks - they should alwys be escaped. It is STRONGLY
+// recommended that you keep this option turned on, *ESPECIALLY* if you allow
+// anonymous edits as no sanitizing what so ever is performed on the HTML.
+$settings->clean_raw_html = true;
+
 // Determined whether users who aren't logged in are allowed to edit your wiki.
 // Set to true to allow anonymous users to log in.
 $settings->anonedits = false;

@@ -118,7 +118,11 @@ register_module([
 				mkdir(dirname("$env->page.md"), null, true);
 			}
 			
-			$pagedata = htmlentities($_POST["content"], ENT_QUOTES);
+			
+			$pagedata = $_POST["content"];
+			
+			if($settings->clean_raw_html)
+				$pagedata = htmlentities($pagedata, ENT_QUOTES);
 			
 			if(file_put_contents("$env->page.md", $pagedata) !== false)
 			{

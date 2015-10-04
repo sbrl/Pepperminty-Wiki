@@ -607,6 +607,11 @@ function parse_page_source($source)
 	if(!isset($parsers->{$settings->parser}))
 		exit(page_renderer::render_main("Parsing error - $settings->sitename", "<p>Parsing some page source data failed. This is most likely because $settings->sitename has the parser setting set incorrectly. Please contact <a href='mailto:" . hide_email($settings->admindetails["email"]) . "'>" . $settings->admindetails["name"] . "</a>, your Administrator."));
 	
+/* Not needed atm because escaping happens when saving, not when rendering *
+	if($settings->clean_raw_html)
+		$source = htmlentities($source, ENT_QUOTES | ENT_HTML5);
+*/
+	
 	return $parsers->{$settings->parser}($source);
 }
 
