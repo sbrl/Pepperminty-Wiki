@@ -139,12 +139,19 @@ register_module([
 				else
 					$pageindex->$page->lasteditor = utf8_encode("anonymous");
 				
+				// A hack to resave the pagedata if the preprocessors have
+				// changed it. We need this because the preprocessors *must*
+				// run _after_ the pageindex has been updated.
+				$pagedata_orig = $pagedata;
 				
 				// Execute all the preprocessors
 				foreach($save_preprocessors as $func)
 				{
 					$func($pageindex->$page, $pagedata);
 				}
+				
+				if($pagedata !== $pagedata_orig)
+					file_put_contents("$env->page.md", $pagedata);
 				
 				
 				file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
