@@ -2074,10 +2074,6 @@ class Parsedown_Slimdown_Extensions {
 	public static $rules = array (
 		'/\r\n/' => "\n",											// new line normalisation
 		
-//		'/!\[(.*)\]\(([^\s]+)\s(\d+.+)\s(left|right)\)/' => '<img src="\2" alt="\1" style="max-width: \3; float: \4;" />',		// images with size
-//		'/!\[(.*)\]\(([^\s]+)\s(\d+.+)\)/' => '<img src="\2" alt="\1" style="max-width: \3;" />',		// images with size
-//		'/!\[(.*)\]\((.*)\)/' => '<img src="\2" alt="\1" />',		// basic images
-		
 		'/\[\[([a-zA-Z0-9\_\- ]+)\|([a-zA-Z0-9\_\- ]+)\]\]/' => '<a href=\'index.php?page=\1\'>\2</a>',	//internal links with display text
 		'/\[\[([a-zA-Z0-9\_\- ]+)\]\]/' => '<a href=\'index.php?page=\1\'>\1</a>',	//internal links
 	);
@@ -3247,7 +3243,46 @@ class Parsedown
 
         $Excerpt['text']= substr($Excerpt['text'], 1);
 
+//		var_dump($Excerpt);
+		
+		// %addition%
+		// Addition by Starbeamrainbowlabs that adds support for image sizing
+		// and floating
+		
+		$url_start = strpos($Excerpt["text"], "(");
+		$url_end = strpos($Excerpt["text"], ")");
+		$url = substr($Excerpt["text"], $url_start, $url_end - $url_start);
+		$style = "";
+		if(preg_match("/\s+/", $url) === 1)
+		{
+			// We have spaces in the url -  there are parameters lying around!
+			$parts = preg_split("/\s+/", $url);
+			$part_url = $parts[0];
+			$part_size = $parts[1];
+			$part_float = false;
+			if(isset($parts[2]))
+				$part_float = $parts[2];
+			
+			// Calculate the length of the bit that we removed
+			$parameter_length = strlen($url) - strlen($part_url);
+			
+			// Add a filler string onto the url to hide the parameters
+			$part_url .= str_repeat("x", $parameter_length);
+			
+			// Remove the parameters so that the link parser doesn't get confused
+			$Excerpt["text"] = str_replace($url, $part_url, $Excerpt["text"]);
+			
+			// Build a string of CSS to represent the parameters
+			$style .= "max-width: $part_size; max-height: $part_size;";
+			if($part_float !== false)
+				$style .= " float: $part_float;";
+			
+		}
+		
         $Link = $this->inlineLink($Excerpt);
+		// %addition_end%
+
+//		var_dump($Link);
 
         if ($Link === null)
         {
@@ -3264,6 +3299,14 @@ class Parsedown
                 ),
             ),
         );
+		
+		// %addition%
+		// Add the style to the image element
+		if(strlen($style) > 0)
+			$Inline["element"]["attributes"]["style"] = $style;
+		// Remove the filler from the src
+		$Inline["element"]["attributes"]["src"] = substr($Inline["element"]["attributes"]["src"], 0, strlen($url) - $parameter_length - 1);
+		// %addition_end%
 
         $Inline['element']['attributes'] += $Link['element']['attributes'];
 
