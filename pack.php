@@ -10,10 +10,10 @@ $module_index = json_decode(file_get_contents("module_index.json"));
 $module_list = [];
 foreach($module_index as $module)
 {
-	// If the module is optional, the module's id isn't present in the command line arguments, and the special '*' module id wasn't passed in, skip it
+	// If the module is optional, the module's id isn't present in the command line arguments, and the special 'all' module id wasn't passed in, skip it
 	if($module->optional &&
 	   strrpos(implode(" ", $argv), $module->id) === false &&
-	   !in_array("*", $argv)) continue;
+	   !in_array("all", $argv)) continue;
 	$module_list[] = $module->id;
 }
 

@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-php build.php
+php build.php $*
