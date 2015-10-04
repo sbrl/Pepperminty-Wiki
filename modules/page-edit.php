@@ -130,7 +130,7 @@ register_module([
 				// Make sure that this page's parents exist
 				check_subpage_parents($page);
 				
-				//update the page index
+				// Update the page index
 				if(!isset($pageindex->$page))
 				{
 					$pageindex->$page = new stdClass();
