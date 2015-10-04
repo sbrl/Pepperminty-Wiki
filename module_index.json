@@ -41,7 +41,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
         "id": "feature-redirect",
-        "lastupdate": 1443874989,
+        "lastupdate": 1443963856,
         "optional": false
     },
     {
@@ -158,7 +158,7 @@
         "author": "Johnny Broadway, Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Also uses a modified Slimdown engine by Johnny Broadway in order to add support for internal links etc. Please be careful, as this module adds a _ton_ of weight to your installation.",
         "id": "parser-parsedown",
-        "lastupdate": 1443961922,
+        "lastupdate": 1443962482,
         "optional": true
     }
 ]

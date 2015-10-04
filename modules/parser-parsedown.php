@@ -9,9 +9,12 @@ register_module([
 	"code" => function() {
 		$parsedown_extra = new ParsedownExtra();
 		add_parser("parsedown", function($source) use ($parsedown_extra) {
-			$source = Parsedown_Slimdown_Extensions::render($source);
 			
-			return $parsedown_extra->text($source);
+			$result = $parsedown_extra->text($source);
+			
+			$result = Parsedown_Slimdown_Extensions::render($source);
+			
+			return $result;
 		});
 	}
 ]);

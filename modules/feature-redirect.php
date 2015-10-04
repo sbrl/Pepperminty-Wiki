@@ -19,9 +19,9 @@ register_module([
 			else
 			{
 				// This page isn't a redirect. Unset the metadata just in case.
-				if(isseet($index_entry->redirect))
+				if(isset($index_entry->redirect))
 					unset($index_entry->redirect);
-				if(isseet($index_entry->redirect_target))
+				if(isset($index_entry->redirect_target))
 					unset($index_entry->redirect_target);
 			}
 		});

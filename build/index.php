@@ -46,6 +46,8 @@ $settings->maxpagesize = 135000;
 // affect code blocks - they should alwys be escaped. It is STRONGLY
 // recommended that you keep this option turned on, *ESPECIALLY* if you allow
 // anonymous edits as no sanitizing what so ever is performed on the HTML.
+// Also note that some parsers may override this setting and escape HTML
+// sequences anyway.
 $settings->clean_raw_html = true;
 
 // Determined whether users who aren't logged in are allowed to edit your wiki.
@@ -1103,9 +1105,9 @@ register_module([
 			else
 			{
 				// This page isn't a redirect. Unset the metadata just in case.
-				if(isseet($index_entry->redirect))
+				if(isset($index_entry->redirect))
 					unset($index_entry->redirect);
-				if(isseet($index_entry->redirect_target))
+				if(isset($index_entry->redirect_target))
 					unset($index_entry->redirect_target);
 			}
 		});
@@ -2028,9 +2030,12 @@ register_module([
 	"code" => function() {
 		$parsedown_extra = new ParsedownExtra();
 		add_parser("parsedown", function($source) use ($parsedown_extra) {
-			$source = Parsedown_Slimdown_Extensions::render($source);
 			
-			return $parsedown_extra->text($source);
+			$result = $parsedown_extra->text($source);
+			
+			$result = Parsedown_Slimdown_Extensions::render($source);
+			
+			return $result;
 		});
 	}
 ]);

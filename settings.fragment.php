@@ -43,6 +43,8 @@ $settings->maxpagesize = 135000;
 // affect code blocks - they should alwys be escaped. It is STRONGLY
 // recommended that you keep this option turned on, *ESPECIALLY* if you allow
 // anonymous edits as no sanitizing what so ever is performed on the HTML.
+// Also note that some parsers may override this setting and escape HTML
+// sequences anyway.
 $settings->clean_raw_html = true;
 
 // Determined whether users who aren't logged in are allowed to edit your wiki.
