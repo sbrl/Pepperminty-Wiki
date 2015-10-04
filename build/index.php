@@ -1945,7 +1945,7 @@ register_module([
 class Slimdown {
 	public static $rules = array (
 		'/\r\n/' => "\n",											// new line normalisation
-		'/(#+)(.*)/' => 'self::header',								// headers
+		'/^(#+)(.*)/' => 'self::header',								// headers
 		'/(\*)(.*?)\1/' => '<strong>\2</strong>',					// bold
 		'/(_)(.*?)\1/' => '<em>\2</em>',							// emphasis
 		
