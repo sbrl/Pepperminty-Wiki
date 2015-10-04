@@ -2033,7 +2033,7 @@ register_module([
 			
 			$result = $parsedown_extra->text($source);
 			
-			$result = Parsedown_Slimdown_Extensions::render($source);
+			$result = Parsedown_Slimdown_Extensions::render($result);
 			
 			return $result;
 		});
@@ -2074,9 +2074,9 @@ class Parsedown_Slimdown_Extensions {
 	public static $rules = array (
 		'/\r\n/' => "\n",											// new line normalisation
 		
-		'/!\[(.*)\]\(([^\s]+)\s(\d+.+)\s(left|right)\)/' => '<img src="\2" alt="\1" style="max-width: \3; float: \4;" />',		// images with size
-		'/!\[(.*)\]\(([^\s]+)\s(\d+.+)\)/' => '<img src="\2" alt="\1" style="max-width: \3;" />',		// images with size
-		'/!\[(.*)\]\((.*)\)/' => '<img src="\2" alt="\1" />',		// basic images
+//		'/!\[(.*)\]\(([^\s]+)\s(\d+.+)\s(left|right)\)/' => '<img src="\2" alt="\1" style="max-width: \3; float: \4;" />',		// images with size
+//		'/!\[(.*)\]\(([^\s]+)\s(\d+.+)\)/' => '<img src="\2" alt="\1" style="max-width: \3;" />',		// images with size
+//		'/!\[(.*)\]\((.*)\)/' => '<img src="\2" alt="\1" />',		// basic images
 		
 		'/\[\[([a-zA-Z0-9\_\- ]+)\|([a-zA-Z0-9\_\- ]+)\]\]/' => '<a href=\'index.php?page=\1\'>\2</a>',	//internal links with display text
 		'/\[\[([a-zA-Z0-9\_\- ]+)\]\]/' => '<a href=\'index.php?page=\1\'>\1</a>',	//internal links

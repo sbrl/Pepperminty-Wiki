@@ -158,7 +158,7 @@
         "author": "Johnny Broadway, Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Also uses a modified Slimdown engine by Johnny Broadway in order to add support for internal links etc. Please be careful, as this module adds a _ton_ of weight to your installation.",
         "id": "parser-parsedown",
-        "lastupdate": 1443962482,
+        "lastupdate": 1443964436,
         "optional": true
     }
 ]
