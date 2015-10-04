@@ -1,12 +1,12 @@
 <?php
 register_module([
 	"name" => "Default Parser",
-	"version" => "0.7",
+	"version" => "0.8",
 	"author" => "Johnny Broadway & Starbeamrainbowlabs",
 	"description" => "The default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page.",
 	"id" => "parser-default",
 	"code" => function() {
-		add_parser(function($markdown) {
+		add_parser("default", function($markdown) {
 			return Slimdown::render($markdown);
 		});
 	}

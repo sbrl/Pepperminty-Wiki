@@ -1,13 +1,13 @@
 <?php
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.10",
+	"version" => "0.11",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You reallyshould include this one.",
 	"id" => "page-view",
 	"code" => function() {
 		add_action("view", function() {
-			global $pageindex, $settings, $env, $parse_page_source;
+			global $pageindex, $settings, $env;
 			
 			// Check to make sure that the page exists
 			$page = $env->page;
@@ -57,7 +57,7 @@ register_module([
 			
 			$parsing_start = microtime(true);
 			
-			$content .= $parse_page_source(file_get_contents("$env->page.md"));
+			$content .= parse_page_source(file_get_contents("$env->page.md"));
 			
 			if($settings->show_subpages)
 			{

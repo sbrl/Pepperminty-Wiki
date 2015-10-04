@@ -51,6 +51,11 @@ $settings->defaultpage = "Main Page";
 // automatically views the default page (see above).
 $settings->defaultaction = "view";
 
+// The parser to use when rendering pages. Defaults to 'default', which is a
+// modified version of slimdown, originally written by
+// Johnny Broadway <johnny@johnnybroadway.com>.
+$settings->parser = "default";
+
 // Whether to show a list of subpages at the bottom of the page.
 $settings->show_subpages = true;
 

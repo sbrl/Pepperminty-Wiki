@@ -64,11 +64,11 @@
     },
     {
         "name": "Page editor",
-        "version": "0.10",
+        "version": "0.11",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1443874970,
+        "lastupdate": 1443945594,
         "optional": false
     },
     {
@@ -136,20 +136,20 @@
     },
     {
         "name": "Page viewer",
-        "version": "0.10",
+        "version": "0.11",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You reallyshould include this one.",
         "id": "page-view",
-        "lastupdate": 1443875776,
+        "lastupdate": 1443946169,
         "optional": false
     },
     {
         "name": "Default Parser",
-        "version": "0.7",
+        "version": "0.8",
         "author": "Johnny Broadway & Starbeamrainbowlabs",
         "description": "The default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page.",
         "id": "parser-default",
-        "lastupdate": 1442928533,
+        "lastupdate": 1443945169,
         "optional": false
     }
 ]

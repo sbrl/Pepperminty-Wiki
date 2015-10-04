@@ -588,15 +588,26 @@ function add_action($action_name, $func)
 	$actions->$action_name = $func;
 }
 
-// Function to register a new parser. If multiple parsers are registered then
-// only the last parser registered will actually be used.
-$parse_page_source = function() {
+// Function to register a new parser.
+$parsers = new stdClass();
+$parsers->none = function() {
 	throw new Exception("No parser registered!");
 };
-function add_parser($parser_code)
+function add_parser($name, $parser_code)
 {
-	global $parse_page_source;
-	$parse_page_source = $parser_code;
+	global $parsers;
+	if(isset($parsers->$name))
+		throw new Exception("Can't register parser with name '$name' because a parser with that name already exists.");
+	
+	$parsers->$name = $parser_code;
+}
+function parse_page_source($source)
+{
+	global $settings, $parsers;
+	if(!isset($parsers->{$settings->parser}))
+		exit(page_renderer::render_main("Parsing error - $settings->sitename", "<p>Parsing some page source data failed. This is most likely because $settings->sitename has the parser setting set incorrectly. Please contact <a href='mailto:" . hide_email($settings->admindetails["email"]) . "'>" . $settings->admindetails["name"] . "</a>, your Administrator."));
+	
+	return $parsers->{$settings->parser}($source);
 }
 
 // Function to register a new proprocessor that will be executed just before

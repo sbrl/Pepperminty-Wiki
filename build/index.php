@@ -54,6 +54,11 @@ $settings->defaultpage = "Main Page";
 // automatically views the default page (see above).
 $settings->defaultaction = "view";
 
+// The parser to use when rendering pages. Defaults to 'default', which is a
+// modified version of slimdown, originally written by
+// Johnny Broadway <johnny@johnnybroadway.com>.
+$settings->parser = "default";
+
 // Whether to show a list of subpages at the bottom of the page.
 $settings->show_subpages = true;
 
@@ -821,15 +826,26 @@ function add_action($action_name, $func)
 	$actions->$action_name = $func;
 }
 
-// Function to register a new parser. If multiple parsers are registered then
-// only the last parser registered will actually be used.
-$parse_page_source = function() {
+// Function to register a new parser.
+$parsers = new stdClass();
+$parsers->none = function() {
 	throw new Exception("No parser registered!");
 };
-function add_parser($parser_code)
+function add_parser($name, $parser_code)
 {
-	global $parse_page_source;
-	$parse_page_source = $parser_code;
+	global $parsers;
+	if(isset($parsers->$name))
+		throw new Exception("Can't register parser with name '$name' because a parser with that name already exists.");
+	
+	$parsers->$name = $parser_code;
+}
+function parse_page_source($source)
+{
+	global $settings, $parsers;
+	if(!isset($parsers->{$settings->parser}))
+		exit(page_renderer::render_main("Parsing error - $settings->sitename", "<p>Parsing some page source data failed. This is most likely because $settings->sitename has the parser setting set incorrectly. Please contact <a href='mailto:" . hide_email($settings->admindetails["email"]) . "'>" . $settings->admindetails["name"] . "</a>, your Administrator."));
+	
+	return $parsers->{$settings->parser}($source);
 }
 
 // Function to register a new proprocessor that will be executed just before
@@ -1193,7 +1209,7 @@ register_module([
 
 register_module([
 	"name" => "Page editor",
-	"version" => "0.10",
+	"version" => "0.11",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -1331,12 +1347,19 @@ register_module([
 				else
 					$pageindex->$page->lasteditor = utf8_encode("anonymous");
 				
+				// A hack to resave the pagedata if the preprocessors have
+				// changed it. We need this because the preprocessors *must*
+				// run _after_ the pageindex has been updated.
+				$pagedata_orig = $pagedata;
 				
 				// Execute all the preprocessors
 				foreach($save_preprocessors as $func)
 				{
 					$func($pageindex->$page, $pagedata);
 				}
+				
+				if($pagedata !== $pagedata_orig)
+					file_put_contents("$env->page.md", $pagedata);
 				
 				
 				file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
@@ -1762,13 +1785,13 @@ register_module([
 
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.10",
+	"version" => "0.11",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You reallyshould include this one.",
 	"id" => "page-view",
 	"code" => function() {
 		add_action("view", function() {
-			global $pageindex, $settings, $env, $parse_page_source;
+			global $pageindex, $settings, $env;
 			
 			// Check to make sure that the page exists
 			$page = $env->page;
@@ -1818,7 +1841,7 @@ register_module([
 			
 			$parsing_start = microtime(true);
 			
-			$content .= $parse_page_source(file_get_contents("$env->page.md"));
+			$content .= parse_page_source(file_get_contents("$env->page.md"));
 			
 			if($settings->show_subpages)
 			{
@@ -1855,12 +1878,12 @@ register_module([
 
 register_module([
 	"name" => "Default Parser",
-	"version" => "0.7",
+	"version" => "0.8",
 	"author" => "Johnny Broadway & Starbeamrainbowlabs",
 	"description" => "The default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page.",
 	"id" => "parser-default",
 	"code" => function() {
-		add_parser(function($markdown) {
+		add_parser("default", function($markdown) {
 			return Slimdown::render($markdown);
 		});
 	}
