@@ -407,10 +407,27 @@ class page_renderer
 		if($body_template === false)
 			$body_template = self::$main_content_template;
 		
+		if(strlen($settings->logo_url) > 0)
+		{
+			// A logo url has been specified
+			$logo_html = "<img class='logo' src='$settings->logo_url' />";
+			switch($settings->logo_position)
+			{
+				case "left":
+					$logo_html = "$logo_html $settings->sitename";
+					break;
+				case "right":
+					$logo_html .= " $settings->sitename";
+					break;
+				default:
+					throw new Exception("Invalid logo_position '$settings->logo_position'. Valid values are either \"left\" or \"right\" and are case sensitive.");
+			}
+		}
+		
 		$parts = [
 			"{body}" => $body_template,
 			
-			"{sitename}" => $settings->sitename,
+			"{sitename}" => $logo_html,
 			"{favicon-url}" => $settings->favicon,
 			"{header-html}" => self::get_css_as_html(),
 			

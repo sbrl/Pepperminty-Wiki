@@ -16,8 +16,18 @@
 $settings = new stdClass();
 
 // The site's name. Used all over the place.
-// Note that by default the session cookie is perfixed with a variant of the sitename so changing this will log everyone out!
+// Note that by default the session cookie is perfixed with a variant of the
+// sitename so changing this will log everyone out!
 $settings->sitename = "Pepperminty Wiki";
+
+// A url that points to the site's logo. Leave blank to disable. When enabled
+// the logo will be inserted next to the site name on every page.
+$settings->logo_url = "//starbeamrainbowlabs.com/images/logos/peppermint.png";
+
+// The side of the site name at which the logo should be placed. May be set to
+// either "left" or "right". Only has an effect if the above is not set to an
+// empty string.
+$settings->logo_position = "left";
 
 // The url from which to fetch updates. Defaults to the master (development)
 // branch If there is sufficient demand, a separate stable branch will be
@@ -179,7 +189,6 @@ input[type=search] { width: 14rem; padding: 0.3rem 0.4rem; font-size: 1rem; colo
 input[type=search]::-webkit-input-placeholder { color : rgba(255, 255, 255, 0.75); }
 input[type=button], input[type=submit] { cursor: pointer; }
 
-
 .sidebar { position: relative; z-index: 100; margin-top: 0.6rem; padding: 1rem 3rem 2rem 0.4rem; background: #9e7eb4; box-shadow: inset -0.6rem 0 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
 .sidebar a { color: #ffa74d; }
 
@@ -194,6 +203,7 @@ input[type=button], input[type=submit] { cursor: pointer; }
 
 h1 { text-align: center; }
 .sitename { margin-top: 5rem; margin-bottom: 3rem; font-size: 2.5rem; }
+.logo { max-width: 4rem; max-height: 4rem; vertical-align: middle; }
 main:not(.printable) { padding: 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 
 label { display: inline-block; min-width: 7rem; }
