@@ -41,7 +41,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
         "id": "feature-redirect",
-        "lastupdate": 1443963856,
+        "lastupdate": 1444295544,
         "optional": false
     },
     {
@@ -95,7 +95,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1436976553,
+        "lastupdate": 1444295525,
         "optional": false
     },
     {

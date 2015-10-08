@@ -20,7 +20,6 @@ register_module([
 			<th>Last Editor</th>
 			<th>Last Edit Time</th>
 		</tr>\n";
-			// todo list the pages in alphabetical order
 		foreach($sorted_pageindex as $pagename => $pagedetails)
 		{
 			$content .= "\t\t<tr>

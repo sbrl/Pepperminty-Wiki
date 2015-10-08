@@ -25,8 +25,6 @@ register_module([
 					unset($index_entry->redirect_target);
 			}
 		});
-		
-		// Todo register a function somewhere else to detect reedirects in the front end
 	}
 ]);
 
