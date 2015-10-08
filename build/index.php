@@ -1176,6 +1176,8 @@ register_module([
 					"thing_url" => ""
 				]
 			];
+			
+			//// Credits html renderer ////
 			$credits_html = "<ul>\n";
 			foreach($credits as $thing => $author_details)
 			{
@@ -1185,6 +1187,27 @@ register_module([
 				$credits_html .= "</li>\n";
 			}
 			$credits_html .= "</ul>";
+			///////////////////////////////
+			
+			//// Module html renderer ////
+			$modules_html = "<table>
+	<tr>
+		<th>Name</th>
+		<th>Version</th>
+		<th>Author</th>
+		<th>Description</th>
+	</tr>";
+			foreach($modules as $module)
+			{
+				$modules_html .= "	<tr>
+		<td title='" . $module["id"] . "'>" . $module["name"] . "</td>
+		<td>" . $module["version"] . "</td>
+		<td>" . $module["author"] . "</td>
+		<td>" . $module["description"] . "</td>
+	</tr>\n";
+			}
+			$modules_html .= "</table>";
+			//////////////////////////////
 			
 			$title = "Credits - $settings->sitename";
 			$content = "<h1>$settings->sitename credits</h1>
@@ -1197,7 +1220,9 @@ register_module([
 		<tr><th>Pepperminty Wiki version:</th><td>$version</td></tr>
 		<tr><th>Number of pages:</th><td>" . count(get_object_vars($pageindex)) . "</td></tr>
 		<tr><th>Number of modules:</th><td>" . count($modules) . "</td></tr>
-	</table>";
+	</table>
+	<h2>Installed Modules</h2>
+	$modules_html";
 			exit(page_renderer::render_main($title, $content));
 		});
 	}
