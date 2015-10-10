@@ -96,6 +96,9 @@ $settings->users = [
 // Whether to use the new sha3 hashing algorithm that was standardised on the
 // 8th August 2015. Only works if you have strawbrary's sha3 extension
 // installed. Get it here: https://github.com/strawbrary/php-sha3
+// Note: If you change this settings, make sure to update the password hashes
+// above! Note that the hash action is aware of this option and will hash
+// passwords appropriately based on this setting.
 $settings->use_sha3 = false;
 
 // An array of usernames that are administrators. Administrators can delete and
