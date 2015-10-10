@@ -32,7 +32,13 @@ if(php_sapi_name() == "cli") echo("Reading in core files...");
 $core = file_get_contents("core.php");
 $settings = file_get_contents("settings.fragment.php");
 $settings = str_replace([ "<?php", "?>" ], "", $settings);
-$core = str_replace("{settings}", $settings, $core);
+$core = str_replace([
+	"{settings}",
+	"{version}"
+], [
+	$settings,
+	file_get_contents("version")
+], $core);
 
 $result = $core;
 

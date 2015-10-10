@@ -263,7 +263,7 @@ Actions:
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////// Do not edit below this line unless you know what you are doing! ///////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-$version = "0.8";
+$version = "v0.9-dev";
 $env = new stdClass();
 $env->action = $settings->defaultaction;
 $env->page = "";
@@ -618,7 +618,7 @@ class page_renderer
 		
 		<footer>
 			<p>{footer-message}</p>
-			<p>Powered by Pepperminty Wiki, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or open an issue <a href='//github.com/sbrl/Pepperminty-Wiki'>on github</a>.</p>
+			<p>Powered by Pepperminty Wiki v0.9-dev, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or open an issue <a href='//github.com/sbrl/Pepperminty-Wiki'>on github</a>.</p>
 			<p>Your local friendly administrators are {admins-name-list}.
 			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
 		</footer>
@@ -630,7 +630,7 @@ class page_renderer
 			<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
 			<p>{footer-message}</p>
 			<p><em>Timed at {generation-date}</em></p>
-			<p><em>Powered by Pepperminty Wiki.</em></p>
+			<p><em>Powered by Pepperminty Wiki v0.9-dev.</em></p>
 		</footer>";
 	
 	// An array of functions that have been registered to process the
@@ -659,7 +659,7 @@ class page_renderer
 	
 	public static function render($title, $content, $body_template = false)
 	{
-		global $settings, $start_time;
+		global $settings, $start_time, $version;
 		
 		if($body_template === false)
 			$body_template = self::$main_content_template;
@@ -685,6 +685,7 @@ class page_renderer
 			"{body}" => $body_template,
 			
 			"{sitename}" => $logo_html,
+			"v0.9-dev" => $version,
 			"{favicon-url}" => $settings->favicon,
 			"{header-html}" => self::get_css_as_html(),
 			
