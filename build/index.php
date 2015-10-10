@@ -89,14 +89,14 @@ $settings->subpages_display_depth = 3;
 // sha256. Put one user / password on each line, remembering the comma at the
 // end. The last user in the list doesn't need a comma after their details though.
 $settings->users = [
-	"admin" => "c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484", //password
-	"user" => "dc0d2411a751cb3c5d80a1abc51b2f44b6f10e7c4742296998444a19a2b43197" //cheese
+	"admin" => "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", //password
+	"user" => "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34" //cheese
 ];
 
 // Whether to use the new sha3 hashing algorithm that was standardised on the
 // 8th August 2015. Only works if you have strawbrary's sha3 extension
 // installed. Get it here: https://github.com/strawbrary/php-sha3
-$settings->use_sha3 = true;
+$settings->use_sha3 = false;
 
 // An array of usernames that are administrators. Administrators can delete and
 // move pages.
