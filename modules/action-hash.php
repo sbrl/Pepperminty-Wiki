@@ -15,7 +15,7 @@ register_module([
 			}
 			else
 			{
-				exit(page_renderer::render_main("Hashed string", "<p><code>" . $_GET["string"] . "</code> → <code>" . hash("sha256", $_GET["string"] . "</code></p>")));
+				exit(page_renderer::render_main("Hashed string", "<p><code>" . $_GET["string"] . "</code> → <code>" . hash("sha256", $_GET["string"]) . "</code></p>"));
 			}
 		});
 	}
