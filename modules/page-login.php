@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Login",
-	"version" => "0.6",
+	"version" => "0.7",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
@@ -49,12 +49,12 @@ register_module([
 				//the user wants to log in
 				$user = $_POST["user"];
 				$pass = $_POST["pass"];
-				if($settings->users[$user] == hash("sha256", $pass))
+				if($settings->users[$user] == hash_password($pass))
 				{
 					$env->is_logged_in = true;
 					$expiretime = time() + 60*60*24*30; //30 days from now
 					$_SESSION["$settings->sessionprefix-user"] = $user;
-					$_SESSION["$settings->sessionprefix-pass"] = hash("sha256", $pass);
+					$_SESSION["$settings->sessionprefix-pass"] = hash_password($pass);
 					$_SESSION["$settings->sessionprefix-expiretime"] = $expiretime;
 					//redirect to wherever the user was going
 					http_response_code(302);
@@ -80,4 +80,27 @@ register_module([
 		});
 	}
 ]);
+
+/*
+ * @summary Hashes the given password according to the current settings defined
+ * 			in $settings.
+ * 
+ * @param $pass {string} The password to hash.
+ * 
+ * @returns {string} The hashed password. Uses sha3 if $settings->use_sha3 is
+ * 					 enabled, or sha256 otherwise.
+ */
+function hash_password($pass)
+{
+	global $settings;
+	if($settings->use_sha3)
+	{
+		return sha3($pass, 256);
+	}
+	else
+	{
+		return hash("sha256", $pass);
+	}
+}
+
 ?>

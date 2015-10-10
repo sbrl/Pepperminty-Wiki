@@ -7,6 +7,8 @@ register_module([
 	"id" => "action-hash",
 	"code" => function() {
 		add_action("hash", function() {
+			global $settings;
+			
 			if(!isset($_GET["string"]))
 			{
 				http_response_code(422);
@@ -15,7 +17,7 @@ register_module([
 			}
 			else
 			{
-				exit(page_renderer::render_main("Hashed string", "<p><code>" . $_GET["string"] . "</code> → <code>" . hash("sha256", $_GET["string"]) . "</code></p>"));
+				exit(page_renderer::render_main("Hashed string", "<p>Algorithm: " . ($settings->use_sha3 ? "sha3" : "sha256") . "</p>\n<p><code>" . $_GET["string"] . "</code> → <code>" . hash_password($_GET["string"]) . "</code></p>"));
 			}
 		});
 	}

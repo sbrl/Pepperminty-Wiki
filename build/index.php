@@ -89,9 +89,14 @@ $settings->subpages_display_depth = 3;
 // sha256. Put one user / password on each line, remembering the comma at the
 // end. The last user in the list doesn't need a comma after their details though.
 $settings->users = [
-	"admin" => "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", //password
-	"user" => "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34" //cheese
+	"admin" => "c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484", //password
+	"user" => "dc0d2411a751cb3c5d80a1abc51b2f44b6f10e7c4742296998444a19a2b43197" //cheese
 ];
+
+// Whether to use the new sha3 hashing algorithm that was standardised on the
+// 8th August 2015. Only works if you have strawbrary's sha3 extension
+// installed. Get it here: https://github.com/strawbrary/php-sha3
+$settings->use_sha3 = true;
 
 // An array of usernames that are administrators. Administrators can delete and
 // move pages.
@@ -911,6 +916,8 @@ register_module([
 	"id" => "action-hash",
 	"code" => function() {
 		add_action("hash", function() {
+			global $settings;
+			
 			if(!isset($_GET["string"]))
 			{
 				http_response_code(422);
@@ -919,7 +926,7 @@ register_module([
 			}
 			else
 			{
-				exit(page_renderer::render_main("Hashed string", "<p><code>" . $_GET["string"] . "</code> → <code>" . hash("sha256", $_GET["string"] . "</code></p>")));
+				exit(page_renderer::render_main("Hashed string", "<p>Algorithm: " . ($settings->use_sha3 ? "sha3" : "sha256") . "</p>\n<p><code>" . $_GET["string"] . "</code> → <code>" . hash_password($_GET["string"]) . "</code></p>"));
 			}
 		});
 	}
@@ -1610,7 +1617,7 @@ register_module([
 
 register_module([
 	"name" => "Login",
-	"version" => "0.6",
+	"version" => "0.7",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
@@ -1658,12 +1665,12 @@ register_module([
 				//the user wants to log in
 				$user = $_POST["user"];
 				$pass = $_POST["pass"];
-				if($settings->users[$user] == hash("sha256", $pass))
+				if($settings->users[$user] == hash_password($pass))
 				{
 					$env->is_logged_in = true;
 					$expiretime = time() + 60*60*24*30; //30 days from now
 					$_SESSION["$settings->sessionprefix-user"] = $user;
-					$_SESSION["$settings->sessionprefix-pass"] = hash("sha256", $pass);
+					$_SESSION["$settings->sessionprefix-pass"] = hash_password($pass);
 					$_SESSION["$settings->sessionprefix-expiretime"] = $expiretime;
 					//redirect to wherever the user was going
 					http_response_code(302);
@@ -1689,6 +1696,29 @@ register_module([
 		});
 	}
 ]);
+
+/*
+ * @summary Hashes the given password according to the current settings defined
+ * 			in $settings.
+ * 
+ * @param $pass {string} The password to hash.
+ * 
+ * @returns {string} The hashed password. Uses sha3 if $settings->use_sha3 is
+ * 					 enabled, or sha256 otherwise.
+ */
+function hash_password($pass)
+{
+	global $settings;
+	if($settings->use_sha3)
+	{
+		return sha3($pass, 256);
+	}
+	else
+	{
+		return hash("sha256", $pass);
+	}
+}
+
 
 
 
