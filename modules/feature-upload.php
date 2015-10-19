@@ -15,8 +15,10 @@ register_module([
 				case "GET":
 					// Send upload page
 					
-					if($settings->allow_uploads)
-						exit(page_renderer::render("Upload - $settings->sitename", "<form method='post' action='?action=upload' enctype='multipart/form-data'>
+					if($settings->upload_enabled && $env->is_logged_in)
+						exit(page_renderer::render("Upload - $settings->sitename", "<p>Select an image below, and then type a name for it in the box. This server currently supports uploads up to " . get_max_upload_size() . " in size.</p>
+		<p>$settings->sitename currently supports uploading of the following file types: " . implode(", ", $settings->upload_allowed_file_types) . ".</p>
+		<form method='post' action='?action=upload' enctype='multipart/form-data'>
 			<label for='file'>Select a file to upload.</label>
 			<input type='file' name='file' />
 			<br />
@@ -26,15 +28,41 @@ register_module([
 			<input type='submit' value='Upload' />
 		</form>"));
 					else
-						exit(page_renderer::render("Error - Upload - $settings->sitename", "<p>$settings->sitename does not currently have uploads enabled. <a href='javascript:history.back();'>Go back</a>.</p>"));
+						exit(page_renderer::render("Error - Upload - $settings->sitename", "<p>$settings->sitename does not currently have uploads enabled, or you do not currently have permission to upload files because you are not logged in. <a href='javascript:history.back();'>Go back</a>.</p>"));
 					
 					break;
 				
-				case "PUT":
 				case "POST":
 					// Recieve file
 					
+					if(!$settings->allow_uploads)
+					{
+						unlink($_FILES["file"]["tmp_name"]);
+						http_response_code(412);
+						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because uploads are currently disabled on $settings->sitename. <a href='index.php'>Go back to the main page</a>.</p>"));
+					}
 					
+					if(!$env->is_logged_in)
+					{
+						unlink($_FILES["file"]["tmp_name"]);
+						http_response_code(401);
+						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because you are not logged in.</p><p>Try <a href='?action=login&returnto=" . rawurlencode("?action=upload") . "'>logging in</a> first."));
+					}
+					
+					// Calculate the target filename, removing any characters we
+					// are unsure about.
+					$target_filename = preg_replace("/[^a-z0-9\-_]/i", "", $_POST["filename"]);
+					
+					$extra_data = [];
+					$imagesize = getimagesize($_FILES["file"]["tmp_name"], $extra_data);
+					echo("Raw file information: ");
+					var_dump($_FILES);
+					echo("Image sizing information: ");
+					var_dump($imagesize);
+					echo("Extra embedded information: ");
+					var_dump($extra_data);
+					
+					unlink($_FILES["file"]["tmp_name"]);
 					
 					break;
 			}
@@ -63,7 +91,7 @@ register_module([
 //// http://stackoverflow.com/a/25370978/1460422
 // Returns a file size limit in bytes based on the PHP upload_max_filesize
 // and post_max_size
-function file_upload_max_size()
+function get_max_upload_size()
 {
 	static $max_size = -1;
 	if ($max_size < 0) {

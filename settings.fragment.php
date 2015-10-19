@@ -171,6 +171,18 @@ $settings->footer_message = "All content is under <a href='?page=License' target
 // page. May contain HTML.
 $settings->editing_message = "By submitting your edit, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!";
 
+// Whether to allow image uploads to the server. Currently disabled temporarily
+// for security reasons while I finish writing the file uploader.
+$settings->upload_enabled = true;
+
+// An array of mime types that are allowed to be uploaded.
+$settings->upload_allowed_types = [
+	"image/jpeg",
+	"image/png",
+	"image/gif",
+	"image/webp"
+];
+
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a
 // <link rel='stylesheet' /> tag.
