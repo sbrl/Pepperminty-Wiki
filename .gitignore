@@ -7,3 +7,6 @@
 
 # The page index
 pageindex.json
+
+# All uploaded files
+build/Files/*
