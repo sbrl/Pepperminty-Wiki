@@ -497,7 +497,9 @@ function check_subpage_parents($pagename)
  */
 function makepathsafe($string)
 {
-	return preg_replace("/[^0-9a-zA-Z\_\-\ \/]/i", "", $string);
+	$string = preg_replace("/[^0-9a-zA-Z\_\-\ \/\.]/i", "", $string);
+	$string = preg_replace("/\.+/", ".", $string);
+	return $string;
 }
 
 /*
@@ -1344,6 +1346,8 @@ register_module([
 					
 					// Save the pageindex
 					file_put_contents("pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+					
+					header("location: ?action=view&page=$new_filename");
 					
 					break;
 			}
