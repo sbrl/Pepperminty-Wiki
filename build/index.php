@@ -537,9 +537,10 @@ function starts_with($haystack, $needle)
      return (substr($haystack, 0, $length) === $needle);
 }
 
-function system_extension_mime_types() {
+function system_mime_type_extensions() {
 	global $settings;
-    # Returns the system MIME type mapping of extensions to MIME types, as defined in /etc/mime.types.
+    # Returns the system MIME type mapping of MIME types to extensions, as defined in /etc/mime.types (considering the first
+    # extension listed to be canonical).
     $out = array();
     $file = fopen($settings->mime_extension_mappings_location, 'r');
     while(($line = fgets($file)) !== false) {
@@ -550,8 +551,8 @@ function system_extension_mime_types() {
         if(count($parts) == 1)
             continue;
         $type = array_shift($parts);
-        foreach($parts as $part)
-            $out[$part] = $type;
+        if(!isset($out[$type]))
+            $out[$type] = array_shift($parts);
     }
     fclose($file);
     return $out;
@@ -1290,7 +1291,6 @@ register_module([
 						case "image":
 							$extra_data = [];
 							$imagesize = getimagesize($temp_filename, $extra_data);
-							var_dump($imagesize);
 							// Make sure that the image size is defined
 							if(!is_int($imagesize[0]) or !is_int($imagesize[1]))
 								exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file that you uploaded doesn't appear to be an image. $settings->sitename currently only supports uploading images (videos coming soon). <a href='?action=upload'>Go back to try again</a>.</p>"));

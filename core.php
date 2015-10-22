@@ -253,9 +253,10 @@ function starts_with($haystack, $needle)
      return (substr($haystack, 0, $length) === $needle);
 }
 
-function system_extension_mime_types() {
+function system_mime_type_extensions() {
 	global $settings;
-    # Returns the system MIME type mapping of extensions to MIME types, as defined in /etc/mime.types.
+    # Returns the system MIME type mapping of MIME types to extensions, as defined in /etc/mime.types (considering the first
+    # extension listed to be canonical).
     $out = array();
     $file = fopen($settings->mime_extension_mappings_location, 'r');
     while(($line = fgets($file)) !== false) {
@@ -266,8 +267,8 @@ function system_extension_mime_types() {
         if(count($parts) == 1)
             continue;
         $type = array_shift($parts);
-        foreach($parts as $part)
-            $out[$part] = $type;
+        if(!isset($out[$type]))
+            $out[$type] = array_shift($parts);
     }
     fclose($file);
     return $out;
