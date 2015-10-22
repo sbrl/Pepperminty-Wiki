@@ -1290,9 +1290,9 @@ register_module([
 						case "image":
 							$extra_data = [];
 							$imagesize = getimagesize($temp_filename, $extra_data);
-							
+							var_dump($imagesize);
 							// Make sure that the image size is defined
-							if(!is_int($imagesize[0]) or !is_int($imagesize))
+							if(!is_int($imagesize[0]) or !is_int($imagesize[1]))
 								exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file that you uploaded doesn't appear to be an image. $settings->sitename currently only supports uploading images (videos coming soon). <a href='?action=upload'>Go back to try again</a>.</p>"));
 							
 							break;
