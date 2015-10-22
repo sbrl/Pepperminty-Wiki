@@ -239,6 +239,49 @@ function hide_email($str)
 	
 	return $hidden_email;
 }
+/*
+ * @summary Checks to see if $haystack starts with $needle.
+ * 
+ * @param $haystack {string} The string to search.
+ * @param $needle {string} The string to search for at the beginning of $haystack.
+ * 
+ * @returns {boolean} Whether $needle can be found at the beginning of $haystack.
+ */
+function starts_with($haystack, $needle)
+{
+     $length = strlen($needle);
+     return (substr($haystack, 0, $length) === $needle);
+}
+
+function system_extension_mime_types() {
+	global $settings;
+    # Returns the system MIME type mapping of extensions to MIME types, as defined in /etc/mime.types.
+    $out = array();
+    $file = fopen($settings->mime_extension_mappings_location, 'r');
+    while(($line = fgets($file)) !== false) {
+        $line = trim(preg_replace('/#.*/', '', $line));
+        if(!$line)
+            continue;
+        $parts = preg_split('/\s+/', $line);
+        if(count($parts) == 1)
+            continue;
+        $type = array_shift($parts);
+        foreach($parts as $part)
+            $out[$part] = $type;
+    }
+    fclose($file);
+    return $out;
+}
+function system_mime_type_extension($type) {
+    # Returns the canonical file extension for the MIME type specified, as defined in /etc/mime.types (considering the first
+    # extension listed to be canonical).
+    #
+    # $type - the MIME type
+    static $exts;
+    if(!isset($exts))
+        $exts = system_mime_type_extensions();
+    return isset($exts[$type]) ? $exts[$type] : null;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 

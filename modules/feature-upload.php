@@ -7,7 +7,7 @@ register_module([
 	"id" => "feature-upload",
 	"code" => function() {
 		add_action("upload", function() {
-			global $settings;
+			global $settings, $env, $pageindex;
 			
 			
 			switch($_SERVER["REQUEST_METHOD"])
@@ -15,33 +15,41 @@ register_module([
 				case "GET":
 					// Send upload page
 					
-					if($settings->upload_enabled && $env->is_logged_in)
-						exit(page_renderer::render("Upload - $settings->sitename", "<p>Select an image below, and then type a name for it in the box. This server currently supports uploads up to " . get_max_upload_size() . " in size.</p>
+					if(!$settings->upload_enabled)
+						exit(page_renderer::render("Upload Disabled - $setting->sitename", "<p>You can't upload anything at the moment because $settings->sitename has uploads disabled. Try contacting " . $settings->admindetails["name"] . ", your site Administrator. <a href='javascript:history.back();'>Go back</a>.</p>"));
+					if(!$env->is_logged_in)
+						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You are not currently logged in, so you can't upload anything.</p>
+		<p>Try <a href='?action=login&returnto=" . rawurlencode("?action=upload") . "'>logging in</a> first.</p>"));
+					
+					exit(page_renderer::render("Upload - $settings->sitename", "<p>Select an image below, and then type a name for it in the box. This server currently supports uploads up to " . get_max_upload_size() . " in size.</p>
 		<p>$settings->sitename currently supports uploading of the following file types: " . implode(", ", $settings->upload_allowed_file_types) . ".</p>
 		<form method='post' action='?action=upload' enctype='multipart/form-data'>
 			<label for='file'>Select a file to upload.</label>
 			<input type='file' name='file' />
 			<br />
-			<label for='filename'>File Name:</label>
-			<input type='text' name='filename'  />
+			<label for='name'>Name:</label>
+			<input type='text' name='name'  />
+			<br />
+			<label for='description'>Description:</label>
+			<textarea name='description'></textarea>
 			<br />
 			<input type='submit' value='Upload' />
 		</form>"));
-					else
-						exit(page_renderer::render("Error - Upload - $settings->sitename", "<p>$settings->sitename does not currently have uploads enabled, or you do not currently have permission to upload files because you are not logged in. <a href='javascript:history.back();'>Go back</a>.</p>"));
 					
 					break;
 				
 				case "POST":
 					// Recieve file
 					
-					if(!$settings->allow_uploads)
+					// Make sure uploads are enabled
+					if(!$settings->upload_enabled)
 					{
 						unlink($_FILES["file"]["tmp_name"]);
 						http_response_code(412);
 						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because uploads are currently disabled on $settings->sitename. <a href='index.php'>Go back to the main page</a>.</p>"));
 					}
 					
+					// Make sure that the user is logged in
 					if(!$env->is_logged_in)
 					{
 						unlink($_FILES["file"]["tmp_name"]);
@@ -49,20 +57,70 @@ register_module([
 						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because you are not logged in.</p><p>Try <a href='?action=login&returnto=" . rawurlencode("?action=upload") . "'>logging in</a> first."));
 					}
 					
-					// Calculate the target filename, removing any characters we
+					// Calculate the target ename, removing any characters we
 					// are unsure about.
-					$target_filename = preg_replace("/[^a-z0-9\-_]/i", "", $_POST["filename"]);
+					$target_name = makepathsafe($_POST["name"]);
+					$temp_filename = $_FILES["file"]["tmp_name"];
 					
-					$extra_data = [];
-					$imagesize = getimagesize($_FILES["file"]["tmp_name"], $extra_data);
-					echo("Raw file information: ");
-					var_dump($_FILES);
-					echo("Image sizing information: ");
-					var_dump($imagesize);
-					echo("Extra embedded information: ");
-					var_dump($extra_data);
+					$mimechecker = new finfo(FILEINFO_MIME_TYPE);
+					$mime_type = finfo_file($mimechecker, $temp_filename);
 					
-					unlink($_FILES["file"]["tmp_name"]);
+					// Perform appropriate checks based on the *real* filetype
+					switch(substr($mime_type, 0, strpos($mime_type, "/")))
+					{
+						case "image":
+							$extra_data = [];
+							$imagesize = getimagesize($temp_filename, $extra_data);
+							
+							// Make sure that the image size is defined
+							if(!is_int($imagesize[0]) or !is_int($imagesize))
+								exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file that you uploaded doesn't appear to be an image. $settings->sitename currently only supports uploading images (videos coming soon). <a href='?action=upload'>Go back to try again</a>.</p>"));
+							
+							break;
+						
+						case "video":
+							exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You uploaded a video, but $settings->sitename doesn't support them yet. Please try again later.</p>"));
+						
+						default:
+							exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You uploaded an unnknown file type which couldn't be processed. $settings->sitename thinks that the file you uploaded was a(n) $mime_type, which isn't supported.</p>"));
+					}
+					
+					$file_extension = system_mime_type_extension($mime_type);
+					
+					$new_filename = "Files/$target_name.$file_extension";
+					$new_description_filename = "Files/$target_name.md";
+					
+					if(isset($pageindex->$new_filename))
+						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>A page or file has already been uploaded with the name '$new_filename'. Try deleting it first. If you do not have permission to delete things, try contacting one of the moderators.</p>"));
+					
+					if(!file_exists("Files"))
+						mkdir("Files", 0664);
+					
+					if(!move_uploaded_file($temp_filename, $new_filename))
+						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that $settings->sitename has been attacked. Please contact " . $settings->admindetails . ", your $settings->sitename Administrator.</p>"));
+					
+					file_put_contents($new_description_filename, $_POST["description"]);
+					
+					$description = $_POST["description"];
+					
+					if($settings->clean_raw_html)
+						$description = htmlentities($description, ENT_QUOTES);
+					
+					file_put_contents($new_description_filename, $description);
+					
+					// Construct a new entry for the pageindex
+					$entry = new stdClass();
+					$entry->filename = $new_description_filename;
+					$entry->size = strlen($description);
+					$entry->lastmodified = time();
+					$entry->lasteditor = $env->user;
+					$entry->uploadedfile = true;
+					$entry->uploadedfilepath = $new_filename;
+					// Add the new entry to the pageindex
+					$pageindex->$new_filename = $entry;
+					
+					// Save the pageindex
+					file_put_contents("pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
 					
 					break;
 			}

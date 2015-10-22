@@ -176,12 +176,19 @@ $settings->editing_message = "By submitting your edit, you are agreeing to relea
 $settings->upload_enabled = true;
 
 // An array of mime types that are allowed to be uploaded.
-$settings->upload_allowed_types = [
+$settings->upload_allowed_file_types = [
 	"image/jpeg",
 	"image/png",
 	"image/gif",
 	"image/webp"
 ];
+
+// The location of a file that maps mime types onto file extensions and vice
+// versa. Used to generate the file extension for an uploaded file. Set to the
+// default location of the mime.types file on Linux. If you aren't using linux,
+// download this pastebin and point this setting at it instead:
+// http://pastebin.com/mjM3zKjz
+$settings->mime_extension_mappings_location = "/etc/mime.types";
 
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a

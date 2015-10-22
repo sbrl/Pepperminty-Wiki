@@ -174,6 +174,25 @@ $settings->footer_message = "All content is under <a href='?page=License' target
 // page. May contain HTML.
 $settings->editing_message = "By submitting your edit, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!";
 
+// Whether to allow image uploads to the server. Currently disabled temporarily
+// for security reasons while I finish writing the file uploader.
+$settings->upload_enabled = true;
+
+// An array of mime types that are allowed to be uploaded.
+$settings->upload_allowed_file_types = [
+	"image/jpeg",
+	"image/png",
+	"image/gif",
+	"image/webp"
+];
+
+// The location of a file that maps mime types onto file extensions and vice
+// versa. Used to generate the file extension for an uploaded file. Set to the
+// default location of the mime.types file on Linux. If you aren't using linux,
+// download this pastebin and point this setting at it instead:
+// http://pastebin.com/mjM3zKjz
+$settings->mime_extension_mappings_location = "/etc/mime.types";
+
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a
 // <link rel='stylesheet' /> tag.
@@ -503,6 +522,49 @@ function hide_email($str)
 	}
 	
 	return $hidden_email;
+}
+/*
+ * @summary Checks to see if $haystack starts with $needle.
+ * 
+ * @param $haystack {string} The string to search.
+ * @param $needle {string} The string to search for at the beginning of $haystack.
+ * 
+ * @returns {boolean} Whether $needle can be found at the beginning of $haystack.
+ */
+function starts_with($haystack, $needle)
+{
+     $length = strlen($needle);
+     return (substr($haystack, 0, $length) === $needle);
+}
+
+function system_extension_mime_types() {
+	global $settings;
+    # Returns the system MIME type mapping of extensions to MIME types, as defined in /etc/mime.types.
+    $out = array();
+    $file = fopen($settings->mime_extension_mappings_location, 'r');
+    while(($line = fgets($file)) !== false) {
+        $line = trim(preg_replace('/#.*/', '', $line));
+        if(!$line)
+            continue;
+        $parts = preg_split('/\s+/', $line);
+        if(count($parts) == 1)
+            continue;
+        $type = array_shift($parts);
+        foreach($parts as $part)
+            $out[$part] = $type;
+    }
+    fclose($file);
+    return $out;
+}
+function system_mime_type_extension($type) {
+    # Returns the canonical file extension for the MIME type specified, as defined in /etc/mime.types (considering the first
+    # extension listed to be canonical).
+    #
+    # $type - the MIME type
+    static $exts;
+    if(!isset($exts))
+        $exts = system_mime_type_extensions();
+    return isset($exts[$type]) ? $exts[$type] : null;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -1151,6 +1213,186 @@ register_module([
 		});
 	}
 ]);
+
+
+
+
+register_module([
+	"name" => "Uploader",
+	"version" => "0.1",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File:' prefix.",
+	"id" => "feature-upload",
+	"code" => function() {
+		add_action("upload", function() {
+			global $settings, $env, $pageindex;
+			
+			
+			switch($_SERVER["REQUEST_METHOD"])
+			{
+				case "GET":
+					// Send upload page
+					
+					if(!$settings->upload_enabled)
+						exit(page_renderer::render("Upload Disabled - $setting->sitename", "<p>You can't upload anything at the moment because $settings->sitename has uploads disabled. Try contacting " . $settings->admindetails["name"] . ", your site Administrator. <a href='javascript:history.back();'>Go back</a>.</p>"));
+					if(!$env->is_logged_in)
+						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You are not currently logged in, so you can't upload anything.</p>
+		<p>Try <a href='?action=login&returnto=" . rawurlencode("?action=upload") . "'>logging in</a> first.</p>"));
+					
+					exit(page_renderer::render("Upload - $settings->sitename", "<p>Select an image below, and then type a name for it in the box. This server currently supports uploads up to " . get_max_upload_size() . " in size.</p>
+		<p>$settings->sitename currently supports uploading of the following file types: " . implode(", ", $settings->upload_allowed_file_types) . ".</p>
+		<form method='post' action='?action=upload' enctype='multipart/form-data'>
+			<label for='file'>Select a file to upload.</label>
+			<input type='file' name='file' />
+			<br />
+			<label for='name'>Name:</label>
+			<input type='text' name='name'  />
+			<br />
+			<label for='description'>Description:</label>
+			<textarea name='description'></textarea>
+			<br />
+			<input type='submit' value='Upload' />
+		</form>"));
+					
+					break;
+				
+				case "POST":
+					// Recieve file
+					
+					// Make sure uploads are enabled
+					if(!$settings->upload_enabled)
+					{
+						unlink($_FILES["file"]["tmp_name"]);
+						http_response_code(412);
+						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because uploads are currently disabled on $settings->sitename. <a href='index.php'>Go back to the main page</a>.</p>"));
+					}
+					
+					// Make sure that the user is logged in
+					if(!$env->is_logged_in)
+					{
+						unlink($_FILES["file"]["tmp_name"]);
+						http_response_code(401);
+						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because you are not logged in.</p><p>Try <a href='?action=login&returnto=" . rawurlencode("?action=upload") . "'>logging in</a> first."));
+					}
+					
+					// Calculate the target ename, removing any characters we
+					// are unsure about.
+					$target_name = makepathsafe($_POST["name"]);
+					$temp_filename = $_FILES["file"]["tmp_name"];
+					
+					$mimechecker = new finfo(FILEINFO_MIME_TYPE);
+					$mime_type = finfo_file($mimechecker, $temp_filename);
+					
+					// Perform appropriate checks based on the *real* filetype
+					switch(substr($mime_type, 0, strpos($mime_type, "/")))
+					{
+						case "image":
+							$extra_data = [];
+							$imagesize = getimagesize($temp_filename, $extra_data);
+							
+							// Make sure that the image size is defined
+							if(!is_int($imagesize[0]) or !is_int($imagesize))
+								exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file that you uploaded doesn't appear to be an image. $settings->sitename currently only supports uploading images (videos coming soon). <a href='?action=upload'>Go back to try again</a>.</p>"));
+							
+							break;
+						
+						case "video":
+							exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You uploaded a video, but $settings->sitename doesn't support them yet. Please try again later.</p>"));
+						
+						default:
+							exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You uploaded an unnknown file type which couldn't be processed. $settings->sitename thinks that the file you uploaded was a(n) $mime_type, which isn't supported.</p>"));
+					}
+					
+					$file_extension = system_mime_type_extension($mime_type);
+					
+					$new_filename = "Files/$target_name.$file_extension";
+					$new_description_filename = "Files/$target_name.md";
+					
+					if(isset($pageindex->$new_filename))
+						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>A page or file has already been uploaded with the name '$new_filename'. Try deleting it first. If you do not have permission to delete things, try contacting one of the moderators.</p>"));
+					
+					if(!file_exists("Files"))
+						mkdir("Files", 0664);
+					
+					if(!move_uploaded_file($temp_filename, $new_filename))
+						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that $settings->sitename has been attacked. Please contact " . $settings->admindetails . ", your $settings->sitename Administrator.</p>"));
+					
+					file_put_contents($new_description_filename, $_POST["description"]);
+					
+					$description = $_POST["description"];
+					
+					if($settings->clean_raw_html)
+						$description = htmlentities($description, ENT_QUOTES);
+					
+					file_put_contents($new_description_filename, $description);
+					
+					// Construct a new entry for the pageindex
+					$entry = new stdClass();
+					$entry->filename = $new_description_filename;
+					$entry->size = strlen($description);
+					$entry->lastmodified = time();
+					$entry->lasteditor = $env->user;
+					$entry->uploadedfile = true;
+					$entry->uploadedfilepath = $new_filename;
+					// Add the new entry to the pageindex
+					$pageindex->$new_filename = $entry;
+					
+					// Save the pageindex
+					file_put_contents("pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+					
+					break;
+			}
+		});
+		add_action("preview", function() {
+			global $settings;
+			
+			// todo render a preview here
+			
+			/*
+			 * size (image outputs only, possibly width / height)
+				 * 1-2048 (configurable)
+			 * filetype
+				 * either a mime type or 'native'
+			 */
+		});
+		
+		page_renderer::register_part_preprocessor(function(&$parts) {
+			// Todo add the preview to the top o fthe page here, but onyl if the current action is view and we are on a page prefixed with file:
+		});
+	}
+]);
+
+//// Pair of functions to calculate the actual maximum upload size supported by the server
+//// Lifted from Drupal by @meustrus from  Stackoverflow. Link to answer:
+//// http://stackoverflow.com/a/25370978/1460422
+// Returns a file size limit in bytes based on the PHP upload_max_filesize
+// and post_max_size
+function get_max_upload_size()
+{
+	static $max_size = -1;
+	if ($max_size < 0) {
+		// Start with post_max_size.
+		$max_size = parse_size(ini_get('post_max_size'));
+		// If upload_max_size is less, then reduce. Except if upload_max_size is
+		// zero, which indicates no limit.
+		$upload_max = parse_size(ini_get('upload_max_filesize'));
+		if ($upload_max > 0 && $upload_max < $max_size) {
+			$max_size = $upload_max;
+		}
+	}
+	return $max_size;
+}
+
+function parse_size($size) {
+	$unit = preg_replace('/[^bkmgtpezy]/i', '', $size); // Remove the non-unit characters from the size.
+	$size = preg_replace('/[^0-9\.]/', '', $size); // Remove the non-numeric characters from the size.
+	if ($unit) {
+		// Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
+		return round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
+	} else {
+		return round($size);
+	}
+}
 
 
 
