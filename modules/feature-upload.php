@@ -64,6 +64,7 @@ register_module([
 					
 					$mimechecker = finfo_open(FILEINFO_MIME_TYPE);
 					$mime_type = finfo_file($mimechecker, $temp_filename);
+					finfo_close($mimechecker);
 					
 					// Perform appropriate checks based on the *real* filetype
 					switch(substr($mime_type, 0, strpos($mime_type, "/")))
