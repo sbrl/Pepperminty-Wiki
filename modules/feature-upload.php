@@ -126,7 +126,7 @@ register_module([
 					// Save the pageindex
 					file_put_contents("pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
 					
-					header("location: ?action=view&page=$new_filename");
+					header("location: ?action=view&page=$new_filename&upload=success");
 					
 					break;
 			}
