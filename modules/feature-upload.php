@@ -88,7 +88,7 @@ register_module([
 					$file_extension = system_mime_type_extension($mime_type);
 					
 					$new_filename = "Files/$target_name.$file_extension";
-					$new_description_filename = "Files/$target_name.md";
+					$new_description_filename = "$new_filename.md";
 					
 					if(isset($pageindex->$new_filename))
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>A page or file has already been uploaded with the name '$new_filename'. Try deleting it first. If you do not have permission to delete things, try contacting one of the moderators.</p>"));
