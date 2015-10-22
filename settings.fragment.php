@@ -190,6 +190,10 @@ $settings->upload_allowed_file_types = [
 // http://pastebin.com/mjM3zKjz
 $settings->mime_extension_mappings_location = "/etc/mime.types";
 
+// The minimum and maximum sizes of generated preview images in pixels.
+$settings->min_preview_size = 1;
+$settings->max_preview_size = 2048;
+
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a
 // <link rel='stylesheet' /> tag.

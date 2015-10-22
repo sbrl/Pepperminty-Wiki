@@ -193,6 +193,10 @@ $settings->upload_allowed_file_types = [
 // http://pastebin.com/mjM3zKjz
 $settings->mime_extension_mappings_location = "/etc/mime.types";
 
+// The minimum and maximum sizes of generated preview images in pixels.
+$settings->min_preview_size = 1;
+$settings->max_preview_size = 2048;
+
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a
 // <link rel='stylesheet' /> tag.
@@ -1339,6 +1343,7 @@ register_module([
 					$entry->lasteditor = $env->user;
 					$entry->uploadedfile = true;
 					$entry->uploadedfilepath = $new_filename;
+					$entry->uploadedfilemime = $mime_type;
 					// Add the new entry to the pageindex
 					// Assign the new entry to the image's filepath as that
 					// should be the page name.
@@ -1353,7 +1358,47 @@ register_module([
 			}
 		});
 		add_action("preview", function() {
-			global $settings;
+			global $settings, $env, $pageindex;
+			
+			$filepath = $pageindex->{$env->page}->uploadedfilepath;
+			$mime_type = $pageindex->{$env->page}->uploadedfilemime;
+			
+			switch(substr($mime_type, 0, strpos($mime_type, "/")))
+			{
+				case "image":
+					$preview = false;
+					switch($mime_type)
+					{
+						case "image/jpeg":
+							$preview = imagecreatefromjpeg($filepath);
+							break;
+						case "image/gif":
+							$preview = imagecreatefromgif($filepath);
+							break;
+						case "image/png":
+							$preview = imagecreatefrompng($filepath);
+							break;
+						case "image/webp":
+							$preview = imagecreatefromwebp($filepath);
+							break;
+						default:
+							$preview = errorimage("Unsupported image type.");
+							break;
+					}
+					
+					$aspect_ratio = imagesx($preview) / imagesy($preview);
+					
+					$target_width = intval($_GET["size"]);
+					if($target_width < $settings->min_preview_size)
+						$target_width = $settings->min_preview_size;
+					if($target_width > $settings->max_preview_size)
+						$target_width = $settings->max_preview_size;
+					$target_height = $target_width;
+					
+					// Todo Scale image to fit inside size.
+					
+					break;
+			}
 			
 			// todo render a preview here
 			
@@ -1401,6 +1446,23 @@ function parse_size($size) {
 	} else {
 		return round($size);
 	}
+}
+
+function errorimage($text)
+{
+	$width = 640;
+	$height = 480;
+	$image = imagecreatetruecolor($width, $height);
+	imagefill($image, 0, 0, imagecolorallocate($image, 238, 232, 242)); // Set the background to #eee8f2
+	$fontwidth = imagefontwidth(3);
+	imagetext($image, 3,
+		($width / 2) - (($fontwidth * strlen($text)) / 2),
+		($height / 2) - (imagefontheight(3) / 2),
+		$text,
+		imagecolorallocate($image, 17, 17, 17) // #111111
+	);
+	
+	return $image;
 }
 
 
