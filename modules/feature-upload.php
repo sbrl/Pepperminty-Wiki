@@ -62,7 +62,7 @@ register_module([
 					$target_name = makepathsafe($_POST["name"]);
 					$temp_filename = $_FILES["file"]["tmp_name"];
 					
-					$mimechecker = new finfo(FILEINFO_MIME_TYPE);
+					$mimechecker = finfo_open(FILEINFO_MIME_TYPE);
 					$mime_type = finfo_file($mimechecker, $temp_filename);
 					
 					// Perform appropriate checks based on the *real* filetype
@@ -82,7 +82,7 @@ register_module([
 							exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You uploaded a video, but $settings->sitename doesn't support them yet. Please try again later.</p>"));
 						
 						default:
-							exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You uploaded an unnknown file type which couldn't be processed. $settings->sitename thinks that the file you uploaded was a(n) $mime_type, which isn't supported.</p>"));
+							exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You uploaded an unnknown file type which couldn't be processed. $settings->sitename thinks that the file you uploaded was a(n) '$mime_type', which isn't supported.</p>"));
 					}
 					
 					$file_extension = system_mime_type_extension($mime_type);
