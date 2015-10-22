@@ -139,7 +139,7 @@ function glob_recursive($pattern, $flags = 0)
 }
 
 /*
- * @summary Gets a list of all the sub pagess of the current page.
+ * @summary Gets a list of all the sub pages of the current page.
  * 
  * @param $pageindex - The pageindex to use to search.
  * @param $pagename - The name of the page to list the sub pages of.
@@ -361,8 +361,8 @@ class page_renderer
 		
 		<footer>
 			<p>{footer-message}</p>
-			<p>Powered by Pepperminty Wiki {version}, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or open an issue <a href='//github.com/sbrl/Pepperminty-Wiki'>on github</a>.</p>
-			<p>Your local friendly administrators are {admins-name-list}.
+			<p>Powered by Pepperminty Wiki {version}, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
+			<p>Your local friendly administrators are {admins-name-list}.</p>
 			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
 		</footer>
 		{navigation-bar-bottom}
