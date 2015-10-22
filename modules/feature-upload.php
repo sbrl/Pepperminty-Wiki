@@ -110,13 +110,17 @@ register_module([
 					
 					// Construct a new entry for the pageindex
 					$entry = new stdClass();
-					$entry->filename = $new_description_filename;
+					// Point to the description's filepath since this property
+					// should point to a markdown file
+					$entry->filename = $new_description_filename; 
 					$entry->size = strlen($description);
 					$entry->lastmodified = time();
 					$entry->lasteditor = $env->user;
 					$entry->uploadedfile = true;
 					$entry->uploadedfilepath = $new_filename;
 					// Add the new entry to the pageindex
+					// Assign the new entry to the image's filepath as that
+					// should be the page name.
 					$pageindex->$new_filename = $entry;
 					
 					// Save the pageindex
