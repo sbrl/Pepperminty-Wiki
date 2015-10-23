@@ -1386,14 +1386,31 @@ register_module([
 							break;
 					}
 					
-					$aspect_ratio = imagesx($preview) / imagesy($preview);
+					$raw_width = imagesx($preview);
+					$raw_height = imagesy($preview);
+					$aspect_ratio = $raw_width / $raw_height;
 					
-					$target_width = intval($_GET["size"]);
-					if($target_width < $settings->min_preview_size)
-						$target_width = $settings->min_preview_size;
-					if($target_width > $settings->max_preview_size)
-						$target_width = $settings->max_preview_size;
-					$target_height = $target_width;
+					$target_size = 512;
+					if(isset($_GET["size"]))
+						$target_size = intval($_GET["size"]);
+					if($target_size < $settings->min_preview_size)
+						$target_size = $settings->min_preview_size;
+					if($target_size > $settings->max_preview_size)
+						$target_size = $settings->max_preview_size;
+					
+					if($raw_width > $raw_height)
+					{
+						$preview_width = $target_size;
+						$preview_height = $target_size * $aspect_ratio;
+					}
+					else
+					{
+						$preview_height = $target_size;
+						$preview_width = $target_size * $aspect_ratio;
+					}
+					header("content-type: text/plain");
+					echo("raw: $raw_width x $raw_height\n");
+					echo("resized: $preview_width x $preview_height\n");
 					
 					// Todo Scale image to fit inside size.
 					
