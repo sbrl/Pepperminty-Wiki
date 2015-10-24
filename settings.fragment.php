@@ -183,11 +183,13 @@ $settings->upload_allowed_file_types = [
 	"image/webp"
 ];
 
-// The default file type for previews. Defaults to image/webp. Webp is a new
-// image format that can cut image sizez down by ~20%, but may still have some
-// issues in certain browsers. Change this to image/png or image/jpeg if you
-// experience issues.
-$settings->preview_file_type = "image/webp";
+// The default file type for previews. Defaults to image/png. Also supports
+// image/jpeg and image/webp. image/webp is a new image format that reduces
+// image sizez by ~20%, but PHP still has some issues with invalid webp images.
+$settings->preview_file_type = "image/png";
+
+// The default size of preview images.
+$settings->default_preview_size = 640;
 
 // The location of a file that maps mime types onto file extensions and vice
 // versa. Used to generate the file extension for an uploaded file. Set to the
@@ -234,6 +236,11 @@ input[type=button], input[type=submit] { cursor: pointer; }
 
 .sidebar ul:before { content: \"\"; position: absolute; top: 0; left: 0; height: 100%; border-left: 2px dashed rgba(50, 50, 50, 0.4); }
 .sidebar li:before { content: \"\"; position: absolute; width: 1rem; top: 0.8rem; left: -1.2rem; border-bottom: 2px dashed rgba(50, 50, 50, 0.4); }
+
+.preview { text-align: center; }
+.preview img { max-width: 100%; }
+.image-controls ul { list-style-type: none; margin: 5px; padding: 5px; }
+.image-controls li { display: inline-block; margin: 5px; padding: 5px; }
 
 
 .printable { padding: 2rem; }

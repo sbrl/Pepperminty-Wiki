@@ -186,11 +186,13 @@ $settings->upload_allowed_file_types = [
 	"image/webp"
 ];
 
-// The default file type for previews. Defaults to image/webp. Webp is a new
-// image format that can cut image sizez down by ~20%, but may still have some
-// issues in certain browsers. Change this to image/png or image/jpeg if you
-// experience issues.
-$settings->preview_file_type = "image/webp";
+// The default file type for previews. Defaults to image/png. Also supports
+// image/jpeg and image/webp. image/webp is a new image format that reduces
+// image sizez by ~20%, but PHP still has some issues with invalid webp images.
+$settings->preview_file_type = "image/png";
+
+// The default size of preview images.
+$settings->default_preview_size = 640;
 
 // The location of a file that maps mime types onto file extensions and vice
 // versa. Used to generate the file extension for an uploaded file. Set to the
@@ -237,6 +239,11 @@ input[type=button], input[type=submit] { cursor: pointer; }
 
 .sidebar ul:before { content: \"\"; position: absolute; top: 0; left: 0; height: 100%; border-left: 2px dashed rgba(50, 50, 50, 0.4); }
 .sidebar li:before { content: \"\"; position: absolute; width: 1rem; top: 0.8rem; left: -1.2rem; border-bottom: 2px dashed rgba(50, 50, 50, 0.4); }
+
+.preview { text-align: center; }
+.preview img { max-width: 100%; }
+.image-controls ul { list-style-type: none; margin: 5px; padding: 5px; }
+.image-controls li { display: inline-block; margin: 5px; padding: 5px; }
 
 
 .printable { padding: 2rem; }
@@ -1254,7 +1261,7 @@ register_module([
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You are not currently logged in, so you can't upload anything.</p>
 		<p>Try <a href='?action=login&returnto=" . rawurlencode("?action=upload") . "'>logging in</a> first.</p>"));
 					
-					exit(page_renderer::render("Upload - $settings->sitename", "<p>Select an image below, and then type a name for it in the box. This server currently supports uploads up to " . get_max_upload_size() . " in size.</p>
+					exit(page_renderer::render("Upload - $settings->sitename", "<p>Select an image below, and then type a name for it in the box. This server currently supports uploads up to " . human_filesize(get_max_upload_size()) . " in size.</p>
 		<p>$settings->sitename currently supports uploading of the following file types: " . implode(", ", $settings->upload_allowed_file_types) . ".</p>
 		<form method='post' action='?action=upload' enctype='multipart/form-data'>
 			<label for='file'>Select a file to upload.</label>
@@ -1307,14 +1314,19 @@ register_module([
 							$imagesize = getimagesize($temp_filename, $extra_data);
 							// Make sure that the image size is defined
 							if(!is_int($imagesize[0]) or !is_int($imagesize[1]))
+							{
+								http_response_code(415);
 								exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file that you uploaded doesn't appear to be an image. $settings->sitename currently only supports uploading images (videos coming soon). <a href='?action=upload'>Go back to try again</a>.</p>"));
+							}
 							
 							break;
 						
 						case "video":
+							http_response_code(501);
 							exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You uploaded a video, but $settings->sitename doesn't support them yet. Please try again later.</p>"));
 						
 						default:
+							http_response_code(415);
 							exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You uploaded an unnknown file type which couldn't be processed. $settings->sitename thinks that the file you uploaded was a(n) '$mime_type', which isn't supported.</p>"));
 					}
 					
@@ -1330,7 +1342,10 @@ register_module([
 						mkdir("Files", 0664);
 					
 					if(!move_uploaded_file($temp_filename, $new_filename))
+					{
+						http_response_code(409);
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that $settings->sitename has been attacked. Please contact " . $settings->admindetails . ", your $settings->sitename Administrator.</p>"));
+					}
 					
 					file_put_contents($new_description_filename, $_POST["description"]);
 					
@@ -1404,6 +1419,7 @@ register_module([
 							$image = imagecreatefromwebp($filepath);
 							break;
 						default:
+							http_response_code(415);
 							$image = errorimage("Unsupported image type.");
 							break;
 					}
@@ -1411,22 +1427,22 @@ register_module([
 					$raw_width = imagesx($image);
 					$raw_height = imagesy($image);
 					
-					$image = resize_image($image, $target_size);
-					
+					$preview_image = resize_image($image, $target_size);
 					header("content-type: $output_mime");
 					switch($output_mime)
 					{
 						case "image/jpeg":
-							imagejpeg($image);
+							imagejpeg($preview_image);
 							break;
 						case "image/png":
-							imagepng($image);
+							imagepng($preview_image);
 							break;
 						default:
 						case "image/webp":
-							imagewebp($image);
+							imagewebp($preview_image);
 							break;
 					}
+					imagedestroy($preview_image);
 					break;
 				
 				default:
@@ -1436,8 +1452,33 @@ register_module([
 		});
 		
 		page_renderer::register_part_preprocessor(function(&$parts) {
-			// Todo add the preview to the top of the page here, but onyl if the current action is view and we are on a page prefixed with file:
-			
+			global $pageindex, $env, $settings;
+			// Todo add the preview to the top of the page here, but only if the current action is view and we are on a page that is a file
+			if(isset($pageindex->{$env->page}->uploadedfile) and $pageindex->{$env->page}->uploadedfile == true)
+			{
+				// We are looking at a page that is paired with an uploaded file
+				$filepath = $pageindex->{$env->page}->uploadedfilepath;
+				$mime_type = $pageindex->{$env->page}->uploadedfilemime;
+				
+				$preview_sizes = [ 256, 512, 768, 1024, 1536 ];
+				$preview_html = "<figure class='preview'>
+			<img src='?action=preview&size=$settings->default_preview_size&page=" . rawurlencode($env->page) . "' />
+			<nav class='image-controls'>
+				<ul><li><a href='$filepath'>&#x01f304; Original image</a></li>
+				<li>Other Sizes: ";
+				foreach($preview_sizes as $size)
+					$preview_html .= "<a href='?action=preview&size='$size>$size" . "px</a> ";
+				$preview_html .= "</li></ul></nav>
+			</figure>
+			<h2>File Information</h2>
+			<table><tr><th>Name</th><td>" . str_replace("File/", "", $filepath) . "</td>
+			<tr><th>Type</th><td>$mime_type</td></tr>
+			<tr><th>Size</th><td>" . human_filesize(filesize($filepath)) . "</td></tr>
+			<tr><th>Uploaded by</th><td>" . $pageindex->{$env->page}->lasteditor . "</td></tr></table>
+			<h2>Description</h2>";
+				
+				$parts["{content}"] = str_replace("</h1>", "</h1>\n$preview_html", $parts["{content}"]);
+			}
 		});
 	}
 ]);
@@ -1503,8 +1544,10 @@ function resize_image($image, $size)
 	$height_ratio = $size / $cur_height;
 	$ratio = min($width_ratio, $height_ratio);
 	
-	$new_height = $cur_height * $ratio;
-	$new_width = $cur_width * $ratio;
+	$new_height = floor($cur_height * $ratio);
+	$new_width = floor($cur_width * $ratio);
+	
+	header("x-resize-to: $new_width x $new_height\n");
 	
 	return imagescale($image, $new_width, $new_height);
 }
