@@ -242,7 +242,7 @@ input[type=button], input[type=submit] { cursor: pointer; }
 .preview img { max-width: 100%; }
 .image-controls ul { list-style-type: none; margin: 5px; padding: 5px; }
 .image-controls li { display: inline-block; margin: 5px; padding: 5px; }
-
+.link-display { margin-left: 0.5rem; }
 
 .printable { padding: 2rem; }
 
@@ -251,8 +251,9 @@ h1 { text-align: center; }
 .logo { max-width: 4rem; max-height: 4rem; vertical-align: middle; }
 main:not(.printable) { padding: 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 
-label { display: inline-block; min-width: 7rem; }
-input[type=text], input[type=password], textarea { margin: 0.5rem 0.8rem; padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
+label:not(.link-display-label) { display: inline-block; min-width: 7rem; }
+input[type=text]:not(.link-display), input[type=password], textarea { margin: 0.5rem 0.8rem; }
+input[type=text], input[type=password], textarea { padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
 textarea { width: calc(100% - 2rem); min-height: 35rem; font-size: 1.25rem; }
 textarea ~ input[type=submit] { width: calc(100% - 0.3rem); margin: 0.5rem 0.8rem; padding: 0.5rem; font-weight: bolder; }
 
