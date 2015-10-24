@@ -200,19 +200,11 @@ register_module([
 					http_response_code(501);
 					exit("Unrecognised file type.");
 			}
-			
-			// todo render a preview here
-			
-			/*
-			 * size (image outputs only, possibly width / height)
-				 * 1-2048 (configurable)
-			 * filetype
-				 * either a mime type or 'native'
-			 */
 		});
 		
 		page_renderer::register_part_preprocessor(function(&$parts) {
-			// Todo add the preview to the top o fthe page here, but onyl if the current action is view and we are on a page prefixed with file:
+			// Todo add the preview to the top of the page here, but onyl if the current action is view and we are on a page prefixed with file:
+			
 		});
 	}
 ]);
