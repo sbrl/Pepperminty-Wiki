@@ -186,6 +186,12 @@ $settings->upload_allowed_file_types = [
 	"image/webp"
 ];
 
+// The default file type for previews. Defaults to image/webp. Webp is a new
+// image format that can cut image sizez down by ~20%, but may still have some
+// issues in certain browsers. Change this to image/png or image/jpeg if you
+// experience issues.
+$settings->preview_file_type = "image/webp";
+
 // The location of a file that maps mime types onto file extensions and vice
 // versa. Used to generate the file extension for an uploaded file. Set to the
 // default location of the mime.types file on Linux. If you aren't using linux,
@@ -1363,58 +1369,67 @@ register_module([
 			$filepath = $pageindex->{$env->page}->uploadedfilepath;
 			$mime_type = $pageindex->{$env->page}->uploadedfilemime;
 			
+			// Determine the target size of the image
+			$target_size = 512;
+			if(isset($_GET["size"]))
+				$target_size = intval($_GET["size"]);
+			if($target_size < $settings->min_preview_size)
+				$target_size = $settings->min_preview_size;
+			if($target_size > $settings->max_preview_size)
+				$target_size = $settings->max_preview_size;
+			
+			// Determine the output file type
+			$output_mime = $settings->preview_file_type;
+			if(isset($_GET["type"]) and in_array($_GET["type"], [ "image/png", "image/jpeg", "image/webp" ]))
+				$output_mime = $_GET["type"];
+			
 			switch(substr($mime_type, 0, strpos($mime_type, "/")))
 			{
 				case "image":
-					$preview = false;
+					$image = false;
 					switch($mime_type)
 					{
 						case "image/jpeg":
-							$preview = imagecreatefromjpeg($filepath);
+							$image = imagecreatefromjpeg($filepath);
 							break;
 						case "image/gif":
-							$preview = imagecreatefromgif($filepath);
+							$image = imagecreatefromgif($filepath);
 							break;
 						case "image/png":
-							$preview = imagecreatefrompng($filepath);
+							$image = imagecreatefrompng($filepath);
 							break;
 						case "image/webp":
-							$preview = imagecreatefromwebp($filepath);
+							$image = imagecreatefromwebp($filepath);
 							break;
 						default:
-							$preview = errorimage("Unsupported image type.");
+							$image = errorimage("Unsupported image type.");
 							break;
 					}
 					
-					$raw_width = imagesx($preview);
-					$raw_height = imagesy($preview);
-					$aspect_ratio = $raw_width / $raw_height;
+					$raw_width = imagesx($image);
+					$raw_height = imagesy($image);
 					
-					$target_size = 512;
-					if(isset($_GET["size"]))
-						$target_size = intval($_GET["size"]);
-					if($target_size < $settings->min_preview_size)
-						$target_size = $settings->min_preview_size;
-					if($target_size > $settings->max_preview_size)
-						$target_size = $settings->max_preview_size;
+					$image = resize_image($image, $target_size);
 					
-					if($raw_width > $raw_height)
+					header("content-type: $output_mime");
+					switch($output_mime)
 					{
-						$preview_width = $target_size;
-						$preview_height = $target_size * $aspect_ratio;
+						case "image/jpeg":
+							imagejpeg($image);
+							break;
+						case "image/png":
+							imagepng($image);
+							break;
+						default:
+						case "image/webp":
+							imagewebp($image);
+							break;
 					}
-					else
-					{
-						$preview_height = $target_size;
-						$preview_width = $target_size * $aspect_ratio;
-					}
-					header("content-type: text/plain");
-					echo("raw: $raw_width x $raw_height\n");
-					echo("resized: $preview_width x $preview_height\n");
-					
-					// Todo Scale image to fit inside size.
-					
 					break;
+				
+				default:
+					http_response_code(501);
+					exit("Unrecognised file type.");
 			}
 			
 			// todo render a preview here
@@ -1480,6 +1495,24 @@ function errorimage($text)
 	);
 	
 	return $image;
+}
+
+function resize_image($image, $size)
+{
+	$cur_width = imagesx($image);
+	$cur_height = imagesy($image);
+	
+	if($cur_width < $size and $cur_height < $size)
+		return $image;
+	
+	$width_ratio = $size / $cur_width;
+	$height_ratio = $size / $cur_height;
+	$ratio = min($width_ratio, $height_ratio);
+	
+	$new_height = $cur_height * $ratio;
+	$new_width = $cur_width * $ratio;
+	
+	return imagescale($image, $new_width, $new_height);
 }
 
 

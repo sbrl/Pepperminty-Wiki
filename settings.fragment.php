@@ -183,6 +183,12 @@ $settings->upload_allowed_file_types = [
 	"image/webp"
 ];
 
+// The default file type for previews. Defaults to image/webp. Webp is a new
+// image format that can cut image sizez down by ~20%, but may still have some
+// issues in certain browsers. Change this to image/png or image/jpeg if you
+// experience issues.
+$settings->preview_file_type = "image/webp";
+
 // The location of a file that maps mime types onto file extensions and vice
 // versa. Used to generate the file extension for an uploaded file. Set to the
 // default location of the mime.types file on Linux. If you aren't using linux,
