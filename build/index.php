@@ -155,6 +155,7 @@ $settings->nav_links = [
 // An array of additional links in the above format that will be shown under
 // "More" subsection.
 $settings->nav_links_extra = [
+	[ "Upload", "index.php?action=upload" ],
 	[ $settings->admindisplaychar . "Delete", "index.php?action=delete&page={page}" ],
 	[ $settings->admindisplaychar . "Move", "index.php?action=move&page={page}" ],
 	[ $settings->admindisplaychar . "Toggle Protection", "index.php?action=protect&page={page}" ]
