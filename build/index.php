@@ -784,7 +784,12 @@ class page_renderer
 			
 			"{all-pages-datalist}" => self::generate_all_pages_datalist(),
 			
-			"{footer-message}" => $settings->footer_message
+			"{footer-message}" => $settings->footer_message,
+			
+			/// Secondary Parts ///
+			
+			"{content}" => $content,
+			"{title}" => $title,
 		];
 		
 		// Pass the parts through the part processors
@@ -798,11 +803,8 @@ class page_renderer
 		$result = str_replace(array_keys($parts), array_values($parts), $result);
 		
 		$result = str_replace([
-			"{title}",
-			"{content}"
+			
 		], [
-			$title,
-			$content
 		], $result);
 		
 		$result = str_replace("{generation-time-taken}", microtime(true) - $start_time, $result);
@@ -1431,19 +1433,11 @@ register_module([
 					http_response_code(501);
 					exit("Unrecognised file type.");
 			}
-			
-			// todo render a preview here
-			
-			/*
-			 * size (image outputs only, possibly width / height)
-				 * 1-2048 (configurable)
-			 * filetype
-				 * either a mime type or 'native'
-			 */
 		});
 		
 		page_renderer::register_part_preprocessor(function(&$parts) {
-			// Todo add the preview to the top o fthe page here, but onyl if the current action is view and we are on a page prefixed with file:
+			// Todo add the preview to the top of the page here, but onyl if the current action is view and we are on a page prefixed with file:
+			
 		});
 	}
 ]);

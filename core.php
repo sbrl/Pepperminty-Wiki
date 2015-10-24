@@ -490,7 +490,12 @@ class page_renderer
 			
 			"{all-pages-datalist}" => self::generate_all_pages_datalist(),
 			
-			"{footer-message}" => $settings->footer_message
+			"{footer-message}" => $settings->footer_message,
+			
+			/// Secondary Parts ///
+			
+			"{content}" => $content,
+			"{title}" => $title,
 		];
 		
 		// Pass the parts through the part processors
@@ -504,11 +509,8 @@ class page_renderer
 		$result = str_replace(array_keys($parts), array_values($parts), $result);
 		
 		$result = str_replace([
-			"{title}",
-			"{content}"
+			
 		], [
-			$title,
-			$content
 		], $result);
 		
 		$result = str_replace("{generation-time-taken}", microtime(true) - $start_time, $result);
