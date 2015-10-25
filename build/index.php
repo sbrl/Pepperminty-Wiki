@@ -2156,7 +2156,7 @@ register_module([
 
 register_module([
 	"name" => "Page mover",
-	"version" => "0.6",
+	"version" => "0.7",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to move pages.",
 	"id" => "page-move",
