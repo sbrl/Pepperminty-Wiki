@@ -256,6 +256,7 @@ input[type=text]:not(.link-display), input[type=password], textarea { margin: 0.
 input[type=text], input[type=password], textarea { padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
 textarea { width: calc(100% - 2rem); min-height: 35rem; font-size: 1.25rem; }
 textarea ~ input[type=submit] { width: calc(100% - 0.3rem); margin: 0.5rem 0.8rem; padding: 0.5rem; font-weight: bolder; }
+.editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
 
 footer { padding: 2rem; }
 /* #ffdb6d #36962c */";

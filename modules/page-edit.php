@@ -60,12 +60,14 @@ register_module([
 			}
 			
 			$content = "<h1>$title</h1>";
+			$page_tags = implode(", ", (!empty($pageindex->{$env->page}->tags)) ? $pageindex->{$env->page}->tags : "");
 			if(!$env->is_logged_in and $settings->anonedits)
 			{
 				$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
 			}
-			$content .= "<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save'>
+			$content .= "<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save' class='editform'>
 			<textarea name='content'>$pagetext</textarea>
+			<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' />
 			<p>$settings->editing_message</p>
 			<input type='submit' value='Save Page' />
 		</form>";
@@ -118,11 +120,17 @@ register_module([
 				mkdir(dirname("$env->page.md"), null, true);
 			}
 			
-			
+			// Read in the new page content
 			$pagedata = $_POST["content"];
-			
+			// Santise it if necessary
 			if($settings->clean_raw_html)
 				$pagedata = htmlentities($pagedata, ENT_QUOTES);
+			
+			// Read in the new page tags
+			$page_tags = explode(",", $_POST["tags"]);
+			// Trim off all the whitespace
+			foreach($page_tags as &$tag)
+				$tag = trim($tag);
 			
 			if(file_put_contents("$env->page.md", $pagedata) !== false)
 			{
@@ -142,6 +150,7 @@ register_module([
 					$pageindex->$page->lasteditor = utf8_encode($env->user);
 				else
 					$pageindex->$page->lasteditor = utf8_encode("anonymous");
+				$pageindex->$page->tags = $page_tags;
 				
 				// A hack to resave the pagedata if the preprocessors have
 				// changed it. We need this because the preprocessors *must*
