@@ -263,7 +263,7 @@ textarea ~ input[type=submit] { width: calc(100% - 0.3rem); margin: 0.5rem 0.8re
 
 .page-tags-display { margin: 0.5rem 0 0 0; padding: 0; list-style-type: none; }
 .page-tags-display li { display: inline-block; margin: 0.5rem; padding: 0.5rem; background: #D2C3DD; white-space: nowrap; }
-.page-tags-display a { color: #FB701A; text-decoration: none; }
+.page-tags-display li a { color: #FB701A; text-decoration: none; }
 .page-tags-display li:before { content: \"\\A\"; position: relative; top: 0.03rem; left: -0.9rem; width: 0; height: 0; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; border-right: 0.5rem solid #D2C3DD; }
 
 footer { padding: 2rem; }
@@ -2429,10 +2429,10 @@ register_module([
 				}
 				$content .= "\n</ul>\n";
 			}
-			else
+			/*else
 			{
-				$content .= "<aside><em>No tags yet! Add some by <a href='?action=edit&page=" . rawurlencode($env->page) .  "'>editing this page</a>!</em></aside>\n";
-			}
+				$content .= "<aside class='page-tags-display'><small><em>(No tags yet! Add some by <a href='?action=edit&page=" . rawurlencode($env->page) .  "'>editing this page</a>!)</em></small></aside>\n";
+			}*/
 			
 			if($settings->show_subpages)
 			{

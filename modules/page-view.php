@@ -69,10 +69,10 @@ register_module([
 				}
 				$content .= "\n</ul>\n";
 			}
-			else
+			/*else
 			{
-				$content .= "<aside><em>No tags yet! Add some by <a href='?action=edit&page=" . rawurlencode($env->page) .  "'>editing this page</a>!</em></aside>\n";
-			}
+				$content .= "<aside class='page-tags-display'><small><em>(No tags yet! Add some by <a href='?action=edit&page=" . rawurlencode($env->page) .  "'>editing this page</a>!)</em></small></aside>\n";
+			}*/
 			
 			if($settings->show_subpages)
 			{
