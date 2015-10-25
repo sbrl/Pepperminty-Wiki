@@ -343,7 +343,9 @@ if(!file_exists("./pageindex.json"))
 }
 else
 {
+	$pageindex_read_start = microtime(true);
 	$pageindex = json_decode(file_get_contents("./pageindex.json"));
+	header("x-pageindex-decode-time: " . round(microtime(true) - $pageindex_read_start, 6) . "ms");
 }
 
 // Work around an Opera + Syntaxtic bug where there is no margin at the left hand side if there isn't a query string when accessing a .php file
