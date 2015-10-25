@@ -2208,6 +2208,15 @@ register_module([
 				$pageindex->$new_name->$key = $value;
 			}
 			unset($pageindex->$page);
+			// If this page has an associated file, then we should move that too
+			if(isset($pageindex->$new_name->uploadedfile) and
+			   $pageindex->$new_name->uploadedfile == true)
+			{
+				// Move the file in the pageindex
+				$pageindex->$new_name->uploadedfilepath = $new_name;
+				// Move the file on disk
+				rename($env->page, $new_name);
+			}
 			file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
 			
 			//move the page on the disk
