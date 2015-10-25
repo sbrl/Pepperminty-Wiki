@@ -51,13 +51,25 @@ register_module([
 				$title = $settings->protectedpagechar . $title;
 			$content = "<h1>$env->page</h1>\n";
 			
-			// Add an extra message if the requested was redirected from another page
+			// Add an extra message if the requester was redirected from another page
 			if(isset($_GET["redirected_from"]))
 				$content .= "<p><em>Redirected from <a href='?page=" . rawurlencode($_GET["redirected_from"]) . "&redirect=no'>" . $_GET["redirected_from"] . "</a>.</em></p>";
 			
 			$parsing_start = microtime(true);
 			
 			$content .= parse_page_source(file_get_contents("$env->page.md"));
+			
+			// todo display tags here
+			if(!empty($pageindex->$page->tags))
+			{
+				$content .= "<ul class='page-tags-display'><li>";
+				$content .= implode("</li><li>", $pageindex->$page->tags);
+				$content .= "</li></ul>\n";
+			}
+			else
+			{
+				$content .= "<aside><em>No tags yet! Add some by <a href='?action=edit&page=" . rawurlencode($env->page) .  "'>editing this page</a>!</em></aside>\n";
+			}
 			
 			if($settings->show_subpages)
 			{

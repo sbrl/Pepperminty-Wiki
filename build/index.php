@@ -261,6 +261,10 @@ textarea { width: calc(100% - 2rem); min-height: 35rem; font-size: 1.25rem; }
 textarea ~ input[type=submit] { width: calc(100% - 0.3rem); margin: 0.5rem 0.8rem; padding: 0.5rem; font-weight: bolder; }
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
 
+.page-tags-display { margin: 0.5rem 0 0 0; padding: 0; list-style-type: none; }
+.page-tags-display li { display: inline-block; margin: 0.5rem; padding: 0.5rem; background: #D2C3DD; color: #FB701A; white-space: nowrap; }
+.page-tags-display li:before { content: \"\\A\"; position: relative; top: 0.03rem; left: -0.9rem; width: 0; height: 0; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; border-right: 0.5rem solid #D2C3DD; }
+
 footer { padding: 2rem; }
 /* #ffdb6d #36962c */";
 
@@ -2366,13 +2370,25 @@ register_module([
 				$title = $settings->protectedpagechar . $title;
 			$content = "<h1>$env->page</h1>\n";
 			
-			// Add an extra message if the requested was redirected from another page
+			// Add an extra message if the requester was redirected from another page
 			if(isset($_GET["redirected_from"]))
 				$content .= "<p><em>Redirected from <a href='?page=" . rawurlencode($_GET["redirected_from"]) . "&redirect=no'>" . $_GET["redirected_from"] . "</a>.</em></p>";
 			
 			$parsing_start = microtime(true);
 			
 			$content .= parse_page_source(file_get_contents("$env->page.md"));
+			
+			// todo display tags here
+			if(!empty($pageindex->$page->tags))
+			{
+				$content .= "<ul class='page-tags-display'><li>";
+				$content .= implode("</li><li>", $pageindex->$page->tags);
+				$content .= "</li></ul>\n";
+			}
+			else
+			{
+				$content .= "<aside><em>No tags yet! Add some by <a href='?action=edit&page=" . rawurlencode($env->page) .  "'>editing this page</a>!</em></aside>\n";
+			}
 			
 			if($settings->show_subpages)
 			{
