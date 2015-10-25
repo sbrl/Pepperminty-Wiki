@@ -131,7 +131,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
         "id": "page-move",
-        "lastupdate": 1445771285,
+        "lastupdate": 1445771483,
         "optional": false
     },
     {

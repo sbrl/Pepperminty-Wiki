@@ -2215,8 +2215,7 @@ register_module([
 			unset($pageindex->$page);
 			$pageindex->$new_name->filename = $new_name;
 			// If this page has an associated file, then we should move that too
-			if(isset($pageindex->$new_name->uploadedfile) and
-			   $pageindex->$new_name->uploadedfile == true)
+			if(!empty($pageindex->$new_name->uploadedfile))
 			{
 				// Update the filepath to point to the description and not the image
 				$pageindex->$new_name->filename = $pageindex->$new_name->filename . ".md";
