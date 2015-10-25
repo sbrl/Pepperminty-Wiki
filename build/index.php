@@ -636,7 +636,7 @@ if(!file_exists("./pageindex.json"))
 			$subpage_parent_filename = "$subpage_parent_key.md";
 			if(array_search($subpage_parent_filename, $existingpages) === false)
 			{
-				// Our parent page doesn't acutally exist - create it
+				// Our parent page doesn't actually exist - create it
 				touch($subpage_parent_filename, 0);
 				// Furthermore, we should add this page to the list of existing pages
 				// in order for it to be indexed
