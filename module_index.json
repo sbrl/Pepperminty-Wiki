@@ -104,7 +104,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1445170746,
+        "lastupdate": 1445787342,
         "optional": false
     },
     {
@@ -149,7 +149,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You reallyshould include this one.",
         "id": "page-view",
-        "lastupdate": 1445775829,
+        "lastupdate": 1445787503,
         "optional": false
     },
     {

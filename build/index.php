@@ -262,7 +262,8 @@ textarea ~ input[type=submit] { width: calc(100% - 0.3rem); margin: 0.5rem 0.8re
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
 
 .page-tags-display { margin: 0.5rem 0 0 0; padding: 0; list-style-type: none; }
-.page-tags-display li { display: inline-block; margin: 0.5rem; padding: 0.5rem; background: #D2C3DD; color: #FB701A; white-space: nowrap; }
+.page-tags-display li { display: inline-block; margin: 0.5rem; padding: 0.5rem; background: #D2C3DD; white-space: nowrap; }
+.page-tags-display a { color: #FB701A; text-decoration: none; }
 .page-tags-display li:before { content: \"\\A\"; position: relative; top: 0.03rem; left: -0.9rem; width: 0; height: 0; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; border-right: 0.5rem solid #D2C3DD; }
 
 footer { padding: 2rem; }
@@ -2011,32 +2012,72 @@ register_module([
 		add_action("list", function() {
 			global $pageindex, $settings;
 			
+			$title = "All Pages";
+			$content = "	<h1>$title on $settings->sitename</h1>";
+			
 			$sorted_pageindex = get_object_vars($pageindex);
 			ksort($sorted_pageindex, SORT_NATURAL);
-			$title = "All Pages";
-			$content = "	<h1>$title on $settings->sitename</h1>
-	<table>
+			
+			$content .= generate_page_list(array_keys($sorted_pageindex));
+			exit(page_renderer::render_main("$title - $settings->sitename", $content));
+		});
+		
+		add_action("list-tags", function() {
+			global $pageindex, $settings;
+			
+			if(empty($_GET["tag"]))
+			{
+				http_response_code(301);
+				header("location: ?action=list");
+			}
+			
+			$tag = $_GET["tag"];
+			
+			
+			$sorted_pageindex = get_object_vars($pageindex);
+			ksort($sorted_pageindex, SORT_NATURAL);
+			
+			$pagelist = [];
+			foreach($pageindex as $pagename => $pagedetails)
+			{
+				if(empty($pagedetails->tags)) continue;
+				if(in_array($tag, $pagedetails->tags))
+					$pagelist[] = $pagename;
+			}
+			
+			$content = "<h1>$tag</h1>\n";
+			$content .= generate_page_list($pagelist);
+			
+			exit(page_renderer::render("$tag - Page List - $settings->sitename", $content));
+		});
+	}
+]);
+
+function generate_page_list($pagelist)
+{
+	global $pageindex;
+	
+	$result = "<table>
 		<tr>
 			<th>Page Name</th>
 			<th>Size</th>
 			<th>Last Editor</th>
 			<th>Last Edit Time</th>
 		</tr>\n";
-		foreach($sorted_pageindex as $pagename => $pagedetails)
-		{
-			$content .= "\t\t<tr>
+	foreach($pagelist as $pagename)
+	{
+			$result .= "\t\t<tr>
 			<td><a href='index.php?page=$pagename'>$pagename</a></td>
-			<td>" . human_filesize($pagedetails->size) . "</td>
-			<td>$pagedetails->lasteditor</td>
-			<td>" . human_time_since($pagedetails->lastmodified) . " <small>(" . date("l jS \of F Y \a\\t h:ia T", $pagedetails->lastmodified) . ")</small></td>
-
-		</tr>\n";
-			}
-			$content .= "	</table>";
-			exit(page_renderer::render_main("$title - $settings->sitename", $content));
-		});
+			<td>" . human_filesize($pageindex->$pagename->size) . "</td>
+			<td>" . $pageindex->$pagename->lasteditor . "</td>
+			<td>" . human_time_since($pageindex->$pagename->lastmodified) . " <small>(" . date("l jS \of F Y \a\\t h:ia T", $pageindex->$pagename->lastmodified) . ")</small></td>
+	
+	</tr>\n";
 	}
-]);
+	$result .= "	</table>";
+	
+	return $result;
+}
 
 
 
@@ -2381,9 +2422,12 @@ register_module([
 			// todo display tags here
 			if(!empty($pageindex->$page->tags))
 			{
-				$content .= "<ul class='page-tags-display'><li>";
-				$content .= implode("</li><li>", $pageindex->$page->tags);
-				$content .= "</li></ul>\n";
+				$content .= "<ul class='page-tags-display'>\n";
+				foreach($pageindex->$page->tags as $tag)
+				{
+					$content .= "<li><a href='?action=list-tags&tag=$tag'>$tag</a></li>\n";
+				}
+				$content .= "\n</ul>\n";
 			}
 			else
 			{
