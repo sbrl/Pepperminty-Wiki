@@ -45,6 +45,15 @@
         "optional": false
     },
     {
+        "name": "Search",
+        "version": "0.1",
+        "author": "Starbeamrainbowlabs",
+        "description": "Adds proper search functionality to Pepperminty Wiki. Note that this module, at the moment, just contains test code while I figure out how best to write a search engine.",
+        "id": "feature-search",
+        "lastupdate": 1445980152,
+        "optional": false
+    },
+    {
         "name": "Uploader",
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
