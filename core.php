@@ -348,7 +348,71 @@ else
 	header("x-pageindex-decode-time: " . round(microtime(true) - $pageindex_read_start, 6) . "ms");
 }
 
-// Work around an Opera + Syntaxtic bug where there is no margin at the left hand side if there isn't a query string when accessing a .php file
+//////////////////////////
+///// Page id system /////
+//////////////////////////
+if(!file_exists("idindex.json"))
+	file_put_contents("idindex.json", "{}");
+$idindex = json_decode(file_get_contents("idindex.json"));
+class ids
+{
+	/*
+	 * @summary Gets the page id associated with the given pagename.
+	 */
+	public static function getid($pagename)
+	{
+		global $idindex;
+		
+		foreach ($idindex as $id => $entry)
+		{
+			if($entry == $pagename)
+				return $id;
+		}
+		
+		// This pagename doesn't have an id - assign it one quick!
+		return self::assign($pagename);
+	}
+	
+	/*
+	 * @summary Gets the page name associated with the given page id.
+	 */
+	public static function getpagename($id)
+	{
+		global $idindex;
+		
+		if(!isset($idindex->$id))
+			return false;
+		else
+			return $idindex->$id;
+	}
+	
+	/*
+	 * @summary Assigns an id to a pagename. Doesn't check to make sure that
+	 * 			pagename doesn't exist in the pageindex.
+	 */
+	protected static function assign($pagename)
+	{
+		global $idindex;
+		
+		$nextid = count(array_keys(get_object_vars($idindex)));
+		
+		if(isset($idindex->$nextid))
+			throw new Exception("The pageid is corrupt! Pepperminty Wiki generated the id $nextid, but that id is already in use.");
+		
+		// Update the id index
+		$idindex->$nextid = utf8_encode($pagename);
+		
+		// Save the id index
+		file_put_contents("idindex.json", json_encode($idindex));
+		
+		return $nextid;
+	}
+}
+//////////////////////////
+//////////////////////////
+
+// Work around an Opera + Syntaxtic bug where there is no margin at the left
+// hand side if there isn't a query string when accessing a .php file.
 if(!isset($_GET["action"]) and !isset($_GET["page"]))
 {
 	http_response_code(302);

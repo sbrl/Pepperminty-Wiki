@@ -657,7 +657,71 @@ else
 	header("x-pageindex-decode-time: " . round(microtime(true) - $pageindex_read_start, 6) . "ms");
 }
 
-// Work around an Opera + Syntaxtic bug where there is no margin at the left hand side if there isn't a query string when accessing a .php file
+//////////////////////////
+///// Page id system /////
+//////////////////////////
+if(!file_exists("idindex.json"))
+	file_put_contents("idindex.json", "{}");
+$idindex = json_decode(file_get_contents("idindex.json"));
+class ids
+{
+	/*
+	 * @summary Gets the page id associated with the given pagename.
+	 */
+	public static function getid($pagename)
+	{
+		global $idindex;
+		
+		foreach ($idindex as $id => $entry)
+		{
+			if($entry == $pagename)
+				return $id;
+		}
+		
+		// This pagename doesn't have an id - assign it one quick!
+		return self::assign($pagename);
+	}
+	
+	/*
+	 * @summary Gets the page name associated with the given page id.
+	 */
+	public static function getpagename($id)
+	{
+		global $idindex;
+		
+		if(!isset($idindex->$id))
+			return false;
+		else
+			return $idindex->$id;
+	}
+	
+	/*
+	 * @summary Assigns an id to a pagename. Doesn't check to make sure that
+	 * 			pagename doesn't exist in the pageindex.
+	 */
+	protected static function assign($pagename)
+	{
+		global $idindex;
+		
+		$nextid = count(array_keys(get_object_vars($idindex)));
+		
+		if(isset($idindex->$nextid))
+			throw new Exception("The pageid is corrupt! Pepperminty Wiki generated the id $nextid, but that id is already in use.");
+		
+		// Update the id index
+		$idindex->$nextid = utf8_encode($pagename);
+		
+		// Save the id index
+		file_put_contents("idindex.json", json_encode($idindex));
+		
+		return $nextid;
+	}
+}
+//////////////////////////
+//////////////////////////
+
+// Work around an Opera + Syntaxtic bug where there is no margin at the left
+// hand side if there isn't a query string when accessing a .php file.
 if(!isset($_GET["action"]) and !isset($_GET["page"]))
 {
 	http_response_code(302);
@@ -1277,47 +1341,59 @@ register_module([
 
 class search
 {
+	// Words that we should exclude from the inverted index.
 	public static $stop_words = [
-		"a", "about", "above", "above", "across", "after", "afterwards", "again", "against",
-		"all", "almost", "alone", "along", "already", "also", "although", "always", "am", "among",
-		"amongst", "amoungst", "amount",  "an", "and", "another", "any", "anyhow", "anyone", "anything",
-		"anyway", "anywhere", "are", "around", "as",  "at", "back", "be", "became", "because", "become",
-		"becomes", "becoming", "been", "before", "beforehand", "behind", "being", "below", "beside",
-		"besides", "between", "beyond", "bill", "both", "bottom", "but", "by", "call", "can", "cannot",
-		"cant", "co", "con", "could", "couldnt", "cry", "de", "describe", "detail", "do", "done", "down",
-		"due", "during", "each", "eg", "eight", "either", "eleven", "else", "elsewhere", "empty",
-		"enough", "etc", "even", "ever", "every", "everyone", "everything", "everywhere", "except",
-		"few", "fifteen", "fify", "fill", "find", "fire", "first", "five", "for", "former", "formerly",
-		"forty", "found", "four", "from", "front", "full", "further", "get", "give", "go", "had", "has",
-		"hasnt", "have", "he", "hence", "her", "here", "hereafter", "hereby", "herein", "hereupon",
-		"hers", "herself", "him", "himself", "his", "how", "however", "hundred", "ie", "if", "in",
-		"inc", "indeed", "interest", "into", "is", "it", "its", "itself", "keep", "last", "latter",
-		"latterly", "least", "less", "ltd", "made", "many", "may", "me", "meanwhile", "might", "mill",
-		"mine", "more", "moreover", "most", "mostly", "move", "much", "must", "my", "myself", "name",
-		"namely", "neither", "never", "nevertheless", "next", "nine", "no", "nobody", "none", "noone",
-		"nor", "not", "nothing", "now", "nowhere", "of", "off", "often", "on", "once", "one", "only",
-		"onto", "or", "other", "others", "otherwise", "our", "ours", "ourselves", "out", "over", "own",
-		"part", "per", "perhaps", "please", "put", "rather", "re", "same", "see", "seem", "seemed",
-		"seeming", "seems", "serious", "several", "she", "should", "show", "side", "since", "sincere",
-		"six", "sixty", "so", "some", "somehow", "someone", "something", "sometime", "sometimes",
-		"somewhere", "still", "such", "system", "take", "ten", "than", "that", "the", "their", "them",
-		"themselves", "then", "thence", "there", "thereafter", "thereby", "therefore", "therein",
-		"thereupon", "these", "they", "thickv", "thin", "third", "this", "those", "though", "three",
-		"through", "throughout", "thru", "thus", "to", "together", "too", "top", "toward", "towards",
-		"twelve", "twenty", "two", "un", "under", "until", "up", "upon", "us", "very", "via", "was",
-		"we", "well", "were", "what", "whatever", "when", "whence", "whenever", "where", "whereafter",
-		"whereas", "whereby", "wherein", "whereupon", "wherever", "whether", "which", "while", "whither",
-		"who", "whoever", "whole", "whom", "whose", "why", "will", "with", "within", "without", "would",
-		"yet", "you", "your", "yours", "yourself", "yourselves"
+		"a", "about", "above", "above", "across", "after", "afterwards", "again",
+		"against", "all", "almost", "alone", "along", "already", "also",
+		"although", "always", "am", "among", "amongst", "amoungst", "amount", 
+		"an", "and", "another", "any", "anyhow", "anyone", "anything", "anyway",
+		"anywhere", "are", "around", "as", "at", "back", "be", "became",
+		"because", "become", "becomes", "becoming", "been", "before",
+		"beforehand", "behind", "being", "below", "beside", "besides",
+		"between", "beyond", "bill", "both", "bottom", "but", "by", "call",
+		"can", "cannot", "cant", "co", "con", "could", "couldnt", "cry", "de",
+		"describe", "detail", "do", "done", "down", "due", "during", "each",
+		"eg", "eight", "either", "eleven", "else", "elsewhere", "empty",
+		"enough", "etc", "even", "ever", "every", "everyone", "everything",
+		"everywhere", "except", "few", "fifteen", "fify", "fill", "find",
+		"fire", "first", "five", "for", "former", "formerly", "forty", "found",
+		"four", "from", "front", "full", "further", "get", "give", "go", "had",
+		"has", "hasnt", "have", "he", "hence", "her", "here", "hereafter",
+		"hereby", "herein", "hereupon", "hers", "herself", "him", "himself",
+		"his", "how", "however", "hundred", "ie", "if", "in", "inc", "indeed",
+		"interest", "into", "is", "it", "its", "itself", "keep", "last",
+		"latter", "latterly", "least", "less", "ltd", "made", "many", "may",
+		"me", "meanwhile", "might", "mine", "more", "moreover", "most",
+		"mostly", "move", "much", "must", "my", "myself", "name", "namely",
+		"neither", "never", "nevertheless", "next", "nine", "no", "none",
+		"nor", "not", "nothing", "now", "nowhere", "of", "off", "often", "on",
+		"once", "one", "only", "onto", "or", "other", "others", "otherwise",
+		"our", "ours", "ourselves", "out", "over", "own", "part", "per",
+		"perhaps", "please", "put", "rather", "re", "same", "see", "seem",
+		"seemed", "seeming", "seems", "serious", "several", "she", "should",
+		"show", "side", "since", "sincere", "six", "sixty", "so", "some",
+		"somehow", "someone", "something", "sometime", "sometimes",
+		"somewhere", "still", "such", "system", "take", "ten", "than", "that",
+		"the", "their", "them", "themselves", "then", "thence", "there",
+		"thereafter", "thereby", "therefore", "therein", "thereupon", "these",
+		"they", "thickv", "thin", "third", "this", "those", "though", "three",
+		"through", "throughout", "thru", "thus", "to", "together", "too", "top",
+		"toward", "towards", "twelve", "twenty", "two", "un", "under", "until",
+		"up", "upon", "us", "very", "via", "was", "we", "well", "were", "what",
+		"whatever", "when", "whence", "whenever", "where", "whereafter",
+		"whereas", "whereby", "wherein", "whereupon", "wherever", "whether",
+		"which", "while", "whither", "who", "whoever", "whole", "whom", "whose",
+		"why", "will", "with", "within", "without", "would", "yet", "you",
+		"your", "yours", "yourself", "yourselves"
 	];
 
 	public static function index($source)
 	{
 		$source = html_entity_decode($source, ENT_QUOTES);
 		$source_length = strlen($source);
-			
+		
 		$index = [];
-
+		
 		// Regex from 
 		$terms = preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))/", $source, -1, PREG_SPLIT_NO_EMPTY);
 		$i = 0;
@@ -1332,47 +1408,79 @@ class search
 			{
 				$index[$nterm] = [ "freq" => 0, "offsets" => [] ];
 			}
-
+			
 			$index[$nterm]["freq"]++;
 			$index[$nterm]["offsets"][] = $i;
-
+			
 			$i++;
 		}
-		
-		self::sort_index($index);
 		
 		return $index;
 	}
 	
 	/*
-	 * @sumary Sorts an index alphabetically. This allows us to do a binary search instead of a regular sequential search.
+	 * @summary Sorts an index alphabetically. Will also sort an inverted index.
+	 * 			This allows us to do a binary search instead of a regular
+	 * 			sequential search.
 	 */
 	public static function sort_index(&$index)
 	{
 		ksort($index, SORT_NATURAL);
 	}
-}
-
-class ids
-{
+	
 	/*
-	 * @summary Gets the page id associated with the given pagename.
+	 * @summary Compares two *regular* indexes to find the differences between them.
+	 * 
+	 * @param {array} $indexa - The old index.
+	 * @param {array} $indexb - The new index.
+	 * @param {array} $changed - An array to be filled with the nterms of all
+	 * 							 the changed entries.
+	 * @param {array} $removed - An array to be filled with the nterms of all
+	 * 							 the removed entries.
 	 */
-	public static function get_page_id($pagename)
+	public static function compare_indexes($indexa, $indexb, &$changed, &$removed)
 	{
-		global $idindex;
-		
-		
+		foreach ($indexa as $nterm => $entrya)
+		{
+			if(!isset($indexb[$nterm]))
+				$removed[] = $nterm;
+			$entryb = $indexb[$nterm];
+			if($entrya !== $entryb) $changed[] = $nterm;
+		}
 	}
 	
 	/*
-	 * @summary Gets the page name associated with the given page id.
+	 * @summary Reads in and parses an inverted index.
 	 */
-	public static function get_id_pagename($id)
+	// Todo remove this function and make everything streamable
+	public static function parse_invindex($invindex_filename) {
+		$invindex = json_decode(file_get_contents($invindex_filename), true);
+		return $invindex;
+	}
+	
+	/*
+	 * @summary Merge an index into an inverted index.
+	 */
+	public static function merge_into_invindex(&$invindex, $pageid, &$index, &$removals = [])
 	{
-		global $idindex;
+		// Remove all the subentries that were removed since last time
+		foreach($removals as $nterm)
+		{
+			unset($invindex[$nterm][$pageid]);
+		}
 		
-		
+		// Merge all the new / changed index entries into the inverted index
+		foreach($index as $nterm => $newentry)
+		{
+			// If the nterm isn't in the inverted index, then create a space for it
+			if(!isset($invindex[$nterm])) $invindex[$nterm] = [];
+			$invindex[$nterm][$pageid] = $newentry;
+		}
+	}
+	
+	public static function save_invindex($filename, &$invindex)
+	{
+		file_put_contents($filename, json_encode($invindex));
 	}
 }
 
