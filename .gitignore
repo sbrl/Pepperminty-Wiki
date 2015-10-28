@@ -7,6 +7,10 @@
 
 # The page index
 pageindex.json
+# The id index
+idindex.json
+# The search index
+invindex.json
 
 # All uploaded files
 build/Files/*
