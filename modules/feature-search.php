@@ -82,10 +82,10 @@ class search
 			{
 				$index[$nterm] = [ "freq" => 0, "offsets" => [] ];
 			}
-
+			
 			$index[$nterm]["freq"]++;
 			$index[$nterm]["offsets"][] = $i;
-
+			
 			$i++;
 		}
 		
