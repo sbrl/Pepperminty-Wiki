@@ -22,6 +22,19 @@ register_module([
 			
 			var_dump($index);
 		});
+		
+		add_action("invindex-rebuild", function() {
+			search::rebuild_invindex();
+		});
+		
+		add_action("search", function() {
+			global $settings;
+			
+			if(!isset($_GET["query"]))
+				exit(page_renderer::render("No Search Terms - Error - $settings->$sitename", "<p>You didn't specify any search terms. Try typing some into the box above.</p>"));
+			
+			
+		});
 	}
 ]);
 
@@ -72,7 +85,7 @@ class search
 		"why", "will", "with", "within", "without", "would", "yet", "you",
 		"your", "yours", "yourself", "yourselves"
 	];
-
+	
 	public static function index($source)
 	{
 		$source = html_entity_decode($source, ENT_QUOTES);
@@ -81,11 +94,11 @@ class search
 		$index = [];
 		
 		// Regex from 
-		$terms = preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))/", $source, -1, PREG_SPLIT_NO_EMPTY);
+		$terms = self::tokenize($source);
 		$i = 0;
 		foreach($terms as $term)
 		{
-			$nterm = strtolower($term);
+			$nterm = $term;
 			
 			// Skip over stop words (see https://en.wikipedia.org/wiki/Stop_words)
 			if(in_array($nterm, self::$stop_words)) continue;
@@ -102,6 +115,28 @@ class search
 		}
 		
 		return $index;
+	}
+	
+	public static function tokenize($source)
+	{
+		$source = strtolower($source);
+		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/", $source, -1, PREG_SPLIT_NO_EMPTY);
+	}
+	
+	public static function rebuild_invindex()
+	{
+		global $pageindex;
+		
+		$invindex = [];
+		foreach($pageindex as $pagename => $pagedetails)
+		{
+			$pagesource = file_get_contents("$pagename.md");
+			$index = self::index($pagesource);
+			
+			self::merge_into_invindex($invindex, ids::getid($pagename), $index);
+		}
+		
+		self::save_invindex("invindex.json", $invindex);
 	}
 	
 	/*
@@ -161,12 +196,65 @@ class search
 			// If the nterm isn't in the inverted index, then create a space for it
 			if(!isset($invindex[$nterm])) $invindex[$nterm] = [];
 			$invindex[$nterm][$pageid] = $newentry;
+			
+			// Sort the page entries for this word by frequency
+			uasort($invindex[$nterm], function($a, $b) {
+				if($a["freq"] == $b["freq"]) return 0;
+				return ($a["freq"] < $b["freq"]) ? +1 : -1;
+			});
 		}
 	}
 	
 	public static function save_invindex($filename, &$invindex)
 	{
 		file_put_contents($filename, json_encode($invindex));
+	}
+	
+	public static function search_invindex($query, &$invindex)
+	{
+		$query_terms = self::tokenize($query);
+		$matching_pages = [];
+		
+		// Loop over each term in the query and find the matching page entries
+		for($i = 0; $i < count($query_terms); $i++)
+		{
+			$qterm = $query_terms[$i];
+			
+			// Skip over this term if it isn't in the inverted index
+			if(!isset($invindex[$qterm]))
+				continue;
+			
+			// Loop over each page
+			foreach($invindex[$qterm] as $pageid => $page_entry)
+			{
+				// Create an entry in the matching pages array if it doesn't exist
+				if(!isset($matching_pages[$pageid]))
+					$matching_pages[$pageid] = [];
+				$matching_pages[$pageid][$qterm] = $page_entry;
+			}
+		}
+		
+		foreach($matching_pages as &$pagedata)
+		{
+			$pagedata["rank"] = 0;
+			
+			foreach($pagedata as $pterm => $entry)
+			{
+				$pagedata["rank"] += $entry["freq"];
+				
+				// todo rank by context here
+			}
+			
+			// todo remove items if the rank is below a threshold
+		}
+		
+		// todo sort by rank here
+		uasort($matching_pages, function($a, $b) {
+			if($a["rank"] == $b["rank"]) return 0;
+			return ($a["rank"] < $b["rank"]) ? +1 : -1;
+		});
+		
+		return $matching_pages;
 	}
 }
 
