@@ -358,6 +358,8 @@ class search
 			$context = self::strip_markup($context);
 			
 			// Make the matching words bold.
+			// Fixme Account for the fact that the offsets in $matches[] are relative to the beginning of the document, not the contextual snippet
+			// Todo Figure out why $extraoffset throws everything off
 			$extraoffset = 0;
 			foreach($group as $match)
 			{
