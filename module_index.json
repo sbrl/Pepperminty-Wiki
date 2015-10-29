@@ -50,7 +50,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki. Note that this module, at the moment, just contains test code while I figure out how best to write a search engine.",
         "id": "feature-search",
-        "lastupdate": 1446059639,
+        "lastupdate": 1446117613,
         "optional": false
     },
     {
@@ -167,7 +167,7 @@
         "author": "Johnny Broadway & Starbeamrainbowlabs",
         "description": "The default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page.",
         "id": "parser-default",
-        "lastupdate": 1445170746,
+        "lastupdate": 1446116543,
         "optional": false
     },
     {

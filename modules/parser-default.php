@@ -51,7 +51,7 @@ class Slimdown {
 	public static $rules = array (
 		'/\r\n/' => "\n",											// new line normalisation
 		'/^(#+)(.*)/' => 'self::header',								// headers
-		'/(\*)(.*?)\1/' => '<strong>\2</strong>',					// bold
+		'/(\*+)(.*?)\1/' => '<strong>\2</strong>',					// bold
 		'/(_)(.*?)\1/' => '<em>\2</em>',							// emphasis
 		
 		'/!\[(.*)\]\(([^\s]+)\s(\d+.+)\s(left|right)\)/' => '<img src="\2" alt="\1" style="max-width: \3; float: \4;" />',		// images with size

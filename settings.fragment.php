@@ -203,6 +203,16 @@ $settings->mime_extension_mappings_location = "/etc/mime.types";
 $settings->min_preview_size = 1;
 $settings->max_preview_size = 2048;
 
+// The maximum distance terms should be apart in the context display below
+// search results. This is purely aesthetical - it doesn't affect the search
+// algorithm.
+$settings->search_max_distance_context_display = 100;
+
+// The number of characters that should be displayed either side of a matching
+// term in the context below each search result.
+$settings->search_characters_context = 200;
+
+
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a
 // <link rel='stylesheet' /> tag.

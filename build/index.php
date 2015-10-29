@@ -206,6 +206,16 @@ $settings->mime_extension_mappings_location = "/etc/mime.types";
 $settings->min_preview_size = 1;
 $settings->max_preview_size = 2048;
 
+// The maximum distance terms should be apart in the context display below
+// search results. This is purely aesthetical - it doesn't affect the search
+// algorithm.
+$settings->search_max_distance_context_display = 100;
+
+// The number of characters that should be displayed either side of a matching
+// term in the context below each search result.
+$settings->search_characters_context = 200;
+
+
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a
 // <link rel='stylesheet' /> tag.
@@ -1345,9 +1355,40 @@ register_module([
 			global $settings;
 			
 			if(!isset($_GET["query"]))
-				exit(page_renderer::render("No Search Terms - Error - $settings->$sitename", "<p>You didn't specify any search terms. Try typing some into the box above.</p>"));
+				exit(page_renderer::render("No Search Terms - Error - $settings->sitename", "<p>You didn't specify any search terms. Try typing some into the box above.</p>"));
 			
+			$search_start = microtime(true);
 			
+			$invindex = search::load_invindex("invindex.json");
+			$results = search::query_invindex($_GET["query"], $invindex);
+			
+			$search_end = microtime(true) - $search_start;
+			
+			$title = $_GET["query"] . " - Search results - $settings->sitename";
+			
+			$content = "<section>\n";
+			$content .= "<h1>Search Results</h1>";
+			
+			// todo add a search box here
+			
+			foreach($results as $result)
+			{
+				$link = "?page=" . rawurlencode($result["pagename"]);
+				$pagesource = file_get_contents($result["pagename"] . ".md");
+				$context = search::extract_context($_GET["query"], $pagesource);
+				
+				$content .= "<div>\n";
+				$content .= "	<h2><a href='$link'>" . $result["pagename"] . "</a></h2>\n";
+				$content .= "	<p>$context</p>\n";
+				$content .= "</div>\n";
+			}
+			
+			$content .= "</section>\n";
+			
+			exit(page_renderer::render($title, $content));
+			
+			//header("content-type: text/plain");
+			//var_dump($results);
 		});
 	}
 ]);
@@ -1437,6 +1478,11 @@ class search
 		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/", $source, -1, PREG_SPLIT_NO_EMPTY);
 	}
 	
+	public static function strip_markup($source)
+	{
+		return str_replace([ "[", "]", "\"", "*", "_", " - ", "`" ], "", $source);
+	}
+	
 	public static function rebuild_invindex()
 	{
 		global $pageindex;
@@ -1488,7 +1534,7 @@ class search
 	 * @summary Reads in and parses an inverted index.
 	 */
 	// Todo remove this function and make everything streamable
-	public static function parse_invindex($invindex_filename) {
+	public static function load_invindex($invindex_filename) {
 		$invindex = json_decode(file_get_contents($invindex_filename), true);
 		return $invindex;
 	}
@@ -1524,11 +1570,12 @@ class search
 		file_put_contents($filename, json_encode($invindex));
 	}
 	
-	public static function search_invindex($query, &$invindex)
+	public static function query_invindex($query, &$invindex)
 	{
 		$query_terms = self::tokenize($query);
 		$matching_pages = [];
 		
+		// Loop over each term in the query and find the matching page entries
 		for($i = 0; $i < count($query_terms); $i++)
 		{
 			$qterm = $query_terms[$i];
@@ -1538,12 +1585,157 @@ class search
 				continue;
 			
 			// Loop over each page
-			foreach($invindex[$qterm] as $page_entry)
+			foreach($invindex[$qterm] as $pageid => $page_entry)
 			{
-				
+				// Create an entry in the matching pages array if it doesn't exist
+				if(!isset($matching_pages[$pageid]))
+					$matching_pages[$pageid] = [ "nterms" => [] ];
+				$matching_pages[$pageid]["nterms"][$qterm] = $page_entry;
 			}
 		}
+		
+		foreach($matching_pages as $pageid => &$pagedata)
+		{
+			$pagedata["pagename"] = ids::getpagename($pageid);
+			$pagedata["rank"] = 0;
+			
+			foreach($pagedata["nterms"] as $pterm => $entry)
+			{
+				$pagedata["rank"] += $entry["freq"];
+				
+				// todo rank by context here
+			}
+			
+			// todo remove items if the rank is below a threshold
+		}
+		
+		// todo sort by rank here
+		uasort($matching_pages, function($a, $b) {
+			if($a["rank"] == $b["rank"]) return 0;
+			return ($a["rank"] < $b["rank"]) ? +1 : -1;
+		});
+		
+		return $matching_pages;
 	}
+	
+	public static function extract_context($query, $source)
+	{
+		global $settings;
+		
+		$nterms = self::tokenize($query);
+		$matches = [];
+		// Loop over each nterm and find it in the source
+		foreach($nterms as $nterm)
+		{
+			$all_offsets = mb_stripos_all($source, $nterm);
+			// Skip over adding matches if there aren't any
+			if($all_offsets === false)
+				continue;
+			foreach($all_offsets as $offset)
+			{
+				$matches[] = [ $nterm, $offset ];
+			}
+		}
+		
+		usort($matches, function($a, $b) {
+			if($a[1] == $b[1]) return 0;
+			return ($a[1] < $b[1]) ? +1 : -1;
+		});
+		
+		$contexts = [];
+		$basepos = 0;
+		$matches_count = count($matches);
+		while($basepos < $matches_count)
+		{
+			// Store the next match along - all others will be relative to that
+			// one
+			$group = [$matches[$basepos]];
+			
+			// Start scanning at the next one along - we always store the first match
+			$scanpos = $basepos + 1;
+			$distance = 0;
+			
+			while(true)
+			{
+				// Break out if we reach the end
+				if($scanpos >= $matches_count) break;
+				
+				// Find the distance between the current one and the last one
+				$distance = $matches[$scanpos][1] - $matches[$scanpos - 1][1];
+				
+				// Store it if the distance is below the threshold
+				if($distance < $settings->search_characters_context)
+					$group[] = $matches[$scanpos];
+				else
+					break;
+				
+				$scanpos++;
+			}
+			
+			$context_start = $group[0][1] - $settings->search_characters_context;
+			$context_end = $group[count($group) - 1][1] + $settings->search_characters_context;
+			
+			$context = substr($source, $context_start, $context_end - $context_start);
+			
+			// Strip the markdown from the context - it's most likely going to
+			// be broken anyway.
+			$context = self::strip_markup($context);
+			
+			// Make the matching words bold.
+			$extraoffset = 0;
+			foreach($group as $match)
+			{
+				$start = $match[1] + $extraoffset;
+				$length = strlen($match[0]);
+				$end = $start + $length;
+				
+				// Insert the end one first to make sure that we don't mess up
+				// the offsets.
+				$context = substr_replace($context, "</strong>", $end, 0);
+				$context = substr_replace($context, "<strong>", $start, 0);
+//				$extraoffset += strlen("<strong></strong>");
+			}
+			
+			$contexts[] = $context;
+			
+			$basepos = $scanpos + 1;
+		}
+		
+		return implode(" ... ", $contexts);
+	}
+}
+
+/**
+ * mb_stripos all occurences
+ * from http://www.pontikis.net/tip/?id=16
+ * based on http://www.php.net/manual/en/function.strpos.php#87061
+ *
+ * Find all occurrences of a needle in a haystack (case-insensitive, UTF8)
+ *
+ * @param string $haystack
+ * @param string $needle
+ * @return array or false
+ */
+function mb_stripos_all($haystack, $needle) {
+ 
+  $s = 0;
+  $i = 0;
+ 
+  while(is_integer($i)) {
+ 
+    $i = mb_stripos($haystack, $needle, $s);
+ 
+    if(is_integer($i)) {
+      $aStrPos[] = $i;
+      $s = $i + mb_strlen($needle);
+    }
+  }
+ 
+  if(isset($aStrPos)) {
+    return $aStrPos;
+  } else {
+    return false;
+  }
 }
 
 
@@ -2821,7 +3013,7 @@ class Slimdown {
 	public static $rules = array (
 		'/\r\n/' => "\n",											// new line normalisation
 		'/^(#+)(.*)/' => 'self::header',								// headers
-		'/(\*)(.*?)\1/' => '<strong>\2</strong>',					// bold
+		'/(\*+)(.*?)\1/' => '<strong>\2</strong>',					// bold
 		'/(_)(.*?)\1/' => '<em>\2</em>',							// emphasis
 		
 		'/!\[(.*)\]\(([^\s]+)\s(\d+.+)\s(left|right)\)/' => '<img src="\2" alt="\1" style="max-width: \3; float: \4;" />',		// images with size
