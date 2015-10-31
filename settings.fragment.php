@@ -261,7 +261,9 @@ h1 { text-align: center; }
 .logo { max-width: 4rem; max-height: 4rem; vertical-align: middle; }
 main:not(.printable) { padding: 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 
+.search-result { position: relative; }
 .search-result::before { content: attr(data-result-number); position: relative; top: 3.2rem; color: rgba(33, 33, 33, 0.3); font-size: 2rem; }
+.search-result::after { content: \"Rank: \" attr(data-rank); position: absolute; top: 3.8rem; right: 0.7rem; color: rgba(50, 50, 50, 0.3); }
 .search-result > h2 { margin-left: 2rem; }
 
 label:not(.link-display-label) { display: inline-block; min-width: 7rem; }
