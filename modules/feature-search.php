@@ -52,6 +52,7 @@ register_module([
 				$link = "?page=" . rawurlencode($result["pagename"]);
 				$pagesource = file_get_contents($result["pagename"] . ".md");
 				$context = search::extract_context($_GET["query"], $pagesource);
+				$context = search::highlight_context($_GET["query"], $context);
 				
 				$content .= "<div>\n";
 				$content .= "	<h2><a href='$link'>" . $result["pagename"] . "</a></h2>\n";
@@ -357,29 +358,24 @@ class search
 			// be broken anyway.
 			$context = self::strip_markup($context);
 			
-			// Make the matching words bold.
-			// Fixme Account for the fact that the offsets in $matches[] are relative to the beginning of the document, not the contextual snippet
-			// Todo Figure out why $extraoffset throws everything off
-			$extraoffset = 0;
-			foreach($group as $match)
-			{
-				$start = $match[1] + $extraoffset;
-				$length = strlen($match[0]);
-				$end = $start + $length;
-				
-				// Insert the end one first to make sure that we don't mess up
-				// the offsets.
-				$context = substr_replace($context, "</strong>", $end, 0);
-				$context = substr_replace($context, "<strong>", $start, 0);
-//				$extraoffset += strlen("<strong></strong>");
-			}
-			
 			$contexts[] = $context;
 			
 			$basepos = $scanpos + 1;
 		}
 		
 		return implode(" ... ", $contexts);
+	}
+	
+	public static function highlight_context($query, $context)
+	{
+		$qterms = self::tokenize($query);
+		
+		foreach($qterms as $qterm)
+		{
+			$context = preg_replace("/" . preg_quote($qterm) . "/i", "<strong>$0</strong>", $context);
+		}
+		
+		return $context;
 	}
 }
 
