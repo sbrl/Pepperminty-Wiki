@@ -261,12 +261,15 @@ h1 { text-align: center; }
 .logo { max-width: 4rem; max-height: 4rem; vertical-align: middle; }
 main:not(.printable) { padding: 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 
+.search-result::before { content: attr(data-result-number); position: relative; top: 3.2rem; color: rgba(33, 33, 33, 0.3); font-size: 2rem; }
+.search-result > h2 { margin-left: 2rem; }
+
 label:not(.link-display-label) { display: inline-block; min-width: 7rem; }
 input[type=text]:not(.link-display), input[type=password], textarea { margin: 0.5rem 0.8rem; }
 input[type=text], input[type=password], textarea, #search-box { padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
-textarea { width: calc(100% - 2rem); min-height: 35rem; font-size: 1.25rem; }
-textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); margin: 0.5rem 0.8rem; padding: 0.5rem; }
-textarea ~ input[type=submit] { font-weight: bolder; }
+textarea { min-height: 35rem; font-size: 1.25rem; }
+textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); }
+textarea ~ input[type=submit] {  margin: 0.5rem 0.8rem; padding: 0.5rem; font-weight: bolder; }
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
 
 .page-tags-display { margin: 0.5rem 0 0 0; padding: 0; list-style-type: none; }

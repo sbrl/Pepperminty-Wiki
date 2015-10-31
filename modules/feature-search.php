@@ -51,6 +51,7 @@ register_module([
 			$content .= "	<input type='hidden' name='action' value='search' />\n";
 			$content .= "</form>";
 			
+			$i = 0; // todo use $_GET["offset"] and $_GET["result-count"] or something
 			foreach($results as $result)
 			{
 				$link = "?page=" . rawurlencode($result["pagename"]);
@@ -58,10 +59,14 @@ register_module([
 				$context = search::extract_context($_GET["query"], $pagesource);
 				$context = search::highlight_context($_GET["query"], $context);
 				
-				$content .= "<div>\n";
+				// We add 1 to $i here to convert it from an index to a result
+				// number as people expect it to start from 1
+				$content .= "<div class='search-result' data-result-number='" . ($i + 1) . "' data-rank='" . $result["rank"] . "'>\n";
 				$content .= "	<h2><a href='$link'>" . $result["pagename"] . "</a></h2>\n";
 				$content .= "	<p>$context</p>\n";
 				$content .= "</div>\n";
+				
+				$i++;
 			}
 			
 			$content .= "</section>\n";
