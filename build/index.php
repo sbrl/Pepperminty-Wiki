@@ -266,9 +266,10 @@ main:not(.printable) { padding: 2rem; background: #faf8fb; box-shadow: 0 0.1rem 
 
 label:not(.link-display-label) { display: inline-block; min-width: 7rem; }
 input[type=text]:not(.link-display), input[type=password], textarea { margin: 0.5rem 0.8rem; }
-input[type=text], input[type=password], textarea { padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
+input[type=text], input[type=password], textarea, #search-box { padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
 textarea { width: calc(100% - 2rem); min-height: 35rem; font-size: 1.25rem; }
-textarea ~ input[type=submit] { width: calc(100% - 0.3rem); margin: 0.5rem 0.8rem; padding: 0.5rem; font-weight: bolder; }
+textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); margin: 0.5rem 0.8rem; padding: 0.5rem; }
+textarea ~ input[type=submit] { font-weight: bolder; }
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
 
 .page-tags-display { margin: 0.5rem 0 0 0; padding: 0; list-style-type: none; }
@@ -1369,7 +1370,11 @@ register_module([
 			$content = "<section>\n";
 			$content .= "<h1>Search Results</h1>";
 			
-			// todo add a search box here
+			/// Search Box ///
+			$content .= "<form method='get' action=''>\n";
+			$content .= "	<input type='search' id='search-box' name='query' placeholder='Type your query here and then press enter.' value='" . $_GET["query"] . "' />\n";
+			$content .= "	<input type='hidden' name='action' value='search' />\n";
+			$content .= "</form>";
 			
 			foreach($results as $result)
 			{
@@ -1696,6 +1701,7 @@ class search
 		
 		foreach($qterms as $qterm)
 		{
+			// From http://stackoverflow.com/a/2483859/1460422
 			$context = preg_replace("/" . preg_quote($qterm) . "/i", "<strong>$0</strong>", $context);
 		}
 		
@@ -1715,25 +1721,19 @@ class search
  * @return array or false
  */
 function mb_stripos_all($haystack, $needle) {
- 
-  $s = 0;
-  $i = 0;
- 
-  while(is_integer($i)) {
- 
-    $i = mb_stripos($haystack, $needle, $s);
- 
-    if(is_integer($i)) {
-      $aStrPos[] = $i;
-      $s = $i + mb_strlen($needle);
-    }
-  }
- 
-  if(isset($aStrPos)) {
-    return $aStrPos;
-  } else {
-    return false;
-  }
+	$s = 0; $i = 0;
+	while(is_integer($i)) {
+		$i = mb_stripos($haystack, $needle, $s);
+		if(is_integer($i)) {
+			$aStrPos[] = $i;
+			$s = $i + mb_strlen($needle);
+		}
+	}
+
+	if(isset($aStrPos))
+		return $aStrPos;
+	else
+		return false;
 }
 
 
