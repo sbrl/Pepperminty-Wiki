@@ -2360,22 +2360,21 @@ register_module([
 			if($settings->clean_raw_html)
 				$pagedata = htmlentities($pagedata, ENT_QUOTES);
 			
-			// Read in the new page tags
-			$page_tags = explode(",", $_POST["tags"]);
-			// Trim off all the whitespace
-			foreach($page_tags as &$tag)
-				$tag = trim($tag);
+			// Read in the new page tags, so long as there are actually some tags to read in
+			$page_tags = [];
+			if(strlen(trim($_POST["tags"])) > 0)
+			{
+				$page_tags = explode(",", $_POST["tags"]);
+				// Trim off all the whitespace
+				foreach($page_tags as &$tag)
+					$tag = trim($tag);
+			}
 			
 			// Update the inverted search index
 			
 			// Construct an index for the old and new page content
 			$oldindex = search::index(file_get_contents("$env->page.md"));
 			$newindex = search::index($pagedata);
-			
-			echo("old: ");
-			var_dump($oldindex);
-			echo("new: ");
-			var_dump($newindex);
 			
 			// Compare the indexes of the old and new content
 			$additions = [];
