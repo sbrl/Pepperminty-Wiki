@@ -638,7 +638,7 @@ class page_renderer
 						break;
 					
 					case "search": // Displays a search bar
-						$result .= "<span class='inflexible'><form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /></form></span>";
+						$result .= "<span class='inflexible'><form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /><input type='hidden' name='search-redirect' value='true' /></form></span>";
 						break;
 					
 					case "divider": // Displays a divider
@@ -692,6 +692,20 @@ class page_renderer
 		return $result;
 	}
 }
+
+//////////////////////////////////////
+///// Extra consistency measures /////
+//////////////////////////////////////
+if(!isset($pageindex->{$env->page}) and isset($_GET["search-redirect"]))
+{
+	http_response_code(307);
+	$url = "?action=search&query=" . rawurlencode($env->page);
+	header("location: $url");
+	exit(pagerenderer::render("Non existent page - $settings->sitename", "<p>There isn't a page on $settings->sitename with that name. However, you could <a href='$url'>search for this page name</a> in other pages.</p>
+		<p>Alternatively, you could <a href='?action=edit&page=" . rawurlencode($env->page) . "&create=true'>create this page</a>.</p>"));
+}
+//////////////////////////////////////
+//////////////////////////////////////
 
 //////////////////////////
 ///  Module functions  ///

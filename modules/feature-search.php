@@ -28,7 +28,7 @@ register_module([
 		});
 		
 		add_action("search", function() {
-			global $settings;
+			global $settings, $env, $pageindex;
 			
 			if(!isset($_GET["query"]))
 				exit(page_renderer::render("No Search Terms - Error - $settings->sitename", "<p>You didn't specify any search terms. Try typing some into the box above.</p>"));
@@ -50,6 +50,16 @@ register_module([
 			$content .= "	<input type='search' id='search-box' name='query' placeholder='Type your query here and then press enter.' value='" . $_GET["query"] . "' />\n";
 			$content .= "	<input type='hidden' name='action' value='search' />\n";
 			$content .= "</form>";
+			
+			$query = $_GET["query"];
+			if(isset($pageindex->$query))
+			{
+				$content .= "<p>There's a page on $settings->sitename called <a href='?page=" . rawurlencode($query) . "'>$query</a>.</p>";
+			}
+			else
+			{
+				$content .= "<p>There isn't a page called $query on $settings->sitename, but you can <a href='?action=edit&page=" . rawurlencode($query) . "'>create it</a>.</p>";
+			}
 			
 			$i = 0; // todo use $_GET["offset"] and $_GET["result-count"] or something
 			foreach($results as $result)
