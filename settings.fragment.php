@@ -212,6 +212,11 @@ $settings->search_max_distance_context_display = 100;
 // term in the context below each search result.
 $settings->search_characters_context = 200;
 
+// The weighting to give to search term matches found in a page's title.
+$settings->search_title_matches_weighting = 10;
+
+// The weighting to give to search term matches found in a page's tags.
+$settings->search_tags_matches_weighting = 3;
 
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a

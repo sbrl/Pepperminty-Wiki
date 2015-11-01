@@ -215,6 +215,11 @@ $settings->search_max_distance_context_display = 100;
 // term in the context below each search result.
 $settings->search_characters_context = 200;
 
+// The weighting to give to search term matches found in a page's title.
+$settings->search_title_matches_weighting = 10;
+
+// The weighting to give to search term matches found in a page's tags.
+$settings->search_tags_matches_weighting = 3;
 
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a
@@ -1412,6 +1417,13 @@ register_module([
 				$pagesource = file_get_contents($result["pagename"] . ".md");
 				$context = search::extract_context($_GET["query"], $pagesource);
 				$context = search::highlight_context($_GET["query"], $context);
+				if(strlen($context) == 0)
+				{
+					$context = search::strip_markup(file_get_contents("$env->page.md", null, null, null, $settings->search_characters_context * 2));
+					if($pageindex->{$env->page}->size > $settings->search_characters_context * 2)
+						$context .= "...";
+				}
+				
 				
 				// We add 1 to $i here to convert it from an index to a result
 				// number as people expect it to start from 1
@@ -1622,27 +1634,65 @@ class search
 	
 	public static function query_invindex($query, &$invindex)
 	{
+		global $settings, $pageindex;
+		
 		$query_terms = self::tokenize($query);
 		$matching_pages = [];
+		
 		
 		// Loop over each term in the query and find the matching page entries
 		for($i = 0; $i < count($query_terms); $i++)
 		{
 			$qterm = $query_terms[$i];
 			
-			// Skip over this term if it isn't in the inverted index
-			if(!isset($invindex[$qterm]))
-				continue;
-			
-			// Loop over each page
-			foreach($invindex[$qterm] as $pageid => $page_entry)
+			// Only search the inverted index if it actually exists there
+			if(isset($invindex[$qterm]))
 			{
-				// Create an entry in the matching pages array if it doesn't exist
-				if(!isset($matching_pages[$pageid]))
-					$matching_pages[$pageid] = [ "nterms" => [] ];
-				$matching_pages[$pageid]["nterms"][$qterm] = $page_entry;
+				// Loop over each page in the inverted index entry
+				foreach($invindex[$qterm] as $pageid => $page_entry)
+				{
+					// Create an entry in the matching pages array if it doesn't exist
+					if(!isset($matching_pages[$pageid]))
+						$matching_pages[$pageid] = [ "nterms" => [] ];
+					$matching_pages[$pageid]["nterms"][$qterm] = $page_entry;
+				}
+			}
+			
+			
+			// Loop over the pageindex and search the titles / tags
+			foreach ($pageindex as $pagename => $pagedata)
+			{
+				// Get the current page's id
+				$pageid = ids::getid($pagename);
+				// Consider matches in the page title
+				if(stripos($pagename, $qterm) !== false)
+				{
+					// We found the qterm in the title
+					if(!isset($matching_pages[$pageid]))
+						$matching_pages[$pageid] = [ "nterms" => [] ];
+					
+					// Set up a counter for page title matches if it doesn't exist already
+					if(!isset($matching_pages[$pageid]["title-matches"]))
+						$matching_pages[$pageid]["title-matches"] = 0;
+					
+					$matching_pages[$pageid]["title-matches"] += count(mb_stripos_all($pagename, $qterm));
+				}
+				
+				// Consider matches in the page's tags
+				if(isset($pagedata->tags) and // If this page has tags
+				   stripos(implode(" ", $pagedata->tags), $qterm) !== false) // And we found the qterm in the tags
+				{
+					if(!isset($matching_pages[$pageid]))
+						$matching_pages[$pageid] = [ "nterms" => [] ];
+					
+					// Set up a counter for tag match if there isn't one already
+					if(!isset($matching_pages[$pageid]["tag-matches"]))
+						$matching_pages[$pageid]["tag-matches"] = 0;
+					$matching_pages[$pageid]["tag-matches"] += count(mb_stripos_all(implode(" ", $pagedata->tags), $qterm));
+				}
 			}
 		}
+		
 		
 		foreach($matching_pages as $pageid => &$pagedata)
 		{
@@ -1655,6 +1705,12 @@ class search
 				
 				// todo rank by context here
 			}
+			
+			// Consider matches in the title / tags
+			if(isset($pagedata["title-matches"]))
+				$pagedata["rank"] += $pagedata["title-matches"] * $settings->search_title_matches_weighting;
+			if(isset($pagedata["tag-matches"]))
+				$pagedata["rank"] += $pagedata["tag-matches"] * $settings->search_tags_matches_weighting;
 			
 			// todo remove items if the rank is below a threshold
 		}
