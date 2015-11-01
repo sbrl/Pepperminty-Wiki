@@ -60,7 +60,7 @@ register_module([
 			}
 			
 			$content = "<h1>$title</h1>";
-			$page_tags = implode(", ", (!empty($pageindex->{$env->page}->tags)) ? $pageindex->{$env->page}->tags : [ "" ]);
+			$page_tags = implode(", ", (!empty($pageindex->{$env->page}->tags)) ? $pageindex->{$env->page}->tags : []);
 			if(!$env->is_logged_in and $settings->anonedits)
 			{
 				$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
