@@ -132,6 +132,24 @@ register_module([
 			foreach($page_tags as &$tag)
 				$tag = trim($tag);
 			
+			// Update the inverted search index
+			
+			// Construct an index for the old and new page content
+			$oldindex = search::index(file_get_contents("$env->page.md"));
+			$newindex = search::index($pagedata);
+			// Compare the indexes of the old and new content
+			$additions = [];
+			$removals = [];
+			search::compare_indexes($oldindex, $newindex, $additions, $removals);
+			// Load in the inverted index
+			$invindex = search::load_invindex("./invindex.json");
+			// Merge the changes into the inverted index
+			search::merge_into_invindex($invindex, ids::getid($env->page), $additions, $removals);
+			// Save the inverted index back to disk
+			search::save_invindex("invindex.json", $invindex);
+			
+			
+			
 			if(file_put_contents("$env->page.md", $pagedata) !== false)
 			{
 				$page = $env->page;

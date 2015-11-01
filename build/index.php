@@ -273,8 +273,8 @@ label:not(.link-display-label) { display: inline-block; min-width: 7rem; }
 input[type=text]:not(.link-display), input[type=password], textarea { margin: 0.5rem 0.8rem; }
 input[type=text], input[type=password], textarea, #search-box { padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
 textarea { min-height: 35rem; font-size: 1.25rem; }
-textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); }
-textarea ~ input[type=submit] {  margin: 0.5rem 0.8rem; padding: 0.5rem; font-weight: bolder; }
+textarea, textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); box-sizing: border-box; }
+textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-weight: bolder; }
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
 
 .page-tags-display { margin: 0.5rem 0 0 0; padding: 0; list-style-type: none; }
@@ -2331,6 +2331,24 @@ register_module([
 			// Trim off all the whitespace
 			foreach($page_tags as &$tag)
 				$tag = trim($tag);
+			
+			// Update the inverted search index
+			
+			// Construct an index for the old and new page content
+			$oldindex = search::index(file_get_contents("$env->page.md"));
+			$newindex = search::index($pagedata);
+			// Compare the indexes of the old and new content
+			$additions = [];
+			$removals = [];
+			search::compare_indexes($oldindex, $newindex, $additions, $removals);
+			// Load in the inverted index
+			$invindex = search::load_invindex("./invindex.json");
+			// Merge the changes into the inverted index
+			search::merge_into_invindex($invindex, ids::getid($env->page), $additions, $removals);
+			// Save the inverted index back to disk
+			search::save_invindex("invindex.json", $invindex);
+			
+			
 			
 			if(file_put_contents("$env->page.md", $pagedata) !== false)
 			{

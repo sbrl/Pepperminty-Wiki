@@ -270,8 +270,8 @@ label:not(.link-display-label) { display: inline-block; min-width: 7rem; }
 input[type=text]:not(.link-display), input[type=password], textarea { margin: 0.5rem 0.8rem; }
 input[type=text], input[type=password], textarea, #search-box { padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
 textarea { min-height: 35rem; font-size: 1.25rem; }
-textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); }
-textarea ~ input[type=submit] {  margin: 0.5rem 0.8rem; padding: 0.5rem; font-weight: bolder; }
+textarea, textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); box-sizing: border-box; }
+textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-weight: bolder; }
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
 
 .page-tags-display { margin: 0.5rem 0 0 0; padding: 0; list-style-type: none; }
