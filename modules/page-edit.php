@@ -137,6 +137,12 @@ register_module([
 			// Construct an index for the old and new page content
 			$oldindex = search::index(file_get_contents("$env->page.md"));
 			$newindex = search::index($pagedata);
+			
+			echo("old: ");
+			var_dump($oldindex);
+			echo("new: ");
+			var_dump($newindex);
+			
 			// Compare the indexes of the old and new content
 			$additions = [];
 			$removals = [];
@@ -192,13 +198,14 @@ register_module([
 				else
 					http_response_code(200);
 				
+//				header("content-type: text/plain");
 				header("location: index.php?page=$env->page&edit_status=success&redirect=no");
 				exit();
 			}
 			else
 			{
 				http_response_code(507);
-				exit(page_renderer::render_main("Error saving page - $settings->sitename", "<p>$settings->sitename failed to write your changes to the disk. Your changes have not been saved, but you might be able to recover your edit by pressing the back button in your browser.</p>
+				exit(page_renderer::render_main("Error saving page - $settings->sitename", "<p>$settings->sitename failed to write your changes to the server's disk. Your changes have not been saved, but you might be able to recover your edit by pressing the back button in your browser.</p>
 				<p>Please tell the administrator of this wiki (" . $settings->admindetails["name"] . ") about this problem.</p>"));
 			}
 		});

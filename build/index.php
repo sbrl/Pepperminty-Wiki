@@ -1488,7 +1488,6 @@ class search
 		
 		$index = [];
 		
-		// Regex from 
 		$terms = self::tokenize($source);
 		$i = 0;
 		foreach($terms as $term)
@@ -1559,14 +1558,18 @@ class search
 	 * @param {array} $removed - An array to be filled with the nterms of all
 	 * 							 the removed entries.
 	 */
-	public static function compare_indexes($indexa, $indexb, &$changed, &$removed)
+	public static function compare_indexes($oldindex, $newindex, &$changed, &$removed)
 	{
-		foreach ($indexa as $nterm => $entrya)
+		foreach($oldindex as $nterm => $entry)
 		{
-			if(!isset($indexb[$nterm]))
+			if(!isset($newindex[$nterm]))
 				$removed[] = $nterm;
-			$entryb = $indexb[$nterm];
-			if($entrya !== $entryb) $changed[] = $nterm;
+		}
+		foreach($newindex as $nterm => $entry)
+		{
+			if(!isset($oldindex[$nterm]) or // If this world is new
+			   $newindex[$nterm] !== $oldindex[$nterm]) // If this word has changed
+				$changed[$nterm] = $newindex[$nterm];
 		}
 	}
 	
@@ -1603,6 +1606,13 @@ class search
 				return ($a["freq"] < $b["freq"]) ? +1 : -1;
 			});
 		}
+		
+		// Sort the inverted index by rank
+		uasort($invindex, function($a, $b) {
+			$ac = count($a); $bc = count($b);
+			if($ac == $bc) return 0;
+			return ($ac < $bc) ? +1 : -1;
+		});
 	}
 	
 	public static function save_invindex($filename, &$invindex)
@@ -2284,7 +2294,7 @@ register_module([
 			}
 			
 			$content = "<h1>$title</h1>";
-			$page_tags = implode(", ", (!empty($pageindex->{$env->page}->tags)) ? $pageindex->{$env->page}->tags : [ "" ]);
+			$page_tags = implode(", ", (!empty($pageindex->{$env->page}->tags)) ? $pageindex->{$env->page}->tags : []);
 			if(!$env->is_logged_in and $settings->anonedits)
 			{
 				$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
@@ -2361,6 +2371,12 @@ register_module([
 			// Construct an index for the old and new page content
 			$oldindex = search::index(file_get_contents("$env->page.md"));
 			$newindex = search::index($pagedata);
+			
+			echo("old: ");
+			var_dump($oldindex);
+			echo("new: ");
+			var_dump($newindex);
+			
 			// Compare the indexes of the old and new content
 			$additions = [];
 			$removals = [];
@@ -2416,13 +2432,14 @@ register_module([
 				else
 					http_response_code(200);
 				
+//				header("content-type: text/plain");
 				header("location: index.php?page=$env->page&edit_status=success&redirect=no");
 				exit();
 			}
 			else
 			{
 				http_response_code(507);
-				exit(page_renderer::render_main("Error saving page - $settings->sitename", "<p>$settings->sitename failed to write your changes to the disk. Your changes have not been saved, but you might be able to recover your edit by pressing the back button in your browser.</p>
+				exit(page_renderer::render_main("Error saving page - $settings->sitename", "<p>$settings->sitename failed to write your changes to the server's disk. Your changes have not been saved, but you might be able to recover your edit by pressing the back button in your browser.</p>
 				<p>Please tell the administrator of this wiki (" . $settings->admindetails["name"] . ") about this problem.</p>"));
 			}
 		});

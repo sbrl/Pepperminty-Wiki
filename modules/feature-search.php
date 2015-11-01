@@ -144,7 +144,6 @@ class search
 		
 		$index = [];
 		
-		// Regex from 
 		$terms = self::tokenize($source);
 		$i = 0;
 		foreach($terms as $term)
@@ -215,14 +214,18 @@ class search
 	 * @param {array} $removed - An array to be filled with the nterms of all
 	 * 							 the removed entries.
 	 */
-	public static function compare_indexes($indexa, $indexb, &$changed, &$removed)
+	public static function compare_indexes($oldindex, $newindex, &$changed, &$removed)
 	{
-		foreach ($indexa as $nterm => $entrya)
+		foreach($oldindex as $nterm => $entry)
 		{
-			if(!isset($indexb[$nterm]))
+			if(!isset($newindex[$nterm]))
 				$removed[] = $nterm;
-			$entryb = $indexb[$nterm];
-			if($entrya !== $entryb) $changed[] = $nterm;
+		}
+		foreach($newindex as $nterm => $entry)
+		{
+			if(!isset($oldindex[$nterm]) or // If this world is new
+			   $newindex[$nterm] !== $oldindex[$nterm]) // If this word has changed
+				$changed[$nterm] = $newindex[$nterm];
 		}
 	}
 	
@@ -259,6 +262,13 @@ class search
 				return ($a["freq"] < $b["freq"]) ? +1 : -1;
 			});
 		}
+		
+		// Sort the inverted index by rank
+		uasort($invindex, function($a, $b) {
+			$ac = count($a); $bc = count($b);
+			if($ac == $bc) return 0;
+			return ($ac < $bc) ? +1 : -1;
+		});
 	}
 	
 	public static function save_invindex($filename, &$invindex)
