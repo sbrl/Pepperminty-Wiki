@@ -5,7 +5,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a utility action (that anyone can use) called hash that hashes a given string. Useful when changing a user's password.",
         "id": "action-hash",
-        "lastupdate": 1445170746,
+        "lastupdate": 1444481636,
         "optional": false
     },
     {
@@ -14,7 +14,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Exposes Pepperminty Wiki's new page protection mechanism and makes the protect button in the 'More...' menu on the top bar work.",
         "id": "action-protect",
-        "lastupdate": 1445170746,
+        "lastupdate": 1443596834,
         "optional": false
     },
     {
@@ -23,7 +23,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a 'raw' action that shows you the raw source of a page.",
         "id": "action-raw",
-        "lastupdate": 1445170746,
+        "lastupdate": 1442907118,
         "optional": false
     },
     {
@@ -32,7 +32,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a sidebar to the left hand side of every page. Add '$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
         "id": "extra-sidebar",
-        "lastupdate": 1445170746,
+        "lastupdate": 1438780254,
         "optional": false
     },
     {
@@ -41,7 +41,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
         "id": "feature-redirect",
-        "lastupdate": 1445170746,
+        "lastupdate": 1444299144,
         "optional": false
     },
     {
@@ -50,7 +50,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki. Note that this module, at the moment, just contains test code while I figure out how best to write a search engine.",
         "id": "feature-search",
-        "lastupdate": 1446390331,
+        "lastupdate": 1446473866,
         "optional": false
     },
     {
@@ -59,7 +59,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File:' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1445716955,
+        "lastupdate": 1446021592,
         "optional": false
     },
     {
@@ -68,7 +68,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
-        "lastupdate": 1445170746,
+        "lastupdate": 1444327084,
         "optional": false
     },
     {
@@ -77,7 +77,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to delete pages.",
         "id": "page-delete",
-        "lastupdate": 1445771075,
+        "lastupdate": 1446021592,
         "optional": false
     },
     {
@@ -86,7 +86,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1446388267,
+        "lastupdate": 1446470780,
         "optional": false
     },
     {
@@ -95,7 +95,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that you can use to export your wiki as a .zip file. Uses $settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
         "id": "page-export",
-        "lastupdate": 1445170746,
+        "lastupdate": 1442931546,
         "optional": false
     },
     {
@@ -104,7 +104,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the help action. You really want this one.",
         "id": "page-help",
-        "lastupdate": 1445170746,
+        "lastupdate": 1432664722,
         "optional": false
     },
     {
@@ -113,7 +113,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1445787342,
+        "lastupdate": 1446021592,
         "optional": false
     },
     {
@@ -122,7 +122,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastupdate": 1445170746,
+        "lastupdate": 1444481426,
         "optional": false
     },
     {
@@ -131,7 +131,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to let users user out. For security reasons it is wise to add this module since logging in automatically opens a session that is valid for 30 days.",
         "id": "page-logout",
-        "lastupdate": 1445170746,
+        "lastupdate": 1442931824,
         "optional": false
     },
     {
@@ -140,7 +140,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
         "id": "page-move",
-        "lastupdate": 1445771483,
+        "lastupdate": 1446021592,
         "optional": false
     },
     {
@@ -149,7 +149,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an update page that downloads the latest stable version of Pepperminty Wiki. This module is currently outdated as it doesn't save your module preferences.",
         "id": "page-update",
-        "lastupdate": 1445170746,
+        "lastupdate": 1442932002,
         "optional": false
     },
     {
@@ -158,7 +158,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You reallyshould include this one.",
         "id": "page-view",
-        "lastupdate": 1445789184,
+        "lastupdate": 1446021592,
         "optional": false
     },
     {
@@ -167,7 +167,7 @@
         "author": "Johnny Broadway & Starbeamrainbowlabs",
         "description": "The default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page.",
         "id": "parser-default",
-        "lastupdate": 1446116543,
+        "lastupdate": 1446470780,
         "optional": false
     },
     {
@@ -176,7 +176,7 @@
         "author": "Johnny Broadway, Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Also uses a modified Slimdown engine by Johnny Broadway in order to add support for internal links etc. Please be careful, as this module adds a _ton_ of weight to your installation.",
         "id": "parser-parsedown",
-        "lastupdate": 1445170746,
+        "lastupdate": 1443972016,
         "optional": true
     }
 ]
