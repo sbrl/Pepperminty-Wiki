@@ -68,12 +68,12 @@ register_module([
 				$pagesource = file_get_contents($result["pagename"] . ".md");
 				$context = search::extract_context($_GET["query"], $pagesource);
 				$context = search::highlight_context($_GET["query"], $context);
-				if(strlen($context) == 0)
+				/*if(strlen($context) == 0)
 				{
 					$context = search::strip_markup(file_get_contents("$env->page.md", null, null, null, $settings->search_characters_context * 2));
 					if($pageindex->{$env->page}->size > $settings->search_characters_context * 2)
 						$context .= "...";
-				}
+				}*/
 				
 				
 				// We add 1 to $i here to convert it from an index to a result
@@ -458,33 +458,6 @@ class search
 		
 		return $context;
 	}
-}
-
-/**
- * mb_stripos all occurences
- * from http://www.pontikis.net/tip/?id=16
- * based on http://www.php.net/manual/en/function.strpos.php#87061
- *
- * Find all occurrences of a needle in a haystack (case-insensitive, UTF8)
- *
- * @param string $haystack
- * @param string $needle
- * @return array or false
- */
-function mb_stripos_all($haystack, $needle) {
-	$s = 0; $i = 0;
-	while(is_integer($i)) {
-		$i = mb_stripos($haystack, $needle, $s);
-		if(is_integer($i)) {
-			$aStrPos[] = $i;
-			$s = $i + mb_strlen($needle);
-		}
-	}
-
-	if(isset($aStrPos))
-		return $aStrPos;
-	else
-		return false;
 }
 
 ?>
