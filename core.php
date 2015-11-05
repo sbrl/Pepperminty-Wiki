@@ -7,18 +7,25 @@ $start_time = time(true);
 /////////////// Do not edit below this line unless you know what you are doing! ///////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 $version = "{version}";
+/// Environment ///
 $env = new stdClass();
 $env->action = $settings->defaultaction;
 $env->page = "";
 $env->user = "Anonymous";
 $env->is_logged_in = false;
 $env->is_admin = false;
-
+/// Paths ///
 $paths = new stdClass();
-$paths->pageindex = "pageindex.json";
-$paths->searchindex = "invindex.json";
-$paths->idindex = "idindex.json";
-$paths->upload_file_prefix = "Files/";
+$paths->pageindex = "pageindex.json"; // The pageindex
+$paths->searchindex = "invindex.json"; // The inverted indx used for searching
+$paths->idindex = "idindex.json"; // The index that converts ids to page names
+
+// Prepend the storage data directory to all the defined paths.
+foreach ($paths as &$path) {
+    $path = $settings->data_storage_dir . DIRECTORY_SEPARATOR . $path;
+}
+
+$paths->upload_file_prefix = "Files/"; // The prefix to append to uploaded files
 
 session_start();
 ///////// Login System /////////

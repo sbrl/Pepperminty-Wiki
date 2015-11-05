@@ -33,14 +33,19 @@ $settings->logo_position = "left";
 // branch If there is sufficient demand, a separate stable branch will be
 // created. Note that if you use the automatic updater currently it won't save
 // your module choices.
-// MAKE SURE THAT THIS POINTS TO A *HTTPS* URL, OTHERWISE SOMEONE COULD INJECT A VIRUS INTO YOUR WIKI
+// MAKE SURE THAT THIS POINTS TO A *HTTPS* URL, OTHERWISE SOMEONE COULD INJECT
+// A VIRUS INTO YOUR WIKI
 $settings->updateurl = "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/master/index.php";
 
 // The secret key used to perform 'dangerous' actions, like updating the wiki,
 // and deleting pages. It is strongly advised that you change this!
 $settings->sitesecret = "ed420502615bac9037f8f12abd4c9f02";
 
-
+// The directory in which to store all files, except this main index.php.
+// A single dot ('.') denotes the current directory.
+// Remember to leave the trailing slash from the directory name, as it is added
+// automatically by Pepperminty Wiki.
+// Note that this setting is currently experimental.
 $settings->data_storage_dir = ".";
 
 // Determined whether edit is enabled. Set to false to disable disting for all
