@@ -16,7 +16,7 @@
 $settings = new stdClass();
 
 // The site's name. Used all over the place.
-// Note that by default the session cookie is perfixed with a variant of the
+// Note that by default the session cookie is prefixed with a variant of the
 // sitename so changing this will log everyone out!
 $settings->sitename = "Pepperminty Wiki";
 
@@ -39,6 +39,9 @@ $settings->updateurl = "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/
 // The secret key used to perform 'dangerous' actions, like updating the wiki,
 // and deleting pages. It is strongly advised that you change this!
 $settings->sitesecret = "ed420502615bac9037f8f12abd4c9f02";
+
+
+$settings->data_storage_dir = ".";
 
 // Determined whether edit is enabled. Set to false to disable disting for all
 // users (anonymous or otherwise).
@@ -131,11 +134,11 @@ $settings->export_allow_only_admins = false;
 // 		user-status		Expands to the user's login information
 //						e.g. "Logged in as {name}. | Logout".
 //						e.g. "Browsing as Anonymous. | Login".
-//		
+//
 //		search			Expands to a search box.
-//		
+//
 //		divider			Expands to a divider to separate stuff.
-//		
+//
 //		more			Expands to the "More..." submenu.
 $settings->nav_links = [
 	"user-status",
