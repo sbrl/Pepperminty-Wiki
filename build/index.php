@@ -19,7 +19,7 @@ $start_time = time(true);
 $settings = new stdClass();
 
 // The site's name. Used all over the place.
-// Note that by default the session cookie is perfixed with a variant of the
+// Note that by default the session cookie is prefixed with a variant of the
 // sitename so changing this will log everyone out!
 $settings->sitename = "Pepperminty Wiki";
 
@@ -36,12 +36,20 @@ $settings->logo_position = "left";
 // branch If there is sufficient demand, a separate stable branch will be
 // created. Note that if you use the automatic updater currently it won't save
 // your module choices.
-// MAKE SURE THAT THIS POINTS TO A *HTTPS* URL, OTHERWISE SOMEONE COULD INJECT A VIRUS INTO YOUR WIKI
+// MAKE SURE THAT THIS POINTS TO A *HTTPS* URL, OTHERWISE SOMEONE COULD INJECT
+// A VIRUS INTO YOUR WIKI
 $settings->updateurl = "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/master/index.php";
 
 // The secret key used to perform 'dangerous' actions, like updating the wiki,
 // and deleting pages. It is strongly advised that you change this!
 $settings->sitesecret = "ed420502615bac9037f8f12abd4c9f02";
+
+// The directory in which to store all files, except this main index.php.
+// A single dot ('.') denotes the current directory.
+// Remember to leave the trailing slash from the directory name, as it is added
+// automatically by Pepperminty Wiki.
+// Note that this setting is currently experimental.
+$settings->data_storage_dir = ".";
 
 // Determined whether edit is enabled. Set to false to disable disting for all
 // users (anonymous or otherwise).
@@ -134,11 +142,11 @@ $settings->export_allow_only_admins = false;
 // 		user-status		Expands to the user's login information
 //						e.g. "Logged in as {name}. | Logout".
 //						e.g. "Browsing as Anonymous. | Login".
-//		
+//
 //		search			Expands to a search box.
-//		
+//
 //		divider			Expands to a divider to separate stuff.
-//		
+//
 //		more			Expands to the "More..." submenu.
 $settings->nav_links = [
 	"user-status",
@@ -337,12 +345,26 @@ Actions:
 /////////////// Do not edit below this line unless you know what you are doing! ///////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 $version = "v0.9-dev";
+/// Environment ///
 $env = new stdClass();
 $env->action = $settings->defaultaction;
 $env->page = "";
 $env->user = "Anonymous";
 $env->is_logged_in = false;
 $env->is_admin = false;
+$env->storage_prefix = $settings->data_storage_dir . DIRECTORY_SEPARATOR;
+/// Paths ///
+$paths = new stdClass();
+$paths->pageindex = "pageindex.json"; // The pageindex
+$paths->searchindex = "invindex.json"; // The inverted index used for searching
+$paths->idindex = "idindex.json"; // The index that converts ids to page names
+
+// Prepend the storage data directory to all the defined paths.
+foreach ($paths as &$path) {
+    $path = $env->storage_prefix . $path;
+}
+
+$paths->upload_file_prefix = "Files/"; // The prefix to append to uploaded files
 
 session_start();
 ///////// Login System /////////
@@ -408,7 +430,7 @@ if($env->is_logged_in)
  * @summary	Converts a filesize into a human-readable string.
  * @source	http://php.net/manual/en/function.filesize.php#106569
  * @editor	Starbeamrainbowlabs
- * 
+ *
  * @param	$bytes		 - The number of bytes to convert.
  * @param	$decimals	 - The number of decimal places to preserve.
  */
@@ -422,9 +444,9 @@ function human_filesize($bytes, $decimals = 2)
  * @summary	Calculates the time sincce a particular timestamp and returns a
  * 			human-readable result.
  * @source	http://snippets.pro/snippet/137-php-convert-the-timestamp-to-human-readable-format/
- * 
+ *
  * @param $time - The timestamp to convert.
- * 
+ *
  * @returns {string} - The time since the given timestamp pas a human-readable string.
  */
 function human_time_since($time)
@@ -448,10 +470,10 @@ function human_time_since($time)
 
 /*
  * @summary A recursive glob() function.
- * 
+ *
  * @param $pattern - The glob pattern to use to find filenames.
  * @param $flags - The glob flags to use when finding filenames.
- * 
+ *
  * @returns {array} - An array of the filepaths that match the given glob.
  */
 // From http://in.php.net/manual/en/function.glob.php#106595
@@ -470,17 +492,17 @@ function glob_recursive($pattern, $flags = 0)
 
 /*
  * @summary Gets a list of all the sub pages of the current page.
- * 
+ *
  * @param $pageindex - The pageindex to use to search.
  * @param $pagename - The name of the page to list the sub pages of.
- * 
+ *
  * @returns An objectt containing all the subpages, and their respective distances from the given page name in the pageindex tree.
  */
 function get_subpages($pageindex, $pagename)
 {
 	$pagenames = get_object_vars($pageindex);
 	$result = new stdClass();
-	
+
 	$stem = "$pagename/";
 	$stem_length = strlen($stem);
 	foreach($pagenames as $entry => $value)
@@ -488,7 +510,7 @@ function get_subpages($pageindex, $pagename)
 		if(substr($entry, 0, $stem_length) == $stem)
 		{
 			// We found a subpage
-			
+
 			// Extract the subpage's key relative to the page that we are searching for
 			$subpage_relative_key = substr($entry, $stem_length, -3);
 			// Calculate how many times removed the current subpage is from the current page. 0 = direct descendant.
@@ -497,16 +519,16 @@ function get_subpages($pageindex, $pagename)
 			$result->$entry = $times_removed;
 		}
 	}
-	
+
 	unset($pagenames);
 	return $result;
 }
 
 /*
  * @summary Makes sure that a subpage's parents exist. Note this doesn't check the pagename itself.
- * 
+ *
  * @param The pagename to check.
- * 
+ *
  */
 function check_subpage_parents($pagename)
 {
@@ -517,14 +539,14 @@ function check_subpage_parents($pagename)
 		file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
 		return;
 	}
-	
+
 	$parent_pagename = substr($pagename, 0, strrpos($pagename, "/"));
 	$parent_page_filename = "$parent_pagename.md";
 	if(!file_exists($parent_page_filename))
 	{
 		// This parent page doesn't exist! Create it and add it to the page index.
 		touch($parent_page_filename, 0);
-		
+
 		$newentry = new stdClass();
 		$newentry->filename = $parent_page_filename;
 		$newentry->size = 0;
@@ -532,13 +554,13 @@ function check_subpage_parents($pagename)
 		$newentry->lasteditor = "none";
 		$pageindex->$parent_pagename = $newentry;
 	}
-	
+
 	check_subpage_parents($parent_pagename);
 }
 
 /*
  * @summary makes a path safe
- * 
+ *
  * @details paths may only contain alphanumeric characters, spaces, underscores, and dashes
  */
 function makepathsafe($string)
@@ -550,7 +572,7 @@ function makepathsafe($string)
 
 /*
  * @summary Hides an email address from bots by adding random html entities.
- * 
+ *
  * @returns The mangled email address.
  */
 function hide_email($str)
@@ -568,48 +590,21 @@ function hide_email($str)
 		else
 			$hidden_email .= "&#" . ord($str[$i]) . ";";
 	}
-	
+
 	return $hidden_email;
 }
 /*
  * @summary Checks to see if $haystack starts with $needle.
- * 
+ *
  * @param $haystack {string} The string to search.
  * @param $needle {string} The string to search for at the beginning of $haystack.
- * 
+ *
  * @returns {boolean} Whether $needle can be found at the beginning of $haystack.
  */
 function starts_with($haystack, $needle)
 {
      $length = strlen($needle);
      return (substr($haystack, 0, $length) === $needle);
-}
-
-/**
- * mb_stripos all occurences
- * from http://www.pontikis.net/tip/?id=16
- * based on http://www.php.net/manual/en/function.strpos.php#87061
- *
- * Find all occurrences of a needle in a haystack (case-insensitive, UTF8)
- *
- * @param string $haystack
- * @param string $needle
- * @return array or false
- */
-function mb_stripos_all($haystack, $needle) {
-	$s = 0; $i = 0;
-	while(is_integer($i)) {
-		$i = function_exists("mb_stripos") ? mb_stripos($haystack, $needle, $s) : stripos($haystack, $needle, $s);
-		if(is_integer($i)) {
-			$aStrPos[] = $i;
-			$s = $i + (function_exists("mb_strlen") ? mb_strlen($needle) : strlen($needle));
-		}
-	}
-
-	if(isset($aStrPos))
-		return $aStrPos;
-	else
-		return false;
 }
 
 function system_mime_type_extensions() {
@@ -653,26 +648,26 @@ function system_mime_type_extension($type) {
  * Sort out the pageindex. We create it if it doesn't exist, and load and parse
  * it if it does.
  */
-if(!file_exists("./pageindex.json"))
+if(!file_exists($paths->pageindex))
 {
-	$existingpages = glob_recursive("*.md");
+	$existingpages = glob_recursive($env->storage_prefix . "*.md");
 	$pageindex = new stdClass();
 	// We use a for loop here because foreach doesn't loop over new values inserted
 	// while we were looping
 	for($i = 0; $i < count($existingpages); $i++)
 	{
 		$pagefilename = $existingpages[$i];
-		
+
 		// Create a new entry
 		$newentry = new stdClass();
-		$newentry->filename = utf8_encode($pagefilename); // Store the filename
+		$newentry->filename = utf8_encode(substr($pagefilename, strlen($env->storage_prefix))); // Store the filename
 		$newentry->size = filesize($pagefilename); // Store the page size
 		$newentry->lastmodified = filemtime($pagefilename); // Store the date last modified
 		// Todo find a way to keep the last editor independent of the page index
 		$newentry->lasteditor = utf8_encode("unknown"); // Set the editor to "unknown"
-		// Extract the name of the (sub)page without the ".md"
-		$pagekey = utf8_encode(substr($pagefilename, 0, -3));
-		
+		// Extract the name of the (sub)page without the ".md" or the storage dir
+		$pagekey = utf8_encode(substr($pagefilename, strlen($env->storage_prefix), -3));
+
 		// Subpage parent checker
 		if(strpos($pagekey, "/") !== false)
 		{
@@ -681,7 +676,7 @@ if(!file_exists("./pageindex.json"))
 			// make sure that it actually exists. If it doesn't, then we need to
 			// create it.
 			$subpage_parent_key = substr($pagekey, 0, strrpos($pagekey, "/"));
-			$subpage_parent_filename = "$subpage_parent_key.md";
+			$subpage_parent_filename = "$env->storage_prefix$subpage_parent_key.md";
 			if(array_search($subpage_parent_filename, $existingpages) === false)
 			{
 				// Our parent page doesn't actually exist - create it
@@ -691,26 +686,26 @@ if(!file_exists("./pageindex.json"))
 				$existingpages[] = $subpage_parent_filename;
 			}
 		}
-		
+
 		// Store the new entry in the new page index
 		$pageindex->$pagekey = $newentry;
 	}
-	file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+	file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
 	unset($existingpages);
 }
 else
 {
 	$pageindex_read_start = microtime(true);
-	$pageindex = json_decode(file_get_contents("./pageindex.json"));
+	$pageindex = json_decode(file_get_contents($paths->pageindex));
 	header("x-pageindex-decode-time: " . round(microtime(true) - $pageindex_read_start, 6) . "ms");
 }
 
 //////////////////////////
 ///// Page id system /////
 //////////////////////////
-if(!file_exists("idindex.json"))
-	file_put_contents("idindex.json", "{}");
-$idindex = json_decode(file_get_contents("idindex.json"));
+if(!file_exists($paths->idindex))
+	file_put_contents($paths->idindex, "{}");
+$idindex = json_decode(file_get_contents($paths->idindex));
 class ids
 {
 	/*
@@ -719,30 +714,30 @@ class ids
 	public static function getid($pagename)
 	{
 		global $idindex;
-		
+
 		foreach ($idindex as $id => $entry)
 		{
 			if($entry == $pagename)
 				return $id;
 		}
-		
+
 		// This pagename doesn't have an id - assign it one quick!
 		return self::assign($pagename);
 	}
-	
+
 	/*
 	 * @summary Gets the page name associated with the given page id.
 	 */
 	public static function getpagename($id)
 	{
 		global $idindex;
-		
+
 		if(!isset($idindex->$id))
 			return false;
 		else
 			return $idindex->$id;
 	}
-	
+
 	/*
 	 * @summary Assigns an id to a pagename. Doesn't check to make sure that
 	 * 			pagename doesn't exist in the pageindex.
@@ -750,18 +745,18 @@ class ids
 	protected static function assign($pagename)
 	{
 		global $idindex;
-		
+
 		$nextid = count(array_keys(get_object_vars($idindex)));
-		
+
 		if(isset($idindex->$nextid))
 			throw new Exception("The pageid is corrupt! Pepperminty Wiki generated the id $nextid, but that id is already in use.");
-		
+
 		// Update the id index
 		$idindex->$nextid = utf8_encode($pagename);
-		
+
 		// Save the id index
-		file_put_contents("idindex.json", json_encode($idindex));
-		
+		file_put_contents($paths->idindex, json_encode($idindex));
+
 		return $nextid;
 	}
 }
@@ -821,13 +816,13 @@ class page_renderer
 	</body>
 </html>
 ";
-	
+
 	public static $main_content_template = "{navigation-bar}
 		<h1 class='sitename'>{sitename}</h1>
 		<main>
 		{content}
 		</main>
-		
+
 		<footer>
 			<p>{footer-message}</p>
 			<p>Powered by Pepperminty Wiki v0.9-dev, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
@@ -844,17 +839,17 @@ class page_renderer
 			<p><em>Timed at {generation-date}</em></p>
 			<p><em>Powered by Pepperminty Wiki v0.9-dev.</em></p>
 		</footer>";
-	
+
 	// An array of functions that have been registered to process the
 	// find / replace array before the page is rendered. Note that the function
 	// should take a *reference* to an array as its only argument.
 	protected static $part_processors = [];
-	
+
 	// Registers a function as a part post processor.
 	public static function register_part_preprocessor($function)
 	{
 		global $settings;
-		
+
 		// Make sure that the function we are about to register is valid
 		if(!is_callable($function))
 		{
@@ -863,19 +858,19 @@ class page_renderer
 			$admin_email = hide_email($settings->admindetails["email"]);
 			exit(page_renderer::render("$settings->sitename - Module Error", "<p>$settings->sitename has got a misbehaving module installed that tried to register an invalid HTML handler with the page renderer. Please contact $settings->sitename's administrator $admin_name at <a href='mailto:$admin_email'>$admin_email</a>."));
 		}
-		
+
 		self::$part_processors[] = $function;
-		
+
 		return true;
 	}
-	
+
 	public static function render($title, $content, $body_template = false)
 	{
 		global $settings, $start_time, $version;
-		
+
 		if($body_template === false)
 			$body_template = self::$main_content_template;
-		
+
 		if(strlen($settings->logo_url) > 0)
 		{
 			// A logo url has been specified
@@ -892,50 +887,50 @@ class page_renderer
 					throw new Exception("Invalid logo_position '$settings->logo_position'. Valid values are either \"left\" or \"right\" and are case sensitive.");
 			}
 		}
-		
+
 		$parts = [
 			"{body}" => $body_template,
-			
+
 			"{sitename}" => $logo_html,
 			"v0.9-dev" => $version,
 			"{favicon-url}" => $settings->favicon,
 			"{header-html}" => self::get_css_as_html(),
-			
+
 			"{navigation-bar}" => self::render_navigation_bar($settings->nav_links, $settings->nav_links_extra, "top"),
 			"{navigation-bar-bottom}" => self::render_navigation_bar($settings->nav_links_bottom, [], "bottom"),
-			
+
 			"{admin-details-name}" => $settings->admindetails["name"],
 			"{admin-details-email}" => $settings->admindetails["email"],
-			
+
 			"{admins-name-list}" => implode(", ", $settings->admins),
-			
+
 			"{generation-date}" => date("l jS \of F Y \a\\t h:ia T"),
-			
+
 			"{all-pages-datalist}" => self::generate_all_pages_datalist(),
-			
+
 			"{footer-message}" => $settings->footer_message,
-			
+
 			/// Secondary Parts ///
-			
+
 			"{content}" => $content,
 			"{title}" => $title,
 		];
-		
+
 		// Pass the parts through the part processors
 		foreach(self::$part_processors as $function)
 		{
 			$function($parts);
 		}
-		
+
 		$result = self::$html_template;
-		
+
 		$result = str_replace(array_keys($parts), array_values($parts), $result);
-		
+
 		$result = str_replace([
-			
+
 		], [
 		], $result);
-		
+
 		$result = str_replace("{generation-time-taken}", microtime(true) - $start_time, $result);
 		return $result;
 	}
@@ -947,24 +942,24 @@ class page_renderer
 	{
 		return self::render($title, $content, self::$minimal_content_template);
 	}
-	
-	
+
+
 	public static function get_css_as_html()
 	{
 		global $settings;
-		
+
 		if(preg_match("/^[^\/]*\/\/|^\//", $settings->css))
 			return "<link rel='stylesheet' href='$settings->css' />";
 		else
 			return "<style>$settings->css</style>";
 	}
-	
+
 	public static $nav_divider = "<span class='nav-divider inflexible'> | </span>";
-	
+
 	/*
 	 * @summary Function to render a navigation bar from an array of links. See
 	 * 			$settings->nav_links for format information.
-	 * 
+	 *
 	 * @param $nav_links - The links to add to the navigation bar.
 	 * @param $nav_links_extra - The extra nav links to add to the "More..."
 	 * 							 menu.
@@ -973,7 +968,7 @@ class page_renderer
 	{
 		global $settings, $env;
 		$result = "<nav class='$class'>\n";
-		
+
 		// Loop over all the navigation links
 		foreach($nav_links as $item)
 		{
@@ -993,22 +988,22 @@ class page_renderer
 						else
 							$result .= "<span class='inflexible'>Browsing as Anonymous.</span>" . /*page_renderer::$nav_divider . */"<span><a href='index.php?action=login'>Login</a></span>" . page_renderer::$nav_divider;
 						break;
-					
+
 					case "search": // Displays a search bar
 						$result .= "<span class='inflexible'><form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /><input type='hidden' name='search-redirect' value='true' /></form></span>";
 						break;
-					
+
 					case "divider": // Displays a divider
 						$result .= page_renderer::$nav_divider;
 						break;
-					
+
 					case "menu":
 						$result .= "<span class='inflexible nav-more'><label for='more-menu-toggler'>More...</label>
 <input type='checkbox' class='off-screen' id='more-menu-toggler' />";
 						$result .= page_renderer::render_navigation_bar($nav_links_extra, [], "nav-more-menu");
 						$result .= "</span>";
 						break;
-					
+
 					// It isn't a keyword, so just output it directly
 					default:
 						$result .= "<span>$item</span>";
@@ -1020,7 +1015,7 @@ class page_renderer
 				$result .= "<span><a href='" . str_replace("{page}", $env->page, $item[1]) . "'>$item[0]</a></span>";
 			}
 		}
-		
+
 		$result .= "</nav>";
 		return $result;
 	}
@@ -1031,21 +1026,21 @@ class page_renderer
 		if(in_array($name, $settings->admins))
 			$result .= $settings->admindisplaychar;
 		$result .= $name;
-		
+
 		return $result;
 	}
-	
+
 	public static function generate_all_pages_datalist()
 	{
 		global $pageindex;
-		
+
 		$result = "<datalist id='allpages'>\n";
 		foreach($pageindex as $pagename => $pagedetails)
 		{
 			$result .= "\t\t\t<option value='$pagename' />\n";
 		}
 		$result .= "\t\t</datalist>";
-		
+
 		return $result;
 	}
 }
@@ -1102,7 +1097,7 @@ function add_parser($name, $parser_code)
 	global $parsers;
 	if(isset($parsers[$name]))
 		throw new Exception("Can't register parser with name '$name' because a parser with that name already exists.");
-	
+
 	$parsers[$name] = $parser_code;
 }
 function parse_page_source($source)
@@ -1110,7 +1105,7 @@ function parse_page_source($source)
 	global $settings, $parsers;
 	if(!isset($parsers[$settings->parser]))
 		exit(page_renderer::render_main("Parsing error - $settings->sitename", "<p>Parsing some page source data failed. This is most likely because $settings->sitename has the parser setting set incorrectly. Please contact <a href='mailto:" . hide_email($settings->admindetails["email"]) . "'>" . $settings->admindetails["name"] . "</a>, your $settings->sitename Administrator."));
-	
+
 /* Not needed atm because escaping happens when saving, not when rendering *
 	if($settings->clean_raw_html)
 		$source = htmlentities($source, ENT_QUOTES | ENT_HTML5);
