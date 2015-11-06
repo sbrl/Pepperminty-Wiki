@@ -14,15 +14,16 @@ $env->page = "";
 $env->user = "Anonymous";
 $env->is_logged_in = false;
 $env->is_admin = false;
+$env->storage_prefix = $settings->data_storage_dir . DIRECTORY_SEPARATOR;
 /// Paths ///
 $paths = new stdClass();
 $paths->pageindex = "pageindex.json"; // The pageindex
-$paths->searchindex = "invindex.json"; // The inverted indx used for searching
+$paths->searchindex = "invindex.json"; // The inverted index used for searching
 $paths->idindex = "idindex.json"; // The index that converts ids to page names
 
 // Prepend the storage data directory to all the defined paths.
 foreach ($paths as &$path) {
-    $path = $settings->data_storage_dir . DIRECTORY_SEPARATOR . $path;
+    $path = $env->storage_prefix . $path;
 }
 
 $paths->upload_file_prefix = "Files/"; // The prefix to append to uploaded files
@@ -309,9 +310,9 @@ function system_mime_type_extension($type) {
  * Sort out the pageindex. We create it if it doesn't exist, and load and parse
  * it if it does.
  */
-if(!file_exists("./pageindex.json"))
+if(!file_exists($paths->pageindex))
 {
-	$existingpages = glob_recursive("*.md");
+	$existingpages = glob_recursive($env->storage_prefix . "*.md");
 	$pageindex = new stdClass();
 	// We use a for loop here because foreach doesn't loop over new values inserted
 	// while we were looping
@@ -321,13 +322,13 @@ if(!file_exists("./pageindex.json"))
 
 		// Create a new entry
 		$newentry = new stdClass();
-		$newentry->filename = utf8_encode($pagefilename); // Store the filename
+		$newentry->filename = utf8_encode(substr($pagefilename, strlen($env->storage_prefix))); // Store the filename
 		$newentry->size = filesize($pagefilename); // Store the page size
 		$newentry->lastmodified = filemtime($pagefilename); // Store the date last modified
 		// Todo find a way to keep the last editor independent of the page index
 		$newentry->lasteditor = utf8_encode("unknown"); // Set the editor to "unknown"
-		// Extract the name of the (sub)page without the ".md"
-		$pagekey = utf8_encode(substr($pagefilename, 0, -3));
+		// Extract the name of the (sub)page without the ".md" or the storage dir
+		$pagekey = utf8_encode(substr($pagefilename, strlen($env->storage_prefix), -3));
 
 		// Subpage parent checker
 		if(strpos($pagekey, "/") !== false)
@@ -337,7 +338,7 @@ if(!file_exists("./pageindex.json"))
 			// make sure that it actually exists. If it doesn't, then we need to
 			// create it.
 			$subpage_parent_key = substr($pagekey, 0, strrpos($pagekey, "/"));
-			$subpage_parent_filename = "$subpage_parent_key.md";
+			$subpage_parent_filename = "$env->storage_prefix$subpage_parent_key.md";
 			if(array_search($subpage_parent_filename, $existingpages) === false)
 			{
 				// Our parent page doesn't actually exist - create it
@@ -351,22 +352,22 @@ if(!file_exists("./pageindex.json"))
 		// Store the new entry in the new page index
 		$pageindex->$pagekey = $newentry;
 	}
-	file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+	file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
 	unset($existingpages);
 }
 else
 {
 	$pageindex_read_start = microtime(true);
-	$pageindex = json_decode(file_get_contents("./pageindex.json"));
+	$pageindex = json_decode(file_get_contents($paths->pageindex));
 	header("x-pageindex-decode-time: " . round(microtime(true) - $pageindex_read_start, 6) . "ms");
 }
 
 //////////////////////////
 ///// Page id system /////
 //////////////////////////
-if(!file_exists("idindex.json"))
-	file_put_contents("idindex.json", "{}");
-$idindex = json_decode(file_get_contents("idindex.json"));
+if(!file_exists($paths->idindex))
+	file_put_contents($paths->idindex, "{}");
+$idindex = json_decode(file_get_contents($paths->idindex));
 class ids
 {
 	/*
@@ -416,7 +417,7 @@ class ids
 		$idindex->$nextid = utf8_encode($pagename);
 
 		// Save the id index
-		file_put_contents("idindex.json", json_encode($idindex));
+		file_put_contents($paths->idindex, json_encode($idindex));
 
 		return $nextid;
 	}
