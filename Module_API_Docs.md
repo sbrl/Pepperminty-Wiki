@@ -2,6 +2,67 @@ Module API Documentation
 ========================
 The core of Pepperminty Wik exposes several global objects and functions that you can use to write your own modules. This page documents these objects and functions so that you can create your own modules more easily.
 
+Indexes
+-------
+Pepperminty Wiki maintains several indexes containing various information about the current site that you can utilise. Some of them also have an 'API' of sorts that you can use to interact with them.
+
+### `pageindex.json`
+This is by _far_ the most important index. It contains an entry for each page, under which a number of interesting pieces of information are stored. It's automatically loaded into the global variable `$pageindex` too, so you don't even have to read it in. Here's an example pageindex:
+
+```json
+{
+    "Internal link": {
+        "filename": "Internal link.md",
+        "size": 120,
+        "lastmodified": 1446019377,
+        "lasteditor": "admin",
+        "tags": [
+            "testing",
+            "test tag with spaces",
+            "really really really really really really long tag"
+        ]
+    },
+    "Main Page": {
+        "filename": "Main Page.md",
+        "size": 151,
+        "lastmodified": 1446388276,
+        "lasteditor": "admin",
+        "tags": []
+    },
+    "Internal link\/Sub": {
+        "filename": "Internal link\/Sub.md",
+        "size": 35,
+        "lastmodified": 1446370194,
+        "lasteditor": "admin",
+        "tags": [
+            "test"
+        ]
+    },
+    "Files\/AJ Scr.png": {
+        "filename": "Files\/AJ Scr.png.md",
+        "size": 29,
+        "lastmodified": 1445501914,
+        "lasteditor": "admin",
+        "uploadedfile": true,
+        "uploadedfilepath": "Files\/AJ Scr.png",
+        "uploadedfilemime": "image\/png"
+    }
+}
+```
+
+Currently, Pepperminty Wiki is configured to pretty print the json in the pageindex when saving it to disk, so if you find yourself saving the pageindex please do the same.
+
+Note that in the future, when alternate data storage directories are supported, the `$entry->filename` will *not* contain the `$env->storage_prefix` prefix. You will need to add this manually if you use it.
+
+### `idindex.json`
+The id index converts page ids into page names and vice versa. It's loaded into the global variable `$idindex`, but you normally wouldn't need to touch that, as there's a seamless API that you can use instead:
+
+#### `ids::getid($pagename)`
+Gets the id associated with the given pagename. If it doesn'texist it will be created.
+
+#### `ids::getpagename($id)`
+Gets the page name associated with the given id. If it doesn't exist `false` will be returned.
+
 Functions
 ---------
 
