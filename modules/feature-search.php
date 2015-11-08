@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Search",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki. Note that this module, at the moment, just contains test code while I figure out how best to write a search engine.",
 	"id" => "feature-search",
@@ -13,7 +13,7 @@ register_module([
 			
 			header("content-type: text/plain");
 			
-			$source = file_get_contents("$env->page.md");
+			$source = file_get_contents("$env->storage_prefix$env->page.md");
 			
 			$index = search::index($source);
 			
@@ -35,11 +35,11 @@ register_module([
 			
 			$search_start = microtime(true);
 			
-			$invindex = search::load_invindex("invindex.json");
+			$invindex = search::load_invindex($paths->searchindex);
 			$results = search::query_invindex($_GET["query"], $invindex);
-			
+
 			$search_end = microtime(true) - $search_start;
-			
+
 			$title = $_GET["query"] . " - Search results - $settings->sitename";
 			
 			$content = "<section>\n";
@@ -65,7 +65,7 @@ register_module([
 			foreach($results as $result)
 			{
 				$link = "?page=" . rawurlencode($result["pagename"]);
-				$pagesource = file_get_contents($result["pagename"] . ".md");
+				$pagesource = file_get_contents($env->storage_prefix . $result["pagename"] . ".md");
 				$context = search::extract_context($_GET["query"], $pagesource);
 				$context = search::highlight_context($_GET["query"], $context);
 				/*if(strlen($context) == 0)
@@ -102,7 +102,7 @@ class search
 	public static $stop_words = [
 		"a", "about", "above", "above", "across", "after", "afterwards", "again",
 		"against", "all", "almost", "alone", "along", "already", "also",
-		"although", "always", "am", "among", "amongst", "amoungst", "amount", 
+		"although", "always", "am", "among", "amongst", "amoungst", "amount",
 		"an", "and", "another", "any", "anyhow", "anyone", "anything", "anyway",
 		"anywhere", "are", "around", "as", "at", "back", "be", "became",
 		"because", "become", "becomes", "becoming", "been", "before",
@@ -192,7 +192,7 @@ class search
 		$invindex = [];
 		foreach($pageindex as $pagename => $pagedetails)
 		{
-			$pagesource = file_get_contents("$pagename.md");
+			$pagesource = file_get_contents("$env->storage_prefix$pagename.md");
 			$index = self::index($pagesource);
 			
 			self::merge_into_invindex($invindex, ids::getid($pagename), $index);

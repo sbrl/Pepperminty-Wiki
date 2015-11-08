@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Export",
-	"version" => "0.2",
+	"version" => "0.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that you can use to export your wiki as a .zip file. Uses \$settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
 	"id" => "page-export",
@@ -27,7 +27,7 @@ register_module([
 			
 			foreach($pageindex as $entry)
 			{
-				$zip->addFile("./$entry->filename", $entry->filename);
+				$zip->addFile("$env->storage_prefix$entry->filename", $entry->filename);
 			}
 			
 			if($zip->close() !== true)

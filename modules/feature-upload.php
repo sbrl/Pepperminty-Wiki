@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Uploader",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File:' prefix.",
 	"id" => "feature-upload",
@@ -92,7 +92,7 @@ register_module([
 					
 					$file_extension = system_mime_type_extension($mime_type);
 					
-					$new_filename = "Files/$target_name.$file_extension";
+					$new_filename = "$paths->upload_file_prefix$target_name.$file_extension";
 					$new_description_filename = "$new_filename.md";
 					
 					if(isset($pageindex->$new_filename))
@@ -101,20 +101,19 @@ register_module([
 					if(!file_exists("Files"))
 						mkdir("Files", 0664);
 					
-					if(!move_uploaded_file($temp_filename, $new_filename))
+					if(!move_uploaded_file($temp_filename, $env->storage_prefix . $new_filename))
 					{
 						http_response_code(409);
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that $settings->sitename has been attacked. Please contact " . $settings->admindetails . ", your $settings->sitename Administrator.</p>"));
 					}
 					
-					file_put_contents($new_description_filename, $_POST["description"]);
-					
 					$description = $_POST["description"];
 					
+					// Escape the raw html in the provided description if the setting is enabled
 					if($settings->clean_raw_html)
 						$description = htmlentities($description, ENT_QUOTES);
 					
-					file_put_contents($new_description_filename, $description);
+					file_put_contents($env->storage_prefix . $new_description_filename, $description);
 					
 					// Construct a new entry for the pageindex
 					$entry = new stdClass();
@@ -133,7 +132,7 @@ register_module([
 					$pageindex->$new_filename = $entry;
 					
 					// Save the pageindex
-					file_put_contents("pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+					file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
 					
 					header("location: ?action=view&page=$new_filename&upload=success");
 					
@@ -143,8 +142,24 @@ register_module([
 		add_action("preview", function() {
 			global $settings, $env, $pageindex;
 			
-			$filepath = $pageindex->{$env->page}->uploadedfilepath;
+			$filepath = $env->storage_prefix . $pageindex->{$env->page}->uploadedfilepath;
 			$mime_type = $pageindex->{$env->page}->uploadedfilemime;
+			
+			if(isset($_GET["size"]) and $_GET["size"] == "original")
+			{
+				// Get the file size
+				$filesize = filesize($filepath);
+				
+				// Send some headers
+				header("content-length: $filesize");
+				header("content-type: $mime_type");
+				
+				// Open the file and send it to the user
+				$handle = fopen($filepath, "rb");
+				fpassthru($handle);
+				fclose($handle);
+				exit();
+			}
 			
 			// Determine the target size of the image
 			$target_size = 512;
@@ -220,6 +235,8 @@ register_module([
 				$filepath = $pageindex->{$env->page}->uploadedfilepath;
 				$mime_type = $pageindex->{$env->page}->uploadedfilemime;
 				$image_link = "//" . $_SERVER["SERVER_NAME"] . dirname($_SERVER["SCRIPT_NAME"]) . $filepath;
+				if($env->storage_prefix !== "./")
+					$image_link = "?action=preview&size=original&page=" . rawurlencode($env->page);
 				
 				$preview_sizes = [ 256, 512, 768, 1024, 1536 ];
 				$preview_html = "<figure class='preview'>

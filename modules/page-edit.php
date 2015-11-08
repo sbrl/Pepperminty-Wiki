@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.11",
+	"version" => "0.12",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -19,7 +19,7 @@ register_module([
 		add_action("edit", function() {
 			global $pageindex, $settings, $env;
 			
-			$filename = "$env->page.md";
+			$filename = "$env->storage_prefix$env->page.md";
 			$page = $env->page;
 			$creatingpage = !isset($pageindex->$page);
 			if((isset($_GET["newpage"]) and $_GET["newpage"] == "true") or $creatingpage)
@@ -104,7 +104,7 @@ register_module([
 			{
 				http_response_code(403);
 				header("refresh: 5; url=index.php?page=$env->page");
-				exit("$env->page is protected, and you aren't logged in as an administrastor or moderator. Your edit was not saved. Redirecting in 5 seconds...");
+				exit("$env->page is protected, and you aren't logged in as an administrator or moderator. Your edit was not saved. Redirecting in 5 seconds...");
 			}
 			if(!isset($_POST["content"]))
 			{
@@ -114,10 +114,10 @@ register_module([
 			}
 			
 			// Make sure that the directory in which the page needs to be saved exists
-			if(!is_dir(dirname("$env->page.md")))
+			if(!is_dir(dirname("$env->storage_prefix$env->page.md")))
 			{
 				// Recursively create the directory if needed
-				mkdir(dirname("$env->page.md"), null, true);
+				mkdir(dirname("$env->storage_prefix$env->page.md"), null, true);
 			}
 			
 			// Read in the new page content
@@ -155,7 +155,7 @@ register_module([
 			
 			
 			
-			if(file_put_contents("$env->page.md", $pagedata) !== false)
+			if(file_put_contents("$env->storage_prefix$env->page.md", $pagedata) !== false)
 			{
 				$page = $env->page;
 				// Make sure that this page's parents exist
@@ -187,10 +187,10 @@ register_module([
 				}
 				
 				if($pagedata !== $pagedata_orig)
-					file_put_contents("$env->page.md", $pagedata);
+					file_put_contents("$env->storage_prefix$env->page.md", $pagedata);
 				
 				
-				file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+				file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
 				
 				if(isset($_GET["newpage"]))
 					http_response_code(201);

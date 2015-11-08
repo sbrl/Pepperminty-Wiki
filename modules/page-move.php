@@ -62,12 +62,12 @@ register_module([
 				// Move the file in the pageindex
 				$pageindex->$new_name->uploadedfilepath = $new_name;
 				// Move the file on disk
-				rename($env->page, $new_name);
+				rename($env->storage_prefix . $env->page, $env->storage_prefix . $new_name);
 			}
 			file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
 			
 			//move the page on the disk
-			rename("$env->page.md", "$new_name.md");
+			rename("$env->storage_prefix$env->page.md", "$env->storage_prefix$new_name.md");
 			
 			exit(page_renderer::render_main("Moving $env->page", "<p><a href='index.php?page=$env->page'>$env->page</a> has been moved to <a href='index.php?page=$new_name'>$new_name</a> successfully.</p>"));
 		});

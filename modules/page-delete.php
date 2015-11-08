@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page deleter",
-	"version" => "0.7",
+	"version" => "0.8",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to delete pages.",
 	"id" => "page-delete",
@@ -30,11 +30,11 @@ register_module([
 			// Delete the associated file if it exists
 			if(!empty($pageindex->$page->uploadedfile))
 			{
-				unlink($pageindex->$page->uploadedfilepath);
+				unlink($env->storage_prefix . $pageindex->$page->uploadedfilepath);
 			}
 			unset($pageindex->$page); //delete the page from the page index
-			file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT)); //save the new page index
-			unlink("./$env->page.md"); //delete the page from the disk
+			file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT)); //save the new page index
+			unlink("$env->storage_prefix$env->page.md"); //delete the page from the disk
 
 			exit(page_renderer::render_main("Deleting $env->page - $settings->sitename", "<p>$env->page has been deleted. <a href='index.php'>Go back to the main page</a>.</p>"));
 		});
