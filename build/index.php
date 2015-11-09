@@ -1,6 +1,14 @@
 <?php
 $start_time = time(true);
 
+// For debugging purposes. Remove or comment out for live sites.
+// This will always be commented out for a release.
+if(file_exists("php_error.php"))
+{
+    require("php_error.php");
+    \php_error\reportErrors([ "error_reporting_on" => E_ALL | E_STRICT ]);
+}
+
 
 /*
  * Pepperminty Wiki
@@ -46,10 +54,10 @@ $settings->sitesecret = "ed420502615bac9037f8f12abd4c9f02";
 
 // The directory in which to store all files, except this main index.php.
 // A single dot ('.') denotes the current directory.
-// Remember to leave the trailing slash from the directory name, as it is added
+// Remember to omit the trailing slash from the directory name, as it is added
 // automatically by Pepperminty Wiki.
 // Note that this setting is currently experimental.
-$settings->data_storage_dir = ".";
+$settings->data_storage_dir = "../data_test";
 
 // Determined whether edit is enabled. Set to false to disable disting for all
 // users (anonymous or otherwise).
@@ -1155,42 +1163,42 @@ register_module([
 
 register_module([
 	"name" => "Page protection",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Exposes Pepperminty Wiki's new page protection mechanism and makes the protect button in the 'More...' menu on the top bar work.",
 	"id" => "action-protect",
 	"code" => function() {
 		add_action("protect", function() {
 			global $env, $pageindex;
-			
+
 			// Make sure that the user is logged in as an admin / mod.
 			if($env->is_admin)
 			{
 				// They check out ok, toggle the page's protection.
 				$page = $env->page;
-				
+
 				$toggled = false;
 				if(!isset($pageindex->$page->protect))
 				{
 					$pageindex->$page->protect = true;
 					$toggled = true;
 				}
-				
+
 				if(!$toggled && $pageindex->$page->protect === true)
 				{
 					$pageindex->$page->protected = false;
 					$toggled = false;
 				}
-				
+
 				if(!$toggled && $pageindex->$page->protect === false)
 				{
 					$pageindex->$page->protected = true;
 					$toggled = true;
 				}
-				
+
 				// Save the pageindex
-				file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
-				
+				file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
+
 				$state = ($pageindex->$page->protect ? "enabled" : "disabled");
 				$title = "Page protection $state.";
 				exit(page_renderer::render_main($title, "<p>Page protection for $env->page has been $state.</p><p><a href='?action=$env->defaultaction&page=$env->page'>Go back</a>."));
@@ -1208,18 +1216,18 @@ register_module([
 
 register_module([
 	"name" => "Raw page source",
-	"version" => "0.3",
+	"version" => "0.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a 'raw' action that shows you the raw source of a page.",
 	"id" => "action-raw",
 	"code" => function() {
 		add_action("raw", function() {
 			global $env;
-			
+
 			http_response_code(307);
 			header("x-filename: " . rawurlencode($env->page) . ".md");
 			header("content-type: text/markdown");
-			exit(file_get_contents("$env->page.md"));
+			exit(file_get_contents("$env->storage_prefix$env->page.md"));
 			exit();
 		});
 	}
@@ -1372,7 +1380,7 @@ register_module([
 
 register_module([
 	"name" => "Search",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki. Note that this module, at the moment, just contains test code while I figure out how best to write a search engine.",
 	"id" => "feature-search",
@@ -1384,7 +1392,7 @@ register_module([
 			
 			header("content-type: text/plain");
 			
-			$source = file_get_contents("$env->page.md");
+			$source = file_get_contents("$env->storage_prefix$env->page.md");
 			
 			$index = search::index($source);
 			
@@ -1406,11 +1414,11 @@ register_module([
 			
 			$search_start = microtime(true);
 			
-			$invindex = search::load_invindex("invindex.json");
+			$invindex = search::load_invindex($paths->searchindex);
 			$results = search::query_invindex($_GET["query"], $invindex);
-			
+
 			$search_end = microtime(true) - $search_start;
-			
+
 			$title = $_GET["query"] . " - Search results - $settings->sitename";
 			
 			$content = "<section>\n";
@@ -1436,7 +1444,7 @@ register_module([
 			foreach($results as $result)
 			{
 				$link = "?page=" . rawurlencode($result["pagename"]);
-				$pagesource = file_get_contents($result["pagename"] . ".md");
+				$pagesource = file_get_contents($env->storage_prefix . $result["pagename"] . ".md");
 				$context = search::extract_context($_GET["query"], $pagesource);
 				$context = search::highlight_context($_GET["query"], $context);
 				/*if(strlen($context) == 0)
@@ -1473,7 +1481,7 @@ class search
 	public static $stop_words = [
 		"a", "about", "above", "above", "across", "after", "afterwards", "again",
 		"against", "all", "almost", "alone", "along", "already", "also",
-		"although", "always", "am", "among", "amongst", "amoungst", "amount", 
+		"although", "always", "am", "among", "amongst", "amoungst", "amount",
 		"an", "and", "another", "any", "anyhow", "anyone", "anything", "anyway",
 		"anywhere", "are", "around", "as", "at", "back", "be", "became",
 		"because", "become", "becomes", "becoming", "been", "before",
@@ -1563,7 +1571,7 @@ class search
 		$invindex = [];
 		foreach($pageindex as $pagename => $pagedetails)
 		{
-			$pagesource = file_get_contents("$pagename.md");
+			$pagesource = file_get_contents("$env->storage_prefix$pagename.md");
 			$index = self::index($pagesource);
 			
 			self::merge_into_invindex($invindex, ids::getid($pagename), $index);
@@ -1836,7 +1844,7 @@ class search
 
 register_module([
 	"name" => "Uploader",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File:' prefix.",
 	"id" => "feature-upload",
@@ -1927,7 +1935,7 @@ register_module([
 					
 					$file_extension = system_mime_type_extension($mime_type);
 					
-					$new_filename = "Files/$target_name.$file_extension";
+					$new_filename = "$paths->upload_file_prefix$target_name.$file_extension";
 					$new_description_filename = "$new_filename.md";
 					
 					if(isset($pageindex->$new_filename))
@@ -1936,20 +1944,19 @@ register_module([
 					if(!file_exists("Files"))
 						mkdir("Files", 0664);
 					
-					if(!move_uploaded_file($temp_filename, $new_filename))
+					if(!move_uploaded_file($temp_filename, $env->storage_prefix . $new_filename))
 					{
 						http_response_code(409);
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that $settings->sitename has been attacked. Please contact " . $settings->admindetails . ", your $settings->sitename Administrator.</p>"));
 					}
 					
-					file_put_contents($new_description_filename, $_POST["description"]);
-					
 					$description = $_POST["description"];
 					
+					// Escape the raw html in the provided description if the setting is enabled
 					if($settings->clean_raw_html)
 						$description = htmlentities($description, ENT_QUOTES);
 					
-					file_put_contents($new_description_filename, $description);
+					file_put_contents($env->storage_prefix . $new_description_filename, $description);
 					
 					// Construct a new entry for the pageindex
 					$entry = new stdClass();
@@ -1968,7 +1975,7 @@ register_module([
 					$pageindex->$new_filename = $entry;
 					
 					// Save the pageindex
-					file_put_contents("pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+					file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
 					
 					header("location: ?action=view&page=$new_filename&upload=success");
 					
@@ -1978,8 +1985,24 @@ register_module([
 		add_action("preview", function() {
 			global $settings, $env, $pageindex;
 			
-			$filepath = $pageindex->{$env->page}->uploadedfilepath;
+			$filepath = $env->storage_prefix . $pageindex->{$env->page}->uploadedfilepath;
 			$mime_type = $pageindex->{$env->page}->uploadedfilemime;
+			
+			if(isset($_GET["size"]) and $_GET["size"] == "original")
+			{
+				// Get the file size
+				$filesize = filesize($filepath);
+				
+				// Send some headers
+				header("content-length: $filesize");
+				header("content-type: $mime_type");
+				
+				// Open the file and send it to the user
+				$handle = fopen($filepath, "rb");
+				fpassthru($handle);
+				fclose($handle);
+				exit();
+			}
 			
 			// Determine the target size of the image
 			$target_size = 512;
@@ -2055,6 +2078,8 @@ register_module([
 				$filepath = $pageindex->{$env->page}->uploadedfilepath;
 				$mime_type = $pageindex->{$env->page}->uploadedfilemime;
 				$image_link = "//" . $_SERVER["SERVER_NAME"] . dirname($_SERVER["SCRIPT_NAME"]) . $filepath;
+				if($env->storage_prefix !== "./")
+					$image_link = "?action=preview&size=original&page=" . rawurlencode($env->page);
 				
 				$preview_sizes = [ 256, 512, 768, 1024, 1536 ];
 				$preview_html = "<figure class='preview'>
@@ -2241,7 +2266,7 @@ register_module([
 
 register_module([
 	"name" => "Page deleter",
-	"version" => "0.7",
+	"version" => "0.8",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to delete pages.",
 	"id" => "page-delete",
@@ -2270,11 +2295,11 @@ register_module([
 			// Delete the associated file if it exists
 			if(!empty($pageindex->$page->uploadedfile))
 			{
-				unlink($pageindex->$page->uploadedfilepath);
+				unlink($env->storage_prefix . $pageindex->$page->uploadedfilepath);
 			}
 			unset($pageindex->$page); //delete the page from the page index
-			file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT)); //save the new page index
-			unlink("./$env->page.md"); //delete the page from the disk
+			file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT)); //save the new page index
+			unlink("$env->storage_prefix$env->page.md"); //delete the page from the disk
 
 			exit(page_renderer::render_main("Deleting $env->page - $settings->sitename", "<p>$env->page has been deleted. <a href='index.php'>Go back to the main page</a>.</p>"));
 		});
@@ -2286,7 +2311,7 @@ register_module([
 
 register_module([
 	"name" => "Page editor",
-	"version" => "0.11",
+	"version" => "0.12",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -2304,7 +2329,7 @@ register_module([
 		add_action("edit", function() {
 			global $pageindex, $settings, $env;
 			
-			$filename = "$env->page.md";
+			$filename = "$env->storage_prefix$env->page.md";
 			$page = $env->page;
 			$creatingpage = !isset($pageindex->$page);
 			if((isset($_GET["newpage"]) and $_GET["newpage"] == "true") or $creatingpage)
@@ -2389,7 +2414,7 @@ register_module([
 			{
 				http_response_code(403);
 				header("refresh: 5; url=index.php?page=$env->page");
-				exit("$env->page is protected, and you aren't logged in as an administrastor or moderator. Your edit was not saved. Redirecting in 5 seconds...");
+				exit("$env->page is protected, and you aren't logged in as an administrator or moderator. Your edit was not saved. Redirecting in 5 seconds...");
 			}
 			if(!isset($_POST["content"]))
 			{
@@ -2399,10 +2424,10 @@ register_module([
 			}
 			
 			// Make sure that the directory in which the page needs to be saved exists
-			if(!is_dir(dirname("$env->page.md")))
+			if(!is_dir(dirname("$env->storage_prefix$env->page.md")))
 			{
 				// Recursively create the directory if needed
-				mkdir(dirname("$env->page.md"), null, true);
+				mkdir(dirname("$env->storage_prefix$env->page.md"), null, true);
 			}
 			
 			// Read in the new page content
@@ -2440,7 +2465,7 @@ register_module([
 			
 			
 			
-			if(file_put_contents("$env->page.md", $pagedata) !== false)
+			if(file_put_contents("$env->storage_prefix$env->page.md", $pagedata) !== false)
 			{
 				$page = $env->page;
 				// Make sure that this page's parents exist
@@ -2472,10 +2497,10 @@ register_module([
 				}
 				
 				if($pagedata !== $pagedata_orig)
-					file_put_contents("$env->page.md", $pagedata);
+					file_put_contents("$env->storage_prefix$env->page.md", $pagedata);
 				
 				
-				file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+				file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
 				
 				if(isset($_GET["newpage"]))
 					http_response_code(201);
@@ -2501,7 +2526,7 @@ register_module([
 
 register_module([
 	"name" => "Export",
-	"version" => "0.2",
+	"version" => "0.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that you can use to export your wiki as a .zip file. Uses \$settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
 	"id" => "page-export",
@@ -2527,7 +2552,7 @@ register_module([
 			
 			foreach($pageindex as $entry)
 			{
-				$zip->addFile("./$entry->filename", $entry->filename);
+				$zip->addFile("$env->storage_prefix$entry->filename", $entry->filename);
 			}
 			
 			if($zip->close() !== true)
@@ -2888,12 +2913,12 @@ register_module([
 				// Move the file in the pageindex
 				$pageindex->$new_name->uploadedfilepath = $new_name;
 				// Move the file on disk
-				rename($env->page, $new_name);
+				rename($env->storage_prefix . $env->page, $env->storage_prefix . $new_name);
 			}
 			file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
 			
 			//move the page on the disk
-			rename("$env->page.md", "$new_name.md");
+			rename("$env->storage_prefix$env->page.md", "$env->storage_prefix$new_name.md");
 			
 			exit(page_renderer::render_main("Moving $env->page", "<p><a href='index.php?page=$env->page'>$env->page</a> has been moved to <a href='index.php?page=$new_name'>$new_name</a> successfully.</p>"));
 		});
@@ -3028,9 +3053,8 @@ register_module([
 			
 			$parsing_start = microtime(true);
 			
-			$content .= parse_page_source(file_get_contents("$env->page.md"));
+			$content .= parse_page_source(file_get_contents("$env->storage_prefix$env->page.md"));
 			
-			// todo display tags here
 			if(!empty($pageindex->$page->tags))
 			{
 				$content .= "<ul class='page-tags-display'>\n";

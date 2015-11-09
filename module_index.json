@@ -10,20 +10,20 @@
     },
     {
         "name": "Page protection",
-        "version": "0.1",
+        "version": "0.2",
         "author": "Starbeamrainbowlabs",
         "description": "Exposes Pepperminty Wiki's new page protection mechanism and makes the protect button in the 'More...' menu on the top bar work.",
         "id": "action-protect",
-        "lastupdate": 1445170746,
+        "lastupdate": 1446975126,
         "optional": false
     },
     {
         "name": "Raw page source",
-        "version": "0.3",
+        "version": "0.4",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a 'raw' action that shows you the raw source of a page.",
         "id": "action-raw",
-        "lastupdate": 1445170746,
+        "lastupdate": 1446975142,
         "optional": false
     },
     {
@@ -46,20 +46,20 @@
     },
     {
         "name": "Search",
-        "version": "0.1",
+        "version": "0.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki. Note that this module, at the moment, just contains test code while I figure out how best to write a search engine.",
         "id": "feature-search",
-        "lastupdate": 1446717614,
+        "lastupdate": 1446975588,
         "optional": false
     },
     {
         "name": "Uploader",
-        "version": "0.1",
+        "version": "0.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File:' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1445716955,
+        "lastupdate": 1447002760,
         "optional": false
     },
     {
@@ -73,29 +73,29 @@
     },
     {
         "name": "Page deleter",
-        "version": "0.7",
+        "version": "0.8",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to delete pages.",
         "id": "page-delete",
-        "lastupdate": 1445771075,
+        "lastupdate": 1447002847,
         "optional": false
     },
     {
         "name": "Page editor",
-        "version": "0.11",
+        "version": "0.12",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1446388267,
+        "lastupdate": 1447002999,
         "optional": false
     },
     {
         "name": "Export",
-        "version": "0.2",
+        "version": "0.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that you can use to export your wiki as a .zip file. Uses $settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
         "id": "page-export",
-        "lastupdate": 1445170746,
+        "lastupdate": 1447003197,
         "optional": false
     },
     {
@@ -140,7 +140,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
         "id": "page-move",
-        "lastupdate": 1445771483,
+        "lastupdate": 1447017276,
         "optional": false
     },
     {
@@ -158,7 +158,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You reallyshould include this one.",
         "id": "page-view",
-        "lastupdate": 1445789184,
+        "lastupdate": 1447052018,
         "optional": false
     },
     {
