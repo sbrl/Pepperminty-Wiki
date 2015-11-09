@@ -22,12 +22,29 @@ register_module([
 		add_action("list-tags", function() {
 			global $pageindex, $settings;
 			
-			if(empty($_GET["tag"]))
+			if(!isset($_GET["tag"]))
 			{
-				http_response_code(301);
-				header("location: ?action=list");
+				// Render a list of all tags
+				$all_tags = [];
+				foreach($pageindex as $entry)
+				{
+					if(!isset($entry->tags)) continue;
+					foreach($entry->tags as $tag)
+					{
+						if(!in_array($tag, $all_tags)) $all_tags[] = $tag;
+					}
+				}
+				
+				$content = "<h1>All tags</h1>
+				<ul>\n";
+				foreach($all_tags as $tag)
+				{
+					$content .= "			<li><a href='?action=list_tags&tag=" . rawurlencode($tag) . "'>$tag</a></li>\n";
+				}
+				$content .= "</ul>";
+				
+				exit(page_renderer::render("All tags - $settings->sitename", $content));
 			}
-			
 			$tag = $_GET["tag"];
 			
 			
