@@ -234,9 +234,11 @@ register_module([
 				// We are looking at a page that is paired with an uploaded file
 				$filepath = $pageindex->{$env->page}->uploadedfilepath;
 				$mime_type = $pageindex->{$env->page}->uploadedfilemime;
+				$dimensions = getimagesize($env->storage_prefix . $filepath);
 				$image_link = "//" . $_SERVER["SERVER_NAME"] . dirname($_SERVER["SCRIPT_NAME"]) . $filepath;
 				if($env->storage_prefix !== "./")
 					$image_link = "?action=preview&size=original&page=" . rawurlencode($env->page);
+				
 				
 				$preview_sizes = [ 256, 512, 768, 1024, 1536 ];
 				$preview_html = "<figure class='preview'>
@@ -246,13 +248,13 @@ register_module([
 				<li>Other Sizes: ";
 				foreach($preview_sizes as $size)
 					$preview_html .= "<a href='?action=preview&size='$size>$size" . "px</a> ";
-				$preview_html .= "</li>
-				<li><label class='link-display-label' for='image-link'>Link:</label> <input class='link-display' type='text' value='$image_link' title='Press CTRL + C to copy.' onclick='this.select();' readonly /></li></ul></nav>
+				$preview_html .= "</li></ul></nav>
 			</figure>
 			<h2>File Information</h2>
 			<table><tr><th>Name</th><td>" . str_replace("File/", "", $filepath) . "</td>
 			<tr><th>Type</th><td>$mime_type</td></tr>
 			<tr><th>Size</th><td>" . human_filesize(filesize($filepath)) . "</td></tr>
+			<tr><th>Original dimensions</th><td>$dimensions[0] x $dimensions[1]</td></tr>
 			<tr><th>Uploaded by</th><td>" . $pageindex->{$env->page}->lasteditor . "</td></tr></table>
 			<h2>Description</h2>";
 				

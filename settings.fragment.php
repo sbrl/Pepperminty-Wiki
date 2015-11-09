@@ -43,10 +43,10 @@ $settings->sitesecret = "ed420502615bac9037f8f12abd4c9f02";
 
 // The directory in which to store all files, except this main index.php.
 // A single dot ('.') denotes the current directory.
-// Remember to leave the trailing slash from the directory name, as it is added
+// Remember to omit the trailing slash from the directory name, as it is added
 // automatically by Pepperminty Wiki.
 // Note that this setting is currently experimental.
-$settings->data_storage_dir = ".";
+$settings->data_storage_dir = "../data_test";
 
 // Determined whether edit is enabled. Set to false to disable disting for all
 // users (anonymous or otherwise).
