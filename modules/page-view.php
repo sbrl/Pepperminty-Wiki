@@ -57,9 +57,8 @@ register_module([
 			
 			$parsing_start = microtime(true);
 			
-			$content .= parse_page_source(file_get_contents("$env->page.md"));
+			$content .= parse_page_source(file_get_contents("$env->storage_prefix$env->page.md"));
 			
-			// todo display tags here
 			if(!empty($pageindex->$page->tags))
 			{
 				$content .= "<ul class='page-tags-display'>\n";
