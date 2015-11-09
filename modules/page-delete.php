@@ -7,7 +7,7 @@ register_module([
 	"id" => "page-delete",
 	"code" => function() {
 		add_action("delete", function() {
-			global $pageindex, $settings, $env;
+			global $pageindex, $settings, $env, $paths;
 			if(!$settings->editing)
 			{
 				exit(page_renderer::render_main("Deleting $env->page - error", "<p>You tried to delete $env->page, but editing is disabled on this wiki.</p>

@@ -7,7 +7,7 @@ register_module([
 	"id" => "action-protect",
 	"code" => function() {
 		add_action("protect", function() {
-			global $env, $pageindex;
+			global $env, $pageindex, $paths;
 
 			// Make sure that the user is logged in as an admin / mod.
 			if($env->is_admin)

@@ -83,7 +83,7 @@ register_module([
 		 *                %save%
 		 */
 		add_action("save", function() {
-			global $pageindex, $settings, $env, $save_preprocessors; 
+			global $pageindex, $settings, $env, $save_preprocessors, $paths; 
 			if(!$settings->editing)
 			{
 				header("location: index.php?page=$env->page");

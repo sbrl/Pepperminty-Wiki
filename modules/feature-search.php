@@ -28,7 +28,7 @@ register_module([
 		});
 		
 		add_action("search", function() {
-			global $settings, $env, $pageindex;
+			global $settings, $env, $pageindex, $paths;
 			
 			if(!isset($_GET["query"]))
 				exit(page_renderer::render("No Search Terms - Error - $settings->sitename", "<p>You didn't specify any search terms. Try typing some into the box above.</p>"));

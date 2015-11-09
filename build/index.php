@@ -752,7 +752,7 @@ class ids
 	 */
 	protected static function assign($pagename)
 	{
-		global $idindex;
+		global $idindex, $paths;
 
 		$nextid = count(array_keys(get_object_vars($idindex)));
 
@@ -1169,7 +1169,7 @@ register_module([
 	"id" => "action-protect",
 	"code" => function() {
 		add_action("protect", function() {
-			global $env, $pageindex;
+			global $env, $pageindex, $paths;
 
 			// Make sure that the user is logged in as an admin / mod.
 			if($env->is_admin)
@@ -1407,7 +1407,7 @@ register_module([
 		});
 		
 		add_action("search", function() {
-			global $settings, $env, $pageindex;
+			global $settings, $env, $pageindex, $paths;
 			
 			if(!isset($_GET["query"]))
 				exit(page_renderer::render("No Search Terms - Error - $settings->sitename", "<p>You didn't specify any search terms. Try typing some into the box above.</p>"));
@@ -1850,8 +1850,7 @@ register_module([
 	"id" => "feature-upload",
 	"code" => function() {
 		add_action("upload", function() {
-			global $settings, $env, $pageindex;
-			
+			global $settings, $env, $pageindex, $paths;
 			
 			switch($_SERVER["REQUEST_METHOD"])
 			{
@@ -2270,7 +2269,7 @@ register_module([
 	"id" => "page-delete",
 	"code" => function() {
 		add_action("delete", function() {
-			global $pageindex, $settings, $env;
+			global $pageindex, $settings, $env, $paths;
 			if(!$settings->editing)
 			{
 				exit(page_renderer::render_main("Deleting $env->page - error", "<p>You tried to delete $env->page, but editing is disabled on this wiki.</p>
@@ -2391,7 +2390,7 @@ register_module([
 		 *                %save%
 		 */
 		add_action("save", function() {
-			global $pageindex, $settings, $env, $save_preprocessors; 
+			global $pageindex, $settings, $env, $save_preprocessors, $paths; 
 			if(!$settings->editing)
 			{
 				header("location: index.php?page=$env->page");

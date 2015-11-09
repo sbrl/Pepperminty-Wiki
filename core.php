@@ -414,7 +414,7 @@ class ids
 	 */
 	protected static function assign($pagename)
 	{
-		global $idindex;
+		global $idindex, $paths;
 
 		$nextid = count(array_keys(get_object_vars($idindex)));
 

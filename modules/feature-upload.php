@@ -7,8 +7,7 @@ register_module([
 	"id" => "feature-upload",
 	"code" => function() {
 		add_action("upload", function() {
-			global $settings, $env, $pageindex;
-			
+			global $settings, $env, $pageindex, $paths;
 			
 			switch($_SERVER["REQUEST_METHOD"])
 			{
