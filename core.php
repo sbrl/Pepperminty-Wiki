@@ -276,6 +276,31 @@ function starts_with($haystack, $needle)
      $length = strlen($needle);
      return (substr($haystack, 0, $length) === $needle);
 }
+/**
+ * mb_stripos all occurences
+ * from http://www.pontikis.net/tip/?id=16
+ * based on http://www.php.net/manual/en/function.strpos.php#87061
+ *
+ * Find all occurrences of a needle in a haystack (case-insensitive, UTF8)
+ *
+ * @param string $haystack
+ * @param string $needle
+ * @return array or false
+ */
+function mb_stripos_all($haystack, $needle) {
+	$s = 0; $i = 0;
+	while(is_integer($i)) {
+		$i = function_exists("mb_stripos") ? mb_stripos($haystack, $needle, $s) : stripos($haystack, $needle, $s);
+		if(is_integer($i)) {
+			$aStrPos[] = $i;
+			$s = $i + (function_exists("mb_strlen") ? mb_strlen($needle) : strlen($needle));
+		}
+	}
+	if(isset($aStrPos))
+		return $aStrPos;
+	else
+		return false;
+}
 
 function system_mime_type_extensions() {
 	global $settings;
