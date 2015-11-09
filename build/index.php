@@ -2078,16 +2078,12 @@ register_module([
 				$filepath = $pageindex->{$env->page}->uploadedfilepath;
 				$mime_type = $pageindex->{$env->page}->uploadedfilemime;
 				$dimensions = getimagesize($env->storage_prefix . $filepath);
-				$image_link = "//" . $_SERVER["SERVER_NAME"] . dirname($_SERVER["SCRIPT_NAME"]) . $filepath;
-				if($env->storage_prefix !== "./")
-					$image_link = "?action=preview&size=original&page=" . rawurlencode($env->page);
-				
 				
 				$preview_sizes = [ 256, 512, 768, 1024, 1536 ];
 				$preview_html = "<figure class='preview'>
 			<img src='?action=preview&size=$settings->default_preview_size&page=" . rawurlencode($env->page) . "' />
 			<nav class='image-controls'>
-				<ul><li><a href='$filepath'>&#x01f304; Original image</a></li>
+				<ul><li><a href='" . ($env->storage_prefix == "./" ? $filepath : "?action=preview&size=original&page=" . rawurlencode($env->page)) . "'>&#x01f304; Original image</a></li>
 				<li>Other Sizes: ";
 				foreach($preview_sizes as $size)
 					$preview_html .= "<a href='?action=preview&size='$size>$size" . "px</a> ";
