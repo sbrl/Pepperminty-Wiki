@@ -432,6 +432,16 @@ class ids
 		else
 			return $idindex->$id;
 	}
+    
+    public static function movepagename($oldpagename, $newpagename)
+    {
+        global $idindex, $paths;
+        
+        $pageid = self::getid($oldpagename);
+        $idindex->$pageid = $newpagename;
+        
+        file_put_contents($paths->idindex, json_encode($idindex));
+    }
 
 	/*
 	 * @summary Assigns an id to a pagename. Doesn't check to make sure that
@@ -748,7 +758,7 @@ if(!isset($pageindex->{$env->page}) and isset($_GET["search-redirect"]))
 	http_response_code(307);
 	$url = "?action=search&query=" . rawurlencode($env->page);
 	header("location: $url");
-	exit(pagerenderer::render("Non existent page - $settings->sitename", "<p>There isn't a page on $settings->sitename with that name. However, you could <a href='$url'>search for this page name</a> in other pages.</p>
+	exit(page_renderer::render("Non existent page - $settings->sitename", "<p>There isn't a page on $settings->sitename with that name. However, you could <a href='$url'>search for this page name</a> in other pages.</p>
 		<p>Alternatively, you could <a href='?action=edit&page=" . rawurlencode($env->page) . "&create=true'>create this page</a>.</p>"));
 }
 //////////////////////////////////////

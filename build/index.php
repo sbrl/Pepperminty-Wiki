@@ -770,6 +770,16 @@ class ids
 		else
 			return $idindex->$id;
 	}
+    
+    public static function movepagename($oldpagename, $newpagename)
+    {
+        global $idindex, $paths;
+        
+        $pageid = self::getid($oldpagename);
+        $idindex->$pageid = $newpagename;
+        
+        file_put_contents($paths->idindex, json_encode($idindex));
+    }
 
 	/*
 	 * @summary Assigns an id to a pagename. Doesn't check to make sure that
@@ -1086,7 +1096,7 @@ if(!isset($pageindex->{$env->page}) and isset($_GET["search-redirect"]))
 	http_response_code(307);
 	$url = "?action=search&query=" . rawurlencode($env->page);
 	header("location: $url");
-	exit(pagerenderer::render("Non existent page - $settings->sitename", "<p>There isn't a page on $settings->sitename with that name. However, you could <a href='$url'>search for this page name</a> in other pages.</p>
+	exit(page_renderer::render("Non existent page - $settings->sitename", "<p>There isn't a page on $settings->sitename with that name. However, you could <a href='$url'>search for this page name</a> in other pages.</p>
 		<p>Alternatively, you could <a href='?action=edit&page=" . rawurlencode($env->page) . "&create=true'>create this page</a>.</p>"));
 }
 //////////////////////////////////////
@@ -2897,7 +2907,7 @@ register_module([
 	"id" => "page-move",
 	"code" => function() {
 		add_action("move", function() {
-			global $pageindex, $settings, $env;
+			global $pageindex, $settings, $env, $paths;
 			if(!$settings->editing)
 			{
 				exit(page_renderer::render_main("Moving $env->page - error", "<p>You tried to move $env->page, but editing is disabled on this wiki.</p>
@@ -2954,11 +2964,15 @@ register_module([
 				// Move the file on disk
 				rename($env->storage_prefix . $env->page, $env->storage_prefix . $new_name);
 			}
-			file_put_contents($env->storage_prefix . "pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+			file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
 			
-			//move the page on the disk
+			// Move the page on the disk
 			rename("$env->storage_prefix$env->page.md", "$env->storage_prefix$new_name.md");
 			
+			// Move the page in the id index
+			ids::movepagename($page, $new_name);
+			
+			// Exit with a nice message
 			exit(page_renderer::render_main("Moving $env->page", "<p><a href='index.php?page=$env->page'>$env->page</a> has been moved to <a href='index.php?page=$new_name'>$new_name</a> successfully.</p>"));
 		});
 	}

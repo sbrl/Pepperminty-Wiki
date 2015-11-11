@@ -7,7 +7,7 @@ register_module([
 	"id" => "page-move",
 	"code" => function() {
 		add_action("move", function() {
-			global $pageindex, $settings, $env;
+			global $pageindex, $settings, $env, $paths;
 			if(!$settings->editing)
 			{
 				exit(page_renderer::render_main("Moving $env->page - error", "<p>You tried to move $env->page, but editing is disabled on this wiki.</p>
@@ -64,11 +64,15 @@ register_module([
 				// Move the file on disk
 				rename($env->storage_prefix . $env->page, $env->storage_prefix . $new_name);
 			}
-			file_put_contents($env->storage_prefix . "pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+			file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
 			
-			//move the page on the disk
+			// Move the page on the disk
 			rename("$env->storage_prefix$env->page.md", "$env->storage_prefix$new_name.md");
 			
+			// Move the page in the id index
+			ids::movepagename($page, $new_name);
+			
+			// Exit with a nice message
 			exit(page_renderer::render_main("Moving $env->page", "<p><a href='index.php?page=$env->page'>$env->page</a> has been moved to <a href='index.php?page=$new_name'>$new_name</a> successfully.</p>"));
 		});
 	}
