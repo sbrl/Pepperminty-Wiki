@@ -433,6 +433,11 @@ class ids
 			return $idindex->$id;
 	}
     
+    /*
+     * @summary Moves a page in the id index from $oldpagename to $newpagename.
+     *          Note that this function doesn't perform any special checks to
+     *          make sure that the destination name doesn't already exist.
+     */
     public static function movepagename($oldpagename, $newpagename)
     {
         global $idindex, $paths;
@@ -440,6 +445,22 @@ class ids
         $pageid = self::getid($oldpagename);
         $idindex->$pageid = $newpagename;
         
+        file_put_contents($paths->idindex, json_encode($idindex));
+    }
+    
+    /*
+     * @summary Removes the given page name from the id index. Note that this
+     *          function doesn't handle multiple entries with the same name.
+     */
+    public static function deletepagename($pagename)
+    {
+        global $idindex, $paths;
+        
+        // Get the id of the specified page
+        $pageid = self::getid($pagename);
+        // Remove it from the pageindex
+        unset($idindex->$pageid);
+        // Save the id index
         file_put_contents($paths->idindex, json_encode($idindex));
     }
 

@@ -771,6 +771,11 @@ class ids
 			return $idindex->$id;
 	}
     
+    /*
+     * @summary Moves a page in the id index from $oldpagename to $newpagename.
+     *          Note that this function doesn't perform any special checks to
+     *          make sure that the destination name doesn't already exist.
+     */
     public static function movepagename($oldpagename, $newpagename)
     {
         global $idindex, $paths;
@@ -778,6 +783,22 @@ class ids
         $pageid = self::getid($oldpagename);
         $idindex->$pageid = $newpagename;
         
+        file_put_contents($paths->idindex, json_encode($idindex));
+    }
+    
+    /*
+     * @summary Removes the given page name from the id index. Note that this
+     *          function doesn't handle multiple entries with the same name.
+     */
+    public static function deletepagename($pagename)
+    {
+        global $idindex, $paths;
+        
+        // Get the id of the specified page
+        $pageid = self::getid($pagename);
+        // Remove it from the pageindex
+        unset($idindex->$pageid);
+        // Save the id index
         file_put_contents($paths->idindex, json_encode($idindex));
     }
 
@@ -2329,10 +2350,17 @@ register_module([
 			{
 				unlink($env->storage_prefix . $pageindex->$page->uploadedfilepath);
 			}
-			unset($pageindex->$page); //delete the page from the page index
-			file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT)); //save the new page index
-			unlink("$env->storage_prefix$env->page.md"); //delete the page from the disk
-
+			// Delete the page from the page index
+			unset($pageindex->$page);
+			// Save the new page index
+			file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT)); 
+			
+			// Remove the page's name from the id index
+			ids::deletepagename($env->page);
+			
+			// Delete the page from the disk
+			unlink("$env->storage_prefix$env->page.md");
+			
 			exit(page_renderer::render_main("Deleting $env->page - $settings->sitename", "<p>$env->page has been deleted. <a href='index.php'>Go back to the main page</a>.</p>"));
 		});
 	}

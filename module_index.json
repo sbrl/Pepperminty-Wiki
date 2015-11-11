@@ -77,7 +77,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to delete pages.",
         "id": "page-delete",
-        "lastupdate": 1447053826,
+        "lastupdate": 1447269808,
         "optional": false
     },
     {
