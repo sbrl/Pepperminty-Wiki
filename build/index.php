@@ -1591,7 +1591,7 @@ class search
 	
 	public static function rebuild_invindex()
 	{
-		global $pageindex;
+		global $pageindex, $env, $paths;
 		
 		$invindex = [];
 		foreach($pageindex as $pagename => $pagedetails)
@@ -1602,7 +1602,7 @@ class search
 			self::merge_into_invindex($invindex, ids::getid($pagename), $index);
 		}
 		
-		self::save_invindex("invindex.json", $invindex);
+		self::save_invindex($paths->searchindex, $invindex);
 	}
 	
 	/*
