@@ -2954,7 +2954,7 @@ register_module([
 				// Move the file on disk
 				rename($env->storage_prefix . $env->page, $env->storage_prefix . $new_name);
 			}
-			file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+			file_put_contents($env->storage_prefix . "pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
 			
 			//move the page on the disk
 			rename("$env->storage_prefix$env->page.md", "$env->storage_prefix$new_name.md");
