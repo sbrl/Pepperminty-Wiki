@@ -7,7 +7,7 @@ register_module([
 	"id" => "action-protect",
 	"code" => function() {
 		add_action("protect", function() {
-			global $env, $pageindex, $paths;
+			global $env, $pageindex, $paths, $settings;
 
 			// Make sure that the user is logged in as an admin / mod.
 			if($env->is_admin)
@@ -39,7 +39,7 @@ register_module([
 
 				$state = ($pageindex->$page->protect ? "enabled" : "disabled");
 				$title = "Page protection $state.";
-				exit(page_renderer::render_main($title, "<p>Page protection for $env->page has been $state.</p><p><a href='?action=$env->defaultaction&page=$env->page'>Go back</a>."));
+				exit(page_renderer::render_main($title, "<p>Page protection for $env->page has been $state.</p><p><a href='?action=$settings->defaultaction&page=$env->page'>Go back</a>."));
 			}
 			else
 			{

@@ -34,6 +34,7 @@ register_module([
 			}
 			// Delete the page from the page index
 			unset($pageindex->$page);
+			
 			// Save the new page index
 			file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT)); 
 			
