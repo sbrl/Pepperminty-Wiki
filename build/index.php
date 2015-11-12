@@ -1242,7 +1242,7 @@ register_module([
 
 				if(!$toggled && $pageindex->$page->protect === true)
 				{
-					$pageindex->$page->protected = false;
+					$pageindex->$page->protect = false;
 					$toggled = false;
 				}
 
