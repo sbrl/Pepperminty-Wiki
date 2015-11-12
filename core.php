@@ -202,11 +202,11 @@ function get_subpages($pageindex, $pagename)
  */
 function check_subpage_parents($pagename)
 {
-	global $pageindex;
+	global $pageindex, $paths;
 	// Save the new pageindex and return if there aren't any more parent pages to check
 	if(strpos($pagename, "/") === false)
 	{
-		file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+		file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
 		return;
 	}
 

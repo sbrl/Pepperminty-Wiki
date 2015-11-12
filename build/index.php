@@ -540,11 +540,11 @@ function get_subpages($pageindex, $pagename)
  */
 function check_subpage_parents($pagename)
 {
-	global $pageindex;
+	global $pageindex, $paths;
 	// Save the new pageindex and return if there aren't any more parent pages to check
 	if(strpos($pagename, "/") === false)
 	{
-		file_put_contents("./pageindex.json", json_encode($pageindex, JSON_PRETTY_PRINT));
+		file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
 		return;
 	}
 
@@ -1232,7 +1232,7 @@ register_module([
 			{
 				// They check out ok, toggle the page's protection.
 				$page = $env->page;
-
+				
 				if(!isset($pageindex->$page->protect))
 				{
 					$pageindex->$page->protect = true;
@@ -1245,10 +1245,10 @@ register_module([
 				{
 					$pageindex->$page->protect = true;
 				}
-
+				
 				// Save the pageindex
 				file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
-
+				
 				$state = ($pageindex->$page->protect ? "enabled" : "disabled");
 				$title = "Page protection $state.";
 				exit(page_renderer::render_main($title, "<p>Page protection for $env->page has been $state.</p><p><a href='?action=$settings->defaultaction&page=$env->page'>Go back</a>."));
