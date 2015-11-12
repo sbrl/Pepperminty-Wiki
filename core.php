@@ -340,8 +340,8 @@ function system_mime_type_extension($type) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 /*
- * Sort out the pageindex. We create it if it doesn't exist, and load and parse
- * it if it does.
+ * Sort out the pageindex. Create it if it doesn't exist, and load + parse it
+ * if it does.
  */
 if(!file_exists($paths->pageindex))
 {
@@ -362,7 +362,35 @@ if(!file_exists($paths->pageindex))
 		$newentry->lasteditor = utf8_encode("unknown"); // Set the editor to "unknown"
 		// Extract the name of the (sub)page without the ".md" or the storage dir
 		$pagekey = utf8_encode(substr($pagefilename, strlen($env->storage_prefix), -3));
-
+        
+        // Calculate the position of the last dot in the file name
+        $last_dot_pos = strrpos($newentry->filename, ".");
+        // Keep everything up to the last dot
+        $uploaded_file_path = substr($newentry->filename, 0, $last_dot_pos);
+        // Work out the location of the next last dot
+        $next_dot_pos = strrpos($uploaded_file_path, ".");
+        if(
+           // There is another dot in the uploaded file path
+           $next_dot_pos !== false &&
+           // This other dot is after the last slash
+           $next_dot_pos >= strrpos($uploaded_file_path, "/") &&
+           // The file actually exists
+           file_exists($env->storage_prefix . $uploaded_file_path))
+        {
+            // This page (potentially) has an associated file!
+            // Let's investigate.
+            
+            // Blindly add the file to the pageindex for now.
+            // Future We might want to do a security check on the file later on. File a bug if you think this is a good idea.
+            $newentry->uploadedfile = true; // Yes this page does have an uploaded file associated with it
+            $newentry->uploadedfilepath = $uploaded_file_path; // It's stored here
+            
+            // Work out what kind of file it really is
+            $mimechecker = finfo_open(FILEINFO_MIME_TYPE);
+            $newentry->uploadedfilemime = finfo_file($mimechecker, $env->storage_prefix . $uploaded_file_path);
+        }
+        
+        
 		// Subpage parent checker
 		if(strpos($pagekey, "/") !== false)
 		{
