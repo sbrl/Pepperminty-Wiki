@@ -1233,23 +1233,17 @@ register_module([
 				// They check out ok, toggle the page's protection.
 				$page = $env->page;
 
-				$toggled = false;
 				if(!isset($pageindex->$page->protect))
 				{
 					$pageindex->$page->protect = true;
-					$toggled = true;
 				}
-
-				if(!$toggled && $pageindex->$page->protect === true)
+				else if($pageindex->$page->protect === true)
 				{
 					$pageindex->$page->protect = false;
-					$toggled = false;
 				}
-
-				if(!$toggled && $pageindex->$page->protect === false)
+				else if($pageindex->$page->protect === false)
 				{
-					$pageindex->$page->protected = true;
-					$toggled = true;
+					$pageindex->$page->protect = true;
 				}
 
 				// Save the pageindex

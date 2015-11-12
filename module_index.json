@@ -14,7 +14,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Exposes Pepperminty Wiki's new page protection mechanism and makes the protect button in the 'More...' menu on the top bar work.",
         "id": "action-protect",
-        "lastupdate": 1447320607,
+        "lastupdate": 1447322278,
         "optional": false
     },
     {
