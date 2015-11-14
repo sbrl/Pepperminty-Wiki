@@ -102,7 +102,7 @@ $settings->require_login_view = false;
 // Remember to omit the trailing slash from the directory name, as it is added
 // automatically by Pepperminty Wiki.
 // Note that this setting is currently experimental.
-$settings->data_storage_dir = "./";
+$settings->data_storage_dir = ".";
 
 // Whether to use the new sha3 hashing algorithm that was standardised on the
 // 8th August 2015. Only works if you have strawbrary's sha3 extension

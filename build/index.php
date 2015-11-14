@@ -113,7 +113,7 @@ $settings->require_login_view = false;
 // Remember to omit the trailing slash from the directory name, as it is added
 // automatically by Pepperminty Wiki.
 // Note that this setting is currently experimental.
-$settings->data_storage_dir = "./";
+$settings->data_storage_dir = ".";
 
 // Whether to use the new sha3 hashing algorithm that was standardised on the
 // 8th August 2015. Only works if you have strawbrary's sha3 extension
@@ -689,51 +689,54 @@ function system_mime_type_extension($type) {
  */
 if(!file_exists($paths->pageindex))
 {
-	$existingpages = glob_recursive($env->storage_prefix . "*.md");
+    $glob_str = $env->storage_prefix . "*.md";
+	$existingpages = glob_recursive($glob_str);
+    var_dump($env->storage_prefix);
+    var_dump($glob_str);
+    var_dump($existingpages);
 	$pageindex = new stdClass();
 	// We use a for loop here because foreach doesn't loop over new values inserted
 	// while we were looping
 	for($i = 0; $i < count($existingpages); $i++)
 	{
 		$pagefilename = $existingpages[$i];
-
+        
 		// Create a new entry
 		$newentry = new stdClass();
-		$newentry->filename = utf8_encode(substr($pagefilename, strlen($env->storage_prefix))); // Store the filename
+		$newentry->filename = utf8_encode(substr( // Store the filename, whilst trimming the storage prefix
+            $pagefilename,
+            strlen(preg_replace("/^\.\//i", "", $env->storage_prefix)) // glob_recursive trim the ./ from returned filenames , so we need to as well
+        ));
+        // Remove the `./` from the beginning if it's still hanging around
+        if(substr($newentry->filename, 0, 2) == "./")
+            $newentry->filename = substr($newentry->filename, 2);
 		$newentry->size = filesize($pagefilename); // Store the page size
 		$newentry->lastmodified = filemtime($pagefilename); // Store the date last modified
 		// Todo find a way to keep the last editor independent of the page index
 		$newentry->lasteditor = utf8_encode("unknown"); // Set the editor to "unknown"
-		// Extract the name of the (sub)page without the ".md" or the storage dir
-		$pagekey = utf8_encode(substr($pagefilename, strlen($env->storage_prefix), -3));
+		// Extract the name of the (sub)page without the ".md"
+		$pagekey = utf8_encode(substr($newentry->filename, 0, -3));
         
-        // Calculate the position of the last dot in the file name
-        $last_dot_pos = strrpos($newentry->filename, ".");
-        // Keep everything up to the last dot
-        $uploaded_file_path = substr($newentry->filename, 0, $last_dot_pos);
-        // Work out the location of the next last dot
-        $next_dot_pos = strrpos($uploaded_file_path, ".");
-        if(
-           // There is another dot in the uploaded file path
-           $next_dot_pos !== false &&
-           // This other dot is after the last slash
-           $next_dot_pos >= strrpos($uploaded_file_path, "/") &&
-           // The file actually exists
-           file_exists($env->storage_prefix . $uploaded_file_path))
+        if(file_exists($env->storage_prefix . $pagekey))
         {
             // This page (potentially) has an associated file!
             // Let's investigate.
             
             // Blindly add the file to the pageindex for now.
-            // Future We might want to do a security check on the file later on. File a bug if you think this is a good idea.
+            // Future We might want to do a security check on the file later on.
+            // File a bug if you think we should do this.
             $newentry->uploadedfile = true; // Yes this page does have an uploaded file associated with it
-            $newentry->uploadedfilepath = $uploaded_file_path; // It's stored here
+            $newentry->uploadedfilepath = $pagekey; // It's stored here
             
             // Work out what kind of file it really is
             $mimechecker = finfo_open(FILEINFO_MIME_TYPE);
-            $newentry->uploadedfilemime = finfo_file($mimechecker, $env->storage_prefix . $uploaded_file_path);
+            $newentry->uploadedfilemime = finfo_file($mimechecker, $env->storage_prefix . $pagekey);
         }
         
+        echo("pagekey: ");
+        var_dump($pagekey);
+        echo("newentry: ");
+        var_dump($newentry);
         
 		// Subpage parent checker
 		if(strpos($pagekey, "/") !== false)
@@ -1957,7 +1960,7 @@ class search
 		foreach($qterms as $qterm)
 		{
 			// From http://stackoverflow.com/a/2483859/1460422
-			$context = preg_replace("/" . preg_quote(str_replace("/", "\/", $qterm)) . "/i", "<strong>$0</strong>", $context);
+			$context = preg_replace("/" . str_replace("/", "\/", preg_quote($qterm)) . "/i", "<strong>$0</strong>", $context);
 		}
 		
 		return $context;
