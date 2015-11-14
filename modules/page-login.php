@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Login",
-	"version" => "0.7",
+	"version" => "0.8",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
