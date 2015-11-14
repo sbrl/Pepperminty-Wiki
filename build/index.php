@@ -1373,7 +1373,12 @@ register_module([
 		}
 		
 		page_renderer::register_part_preprocessor(function(&$parts) use ($show_sidebar) {
-			global $settings, $pageindex;
+			global $settings, $pageindex, $env;
+			
+			// Don't render a sidebar if the user is logging in and a login is
+			// required in order to view pages.
+			if($settings->require_login_view && in_array($env->action, [ "login", "checklogin" ]))
+				return false;
 			
 			if($show_sidebar && !isset($_GET["printable"]))
 			{
