@@ -543,6 +543,7 @@ if(makepathsafe($_GET["page"]) !== $_GET["page"])
 	exit();
 }
 
+// Finish setting up the environment object
 $env->page = $_GET["page"];
 $env->action = strtolower($_GET["action"]);
 
@@ -696,8 +697,7 @@ class page_renderer
 	{
 		return self::render($title, $content, self::$minimal_content_template);
 	}
-
-
+    
 	public static function get_css_as_html()
 	{
 		global $settings;
@@ -802,6 +802,7 @@ class page_renderer
 //////////////////////////////////////
 ///// Extra consistency measures /////
 //////////////////////////////////////
+// Redirect to the search page if there isn't a page with the requested name
 if(!isset($pageindex->{$env->page}) and isset($_GET["search-redirect"]))
 {
 	http_response_code(307);
@@ -809,6 +810,22 @@ if(!isset($pageindex->{$env->page}) and isset($_GET["search-redirect"]))
 	header("location: $url");
 	exit(page_renderer::render("Non existent page - $settings->sitename", "<p>There isn't a page on $settings->sitename with that name. However, you could <a href='$url'>search for this page name</a> in other pages.</p>
 		<p>Alternatively, you could <a href='?action=edit&page=" . rawurlencode($env->page) . "&create=true'>create this page</a>.</p>"));
+}
+
+// Redirect the user to the login page if:
+//  - A login is required to view this wiki
+//  - The user isn't already requesting the login page
+// Note we use $_GET here because $env->action isn't populated at this point
+if($settings->require_login_view === true && // If this site requires a login in order to view pages
+   !$env->is_logged_in && // And the user isn't logged in
+   $_GET["action"] !== "login") // And the user isn't requesting the login page
+{
+    // Redirect the user to the login page
+    http_response_code(307);
+    $url = "?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "&required=true";
+    header("location: $url");
+    exit(page_renderer::render("Login required - $settings->sitename", "<p>$settings->sitename requires that you login before you are able to access it.</p>
+        <p><a href='$url'>Login</a>.</p>"));
 }
 //////////////////////////////////////
 //////////////////////////////////////

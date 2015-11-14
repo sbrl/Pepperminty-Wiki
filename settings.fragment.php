@@ -98,6 +98,8 @@ $settings->users = [
 	"user" => "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34" //cheese
 ];
 
+$settings->require_login_view = true;
+
 // Whether to use the new sha3 hashing algorithm that was standardised on the
 // 8th August 2015. Only works if you have strawbrary's sha3 extension
 // installed. Get it here: https://github.com/strawbrary/php-sha3

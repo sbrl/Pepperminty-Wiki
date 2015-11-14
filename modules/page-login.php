@@ -16,11 +16,19 @@ register_module([
 		 */
 		add_action("login", function() {
 			global $settings;
+			
+			// Build the action url that will actually perform the login
+			$login_form_action_url = "index.php?action=checklogin"
+			if(isset($_GET["returnto"]))
+				$login_form_action_url .= "&returnto=" . rawurlencode($_SERVER['REQUEST_URI']);
+			
 			$title = "Login to $settings->sitename";
 			$content = "<h1>Login to $settings->sitename</h1>\n";
 			if(isset($_GET["failed"]))
 				$content .= "\t\t<p><em>Login failed.</em></p>\n";
-			$content .= "\t\t<form method='post' action='index.php?action=checklogin&returnto=" . rawurlencode($_SERVER['REQUEST_URI']) . "'>
+			if(isset($_GET["required"]))
+				$content .= "\t\t<p><em>$settings->sitename requires that you login before continuing.</em></p>\n";
+			$content .= "\t\t<form method='post' action='$login_form_action_url'>
 				<label for='user'>Username:</label>
 				<input type='text' name='user' id='user' />
 				<br />
@@ -28,7 +36,7 @@ register_module([
 				<input type='password' name='pass' id='pass' />
 				<br />
 				<input type='submit' value='Login' />
-			</form>";
+			</form>\n";
 			exit(page_renderer::render_main($title, $content));
 		});
 		
@@ -58,7 +66,7 @@ register_module([
 					$_SESSION["$settings->sessionprefix-expiretime"] = $expiretime;
 					//redirect to wherever the user was going
 					http_response_code(302);
-					if(isset($_POST["goto"]))
+					if(isset($_POST["returnto"]))
 						header("location: " . $_POST["returnto"]);
 					else
 						header("location: index.php");
