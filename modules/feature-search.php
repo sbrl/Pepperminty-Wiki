@@ -278,6 +278,25 @@ class search
 		});
 	}
 	
+	/**
+	 * Deletes the given pageid from the given pageindex.
+	 * @param  inverted_index	&$invindex	The inverted index.
+	 * @param  number			$pageid		The pageid to remove.
+	 */
+	public static function delete_entry(&$invindex, $pageid)
+	{
+		$str_pageid = (string)$pageid;
+		foreach($invindex as $nterm => &$entry)
+		{
+			if(isset($entry[$pageid]))
+				unset($entry[$pageid]);
+			if(isset($entry[$str_pageid]))
+				unset($entry[$str_pageid]);
+			if(count($entry) === 0)
+				unset($invindex[$nterm]);
+		}
+	}
+	
 	public static function save_invindex($filename, &$invindex)
 	{
 		file_put_contents($filename, json_encode($invindex));

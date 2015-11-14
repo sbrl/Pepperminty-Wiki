@@ -7,7 +7,7 @@ register_module([
 	"id" => "page-delete",
 	"code" => function() {
 		add_action("delete", function() {
-			global $pageindex, $settings, $env, $paths;
+			global $pageindex, $settings, $env, $paths, $modules;
 			if(!$settings->editing)
 			{
 				exit(page_renderer::render_main("Deleting $env->page - error", "<p>You tried to delete $env->page, but editing is disabled on this wiki.</p>
@@ -32,6 +32,7 @@ register_module([
 			{
 				unlink($env->storage_prefix . $pageindex->$page->uploadedfilepath);
 			}
+			
 			// Delete the page from the page index
 			unset($pageindex->$page);
 			
@@ -40,6 +41,15 @@ register_module([
 			
 			// Remove the page's name from the id index
 			ids::deletepagename($env->page);
+			
+			// Delete the page from the search index, if that module is installed
+			if(isset($modules["feature-search"]))
+			{
+				$pageid = ids::getid($env->page);
+				$invindex = search::load_invindex($paths->searchindex);
+				search::delete_entry($invindex, $pageid);
+				search::save_invindex($paths->searchindex, $invindex);
+			}
 			
 			// Delete the page from the disk
 			unlink("$env->storage_prefix$env->page.md");
