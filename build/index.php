@@ -1158,7 +1158,7 @@ if(!isset($pageindex->{$env->page}) and isset($_GET["search-redirect"]))
 // Note we use $_GET here because $env->action isn't populated at this point
 if($settings->require_login_view === true && // If this site requires a login in order to view pages
    !$env->is_logged_in && // And the user isn't logged in
-   $_GET["action"] !== "login") // And the user isn't requesting the login page
+   !in_array($_GET["action"], [ "login", "checklogin" ])) // And the user isn't trying to login
 {
     // Redirect the user to the login page
     http_response_code(307);
@@ -2854,13 +2854,19 @@ register_module([
 		 */
 		add_action("login", function() {
 			global $settings;
+			
+			// Build the action url that will actually perform the login
+			$login_form_action_url = "index.php?action=checklogin";
+			if(isset($_GET["returnto"]))
+				$login_form_action_url .= "&returnto=" . rawurlencode($_GET["returnto"]);
+			
 			$title = "Login to $settings->sitename";
 			$content = "<h1>Login to $settings->sitename</h1>\n";
 			if(isset($_GET["failed"]))
 				$content .= "\t\t<p><em>Login failed.</em></p>\n";
 			if(isset($_GET["required"]))
 				$content .= "\t\t<p><em>$settings->sitename requires that you login before continuing.</em></p>\n";
-			$content .= "\t\t<form method='post' action='index.php?action=checklogin&returnto=" . rawurlencode($_SERVER['REQUEST_URI']) . "'>
+			$content .= "\t\t<form method='post' action='$login_form_action_url'>
 				<label for='user'>Username:</label>
 				<input type='text' name='user' id='user' />
 				<br />
@@ -2898,8 +2904,8 @@ register_module([
 					$_SESSION["$settings->sessionprefix-expiretime"] = $expiretime;
 					//redirect to wherever the user was going
 					http_response_code(302);
-					if(isset($_POST["goto"]))
-						header("location: " . $_POST["returnto"]);
+					if(isset($_GET["returnto"]))
+						header("location: " . $_GET["returnto"]);
 					else
 						header("location: index.php");
 					exit();

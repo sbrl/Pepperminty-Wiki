@@ -122,7 +122,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastupdate": 1447514093,
+        "lastupdate": 1447515644,
         "optional": false
     },
     {

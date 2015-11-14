@@ -18,9 +18,9 @@ register_module([
 			global $settings;
 			
 			// Build the action url that will actually perform the login
-			$login_form_action_url = "index.php?action=checklogin"
+			$login_form_action_url = "index.php?action=checklogin";
 			if(isset($_GET["returnto"]))
-				$login_form_action_url .= "&returnto=" . rawurlencode($_SERVER['REQUEST_URI']);
+				$login_form_action_url .= "&returnto=" . rawurlencode($_GET["returnto"]);
 			
 			$title = "Login to $settings->sitename";
 			$content = "<h1>Login to $settings->sitename</h1>\n";
@@ -66,8 +66,8 @@ register_module([
 					$_SESSION["$settings->sessionprefix-expiretime"] = $expiretime;
 					//redirect to wherever the user was going
 					http_response_code(302);
-					if(isset($_POST["returnto"]))
-						header("location: " . $_POST["returnto"]);
+					if(isset($_GET["returnto"]))
+						header("location: " . $_GET["returnto"]);
 					else
 						header("location: index.php");
 					exit();
