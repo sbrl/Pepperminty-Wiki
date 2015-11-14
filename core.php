@@ -740,7 +740,7 @@ class page_renderer
 							$result .= page_renderer::$nav_divider;
 						}
 						else
-							$result .= "<span class='inflexible'>Browsing as Anonymous.</span>" . /*page_renderer::$nav_divider . */"<span><a href='index.php?action=login'>Login</a></span>" . page_renderer::$nav_divider;
+							$result .= "<span class='inflexible'>Browsing as Anonymous.</span>" . /*page_renderer::$nav_divider . */"<span><a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>Login</a></span>" . page_renderer::$nav_divider;
 						break;
 
 					case "search": // Displays a search bar

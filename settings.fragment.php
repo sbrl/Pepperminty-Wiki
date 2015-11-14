@@ -41,13 +41,6 @@ $settings->updateurl = "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/
 // and deleting pages. It is strongly advised that you change this!
 $settings->sitesecret = "ed420502615bac9037f8f12abd4c9f02";
 
-// The directory in which to store all files, except this main index.php.
-// A single dot ('.') denotes the current directory.
-// Remember to omit the trailing slash from the directory name, as it is added
-// automatically by Pepperminty Wiki.
-// Note that this setting is currently experimental.
-$settings->data_storage_dir = "../data_test";
-
 // Determined whether edit is enabled. Set to false to disable disting for all
 // users (anonymous or otherwise).
 $settings->editing = true;
@@ -98,7 +91,18 @@ $settings->users = [
 	"user" => "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34" //cheese
 ];
 
-$settings->require_login_view = true;
+// Whether to require that users login before they do anything else. If you
+// combine this setting with the `data_storage_dir` option to move the storage
+// directory outside your web root, this will completely hide your wiki from
+// anyone who isn't logged in.
+$settings->require_login_view = false;
+
+// The directory in which to store all files, except this main index.php.
+// A single dot ('.') denotes the current directory.
+// Remember to omit the trailing slash from the directory name, as it is added
+// automatically by Pepperminty Wiki.
+// Note that this setting is currently experimental.
+$settings->data_storage_dir = "./";
 
 // Whether to use the new sha3 hashing algorithm that was standardised on the
 // 8th August 2015. Only works if you have strawbrary's sha3 extension
