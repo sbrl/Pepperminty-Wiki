@@ -88,6 +88,14 @@ register_module([
 
 The function that you provide will be executed after the initial setup has been completed.
 
+### `module_exists($id)`
+Checks to see if a module with the given id is currently loaded. Very useful for providing optional integration with other modules. Note that this may return false if all the modules haven't been loaded yet. All the modules are guaranteed to be loaded by the time the code in the `"code"` function is executed.
+
+```php
+<?php
+module_exists("feature-search"); // Returns true if the feature-search module is loaded, false otherwise.
+```
+
 ### `add_action($action_name, $code)`
 Since Pepperminty Wiki works through actions via the GET parameter `action`, there is a function that lets you register a new handler for any given action. Note that you should call this inside the function you passed to `register_handler()`. Here's an example:
 
