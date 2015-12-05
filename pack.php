@@ -37,7 +37,7 @@ $core = str_replace([
 	"{version}"
 ], [
 	$settings,
-	file_get_contents("version")
+	trim(file_get_contents("version"))
 ], $core);
 
 $result = $core;
