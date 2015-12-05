@@ -5,8 +5,8 @@ $start_time = time(true);
 // This will always be commented out for a release.
 if(file_exists("php_error.php"))
 {
-    require("php_error.php");
-    \php_error\reportErrors([ "error_reporting_on" => E_ALL | E_STRICT ]);
+	require("php_error.php");
+	\php_error\reportErrors([ "error_reporting_on" => E_ALL | E_STRICT ]);
 }
 
 {settings}
@@ -31,7 +31,7 @@ $paths->idindex = "idindex.json"; // The index that converts ids to page names
 
 // Prepend the storage data directory to all the defined paths.
 foreach ($paths as &$path) {
-    $path = $env->storage_prefix . $path;
+	$path = $env->storage_prefix . $path;
 }
 
 $paths->upload_file_prefix = "Files/"; // The prefix to append to uploaded files
@@ -273,8 +273,8 @@ function hide_email($str)
  */
 function starts_with($haystack, $needle)
 {
-     $length = strlen($needle);
-     return (substr($haystack, 0, $length) === $needle);
+	 $length = strlen($needle);
+	 return (substr($haystack, 0, $length) === $needle);
 }
 /**
  * mb_stripos all occurences
@@ -304,33 +304,33 @@ function mb_stripos_all($haystack, $needle) {
 
 function system_mime_type_extensions() {
 	global $settings;
-    # Returns the system MIME type mapping of MIME types to extensions, as defined in /etc/mime.types (considering the first
-    # extension listed to be canonical).
-    $out = array();
-    $file = fopen($settings->mime_extension_mappings_location, 'r');
-    while(($line = fgets($file)) !== false) {
-        $line = trim(preg_replace('/#.*/', '', $line));
-        if(!$line)
-            continue;
-        $parts = preg_split('/\s+/', $line);
-        if(count($parts) == 1)
-            continue;
-        $type = array_shift($parts);
-        if(!isset($out[$type]))
-            $out[$type] = array_shift($parts);
-    }
-    fclose($file);
-    return $out;
+	# Returns the system MIME type mapping of MIME types to extensions, as defined in /etc/mime.types (considering the first
+	# extension listed to be canonical).
+	$out = array();
+	$file = fopen($settings->mime_extension_mappings_location, 'r');
+	while(($line = fgets($file)) !== false) {
+		$line = trim(preg_replace('/#.*/', '', $line));
+		if(!$line)
+			continue;
+		$parts = preg_split('/\s+/', $line);
+		if(count($parts) == 1)
+			continue;
+		$type = array_shift($parts);
+		if(!isset($out[$type]))
+			$out[$type] = array_shift($parts);
+	}
+	fclose($file);
+	return $out;
 }
 function system_mime_type_extension($type) {
-    # Returns the canonical file extension for the MIME type specified, as defined in /etc/mime.types (considering the first
-    # extension listed to be canonical).
-    #
-    # $type - the MIME type
-    static $exts;
-    if(!isset($exts))
-        $exts = system_mime_type_extensions();
-    return isset($exts[$type]) ? $exts[$type] : null;
+	# Returns the canonical file extension for the MIME type specified, as defined in /etc/mime.types (considering the first
+	# extension listed to be canonical).
+	#
+	# $type - the MIME type
+	static $exts;
+	if(!isset($exts))
+		$exts = system_mime_type_extensions();
+	return isset($exts[$type]) ? $exts[$type] : null;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -345,58 +345,58 @@ function system_mime_type_extension($type) {
  */
 if(!file_exists($paths->pageindex))
 {
-    $glob_str = $env->storage_prefix . "*.md";
+	$glob_str = $env->storage_prefix . "*.md";
 	$existingpages = glob_recursive($glob_str);
-    // Debug statements. Uncomment when debugging the pageindex regenerator.
-    // var_dump($env->storage_prefix);
-    // var_dump($glob_str);
-    // var_dump($existingpages);
+	// Debug statements. Uncomment when debugging the pageindex regenerator.
+	// var_dump($env->storage_prefix);
+	// var_dump($glob_str);
+	// var_dump($existingpages);
 	$pageindex = new stdClass();
 	// We use a for loop here because foreach doesn't loop over new values inserted
 	// while we were looping
 	for($i = 0; $i < count($existingpages); $i++)
 	{
 		$pagefilename = $existingpages[$i];
-        
+		
 		// Create a new entry
 		$newentry = new stdClass();
 		$newentry->filename = utf8_encode(substr( // Store the filename, whilst trimming the storage prefix
-            $pagefilename,
-            strlen(preg_replace("/^\.\//i", "", $env->storage_prefix)) // glob_recursive trim the ./ from returned filenames , so we need to as well
-        ));
-        // Remove the `./` from the beginning if it's still hanging around
-        if(substr($newentry->filename, 0, 2) == "./")
-            $newentry->filename = substr($newentry->filename, 2);
+			$pagefilename,
+			strlen(preg_replace("/^\.\//i", "", $env->storage_prefix)) // glob_recursive trim the ./ from returned filenames , so we need to as well
+		));
+		// Remove the `./` from the beginning if it's still hanging around
+		if(substr($newentry->filename, 0, 2) == "./")
+			$newentry->filename = substr($newentry->filename, 2);
 		$newentry->size = filesize($pagefilename); // Store the page size
 		$newentry->lastmodified = filemtime($pagefilename); // Store the date last modified
 		// Todo find a way to keep the last editor independent of the page index
 		$newentry->lasteditor = utf8_encode("unknown"); // Set the editor to "unknown"
 		// Extract the name of the (sub)page without the ".md"
 		$pagekey = utf8_encode(substr($newentry->filename, 0, -3));
-        
-        if(file_exists($env->storage_prefix . $pagekey) && // If it exists...
-            !is_dir($env->storage_prefix . $pagekey)) // ...and isn't a directory
-        {
-            // This page (potentially) has an associated file!
-            // Let's investigate.
-            
-            // Blindly add the file to the pageindex for now.
-            // Future We might want to do a security check on the file later on.
-            // File a bug if you think we should do this.
-            $newentry->uploadedfile = true; // Yes this page does have an uploaded file associated with it
-            $newentry->uploadedfilepath = $pagekey; // It's stored here
-            
-            // Work out what kind of file it really is
-            $mimechecker = finfo_open(FILEINFO_MIME_TYPE);
-            $newentry->uploadedfilemime = finfo_file($mimechecker, $env->storage_prefix . $pagekey);
-        }
-        
-        // Debug statements. Uncomment when debugging the pageindex regenerator.
-        // echo("pagekey: ");
-        // var_dump($pagekey);
-        // echo("newentry: ");
-        // var_dump($newentry);
-        
+		
+		if(file_exists($env->storage_prefix . $pagekey) && // If it exists...
+			!is_dir($env->storage_prefix . $pagekey)) // ...and isn't a directory
+		{
+			// This page (potentially) has an associated file!
+			// Let's investigate.
+			
+			// Blindly add the file to the pageindex for now.
+			// Future We might want to do a security check on the file later on.
+			// File a bug if you think we should do this.
+			$newentry->uploadedfile = true; // Yes this page does have an uploaded file associated with it
+			$newentry->uploadedfilepath = $pagekey; // It's stored here
+			
+			// Work out what kind of file it really is
+			$mimechecker = finfo_open(FILEINFO_MIME_TYPE);
+			$newentry->uploadedfilemime = finfo_file($mimechecker, $env->storage_prefix . $pagekey);
+		}
+		
+		// Debug statements. Uncomment when debugging the pageindex regenerator.
+		// echo("pagekey: ");
+		// var_dump($pagekey);
+		// echo("newentry: ");
+		// var_dump($newentry);
+		
 		// Subpage parent checker
 		if(strpos($pagekey, "/") !== false)
 		{
@@ -466,37 +466,37 @@ class ids
 		else
 			return $idindex->$id;
 	}
-    
-    /*
-     * @summary Moves a page in the id index from $oldpagename to $newpagename.
-     *          Note that this function doesn't perform any special checks to
-     *          make sure that the destination name doesn't already exist.
-     */
-    public static function movepagename($oldpagename, $newpagename)
-    {
-        global $idindex, $paths;
-        
-        $pageid = self::getid($oldpagename);
-        $idindex->$pageid = $newpagename;
-        
-        file_put_contents($paths->idindex, json_encode($idindex));
-    }
-    
-    /*
-     * @summary Removes the given page name from the id index. Note that this
-     *          function doesn't handle multiple entries with the same name.
-     */
-    public static function deletepagename($pagename)
-    {
-        global $idindex, $paths;
-        
-        // Get the id of the specified page
-        $pageid = self::getid($pagename);
-        // Remove it from the pageindex
-        unset($idindex->$pageid);
-        // Save the id index
-        file_put_contents($paths->idindex, json_encode($idindex));
-    }
+	
+	/*
+	 * @summary Moves a page in the id index from $oldpagename to $newpagename.
+	 *		  Note that this function doesn't perform any special checks to
+	 *		  make sure that the destination name doesn't already exist.
+	 */
+	public static function movepagename($oldpagename, $newpagename)
+	{
+		global $idindex, $paths;
+		
+		$pageid = self::getid($oldpagename);
+		$idindex->$pageid = $newpagename;
+		
+		file_put_contents($paths->idindex, json_encode($idindex));
+	}
+	
+	/*
+	 * @summary Removes the given page name from the id index. Note that this
+	 *		  function doesn't handle multiple entries with the same name.
+	 */
+	public static function deletepagename($pagename)
+	{
+		global $idindex, $paths;
+		
+		// Get the id of the specified page
+		$pageid = self::getid($pagename);
+		// Remove it from the pageindex
+		unset($idindex->$pageid);
+		// Save the id index
+		file_put_contents($paths->idindex, json_encode($idindex));
+	}
 
 	/*
 	 * @summary Assigns an id to a pagename. Doesn't check to make sure that
@@ -703,7 +703,7 @@ class page_renderer
 	{
 		return self::render($title, $content, self::$minimal_content_template);
 	}
-    
+	
 	public static function get_css_as_html()
 	{
 		global $settings;
@@ -826,12 +826,12 @@ if($settings->require_login_view === true && // If this site requires a login in
    !$env->is_logged_in && // And the user isn't logged in
    !in_array($_GET["action"], [ "login", "checklogin" ])) // And the user isn't trying to login
 {
-    // Redirect the user to the login page
-    http_response_code(307);
-    $url = "?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "&required=true";
-    header("location: $url");
-    exit(page_renderer::render("Login required - $settings->sitename", "<p>$settings->sitename requires that you login before you are able to access it.</p>
-        <p><a href='$url'>Login</a>.</p>"));
+	// Redirect the user to the login page
+	http_response_code(307);
+	$url = "?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "&required=true";
+	header("location: $url");
+	exit(page_renderer::render("Login required - $settings->sitename", "<p>$settings->sitename requires that you login before you are able to access it.</p>
+		<p><a href='$url'>Login</a>.</p>"));
 }
 //////////////////////////////////////
 //////////////////////////////////////
@@ -852,6 +852,21 @@ function register_module($moduledata)
 	//echo("registering module\n");
 	//var_dump($moduledata);
 	$modules[] = $moduledata;
+}
+/**
+ * Checks to see whether a module with the given id exists.
+ * @param  string   $id	 The id to search for.
+ * @return bool     Whether a module is currently loaded with the given id.
+ */
+function module_exists($id)
+{
+	global $modules;
+	foreach($modules as $module)
+	{
+		if($module["id"] == $id)
+			return true;
+	}
+	return false;
 }
 
 // Function to register an action handler

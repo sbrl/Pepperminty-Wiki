@@ -50,7 +50,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki. Note that this module, at the moment, just contains test code while I figure out how best to write a search engine.",
         "id": "feature-search",
-        "lastupdate": 1447521069,
+        "lastupdate": 1449335838,
         "optional": false
     },
     {
@@ -77,7 +77,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to delete pages.",
         "id": "page-delete",
-        "lastupdate": 1447520092,
+        "lastupdate": 1449341692,
         "optional": false
     },
     {
@@ -86,7 +86,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1447053850,
+        "lastupdate": 1449337027,
         "optional": false
     },
     {

@@ -43,7 +43,7 @@ register_module([
 			ids::deletepagename($env->page);
 			
 			// Delete the page from the search index, if that module is installed
-			if(isset($modules["feature-search"]))
+			if(module_exists("feature-search"))
 			{
 				$pageid = ids::getid($env->page);
 				$invindex = search::load_invindex($paths->searchindex);
