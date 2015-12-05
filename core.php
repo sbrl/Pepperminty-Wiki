@@ -374,7 +374,8 @@ if(!file_exists($paths->pageindex))
 		// Extract the name of the (sub)page without the ".md"
 		$pagekey = utf8_encode(substr($newentry->filename, 0, -3));
         
-        if(file_exists($env->storage_prefix . $pagekey))
+        if(file_exists($env->storage_prefix . $pagekey) && // If it exists...
+            !is_dir($env->storage_prefix . $pagekey)) // ...and isn't a directory
         {
             // This page (potentially) has an associated file!
             // Let's investigate.
