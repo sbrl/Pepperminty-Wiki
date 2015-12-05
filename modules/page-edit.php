@@ -139,7 +139,9 @@ register_module([
 			// Update the inverted search index
 			
 			// Construct an index for the old and new page content
-			$oldindex = search::index(file_get_contents("$env->page.md"));
+			$oldindex = [];
+			if(file_exists("$env->page.md"))
+				$oldindex = search::index(file_get_contents("$env->page.md"));
 			$newindex = search::index($pagedata);
 			
 			// Compare the indexes of the old and new content
