@@ -121,7 +121,7 @@ $settings->admins = [ "admin" ];
 $settings->admindisplaychar = "&#9670;";
 
 // The string that is prepended a page's name in the page title if it is
-// protected. Defaults to a lock symbol.
+// protected. Defaults to a lock symbol. (&#128274;)
 $settings->protectedpagechar = "&#128274;";
 
 // Contact details for the site administrator. Since users can only be added by
