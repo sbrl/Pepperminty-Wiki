@@ -30,6 +30,11 @@ register_module([
 		add_action("search", function() {
 			global $settings, $env, $pageindex, $paths;
 			
+			// Create the inverted index if it doesn't exist.
+			// todo In the future perhaps a CLI for this would be good?
+			if(!file_exists($paths->searchindex))
+				search::rebuild_invindex();
+			
 			if(!isset($_GET["query"]))
 				exit(page_renderer::render("No Search Terms - Error - $settings->sitename", "<p>You didn't specify any search terms. Try typing some into the box above.</p>"));
 			
