@@ -2846,7 +2846,7 @@ register_module([
 				<ul>\n";
 				foreach($all_tags as $tag)
 				{
-					$content .= "			<li><a href='?action=list_tags&tag=" . rawurlencode($tag) . "'>$tag</a></li>\n";
+					$content .= "			<li><a href='?action=list-tags&tag=" . rawurlencode($tag) . "'>$tag</a></li>\n";
 				}
 				$content .= "</ul>";
 				
