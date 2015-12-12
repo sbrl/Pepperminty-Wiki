@@ -19,10 +19,13 @@ Above: A Main Page with the sidebar enabled.
 - Internal links
 - Printable page view
 - Customisable theme
-- Basic 'search' bar
+- ~~Basic 'search' bar~~ A full text search engine!
 - (Optional) Sidebar with a tree of all the current pages
 - List of all pages & details
 - Inbuilt help page
+- Tags
+- Image upload
+- Page protection
 
 ## Demo
 A Live demo of the latest stable version can be found over at [my website](//starbeamrainbowlabs.com/labs/peppermint)
