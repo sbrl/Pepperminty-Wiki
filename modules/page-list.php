@@ -71,7 +71,7 @@ function generate_page_list($pagelist)
 {
 	global $pageindex;
 	
-	$result = "<table>
+	$result = "<table class='page-list'>
 		<tr>
 			<th>Page Name</th>
 			<th>Size</th>
