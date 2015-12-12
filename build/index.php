@@ -307,7 +307,9 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .page-tags-display { margin: 0.5rem 0 0 0; padding: 0; list-style-type: none; }
 .page-tags-display li { display: inline-block; margin: 0.5rem; padding: 0.5rem; background: #D2C3DD; white-space: nowrap; }
 .page-tags-display li a { color: #FB701A; text-decoration: none; }
-.page-tags-display li:before { content: \"\\A\"; position: relative; top: 0.03rem; left: -0.9rem; width: 0; height: 0; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; border-right: 0.5rem solid #D2C3DD; }
+.page-tags-display li::before { content: \"\\A\"; position: relative; top: 0.03rem; left: -0.9rem; width: 0; height: 0; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; border-right: 0.5rem solid #D2C3DD; }
+
+.mini-tag { background: #d2c3dd; padding: 0.2rem 0.4rem; color: #fb701a; text-decoration: none; }
 
 footer { padding: 2rem; }
 /* #ffdb6d #36962c */";
@@ -2884,14 +2886,28 @@ function generate_page_list($pagelist)
 			<th>Size</th>
 			<th>Last Editor</th>
 			<th>Last Edit Time</th>
+			<th>Tags</th>
 		</tr>\n";
 	foreach($pagelist as $pagename)
 	{
+		// Construct a list of tags that are attached to this page ready for display
+		$tags = "";
+		// Make sure that this page does actually have some tags first
+		if(isset($pageindex->$pagename->tags))
+		{
+			foreach($pageindex->$pagename->tags as $tag)
+			{
+				$tags .= "<a href='?action=list-tags&tag=" . rawurlencode($tag) . "' class='mini-tag'>$tag</a>, ";
+			}
+			$tags = substr($tags, 0, -2); // Remove the last ", " from the tag list
+		}
+		
 			$result .= "\t\t<tr>
 			<td><a href='index.php?page=$pagename'>$pagename</a></td>
 			<td>" . human_filesize($pageindex->$pagename->size) . "</td>
 			<td>" . $pageindex->$pagename->lasteditor . "</td>
 			<td>" . human_time_since($pageindex->$pagename->lastmodified) . " <small>(" . date("l jS \of F Y \a\\t h:ia T", $pageindex->$pagename->lastmodified) . ")</small></td>
+			<td>$tags</td>
 	
 	</tr>\n";
 	}
