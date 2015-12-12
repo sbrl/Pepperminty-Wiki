@@ -311,6 +311,8 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .page-tags-display li::before { content: \"\\A\"; position: relative; top: 0.03rem; left: -0.9rem; width: 0; height: 0; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; border-right: 0.5rem solid #D2C3DD; }
 
 .page-list td { padding: 0.5rem 0.2rem 0.5rem 0.2rem; }
+.tag-list { list-style-type: none; margin: 0.5rem; padding: 0.5rem; }
+.tag-list li { margin: 1rem }
 .mini-tag { background: #d2c3dd; padding: 0.2rem 0.4rem; color: #fb701a; text-decoration: none; }
 
 footer { padding: 2rem; }
@@ -2847,10 +2849,10 @@ register_module([
 				}
 				
 				$content = "<h1>All tags</h1>
-				<ul>\n";
+				<ul class='tag-list'>\n";
 				foreach($all_tags as $tag)
 				{
-					$content .= "			<li><a href='?action=list-tags&tag=" . rawurlencode($tag) . "'>$tag</a></li>\n";
+					$content .= "			<li><a href='?action=list-tags&tag=" . rawurlencode($tag) . "' class='mini-tag'>$tag</a></li>\n";
 				}
 				$content .= "</ul>";
 				

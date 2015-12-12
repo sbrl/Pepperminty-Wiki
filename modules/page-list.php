@@ -36,10 +36,10 @@ register_module([
 				}
 				
 				$content = "<h1>All tags</h1>
-				<ul>\n";
+				<ul class='tag-list'>\n";
 				foreach($all_tags as $tag)
 				{
-					$content .= "			<li><a href='?action=list-tags&tag=" . rawurlencode($tag) . "'>$tag</a></li>\n";
+					$content .= "			<li><a href='?action=list-tags&tag=" . rawurlencode($tag) . "' class='mini-tag'>$tag</a></li>\n";
 				}
 				$content .= "</ul>";
 				
