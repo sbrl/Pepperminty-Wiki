@@ -106,9 +106,10 @@ if($env->is_logged_in)
  */
 function human_filesize($bytes, $decimals = 2)
 {
-	$sz = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "YB", "ZB"];
+	$sz = ["b", "kb", "mb", "gb", "tb", "pb", "eb", "yb", "zb"];
 	$factor = floor((strlen($bytes) - 1) / 3);
-	return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+	$result = round($bytes / pow(1024, $factor), $decimals);
+	return $result . @$sz[$factor];
 }
 /*
  * @summary	Calculates the time sincce a particular timestamp and returns a

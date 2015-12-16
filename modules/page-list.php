@@ -88,7 +88,7 @@ function generate_page_list($pagelist)
 		
 		$result .= "<li><a href='index.php?page=$pagename'>$pagename</a>
 		<em class='size'>(" . human_filesize($pageindex->$pagename->size) . ")</em>
-		<span class='editor'>&#9998;" . $pageindex->$pagename->lasteditor . "</span>
+		<span class='editor'>&#9998; " . $pageindex->$pagename->lasteditor . "</span>
 		<time title='" . date("l jS \of F Y \a\\t h:ia T", $pageindex->$pagename->lastmodified) . "'>" . human_time_since($pageindex->$pagename->lastmodified) . "</time>
 		<span class='tags'>$tags</span></li>";
 	}

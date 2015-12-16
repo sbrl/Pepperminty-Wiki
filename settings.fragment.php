@@ -301,7 +301,7 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 
 .page-list { list-style-type: none; margin: 0.5rem; padding: 0.5rem; }
 .page-list li { margin: 0.5rem; padding: 0.5rem; }
-.page-list li .size { color: rgba(30, 30, 30, 0.5); }
+.page-list li .size { margin-left: 0.7rem; color: rgba(30, 30, 30, 0.5); }
 .page-list li .editor { display: inline-block; margin: 0 0.5rem; }
 .page-list li .tags { margin: 0 1rem; }
 .tag-list { list-style-type: none; margin: 0.5rem; padding: 0.5rem; }

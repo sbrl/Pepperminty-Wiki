@@ -312,7 +312,7 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 
 .page-list { list-style-type: none; margin: 0.5rem; padding: 0.5rem; }
 .page-list li { margin: 0.5rem; padding: 0.5rem; }
-.page-list li .size { color: rgba(30, 30, 30, 0.5); }
+.page-list li .size { margin-left: 0.7rem; color: rgba(30, 30, 30, 0.5); }
 .page-list li .editor { display: inline-block; margin: 0 0.5rem; }
 .page-list li .tags { margin: 0 1rem; }
 .tag-list { list-style-type: none; margin: 0.5rem; padding: 0.5rem; }
@@ -460,9 +460,10 @@ if($env->is_logged_in)
  */
 function human_filesize($bytes, $decimals = 2)
 {
-	$sz = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "YB", "ZB"];
+	$sz = ["b", "kb", "mb", "gb", "tb", "pb", "eb", "yb", "zb"];
 	$factor = floor((strlen($bytes) - 1) / 3);
-	return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+	$result = round($bytes / pow(1024, $factor), $decimals);
+	return $result . @$sz[$factor];
 }
 /*
  * @summary	Calculates the time sincce a particular timestamp and returns a
@@ -2905,7 +2906,7 @@ function generate_page_list($pagelist)
 		
 		$result .= "<li><a href='index.php?page=$pagename'>$pagename</a>
 		<em class='size'>(" . human_filesize($pageindex->$pagename->size) . ")</em>
-		<span class='editor'>&#9998;" . $pageindex->$pagename->lasteditor . "</span>
+		<span class='editor'>&#9998; " . $pageindex->$pagename->lasteditor . "</span>
 		<time title='" . date("l jS \of F Y \a\\t h:ia T", $pageindex->$pagename->lastmodified) . "'>" . human_time_since($pageindex->$pagename->lastmodified) . "</time>
 		<span class='tags'>$tags</span></li>";
 	}
