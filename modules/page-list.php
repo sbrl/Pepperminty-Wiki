@@ -70,15 +70,8 @@ register_module([
 function generate_page_list($pagelist)
 {
 	global $pageindex;
-	
-	$result = "<table class='page-list'>
-		<tr>
-			<th>Page Name</th>
-			<th>Size</th>
-			<th>Last Editor</th>
-			<th>Last Edit Time</th>
-			<th>Tags</th>
-		</tr>\n";
+	// ✎ &#9998; 🕒 &#128338;
+	$result = "<ul class='page-list'>\n";
 	foreach($pagelist as $pagename)
 	{
 		// Construct a list of tags that are attached to this page ready for display
@@ -93,16 +86,13 @@ function generate_page_list($pagelist)
 			$tags = substr($tags, 0, -2); // Remove the last ", " from the tag list
 		}
 		
-			$result .= "\t\t<tr>
-			<td><a href='index.php?page=$pagename'>$pagename</a></td>
-			<td>" . human_filesize($pageindex->$pagename->size) . "</td>
-			<td>" . $pageindex->$pagename->lasteditor . "</td>
-			<td>" . human_time_since($pageindex->$pagename->lastmodified) . " <small>(" . date("l jS \of F Y \a\\t h:ia T", $pageindex->$pagename->lastmodified) . ")</small></td>
-			<td>$tags</td>
-	
-	</tr>\n";
+		$result .= "<li><a href='index.php?page=$pagename'>$pagename</a>
+		<em class='size'>(" . human_filesize($pageindex->$pagename->size) . ")</em>
+		<span class='editor'>&#9998;" . $pageindex->$pagename->lasteditor . "</span>
+		<time title='" . date("l jS \of F Y \a\\t h:ia T", $pageindex->$pagename->lastmodified) . "'>" . human_time_since($pageindex->$pagename->lastmodified) . "</time>
+		<span class='tags'>$tags</span></li>";
 	}
-	$result .= "	</table>";
+	$result .= "	</ul>";
 	
 	return $result;
 }

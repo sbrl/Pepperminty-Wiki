@@ -310,7 +310,11 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .page-tags-display li a { color: #FB701A; text-decoration: none; }
 .page-tags-display li::before { content: \"\\A\"; position: relative; top: 0.03rem; left: -0.9rem; width: 0; height: 0; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; border-right: 0.5rem solid #D2C3DD; }
 
-.page-list td { padding: 0.5rem 0.2rem 0.5rem 0.2rem; }
+.page-list { list-style-type: none; margin: 0.5rem; padding: 0.5rem; }
+.page-list li { margin: 0.5rem; padding: 0.5rem; }
+.page-list li .size { color: rgba(30, 30, 30, 0.5); }
+.page-list li .editor { display: inline-block; margin: 0 0.5rem; }
+.page-list li .tags { margin: 0 1rem; }
 .tag-list { list-style-type: none; margin: 0.5rem; padding: 0.5rem; }
 .tag-list li { margin: 1rem }
 .mini-tag { background: #d2c3dd; padding: 0.2rem 0.4rem; color: #fb701a; text-decoration: none; }
@@ -2883,15 +2887,8 @@ register_module([
 function generate_page_list($pagelist)
 {
 	global $pageindex;
-	
-	$result = "<table class='page-list'>
-		<tr>
-			<th>Page Name</th>
-			<th>Size</th>
-			<th>Last Editor</th>
-			<th>Last Edit Time</th>
-			<th>Tags</th>
-		</tr>\n";
+	// ✎ &#9998; 🕒 &#128338;
+	$result = "<ul class='page-list'>\n";
 	foreach($pagelist as $pagename)
 	{
 		// Construct a list of tags that are attached to this page ready for display
@@ -2906,16 +2903,13 @@ function generate_page_list($pagelist)
 			$tags = substr($tags, 0, -2); // Remove the last ", " from the tag list
 		}
 		
-			$result .= "\t\t<tr>
-			<td><a href='index.php?page=$pagename'>$pagename</a></td>
-			<td>" . human_filesize($pageindex->$pagename->size) . "</td>
-			<td>" . $pageindex->$pagename->lasteditor . "</td>
-			<td>" . human_time_since($pageindex->$pagename->lastmodified) . " <small>(" . date("l jS \of F Y \a\\t h:ia T", $pageindex->$pagename->lastmodified) . ")</small></td>
-			<td>$tags</td>
-	
-	</tr>\n";
+		$result .= "<li><a href='index.php?page=$pagename'>$pagename</a>
+		<em class='size'>(" . human_filesize($pageindex->$pagename->size) . ")</em>
+		<span class='editor'>&#9998;" . $pageindex->$pagename->lasteditor . "</span>
+		<time title='" . date("l jS \of F Y \a\\t h:ia T", $pageindex->$pagename->lastmodified) . "'>" . human_time_since($pageindex->$pagename->lastmodified) . "</time>
+		<span class='tags'>$tags</span></li>";
 	}
-	$result .= "	</table>";
+	$result .= "	</ul>";
 	
 	return $result;
 }
