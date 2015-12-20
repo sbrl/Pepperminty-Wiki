@@ -2859,7 +2859,7 @@ register_module([
 				{
 					$content .= "			<li><a href='?action=list-tags&tag=" . rawurlencode($tag) . "' class='mini-tag'>$tag</a></li>\n";
 				}
-				$content .= "</ul>";
+				$content .= "</ul>\n";
 				
 				exit(page_renderer::render("All tags - $settings->sitename", $content));
 			}
@@ -2879,6 +2879,8 @@ register_module([
 			
 			$content = "<h1>$tag</h1>\n";
 			$content .= generate_page_list($pagelist);
+			
+			$content .= "<p>(<a href='?action=list-tags'>All tags</a>)</p>\n";
 			
 			exit(page_renderer::render("$tag - Page List - $settings->sitename", $content));
 		});
@@ -2910,7 +2912,7 @@ function generate_page_list($pagelist)
 		<time title='" . date("l jS \of F Y \a\\t h:ia T", $pageindex->$pagename->lastmodified) . "'>" . human_time_since($pageindex->$pagename->lastmodified) . "</time>
 		<span class='tags'>$tags</span></li>";
 	}
-	$result .= "	</ul>";
+	$result .= "		</ul>\n";
 	
 	return $result;
 }
