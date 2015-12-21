@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page list",
-	"version" => "0.6",
+	"version" => "0.8",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that lists all the pages in the index along with their metadata.",
 	"id" => "page-list",
