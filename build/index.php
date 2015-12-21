@@ -1272,7 +1272,9 @@ function register_save_preprocessor($func)
 $help_sections = [];
 function add_help_section($index, $title, $content)
 {
-	$help_section[$index] = [
+	global $help_sections;
+	
+	$help_sections[$index] = [
 		"title" => $title,
 		"content" => $content
 	];
@@ -2288,7 +2290,7 @@ register_module([
 		});
 		
 		// Register a section on the help page on uploading files
-		add_help_section("28-uploading-files", "Uploading Files", "<p>$settings->sitename supports the uploading of files, though it is up to " . $admindetails["name"] . ", $settings->sitename's administrator as to whether it is enabled or not (uploads are currently " . (($settings->upload_enabled) ? "enabled" : "disabled") . ").</p>
+		add_help_section("28-uploading-files", "Uploading Files", "<p>$settings->sitename supports the uploading of files, though it is up to " . $settings->admindetails["name"] . ", $settings->sitename's administrator as to whether it is enabled or not (uploads are currently " . (($settings->upload_enabled) ? "enabled" : "disabled") . ").</p>
 		<p>Currently Pepperminty Wiki (the software that $settings->sitename uses) only supports the uploading of images, although more file types should be supported in the future (<a href='//github.com/sbrl/Pepperminty-Wiki/issues'>open an issue on GitHub</a> if you are interested in support for more file types).</p>
 		<p>Uploading a file is actually quite simple. Click the &quot;Upload&quot; option in the &quot;More...&quot; menu to go to the upload page. The upload page will tell you what types of file $settings->sitename allows, and the maximum supported filesize for files that you upload (this is usually set by the web server that the wiki is running on).</p>
 		<p>Use the file chooser to select the file that you want to upload, and then decide on a name for it. Note that the name that you choose should not include the file extension, as this will be determined automatically. Enter a description that will appear on the file's page, and then click upload.</p>");
@@ -2815,16 +2817,31 @@ register_module([
 		add_action("help", function() {
 			global $settings, $version, $help_sections;
 			
+			if(isset($_GET["dev"]) and $_GET["dev"] == "yes")
+			{
+				$title = "Developers Help - $settings->sitename";
+				$content = "<p>$settings->sitename runs on Pepperminty Wiki, an entire wiki packed into a single file. This page contains some information that developers may find useful.</p>
+				<p>A full guide to developing a Pepperminty Wiki module can be found <a href='//github.com/sbrl/Pepperminty-Wiki/blob/master/Module_API_Docs.md#module-api-documentation'>on GitHub</a>.</p>
+				<p>A full guide to Pepperminty Wiki can be found <a href=''
+				<p>The following help sections are currently registered:</p>
+				<table><tr><th>Index</th><th>Title</th><th>Length</th></tr>\n";
+				foreach($help_sections as $index => $section)
+				{
+					$content .= "\t\t\t<tr><td>$index</td><td>" . $section["title"] . "</td><td>" . strlen($section["content"]) . "</td></tr>\n";
+				}
+				$content .= "\t\t</table>";
+			}
 			$title = "Help - $settings->sitename";
 			
 			// Sort the help sections by key
 			ksort($help_sections, SORT_NATURAL);
 			
-			$content .= "	<h1>$settings->sitename Help</h1>
+			$content = "	<h1>$settings->sitename Help</h1>
 		<p>Welcome to $settings->sitename!</p>
 		<p>$settings->sitename is powered by Pepperminty wiki, a complete wiki in a box you can drop into your server.</p>";
 			
-			// todo Insert a tabel of contents here?
+			var_dump($help_sections);
+			// todo Insert a table of contents here?
 			
 			foreach($help_sections as $index => $section)
 			{
@@ -2834,11 +2851,6 @@ register_module([
 				$content .= $section["content"] . "\n";
 			}
 			
-			$content = "	<h1>$settings->sitename Help</h1>
-	<h2>Administrator Actions</h2>
-	<p>By default, the <code>delete</code> and <code>move</code> actions are shown on the nav bar. These can be used by administrators to delete or move pages.</p>
-	<p>The other thing admininistrators can do is update the wiki (provided they know the site's secret). This page can be found here: <a href='?action=update'>Update $settings->sitename</a>.</p>
-	<p>$settings->sitename is currently running on Pepperminty Wiki <code>$version</code></p>";
 			exit(page_renderer::render_main($title, $content));
 		});
 		
@@ -2846,6 +2858,9 @@ register_module([
 		add_help_section("5-navigation", "Navigation", "<h2>Navigating</h2>
 		<p>All the navigation links can be found on the top bar, along with a search box (if your site administrator has enabled it). There is also a &quot;More...&quot; menu in the top right that contains some additional links that you may fine useful.</p>
 		<p>This page, along with the credits page, can be found on the bar at the bottom of every page.</p>");
+		
+		add_help_section("999-extra", "Extra Information", "<p>You can find out whch version of Pepperminty Wiki $settings->sitename is using by visiting the <a href='?action=credits'>credits</a> page.</p>
+		<p>Information for developers can be found on <a href='?action=help&dev=yes'>this page</a>.</p>");
 	}
 ]);
 
