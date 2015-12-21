@@ -19,29 +19,29 @@
     },
     {
         "name": "Raw page source",
-        "version": "0.4",
+        "version": "0.5",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a 'raw' action that shows you the raw source of a page.",
         "id": "action-raw",
-        "lastupdate": 1446975142,
+        "lastupdate": 1450706567,
         "optional": false
     },
     {
         "name": "Sidebar",
-        "version": "0.2",
+        "version": "0.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a sidebar to the left hand side of every page. Add '$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
         "id": "extra-sidebar",
-        "lastupdate": 1447516807,
+        "lastupdate": 1450704211,
         "optional": false
     },
     {
         "name": "Redirect pages",
-        "version": "0.1",
+        "version": "0.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
         "id": "feature-redirect",
-        "lastupdate": 1445170746,
+        "lastupdate": 1450686571,
         "optional": false
     },
     {
@@ -55,11 +55,11 @@
     },
     {
         "name": "Uploader",
-        "version": "0.2",
+        "version": "0.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File:' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1450293208,
+        "lastupdate": 1450706563,
         "optional": false
     },
     {
@@ -73,29 +73,29 @@
     },
     {
         "name": "Page deleter",
-        "version": "0.8",
+        "version": "0.9",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to delete pages.",
         "id": "page-delete",
-        "lastupdate": 1449341692,
+        "lastupdate": 1450687269,
         "optional": false
     },
     {
         "name": "Page editor",
-        "version": "0.12",
+        "version": "0.13",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1449337027,
+        "lastupdate": 1450687286,
         "optional": false
     },
     {
         "name": "Export",
-        "version": "0.3",
+        "version": "0.4",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that you can use to export your wiki as a .zip file. Uses $settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
         "id": "page-export",
-        "lastupdate": 1447003197,
+        "lastupdate": 1450686594,
         "optional": false
     },
     {
@@ -104,16 +104,16 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the help action. You really want this one.",
         "id": "page-help",
-        "lastupdate": 1445170746,
+        "lastupdate": 1450687304,
         "optional": false
     },
     {
         "name": "Page list",
-        "version": "0.6",
+        "version": "0.9",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1450608845,
+        "lastupdate": 1450687245,
         "optional": false
     },
     {
@@ -122,7 +122,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastupdate": 1447516536,
+        "lastupdate": 1450705429,
         "optional": false
     },
     {
@@ -136,11 +136,11 @@
     },
     {
         "name": "Page mover",
-        "version": "0.7",
+        "version": "0.8",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
         "id": "page-move",
-        "lastupdate": 1447267600,
+        "lastupdate": 1450687315,
         "optional": false
     },
     {
@@ -163,11 +163,11 @@
     },
     {
         "name": "Default Parser",
-        "version": "0.8",
+        "version": "0.9",
         "author": "Johnny Broadway & Starbeamrainbowlabs",
         "description": "The default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page.",
         "id": "parser-default",
-        "lastupdate": 1446116543,
+        "lastupdate": 1450687319,
         "optional": false
     },
     {

@@ -1269,8 +1269,16 @@ function register_save_preprocessor($func)
 	$save_preprocessors[] = $func;
 }
 
-//////////////////////////////////////////////////////////////////
+$help_sections = [];
+function add_help_section($index, $title, $content)
+{
+	$help_section[$index] = [
+		"title" => $title,
+		"content" => $content
+	];
+}
 
+//////////////////////////////////////////////////////////////////
 
 
 register_module([
@@ -1349,11 +1357,13 @@ register_module([
 
 register_module([
 	"name" => "Raw page source",
-	"version" => "0.4",
+	"version" => "0.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a 'raw' action that shows you the raw source of a page.",
 	"id" => "action-raw",
 	"code" => function() {
+		global $settings;
+		
 		add_action("raw", function() {
 			global $env;
 
@@ -1363,6 +1373,9 @@ register_module([
 			exit(file_get_contents("$env->storage_prefix$env->page.md"));
 			exit();
 		});
+		
+		add_help_section("800-raw-page-content", "Viewing Raw Page Content", "<p>Although you can use the edit page to view a page's source, you can also ask $settings->sitename to send you the raw page source and nothing else. This feature is intented for those who want to automate their interaction with $settings->sitename.</p>
+		<p>To use this feature, navigate to the page for which you want to see the source, and then alter the <code>action</code> parameter in the url's query string to be <code>raw</code>. If the <code>action</code> parameter doesn't exist, add it. Note that when used on an file's page this action will return the source of the description and not the file itself.</p>");
 	}
 ]);
 
@@ -1371,11 +1384,13 @@ register_module([
 
 register_module([
 	"name" => "Sidebar",
-	"version" => "0.2",
+	"version" => "0.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a sidebar to the left hand side of every page. Add '\$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
 	"id" => "extra-sidebar",
 	"code" => function() {
+		global $settings;
+		
 		$show_sidebar = false;
 		
 		// Show the sidebar if it is enabled in the settings
@@ -1436,6 +1451,9 @@ register_module([
 		</style>";
 			}
 		});
+		
+		add_help_section("50-sidebar", "Sidebar", "<p>$settings->sitename has an optional sidebar which displays a list of all the current pages (but not subpages) that it is currently hosting. It may or may not be enabled.</p>
+		<p>If it isn't enabled, it can be enabled for your current browser only by appending <code>sidebar=yes</code> to the current page's query string.</p>");
 	}
 ]);
 
@@ -1486,11 +1504,13 @@ function render_sidebar($pageindex, $root_pagename = "")
 
 register_module([
 	"name" => "Redirect pages",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
 	"id" => "feature-redirect",
 	"code" => function() {
+		global $settings;
+		
 		register_save_preprocessor(function(&$index_entry, &$pagedata) {
 			$matches = [];
 			if(preg_match("/^# ?REDIRECT ?\[\[([^\]]+)\]\]/i", $pagedata, $matches) === 1)
@@ -1510,6 +1530,9 @@ register_module([
 					unset($index_entry->redirect_target);
 			}
 		});
+		
+		// Register a help section
+		add_help_section("25-redirect", "Redirect Pages", "<p>$settings->sitename supports redirect pages. To create a redirect page, enter something like <code># REDIRECT [[pagename]]</code> on the first line of the redirect page's content. This <em>must</em> appear as the first line of the page, with no whitespace before it. You can include content beneath the redirect if you want, too (such as a reason for redirecting the page).</p>");
 	}
 ]);
 
@@ -2006,11 +2029,13 @@ class search
 
 register_module([
 	"name" => "Uploader",
-	"version" => "0.2",
+	"version" => "0.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File:' prefix.",
 	"id" => "feature-upload",
 	"code" => function() {
+		global $settings;
+		
 		add_action("upload", function() {
 			global $settings, $env, $pageindex, $paths;
 			
@@ -2261,6 +2286,12 @@ register_module([
 				$parts["{content}"] = str_replace("</h1>", "</h1>\n$preview_html", $parts["{content}"]);
 			}
 		});
+		
+		// Register a section on the help page on uploading files
+		add_help_section("28-uploading-files", "Uploading Files", "<p>$settings->sitename supports the uploading of files, though it is up to " . $admindetails["name"] . ", $settings->sitename's administrator as to whether it is enabled or not (uploads are currently " . (($settings->upload_enabled) ? "enabled" : "disabled") . ").</p>
+		<p>Currently Pepperminty Wiki (the software that $settings->sitename uses) only supports the uploading of images, although more file types should be supported in the future (<a href='//github.com/sbrl/Pepperminty-Wiki/issues'>open an issue on GitHub</a> if you are interested in support for more file types).</p>
+		<p>Uploading a file is actually quite simple. Click the &quot;Upload&quot; option in the &quot;More...&quot; menu to go to the upload page. The upload page will tell you what types of file $settings->sitename allows, and the maximum supported filesize for files that you upload (this is usually set by the web server that the wiki is running on).</p>
+		<p>Use the file chooser to select the file that you want to upload, and then decide on a name for it. Note that the name that you choose should not include the file extension, as this will be determined automatically. Enter a description that will appear on the file's page, and then click upload.</p>");
 	}
 ]);
 
@@ -2425,11 +2456,13 @@ register_module([
 
 register_module([
 	"name" => "Page deleter",
-	"version" => "0.8",
+	"version" => "0.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to delete pages.",
 	"id" => "page-delete",
 	"code" => function() {
+		global $settings;
+		
 		add_action("delete", function() {
 			global $pageindex, $settings, $env, $paths, $modules;
 			if(!$settings->editing)
@@ -2480,6 +2513,10 @@ register_module([
 			
 			exit(page_renderer::render_main("Deleting $env->page - $settings->sitename", "<p>$env->page has been deleted. <a href='index.php'>Go back to the main page</a>.</p>"));
 		});
+		
+		// Register a help section
+		add_help_section("60-delete", "Deleting Pages", "<p>If you are logged in as an adminitrator, then you have the power to delete pages. To do this, click &quot;Delete&quot; in the &quot;More...&quot; menu when browsing the pge you wish to delete. When you are sure that you want to delete the page, click the given link.</p>
+		<p><strong>Warning: Once a page has been deleted, you can't bring it back! You will need to recover it from your backup, if you have one (which you really should).</strong></p>");
 	}
 ]);
 
@@ -2488,12 +2525,13 @@ register_module([
 
 register_module([
 	"name" => "Page editor",
-	"version" => "0.12",
+	"version" => "0.13",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
 	
 	"code" => function() {
+		global $settings;
 		
 		/*
 		 *           _ _ _
@@ -2697,6 +2735,10 @@ register_module([
 				<p>Please tell the administrator of this wiki (" . $settings->admindetails["name"] . ") about this problem.</p>"));
 			}
 		});
+		
+		add_help_section("15-editing", "Editing", "<p>To edit a page on $settings->sitename, click the edit button on the top bar. Note that you will probably need to be logged in. If you do not already have an account you will need to ask $settings->sitename's administrator for an account since there is no registration form. Note that the $settings->sitename's administrator may have changed these settings to allow anonymous edits.</p>
+		<p>Editing is simple. The edit page has a sizeable box that contains a page's current contents. Once you are done altering it, add or change the comma separated list of tags in the field below the editor and then click save page.</p>
+		<p>A reference to the syntax that $settings->sitename supports can be found below.</p>");
 	}
 ]);
 
@@ -2705,11 +2747,13 @@ register_module([
 
 register_module([
 	"name" => "Export",
-	"version" => "0.3",
+	"version" => "0.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that you can use to export your wiki as a .zip file. Uses \$settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
 	"id" => "page-export",
 	"code" => function() {
+		global $settings;
+		
 		add_action("export", function() {
 			global $settings, $pageindex, $env;
 			
@@ -2749,6 +2793,10 @@ register_module([
 			fclose($zip_handle);
 			unlink($tmpfilename);
 		});
+		
+		// Add a section to the help page
+		add_help_section("50-export", "Exporting", "<p>$settings->sitename supports exporting the entire wiki's content as a zip. Note that you may need to be a moderator in order to do this. Also note that you should check for permission before doing so, even if you are able to export without asking.</p>
+		<p>To perform an export, go to the credits page and click &quot;Export as zip - Check for permission first&quot;.</p>");
 	}
 ]);
 
@@ -2762,55 +2810,42 @@ register_module([
 	"description" => "Adds the help action. You really want this one.",
 	"id" => "page-help",
 	"code" => function() {
+		global $settings;
+		
 		add_action("help", function() {
-			global $settings, $version;
+			global $settings, $version, $help_sections;
 			
 			$title = "Help - $settings->sitename";
+			
+			// Sort the help sections by key
+			ksort($help_sections, SORT_NATURAL);
+			
+			$content .= "	<h1>$settings->sitename Help</h1>
+		<p>Welcome to $settings->sitename!</p>
+		<p>$settings->sitename is powered by Pepperminty wiki, a complete wiki in a box you can drop into your server.</p>";
+			
+			// todo Insert a tabel of contents here?
+			
+			foreach($help_sections as $index => $section)
+			{
+				// Todo add a button that you can click to get a permanent link
+				// to this section.
+				$content .= "<h2 id='$index'>" . $section["title"];
+				$content .= $section["content"] . "\n";
+			}
+			
 			$content = "	<h1>$settings->sitename Help</h1>
-	<p>Welcome to $settings->sitename!</p>
-	<p>$settings->sitename is powered by Pepperminty wiki, a complete wiki in a box you can drop into your server.</p>
-	<h2>Navigating</h2>
-	<p>All the navigation links can be found in the top right corner, along with a box in which you can type a page name and hit enter to be taken to that page (if your site administrator has enabled it).</p>
-	<p>In order to edit pages on $settings->sitename, you probably need to be logged in. If you do not already have an account you will need to ask $settings->sitename's administrator for an account since there is not registration form. Note that the $settings->sitename's administrator may have changed these settings to allow anonymous edits.</p>
-	<h2>Editing</h2>
-	<p>$settings->sitename's editor uses a modified version of slimdown, a flavour of markdown that is implementated using regular expressions. See the credits page for more information and links to the original source for this. A quick reference can be found below:</p>
-	<table>
-		<tr><th>Type This</th><th>To get this</th>
-		<tr><td><code>_italics_</code></td><td><em>italics</em></td></tr>
-		<tr><td><code>*bold*</code></td><td><strong>bold</strong></td></tr>
-		<tr><td><code>~~Strikethrough~~</code></td><td><del>Strikethough</del></td></tr>
-		<tr><td><code>`code`</code></td><td><code>code</code></td></tr>
-		<tr><td><code># Heading</code></td><td><h2>Heading</h2></td></tr>
-		<tr><td><code>## Sub Heading</code></td><td><h3>Sub Heading</h3></td></tr>
-		<tr><td><code>[[Internal Link]]</code></td><td><a href='index.php?page=Internal Link'>Internal Link</a></td></tr>
-		<tr><td><code>[[Display Text|Internal Link]]</code></td><td><a href='index.php?page=Internal Link'>Display Text</a></td></tr>
-		<tr><td><code>[Display text](//google.com/)</code></td><td><a href='//google.com/'>Display Text</a></td></tr>
-		<tr><td><code>&gt; Blockquote<br />&gt; Some text</code></td><td><blockquote> Blockquote<br />Some text</td></tr>
-		<tr><td><code> - Apples<br /> * Oranges</code></td><td><ul><li>Apples</li><li>Oranges</li></ul></td></tr>
-		<tr><td><code>1. This is<br />2. an ordered list</code></td><td><ol><li>This is</li><li>an ordered list</li></ol></td></tr>
-		<tr><td><code>
-	---
-	</code></td><td><hr /></td></tr>
-		<!--<tr><tds><code> - One
- - Two
- - Three</code></td><td><ul><li>One</li><li>Two</li><li>Three</li></ul></td></tr>-->
-		<tr><td><code>![Alt text](//starbeamrainbowlabs.com/favicon-small.png)</code></td><td><img src='//starbeamrainbowlabs.com/favicon-small.png' alt='Alt text' /></td></code>
-	</table>
-	
-	<p>In addition, the following extra syntax is supported for images:</p>
-	
-	<pre><code>Size the image to at most 250 pixels wide:
-![Alt text](//starbeamrainbowlabs.com/favicon-small.png 250px)
-
-Size the image to at most 120px wide and have it float at the right ahnd size of the page:
-![Alt text](//starbeamrainbowlabs.com/favicon-small.png 120px right)</code></pre>
-	
 	<h2>Administrator Actions</h2>
 	<p>By default, the <code>delete</code> and <code>move</code> actions are shown on the nav bar. These can be used by administrators to delete or move pages.</p>
 	<p>The other thing admininistrators can do is update the wiki (provided they know the site's secret). This page can be found here: <a href='?action=update'>Update $settings->sitename</a>.</p>
 	<p>$settings->sitename is currently running on Pepperminty Wiki <code>$version</code></p>";
 			exit(page_renderer::render_main($title, $content));
 		});
+		
+		// Register a help section on general navigation
+		add_help_section("5-navigation", "Navigation", "<h2>Navigating</h2>
+		<p>All the navigation links can be found on the top bar, along with a search box (if your site administrator has enabled it). There is also a &quot;More...&quot; menu in the top right that contains some additional links that you may fine useful.</p>
+		<p>This page, along with the credits page, can be found on the bar at the bottom of every page.</p>");
 	}
 ]);
 
@@ -2819,11 +2854,13 @@ Size the image to at most 120px wide and have it float at the right ahnd size of
 
 register_module([
 	"name" => "Page list",
-	"version" => "0.6",
+	"version" => "0.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that lists all the pages in the index along with their metadata.",
 	"id" => "page-list",
 	"code" => function() {
+		global $settings;
+		
 		add_action("list", function() {
 			global $pageindex, $settings;
 			
@@ -2884,6 +2921,10 @@ register_module([
 			
 			exit(page_renderer::render("$tag - Page List - $settings->sitename", $content));
 		});
+		
+		add_help_section("30-all-pages-tags", "Listing pages and tags", "<p>All the pages and tags on $settings->sitename are listed on a pair of paegs to aid navigation. The list of all pages on $settings->sitename can be found by clicking &quot;All Pages&quot; on the top bar. The list of all the tags currently in use can be found by clicking &quot;All Tags&quot; in the &quot;More...&quot; menu in the top right.</p>
+		<p>Each tag on either page can be clicked, and leads to a list of all pages that possess that particular tag.</p>
+		<p>A page's last known editor is also shown next to each entry on a list of pages, along with the last known size (which should correct, unless it was changed outside of $settings->sitename) and the time since the last modification (hovering over this will show the exact time that the last modification was made in a tooltip).</p>");
 	}
 ]);
 
@@ -2927,6 +2968,8 @@ register_module([
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
 	"code" => function() {
+		global $settings;
+		
 		/*
 		 *  _             _
 		 * | | ___   __ _(_)_ __
@@ -3007,6 +3050,10 @@ register_module([
 				exit();
 			}
 		});
+		
+		// Register a section on logging in on the help page.
+		add_help_section("30-login", "Logging in", "<p>In order to edit $settings->sitename and have your edit attributed to you, you need to be logged in. Depending on the settings, logging in may be a required step if you want to edit at all. Thankfully, loggging in is not hard. Simply click the &quot;Login&quot; link in the top left, type your username and password, and then click login.</p>
+		<p>If you do not have an account yet and would like one, try contacting <a href='mailto:" . hide_email($settings->admindetails["email"]) . "'>" . $settings->admindetails["name"] . "</a>, $settings->sitename's administrator and ask them nicely to see if they can create you an account.</p>");
 	}
 ]);
 
@@ -3062,11 +3109,13 @@ register_module([
 
 register_module([
 	"name" => "Page mover",
-	"version" => "0.7",
+	"version" => "0.8",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to move pages.",
 	"id" => "page-move",
 	"code" => function() {
+		global $settings;
+		
 		add_action("move", function() {
 			global $pageindex, $settings, $env, $paths;
 			if(!$settings->editing)
@@ -3136,6 +3185,9 @@ register_module([
 			// Exit with a nice message
 			exit(page_renderer::render_main("Moving $env->page", "<p><a href='index.php?page=$env->page'>$env->page</a> has been moved to <a href='index.php?page=$new_name'>$new_name</a> successfully.</p>"));
 		});
+		
+		// Register a help section
+		add_help_section("60-move", "Moving Pages", "<p>If you are logged in as an adminitrator, then you have the power to move pages. To do this, click &quot;Delete&quot; in the &quot;More...&quot; menu when browsing the pge you wish to move. Type in the new name of the page, and then click &quot;Move Page&quot;.</p>");
 	}
 ]);
 
@@ -3318,14 +3370,52 @@ register_module([
 
 register_module([
 	"name" => "Default Parser",
-	"version" => "0.8",
+	"version" => "0.9",
 	"author" => "Johnny Broadway & Starbeamrainbowlabs",
 	"description" => "The default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page.",
 	"id" => "parser-default",
 	"code" => function() {
+		global $settings;
+		
 		add_parser("default", function($markdown) {
 			return Slimdown::render($markdown);
 		});
+		
+		// Register the help section
+		if($settings->parser != "default")
+			return; // Don't register the help section if we aren't the currently set parser.
+		add_help_section("20-parser-default", "Editor Syntax", "<h2>Editing</h2>
+		<p>$settings->sitename's editor uses a modified version of slimdown, a flavour of markdown that is implementated using regular expressions. See the credits page for more information and links to the original source for this. A quick reference can be found below:</p>
+		<table>
+			<tr><th>Type This</th><th>To get this</th>
+			<tr><td><code>_italics_</code></td><td><em>italics</em></td></tr>
+			<tr><td><code>*bold*</code></td><td><strong>bold</strong></td></tr>
+			<tr><td><code>~~Strikethrough~~</code></td><td><del>Strikethough</del></td></tr>
+			<tr><td><code>`code`</code></td><td><code>code</code></td></tr>
+			<tr><td><code># Heading</code></td><td><h2>Heading</h2></td></tr>
+			<tr><td><code>## Sub Heading</code></td><td><h3>Sub Heading</h3></td></tr>
+			<tr><td><code>[[Internal Link]]</code></td><td><a href='index.php?page=Internal Link'>Internal Link</a></td></tr>
+			<tr><td><code>[[Display Text|Internal Link]]</code></td><td><a href='index.php?page=Internal Link'>Display Text</a></td></tr>
+			<tr><td><code>[Display text](//google.com/)</code></td><td><a href='//google.com/'>Display Text</a></td></tr>
+			<tr><td><code>&gt; Blockquote<br />&gt; Some text</code></td><td><blockquote> Blockquote<br />Some text</td></tr>
+			<tr><td><code> - Apples<br /> * Oranges</code></td><td><ul><li>Apples</li><li>Oranges</li></ul></td></tr>
+			<tr><td><code>1. This is<br />2. an ordered list</code></td><td><ol><li>This is</li><li>an ordered list</li></ol></td></tr>
+			<tr><td><code>
+		---
+		</code></td><td><hr /></td></tr>
+			<!--<tr><tds><code> - One
+	 - Two
+	 - Three</code></td><td><ul><li>One</li><li>Two</li><li>Three</li></ul></td></tr>-->
+			<tr><td><code>![Alt text](//starbeamrainbowlabs.com/favicon-small.png)</code></td><td><img src='//starbeamrainbowlabs.com/favicon-small.png' alt='Alt text' /></td></code>
+		</table>
+		
+		<p>In addition, the following extra syntax is supported for images:</p>
+		
+		<pre><code>Size the image to at most 250 pixels wide:
+	![Alt text](//starbeamrainbowlabs.com/favicon-small.png 250px)
+	
+	Size the image to at most 120px wide and have it float at the right ahnd size of the page:
+	![Alt text](//starbeamrainbowlabs.com/favicon-small.png 120px right)</code></pre>");
 	}
 ]);
 
@@ -3443,6 +3533,7 @@ class Slimdown {
 
 // %next_module% //
 
+//////////////////////////////////////////////////////////////////
 
 // Execute each module's code
 foreach($modules as $moduledata)
