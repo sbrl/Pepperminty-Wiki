@@ -1,11 +1,13 @@
 <?php
 register_module([
 	"name" => "Page deleter",
-	"version" => "0.8",
+	"version" => "0.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to delete pages.",
 	"id" => "page-delete",
 	"code" => function() {
+		global $settings;
+		
 		add_action("delete", function() {
 			global $pageindex, $settings, $env, $paths, $modules;
 			if(!$settings->editing)
@@ -56,6 +58,10 @@ register_module([
 			
 			exit(page_renderer::render_main("Deleting $env->page - $settings->sitename", "<p>$env->page has been deleted. <a href='index.php'>Go back to the main page</a>.</p>"));
 		});
+		
+		// Register a help section
+		add_help_section("60-delete", "Deleting Pages", "<p>If you are logged in as an adminitrator, then you have the power to delete pages. To do this, click &quot;Delete&quot; in the &quot;More...&quot; menu when browsing the pge you wish to delete. When you are sure that you want to delete the page, click the given link.</p>
+		<p><strong>Warning: Once a page has been deleted, you can't bring it back! You will need to recover it from your backup, if you have one (which you really should).</strong></p>");
 	}
 ]);
 

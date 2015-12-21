@@ -915,11 +915,20 @@ function register_save_preprocessor($func)
 	$save_preprocessors[] = $func;
 }
 
-//////////////////////////////////////////////////////////////////
+$help_sections = [];
+function add_help_section($index, $title, $content)
+{
+	$help_section[$index] = [
+		"title" => $title,
+		"content" => $content
+	];
+}
 
+//////////////////////////////////////////////////////////////////
 
 // %next_module% //
 
+//////////////////////////////////////////////////////////////////
 
 // Execute each module's code
 foreach($modules as $moduledata)

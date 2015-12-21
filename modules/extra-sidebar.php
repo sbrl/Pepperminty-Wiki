@@ -1,11 +1,13 @@
 <?php
 register_module([
 	"name" => "Sidebar",
-	"version" => "0.2",
+	"version" => "0.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a sidebar to the left hand side of every page. Add '\$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
 	"id" => "extra-sidebar",
 	"code" => function() {
+		global $settings;
+		
 		$show_sidebar = false;
 		
 		// Show the sidebar if it is enabled in the settings
@@ -66,6 +68,9 @@ register_module([
 		</style>";
 			}
 		});
+		
+		add_help_section("50-sidebar", "Sidebar", "<p>$settings->sitename has an optional sidebar which displays a list of all the current pages (but not subpages) that it is currently hosting. It may or may not be enabled.</p>
+		<p>If it isn't enabled, it can be enabled for your current browser only by appending <code>sidebar=yes</code> to the current page's query string.</p>");
 	}
 ]);
 

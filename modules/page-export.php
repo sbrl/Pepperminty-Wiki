@@ -1,11 +1,13 @@
 <?php
 register_module([
 	"name" => "Export",
-	"version" => "0.3",
+	"version" => "0.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that you can use to export your wiki as a .zip file. Uses \$settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
 	"id" => "page-export",
 	"code" => function() {
+		global $settings;
+		
 		add_action("export", function() {
 			global $settings, $pageindex, $env;
 			
@@ -45,6 +47,10 @@ register_module([
 			fclose($zip_handle);
 			unlink($tmpfilename);
 		});
+		
+		// Add a section to the help page
+		add_help_section("50-export", "Exporting", "<p>$settings->sitename supports exporting the entire wiki's content as a zip. Note that you may need to be a moderator in order to do this. Also note that you should check for permission before doing so, even if you are able to export without asking.</p>
+		<p>To perform an export, go to the credits page and click &quot;Export as zip - Check for permission first&quot;.</p>");
 	}
 ]);
 

@@ -1,11 +1,13 @@
 <?php
 register_module([
 	"name" => "Page mover",
-	"version" => "0.7",
+	"version" => "0.8",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to move pages.",
 	"id" => "page-move",
 	"code" => function() {
+		global $settings;
+		
 		add_action("move", function() {
 			global $pageindex, $settings, $env, $paths;
 			if(!$settings->editing)
@@ -75,6 +77,9 @@ register_module([
 			// Exit with a nice message
 			exit(page_renderer::render_main("Moving $env->page", "<p><a href='index.php?page=$env->page'>$env->page</a> has been moved to <a href='index.php?page=$new_name'>$new_name</a> successfully.</p>"));
 		});
+		
+		// Register a help section
+		add_help_section("60-move", "Moving Pages", "<p>If you are logged in as an adminitrator, then you have the power to move pages. To do this, click &quot;Delete&quot; in the &quot;More...&quot; menu when browsing the pge you wish to move. Type in the new name of the page, and then click &quot;Move Page&quot;.</p>");
 	}
 ]);
 

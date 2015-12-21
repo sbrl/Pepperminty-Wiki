@@ -1,11 +1,13 @@
 <?php
 register_module([
 	"name" => "Page list",
-	"version" => "0.8",
+	"version" => "0.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that lists all the pages in the index along with their metadata.",
 	"id" => "page-list",
 	"code" => function() {
+		global $settings;
+		
 		add_action("list", function() {
 			global $pageindex, $settings;
 			
@@ -66,6 +68,10 @@ register_module([
 			
 			exit(page_renderer::render("$tag - Page List - $settings->sitename", $content));
 		});
+		
+		add_help_section("30-all-pages-tags", "Listing pages and tags", "<p>All the pages and tags on $settings->sitename are listed on a pair of paegs to aid navigation. The list of all pages on $settings->sitename can be found by clicking &quot;All Pages&quot; on the top bar. The list of all the tags currently in use can be found by clicking &quot;All Tags&quot; in the &quot;More...&quot; menu in the top right.</p>
+		<p>Each tag on either page can be clicked, and leads to a list of all pages that possess that particular tag.</p>
+		<p>A page's last known editor is also shown next to each entry on a list of pages, along with the last known size (which should correct, unless it was changed outside of $settings->sitename) and the time since the last modification (hovering over this will show the exact time that the last modification was made in a tooltip).</p>");
 	}
 ]);
 

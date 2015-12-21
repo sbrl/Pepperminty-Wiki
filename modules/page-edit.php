@@ -1,12 +1,13 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.12",
+	"version" => "0.13",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
 	
 	"code" => function() {
+		global $settings;
 		
 		/*
 		 *           _ _ _
@@ -210,6 +211,10 @@ register_module([
 				<p>Please tell the administrator of this wiki (" . $settings->admindetails["name"] . ") about this problem.</p>"));
 			}
 		});
+		
+		add_help_section("15-editing", "Editing", "<p>To edit a page on $settings->sitename, click the edit button on the top bar. Note that you will probably need to be logged in. If you do not already have an account you will need to ask $settings->sitename's administrator for an account since there is no registration form. Note that the $settings->sitename's administrator may have changed these settings to allow anonymous edits.</p>
+		<p>Editing is simple. The edit page has a sizeable box that contains a page's current contents. Once you are done altering it, add or change the comma separated list of tags in the field below the editor and then click save page.</p>
+		<p>A reference to the syntax that $settings->sitename supports can be found below.</p>");
 	}
 ]);
 
