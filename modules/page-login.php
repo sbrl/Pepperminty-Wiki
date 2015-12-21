@@ -6,6 +6,8 @@ register_module([
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
 	"code" => function() {
+		global $settings;
+		
 		/*
 		 *  _             _
 		 * | | ___   __ _(_)_ __
@@ -86,6 +88,10 @@ register_module([
 				exit();
 			}
 		});
+		
+		// Register a section on logging in on the help page.
+		add_help_section("30-login", "Logging in", "<p>In order to edit $settings->sitename and have your edit attributed to you, you need to be logged in. Depending on the settings, logging in may be a required step if you want to edit at all. Thankfully, loggging in is not hard. Simply click the &quot;Login&quot; link in the top left, type your username and password, and then click login.</p>
+		<p>If you do not have an account yet and would like one, try contacting <a href='mailto:" . hide_email($settings->admindetails["email"]) . "'>" . $settings->admindetails["name"] . "</a>, $settings->sitename's administrator and ask them nicely to see if they can create you an account.</p>");
 	}
 ]);
 
