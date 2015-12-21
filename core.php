@@ -111,6 +111,7 @@ function human_filesize($bytes, $decimals = 2)
 	$result = round($bytes / pow(1024, $factor), $decimals);
 	return $result . @$sz[$factor];
 }
+
 /*
  * @summary	Calculates the time sincce a particular timestamp and returns a
  * 			human-readable result.

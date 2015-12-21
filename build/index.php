@@ -465,6 +465,7 @@ function human_filesize($bytes, $decimals = 2)
 	$result = round($bytes / pow(1024, $factor), $decimals);
 	return $result . @$sz[$factor];
 }
+
 /*
  * @summary	Calculates the time sincce a particular timestamp and returns a
  * 			human-readable result.
@@ -2817,37 +2818,40 @@ register_module([
 		add_action("help", function() {
 			global $settings, $version, $help_sections;
 			
+			// Sort the help sections by key
+			ksort($help_sections, SORT_NATURAL);
+			
 			if(isset($_GET["dev"]) and $_GET["dev"] == "yes")
 			{
 				$title = "Developers Help - $settings->sitename";
 				$content = "<p>$settings->sitename runs on Pepperminty Wiki, an entire wiki packed into a single file. This page contains some information that developers may find useful.</p>
 				<p>A full guide to developing a Pepperminty Wiki module can be found <a href='//github.com/sbrl/Pepperminty-Wiki/blob/master/Module_API_Docs.md#module-api-documentation'>on GitHub</a>.</p>
-				<p>A full guide to Pepperminty Wiki can be found <a href=''
 				<p>The following help sections are currently registered:</p>
 				<table><tr><th>Index</th><th>Title</th><th>Length</th></tr>\n";
 				foreach($help_sections as $index => $section)
 				{
-					$content .= "\t\t\t<tr><td>$index</td><td>" . $section["title"] . "</td><td>" . strlen($section["content"]) . "</td></tr>\n";
+					$content .= "\t\t\t<tr><td>$index</td><td>" . $section["title"] . "</td><td>" . human_filesize(strlen($section["content"])) . "</td></tr>\n";
 				}
 				$content .= "\t\t</table>";
 			}
-			$title = "Help - $settings->sitename";
-			
-			// Sort the help sections by key
-			ksort($help_sections, SORT_NATURAL);
-			
-			$content = "	<h1>$settings->sitename Help</h1>
+			else
+			{
+				$title = "Help - $settings->sitename";
+				
+				$content = "	<h1>$settings->sitename Help</h1>
 		<p>Welcome to $settings->sitename!</p>
 		<p>$settings->sitename is powered by Pepperminty Wiki, a complete wiki in a box you can drop into your server.</p>";
-		// todo Insert a table of contents here?
-		
-		foreach($help_sections as $index => $section)
-		{
-			
-				// Todo add a button that you can click to get a permanent link
-				// to this section.
-				$content .= "<h2 id='$index'>" . $section["title"] . "</h2>\n";
-				$content .= $section["content"] . "\n";
+				
+				// todo Insert a table of contents here?
+				
+				foreach($help_sections as $index => $section)
+				{
+					
+					// Todo add a button that you can click to get a permanent link
+					// to this section.
+					$content .= "<h2 id='$index'>" . $section["title"] . "</h2>\n";
+					$content .= $section["content"] . "\n";
+				}
 			}
 			
 			exit(page_renderer::render_main($title, $content));
