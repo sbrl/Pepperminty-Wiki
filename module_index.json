@@ -59,7 +59,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File:' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1450706563,
+        "lastupdate": 1450706993,
         "optional": false
     },
     {
@@ -100,11 +100,11 @@
     },
     {
         "name": "Help page",
-        "version": "0.6",
+        "version": "0.7",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the help action. You really want this one.",
         "id": "page-help",
-        "lastupdate": 1450687304,
+        "lastupdate": 1450708446,
         "optional": false
     },
     {
@@ -167,7 +167,7 @@
         "author": "Johnny Broadway & Starbeamrainbowlabs",
         "description": "The default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page.",
         "id": "parser-default",
-        "lastupdate": 1450687319,
+        "lastupdate": 1450708466,
         "optional": false
     },
     {

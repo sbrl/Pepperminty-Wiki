@@ -15,8 +15,7 @@ register_module([
 		// Register the help section
 		if($settings->parser != "default")
 			return; // Don't register the help section if we aren't the currently set parser.
-		add_help_section("20-parser-default", "Editor Syntax", "<h2>Editing</h2>
-		<p>$settings->sitename's editor uses a modified version of slimdown, a flavour of markdown that is implementated using regular expressions. See the credits page for more information and links to the original source for this. A quick reference can be found below:</p>
+		add_help_section("20-parser-default", "Editor Syntax", "<p>$settings->sitename's editor uses a modified version of slimdown, a flavour of markdown that is implementated using regular expressions. See the credits page for more information and links to the original source for this. A quick reference can be found below:</p>
 		<table>
 			<tr><th>Type This</th><th>To get this</th>
 			<tr><td><code>_italics_</code></td><td><em>italics</em></td></tr>

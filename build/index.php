@@ -2807,7 +2807,7 @@ register_module([
 
 register_module([
 	"name" => "Help page",
-	"version" => "0.6",
+	"version" => "0.7",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the help action. You really want this one.",
 	"id" => "page-help",
@@ -2838,16 +2838,15 @@ register_module([
 			
 			$content = "	<h1>$settings->sitename Help</h1>
 		<p>Welcome to $settings->sitename!</p>
-		<p>$settings->sitename is powered by Pepperminty wiki, a complete wiki in a box you can drop into your server.</p>";
+		<p>$settings->sitename is powered by Pepperminty Wiki, a complete wiki in a box you can drop into your server.</p>";
+		// todo Insert a table of contents here?
+		
+		foreach($help_sections as $index => $section)
+		{
 			
-			var_dump($help_sections);
-			// todo Insert a table of contents here?
-			
-			foreach($help_sections as $index => $section)
-			{
 				// Todo add a button that you can click to get a permanent link
 				// to this section.
-				$content .= "<h2 id='$index'>" . $section["title"];
+				$content .= "<h2 id='$index'>" . $section["title"] . "</h2>\n";
 				$content .= $section["content"] . "\n";
 			}
 			
@@ -2855,8 +2854,7 @@ register_module([
 		});
 		
 		// Register a help section on general navigation
-		add_help_section("5-navigation", "Navigation", "<h2>Navigating</h2>
-		<p>All the navigation links can be found on the top bar, along with a search box (if your site administrator has enabled it). There is also a &quot;More...&quot; menu in the top right that contains some additional links that you may fine useful.</p>
+		add_help_section("5-navigation", "Navigating", "<p>All the navigation links can be found on the top bar, along with a search box (if your site administrator has enabled it). There is also a &quot;More...&quot; menu in the top right that contains some additional links that you may fine useful.</p>
 		<p>This page, along with the credits page, can be found on the bar at the bottom of every page.</p>");
 		
 		add_help_section("999-extra", "Extra Information", "<p>You can find out whch version of Pepperminty Wiki $settings->sitename is using by visiting the <a href='?action=credits'>credits</a> page.</p>
@@ -3399,8 +3397,7 @@ register_module([
 		// Register the help section
 		if($settings->parser != "default")
 			return; // Don't register the help section if we aren't the currently set parser.
-		add_help_section("20-parser-default", "Editor Syntax", "<h2>Editing</h2>
-		<p>$settings->sitename's editor uses a modified version of slimdown, a flavour of markdown that is implementated using regular expressions. See the credits page for more information and links to the original source for this. A quick reference can be found below:</p>
+		add_help_section("20-parser-default", "Editor Syntax", "<p>$settings->sitename's editor uses a modified version of slimdown, a flavour of markdown that is implementated using regular expressions. See the credits page for more information and links to the original source for this. A quick reference can be found below:</p>
 		<table>
 			<tr><th>Type This</th><th>To get this</th>
 			<tr><td><code>_italics_</code></td><td><em>italics</em></td></tr>

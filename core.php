@@ -918,7 +918,9 @@ function register_save_preprocessor($func)
 $help_sections = [];
 function add_help_section($index, $title, $content)
 {
-	$help_section[$index] = [
+	global $help_sections;
+	
+	$help_sections[$index] = [
 		"title" => $title,
 		"content" => $content
 	];
