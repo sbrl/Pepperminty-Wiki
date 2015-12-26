@@ -1911,7 +1911,8 @@ class search
 		
 		
 		// Loop over each term in the query and find the matching page entries
-		for($i = 0; $i < count($query_terms); $i++)
+		$count = count($query_terms);
+		for($i = 0; $i < $count; $i++)
 		{
 			$qterm = $query_terms[$i];
 			
