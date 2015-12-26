@@ -6,6 +6,14 @@ register_module([
 	"description" => "Adds proper search functionality to Pepperminty Wiki. Note that this module, at the moment, just contains test code while I figure out how best to write a search engine.",
 	"id" => "feature-search",
 	"code" => function() {
+		
+		/*
+		 * ██ ███    ██ ██████  ███████ ██   ██ 
+		 * ██ ████   ██ ██   ██ ██       ██ ██  
+		 * ██ ██ ██  ██ ██   ██ █████     ███   
+		 * ██ ██  ██ ██ ██   ██ ██       ██ ██  
+		 * ██ ██   ████ ██████  ███████ ██   ██ 
+		 */
 		add_action("index", function() {
 			global $settings, $env;
 			
@@ -23,10 +31,30 @@ register_module([
 			var_dump($index);
 		});
 		
+		/*
+		 * ██ ███    ██ ██    ██ ██ ███    ██ ██████  ███████ ██   ██          
+		 * ██ ████   ██ ██    ██ ██ ████   ██ ██   ██ ██       ██ ██           
+		 * ██ ██ ██  ██ ██    ██ ██ ██ ██  ██ ██   ██ █████     ███  █████     
+		 * ██ ██  ██ ██  ██  ██  ██ ██  ██ ██ ██   ██ ██       ██ ██           
+		 * ██ ██   ████   ████   ██ ██   ████ ██████  ███████ ██   ██          
+		 * 
+		 * ██████  ███████ ██████  ██    ██ ██ ██      ██████                  
+		 * ██   ██ ██      ██   ██ ██    ██ ██ ██      ██   ██                 
+		 * ██████  █████   ██████  ██    ██ ██ ██      ██   ██                 
+		 * ██   ██ ██      ██   ██ ██    ██ ██ ██      ██   ██                 
+		 * ██   ██ ███████ ██████   ██████  ██ ███████ ██████                  
+		 */
 		add_action("invindex-rebuild", function() {
 			search::rebuild_invindex();
 		});
 		
+		/*
+		 * ███████ ███████  █████  ██████   ██████ ██   ██ 
+		 * ██      ██      ██   ██ ██   ██ ██      ██   ██ 
+		 * ███████ █████   ███████ ██████  ██      ███████ 
+		 *      ██ ██      ██   ██ ██   ██ ██      ██   ██ 
+		 * ███████ ███████ ██   ██ ██   ██  ██████ ██   ██ 
+		 */
 		add_action("search", function() {
 			global $settings, $env, $pageindex, $paths;
 			

@@ -8,6 +8,13 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/*
+		 * ██      ██ ███████ ████████ 
+		 * ██      ██ ██         ██    
+		 * ██      ██ ███████    ██    
+		 * ██      ██      ██    ██    
+		 * ███████ ██ ███████    ██    
+		 */
 		add_action("list", function() {
 			global $pageindex, $settings;
 			
@@ -21,6 +28,13 @@ register_module([
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});
 		
+		/*
+		 * ██      ██ ███████ ████████ ████████  █████   ██████  ███████ 
+		 * ██      ██ ██         ██       ██    ██   ██ ██       ██      
+		 * ██      ██ ███████    ██ █████ ██    ███████ ██   ███ ███████ 
+		 * ██      ██      ██    ██       ██    ██   ██ ██    ██      ██ 
+		 * ███████ ██ ███████    ██       ██    ██   ██  ██████  ███████ 
+		 */
 		add_action("list-tags", function() {
 			global $pageindex, $settings;
 			

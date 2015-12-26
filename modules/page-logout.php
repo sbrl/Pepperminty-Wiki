@@ -6,6 +6,13 @@ register_module([
 	"description" => "Adds an action to let users user out. For security reasons it is wise to add this module since logging in automatically opens a session that is valid for 30 days.",
 	"id" => "page-logout",
 	"code" => function() {
+		/*
+		 * ██       ██████   ██████   ██████  ██    ██ ████████ 
+		 * ██      ██    ██ ██       ██    ██ ██    ██    ██    
+		 * ██      ██    ██ ██   ███ ██    ██ ██    ██    ██    
+		 * ██      ██    ██ ██    ██ ██    ██ ██    ██    ██    
+		 * ███████  ██████   ██████   ██████   ██████     ██    
+		 */
 		add_action("logout", function() {
 			global $env;
 			$env->is_logged_in = false;

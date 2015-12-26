@@ -6,6 +6,14 @@ register_module([
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
 	"code" => function() {
+		
+		/*
+		 *  ██████ ██████  ███████ ██████  ██ ████████ ███████ 
+		 * ██      ██   ██ ██      ██   ██ ██    ██    ██      
+		 * ██      ██████  █████   ██   ██ ██    ██    ███████ 
+		 * ██      ██   ██ ██      ██   ██ ██    ██         ██ 
+		 *  ██████ ██   ██ ███████ ██████  ██    ██    ███████ 
+		 */
 		add_action("credits", function() {
 			global $settings, $version, $pageindex, $modules;
 			

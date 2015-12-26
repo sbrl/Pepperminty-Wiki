@@ -6,6 +6,13 @@ register_module([
 	"description" => "Allows you to view pages. You reallyshould include this one.",
 	"id" => "page-view",
 	"code" => function() {
+		/*
+		 * ██    ██ ██ ███████ ██     ██ 
+		 * ██    ██ ██ ██      ██     ██ 
+		 * ██    ██ ██ █████   ██  █  ██ 
+		 *  ██  ██  ██ ██      ██ ███ ██ 
+		 *   ████   ██ ███████  ███ ███  
+		 */
 		add_action("view", function() {
 			global $pageindex, $settings, $env;
 			

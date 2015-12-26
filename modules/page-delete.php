@@ -8,6 +8,13 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/*
+		 * ██████  ███████ ██      ███████ ████████ ███████ 
+		 * ██   ██ ██      ██      ██         ██    ██      
+		 * ██   ██ █████   ██      █████      ██    █████   
+		 * ██   ██ ██      ██      ██         ██    ██      
+		 * ██████  ███████ ███████ ███████    ██    ███████ 
+		 */
 		add_action("delete", function() {
 			global $pageindex, $settings, $env, $paths, $modules;
 			if(!$settings->editing)

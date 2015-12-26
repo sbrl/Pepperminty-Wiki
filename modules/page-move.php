@@ -8,6 +8,13 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/*
+		 * ███    ███  ██████  ██    ██ ███████ 
+		 * ████  ████ ██    ██ ██    ██ ██      
+		 * ██ ████ ██ ██    ██ ██    ██ █████   
+		 * ██  ██  ██ ██    ██  ██  ██  ██      
+		 * ██      ██  ██████    ████   ███████ 
+		 */
 		add_action("move", function() {
 			global $pageindex, $settings, $env, $paths;
 			if(!$settings->editing)

@@ -8,6 +8,13 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/*
+		 * ██████   █████  ██     ██ 
+		 * ██   ██ ██   ██ ██     ██ 
+		 * ██████  ███████ ██  █  ██ 
+		 * ██   ██ ██   ██ ██ ███ ██ 
+		 * ██   ██ ██   ██  ███ ███  
+		 */
 		add_action("raw", function() {
 			global $env;
 

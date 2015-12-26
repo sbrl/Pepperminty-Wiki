@@ -38,16 +38,11 @@ register_module([
  * Website: https://gist.github.com/jbroadway/2836900
  * License: MIT
  */
-
 /**
- * Modified by Starbeamrainbowlabs (starbeamrainbowlabs)
- * 
- 	* Changed bold to use single asterisks
- 	* Changed italics to use single underscores
- 	* Added one to add the heading levels (no <h1> tags allowed)
- 	* Added wiki style internal link parsing
- 	* Added wiki style internal link parsing with display text
- 	* Added image support
+ * Modified by Starbeamrainbowlabs
+ *
+ *  - Stripped all existing rules
+ *  - Added a few extensions that parsedown doesn't deal with
  */
 class Parsedown_Slimdown_Extensions {
 	public static $rules = array (
@@ -79,7 +74,13 @@ class Parsedown_Slimdown_Extensions {
 }
 
 
-#
+/*
+ * ██████   █████  ██████  ███████ ███████ ██████   ██████  ██     ██ ███    ██ 
+ * ██   ██ ██   ██ ██   ██ ██      ██      ██   ██ ██    ██ ██     ██ ████   ██ 
+ * ██████  ███████ ██████  ███████ █████   ██   ██ ██    ██ ██  █  ██ ██ ██  ██ 
+ * ██      ██   ██ ██   ██      ██ ██      ██   ██ ██    ██ ██ ███ ██ ██  ██ ██ 
+ * ██      ██   ██ ██   ██ ███████ ███████ ██████   ██████   ███ ███  ██   ████ 
+ */
 #
 # Parsedown
 # http://parsedown.org
@@ -89,9 +90,8 @@ class Parsedown_Slimdown_Extensions {
 #
 # For the full license information, view the LICENSE file that was distributed
 # with this source code.
-#
-#
-
+# 
+# 
 class Parsedown
 {
     # ~

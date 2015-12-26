@@ -8,6 +8,13 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/*
+		 * ██   ██ ███████ ██      ██████  
+		 * ██   ██ ██      ██      ██   ██ 
+		 * ███████ █████   ██      ██████  
+		 * ██   ██ ██      ██      ██      
+		 * ██   ██ ███████ ███████ ██      
+		 */
 		add_action("help", function() {
 			global $settings, $version, $help_sections;
 			

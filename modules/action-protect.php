@@ -6,6 +6,14 @@ register_module([
 	"description" => "Exposes Pepperminty Wiki's new page protection mechanism and makes the protect button in the 'More...' menu on the top bar work.",
 	"id" => "action-protect",
 	"code" => function() {
+		
+		/*
+		 * ██████  ██████   ██████  ████████ ███████  ██████ ████████ 
+		 * ██   ██ ██   ██ ██    ██    ██    ██      ██         ██    
+		 * ██████  ██████  ██    ██    ██    █████   ██         ██    
+		 * ██      ██   ██ ██    ██    ██    ██      ██         ██    
+		 * ██      ██   ██  ██████     ██    ███████  ██████    ██    
+		 */
 		add_action("protect", function() {
 			global $env, $pageindex, $paths, $settings;
 
