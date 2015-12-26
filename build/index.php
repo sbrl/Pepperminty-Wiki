@@ -1291,6 +1291,15 @@ register_module([
 	"description" => "Adds a utility action (that anyone can use) called hash that hashes a given string. Useful when changing a user's password.",
 	"id" => "action-hash",
 	"code" => function() {
+		
+		/*
+		 * ██   ██  █████  ███████ ██   ██ 
+		 * ██   ██ ██   ██ ██      ██   ██ 
+		 * ███████ ███████ ███████ ███████ 
+		 * ██   ██ ██   ██      ██ ██   ██ 
+		 * ██   ██ ██   ██ ███████ ██   ██
+		 */
+		
 		add_action("hash", function() {
 			global $settings;
 			
@@ -1318,6 +1327,14 @@ register_module([
 	"description" => "Exposes Pepperminty Wiki's new page protection mechanism and makes the protect button in the 'More...' menu on the top bar work.",
 	"id" => "action-protect",
 	"code" => function() {
+		
+		/*
+		 * ██████  ██████   ██████  ████████ ███████  ██████ ████████ 
+		 * ██   ██ ██   ██ ██    ██    ██    ██      ██         ██    
+		 * ██████  ██████  ██    ██    ██    █████   ██         ██    
+		 * ██      ██   ██ ██    ██    ██    ██      ██         ██    
+		 * ██      ██   ██  ██████     ██    ███████  ██████    ██    
+		 */
 		add_action("protect", function() {
 			global $env, $pageindex, $paths, $settings;
 
@@ -1367,6 +1384,13 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/*
+		 * ██████   █████  ██     ██ 
+		 * ██   ██ ██   ██ ██     ██ 
+		 * ██████  ███████ ██  █  ██ 
+		 * ██   ██ ██   ██ ██ ███ ██ 
+		 * ██   ██ ██   ██  ███ ███  
+		 */
 		add_action("raw", function() {
 			global $env;
 
@@ -1549,6 +1573,14 @@ register_module([
 	"description" => "Adds proper search functionality to Pepperminty Wiki. Note that this module, at the moment, just contains test code while I figure out how best to write a search engine.",
 	"id" => "feature-search",
 	"code" => function() {
+		
+		/*
+		 * ██ ███    ██ ██████  ███████ ██   ██ 
+		 * ██ ████   ██ ██   ██ ██       ██ ██  
+		 * ██ ██ ██  ██ ██   ██ █████     ███   
+		 * ██ ██  ██ ██ ██   ██ ██       ██ ██  
+		 * ██ ██   ████ ██████  ███████ ██   ██ 
+		 */
 		add_action("index", function() {
 			global $settings, $env;
 			
@@ -1566,10 +1598,30 @@ register_module([
 			var_dump($index);
 		});
 		
+		/*
+		 * ██ ███    ██ ██    ██ ██ ███    ██ ██████  ███████ ██   ██          
+		 * ██ ████   ██ ██    ██ ██ ████   ██ ██   ██ ██       ██ ██           
+		 * ██ ██ ██  ██ ██    ██ ██ ██ ██  ██ ██   ██ █████     ███  █████     
+		 * ██ ██  ██ ██  ██  ██  ██ ██  ██ ██ ██   ██ ██       ██ ██           
+		 * ██ ██   ████   ████   ██ ██   ████ ██████  ███████ ██   ██          
+		 * 
+		 * ██████  ███████ ██████  ██    ██ ██ ██      ██████                  
+		 * ██   ██ ██      ██   ██ ██    ██ ██ ██      ██   ██                 
+		 * ██████  █████   ██████  ██    ██ ██ ██      ██   ██                 
+		 * ██   ██ ██      ██   ██ ██    ██ ██ ██      ██   ██                 
+		 * ██   ██ ███████ ██████   ██████  ██ ███████ ██████                  
+		 */
 		add_action("invindex-rebuild", function() {
 			search::rebuild_invindex();
 		});
 		
+		/*
+		 * ███████ ███████  █████  ██████   ██████ ██   ██ 
+		 * ██      ██      ██   ██ ██   ██ ██      ██   ██ 
+		 * ███████ █████   ███████ ██████  ██      ███████ 
+		 *      ██ ██      ██   ██ ██   ██ ██      ██   ██ 
+		 * ███████ ███████ ██   ██ ██   ██  ██████ ██   ██ 
+		 */
 		add_action("search", function() {
 			global $settings, $env, $pageindex, $paths;
 			
@@ -2039,6 +2091,13 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/*
+		 * ██    ██ ██████  ██       ██████   █████  ██████  
+		 * ██    ██ ██   ██ ██      ██    ██ ██   ██ ██   ██ 
+		 * ██    ██ ██████  ██      ██    ██ ███████ ██   ██ 
+		 * ██    ██ ██      ██      ██    ██ ██   ██ ██   ██ 
+		 *  ██████  ██      ███████  ██████  ██   ██ ██████  
+		 */
 		add_action("upload", function() {
 			global $settings, $env, $pageindex, $paths;
 			
@@ -2171,6 +2230,14 @@ register_module([
 					break;
 			}
 		});
+		
+		/*
+		 * ██████  ██████  ███████ ██    ██ ██ ███████ ██     ██ 
+		 * ██   ██ ██   ██ ██      ██    ██ ██ ██      ██     ██ 
+		 * ██████  ██████  █████   ██    ██ ██ █████   ██  █  ██ 
+		 * ██      ██   ██ ██       ██  ██  ██ ██      ██ ███ ██ 
+		 * ██      ██   ██ ███████   ████   ██ ███████  ███ ███  
+		 */
 		add_action("preview", function() {
 			global $settings, $env, $pageindex;
 			
@@ -2377,6 +2444,14 @@ register_module([
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
 	"code" => function() {
+		
+		/*
+		 *  ██████ ██████  ███████ ██████  ██ ████████ ███████ 
+		 * ██      ██   ██ ██      ██   ██ ██    ██    ██      
+		 * ██      ██████  █████   ██   ██ ██    ██    ███████ 
+		 * ██      ██   ██ ██      ██   ██ ██    ██         ██ 
+		 *  ██████ ██   ██ ███████ ██████  ██    ██    ███████ 
+		 */
 		add_action("credits", function() {
 			global $settings, $version, $pageindex, $modules;
 			
@@ -2466,6 +2541,13 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/*
+		 * ██████  ███████ ██      ███████ ████████ ███████ 
+		 * ██   ██ ██      ██      ██         ██    ██      
+		 * ██   ██ █████   ██      █████      ██    █████   
+		 * ██   ██ ██      ██      ██         ██    ██      
+		 * ██████  ███████ ███████ ███████    ██    ███████ 
+		 */
 		add_action("delete", function() {
 			global $pageindex, $settings, $env, $paths, $modules;
 			if(!$settings->editing)
@@ -2757,6 +2839,13 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/*
+		 * ███████ ██   ██ ██████   ██████  ██████  ████████ 
+		 * ██       ██ ██  ██   ██ ██    ██ ██   ██    ██    
+		 * █████     ███   ██████  ██    ██ ██████     ██    
+		 * ██       ██ ██  ██      ██    ██ ██   ██    ██    
+		 * ███████ ██   ██ ██       ██████  ██   ██    ██    
+		 */
 		add_action("export", function() {
 			global $settings, $pageindex, $env;
 			
@@ -2815,6 +2904,13 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/*
+		 * ██   ██ ███████ ██      ██████  
+		 * ██   ██ ██      ██      ██   ██ 
+		 * ███████ █████   ██      ██████  
+		 * ██   ██ ██      ██      ██      
+		 * ██   ██ ███████ ███████ ██      
+		 */
 		add_action("help", function() {
 			global $settings, $version, $help_sections;
 			
@@ -2878,6 +2974,13 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/*
+		 * ██      ██ ███████ ████████ 
+		 * ██      ██ ██         ██    
+		 * ██      ██ ███████    ██    
+		 * ██      ██      ██    ██    
+		 * ███████ ██ ███████    ██    
+		 */
 		add_action("list", function() {
 			global $pageindex, $settings;
 			
@@ -2891,6 +2994,13 @@ register_module([
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});
 		
+		/*
+		 * ██      ██ ███████ ████████ ████████  █████   ██████  ███████ 
+		 * ██      ██ ██         ██       ██    ██   ██ ██       ██      
+		 * ██      ██ ███████    ██ █████ ██    ███████ ██   ███ ███████ 
+		 * ██      ██      ██    ██       ██    ██   ██ ██    ██      ██ 
+		 * ███████ ██ ███████    ██       ██    ██   ██  ██████  ███████ 
+		 */
 		add_action("list-tags", function() {
 			global $pageindex, $settings;
 			
@@ -3106,6 +3216,13 @@ register_module([
 	"description" => "Adds an action to let users user out. For security reasons it is wise to add this module since logging in automatically opens a session that is valid for 30 days.",
 	"id" => "page-logout",
 	"code" => function() {
+		/*
+		 * ██       ██████   ██████   ██████  ██    ██ ████████ 
+		 * ██      ██    ██ ██       ██    ██ ██    ██    ██    
+		 * ██      ██    ██ ██   ███ ██    ██ ██    ██    ██    
+		 * ██      ██    ██ ██    ██ ██    ██ ██    ██    ██    
+		 * ███████  ██████   ██████   ██████   ██████     ██    
+		 */
 		add_action("logout", function() {
 			global $env;
 			$env->is_logged_in = false;
@@ -3133,6 +3250,13 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/*
+		 * ███    ███  ██████  ██    ██ ███████ 
+		 * ████  ████ ██    ██ ██    ██ ██      
+		 * ██ ████ ██ ██    ██ ██    ██ █████   
+		 * ██  ██  ██ ██    ██  ██  ██  ██      
+		 * ██      ██  ██████    ████   ███████ 
+		 */
 		add_action("move", function() {
 			global $pageindex, $settings, $env, $paths;
 			if(!$settings->editing)
@@ -3218,6 +3342,13 @@ register_module([
 	"description" => "Adds an update page that downloads the latest stable version of Pepperminty Wiki. This module is currently outdated as it doesn't save your module preferences.",
 	"id" => "page-update",
 	"code" => function() {
+		/*
+		 * ██    ██ ██████  ██████   █████  ████████ ███████ 
+		 * ██    ██ ██   ██ ██   ██ ██   ██    ██    ██      
+		 * ██    ██ ██████  ██   ██ ███████    ██    █████   
+		 * ██    ██ ██      ██   ██ ██   ██    ██    ██      
+		 *  ██████  ██      ██████  ██   ██    ██    ███████ 
+		 */
 		add_action("update", function() {
 			global $settings, $env;
 			
@@ -3285,6 +3416,13 @@ register_module([
 	"description" => "Allows you to view pages. You reallyshould include this one.",
 	"id" => "page-view",
 	"code" => function() {
+		/*
+		 * ██    ██ ██ ███████ ██     ██ 
+		 * ██    ██ ██ ██      ██     ██ 
+		 * ██    ██ ██ █████   ██  █  ██ 
+		 *  ██  ██  ██ ██      ██ ███ ██ 
+		 *   ████   ██ ███████  ███ ███  
+		 */
 		add_action("view", function() {
 			global $pageindex, $settings, $env;
 			
@@ -3435,11 +3573,13 @@ register_module([
 	}
 ]);
 
-////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////// Slimdown /////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////// %slimdown% //
-////////////////////////////////////////////////////////////////////////////////////////////
+/***********************************************************************
+ * ███████ ██      ██ ███    ███ ██████   ██████  ██     ██ ███    ██  *
+ * ██      ██      ██ ████  ████ ██   ██ ██    ██ ██     ██ ████   ██  *
+ * ███████ ██      ██ ██ ████ ██ ██   ██ ██    ██ ██  █  ██ ██ ██  ██  *
+ *      ██ ██      ██ ██  ██  ██ ██   ██ ██    ██ ██ ███ ██ ██  ██ ██  *
+ * ███████ ███████ ██ ██      ██ ██████   ██████   ███ ███  ██   ████  *
+ ***********************************************************************/
 /**
  * Slimdown - A very basic regex-based Markdown parser. Supports the
  * following elements (and can be extended via Slimdown::add_rule()):
