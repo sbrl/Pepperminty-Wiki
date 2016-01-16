@@ -325,7 +325,7 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .larger { color: rgb(9, 180, 0); }
 .smaller { color: rgb(207, 28, 17); }
 .nochange { color: rgb(132, 123, 199); font-style: italic; }
-.significant { font-weight: bold; }
+.significant { font-weight: bolder; font-size: 1.1rem; }
 
 footer { padding: 2rem; }
 /* #ffdb6d #36962c */";
@@ -1606,9 +1606,6 @@ register_module([
 			$newsize = strlen($newsource);
 			// Calculate the page length difference
 			$size_diff = $newsize - $oldsize;
-			
-			error_log("$oldsize -> $newsize");
-			error_log("Size diff: $size_diff");
 			
 			$recentchanges = json_decode(file_get_contents($paths->recentchanges), true);
 			array_unshift($recentchanges, [

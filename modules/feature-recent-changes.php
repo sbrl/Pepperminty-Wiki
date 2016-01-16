@@ -69,9 +69,6 @@ register_module([
 			// Calculate the page length difference
 			$size_diff = $newsize - $oldsize;
 			
-			error_log("$oldsize -> $newsize");
-			error_log("Size diff: $size_diff");
-			
 			$recentchanges = json_decode(file_get_contents($paths->recentchanges), true);
 			array_unshift($recentchanges, [
 				"timestamp" => time(),
