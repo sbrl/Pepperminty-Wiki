@@ -322,6 +322,11 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .tag-list li { display: inline-block; margin: 1rem; }
 .mini-tag { background: #d2c3dd; padding: 0.2rem 0.4rem; color: #fb701a; text-decoration: none; }
 
+.larger { color: rgb(9, 180, 0); }
+.smaller { color: rgb(207, 28, 17); }
+.nochange { color: rgb(132, 123, 199); font-style: italic; }
+.significant { font-weight: bold; }
+
 footer { padding: 2rem; }
 /* #ffdb6d #36962c */";
 
@@ -1562,19 +1567,33 @@ register_module([
 		add_action("recent-changes", function() {
 			global $settings, $paths;
 			
-			$content = "\t\t<h1>Recent Changes</h1>
-		<ul>\n";
+			$content = "\t\t<h1>Recent Changes</h1>\n";
 			
 			$recentchanges = json_decode(file_get_contents($paths->recentchanges));
-			foreach($recentchanges as $rchange)
-			{
-				// The number (and the sign) of the size difference to display
-				$size_display = ($rchange->sizediff > 0 ? "+" : ($rchange < 0 ? "-" : "")) . $rchange->sizediff;
-				$size_display_class = $rchange->sizediff > 0 ? "larger" : ($rchange < 0 ? "smaller" : "nochange");
-				$content .= "\t\t\t<li><span class='editor'>&#9998; $rchange->page $rchange->user</span> " . human_time_since($rchange->timestamp) . " <span class='$size_display_class' title='New size: $rchange->newsize'>($size_display)</span></li>\n";
-			}
 			
-			$content .= "\t\t</ul>";
+			if(count($recentchanges) > 0)
+			{
+				$content .= "<ul class='page-list'>\n";
+				foreach($recentchanges as $rchange)
+				{
+					// The number (and the sign) of the size difference to display
+					$size_display = ($rchange->sizediff > 0 ? "+" : "") . $rchange->sizediff;
+					$size_display_class = $rchange->sizediff > 0 ? "larger" : ($rchange->sizediff < 0 ? "smaller" : "nochange");
+					if($rchange->sizediff > 500 or $rchange->sizediff < -500)
+					$size_display_class .= " significant";
+					
+					
+					$title_display = human_filesize($rchange->newsize - $rchange->sizediff) . " -> " .  human_filesize($rchange->newsize);
+					
+					$content .= "\t\t\t<li><a href='?page=" . rawurlencode($rchange->page) . "'>$rchange->page</a> <span class='editor'>&#9998; $rchange->user</span> " . human_time_since($rchange->timestamp) . " <span class='$size_display_class' title='$title_display'>($size_display)</span></li>\n";
+				}
+				$content .= "\t\t</ul>";
+			}
+			else
+			{
+				// No changes yet :(
+				$content .= "<p><em>None yet! Try making a few changes and then check back here.</em></p>\n";
+			}
 			
 			echo(page_renderer::render("Recent Changes - $settings->sitename", $content));
 		});
@@ -1592,13 +1611,13 @@ register_module([
 			error_log("Size diff: $size_diff");
 			
 			$recentchanges = json_decode(file_get_contents($paths->recentchanges), true);
-			$recentchanges[] = [
+			array_unshift($recentchanges, [
 				"timestamp" => time(),
 				"page" => $env->page,
 				"user" => $env->user,
 				"newsize" => $newsize,
 				"sizediff" => $size_diff
-			];
+			]);
 			
 			// Limit the number of entries in the recent changes file if we've
 			// been asked to.

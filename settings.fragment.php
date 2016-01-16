@@ -311,6 +311,11 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .tag-list li { display: inline-block; margin: 1rem; }
 .mini-tag { background: #d2c3dd; padding: 0.2rem 0.4rem; color: #fb701a; text-decoration: none; }
 
+.larger { color: rgb(9, 180, 0); }
+.smaller { color: rgb(207, 28, 17); }
+.nochange { color: rgb(132, 123, 199); font-style: italic; }
+.significant { font-weight: bold; }
+
 footer { padding: 2rem; }
 /* #ffdb6d #36962c */";
 
