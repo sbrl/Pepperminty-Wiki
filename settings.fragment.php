@@ -169,11 +169,11 @@ $settings->nav_links = [
 // An array of additional links in the above format that will be shown under
 // "More" subsection.
 $settings->nav_links_extra = [
-	[ "All&nbsp;Tags", "index.php?action=list-tags" ],
-	[ "Upload", "index.php?action=upload" ],
-	[ $settings->admindisplaychar . "Delete", "index.php?action=delete&page={page}" ],
-	[ $settings->admindisplaychar . "Move", "index.php?action=move&page={page}" ],
-	[ $settings->admindisplaychar . "Toggle Protection", "index.php?action=protect&page={page}" ]
+	[ "&#x1f3ab; All&nbsp;Tags", "index.php?action=list-tags" ],
+	[ "&#x1f845; Upload", "index.php?action=upload" ],
+	[ "&#x2327; $settings->admindisplaychar" . "Delete", "index.php?action=delete&page={page}" ],
+	[ "&#x2398; $settings->admindisplaychar" . "Move", "index.php?action=move&page={page}" ],
+	[ "&#x1f510; $settings->admindisplaychar" . "Toggle Protection", "index.php?action=protect&page={page}" ]
 ];
 
 // An array of links in the above format that will be shown at the bottom of
