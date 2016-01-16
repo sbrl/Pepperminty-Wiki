@@ -41,7 +41,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds recent changes. Access through the 'recent-changes' action.",
         "id": "feature-recent-changes",
-        "lastupdate": 1452952383,
+        "lastupdate": 1452953620,
         "optional": false
     },
     {
@@ -122,7 +122,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1451134069,
+        "lastupdate": 1452953587,
         "optional": false
     },
     {

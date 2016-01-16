@@ -322,6 +322,8 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .tag-list li { display: inline-block; margin: 1rem; }
 .mini-tag { background: #d2c3dd; padding: 0.2rem 0.4rem; color: #fb701a; text-decoration: none; }
 
+.cursor-query { cursor: help; }
+
 .larger { color: rgb(9, 180, 0); }
 .smaller { color: rgb(207, 28, 17); }
 .nochange { color: rgb(132, 123, 199); font-style: italic; }
@@ -1585,7 +1587,7 @@ register_module([
 					
 					$title_display = human_filesize($rchange->newsize - $rchange->sizediff) . " -> " .  human_filesize($rchange->newsize);
 					
-					$content .= "\t\t\t<li><a href='?page=" . rawurlencode($rchange->page) . "'>$rchange->page</a> <span class='editor'>&#9998; $rchange->user</span> " . human_time_since($rchange->timestamp) . " <span class='$size_display_class' title='$title_display'>($size_display)</span></li>\n";
+					$content .= "\t\t\t<li><a href='?page=" . rawurlencode($rchange->page) . "'>$rchange->page</a> <span class='editor'>&#9998; $rchange->user</span> <time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $rchange->timestamp) . "'>" . human_time_since($rchange->timestamp) . "</time> <span class='$size_display_class' title='$title_display'>($size_display)</span></li>\n";
 				}
 				$content .= "\t\t</ul>";
 			}
@@ -3185,7 +3187,7 @@ function generate_page_list($pagelist)
 		$result .= "<li><a href='index.php?page=$pagename'>$pagename</a>
 		<em class='size'>(" . human_filesize($pageindex->$pagename->size) . ")</em>
 		<span class='editor'>&#9998; " . $pageindex->$pagename->lasteditor . "</span>
-		<time title='" . date("l jS \of F Y \a\\t h:ia T", $pageindex->$pagename->lastmodified) . "'>" . human_time_since($pageindex->$pagename->lastmodified) . "</time>
+		<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $pageindex->$pagename->lastmodified) . "'>" . human_time_since($pageindex->$pagename->lastmodified) . "</time>
 		<span class='tags'>$tags</span></li>";
 	}
 	$result .= "		</ul>\n";

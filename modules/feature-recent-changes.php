@@ -47,7 +47,7 @@ register_module([
 					
 					$title_display = human_filesize($rchange->newsize - $rchange->sizediff) . " -> " .  human_filesize($rchange->newsize);
 					
-					$content .= "\t\t\t<li><a href='?page=" . rawurlencode($rchange->page) . "'>$rchange->page</a> <span class='editor'>&#9998; $rchange->user</span> " . human_time_since($rchange->timestamp) . " <span class='$size_display_class' title='$title_display'>($size_display)</span></li>\n";
+					$content .= "\t\t\t<li><a href='?page=" . rawurlencode($rchange->page) . "'>$rchange->page</a> <span class='editor'>&#9998; $rchange->user</span> <time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $rchange->timestamp) . "'>" . human_time_since($rchange->timestamp) . "</time> <span class='$size_display_class' title='$title_display'>($size_display)</span></li>\n";
 				}
 				$content .= "\t\t</ul>";
 			}
