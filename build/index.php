@@ -94,6 +94,9 @@ $settings->show_subpages = true;
 // the page.
 $settings->subpages_display_depth = 3;
 
+// The maximum number of recent changes to display on the recent changes page.
+$settings->max_recent_changes = 512;
+
 // An array of usernames and passwords - passwords should be hashed with
 // sha256. Put one user / password on each line, remembering the comma at the
 // end. The last user in the list doesn't need a comma after their details though.
@@ -1530,8 +1533,92 @@ function render_sidebar($pageindex, $root_pagename = "")
 
 
 register_module([
+	"name" => "Recent Changes",
+	"version" => "0.1",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds recent changes. Access through the 'recent-changes' action.",
+	"id" => "feature-recent-changes",
+	"code" => function() {
+		global $settings, $env, $paths;
+		// Add the recent changes json file to $paths for convenience.
+		$paths->recentchanges = $env->storage_prefix . "recent-changes.json";
+		// Create the recent changes json file if it doesn't exist
+		if(!file_exists($paths->recentchanges))
+			file_put_contents($paths->recentchanges, "[]");
+		
+		/*
+		 * ██████  ███████  ██████ ███████ ███    ██ ████████         
+		 * ██   ██ ██      ██      ██      ████   ██    ██            
+		 * ██████  █████   ██      █████   ██ ██  ██    ██            
+		 * ██   ██ ██      ██      ██      ██  ██ ██    ██            
+		 * ██   ██ ███████  ██████ ███████ ██   ████    ██            
+		 * 
+		 *  ██████ ██   ██  █████  ███    ██  ██████  ███████ ███████ 
+		 * ██      ██   ██ ██   ██ ████   ██ ██       ██      ██      
+		 * ██      ███████ ███████ ██ ██  ██ ██   ███ █████   ███████ 
+		 * ██      ██   ██ ██   ██ ██  ██ ██ ██    ██ ██           ██ 
+		 *  ██████ ██   ██ ██   ██ ██   ████  ██████  ███████ ███████
+		 */
+		add_action("recent-changes", function() {
+			global $settings, $paths;
+			
+			$content = "\t\t<h1>Recent Changes</h1>
+		<ul>\n";
+			
+			$recentchanges = json_decode(file_get_contents($paths->recentchanges));
+			foreach($recentchanges as $rchange)
+			{
+				// The number (and the sign) of the size difference to display
+				$size_display = ($rchange->sizediff > 0 ? "+" : ($rchange < 0 ? "-" : "")) . $rchange->sizediff;
+				$size_display_class = $rchange->sizediff > 0 ? "larger" : ($rchange < 0 ? "smaller" : "nochange");
+				$content .= "\t\t\t<li><span class='editor'>&#9998; $rchange->page $rchange->user</span> " . human_time_since($rchange->timestamp) . " <span class='$size_display_class' title='New size: $rchange->newsize'>($size_display)</span></li>\n";
+			}
+			
+			$content .= "\t\t</ul>";
+			
+			echo(page_renderer::render("Recent Changes - $settings->sitename", $content));
+		});
+		
+		register_save_preprocessor(function(&$pageinfo, &$newsource, &$oldsource) {
+			global $env, $settings, $paths;
+			
+			// Work out the old and new page lengths
+			$oldsize = strlen($oldsource);
+			$newsize = strlen($newsource);
+			// Calculate the page length difference
+			$size_diff = $newsize - $oldsize;
+			
+			error_log("$oldsize -> $newsize");
+			error_log("Size diff: $size_diff");
+			
+			$recentchanges = json_decode(file_get_contents($paths->recentchanges), true);
+			$recentchanges[] = [
+				"timestamp" => time(),
+				"page" => $env->page,
+				"user" => $env->user,
+				"newsize" => $newsize,
+				"sizediff" => $size_diff
+			];
+			
+			// Limit the number of entries in the recent changes file if we've
+			// been asked to.
+			if(isset($settings->max_recent_changes))
+				$recentchanges = array_slice($recentchanges, -$settings->max_recent_changes);
+			
+			// Save the recent changes file back to disk
+			file_put_contents($paths->recentchanges, json_encode($recentchanges, JSON_PRETTY_PRINT));
+		});
+		
+		add_help_section("800-raw-page-content", "Recent Changes", "<p></p>");
+	}
+]);
+
+
+
+
+register_module([
 	"name" => "Redirect pages",
-	"version" => "0.2",
+	"version" => "0.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
 	"id" => "feature-redirect",
@@ -1542,7 +1629,7 @@ register_module([
 			$matches = [];
 			if(preg_match("/^# ?REDIRECT ?\[\[([^\]]+)\]\]/i", $pagedata, $matches) === 1)
 			{
-				error_log("matches: " . var_export($matches, true));
+				//error_log("matches: " . var_export($matches, true));
 				// We have found a redirect page!
 				// Update the metadata to reflect this.
 				$index_entry->redirect = true;
@@ -2751,8 +2838,12 @@ register_module([
 			
 			// Construct an index for the old and new page content
 			$oldindex = [];
+			$oldpagedata = ""; // We need the old page data in order to pass it to the preprocessor
 			if(file_exists("$env->page.md"))
-				$oldindex = search::index(file_get_contents("$env->page.md"));
+			{
+				$oldpagedata = file_get_contents("$env->page.md");
+				$oldindex = search::index($oldpagedata);
+			}
 			$newindex = search::index($pagedata);
 			
 			// Compare the indexes of the old and new content
@@ -2796,7 +2887,7 @@ register_module([
 				// Execute all the preprocessors
 				foreach($save_preprocessors as $func)
 				{
-					$func($pageindex->$page, $pagedata);
+					$func($pageindex->$page, $pagedata, $oldpagedata);
 				}
 				
 				if($pagedata !== $pagedata_orig)

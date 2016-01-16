@@ -13,6 +13,8 @@ pageindex.json
 idindex.json
 # The search index
 invindex.json
+# The recent changes list
+recent-changes.json
 
 # All uploaded files
 build/Files/*

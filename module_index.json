@@ -36,12 +36,21 @@
         "optional": false
     },
     {
+        "name": "Recent Changes",
+        "version": "0.1",
+        "author": "Starbeamrainbowlabs",
+        "description": "Adds recent changes. Access through the 'recent-changes' action.",
+        "id": "feature-recent-changes",
+        "lastupdate": 1452950460,
+        "optional": false
+    },
+    {
         "name": "Redirect pages",
-        "version": "0.2",
+        "version": "0.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
         "id": "feature-redirect",
-        "lastupdate": 1450686571,
+        "lastupdate": 1452949822,
         "optional": false
     },
     {
@@ -86,7 +95,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1450687286,
+        "lastupdate": 1452949641,
         "optional": false
     },
     {

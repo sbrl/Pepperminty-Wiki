@@ -141,8 +141,12 @@ register_module([
 			
 			// Construct an index for the old and new page content
 			$oldindex = [];
+			$oldpagedata = ""; // We need the old page data in order to pass it to the preprocessor
 			if(file_exists("$env->page.md"))
-				$oldindex = search::index(file_get_contents("$env->page.md"));
+			{
+				$oldpagedata = file_get_contents("$env->page.md");
+				$oldindex = search::index($oldpagedata);
+			}
 			$newindex = search::index($pagedata);
 			
 			// Compare the indexes of the old and new content
@@ -186,7 +190,7 @@ register_module([
 				// Execute all the preprocessors
 				foreach($save_preprocessors as $func)
 				{
-					$func($pageindex->$page, $pagedata);
+					$func($pageindex->$page, $pagedata, $oldpagedata);
 				}
 				
 				if($pagedata !== $pagedata_orig)

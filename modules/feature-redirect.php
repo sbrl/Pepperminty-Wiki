@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Redirect pages",
-	"version" => "0.2",
+	"version" => "0.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
 	"id" => "feature-redirect",
@@ -12,7 +12,7 @@ register_module([
 			$matches = [];
 			if(preg_match("/^# ?REDIRECT ?\[\[([^\]]+)\]\]/i", $pagedata, $matches) === 1)
 			{
-				error_log("matches: " . var_export($matches, true));
+				//error_log("matches: " . var_export($matches, true));
 				// We have found a redirect page!
 				// Update the metadata to reflect this.
 				$index_entry->redirect = true;
