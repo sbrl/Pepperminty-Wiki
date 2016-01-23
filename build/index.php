@@ -33,86 +33,9 @@ $settings = new stdClass();
 // The site's name. Used all over the place.
 $settings->sitename = "Pepperminty Wiki";
 
-// A url that points to the site's logo. Leave blank to disable. When enabled
-// the logo will be inserted next to the site name on every page.
-$settings->logo_url = "//starbeamrainbowlabs.com/images/logos/peppermint.png";
-
-// The side of the site name at which the logo should be placed.
-$settings->logo_position = "left";
-
-// The url from which to fetch updates. Defaults to the master (development)
-// branch.
-// MAKE SURE THAT THIS POINTS TO A *HTTPS* URL, OTHERWISE SOMEONE COULD INJECT
-// A VIRUS INTO YOUR WIKI
-$settings->updateurl = "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/master/index.php";
-
-// The secret key used to perform 'dangerous' actions, like updating the wiki.
-// It is strongly advised that you change this!
-$settings->sitesecret = "ed420502615bac9037f8f12abd4c9f02";
-
-// Whether editing is enabled.
-$settings->editing = true;
-
-// The maximum page size in characters.
-$settings->maxpagesize = 135000;
-
-// Whether page sources should be cleaned of HTML before rendering. It is
-// STRONGLY recommended that you keep this option turned on.
-$settings->clean_raw_html = true;
-
-// Whether users who aren't logged in are allowed to edit your wiki.
-$settings->anonedits = false;
-
 // The name of the page that will act as the home page for the wiki. This page
 // will be served if the user didn't specify a page.
 $settings->defaultpage = "Main Page";
-
-// The default action. This action will be performed if no other action is
-// specified. It is recommended you set this to "view" - that way the user
-// automatically views the default page (see above).
-$settings->defaultaction = "view";
-
-// The parser to use when rendering pages. Defaults to a modified version of
-// slimdown, originally written by Johnny Broadway <johnny@johnnybroadway.com>.
-$settings->parser = "default";
-
-// Whether to show a list of subpages at the bottom of the page.
-$settings->show_subpages = true;
-
-// The depth to which we should display when listing subpages at the bottom of
-// the page.
-$settings->subpages_display_depth = 3;
-
-// The maximum number of recent changes to display on the recent changes page.
-$settings->max_recent_changes = 512;
-
-// An array of usernames and passwords - passwords should be hashed with
-// sha256.
-$settings->users = [
-	"admin" => "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", //password
-	"user" => "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34" //cheese
-];
-
-// Whether to require that users login before they do anything else.
-$settings->require_login_view = false;
-
-// The directory in which to store all files, except this main index.php.
-$settings->data_storage_dir = ".";
-
-// Whether to use the new sha3 hashing algorithm for passwords etc.
-$settings->use_sha3 = false;
-
-// An array of usernames that are administrators. Administrators can delete and
-// move pages.
-$settings->admins = [ "admin" ];
-
-// The string that is prepended before an admin's name on the nav bar. Defaults
-// to a diamond shape (&#9670;).
-$settings->admindisplaychar = "&#9670;";
-
-// The string that is prepended a page's name in the page title if it is
-// protected. Defaults to a lock symbol. (&#128274;)
-$settings->protectedpagechar = "&#128274;";
 
 // Contact details for the site administrator. Since users can only be added by
 // editing this file, people will need a contact address to use to ask for an
@@ -122,9 +45,101 @@ $settings->admindetails = [
 	"email" => "admin@localhost"
 ];
 
-// Whether to only allow adminstrators to export the your wiki as a zip using
-// the page-export module.
-$settings->export_allow_only_admins = false;
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// Appearance //////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+// A url that points to the favicon you want to use for your wiki. By default
+// this is set to a data: url of a Peppermint.
+// Default favicon credit: Peppermint by bluefrog23
+//	Link: https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23
+$settings->favicon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAB3VBMVEXhERHbKCjeVVXjb2/kR0fhKirdHBziDg6qAADaHh7qLy/pdXXUNzfMAADYPj7ZPDzUNzfbHx/fERHpamrqMTHgExPdHx/bLCzhLS3fVFTjT0/ibm7kRkbiLi7aKirdISHeFBTqNDTpeHjgERHYJCTVODjYQkLaPj6/AADVOTnpbW3cIyPdFRXcJCThMjLiTU3ibW3fVVXaKyvcERH4ODj+8fH/////fHz+Fxf4KSn0UFD/CAj/AAD/Xl7/wMD/EhL//v70xMT/+Pj/iYn/HBz/g4P/IyP/Kyv/7Oz0QUH/9PT/+vr/ior/Dg7/vr7/aGj/QED/bGz/AQH/ERH/Jib/R0f/goL/0dH/qan/YWH/7e3/Cwv4R0f/MTH/enr/vLz/u7v/cHD/oKD/n5//aWn+9/f/k5P/0tL/trb/QUH/cXH/dHT/wsL/DQ3/p6f/DAz/1dX/XV3/kpL/i4v/Vlb/2Nj/9/f/pKT+7Oz/V1f/iIj/jIz/r6//Zmb/lZX/j4//T0//Dw/4MzP/GBj/+fn/o6P/TEz/xMT/b2//Tk7/OTn/HR3/hIT/ODj/Y2P/CQn/ZGT/6Oj0UlL/Gxv//f3/Bwf/YmL/6+v0w8P/Cgr/tbX0QkL+9fX4Pz/qNzd0dFHLAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfeCxINNSdmw510AAAA5ElEQVQYGQXBzSuDAQCA8eexKXOwmSZepa1JiPJxsJOrCwcnuchBjg4O/gr7D9zk4uAgJzvuMgcTpYxaUZvSm5mUj7TX7ycAqvoLIJBwStVbP0Hom1Z/ejoxrbaR1Jz6nWinbKWttGRgMSSjanPktRY6mB9WtRNTn7Ilh7LxnNpKq2/x5LnBitfz+hx0qxUaxhZ6vwqq9bx6f2XXvuUl9SVQS38NR7cvln3v15tZ9bQpuWDtZN3Lgh5DWJex3Y+z1KrVhw21+CiM74WZo83DiXq0dVBDYNJkFEU7WrwDAZhRtQrwDzwKQbT6GboLAAAAAElFTkSuQmCC";
+
+// A url that points to the site's logo. Leave blank to disable. When enabled
+// the logo will be inserted next to the site name on every page.
+$settings->logo_url = "//starbeamrainbowlabs.com/images/logos/peppermint.png";
+
+// The side of the site name at which the logo should be placed.
+$settings->logo_position = "left";
+
+// Whether to show a list of subpages at the bottom of the page.
+$settings->show_subpages = true;
+
+// The depth to which we should display when listing subpages at the bottom of
+// the page.
+$settings->subpages_display_depth = 3;
+
+// A message that will appear at the bottom of every page. May contain HTML.
+$settings->footer_message = "All content is under <a href='?page=License' target='_blank'>this license</a>. Please make sure that you read and understand the license, especially if you are thinking about copying some (or all) of this site's content, as it may restrict you from doing so.";
+
+// A message that will appear just before the submit button on the editing
+// page. May contain HTML.
+$settings->editing_message = "By submitting your edit, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!";
+
+// The string that is prepended before an admin's name on the nav bar. Defaults
+// to a diamond shape (&#9670;).
+$settings->admindisplaychar = "&#9670;";
+
+// The string that is prepended a page's name in the page title if it is
+// protected. Defaults to a lock symbol. (&#128274;)
+$settings->protectedpagechar = "&#128274;";
+
+
+///////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////// Editing ///////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+// Whether editing is enabled.
+$settings->editing = true;
+
+// Whether users who aren't logged in are allowed to edit your wiki.
+$settings->anonedits = false;
+
+// The maximum page size in characters.
+$settings->maxpagesize = 135000;
+
+// The parser to use when rendering pages. Defaults to a modified version of
+// slimdown, originally written by Johnny Broadway <johnny@johnnybroadway.com>.
+$settings->parser = "default";
+
+// Whether page sources should be cleaned of HTML before rendering. It is
+// STRONGLY recommended that you keep this option turned on.
+$settings->clean_raw_html = true;
+
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////// Access and Security /////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+// An array of usernames and passwords - passwords should be hashed with
+// sha256.
+$settings->users = [
+	"admin" => "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", //password
+	"user" => "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34" //cheese
+];
+
+// An array of usernames that are administrators. Administrators can delete and
+// move pages.
+$settings->admins = [ "admin" ];
+
+// Whether to use the new sha3 hashing algorithm for passwords etc.
+$settings->use_sha3 = false;
+
+// Whether to require that users login before they do anything else.
+$settings->require_login_view = false;
+
+// The directory in which to store all files, except this main index.php.
+$settings->data_storage_dir = ".";
+
+// The secret key used to perform 'dangerous' actions, like updating the wiki.
+// It is strongly advised that you change this!
+$settings->sitesecret = "ed420502615bac9037f8f12abd4c9f02";
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// Navigation //////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 // An array of links and display text to display at the top of the site.
 // Format:
@@ -169,12 +184,10 @@ $settings->nav_links_bottom = [
 	[ "Help", "index.php?action=help" ]
 ];
 
-// A message that will appear at the bottom of every page. May contain HTML.
-$settings->footer_message = "All content is under <a href='?page=License' target='_blank'>this license</a>. Please make sure that you read and understand the license, especially if you are thinking about copying some (or all) of this site's content, as it may restrict you from doing so.";
 
-// A message that will appear just before the submit button on the editing
-// page. May contain HTML.
-$settings->editing_message = "By submitting your edit, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!";
+///////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////// Uploads ///////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 // Whether to allow image uploads to the server.
 $settings->upload_enabled = true;
@@ -202,6 +215,11 @@ $settings->mime_extension_mappings_location = "/etc/mime.types";
 $settings->min_preview_size = 1;
 $settings->max_preview_size = 2048;
 
+
+////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////// Search ////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
 // The number of characters that should be displayed either side of a matching
 // term in the context below each search result.
 $settings->search_characters_context = 200;
@@ -211,6 +229,43 @@ $settings->search_title_matches_weighting = 10;
 
 // The weighting to give to search term matches found in a page's tags.
 $settings->search_tags_matches_weighting = 3;
+
+
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////// Advanced ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+// The default action. This action will be performed if no other action is
+// specified. It is recommended you set this to "view" - that way the user
+// automatically views the default page (see above).
+$settings->defaultaction = "view";
+
+// The url from which to fetch updates. Defaults to the master (development)
+// branch.
+// MAKE SURE THAT THIS POINTS TO A *HTTPS* URL, OTHERWISE SOMEONE COULD INJECT
+// A VIRUS INTO YOUR WIKI
+$settings->updateurl = "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/master/index.php";
+
+
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////// Other Modules ////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+// The maximum number of recent changes to display on the recent changes page.
+$settings->max_recent_changes = 512;
+
+// Whether to only allow adminstrators to export the your wiki as a zip using
+// the page-export module.
+$settings->export_allow_only_admins = false;
+
+// The prefix that should be used in the names of the session variables. See
+// the readme for more information.
+$settings->sessionprefix = preg_replace("/[^0-9a-z]/i", "", strtolower($settings->sitename));
+
+
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////// Theme ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a
@@ -297,17 +352,7 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 footer { padding: 2rem; }
 /* #ffdb6d #36962c */";
 
-// A url that points to the favicon you want to use for your wiki. By default
-// this is set to a data: url of a Peppermint.
-// Default favicon credit: Peppermint by bluefrog23
-//	Link: https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23
-$settings->favicon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAB3VBMVEXhERHbKCjeVVXjb2/kR0fhKirdHBziDg6qAADaHh7qLy/pdXXUNzfMAADYPj7ZPDzUNzfbHx/fERHpamrqMTHgExPdHx/bLCzhLS3fVFTjT0/ibm7kRkbiLi7aKirdISHeFBTqNDTpeHjgERHYJCTVODjYQkLaPj6/AADVOTnpbW3cIyPdFRXcJCThMjLiTU3ibW3fVVXaKyvcERH4ODj+8fH/////fHz+Fxf4KSn0UFD/CAj/AAD/Xl7/wMD/EhL//v70xMT/+Pj/iYn/HBz/g4P/IyP/Kyv/7Oz0QUH/9PT/+vr/ior/Dg7/vr7/aGj/QED/bGz/AQH/ERH/Jib/R0f/goL/0dH/qan/YWH/7e3/Cwv4R0f/MTH/enr/vLz/u7v/cHD/oKD/n5//aWn+9/f/k5P/0tL/trb/QUH/cXH/dHT/wsL/DQ3/p6f/DAz/1dX/XV3/kpL/i4v/Vlb/2Nj/9/f/pKT+7Oz/V1f/iIj/jIz/r6//Zmb/lZX/j4//T0//Dw/4MzP/GBj/+fn/o6P/TEz/xMT/b2//Tk7/OTn/HR3/hIT/ODj/Y2P/CQn/ZGT/6Oj0UlL/Gxv//f3/Bwf/YmL/6+v0w8P/Cgr/tbX0QkL+9fX4Pz/qNzd0dFHLAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfeCxINNSdmw510AAAA5ElEQVQYGQXBzSuDAQCA8eexKXOwmSZepa1JiPJxsJOrCwcnuchBjg4O/gr7D9zk4uAgJzvuMgcTpYxaUZvSm5mUj7TX7ycAqvoLIJBwStVbP0Hom1Z/ejoxrbaR1Jz6nWinbKWttGRgMSSjanPktRY6mB9WtRNTn7Ilh7LxnNpKq2/x5LnBitfz+hx0qxUaxhZ6vwqq9bx6f2XXvuUl9SVQS38NR7cvln3v15tZ9bQpuWDtZN3Lgh5DWJex3Y+z1KrVhw21+CiM74WZo83DiXq0dVBDYNJkFEU7WrwDAZhRtQrwDzwKQbT6GboLAAAAAElFTkSuQmCC";
-
-// The prefix that should be used in the names of the session variables. See
-// the readme for more information.
-$settings->sessionprefix = preg_replace("/[^0-9a-z]/i", "", strtolower($settings->sitename));
-
-/*
+/*** Notes ***
 Actions:
 	view - view a page
 		page - page name
@@ -331,7 +376,7 @@ Actions:
 	delete - delete a page
 		page - page name
 		delete=yes - actually do the deletion (otherwise we display a prompt)
-*/
+ *************/
 
 
 
