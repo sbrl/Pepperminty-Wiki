@@ -72,7 +72,7 @@ These commands are also in `build.sh`. You can run that if you want. Here's an e
 2. Rebuilds the module index that the build scripts uses to determine what modules it should include when building
 3. Actually builds Pepperminty Wiki. Outputs to `index.php`.
 
-### Configuring
+## Configuring
 To configure your new install, open `index.php` in your favourite text editor and take a look at the comments. They should be self explanatory, but if you need any help, just contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new).
 
 Below are all the configuration directives that Pepperminty Wiki (and all the modules included in the repository) understand.
