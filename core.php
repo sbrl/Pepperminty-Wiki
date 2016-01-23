@@ -1,14 +1,6 @@
 <?php
 $start_time = time(true);
 
-// For debugging purposes. Remove or comment out for live sites.
-// This will always be commented out for a release.
-if(file_exists("php_error.php"))
-{
-	require("php_error.php");
-	\php_error\reportErrors([ "error_reporting_on" => E_ALL | E_STRICT ]);
-}
-
 {settings}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

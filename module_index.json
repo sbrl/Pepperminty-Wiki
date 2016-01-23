@@ -19,11 +19,11 @@
     },
     {
         "name": "Raw page source",
-        "version": "0.5",
+        "version": "0.6",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a 'raw' action that shows you the raw source of a page.",
         "id": "action-raw",
-        "lastupdate": 1451133673,
+        "lastupdate": 1453559572,
         "optional": false
     },
     {
@@ -78,6 +78,15 @@
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
         "lastupdate": 1451133924,
+        "optional": false
+    },
+    {
+        "name": "Debug Information",
+        "version": "0.1",
+        "author": "Starbeamrainbowlabs",
+        "description": "Adds a debug action for administrator use only that collects a load of useful information to make reporting bugs easier.",
+        "id": "page-debug-info",
+        "lastupdate": 1453562632,
         "optional": false
     },
     {
