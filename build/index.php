@@ -26,51 +26,41 @@ if(file_exists("php_error.php"))
 // Initialises a new object to store your wiki's settings in. Please don't touch this.
 $settings = new stdClass();
 
+////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////// Basic Settings ////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
 // The site's name. Used all over the place.
-// Note that by default the session cookie is prefixed with a variant of the
-// sitename so changing this will log everyone out!
 $settings->sitename = "Pepperminty Wiki";
 
 // A url that points to the site's logo. Leave blank to disable. When enabled
 // the logo will be inserted next to the site name on every page.
 $settings->logo_url = "//starbeamrainbowlabs.com/images/logos/peppermint.png";
 
-// The side of the site name at which the logo should be placed. May be set to
-// either "left" or "right". Only has an effect if the above is not set to an
-// empty string.
+// The side of the site name at which the logo should be placed.
 $settings->logo_position = "left";
 
 // The url from which to fetch updates. Defaults to the master (development)
-// branch If there is sufficient demand, a separate stable branch will be
-// created. Note that if you use the automatic updater currently it won't save
-// your module choices.
+// branch.
 // MAKE SURE THAT THIS POINTS TO A *HTTPS* URL, OTHERWISE SOMEONE COULD INJECT
 // A VIRUS INTO YOUR WIKI
 $settings->updateurl = "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/master/index.php";
 
-// The secret key used to perform 'dangerous' actions, like updating the wiki,
-// and deleting pages. It is strongly advised that you change this!
+// The secret key used to perform 'dangerous' actions, like updating the wiki.
+// It is strongly advised that you change this!
 $settings->sitesecret = "ed420502615bac9037f8f12abd4c9f02";
 
-// Determined whether edit is enabled. Set to false to disable disting for all
-// users (anonymous or otherwise).
+// Whether editing is enabled.
 $settings->editing = true;
 
-// The maximum number of characters allowed in a single page. The default is
-// 135,000 characters, which is about 50 pages.
+// The maximum page size in characters.
 $settings->maxpagesize = 135000;
 
-// Whether page sources should be cleaned of HTML before rendering. If set to
-// true any raw HTML will be escaped before rendering. Note that this shouldn't
-// affect code blocks - they should alwys be escaped. It is STRONGLY
-// recommended that you keep this option turned on, *ESPECIALLY* if you allow
-// anonymous edits as no sanitizing what so ever is performed on the HTML.
-// Also note that some parsers may override this setting and escape HTML
-// sequences anyway.
+// Whether page sources should be cleaned of HTML before rendering. It is
+// STRONGLY recommended that you keep this option turned on.
 $settings->clean_raw_html = true;
 
-// Determined whether users who aren't logged in are allowed to edit your wiki.
-// Set to true to allow anonymous users to log in.
+// Whether users who aren't logged in are allowed to edit your wiki.
 $settings->anonedits = false;
 
 // The name of the page that will act as the home page for the wiki. This page
@@ -82,9 +72,8 @@ $settings->defaultpage = "Main Page";
 // automatically views the default page (see above).
 $settings->defaultaction = "view";
 
-// The parser to use when rendering pages. Defaults to 'default', which is a
-// modified version of slimdown, originally written by
-// Johnny Broadway <johnny@johnnybroadway.com>.
+// The parser to use when rendering pages. Defaults to a modified version of
+// slimdown, originally written by Johnny Broadway <johnny@johnnybroadway.com>.
 $settings->parser = "default";
 
 // Whether to show a list of subpages at the bottom of the page.
@@ -98,32 +87,19 @@ $settings->subpages_display_depth = 3;
 $settings->max_recent_changes = 512;
 
 // An array of usernames and passwords - passwords should be hashed with
-// sha256. Put one user / password on each line, remembering the comma at the
-// end. The last user in the list doesn't need a comma after their details though.
+// sha256.
 $settings->users = [
 	"admin" => "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", //password
 	"user" => "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34" //cheese
 ];
 
-// Whether to require that users login before they do anything else. If you
-// combine this setting with the `data_storage_dir` option to move the storage
-// directory outside your web root, this will completely hide your wiki from
-// anyone who isn't logged in.
+// Whether to require that users login before they do anything else.
 $settings->require_login_view = false;
 
 // The directory in which to store all files, except this main index.php.
-// A single dot ('.') denotes the current directory.
-// Remember to omit the trailing slash from the directory name, as it is added
-// automatically by Pepperminty Wiki.
-// Note that this setting is currently experimental.
 $settings->data_storage_dir = ".";
 
-// Whether to use the new sha3 hashing algorithm that was standardised on the
-// 8th August 2015. Only works if you have strawbrary's sha3 extension
-// installed. Get it here: https://github.com/strawbrary/php-sha3
-// Note: If you change this settings, make sure to update the password hashes
-// above! Note that the hash action is aware of this option and will hash
-// passwords appropriately based on this setting.
+// Whether to use the new sha3 hashing algorithm for passwords etc.
 $settings->use_sha3 = false;
 
 // An array of usernames that are administrators. Administrators can delete and
@@ -140,8 +116,7 @@ $settings->protectedpagechar = "&#128274;";
 
 // Contact details for the site administrator. Since users can only be added by
 // editing this file, people will need a contact address to use to ask for an
-// account. Displayed at the bottom of the page, and will be appropriately
-// obfusticated to deter spammers.
+// account.
 $settings->admindetails = [
 	"name" => "Administrator",
 	"email" => "admin@localhost"
@@ -151,7 +126,7 @@ $settings->admindetails = [
 // the page-export module.
 $settings->export_allow_only_admins = false;
 
-// Array of links and display text to display at the top of the site.
+// An array of links and display text to display at the top of the site.
 // Format:
 //		[ "Display Text", "Link" ]
 // You can also use strings here and they will be printed as-is, except the
@@ -201,8 +176,7 @@ $settings->footer_message = "All content is under <a href='?page=License' target
 // page. May contain HTML.
 $settings->editing_message = "By submitting your edit, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!";
 
-// Whether to allow image uploads to the server. Currently disabled temporarily
-// for security reasons while I finish writing the file uploader.
+// Whether to allow image uploads to the server.
 $settings->upload_enabled = true;
 
 // An array of mime types that are allowed to be uploaded.
@@ -213,29 +187,20 @@ $settings->upload_allowed_file_types = [
 	"image/webp"
 ];
 
-// The default file type for previews. Defaults to image/png. Also supports
-// image/jpeg and image/webp. image/webp is a new image format that reduces
-// image sizez by ~20%, but PHP still has some issues with invalid webp images.
+// The default file type for previews.
 $settings->preview_file_type = "image/png";
 
 // The default size of preview images.
 $settings->default_preview_size = 640;
 
 // The location of a file that maps mime types onto file extensions and vice
-// versa. Used to generate the file extension for an uploaded file. Set to the
-// default location of the mime.types file on Linux. If you aren't using linux,
-// download this pastebin and point this setting at it instead:
-// http://pastebin.com/mjM3zKjz
+// versa. Used to generate the file extension for an uploaded file. See the
+// configuration guide for windows instructions.
 $settings->mime_extension_mappings_location = "/etc/mime.types";
 
 // The minimum and maximum sizes of generated preview images in pixels.
 $settings->min_preview_size = 1;
 $settings->max_preview_size = 2048;
-
-// The maximum distance terms should be apart in the context display below
-// search results. This is purely aesthetical - it doesn't affect the search
-// algorithm.
-$settings->search_max_distance_context_display = 100;
 
 // The number of characters that should be displayed either side of a matching
 // term in the context below each search result.
@@ -338,13 +303,8 @@ footer { padding: 2rem; }
 //	Link: https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23
 $settings->favicon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAB3VBMVEXhERHbKCjeVVXjb2/kR0fhKirdHBziDg6qAADaHh7qLy/pdXXUNzfMAADYPj7ZPDzUNzfbHx/fERHpamrqMTHgExPdHx/bLCzhLS3fVFTjT0/ibm7kRkbiLi7aKirdISHeFBTqNDTpeHjgERHYJCTVODjYQkLaPj6/AADVOTnpbW3cIyPdFRXcJCThMjLiTU3ibW3fVVXaKyvcERH4ODj+8fH/////fHz+Fxf4KSn0UFD/CAj/AAD/Xl7/wMD/EhL//v70xMT/+Pj/iYn/HBz/g4P/IyP/Kyv/7Oz0QUH/9PT/+vr/ior/Dg7/vr7/aGj/QED/bGz/AQH/ERH/Jib/R0f/goL/0dH/qan/YWH/7e3/Cwv4R0f/MTH/enr/vLz/u7v/cHD/oKD/n5//aWn+9/f/k5P/0tL/trb/QUH/cXH/dHT/wsL/DQ3/p6f/DAz/1dX/XV3/kpL/i4v/Vlb/2Nj/9/f/pKT+7Oz/V1f/iIj/jIz/r6//Zmb/lZX/j4//T0//Dw/4MzP/GBj/+fn/o6P/TEz/xMT/b2//Tk7/OTn/HR3/hIT/ODj/Y2P/CQn/ZGT/6Oj0UlL/Gxv//f3/Bwf/YmL/6+v0w8P/Cgr/tbX0QkL+9fX4Pz/qNzd0dFHLAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfeCxINNSdmw510AAAA5ElEQVQYGQXBzSuDAQCA8eexKXOwmSZepa1JiPJxsJOrCwcnuchBjg4O/gr7D9zk4uAgJzvuMgcTpYxaUZvSm5mUj7TX7ycAqvoLIJBwStVbP0Hom1Z/ejoxrbaR1Jz6nWinbKWttGRgMSSjanPktRY6mB9WtRNTn7Ilh7LxnNpKq2/x5LnBitfz+hx0qxUaxhZ6vwqq9bx6f2XXvuUl9SVQS38NR7cvln3v15tZ9bQpuWDtZN3Lgh5DWJex3Y+z1KrVhw21+CiM74WZo83DiXq0dVBDYNJkFEU7WrwDAZhRtQrwDzwKQbT6GboLAAAAAElFTkSuQmCC";
 
-// The prefix that should be used in the names of the session variables.
-// Defaults to an all lower case version of the site name with all non
-// alphanumeric characters removed. Remember that changing this will log
-// everyone out since the session variable's name will have changed.
-// Normally you won't have to change this - This setting is left over from when
-// we used a cookie to store login details.
-// By default this is set to a safe variant on your site name.
+// The prefix that should be used in the names of the session variables. See
+// the readme for more information.
 $settings->sessionprefix = preg_replace("/[^0-9a-z]/i", "", strtolower($settings->sitename));
 
 /*
