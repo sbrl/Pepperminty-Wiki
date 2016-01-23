@@ -637,7 +637,7 @@ class page_renderer
 		if(strlen($settings->logo_url) > 0)
 		{
 			// A logo url has been specified
-			$logo_html = "<img class='logo' src='$settings->logo_url' />";
+			$logo_html = "<img class='logo" . (isset($_GET["printable"]) ? " small" : "") . "' src='$settings->logo_url' />";
 			switch($settings->logo_position)
 			{
 				case "left":

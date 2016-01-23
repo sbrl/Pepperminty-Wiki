@@ -313,6 +313,7 @@ input[type=button], input[type=submit] { cursor: pointer; }
 h1 { text-align: center; }
 .sitename { margin-top: 5rem; margin-bottom: 3rem; font-size: 2.5rem; }
 .logo { max-width: 4rem; max-height: 4rem; vertical-align: middle; }
+.logo.small { max-width: 2rem; max-height: 2rem; }
 main:not(.printable) { padding: 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 
 .search-result { position: relative; }
@@ -1006,7 +1007,7 @@ class page_renderer
 		if(strlen($settings->logo_url) > 0)
 		{
 			// A logo url has been specified
-			$logo_html = "<img class='logo' src='$settings->logo_url' />";
+			$logo_html = "<img class='logo" . (isset($_GET["printable"]) ? " small" : "") . "' src='$settings->logo_url' />";
 			switch($settings->logo_position)
 			{
 				case "left":

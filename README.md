@@ -82,7 +82,7 @@ Key				| Value			| Explanation
 `sitename`		| string		| The site's name. Used all over the place. Note that by default the session cookie is prefixed with a variant of the sitename, so changing this will log everyone out!
 `logo_url`		| url			| A url that points to the site's logo. Leave blank to disable. When enabled, the logo will be inserted next to the site name on every page.
 `logo_postition`| left|right	| The side of the site name at which the logo should be placed. Only has an effect if the above is not set to an empty string.
-`updateurl`		| url			| The url from which to fetch updates. Defaults to the master (development) branch. If there is sufficient demand, a separate stable branch will be created. Note that if you use the automatic updater currently it won't save your module choices. **MAKE SURE THAT THIS POINTS TO A *HTTPS* URL, OTHERWISE SOMEONE COULD INJECT A VIRUS INTO YOUR WIKI**
+`updateurl`		| url			| The url from which to fetch updates. Defaults to the master (development) branch. If there is sufficient demand, a separate stable branch will be created. Note that if you use the automatic updater currently it won't save your module choices. **MAKE SURE THAT THIS POINTS TO A *HTTPS* URL, OTHERWISE SOMEONE COULD INJECT A VIRUS INTO YOUR WIKI!**
 `sitesecret`	| string		| The secret key used to perform 'dangerous' actions, like updating the wiki. It is strongly advised that you change this!
 `editing`		| boolean		| Determines whether editing is enabled. Set to false to disable disting for all users (anonymous or otherwise).
 `maxpagesize`	| integer		| The maximum number of characters allowed on a single page. The default is 135,000 characters, which is about 50 pages.
