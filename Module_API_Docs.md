@@ -120,6 +120,15 @@ register_module([
 
 The above adds an action called `action_name`, which, when requested, outputs the text `Hello, World!`.
 
+### `register_save_preprocessor($function)`
+Registers a function to be called every time a page is edited. The function will be passed the following parameters:
+
+1. A reference to the pageindex entry that is about to be saved.
+2. The new text that is to replace the old text.
+3. The old text that the new text is going to replace.
+
+If you make the function that you pass here take the new text that is to be saved in as a reference, you may alter it before it is saved to disk.
+
 ### `page_renderer`
 You probably want your module to output a nice user-friendly page instead of a simple text-based one. Luckily, Pepperminty Wiki has a system to let you do that.
 
