@@ -3849,7 +3849,7 @@ class PeppermintParsedown extends ParsedownExtra
 			
 			$style = "";
 			if($imageSize !== false)
-				$style .= " max-width: " . $imageSize["x"] . "; max-height: " . $imageSize["y"] . ";";
+				$style .= " max-width: " . $imageSize["x"] . "px; max-height: " . $imageSize["y"] . "px;";
 			if($floatDirection)
 				$style .= " float: $floatDirection;";
 			

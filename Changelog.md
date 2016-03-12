@@ -7,6 +7,7 @@
  - Added recent changes page under the action `recent-changes`.
  - Changed the cursor when hovering over a time to indicate that the tooltip contains more information.
  - Added icons to the "More..." menu
+ - Help section to parsedown parser.
 
 ## Changed
  - Improved appearance of the all pages list.
