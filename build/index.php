@@ -154,7 +154,6 @@ $settings->nav_links = [
 	"search",
 	[ "Read", "index.php?page={page}" ],
 	[ "Edit", "index.php?action=edit&page={page}" ],
-	[ "Printable", "index.php?action=view&printable=yes&page={page}" ],
 	//"divider",
 	[ "All&nbsp;Pages", "index.php?action=list" ],
 	"menu"
@@ -172,6 +171,7 @@ $settings->nav_links_extra = [
 // An array of links in the above format that will be shown at the bottom of
 // the page.
 $settings->nav_links_bottom = [
+	[ "&#x1f5b6; Printable version", "index.php?action=view&printable=yes&page={page}" ],
 	[ "Credits", "index.php?action=credits" ],
 	[ "Help", "index.php?action=help" ]
 ];
