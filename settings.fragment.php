@@ -159,6 +159,7 @@ $settings->nav_links = [
 // "More" subsection.
 $settings->nav_links_extra = [
 	[ "&#x1f3ab; All&nbsp;Tags", "index.php?action=list-tags" ],
+	[ "Recent changes", "?action=recent-changes" ],
 	[ "&#x1f845; Upload", "index.php?action=upload" ],
 	[ "&#x2327; $settings->admindisplaychar" . "Delete", "index.php?action=delete&page={page}" ],
 	[ "&#x2398; $settings->admindisplaychar" . "Move", "index.php?action=move&page={page}" ],
