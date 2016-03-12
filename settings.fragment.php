@@ -8,6 +8,7 @@
  * Credits:
 	* Code by @Starbeamrainbowlabs
 	* Slimdown - by Johnny Broadway from https://gist.github.com/jbroadway/2836900
+	* Parsedown - by erusev and others on github from http://parsedown.org/
  * Bug reports:
 	* #2 - Incorrect closing tag - nibreh <https://github.com/nibreh/>
 	* #8 - Rogue <datalist /> tag - nibreh <https://github.com/nibreh/>
