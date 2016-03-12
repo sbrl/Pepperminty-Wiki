@@ -4,7 +4,7 @@
 ## Added
  - This changelog. It's long overdue I think!
  - Added the all tags page to the "More..." menu by default.
- - Added recent changes page under the action `recent-changes`.
+ - Added recent changes page under the action `recent-changes`. A link can be found in the "More..." menu by default.
  - Changed the cursor when hovering over a time to indicate that the tooltip contains more information.
  - Added icons to the "More..." menu
  - Help section to parsedown parser.
