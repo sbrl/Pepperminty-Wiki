@@ -91,7 +91,19 @@ register_module([
 			}
 			else
 			{
-				$content .= "<p>There isn't a page called $query on $settings->sitename, but you can <a href='?action=edit&page=" . rawurlencode($query) . "'>create it</a>.</p>";
+				$content .= "<p>There isn't a page called $query on $settings->sitename, but you ";
+				if((!$settings->anonedits && !$env->is_logged_in) || !$settings->editing)
+				{
+					$content .= "do not have permission to create it.";
+					if(!$env->is_logged_in)
+					{
+						$content .= " You could try <a href='?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.";
+					}
+				}
+				else
+				{
+					$content .= "can <a href='?action=edit&page=" . rawurlencode($query) . "'>create it</a>.</p>";
+				}
 			}
 			
 			$i = 0; // todo use $_GET["offset"] and $_GET["result-count"] or something
