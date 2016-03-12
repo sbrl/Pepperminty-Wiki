@@ -15,6 +15,9 @@
  - Upgraded help page. Modules can now register their own sections on a wiki's help page.
  - Optimised search queries a bit.
  - Save preprocessors now get passed an extra parameter, which contains the old page source.
+ - Changed the default parser to parsedown.
+ - Removed parsedown from the `parser-parsedown` module and replaced it with code that automatically downloads parsedown and parsedown extra on the first run.
+ - Removed Slimdown add from the parsedown parser and replaced it with a custom extension of parsedown extra.
 
 ## Fixed
  - Removed debug statement from the redirect page module.
