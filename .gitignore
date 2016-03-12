@@ -16,6 +16,10 @@ invindex.json
 # The recent changes list
 recent-changes.json
 
+# The automatically downloaded parsedown files
+Parsedown.php
+ParsedownExtra.php
+
 # All uploaded files
 build/Files/*
 

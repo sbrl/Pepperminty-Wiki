@@ -90,7 +90,7 @@ $settings->maxpagesize = 135000;
 
 // The parser to use when rendering pages. Defaults to a modified version of
 // slimdown, originally written by Johnny Broadway <johnny@johnnybroadway.com>.
-$settings->parser = "default";
+$settings->parser = "parsedown";
 
 // Whether page sources should be cleaned of HTML before rendering. It is
 // STRONGLY recommended that you keep this option turned on.

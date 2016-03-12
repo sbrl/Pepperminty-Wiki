@@ -18,6 +18,9 @@ if(file_exists($build_env->target))
 echo("*** Rebuilding module index ***\n");
 $modules = glob("modules/*.php");
 $module_index = [];
+// Defined just in case a module needs to reference them when we require() them
+// to gain information
+$env = $paths = new stdClass();
 
 function register_module($settings)
 {

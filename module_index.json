@@ -180,21 +180,21 @@
         "optional": false
     },
     {
-        "name": "Default Parser",
+        "name": "Old Default Parser",
         "version": "0.9",
         "author": "Johnny Broadway & Starbeamrainbowlabs",
-        "description": "The default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page.",
-        "id": "parser-default",
-        "lastupdate": 1451134309,
-        "optional": false
+        "description": "The *old* default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page. Superceded by a customised extension of parsedown extra.",
+        "id": "parser-default-old",
+        "lastupdate": false,
+        "optional": true
     },
     {
         "name": "Parsedown",
-        "version": "0.1",
+        "version": "0.3",
         "author": "Johnny Broadway, Emanuil Rusev & Starbeamrainbowlabs",
-        "description": "An upgraded parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Also uses a modified Slimdown engine by Johnny Broadway in order to add support for internal links etc. Please be careful, as this module adds a _ton_ of weight to your installation.",
+        "description": "An upgraded parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Please be careful, as this module adds a some weight to your installation, and also requires write access to the disk on first load.",
         "id": "parser-parsedown",
-        "lastupdate": 1451134485,
-        "optional": true
+        "lastupdate": 1457796170,
+        "optional": false
     }
 ]
