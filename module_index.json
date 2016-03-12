@@ -57,9 +57,9 @@
         "name": "Search",
         "version": "0.2",
         "author": "Starbeamrainbowlabs",
-        "description": "Adds proper search functionality to Pepperminty Wiki. Note that this module, at the moment, just contains test code while I figure out how best to write a search engine.",
+        "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
         "id": "feature-search",
-        "lastupdate": 1451135184,
+        "lastupdate": 1457808707,
         "optional": false
     },
     {
