@@ -118,11 +118,11 @@
     },
     {
         "name": "Help page",
-        "version": "0.7",
+        "version": "0.7.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the help action. You really want this one.",
         "id": "page-help",
-        "lastupdate": 1451134026,
+        "lastupdate": 1458412065,
         "optional": false
     },
     {

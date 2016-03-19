@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Help page",
-	"version" => "0.7",
+	"version" => "0.7.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the help action. You really want this one.",
 	"id" => "page-help",
@@ -40,7 +40,7 @@ register_module([
 				
 				$content = "	<h1>$settings->sitename Help</h1>
 		<p>Welcome to $settings->sitename!</p>
-		<p>$settings->sitename is powered by Pepperminty Wiki, a complete wiki in a box you can drop into your server.</p>";
+		<p>$settings->sitename is powered by Pepperminty Wiki, a complete wiki in a box you can drop into your server and expect it to just <em>work</em>.</p>";
 				
 				// todo Insert a table of contents here?
 				
