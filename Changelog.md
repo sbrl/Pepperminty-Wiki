@@ -21,6 +21,7 @@
  - Removed Slimdown add from the parsedown parser and replaced it with a custom extension of parsedown extra.
  - Moved printable button to bottom bar and changed display text to "Printable version".
  - Improved the "There isn't a page called..." message you sometimes see when searching.
+ - Corrected a minor issue on the help page.
 
 ## Fixed
  - Removed debug statement from the redirect page module.

@@ -3087,9 +3087,9 @@ register_module([
 
 register_module([
 	"name" => "Help page",
-	"version" => "0.7.1",
+	"version" => "0.8.1",
 	"author" => "Starbeamrainbowlabs",
-	"description" => "Adds the help action. You really want this one.",
+	"description" => "Adds a rather useful help page. Access through the 'help' action. This module also exposes help content added to Pepperminty Wiki's inbuilt invisible help section system.",
 	"id" => "page-help",
 	"code" => function() {
 		global $settings;
@@ -3102,7 +3102,7 @@ register_module([
 		 * ██   ██ ███████ ███████ ██      
 		 */
 		add_action("help", function() {
-			global $settings, $version, $help_sections;
+			global $settings, $version, $help_sections, $actions;
 			
 			// Sort the help sections by key
 			ksort($help_sections, SORT_NATURAL);
@@ -3112,13 +3112,17 @@ register_module([
 				$title = "Developers Help - $settings->sitename";
 				$content = "<p>$settings->sitename runs on Pepperminty Wiki, an entire wiki packed into a single file. This page contains some information that developers may find useful.</p>
 				<p>A full guide to developing a Pepperminty Wiki module can be found <a href='//github.com/sbrl/Pepperminty-Wiki/blob/master/Module_API_Docs.md#module-api-documentation'>on GitHub</a>.</p>
+				<h3>Registered Help Sections</h3>
 				<p>The following help sections are currently registered:</p>
 				<table><tr><th>Index</th><th>Title</th><th>Length</th></tr>\n";
 				foreach($help_sections as $index => $section)
 				{
 					$content .= "\t\t\t<tr><td>$index</td><td>" . $section["title"] . "</td><td>" . human_filesize(strlen($section["content"])) . "</td></tr>\n";
 				}
-				$content .= "\t\t</table>";
+				$content .= "\t\t</table>\n";
+				$content .= "<h3>Registered Actions</h3>
+				<p>The following actions are currently registered:</p>\n";
+				$content .= "<p>" . implode(", ", array_keys(get_object_vars($actions))) . "</p>";
 			}
 			else
 			{
