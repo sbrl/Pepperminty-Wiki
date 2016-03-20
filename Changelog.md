@@ -9,6 +9,7 @@
  - Added icons to the "More..." menu
  - Added help section to parsedown parser.
  - Added more information to the dev help page.
+ - Added templating! It works the way you'd expect it to in Mediawiki.
 
 ## Changed
  - Improved appearance of the all pages list.
@@ -23,6 +24,8 @@
  - Moved printable button to bottom bar and changed display text to "Printable version".
  - Improved the "There isn't a page called..." message you sometimes see when searching.
  - Corrected a minor issue on the help page.
+ - Redirect pages now show in italics in page lists.
+ - Made other minor improvements to the page lists.
 
 ## Fixed
  - Removed debug statement from the redirect page module.

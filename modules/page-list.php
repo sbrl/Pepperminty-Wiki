@@ -108,9 +108,13 @@ function generate_page_list($pagelist)
 			$tags = substr($tags, 0, -2); // Remove the last ", " from the tag list
 		}
 		
-		$result .= "<li><a href='index.php?page=$pagename'>$pagename</a>
+		$pageDisplayName = $pagename;
+		if($pageindex->$pagename->redirect)
+			$pageDisplayName = "<em>$pageDisplayName</em>";
+		
+		$result .= "<li><a href='index.php?page=$pagename'>$pageDisplayName</a>
 		<em class='size'>(" . human_filesize($pageindex->$pagename->size) . ")</em>
-		<span class='editor'>&#9998; " . $pageindex->$pagename->lasteditor . "</span>
+		<span class='editor'><span class='texticon cursor-query' title='Last editor'>&#9998;</span> " . $pageindex->$pagename->lasteditor . "</span>
 		<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $pageindex->$pagename->lastmodified) . "'>" . human_time_since($pageindex->$pagename->lastmodified) . "</time>
 		<span class='tags'>$tags</span></li>";
 	}
