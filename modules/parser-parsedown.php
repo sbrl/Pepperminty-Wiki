@@ -85,11 +85,16 @@ class PeppermintParsedown extends ParsedownExtra
 		if(preg_match("/\{\{\{([^}]+)\}\}\}/", $fragment["text"], $matches))
 		{
 			$variableKey = trim($matches[1]);
+			
+			$variableValue = false;
 			if(isset(array_slice($this->paramStack, -1)[0][$variableKey]))
+				$variableValue = array_slice($this->paramStack, -1)[0][$variableKey];
+			
+			if($variableValue)
 			{
 				return [
 					"extent" => strlen($matches[0]),
-					"markup" => array_slice($this->paramStack, -1)[0][$variableKey]
+					"markup" => $variableValue
 				];
 			}
 		}
