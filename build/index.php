@@ -3810,7 +3810,10 @@ class PeppermintParsedown extends ParsedownExtra
 			
 			$variableValue = false;
 			if(isset(array_slice($this->paramStack, -1)[0][$variableKey]))
+			{
 				$variableValue = array_slice($this->paramStack, -1)[0][$variableKey];
+				$variableValue = $this->escapeText($variableValue);
+			}
 			
 			if($variableValue)
 			{
@@ -4011,6 +4014,11 @@ class PeppermintParsedown extends ParsedownExtra
 			"x" => $parts[0],
 			"y" => $parts[1]
 		];
+	}
+	
+	protected function escapeText($text)
+	{
+		return htmlentities($text, ENT_COMPAT | ENT_HTML5);
 	}
 	
 	/**
