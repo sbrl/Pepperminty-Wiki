@@ -63,6 +63,9 @@ class PeppermintParsedown extends ParsedownExtra
 {
 	private $internalLinkBase = "./%s";
 	
+	protected $maxParamDepth = 0;
+	protected $paramStack = [];
+	
 	function __construct()
 	{
 		// Prioritise our internal link parsing over the regular link parsing
@@ -78,7 +81,19 @@ class PeppermintParsedown extends ParsedownExtra
 	
 	protected function inlineTemplate($fragment)
 	{
-		if(preg_match("/\{\{([^}]+)\}\}/", $fragment["text"], $matches))
+		// Variable parsing
+		if(preg_match("/\{\{\{([^}]+)\}\}\}/", $fragment["text"], $matches))
+		{
+			$variableKey = trim($matches[1]);
+			if(isset(array_slice($this->paramStack, -1)[0][$variableKey]))
+			{
+				return [
+					"extent" => strlen($matches[0]),
+					"markup" => array_slice($this->paramStack, -1)[0][$variableKey]
+				];
+			}
+		}
+		else if(preg_match("/\{\{([^}]+)\}\}/", $fragment["text"], $matches))
 		{
 			$templateElement = $this->templateHandler($matches[1]);
 			
@@ -96,6 +111,7 @@ class PeppermintParsedown extends ParsedownExtra
 	{
 		global $pageindex, $paths;
 		
+		
 		$parts = explode("|", trim($source, "{}"));
 		$parts = array_map(trim, $parts);
 		
@@ -107,6 +123,7 @@ class PeppermintParsedown extends ParsedownExtra
 			return false;
 		
 		// Parse the parameters
+		$this->maxParamDepth++;
 		$params = [];
 		$i = 0;
 		foreach($parts as $part)
@@ -121,15 +138,20 @@ class PeppermintParsedown extends ParsedownExtra
 			else
 			{
 				// This isn't a named parameter
-				$params[$i] = trim($part);
+				$params["$i"] = trim($part);
 				
 				$i++;
 			}
 		}
+		// Add the parsed parameters to the parameter stack
+		$this->paramStack[] = $params;
 		
 		$templateFilePath = $paths->storage_prefix . $pageindex->$templatePagename->filename;
 		
 		$parsedTemplateSource = $this->text(file_get_contents($templateFilePath));
+		
+		// Remove the parsed parameters from the stack
+		array_pop($this->paramStack);
 		
 		return [
 			"name" => "div",
@@ -233,6 +255,10 @@ class PeppermintParsedown extends ParsedownExtra
 			];
 		}
 	}
+	
+	# ~
+	# Utility Methods
+	# ~
 	
 	private function isFloatValue($value)
 	{
