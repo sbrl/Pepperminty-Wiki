@@ -3803,15 +3803,43 @@ class PeppermintParsedown extends ParsedownExtra
 	
 	protected function inlineTemplate($fragment)
 	{
+		global $env;
+		
 		// Variable parsing
 		if(preg_match("/\{\{\{([^}]+)\}\}\}/", $fragment["text"], $matches))
 		{
+			$stackEntry = array_slice($this->paramStack, -1)[0];
+			$params = !empty($stackEntry) ? $stackEntry["params"] : false;
+			
 			$variableKey = trim($matches[1]);
 			
 			$variableValue = false;
-			if(isset(array_slice($this->paramStack, -1)[0][$variableKey]))
+			switch ($variableKey)
 			{
-				$variableValue = array_slice($this->paramStack, -1)[0][$variableKey];
+				case "@":
+					if(!empty($params))
+					{
+						$variableValue = "<table>
+	<tr><th>Key</th><th>Value</th></tr>\n";
+						foreach($params as $key => $value)
+						{
+							$variableValue .= "\t<tr><td>" . $this->escapeText($key) . "</td><td>" . $this->escapeText($value) . "</td></tr>\n";
+						}
+						$variableValue .= "</table>";
+					}
+					break;
+				case "#":
+					$variableValue = "<ol start=\"0\">\n";
+					$variableValue .= "\t<li>$env->page</li>\n";
+					foreach($this->paramStack as $curStackEntry)
+					{
+						$variableValue .= "\t<li>" . $curStackEntry["pagename"] . "</li>\n";
+					}
+					$variableValue .= "</ol>\n";
+			}
+			if(isset($params[$variableKey]))
+			{
+				$variableValue = $params[$variableKey];
 				$variableValue = $this->escapeText($variableValue);
 			}
 			
@@ -3874,7 +3902,10 @@ class PeppermintParsedown extends ParsedownExtra
 			}
 		}
 		// Add the parsed parameters to the parameter stack
-		$this->paramStack[] = $params;
+		$this->paramStack[] = [
+			"pagename" => $templatePagename,
+			"params" => $params
+		];
 		
 		$templateFilePath = $paths->storage_prefix . $pageindex->$templatePagename->filename;
 		
