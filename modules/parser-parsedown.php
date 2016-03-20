@@ -70,7 +70,74 @@ class PeppermintParsedown extends ParsedownExtra
 		// Prioritise our image parser over the regular image parser
 		array_unshift($this->InlineTypes["!"], "ExtendedImage");
 		
-		//$this->inlineMarkerList .= "{";
+		$this->inlineMarkerList .= "{";
+		if(!is_array($this->InlineTypes["{"]))
+			$this->InlineTypes["{"] = [];
+		$this->InlineTypes["{"][] = "Template";
+	}
+	
+	protected function inlineTemplate($fragment)
+	{
+		if(preg_match("/\{\{([^}]+)\}\}/", $fragment["text"], $matches))
+		{
+			$templateElement = $this->templateHandler($matches[1]);
+			
+			if(!empty($templateElement))
+			{
+				return [
+					"extent" => strlen($matches[0]),
+					"element" => $templateElement
+				];
+			}
+		}
+	}
+	
+	protected function templateHandler($source)
+	{
+		global $pageindex, $paths;
+		
+		$parts = explode("|", trim($source, "{}"));
+		$parts = array_map(trim, $parts);
+		
+		// Extract the name of the temaplate page
+		$templatePagename = array_shift($parts);
+		// If the page that we are supposed to use as the tempalte doesn't
+		// exist, then there's no point in continuing.
+		if(empty($pageindex->$templatePagename))
+			return false;
+		
+		// Parse the parameters
+		$params = [];
+		$i = 0;
+		foreach($parts as $part)
+		{
+			if(strpos($part, "=") !== false)
+			{
+				// This param contains an equals sign, so it's a named parameter
+				$keyValuePair = explode("=", $part, 2);
+				$keyValuePair = array_map(trim, $keyValuePair);
+				$params[$keyValuePair[0]] = $keyValuePair[1];
+			}
+			else
+			{
+				// This isn't a named parameter
+				$params[$i] = trim($part);
+				
+				$i++;
+			}
+		}
+		
+		$templateFilePath = $paths->storage_prefix . $pageindex->$templatePagename->filename;
+		
+		$parsedTemplateSource = $this->text(file_get_contents($templateFilePath));
+		
+		return [
+			"name" => "div",
+			"text" => $parsedTemplateSource,
+			"attributes" => [
+				"class" => "template"
+			]
+		];
 	}
 	
 	protected function inlineInternalLink($fragment)
