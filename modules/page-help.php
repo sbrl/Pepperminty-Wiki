@@ -53,7 +53,7 @@ register_module([
 					
 					// Todo add a button that you can click to get a permanent link
 					// to this section.
-					$content .= "<h2 id='$index'>" . $section["title"] . "</h2>\n";
+					$content .= "<h2 id='$index' class='help-section-header'>" . $section["title"] . "</h2>\n";
 					$content .= $section["content"] . "\n";
 				}
 			}

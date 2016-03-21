@@ -337,6 +337,8 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .tag-list li { display: inline-block; margin: 1rem; }
 .mini-tag { background: #d2c3dd; padding: 0.2rem 0.4rem; color: #fb701a; text-decoration: none; }
 
+.help-section-header::after { content: attr(id); float: right; color: rgba(0, 0, 0, 0.4); font-size: 0.8rem; font-weight: normal; }
+
 .cursor-query { cursor: help; }
 
 .larger { color: rgb(9, 180, 0); }
@@ -3144,7 +3146,7 @@ register_module([
 					
 					// Todo add a button that you can click to get a permanent link
 					// to this section.
-					$content .= "<h2 id='$index'>" . $section["title"] . "</h2>\n";
+					$content .= "<h2 id='$index' class='help-section-header'>" . $section["title"] . "</h2>\n";
 					$content .= $section["content"] . "\n";
 				}
 			}
