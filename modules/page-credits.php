@@ -21,12 +21,14 @@ register_module([
 				"Code" => [
 					"author" => "Starbeamrainbowlabs",
 					"author_url" => "https://starbeamrmainbowlabs.com/",
-					"thing_url" => "https://github.com/sbrl/Pepprminty-Wiki"
+					"thing_url" => "https://github.com/sbrl/Pepprminty-Wiki",
+					"icon" => "https://avatars0.githubusercontent.com/u/9929737?v=3&s=24"
 				],
 				"Slightly modified version of Slimdown" => [
 					"author" => "Johnny Broadway",
 					"author_url" => "https://github.com/jbroadway",
-					"thing_url" => "https://gist.github.com/jbroadway/2836900"
+					"thing_url" => "https://gist.github.com/jbroadway/2836900",
+					"icon" => "https://avatars2.githubusercontent.com/u/87886?v=3&s=24"
 				],
 				"Default Favicon" => [
 					"author" => "bluefrog23",
@@ -36,7 +38,8 @@ register_module([
 				"Bug Reports" => [
 					"author" => "nibreh",
 					"author_url" => "https://github.com/nibreh/",
-					"thing_url" => ""
+					"thing_url" => "",
+					"icon" => "https://avatars2.githubusercontent.com/u/7314006?v=3&s=24"
 				]
 			];
 			
@@ -46,6 +49,8 @@ register_module([
 			{
 				$credits_html .= "	<li>";
 				$credits_html .= "<a href='" . $author_details["thing_url"] . "'>$thing</a> by ";
+				if(isset($author_details["icon"]))
+				$credits_html .= "<img style='vertical-align: middle;' src='" . $author_details["icon"] . "' /> ";
 				$credits_html .= "<a href='" . $author_details["author_url"] . "'>" . $author_details["author"] . "</a>";
 				$credits_html .= "</li>\n";
 			}
