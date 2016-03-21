@@ -34,6 +34,7 @@ A Live demo of the latest stable version can be found over at [my website](//sta
 ### Requirements
 - PHP-enabled webserver
 - PHP session support (for logging in, see [here](https://php.net/manual/en/session.installation.php) for more information)
+- The `mbstring` PHP extension
 - Write access to own folder (only for editing)
 
 ### Getting your own copy
