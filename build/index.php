@@ -3710,10 +3710,14 @@ register_module([
 			
 			$content .= "\n\t\t<!-- Took " . (microtime(true) - $parsing_start) . " seconds to parse page source -->\n";
 			
+			// Content only mode: Sends only the raw rendered page
+			if(isset($_GET["contentonly"]) and $_GET["contentonly"] === "yes")
+				exit(parse_page_source($content));
+			// Printable: Sends a printable version of the page
 			if(isset($_GET["printable"]) and $_GET["printable"] === "yes")
 				exit(page_renderer::render_minimal($title, $content));
-			else
-				exit(page_renderer::render_main($title, $content));
+			// Normal page
+			exit(page_renderer::render_main($title, $content));
 		});
 	}
 ]);
