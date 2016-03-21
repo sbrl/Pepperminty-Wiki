@@ -27,7 +27,7 @@ register_module([
 		 *  ██████ ██   ██ ██   ██ ██   ████  ██████  ███████ ███████
 		 */
 		add_action("recent-changes", function() {
-			global $settings, $paths;
+			global $settings, $paths, $pageindex;
 			
 			$content = "\t\t<h1>Recent Changes</h1>\n";
 			
@@ -47,7 +47,11 @@ register_module([
 					
 					$title_display = human_filesize($rchange->newsize - $rchange->sizediff) . " -> " .  human_filesize($rchange->newsize);
 					
-					$content .= "\t\t\t<li><a href='?page=" . rawurlencode($rchange->page) . "'>$rchange->page</a> <span class='editor'>&#9998; $rchange->user</span> <time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $rchange->timestamp) . "'>" . human_time_since($rchange->timestamp) . "</time> <span class='$size_display_class' title='$title_display'>($size_display)</span></li>\n";
+					$pageDisplayName = $rchange->page;
+					if(isset($pageindex->$pageDisplayName) and $pageindex->$pageDisplayName->redirect)
+						$pageDisplayName = "<em>$pageDisplayName</em>";
+					
+					$content .= "\t\t\t<li><a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a> <span class='editor'>&#9998; $rchange->user</span> <time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $rchange->timestamp) . "'>" . human_time_since($rchange->timestamp) . "</time> <span class='$size_display_class' title='$title_display'>($size_display)</span></li>\n";
 				}
 				$content .= "\t\t</ul>";
 			}
@@ -87,7 +91,8 @@ register_module([
 			file_put_contents($paths->recentchanges, json_encode($recentchanges, JSON_PRETTY_PRINT));
 		});
 		
-		add_help_section("800-raw-page-content", "Recent Changes", "<p></p>");
+		add_help_section("800-raw-page-content", "Recent Changes", "<p>The <a href='?action=recent-changes'>recent changes</a> page displays a list of all the most recent changes that have happened around $settings->sitename, arranged in chronological order. It can be found in the \"More...\" menu in the top right by default.</p>
+		<p>Each entry displays the name of the page in question, who edited it, how long ago they did so, and the number of characters added or removed. Pages that <em>currently</em> redirect to another page are shown in italics, and hovering over the time since the edit wil show the exact time that the edit was made.</p>");
 	}
 ]);
 
