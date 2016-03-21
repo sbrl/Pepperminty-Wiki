@@ -10,6 +10,7 @@
  - Added help section to parsedown parser.
  - Added more information to the dev help page.
  - Added templating! It works the way you'd expect it to in Mediawiki.
+ - Help section ids now show to the right of the help section headers by default.
 
 ## Changed
  - Improved appearance of the all pages list.
