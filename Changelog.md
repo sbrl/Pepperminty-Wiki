@@ -1,7 +1,8 @@
 # Changelog
 
-## v0.10
-## Added
+## v0.10-beta1
+
+### Added
  - This changelog. It's long overdue I think!
  - Added the all tags page to the "More..." menu by default.
  - Added recent changes page under the action `recent-changes`. A link can be found in the "More..." menu by default.
@@ -12,7 +13,7 @@
  - Added templating! It works the way you'd expect it to in Mediawiki.
  - Help section ids now show to the right of the help section headers by default.
 
-## Changed
+### Changed
  - Improved appearance of the all pages list.
  - Improved apparence of the tag list page.
  - Added a link back to the list of tags on the list of pages with a particular tag.
@@ -23,10 +24,11 @@
  - Removed parsedown from the `parser-parsedown` module and replaced it with code that automatically downloads parsedown and parsedown extra on the first run.
  - Removed Slimdown add from the parsedown parser and replaced it with a custom extension of parsedown extra.
  - Moved printable button to bottom bar and changed display text to "Printable version".
- - Improved the "There isn't a page called..." message you sometimes see when searching.
- - Corrected a minor issue on the help page.
  - Redirect pages now show in italics in page lists.
  - Made other minor improvements to the page lists.
 
-## Fixed
+### Fixed
  - Removed debug statement from the redirect page module.
+ - Improved the "There isn't a page called..." message you sometimes see when searching.
+ - Corrected a few minor spelling issues on the help page.
+ - The `recent-changes` module now has a proper help section.
