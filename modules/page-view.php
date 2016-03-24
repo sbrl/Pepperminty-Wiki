@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.11",
+	"version" => "0.12.0",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You reallyshould include this one.",
 	"id" => "page-view",

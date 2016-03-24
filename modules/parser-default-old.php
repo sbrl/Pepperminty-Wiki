@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Old Default Parser",
-	"version" => "0.9",
+	"version" => "0.10",
 	"author" => "Johnny Broadway & Starbeamrainbowlabs",
 	"description" => "The *old* default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page. Superceded by a customised extension of parsedown extra.",
 	"id" => "parser-default-old",

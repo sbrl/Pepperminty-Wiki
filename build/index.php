@@ -1542,7 +1542,7 @@ function render_sidebar($pageindex, $root_pagename = "")
 
 register_module([
 	"name" => "Recent Changes",
-	"version" => "0.1",
+	"version" => "0.2.0",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds recent changes. Access through the 'recent-changes' action.",
 	"id" => "feature-recent-changes",
@@ -1679,7 +1679,7 @@ register_module([
 
 register_module([
 	"name" => "Search",
-	"version" => "0.2",
+	"version" => "0.2.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
@@ -2563,7 +2563,7 @@ function resize_image($image, $size)
 
 register_module([
 	"name" => "Credits",
-	"version" => "0.6",
+	"version" => "0.7.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
@@ -3099,7 +3099,7 @@ register_module([
 
 register_module([
 	"name" => "Help page",
-	"version" => "0.8.1",
+	"version" => "0.9.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a rather useful help page. Access through the 'help' action. This module also exposes help content added to Pepperminty Wiki's inbuilt invisible help section system.",
 	"id" => "page-help",
@@ -3172,7 +3172,7 @@ register_module([
 
 register_module([
 	"name" => "Page list",
-	"version" => "0.9",
+	"version" => "0.10.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that lists all the pages in the index along with their metadata.",
 	"id" => "page-list",
@@ -3620,7 +3620,7 @@ register_module([
 
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.11",
+	"version" => "0.12.0",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You reallyshould include this one.",
 	"id" => "page-view",
@@ -3738,7 +3738,7 @@ register_module([
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.3.1",
+	"version" => "0.5.3",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds a some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",
