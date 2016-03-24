@@ -1,4 +1,9 @@
 # Changelog
+## v0.10-beta2
+
+## Fixed
+ - Added the moderator diamond next to the link to the update page in the credits.
+ - Corrected the version numbers of a large number of modules that I forgot to change.
 
 ## v0.10-beta1
 
