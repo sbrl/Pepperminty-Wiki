@@ -3,7 +3,7 @@ A Wiki in a box
 
 [![Build Status](https://travis-ci.org/sbrl/Pepperminty-Wiki.svg?branch=master)](https://travis-ci.org/sbrl/Pepperminty-Wiki)
 
-Pepperminty Wiki is a complete wiki contained in a single file, inspired by @am2064's [Minty Wiki](https://github.com/am2064/Minty-Wiki).
+Pepperminty Wiki is a complete wiki contained in a single file, inspired by @am2064's [Minty Wiki](https://github.com/am2064/Minty-Wiki). It's open source too (under MPL-2.0), so contributions are welcome!
 
 ## Screenshots
 ![Main Page Example](https://cloud.githubusercontent.com/assets/9929737/9069904/12acfad6-3ae4-11e5-8ec4-6ec0e3de7249.png)
@@ -143,3 +143,6 @@ Here's a list of things that I want to add at some point (please feel free to [s
 - ...?
 
 Is the feature you want to see not on this list? [Open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) or [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls)!
+
+# License
+Pepperminty Wiki is released under the Mozilla Public License 2.0. The full license text is included in the `LICENSE` fiel in this repository.
