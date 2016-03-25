@@ -36,7 +36,7 @@
  - Save preprocessors now get passed an extra parameter, which contains the old page source.
  - Changed the default parser to parsedown.
  - Removed parsedown from the `parser-parsedown` module and replaced it with code that automatically downloads parsedown and parsedown extra on the first run.
- - Removed Slimdown add from the parsedown parser and replaced it with a custom extension of parsedown extra.
+ - Removed Slimdown addition from the parsedown parser and replaced it with a custom extension of parsedown extra.
  - Moved printable button to bottom bar and changed display text to "Printable version".
  - Redirect pages now show in italics in page lists.
  - Made other minor improvements to the page lists.
