@@ -1,4 +1,13 @@
 # Changelog
+## v0.10
+
+### Added
+ - Added a license. Pepperminty Wiki is now licensed under the Mozilla Public License 2.0.
+
+### Fixed
+ - Corrected a minor error in the description of the page viewer module.
+ - Corrected a minor spelling mistake in the credits page.
+
 ## v0.10-beta2
 
 ## Fixed
