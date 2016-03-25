@@ -73,11 +73,11 @@
     },
     {
         "name": "Credits",
-        "version": "0.7.1",
+        "version": "0.7.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
-        "lastupdate": 1458906018,
+        "lastupdate": 1458906058,
         "optional": false
     },
     {
@@ -172,11 +172,11 @@
     },
     {
         "name": "Page viewer",
-        "version": "0.12.0",
+        "version": "0.12.1",
         "author": "Starbeamrainbowlabs",
-        "description": "Allows you to view pages. You reallyshould include this one.",
+        "description": "Allows you to view pages. You really should include this one.",
         "id": "page-view",
-        "lastupdate": 1458824824,
+        "lastupdate": 1458906065,
         "optional": false
     },
     {

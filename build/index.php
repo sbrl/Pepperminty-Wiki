@@ -380,7 +380,7 @@ Actions:
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////// Do not edit below this line unless you know what you are doing! ///////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-$version = "v0.10-beta2";
+$version = "v0.10";
 /// Environment ///
 $env = new stdClass();
 $env->action = $settings->defaultaction;
@@ -954,7 +954,7 @@ class page_renderer
 
 		<footer>
 			<p>{footer-message}</p>
-			<p>Powered by Pepperminty Wiki v0.10-beta2, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
+			<p>Powered by Pepperminty Wiki v0.10, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
 			<p>Your local friendly administrators are {admins-name-list}.</p>
 			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
 		</footer>
@@ -966,7 +966,7 @@ class page_renderer
 			<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
 			<p>{footer-message}</p>
 			<p><em>Timed at {generation-date}</em></p>
-			<p><em>Powered by Pepperminty Wiki v0.10-beta2.</em></p>
+			<p><em>Powered by Pepperminty Wiki v0.10.</em></p>
 		</footer>";
 
 	// An array of functions that have been registered to process the
@@ -1021,7 +1021,7 @@ class page_renderer
 			"{body}" => $body_template,
 
 			"{sitename}" => $logo_html,
-			"v0.10-beta2" => $version,
+			"v0.10" => $version,
 			"{favicon-url}" => $settings->favicon,
 			"{header-html}" => self::get_css_as_html(),
 
@@ -2563,7 +2563,7 @@ function resize_image($image, $size)
 
 register_module([
 	"name" => "Credits",
-	"version" => "0.7.1",
+	"version" => "0.7.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
@@ -3620,9 +3620,9 @@ register_module([
 
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.12.0",
+	"version" => "0.12.1",
 	"author" => "Starbeamrainbowlabs",
-	"description" => "Allows you to view pages. You reallyshould include this one.",
+	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
 	"code" => function() {
 		/*
