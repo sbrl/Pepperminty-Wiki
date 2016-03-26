@@ -12,8 +12,13 @@ foreach($module_index as $module)
 {
 	// If the module is optional, the module's id isn't present in the command line arguments, and the special 'all' module id wasn't passed in, skip it
 	if($module->optional &&
-	   strrpos(implode(" ", $argv), $module->id) === false &&
-	   !in_array("all", $argv)) continue;
+		(
+			isset($argv) &&
+			strrpos(implode(" ", $argv), $module->id) === false &&
+			!in_array("all", $argv)
+		)
+	)
+		continue;
 	$module_list[] = $module->id;
 }
 
