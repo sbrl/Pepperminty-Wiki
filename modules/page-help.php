@@ -29,14 +29,21 @@ register_module([
 				<h3>Registered Help Sections</h3>
 				<p>The following help sections are currently registered:</p>
 				<table><tr><th>Index</th><th>Title</th><th>Length</th></tr>\n";
+				$totalSize = 0;
 				foreach($help_sections as $index => $section)
 				{
-					$content .= "\t\t\t<tr><td>$index</td><td>" . $section["title"] . "</td><td>" . human_filesize(strlen($section["content"])) . "</td></tr>\n";
+					$sectionLength = strlen($section["content"]);
+					$totalSize += $sectionLength;
+					
+					$content .= "\t\t\t<tr><td>$index</td><td>" . $section["title"] . "</td><td>" . human_filesize($sectionLength) . "</td></tr>\n";
 				}
+				$content .= "\t\t\t<tr><th colspan='2' style='text-align: right;'>Total:</th><td>" . human_filesize($totalSize) . "</td></tr>\n";
 				$content .= "\t\t</table>\n";
 				$content .= "<h3>Registered Actions</h3>
 				<p>The following actions are currently registered:</p>\n";
 				$content .= "<p>" . implode(", ", array_keys(get_object_vars($actions))) . "</p>";
+				$content .= "<h3>Environment</h3>\n";
+				$content .= "<p>$settings->sitename's root directory is " . (!is_writeable(__DIR__) ? "not " : "") . "writeable.</p>";
 			}
 			else
 			{
