@@ -29,8 +29,9 @@
 			$module_index = json_decode(file_get_contents("module_index.json"));
 			foreach($module_index as $module)
 			{
+			$checkedText = (isset($module->optional) && $module->optional === true) ? "" : " checked";
 			echo("<tr>
-				<td><input type='checkbox' id='$module->id' checked /></td>
+				<td><input type='checkbox' id='$module->id'$checkedText /></td>
 				<td><label for='$module->id'>$module->name</label></td>
 				<td>$module->description</td>
 				<td>$module->author</td>
