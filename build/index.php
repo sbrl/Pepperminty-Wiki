@@ -458,17 +458,17 @@ if($env->is_logged_in)
 }
 /////// Login System End ///////
 
-///////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////// Functions ////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// Functions //////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
-/*
- * @summary	Converts a filesize into a human-readable string.
- * @source	http://php.net/manual/en/function.filesize.php#106569
- * @editor	Starbeamrainbowlabs
- *
- * @param	$bytes		 - The number of bytes to convert.
- * @param	$decimals	 - The number of decimal places to preserve.
+/**
+ * Converts a filesize into a human-readable string.
+ * From http://php.net/manual/en/function.filesize.php#106569
+ * Edited by Starbeamrainbowlabs.
+ * @param	number	$bytes		The number of bytes to convert.
+ * @param	number	$decimals	The number of decimal places to preserve.
+ * @return 	string				A human-readable filesize.
  */
 function human_filesize($bytes, $decimals = 2)
 {
@@ -478,14 +478,13 @@ function human_filesize($bytes, $decimals = 2)
 	return $result . @$sz[$factor];
 }
 
-/*
- * @summary	Calculates the time sincce a particular timestamp and returns a
- * 			human-readable result.
- * @source	http://snippets.pro/snippet/137-php-convert-the-timestamp-to-human-readable-format/
- *
- * @param $time - The timestamp to convert.
- *
- * @returns {string} - The time since the given timestamp pas a human-readable string.
+/**
+ * Calculates the time sincce a particular timestamp and returns a
+ * human-readable result.
+ * From http://goo.gl/zpgLgq.
+ * @param	integer	$time	The timestamp to convert.
+ * @return	string			The time since the given timestamp as
+ *                      	a human-readable string.
  */
 function human_time_since($time)
 {
@@ -506,15 +505,13 @@ function human_time_since($time)
 	}
 }
 
-/*
- * @summary A recursive glob() function.
- *
- * @param $pattern - The glob pattern to use to find filenames.
- * @param $flags - The glob flags to use when finding filenames.
- *
- * @returns {array} - An array of the filepaths that match the given glob.
+/**
+ * A recursive glob() function.
+ * From http://in.php.net/manual/en/function.glob.php#106595
+ * @param  string  $pattern The glob pattern to use to find filenames.
+ * @param  integer $flags   The glob flags to use when finding filenames.
+ * @return array			An array of the filepaths that match the given glob.
  */
-// From http://in.php.net/manual/en/function.glob.php#106595
 function glob_recursive($pattern, $flags = 0)
 {
 	$files = glob($pattern, $flags);
@@ -528,13 +525,12 @@ function glob_recursive($pattern, $flags = 0)
 	return $files;
 }
 
-/*
- * @summary Gets a list of all the sub pages of the current page.
- *
- * @param $pageindex - The pageindex to use to search.
- * @param $pagename - The name of the page to list the sub pages of.
- *
- * @returns An objectt containing all the subpages, and their respective distances from the given page name in the pageindex tree.
+/**
+ * Gets a list of all the sub pages of the current page.
+ * @param	object	$pageindex	The pageindex to use to search.
+ * @param	string	$pagename	The name of the page to list the sub pages of.
+ * @return	object				An object containing all the subpages and their
+ *     respective distances from the given page name in the pageindex tree.
  */
 function get_subpages($pageindex, $pagename)
 {
@@ -562,11 +558,10 @@ function get_subpages($pageindex, $pagename)
 	return $result;
 }
 
-/*
- * @summary Makes sure that a subpage's parents exist. Note this doesn't check the pagename itself.
- *
+/**
+ * Makes sure that a subpage's parents exist.
+ * Note this doesn't check the pagename itself.
  * @param The pagename to check.
- *
  */
 function check_subpage_parents($pagename)
 {
@@ -596,10 +591,12 @@ function check_subpage_parents($pagename)
 	check_subpage_parents($parent_pagename);
 }
 
-/*
- * @summary makes a path safe
- *
- * @details paths may only contain alphanumeric characters, spaces, underscores, and dashes
+/**
+ * Makes a path safe.
+ * Paths may only contain alphanumeric characters, spaces, underscores, and
+ * dashes.
+ * @param	string	$string	The string to make safe.
+ * @return	string			A safe version of the given string.
  */
 function makepathsafe($string)
 {
@@ -608,10 +605,10 @@ function makepathsafe($string)
 	return $string;
 }
 
-/*
- * @summary Hides an email address from bots by adding random html entities.
- *
- * @returns The mangled email address.
+/**
+ * Hides an email address from bots by adding random html entities.
+ * @param	string	$str	The original email address
+ * @return	string			The mangled email address.
  */
 function hide_email($str)
 {
@@ -631,29 +628,29 @@ function hide_email($str)
 
 	return $hidden_email;
 }
-/*
- * @summary Checks to see if $haystack starts with $needle.
- *
- * @param $haystack {string} The string to search.
- * @param $needle {string} The string to search for at the beginning of $haystack.
- *
- * @returns {boolean} Whether $needle can be found at the beginning of $haystack.
+/**
+ * Checks to see if $haystack starts with $needle.
+ * @param	string	$haystack	The string to search.
+ * @param	string	$needle		The string to search for at the beginning
+ *                        		of $haystack.
+ * @return	boolean				Whether $needle can be found at the beginning
+ *                            	of $haystack.
  */
 function starts_with($haystack, $needle)
 {
 	 $length = strlen($needle);
 	 return (substr($haystack, 0, $length) === $needle);
 }
+
 /**
- * mb_stripos all occurences
- * from http://www.pontikis.net/tip/?id=16
+ * Case-insensitively finds all occurrences of $needle in $haystack. Handles
+ * UTF-8 characters correctly.
+ * From http://www.pontikis.net/tip/?id=16, and
  * based on http://www.php.net/manual/en/function.strpos.php#87061
- *
- * Find all occurrences of a needle in a haystack (case-insensitive, UTF8)
- *
- * @param string $haystack
- * @param string $needle
- * @return array or false
+ * @param	string			$haystack	The string to search.
+ * @param	string			$needle		The string to find.
+ * @return	array || false				An array of match indices, or false if
+ *                  					nothing was found.
  */
 function mb_stripos_all($haystack, $needle) {
 	$s = 0; $i = 0;
@@ -670,10 +667,13 @@ function mb_stripos_all($haystack, $needle) {
 		return false;
 }
 
+/**
+ * Returns the system's mime type mappings, considering the first extension
+ * listed to be cacnonical.
+ * @return array	An array of mime type mappings.
+ */
 function system_mime_type_extensions() {
 	global $settings;
-	# Returns the system MIME type mapping of MIME types to extensions, as defined in /etc/mime.types (considering the first
-	# extension listed to be canonical).
 	$out = array();
 	$file = fopen($settings->mime_extension_mappings_location, 'r');
 	while(($line = fgets($file)) !== false) {
@@ -690,22 +690,23 @@ function system_mime_type_extensions() {
 	fclose($file);
 	return $out;
 }
+/**
+ * Converts a given mime type to it's associated file extension.
+ * @param  string $type The mime type to convert.
+ * @return string       The extension for the given mime type.
+ */
 function system_mime_type_extension($type) {
-	# Returns the canonical file extension for the MIME type specified, as defined in /etc/mime.types (considering the first
-	# extension listed to be canonical).
-	#
-	# $type - the MIME type
 	static $exts;
 	if(!isset($exts))
 		$exts = system_mime_type_extensions();
 	return isset($exts[$type]) ? $exts[$type] : null;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////// Security and Consistency Measures ////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+////////////////////// Security and Consistency Measures //////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 /*
  * Sort out the pageindex. Create it if it doesn't exist, and load + parse it
@@ -921,12 +922,12 @@ if(makepathsafe($_GET["page"]) !== $_GET["page"])
 $env->page = $_GET["page"];
 $env->action = strtolower($_GET["action"]);
 
-///////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////// HTML fragments //////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////// HTML fragments ////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 class page_renderer
 {
 	public static $html_template = "<!DOCTYPE html>
@@ -1084,13 +1085,12 @@ class page_renderer
 
 	public static $nav_divider = "<span class='nav-divider inflexible'> | </span>";
 
-	/*
-	 * @summary Function to render a navigation bar from an array of links. See
-	 * 			$settings->nav_links for format information.
-	 *
-	 * @param $nav_links - The links to add to the navigation bar.
-	 * @param $nav_links_extra - The extra nav links to add to the "More..."
-	 * 							 menu.
+	/**
+	 * Renders a navigation bar from an array of links. See
+	 * $settings->nav_links for format information.
+	 * @param array	$nav_links			The links to add to the navigation bar.
+	 * @param array	$nav_links_extra	The extra nav links to add to
+	 *                               	the "More..." menu.
 	 */
 	public static function render_navigation_bar($nav_links, $nav_links_extra, $class = "")
 	{
@@ -1246,12 +1246,16 @@ function add_action($action_name, $func)
 	$actions->$action_name = $func;
 }
 
-// Function to register a new parser.
 $parsers = [
 	"none" => function() {
 		throw new Exception("No parser registered!");
 	}
 ];
+/**
+ * Registers a new parser.
+ * @param string	$name       	The name of the new parser to register.
+ * @param function	$parser_code	The function to register as a new parser.
+ */
 function add_parser($name, $parser_code)
 {
 	global $parsers;
@@ -1273,9 +1277,13 @@ function parse_page_source($source)
 	return $parsers[$settings->parser]($source);
 }
 
-// Function to register a new proprocessor that will be executed just before
-// an edit is saved.
+// Function to 
 $save_preprocessors = [];
+/**
+ * Register a new proprocessor that will be executed just before
+ * an edit is saved.
+ * @param	function	$func	The function to register.
+ */
 function register_save_preprocessor($func)
 {
 	global $save_preprocessors;
@@ -1283,6 +1291,12 @@ function register_save_preprocessor($func)
 }
 
 $help_sections = [];
+/**
+ * Adds a new help section to the help page.
+ * @param string $index   The string to index the new section under.
+ * @param string $title   The title to display above the section.
+ * @param string $content The content to display.
+ */
 function add_help_section($index, $title, $content)
 {
 	global $help_sections;
