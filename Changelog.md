@@ -1,4 +1,8 @@
 # Changelog
+# v0.11-dev
+ - Enhanced the dev help page some more
+ - Fixed the downloader
+
 ## v0.10
 
 ### Added
