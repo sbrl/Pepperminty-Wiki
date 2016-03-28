@@ -3835,8 +3835,7 @@ class PeppermintParsedown extends ParsedownExtra
 		array_unshift($this->InlineTypes["!"], "ExtendedImage");
 		
 		$this->inlineMarkerList .= "{";
-		if(!isset($this->InlineTypes["{"]) or
-			!is_array($this->InlineTypes["{"]))
+		if(!isset($this->InlineTypes["{"]) or !is_array($this->InlineTypes["{"]))
 			$this->InlineTypes["{"] = [];
 		$this->InlineTypes["{"][] = "Template";
 	}
