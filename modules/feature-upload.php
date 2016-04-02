@@ -278,9 +278,10 @@ register_module([
 			<h2>File Information</h2>
 			<table><tr><th>Name</th><td>" . str_replace("File/", "", $filepath) . "</td>
 			<tr><th>Type</th><td>$mime_type</td></tr>
-			<tr><th>Size</th><td>" . human_filesize(filesize($filepath)) . "</td></tr>
-			<tr><th>Original dimensions</th><td>$dimensions[0] x $dimensions[1]</td></tr>
-			<tr><th>Uploaded by</th><td>" . $pageindex->{$env->page}->lasteditor . "</td></tr></table>
+			<tr><th>Size</th><td>" . human_filesize(filesize($filepath)) . "</td></tr>";
+			if(substr($mime_type, strpos($mime_type, "/")) == "image")
+				$preview_html .= "<tr><th>Original dimensions</th><td>$dimensions[0] x $dimensions[1]</td></tr>";
+			$preview_html .= "<tr><th>Uploaded by</th><td>" . $pageindex->{$env->page}->lasteditor . "</td></tr></table>
 			<h2>Description</h2>";
 				
 				$parts["{content}"] = str_replace("</h1>", "</h1>\n$preview_html", $parts["{content}"]);
