@@ -1,7 +1,12 @@
 # Changelog
 # v0.11-dev
+
+# Changed
  - Enhanced the dev help page some more
+
+# Fixed
  - Fixed the downloader
+ - Fixed an issue with the recent changes page and redirects causing a large number of warnings
 
 ## v0.10
 

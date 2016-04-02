@@ -16,16 +16,22 @@ Above: A Main Page with the sidebar enabled.
 - Page creation
 - Sub pages
 - Markdown-powered syntax
+	- Templating support
+	- Additional syntax for resizing and floating images
 - Internal links
 - Printable page view
 - Customisable theme
 - ~~Basic 'search' bar~~ A full text search engine!
 - (Optional) Sidebar with a tree of all the current pages
-- List of all pages & details
+- List of all pages and details
+	- List of all tags and pages with any given tag
+	- List of recent changes
 - Inbuilt help page
 - Tags
 - Image upload
 - Page protection
+- Customisable module based system
+	- Allows you to add or remove features at will
 
 ## Demo
 A Live demo of the latest stable version can be found over at [my website](//starbeamrainbowlabs.com/labs/peppermint)
@@ -110,10 +116,11 @@ Key				| Value			| Explanation
 `footer_message`	| string( + HTML) | A message that will appear at the bottom of every page. May contain HTML.
 `editing_message`	| string( + HTML) | A message that will appear just before the submit button on the editing page. May contain HTML.
 `upload_enabled`	| boolean	| Whether to allow image uploads to the server.
-`upload_allowed_file_types` | array of strings | An array of mime types that are allowed to be uploaded. Currently only images are supported, but other types may be supported in the future.
+`upload_allowed_file_types` | array of strings | An array of mime types that are allowed to be uploaded. Note that Pepperminty Wiki only does minimal checking of the actual content that is being uploaded - so please don't add any dangerous file types here on a parmanant bases for your own safety!
 `preview_file_type`	| mime type	| The default file type for previews. Defaults to image/png. Also supports `image/jpeg` and `image/webp`. `image/webp` is a new image format that reduces image sizez by ~20%, but PHP still has some issues with invalid webp images.
 `default_preview_size` | number	| The default size of preview images.
 `mime_extension_mappings_location` | path | The location of a file that maps mime types onto file extensions and vice versa. Used to generate the file extension for an uploaded file. Set to the default location of the mime.types file on Linux. If you aren't using linux, download [this pastebin](http://pastebin.com/mjM3zKjz) and point this setting at it instead.
+`mime_mappings_overrides` | array of strings | An array of override mime mappings to translate mime types into the appropriate file extension. Use if the file pointed to by the above assigns weird file extensions to any file types.
 `min_preview_size`	| number	| The minimum allowed size for generated preview images in pixels.
 `max_preview_size`	| number	| The maximum allowed size for generated preview images in pixels.
 `search_characters_context` | number | The number of characters that should be displayed either side of a matching term in the context below each search result.

@@ -205,7 +205,14 @@ $settings->default_preview_size = 640;
 // configuration guide for windows instructions.
 $settings->mime_extension_mappings_location = "/etc/mime.types";
 
-// The minimum and maximum sizes of generated preview images in pixels.
+// Override mappings to convert mime types into the appropriate file extension.
+// Used to override the above file if it assigns weird extensions
+// to any mime types.
+$settings->mime_mappings_overrides = [
+	"text/plain" => "txt"
+];
+
+// The minimum and maximum allowed sizes of generated preview images in pixels.
 $settings->min_preview_size = 1;
 $settings->max_preview_size = 2048;
 
@@ -1603,7 +1610,7 @@ register_module([
 					$title_display = human_filesize($rchange->newsize - $rchange->sizediff) . " -> " .  human_filesize($rchange->newsize);
 					
 					$pageDisplayName = $rchange->page;
-					if(isset($pageindex->$pageDisplayName) and $pageindex->$pageDisplayName->redirect)
+					if(isset($pageindex->$pageDisplayName) and !empty($pageindex->$pageDisplayName->redirect))
 						$pageDisplayName = "<em>$pageDisplayName</em>";
 					
 					$content .= "\t\t\t<li><a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a> <span class='editor'>&#9998; $rchange->user</span> <time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $rchange->timestamp) . "'>" . human_time_since($rchange->timestamp) . "</time> <span class='$size_display_class' title='$title_display'>($size_display)</span></li>\n";
@@ -2286,7 +2293,7 @@ register_module([
 						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because you are not logged in.</p><p>Try <a href='?action=login&returnto=" . rawurlencode("?action=upload") . "'>logging in</a> first."));
 					}
 					
-					// Calculate the target ename, removing any characters we
+					// Calculate the target name, removing any characters we
 					// are unsure about.
 					$target_name = makepathsafe($_POST["name"]);
 					$temp_filename = $_FILES["file"]["tmp_name"];
@@ -2294,6 +2301,14 @@ register_module([
 					$mimechecker = finfo_open(FILEINFO_MIME_TYPE);
 					$mime_type = finfo_file($mimechecker, $temp_filename);
 					finfo_close($mimechecker);
+					
+					if(!in_array($mime_type, $settings->upload_allowed_file_types))
+					{
+						http_response_code(415);
+						exit(page_renderer::render("Unknown file type - Upload error - $settings->sitename", "<p>$settings->sitename recieved the file you tried to upload successfully, but detected that the type of file you uploaded is not in the allowed file types list. The file has been discarded.</p>
+						<p>The file you tried to upload appeared to be of type <code>$mime_type</code>, but $settings->sitename currently only allows the uploading of the following file types: <code>" . implode("</code>, <code>", $settings->upload_allowed_file_types) . "</code>.</p>
+						<p><a href='?action=$settings->defaultaction'>Go back</a> to the Main Page.</p>"));
+					}
 					
 					// Perform appropriate checks based on the *real* filetype
 					switch(substr($mime_type, 0, strpos($mime_type, "/")))
@@ -2305,21 +2320,26 @@ register_module([
 							if(!is_int($imagesize[0]) or !is_int($imagesize[1]))
 							{
 								http_response_code(415);
-								exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file that you uploaded doesn't appear to be an image. $settings->sitename currently only supports uploading images (videos coming soon). <a href='?action=upload'>Go back to try again</a>.</p>"));
+								exit(page_renderer::render("Upload Error - $settings->sitename", "<p>Although the file that you uploaded appears to be an image, $settings->sitename has been unable to determine it's dimensions. The uploaded file has been discarded. <a href='?action=upload'>Go back to try again</a>.</p>
+								<p>You may wish to consider <a href='https://github.com/sbrl/Pepperminty-Wiki'>opening an issue</a> against Pepperminty Wiki (the software that powers $settings->sitename) if this isn't the first time that you have seen this message.</p>"));
 							}
 							
 							break;
-						
-						case "video":
-							http_response_code(501);
-							exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You uploaded a video, but $settings->sitename doesn't support them yet. Please try again later.</p>"));
-						
-						default:
-							http_response_code(415);
-							exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You uploaded an unnknown file type which couldn't be processed. $settings->sitename thinks that the file you uploaded was a(n) '$mime_type', which isn't supported.</p>"));
 					}
 					
 					$file_extension = system_mime_type_extension($mime_type);
+					
+					// Override the detected file extension if a file extension
+					// is explicitly specified in the settings
+					if(isset($settings->mime_mappings_overrides))
+						$file_extension = $settings->mime_mappings_overrides[$mime_type];
+					
+					if(in_array($file_extension, [ "php", ".htaccess", "asp" ]))
+					{
+						http_response_code(415);
+						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded appears to be dangerous and has been discarded. Please contact $settings->sitename's administrator for assistance.</p>
+						<p>Additional information: The file uploaded appeared to be of type <code>$mime_type</code>, which mapped onto the extension <code>$file_extension</code>. This file extension has the potential to be executed accidentally by the web server.</p>"));
+					}
 					
 					$new_filename = "$paths->upload_file_prefix$target_name.$file_extension";
 					$new_description_filename = "$new_filename.md";

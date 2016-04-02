@@ -202,7 +202,14 @@ $settings->default_preview_size = 640;
 // configuration guide for windows instructions.
 $settings->mime_extension_mappings_location = "/etc/mime.types";
 
-// The minimum and maximum sizes of generated preview images in pixels.
+// Override mappings to convert mime types into the appropriate file extension.
+// Used to override the above file if it assigns weird extensions
+// to any mime types.
+$settings->mime_mappings_overrides = [
+	"text/plain" => "txt"
+];
+
+// The minimum and maximum allowed sizes of generated preview images in pixels.
 $settings->min_preview_size = 1;
 $settings->max_preview_size = 2048;
 
