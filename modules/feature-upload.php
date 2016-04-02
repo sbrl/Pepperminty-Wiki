@@ -204,9 +204,11 @@ register_module([
 			if(isset($_GET["type"]) and in_array($_GET["type"], [ "image/png", "image/jpeg", "image/webp" ]))
 				$output_mime = $_GET["type"];
 			
+			$preview_image = false;
 			switch(substr($mime_type, 0, strpos($mime_type, "/")))
 			{
 				case "image":
+					// Read in the image
 					$image = false;
 					switch($mime_type)
 					{
@@ -228,31 +230,37 @@ register_module([
 							break;
 					}
 					
+					// Get the size of the image for later
 					$raw_width = imagesx($image);
 					$raw_height = imagesy($image);
 					
+					// Resize the image
 					$preview_image = resize_image($image, $target_size);
-					header("content-type: $output_mime");
-					switch($output_mime)
-					{
-						case "image/jpeg":
-							imagejpeg($preview_image);
-							break;
-						case "image/png":
-							imagepng($preview_image);
-							break;
-						default:
-						case "image/webp":
-							imagewebp($preview_image);
-							break;
-					}
-					imagedestroy($preview_image);
+					// Delete the temporary image.
+					imagedestroy($image);
 					break;
 				
 				default:
 					http_response_code(501);
-					exit("Unrecognised file type.");
+					$preview_image = errorimage("Unrecognised file type '$mime_type'.");
 			}
+			
+			// Send the completed preview image to the user
+			header("content-type: $output_mime");
+			switch($output_mime)
+			{
+				case "image/jpeg":
+					imagejpeg($preview_image);
+					break;
+				case "image/png":
+					imagepng($preview_image);
+					break;
+				default:
+				case "image/webp":
+					imagewebp($preview_image);
+					break;
+			}
+			imagedestroy($preview_image);
 		});
 		
 		page_renderer::register_part_preprocessor(function(&$parts) {
@@ -335,7 +343,7 @@ function errorimage($text)
 	$image = imagecreatetruecolor($width, $height);
 	imagefill($image, 0, 0, imagecolorallocate($image, 238, 232, 242)); // Set the background to #eee8f2
 	$fontwidth = imagefontwidth(3);
-	imagetext($image, 3,
+	imagestring($image, 3,
 		($width / 2) - (($fontwidth * strlen($text)) / 2),
 		($height / 2) - (imagefontheight(3) / 2),
 		$text,
