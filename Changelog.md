@@ -1,5 +1,7 @@
 # Changelog
 # v0.11-dev
+# Added
+ - Unlocked the uploading of any file type. Note that only the file types specified in the settings are allowed to be uploaded.
 
 # Changed
  - Enhanced the dev help page some more
