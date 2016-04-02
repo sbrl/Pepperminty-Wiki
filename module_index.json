@@ -37,11 +37,11 @@
     },
     {
         "name": "Recent Changes",
-        "version": "0.2.0",
+        "version": "0.2.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds recent changes. Access through the 'recent-changes' action.",
         "id": "feature-recent-changes",
-        "lastupdate": 1459601264,
+        "lastupdate": 1459627889,
         "optional": false
     },
     {
@@ -64,11 +64,11 @@
     },
     {
         "name": "Uploader",
-        "version": "0.3",
+        "version": "0.4",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File:' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1459621957,
+        "lastupdate": 1459627881,
         "optional": false
     },
     {
@@ -154,11 +154,11 @@
     },
     {
         "name": "Page mover",
-        "version": "0.8",
+        "version": "0.8.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
         "id": "page-move",
-        "lastupdate": 1451134153,
+        "lastupdate": 1459628404,
         "optional": false
     },
     {
