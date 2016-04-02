@@ -103,7 +103,7 @@ register_module([
 					
 					// Override the detected file extension if a file extension
 					// is explicitly specified in the settings
-					if(isset($settings->mime_mappings_overrides))
+					if(isset($settings->mime_mappings_overrides[$mime_type]))
 						$file_extension = $settings->mime_mappings_overrides[$mime_type];
 					
 					if(in_array($file_extension, [ "php", ".htaccess", "asp" ]))
