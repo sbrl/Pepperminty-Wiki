@@ -1690,12 +1690,39 @@ function add_recent_change($rchange)
 	file_put_contents($paths->recentchanges, json_encode($recentchanges, JSON_PRETTY_PRINT));
 }
 
-function render_recent_changes($recentchanges)
+function render_recent_changes($recent_changes)
 {
+	// Cache the number of recent changes we are dealing with
+	$rchange_count = count($recent_changes);
+	
+	// Group changes made on the same page and the same day together
+	for($i = 0; $i < $rchange_count; $i++)
+	{
+		for($s = $i + 1; $s < $rchange_count; $s++)
+		{
+			// Break out if we have reached the end of the day we are scanning
+			if(date("dmY", $recent_changes[$i]->timestamp) !== date("dmY", $recent_changes[$s]->timestamp))
+				break;
+			
+			// If we have found a change that has been made on the same page as
+			// the one that we are scanning for, move it up next to the change
+			// we are scanning for.
+			if($recent_changes[$i]->page == $recent_changes[$s]->page)
+			{
+				// FUTURE: We may need to remove and insert instead of swapping changes around if this causes some changes to appear out of order.
+				$temp = $recent_changes[$i + 1];
+				$recent_changes[$i + 1] = $recent_changes[$s];
+				$recent_changes[$s] = $temp;
+				$i++;
+			}
+		}
+	}
+	
 	$content = "<ul class='page-list'>\n";
 	$last_time = 0;
-	foreach($recentchanges as $rchange)
+	for($i = 0; $i < $rchange_count; $i++)
 	{
+		$rchange = $recent_changes[$i];
 		if($last_time !== date("dmY", $rchange->timestamp))
 			$content .= "<li><h2>" . date("jS F", $rchange->timestamp) . "</h2></li>\n";
 		
