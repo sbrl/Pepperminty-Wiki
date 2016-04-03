@@ -100,6 +100,11 @@ $settings->parser = "parsedown";
 // STRONGLY recommended that you keep this option turned on.
 $settings->clean_raw_html = true;
 
+// Whether to enable client side rendering of methematical expressions.
+// Math expressions should be enclosed inside of dollar signs ($).
+// Turn off if you don't use it.
+$settings->enable_math_rendering = true;
+
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// Access and Security /////////////////////////////
@@ -1035,7 +1040,7 @@ class page_renderer
 			"{sitename}" => $logo_html,
 			"v0.11-dev" => $version,
 			"{favicon-url}" => $settings->favicon,
-			"{header-html}" => self::get_css_as_html(),
+			"{header-html}" => self::get_header_html(),
 
 			"{navigation-bar}" => self::render_navigation_bar($settings->nav_links, $settings->nav_links_extra, "top"),
 			"{navigation-bar-bottom}" => self::render_navigation_bar($settings->nav_links_bottom, [], "bottom"),
@@ -1084,6 +1089,25 @@ class page_renderer
 		return self::render($title, $content, self::$minimal_content_template);
 	}
 	
+	public static function get_header_html()
+	{
+		global $settings;
+		$result = self::get_css_as_html();
+		
+		if(!empty($settings->enable_math_rendering))
+			$result .= "<script type='text/x-mathjax-config'>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ['\\\\(','\\\\)'] ],
+      processEscapes: true,
+      skipTags: ['script','noscript','style','textarea','pre','code']
+    }
+  });
+</script>
+<script async src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML'></script>";
+		
+		return $result;
+	}
 	public static function get_css_as_html()
 	{
 		global $settings;

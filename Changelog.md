@@ -6,6 +6,7 @@
     - New pages show up with an 'N' next to them (as they do in a MediaWiki installation)
     - Page deletions show up in red with a line though them
     - Uploads show with an arrow next to them along with the size of the uploaded file
+ - Added mathematical expression parsing between dollar signs.
 
 # Changed
  - Enhanced the dev help page some more

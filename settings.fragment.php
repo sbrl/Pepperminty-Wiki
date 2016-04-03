@@ -97,6 +97,11 @@ $settings->parser = "parsedown";
 // STRONGLY recommended that you keep this option turned on.
 $settings->clean_raw_html = true;
 
+// Whether to enable client side rendering of methematical expressions.
+// Math expressions should be enclosed inside of dollar signs ($).
+// Turn off if you don't use it.
+$settings->enable_math_rendering = true;
+
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// Access and Security /////////////////////////////
