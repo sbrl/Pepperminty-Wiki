@@ -63,6 +63,18 @@ register_module([
 			// Delete the page from the disk
 			unlink("$env->storage_prefix$env->page.md");
 			
+			// Add a recent change announcing the deletion if the recent changes
+			// module is installed
+			if(module_exists("feature-recent-changes"))
+			{
+				add_recent_change([
+					"type" => "deletion",
+					"timestamp" => time(),
+					"page" => $env->page,
+					"user" => $env->user,
+				]);
+			}
+			
 			exit(page_renderer::render_main("Deleting $env->page - $settings->sitename", "<p>$env->page has been deleted. <a href='index.php'>Go back to the main page</a>.</p>"));
 		});
 		

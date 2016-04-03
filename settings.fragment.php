@@ -346,9 +346,10 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .cursor-query { cursor: help; }
 
 .larger { color: rgb(9, 180, 0); }
-.smaller { color: rgb(207, 28, 17); }
+.smaller, .deletion { color: rgb(207, 28, 17); }
 .nochange { color: rgb(132, 123, 199); font-style: italic; }
 .significant { font-weight: bolder; font-size: 1.1rem; }
+.deletion, .deletion > .editor { text-decoration: line-through; }
 
 .newpage::before { content: \"N\"; margin: 0 0.3em 0 -1em; font-weight: bolder; text-decoration: underline dotted; }
 

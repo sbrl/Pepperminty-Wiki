@@ -349,9 +349,10 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .cursor-query { cursor: help; }
 
 .larger { color: rgb(9, 180, 0); }
-.smaller { color: rgb(207, 28, 17); }
+.smaller, .deletion { color: rgb(207, 28, 17); }
 .nochange { color: rgb(132, 123, 199); font-style: italic; }
 .significant { font-weight: bolder; font-size: 1.1rem; }
+.deletion, .deletion > .editor { text-decoration: line-through; }
 
 .newpage::before { content: \"N\"; margin: 0 0.3em 0 -1em; font-weight: bolder; text-decoration: underline dotted; }
 
@@ -1602,20 +1603,31 @@ register_module([
 				$content .= "<ul class='page-list'>\n";
 				foreach($recentchanges as $rchange)
 				{
-					// The number (and the sign) of the size difference to display
-					$size_display = ($rchange->sizediff > 0 ? "+" : "") . $rchange->sizediff;
-					$size_display_class = $rchange->sizediff > 0 ? "larger" : ($rchange->sizediff < 0 ? "smaller" : "nochange");
-					if($rchange->sizediff > 500 or $rchange->sizediff < -500)
-					$size_display_class .= " significant";
-					
-					
-					$title_display = human_filesize($rchange->newsize - $rchange->sizediff) . " -> " .  human_filesize($rchange->newsize);
-					
+					// Render the page's name
 					$pageDisplayName = $rchange->page;
 					if(isset($pageindex->$pageDisplayName) and !empty($pageindex->$pageDisplayName->redirect))
 						$pageDisplayName = "<em>$pageDisplayName</em>";
 					
-					$content .= "\t\t\t<li" . (!empty($rchange->newpage) ? " class='newpage'" : "") . "><a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a> <span class='editor'>&#9998; $rchange->user</span> <time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $rchange->timestamp) . "'>" . human_time_since($rchange->timestamp) . "</time> <span class='$size_display_class' title='$title_display'>($size_display)</span></li>\n";
+					switch(isset($rchange->type) ? $rchange->type : "edit")
+					{
+						case "edit":
+							// The number (and the sign) of the size difference to display
+							$size_display = ($rchange->sizediff > 0 ? "+" : "") . $rchange->sizediff;
+							$size_display_class = $rchange->sizediff > 0 ? "larger" : ($rchange->sizediff < 0 ? "smaller" : "nochange");
+							if($rchange->sizediff > 500 or $rchange->sizediff < -500)
+							$size_display_class .= " significant";
+							
+							
+							$title_display = human_filesize($rchange->newsize - $rchange->sizediff) . " -> " .  human_filesize($rchange->newsize);
+							
+							
+							$content .= "\t\t\t<li" . (!empty($rchange->newpage) ? " class='newpage'" : "") . "><a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a> <span class='editor'>&#9998; $rchange->user</span> <time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $rchange->timestamp) . "'>" . human_time_since($rchange->timestamp) . "</time> <span class='$size_display_class' title='$title_display'>($size_display)</span></li>\n";
+							break;
+						
+						case "deletion":
+							$content .= "<li class='deletion'>$pageDisplayName <span class='editor'>&#9998; $rchange->user</span> <time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $rchange->timestamp) . "'>" . human_time_since($rchange->timestamp) . "</time></li>";
+					}
+					
 				}
 				$content .= "\t\t</ul>";
 			}
@@ -1663,6 +1675,7 @@ register_module([
 function add_recent_change($rchange)
 {
 	global $settings, $paths;
+	
 	$recentchanges = json_decode(file_get_contents($paths->recentchanges), true);
 	array_unshift($recentchanges, $rchange);
 	
@@ -2853,6 +2866,18 @@ register_module([
 			
 			// Delete the page from the disk
 			unlink("$env->storage_prefix$env->page.md");
+			
+			// Add a recent change announcing the deletion if the recent changes
+			// module is installed
+			if(module_exists("feature-recent-changes"))
+			{
+				add_recent_change([
+					"type" => "deletion",
+					"timestamp" => time(),
+					"page" => $env->page,
+					"user" => $env->user,
+				]);
+			}
 			
 			exit(page_renderer::render_main("Deleting $env->page - $settings->sitename", "<p>$env->page has been deleted. <a href='index.php'>Go back to the main page</a>.</p>"));
 		});
