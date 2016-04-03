@@ -352,6 +352,7 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .deletion, .deletion > .editor { text-decoration: line-through; }
 
 .newpage::before { content: \"N\"; margin: 0 0.3em 0 -1em; font-weight: bolder; text-decoration: underline dotted; }
+.upload::before { content: \"\\1f845\"; margin: 0 0.1em 0 -1.1em; }
 
 footer { padding: 2rem; }
 /* #ffdb6d #36962c */";

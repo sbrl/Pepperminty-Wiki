@@ -155,6 +155,17 @@ register_module([
 					// Save the pageindex
 					file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
 					
+					if(module_exists("feature-recent-changes"))
+					{
+						add_recent_change([
+							"type" => "upload",
+							"timestamp" => time(),
+							"page" => $new_filename,
+							"user" => $env->user,
+							"filesize" => filesize($entry->uploadedfilepath)
+						]);
+					}
+					
 					header("location: ?action=view&page=$new_filename&upload=success");
 					
 					break;

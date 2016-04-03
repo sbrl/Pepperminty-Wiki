@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Recent Changes",
-	"version" => "0.3",
+	"version" => "0.3.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds recent changes. Access through the 'recent-changes' action.",
 	"id" => "feature-recent-changes",
@@ -112,6 +112,7 @@ function render_recent_change($rchange)
 	$pageDisplayName = $rchange->page;
 	if(isset($pageindex->$pageDisplayName) and !empty($pageindex->$pageDisplayName->redirect))
 		$pageDisplayName = "<em>$pageDisplayName</em>";
+	$pageDisplayLink = "<a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a>";
 	
 	$editorDisplayHtml = "<span class='editor'>&#9998; $rchange->user</span>";
 	$timeDisplayHtml = "<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $rchange->timestamp) . "'>" . human_time_since($rchange->timestamp) . "</time>";
@@ -133,12 +134,18 @@ function render_recent_change($rchange)
 			if(!empty($rchange->newpage))
 				$resultClasses[] = "newpage";
 			
-			$result .= "<a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a> $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$title_display'>($size_display)</span>";
+			$result .= "$pageDisplayLink $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$title_display'>($size_display)</span>";
 			break;
 		
 		case "deletion":
 			$resultClasses[] = "deletion";
 			$result .= "$pageDisplayName $editorDisplayHtml $timeDisplayHtml";
+			break;
+		
+		case "upload":
+			$resultClasses[] = "upload";
+			$result .= "$pageDisplayLink $editorDisplayHtml $timeDisplayHtml (" . human_filesize($rchange->filesize) . ")";
+			break;
 	}
 	
 	$resultAttributes = " " . (count($resultClasses) > 0 ? "class='" . implode(" ", $resultClasses) . "'" : "");

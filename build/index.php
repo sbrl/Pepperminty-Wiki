@@ -355,6 +355,7 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .deletion, .deletion > .editor { text-decoration: line-through; }
 
 .newpage::before { content: \"N\"; margin: 0 0.3em 0 -1em; font-weight: bolder; text-decoration: underline dotted; }
+.upload::before { content: \"\\1f845\"; margin: 0 0.1em 0 -1.1em; }
 
 footer { padding: 2rem; }
 /* #ffdb6d #36962c */";
@@ -1566,7 +1567,7 @@ function render_sidebar($pageindex, $root_pagename = "")
 
 register_module([
 	"name" => "Recent Changes",
-	"version" => "0.3",
+	"version" => "0.3.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds recent changes. Access through the 'recent-changes' action.",
 	"id" => "feature-recent-changes",
@@ -1677,6 +1678,7 @@ function render_recent_change($rchange)
 	$pageDisplayName = $rchange->page;
 	if(isset($pageindex->$pageDisplayName) and !empty($pageindex->$pageDisplayName->redirect))
 		$pageDisplayName = "<em>$pageDisplayName</em>";
+	$pageDisplayLink = "<a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a>";
 	
 	$editorDisplayHtml = "<span class='editor'>&#9998; $rchange->user</span>";
 	$timeDisplayHtml = "<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $rchange->timestamp) . "'>" . human_time_since($rchange->timestamp) . "</time>";
@@ -1698,12 +1700,18 @@ function render_recent_change($rchange)
 			if(!empty($rchange->newpage))
 				$resultClasses[] = "newpage";
 			
-			$result .= "<a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a> $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$title_display'>($size_display)</span>";
+			$result .= "$pageDisplayLink $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$title_display'>($size_display)</span>";
 			break;
 		
 		case "deletion":
 			$resultClasses[] = "deletion";
 			$result .= "$pageDisplayName $editorDisplayHtml $timeDisplayHtml";
+			break;
+		
+		case "upload":
+			$resultClasses[] = "upload";
+			$result .= "$pageDisplayLink $editorDisplayHtml $timeDisplayHtml (" . human_filesize($rchange->filesize) . ")";
+			break;
 	}
 	
 	$resultAttributes = " " . (count($resultClasses) > 0 ? "class='" . implode(" ", $resultClasses) . "'" : "");
@@ -2436,6 +2444,17 @@ register_module([
 					
 					// Save the pageindex
 					file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
+					
+					if(module_exists("feature-recent-changes"))
+					{
+						add_recent_change([
+							"type" => "upload",
+							"timestamp" => time(),
+							"page" => $new_filename,
+							"user" => $env->user,
+							"filesize" => filesize($entry->uploadedfilepath)
+						]);
+					}
 					
 					header("location: ?action=view&page=$new_filename&upload=success");
 					
