@@ -350,6 +350,8 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .nochange { color: rgb(132, 123, 199); font-style: italic; }
 .significant { font-weight: bolder; font-size: 1.1rem; }
 
+.newpage::before { content: \"N\"; margin: 0 0.3em 0 -1em; font-weight: bolder; text-decoration: underline dotted; }
+
 footer { padding: 2rem; }
 /* #ffdb6d #36962c */";
 

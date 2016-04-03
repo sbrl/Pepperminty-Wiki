@@ -353,6 +353,8 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .nochange { color: rgb(132, 123, 199); font-style: italic; }
 .significant { font-weight: bolder; font-size: 1.1rem; }
 
+.newpage::before { content: \"N\"; margin: 0 0.3em 0 -1em; font-weight: bolder; text-decoration: underline dotted; }
+
 footer { padding: 2rem; }
 /* #ffdb6d #36962c */";
 
@@ -1613,7 +1615,7 @@ register_module([
 					if(isset($pageindex->$pageDisplayName) and !empty($pageindex->$pageDisplayName->redirect))
 						$pageDisplayName = "<em>$pageDisplayName</em>";
 					
-					$content .= "\t\t\t<li><a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a> <span class='editor'>&#9998; $rchange->user</span> <time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $rchange->timestamp) . "'>" . human_time_since($rchange->timestamp) . "</time> <span class='$size_display_class' title='$title_display'>($size_display)</span></li>\n";
+					$content .= "\t\t\t<li" . (!empty($rchange->newpage) ? " class='newpage'" : "") . "><a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a> <span class='editor'>&#9998; $rchange->user</span> <time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $rchange->timestamp) . "'>" . human_time_since($rchange->timestamp) . "</time> <span class='$size_display_class' title='$title_display'>($size_display)</span></li>\n";
 				}
 				$content .= "\t\t</ul>";
 			}
@@ -1636,13 +1638,17 @@ register_module([
 			$size_diff = $newsize - $oldsize;
 			
 			$recentchanges = json_decode(file_get_contents($paths->recentchanges), true);
-			array_unshift($recentchanges, [
+			$newchange = [
+				"type" => "edit",
 				"timestamp" => time(),
 				"page" => $env->page,
 				"user" => $env->user,
 				"newsize" => $newsize,
 				"sizediff" => $size_diff
-			]);
+			];
+			if($oldsize == 0)
+				$newchange["newpage"] = true;
+			array_unshift($recentchanges, $newchange);
 			
 			// Limit the number of entries in the recent changes file if we've
 			// been asked to.
