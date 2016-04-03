@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Recent Changes",
-	"version" => "0.2.1",
+	"version" => "0.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds recent changes. Access through the 'recent-changes' action.",
 	"id" => "feature-recent-changes",
@@ -73,7 +73,6 @@ register_module([
 			// Calculate the page length difference
 			$size_diff = $newsize - $oldsize;
 			
-			$recentchanges = json_decode(file_get_contents($paths->recentchanges), true);
 			$newchange = [
 				"type" => "edit",
 				"timestamp" => time(),
@@ -84,20 +83,32 @@ register_module([
 			];
 			if($oldsize == 0)
 				$newchange["newpage"] = true;
-			array_unshift($recentchanges, $newchange);
 			
-			// Limit the number of entries in the recent changes file if we've
-			// been asked to.
-			if(isset($settings->max_recent_changes))
-				$recentchanges = array_slice($recentchanges, -$settings->max_recent_changes);
-			
-			// Save the recent changes file back to disk
-			file_put_contents($paths->recentchanges, json_encode($recentchanges, JSON_PRETTY_PRINT));
+			add_recent_change($newchange);
 		});
 		
 		add_help_section("800-raw-page-content", "Recent Changes", "<p>The <a href='?action=recent-changes'>recent changes</a> page displays a list of all the most recent changes that have happened around $settings->sitename, arranged in chronological order. It can be found in the \"More...\" menu in the top right by default.</p>
 		<p>Each entry displays the name of the page in question, who edited it, how long ago they did so, and the number of characters added or removed. Pages that <em>currently</em> redirect to another page are shown in italics, and hovering over the time since the edit wil show the exact time that the edit was made.</p>");
 	}
 ]);
+
+/**
+ * Adds a new recent change to the recent changes file.
+ * @param array $rchange The new change to add.
+ */
+function add_recent_change($rchange)
+{
+	global $settings, $paths;
+	$recentchanges = json_decode(file_get_contents($paths->recentchanges), true);
+	array_unshift($recentchanges, $rchange);
+	
+	// Limit the number of entries in the recent changes file if we've
+	// been asked to.
+	if(isset($settings->max_recent_changes))
+		$recentchanges = array_slice($recentchanges, -$settings->max_recent_changes);
+	
+	// Save the recent changes file back to disk
+	file_put_contents($paths->recentchanges, json_encode($recentchanges, JSON_PRETTY_PRINT));
+}
 
 ?>
