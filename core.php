@@ -952,6 +952,10 @@ function add_help_section($index, $title, $content)
 	];
 }
 
+if(!empty($settings->enable_math_rendering))
+	add_help_section("22-Mathematical-Expressions", "Methematical Expressions", "<p>$settings->sitename supports rendering of mathematical expressions. Mathematical expressions can be included practically anywhere in your page. Expressions should be written in LaTeX and enclosed in dollar signs like this: <code>&#36;x^2&#36;</code>.</p>
+	<p>Note that expression parsing is done on the viewer's computer with javascript (specifically MathJax) and not by $settings->sitename directly (also called client side rendering).</p>");
+
 //////////////////////////////////////////////////////////////////
 
 // %next_module% //
