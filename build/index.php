@@ -5,7 +5,7 @@ $start_time = time(true);
 /*
  * Pepperminty Wiki
  * ================
- * Inspired by Minty Wiki by am2064:
+ * Inspired by Minty Wiki by am2064
 	* Link: https://github.com/am2064/Minty-Wiki
  *
  * Credits:
@@ -1693,9 +1693,15 @@ function add_recent_change($rchange)
 function render_recent_changes($recentchanges)
 {
 	$content = "<ul class='page-list'>\n";
+	$last_time = 0;
 	foreach($recentchanges as $rchange)
 	{
+		if($last_time !== date("dmY", $rchange->timestamp))
+			$content .= "<li><h2>" . date("jS F", $rchange->timestamp) . "</h2></li>\n";
+		
 		$content .= render_recent_change($rchange);
+		
+		$last_time = date("dmY", $rchange->timestamp);
 	}
 	$content .= "\t\t</ul>";
 	

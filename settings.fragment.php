@@ -2,7 +2,7 @@
 /*
  * Pepperminty Wiki
  * ================
- * Inspired by Minty Wiki by am2064:
+ * Inspired by Minty Wiki by am2064
 	* Link: https://github.com/am2064/Minty-Wiki
  *
  * Credits:
