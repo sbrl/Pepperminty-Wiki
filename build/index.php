@@ -1596,40 +1596,11 @@ register_module([
 			
 			$content = "\t\t<h1>Recent Changes</h1>\n";
 			
-			$recentchanges = json_decode(file_get_contents($paths->recentchanges));
+			$recent_changes = json_decode(file_get_contents($paths->recentchanges));
 			
-			if(count($recentchanges) > 0)
+			if(count($recent_changes) > 0)
 			{
-				$content .= "<ul class='page-list'>\n";
-				foreach($recentchanges as $rchange)
-				{
-					// Render the page's name
-					$pageDisplayName = $rchange->page;
-					if(isset($pageindex->$pageDisplayName) and !empty($pageindex->$pageDisplayName->redirect))
-						$pageDisplayName = "<em>$pageDisplayName</em>";
-					
-					switch(isset($rchange->type) ? $rchange->type : "edit")
-					{
-						case "edit":
-							// The number (and the sign) of the size difference to display
-							$size_display = ($rchange->sizediff > 0 ? "+" : "") . $rchange->sizediff;
-							$size_display_class = $rchange->sizediff > 0 ? "larger" : ($rchange->sizediff < 0 ? "smaller" : "nochange");
-							if($rchange->sizediff > 500 or $rchange->sizediff < -500)
-							$size_display_class .= " significant";
-							
-							
-							$title_display = human_filesize($rchange->newsize - $rchange->sizediff) . " -> " .  human_filesize($rchange->newsize);
-							
-							
-							$content .= "\t\t\t<li" . (!empty($rchange->newpage) ? " class='newpage'" : "") . "><a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a> <span class='editor'>&#9998; $rchange->user</span> <time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $rchange->timestamp) . "'>" . human_time_since($rchange->timestamp) . "</time> <span class='$size_display_class' title='$title_display'>($size_display)</span></li>\n";
-							break;
-						
-						case "deletion":
-							$content .= "<li class='deletion'>$pageDisplayName <span class='editor'>&#9998; $rchange->user</span> <time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $rchange->timestamp) . "'>" . human_time_since($rchange->timestamp) . "</time></li>";
-					}
-					
-				}
-				$content .= "\t\t</ul>";
+				$content .= render_recent_changes($recent_changes);
 			}
 			else
 			{
@@ -1686,6 +1657,59 @@ function add_recent_change($rchange)
 	
 	// Save the recent changes file back to disk
 	file_put_contents($paths->recentchanges, json_encode($recentchanges, JSON_PRETTY_PRINT));
+}
+
+function render_recent_changes($recentchanges)
+{
+	$content = "<ul class='page-list'>\n";
+	foreach($recentchanges as $rchange)
+	{
+		$content .= render_recent_change($rchange);
+	}
+	$content .= "\t\t</ul>";
+	
+	return $content;
+}
+
+function render_recent_change($rchange)
+{
+	// Render the page's name
+	$pageDisplayName = $rchange->page;
+	if(isset($pageindex->$pageDisplayName) and !empty($pageindex->$pageDisplayName->redirect))
+		$pageDisplayName = "<em>$pageDisplayName</em>";
+	
+	$editorDisplayHtml = "<span class='editor'>&#9998; $rchange->user</span>";
+	$timeDisplayHtml = "<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $rchange->timestamp) . "'>" . human_time_since($rchange->timestamp) . "</time>";
+	
+	$result = "";
+	$resultClasses = [];
+	switch(isset($rchange->type) ? $rchange->type : "edit")
+	{
+		case "edit":
+			// The number (and the sign) of the size difference to display
+			$size_display = ($rchange->sizediff > 0 ? "+" : "") . $rchange->sizediff;
+			$size_display_class = $rchange->sizediff > 0 ? "larger" : ($rchange->sizediff < 0 ? "smaller" : "nochange");
+			if($rchange->sizediff > 500 or $rchange->sizediff < -500)
+				$size_display_class .= " significant";
+			
+			
+			$title_display = human_filesize($rchange->newsize - $rchange->sizediff) . " -> " .  human_filesize($rchange->newsize);
+			
+			if(!empty($rchange->newpage))
+				$resultClasses[] = "newpage";
+			
+			$result .= "<a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a> $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$title_display'>($size_display)</span>";
+			break;
+		
+		case "deletion":
+			$resultClasses[] = "deletion";
+			$result .= "$pageDisplayName $editorDisplayHtml $timeDisplayHtml";
+	}
+	
+	$resultAttributes = " " . (count($resultClasses) > 0 ? "class='" . implode(" ", $resultClasses) . "'" : "");
+	$result = "\t\t\t<li$resultAttributes>$result</li>\n";
+	
+	return $result;
 }
 
 

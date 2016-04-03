@@ -2,6 +2,9 @@
 # v0.11-dev
 # Added
  - Unlocked the uploading of any file type. Note that only the file types specified in the settings are allowed to be uploaded.
+ - Enhanced the recent changes page.
+    - New pages show up with an 'N' next to them (as they do in a MediaWiki installation)
+    - Page deletions show up in red with a line though them
 
 # Changed
  - Enhanced the dev help page some more
