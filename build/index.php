@@ -342,8 +342,8 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .page-tags-display li a { color: #FB701A; text-decoration: none; }
 .page-tags-display li::before { content: \"\\A\"; position: relative; top: 0.03rem; left: -0.9rem; width: 0; height: 0; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; border-right: 0.5rem solid #D2C3DD; }
 
-.page-list { list-style-type: none; margin: 0.5rem; padding: 0.5rem; }
-.page-list li { margin: 0.5rem; padding: 0.5rem; }
+.page-list { list-style-type: none; margin: 0.3rem; padding: 0.3rem; }
+.page-list li:not(.header) { margin: 0.3rem; padding: 0.3rem; }
 .page-list li .size { margin-left: 0.7rem; color: rgba(30, 30, 30, 0.5); }
 .page-list li .editor { display: inline-block; margin: 0 0.5rem; }
 .page-list li .tags { margin: 0 1rem; }
@@ -1692,6 +1692,8 @@ function add_recent_change($rchange)
 
 function render_recent_changes($recent_changes)
 {
+	global $pageindex;
+	
 	// Cache the number of recent changes we are dealing with
 	$rchange_count = count($recent_changes);
 	
@@ -1724,9 +1726,43 @@ function render_recent_changes($recent_changes)
 	{
 		$rchange = $recent_changes[$i];
 		if($last_time !== date("dmY", $rchange->timestamp))
-			$content .= "<li><h2>" . date("jS F", $rchange->timestamp) . "</h2></li>\n";
+			$content .= "<li class='header'><h2>" . date("jS F", $rchange->timestamp) . "</h2></li>\n";
 		
-		$content .= render_recent_change($rchange);
+		
+		$rchange_results = [];
+		for($s = $i; $s < $rchange_count; $s++)
+		{
+			if($recent_changes[$s]->page !== $rchange->page)
+				break;
+			
+			$rchange_results[$s] = render_recent_change($recent_changes[$s]);
+			$i++;
+		}
+		//$content .= render_recent_change($rchange);
+		
+		$next_entry = implode("\n", $rchange_results);
+		if(count($rchange_results) > 1)
+		{
+			reset($rchange_results);
+			$rchange_first = $recent_changes[key($rchange_results)];
+			end($rchange_results);
+			$rchange_last = $recent_changes[key($rchange_results)];
+			
+			$pageDisplayHtml = render_rchange_pagename($rchange_first);
+			$timeDisplayHtml = render_rchange_timestamp($rchange_first->timestamp);
+			$users = [];
+			foreach($rchange_results as $key => $rchange_result)
+			{
+				if(!in_array($recent_changes[$key]->user, $users))
+					$users[] = $recent_changes[$key]->user; 
+			}
+			$userDisplayHtml = render_rchange_editor(implode(", ", $users));
+			
+			// TODO: COllect up and render a list of participating users
+			$next_entry = "<li><details><summary>$pageDisplayHtml $userDisplayHtml $timeDisplayHtml</summary><ul class='page-list'>$next_entry</ul></details></li>";
+			
+			$content .= "$next_entry\n";
+		}
 		
 		$last_time = date("dmY", $rchange->timestamp);
 	}
@@ -1737,14 +1773,9 @@ function render_recent_changes($recent_changes)
 
 function render_recent_change($rchange)
 {
-	// Render the page's name
-	$pageDisplayName = $rchange->page;
-	if(isset($pageindex->$pageDisplayName) and !empty($pageindex->$pageDisplayName->redirect))
-		$pageDisplayName = "<em>$pageDisplayName</em>";
-	$pageDisplayLink = "<a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a>";
-	
-	$editorDisplayHtml = "<span class='editor'>&#9998; $rchange->user</span>";
-	$timeDisplayHtml = "<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $rchange->timestamp) . "'>" . human_time_since($rchange->timestamp) . "</time>";
+	$pageDisplayHtml = render_rchange_pagename($rchange);
+	$editorDisplayHtml = render_rchange_editor($rchange->user);
+	$timeDisplayHtml = render_rchange_timestamp($rchange->timestamp);
 	
 	$result = "";
 	$resultClasses = [];
@@ -1758,22 +1789,22 @@ function render_recent_change($rchange)
 				$size_display_class .= " significant";
 			
 			
-			$title_display = human_filesize($rchange->newsize - $rchange->sizediff) . " -> " .  human_filesize($rchange->newsize);
+			$size_title_display = human_filesize($rchange->newsize - $rchange->sizediff) . " -> " .  human_filesize($rchange->newsize);
 			
 			if(!empty($rchange->newpage))
 				$resultClasses[] = "newpage";
 			
-			$result .= "$pageDisplayLink $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$title_display'>($size_display)</span>";
+			$result .= "$pageDisplayHtml $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$size_title_display'>($size_display)</span>";
 			break;
 		
 		case "deletion":
 			$resultClasses[] = "deletion";
-			$result .= "$pageDisplayName $editorDisplayHtml $timeDisplayHtml";
+			$result .= "$pageDisplayHtml $editorDisplayHtml $timeDisplayHtml";
 			break;
 		
 		case "upload":
 			$resultClasses[] = "upload";
-			$result .= "$pageDisplayLink $editorDisplayHtml $timeDisplayHtml (" . human_filesize($rchange->filesize) . ")";
+			$result .= "$pageDisplayHtml $editorDisplayHtml $timeDisplayHtml (" . human_filesize($rchange->filesize) . ")";
 			break;
 	}
 	
@@ -1781,6 +1812,29 @@ function render_recent_change($rchange)
 	$result = "\t\t\t<li$resultAttributes>$result</li>\n";
 	
 	return $result;
+}
+
+function render_rchange_timestamp($timestamp)
+{
+	return "<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $timestamp) . "'>" . human_time_since($timestamp) . "</time>";
+}
+
+function render_rchange_pagename($rchange)
+{
+	global $pageindex;
+	
+	// Render the page's name
+	$pageDisplayName = $rchange->page;
+	if(isset($pageindex->$pageDisplayName) and !empty($pageindex->$pageDisplayName->redirect))
+		$pageDisplayName = "<em>$pageDisplayName</em>";
+	$pageDisplayLink = "<a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a>";
+	
+	return $pageDisplayName;
+}
+
+function render_rchange_editor($editorName)
+{
+	return "<span class='editor'>&#9998; $editorName</span>";
 }
 
 

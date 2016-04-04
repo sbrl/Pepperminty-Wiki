@@ -339,8 +339,8 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .page-tags-display li a { color: #FB701A; text-decoration: none; }
 .page-tags-display li::before { content: \"\\A\"; position: relative; top: 0.03rem; left: -0.9rem; width: 0; height: 0; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; border-right: 0.5rem solid #D2C3DD; }
 
-.page-list { list-style-type: none; margin: 0.5rem; padding: 0.5rem; }
-.page-list li { margin: 0.5rem; padding: 0.5rem; }
+.page-list { list-style-type: none; margin: 0.3rem; padding: 0.3rem; }
+.page-list li:not(.header) { margin: 0.3rem; padding: 0.3rem; }
 .page-list li .size { margin-left: 0.7rem; color: rgba(30, 30, 30, 0.5); }
 .page-list li .editor { display: inline-block; margin: 0 0.5rem; }
 .page-list li .tags { margin: 0 1rem; }
