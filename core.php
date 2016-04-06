@@ -1,5 +1,5 @@
 <?php
-$start_time = time(true);
+$start_time = microtime(true);
 
 {settings}
 

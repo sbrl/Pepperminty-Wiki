@@ -180,7 +180,7 @@ register_module([
 		 * ██      ██   ██ ███████   ████   ██ ███████  ███ ███  
 		 */
 		add_action("preview", function() {
-			global $settings, $env, $pageindex;
+			global $settings, $env, $pageindex, $start_time;
 			
 			$filepath = $env->storage_prefix . $pageindex->{$env->page}->uploadedfilepath;
 			$mime_type = $pageindex->{$env->page}->uploadedfilemime;
@@ -244,6 +244,7 @@ register_module([
 			
 			// Send the completed preview image to the user
 			header("content-type: $output_mime");
+			header("x-generation-time: " . (microtime(true) - $start_time) . "s");
 			$preview_image->setImageFormat(substr($output_mime, strpos($output_mime, "/") + 1));
 			echo($preview_image->getImageBlob());
 		});
