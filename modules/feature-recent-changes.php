@@ -202,7 +202,7 @@ function render_recent_change($rchange)
 			if(!empty($rchange->newpage))
 				$resultClasses[] = "newpage";
 			
-			$result .= "$pageDisplayHtml $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$size_title_display'>($size_display)</span>";
+			$result .= "<a href='?page=$rchange->page'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$size_title_display'>($size_display)</span>";
 			break;
 		
 		case "deletion":
@@ -212,7 +212,7 @@ function render_recent_change($rchange)
 		
 		case "upload":
 			$resultClasses[] = "upload";
-			$result .= "$pageDisplayHtml $editorDisplayHtml $timeDisplayHtml (" . human_filesize($rchange->filesize) . ")";
+			$result .= "<a href='?page=$rchange->page'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml (" . human_filesize($rchange->filesize) . ")";
 			break;
 	}
 	

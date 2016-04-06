@@ -352,6 +352,8 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 
 .cursor-query { cursor: help; }
 
+summary { cursor: pointer; }
+
 .larger { color: rgb(9, 180, 0); }
 .smaller, .deletion { color: rgb(207, 28, 17); }
 .nochange { color: rgb(132, 123, 199); font-style: italic; }

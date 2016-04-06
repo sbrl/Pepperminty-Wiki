@@ -215,63 +215,25 @@ register_module([
 			if(isset($_GET["type"]) and in_array($_GET["type"], [ "image/png", "image/jpeg", "image/webp" ]))
 				$output_mime = $_GET["type"];
 			
-			$preview_image = false;
+			$preview_image = new Imagick();
 			switch(substr($mime_type, 0, strpos($mime_type, "/")))
 			{
 				case "image":
-					// Read in the image
-					$image = false;
-					switch($mime_type)
-					{
-						case "image/jpeg":
-							$image = imagecreatefromjpeg($filepath);
-							break;
-						case "image/gif":
-							$image = imagecreatefromgif($filepath);
-							break;
-						case "image/png":
-							$image = imagecreatefrompng($filepath);
-							break;
-						case "image/webp":
-							$image = imagecreatefromwebp($filepath);
-							break;
-						default:
-							http_response_code(415);
-							$image = errorimage("Unsupported image type.");
-							break;
-					}
-					
-					// Get the size of the image for later
-					$raw_width = imagesx($image);
-					$raw_height = imagesy($image);
-					
-					// Resize the image
-					$preview_image = resize_image($image, $target_size);
-					// Delete the temporary image.
-					imagedestroy($image);
+					$preview_image->readImage($filepath);
 					break;
 				
 				default:
 					http_response_code(501);
 					$preview_image = errorimage("Unrecognised file type '$mime_type'.");
 			}
+			// Scale the image down to the target size
+			$preview_image->resizeImage($target_size, $target_size, imagick::FILTER_LANCZOS, 1, true);
 			
 			// Send the completed preview image to the user
 			header("content-type: $output_mime");
-			switch($output_mime)
-			{
-				case "image/jpeg":
-					imagejpeg($preview_image);
-					break;
-				case "image/png":
-					imagepng($preview_image);
-					break;
-				default:
-				case "image/webp":
-					imagewebp($preview_image);
-					break;
-			}
-			imagedestroy($preview_image);
+			$outputFormat = substr($mime_type, strpos($mime_type, "/") + 1);
+			$preview_image->setImageFormat($outputFormat);
+			echo($preview_image->getImageBlob());
 		});
 		
 		page_renderer::register_part_preprocessor(function(&$parts) {
@@ -362,26 +324,6 @@ function errorimage($text)
 	);
 	
 	return $image;
-}
-
-function resize_image($image, $size)
-{
-	$cur_width = imagesx($image);
-	$cur_height = imagesy($image);
-	
-	if($cur_width < $size and $cur_height < $size)
-		return $image;
-	
-	$width_ratio = $size / $cur_width;
-	$height_ratio = $size / $cur_height;
-	$ratio = min($width_ratio, $height_ratio);
-	
-	$new_height = floor($cur_height * $ratio);
-	$new_width = floor($cur_width * $ratio);
-	
-	header("x-resize-to: $new_width x $new_height\n");
-	
-	return imagescale($image, $new_width, $new_height);
 }
 
 ?>
