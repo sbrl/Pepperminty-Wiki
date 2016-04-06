@@ -167,6 +167,10 @@ function render_recent_changes($recent_changes)
 			
 			$content .= "$next_entry\n";
 		}
+		else
+		{
+			$content .= implode("\n", $rchange_results);
+		}
 		
 		$last_time = date("dmY", $rchange->timestamp);
 	}
