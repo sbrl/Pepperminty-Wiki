@@ -40,7 +40,7 @@ A Live demo of the latest stable version can be found over at [my website](//sta
 ### Requirements
 - PHP-enabled webserver
 - PHP session support (for logging in, see [here](https://php.net/manual/en/session.installation.php) for more information)
-- The following PHP extensions: mbstring, gd (for preview generation), and fileinfo (for proper mime type checking of uploaded files)
+- The following PHP extensions: mbstring, imagick (for preview generation), and fileinfo (for proper mime type checking of uploaded files)
 - Write access to own folder (only for editing)
 
 ### Getting your own copy
