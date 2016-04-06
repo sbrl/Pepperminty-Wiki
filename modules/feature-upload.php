@@ -222,17 +222,29 @@ register_module([
 					$preview_image->readImage($filepath);
 					break;
 				
+				case "application":
+					if($mime_type == "application/pdf")
+					{
+						$preview_image = new imagick();
+						$preview_image->readImage("{$filepath}[0]");
+						$preview_image->setResolution(300,300);
+						$preview_image->setImageColorspace(255);
+						break;
+					}
+				
 				default:
 					http_response_code(501);
 					$preview_image = errorimage("Unrecognised file type '$mime_type'.");
+					header("content-type: image/png");
+					imagepng($preview_image);
+					exit();
 			}
 			// Scale the image down to the target size
 			$preview_image->resizeImage($target_size, $target_size, imagick::FILTER_LANCZOS, 1, true);
 			
 			// Send the completed preview image to the user
 			header("content-type: $output_mime");
-			$outputFormat = substr($mime_type, strpos($mime_type, "/") + 1);
-			$preview_image->setImageFormat($outputFormat);
+			$preview_image->setImageFormat(substr($output_mime, strpos($output_mime, "/") + 1));
 			echo($preview_image->getImageBlob());
 		});
 		
