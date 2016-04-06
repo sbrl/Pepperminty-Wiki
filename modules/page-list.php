@@ -109,7 +109,8 @@ function generate_page_list($pagelist)
 		}
 		
 		$pageDisplayName = $pagename;
-		if($pageindex->$pagename->redirect)
+		if(isset($pageindex->$pagename) and
+			!empty($pageindex->$pagename->redirect))
 			$pageDisplayName = "<em>$pageDisplayName</em>";
 		
 		$result .= "<li><a href='index.php?page=$pagename'>$pageDisplayName</a>
