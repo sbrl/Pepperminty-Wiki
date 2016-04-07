@@ -196,7 +196,11 @@ $settings->upload_allowed_file_types = [
 	"image/jpeg",
 	"image/png",
 	"image/gif",
-	"image/webp"
+	"image/webp",
+	"video/mp4",
+	"video/webm",
+	"audio/mp4",
+	"audio/mp3"
 ];
 
 // The default file type for previews.

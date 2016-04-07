@@ -199,7 +199,11 @@ $settings->upload_allowed_file_types = [
 	"image/jpeg",
 	"image/png",
 	"image/gif",
-	"image/webp"
+	"image/webp",
+	"video/mp4",
+	"video/webm",
+	"audio/mp4",
+	"audio/mp3"
 ];
 
 // The default file type for previews.
@@ -2631,8 +2635,6 @@ register_module([
 				$output_mime = $_GET["type"];
 			
 			/// ETag handling ///
-			// TODO: Test this
-			error_log("Note to self: Please remember to test this etag code!");
 			// Generate the etag and send it to the client
 			$preview_etag = sha1("$output_mime|$target_size|$filepath|$mime_type");
 			$allheaders = getallheaders();
@@ -2653,68 +2655,118 @@ register_module([
 			}
 			/// ETag handling end ///
 			
-			$preview_image = new Imagick();
+			$preview = new Imagick();
 			switch(substr($mime_type, 0, strpos($mime_type, "/")))
 			{
 				case "image":
-					$preview_image->readImage($filepath);
+					$preview->readImage($filepath);
 					break;
 				
 				case "application":
 					if($mime_type == "application/pdf")
 					{
-						$preview_image = new imagick();
-						$preview_image->readImage("{$filepath}[0]");
-						$preview_image->setResolution(300,300);
-						$preview_image->setImageColorspace(255);
+						$preview = new imagick();
+						$preview->readImage("{$filepath}[0]");
+						$preview->setResolution(300,300);
+						$preview->setImageColorspace(255);
 						break;
 					}
 				
+				case "video":
+				case "audio":
+					$im = errorimage("TODO: Proxy the video / audio through");
+					header("image/png");
+					imagepng($im);
+					break;
+				
 				default:
 					http_response_code(501);
-					$preview_image = errorimage("Unrecognised file type '$mime_type'.");
+					$preview = errorimage("Unrecognised file type '$mime_type'.");
 					header("content-type: image/png");
-					imagepng($preview_image);
+					imagepng($preview);
 					exit();
 			}
+			
 			// Scale the image down to the target size
-			$preview_image->resizeImage($target_size, $target_size, imagick::FILTER_LANCZOS, 1, true);
+			$preview->resizeImage($target_size, $target_size, imagick::FILTER_LANCZOS, 1, true);
 			
 			// Send the completed preview image to the user
 			header("content-type: $output_mime");
 			header("x-generation-time: " . (microtime(true) - $start_time) . "s");
-			$preview_image->setImageFormat(substr($output_mime, strpos($output_mime, "/") + 1));
-			echo($preview_image->getImageBlob());
+			$preview->setImageFormat(substr($output_mime, strpos($output_mime, "/") + 1));
+			echo($preview->getImageBlob());
 		});
 		
+		/*
+		 * ██████  ██████  ███████ ██    ██ ██ ███████ ██     ██
+		 * ██   ██ ██   ██ ██      ██    ██ ██ ██      ██     ██
+		 * ██████  ██████  █████   ██    ██ ██ █████   ██  █  ██
+		 * ██      ██   ██ ██       ██  ██  ██ ██      ██ ███ ██
+		 * ██      ██   ██ ███████   ████   ██ ███████  ███ ███
+		 * 
+		 * ██████  ██ ███████ ██████  ██       █████  ██    ██ ███████ ██████
+		 * ██   ██ ██ ██      ██   ██ ██      ██   ██  ██  ██  ██      ██   ██
+		 * ██   ██ ██ ███████ ██████  ██      ███████   ████   █████   ██████
+		 * ██   ██ ██      ██ ██      ██      ██   ██    ██    ██      ██   ██
+		 * ██████  ██ ███████ ██      ███████ ██   ██    ██    ███████ ██   ██
+		 */
 		page_renderer::register_part_preprocessor(function(&$parts) {
 			global $pageindex, $env, $settings;
-			// Todo add the preview to the top of the page here, but only if the current action is view and we are on a page that is a file
+			// Don't do anything if the action isn't view
+			if($env->action !== "view")
+				return;
+			
 			if(isset($pageindex->{$env->page}->uploadedfile) and $pageindex->{$env->page}->uploadedfile == true)
 			{
 				// We are looking at a page that is paired with an uploaded file
 				$filepath = $pageindex->{$env->page}->uploadedfilepath;
 				$mime_type = $pageindex->{$env->page}->uploadedfilemime;
 				$dimensions = getimagesize($env->storage_prefix . $filepath);
+				$fileTypeDisplay = substr($mime_type, 0, strpos($mime_type, "/"));
+				$previewUrl = "?action=preview&size=$settings->default_preview_size&page=" . rawurlencode($env->page);
 				
-				$preview_sizes = [ 256, 512, 768, 1024, 1440 ];
-				$preview_html = "<figure class='preview'>
-			<img src='?action=preview&size=$settings->default_preview_size&page=" . rawurlencode($env->page) . "' />
+				$preview_html = "";
+				
+				error_log($fileTypeDisplay);
+				switch($fileTypeDisplay)
+				{
+					case "image":
+						$preview_sizes = [ 256, 512, 768, 1024, 1440 ];
+						$preview_html .= "\t\t\t<figure class='preview'>
+			<img src='$previewUrl' />
 			<nav class='image-controls'>
 				<ul><li><a href='" . ($env->storage_prefix == "./" ? $filepath : "?action=preview&size=original&page=" . rawurlencode($env->page)) . "'>&#x01f304; Original image</a></li>
 				<li>Other Sizes: ";
 				foreach($preview_sizes as $size)
 					$preview_html .= "<a href='?action=preview&page=" . rawurlencode($env->page) . "&size=$size'>$size" . "px</a> ";
 				$preview_html .= "</li></ul></nav>
-			</figure>
-			<h2>File Information</h2>
-			<table><tr><th>Name</th><td>" . str_replace("File/", "", $filepath) . "</td>
-			<tr><th>Type</th><td>$mime_type</td></tr>
-			<tr><th>Size</th><td>" . human_filesize(filesize($filepath)) . "</td></tr>";
-			if(substr($mime_type, strpos($mime_type, "/")) == "image")
-				$preview_html .= "<tr><th>Original dimensions</th><td>$dimensions[0] x $dimensions[1]</td></tr>";
-			$preview_html .= "<tr><th>Uploaded by</th><td>" . $pageindex->{$env->page}->lasteditor . "</td></tr></table>
-			<h2>Description</h2>";
+			</figure>";
+						break;
+					
+					case "video":
+						$preview_html .= "<video src='$previewUrl' controls preload='metadata'>Your browser doesn't support the HTML5 video tag, but you can still <a href='$previewUrl'>download it</a> if you'd like.</video>";
+						break;
+				}
+				
+				$fileInfo = [];
+				$fileInfo["Name"] = str_replace("File/", "", $filepath);
+				$fileInfo["Type"] = $mime_type;
+				$fileInfo["Size"] = human_filesize(filesize($filepath));
+				switch($fileTypeDisplay)
+				{
+					case "image":
+						$fileInfo["Original dimensions"] = "$dimensions[0] x $dimensions[1]";
+						break;
+				}
+				$fileInfo["Uploaded by"] = $pageindex->{$env->page}->lasteditor;
+				
+				$preview_html .= "\t\t\t<h2>File Information</h2>
+			<table>";
+				foreach ($fileInfo as $displayName => $displayValue)
+				{
+					$preview_html .= "<tr><th>$displayName</th><td>$displayValue</td></tr>\n";
+				}
+				$preview_html .= "</table>";
 				
 				$parts["{content}"] = str_replace("</h1>", "</h1>\n$preview_html", $parts["{content}"]);
 			}

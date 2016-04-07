@@ -17,6 +17,9 @@
  - Fixed the downloader
  - Fixed an issue with the recent changes page and redirects causing a large number of warnings
 
+# Notes
+ - Test the etag code!
+
 ## v0.10
 
 ### Added
