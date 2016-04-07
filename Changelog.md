@@ -7,9 +7,11 @@
     - Page deletions show up in red with a line though them
     - Uploads show with an arrow next to them along with the size of the uploaded file
  - Added mathematical expression parsing between dollar signs.
+ - Generated previews now have etags. This should speed up subsequent loading times significantly.
 
 # Changed
  - Enhanced the dev help page some more
+ - Changed the uploaded file preview generation to use imagemagick. You now need to have the `imagick` php extension installed (linux installation: `sudo apt-get install php-imagick`).
 
 # Fixed
  - Fixed the downloader
