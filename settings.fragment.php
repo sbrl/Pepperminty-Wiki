@@ -68,7 +68,7 @@ $settings->footer_message = "All content is under <a href='?page=License' target
 // A message that will appear just before the submit button on the editing
 // page. May contain HTML.
 $settings->editing_message = "<a href='?action=help#20-parser-default' target='_blank'>Formatting help</a> (<a href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'>Markdown Cheatsheet</a>)<br />
-By submitting your edit, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!";
+By submitting your edit or uploading your file, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!";
 
 // The string that is prepended before an admin's name on the nav bar. Defaults
 // to a diamond shape (&#9670;).

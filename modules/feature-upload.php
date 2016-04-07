@@ -40,7 +40,7 @@ register_module([
 			<br />
 			<label for='description'>Description:</label>
 			<textarea name='description'></textarea>
-			<br />
+			<p class='editing_message'>$settings->editing_message</p>
 			<input type='submit' value='Upload' />
 		</form>"));
 					
@@ -255,6 +255,7 @@ register_module([
 				
 				case "video":
 				case "audio":
+					// TODO: Add support for ranges here.
 					// Get the file size
 					$filesize = filesize($filepath);
 					
