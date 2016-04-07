@@ -69,7 +69,7 @@ register_module([
 			$content .= "<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save' class='editform'>
 			<textarea name='content'>$pagetext</textarea>
 			<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' />
-			<p>$settings->editing_message</p>
+			<p class='editing_message'>$settings->editing_message</p>
 			<input type='submit' value='Save Page' />
 		</form>";
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));

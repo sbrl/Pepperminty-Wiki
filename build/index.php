@@ -70,7 +70,8 @@ $settings->footer_message = "All content is under <a href='?page=License' target
 
 // A message that will appear just before the submit button on the editing
 // page. May contain HTML.
-$settings->editing_message = "By submitting your edit, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!";
+$settings->editing_message = "<a href='?action=help#20-parser-default' target='_blank'>Formatting help</a> (<a href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'>Markdown Cheatsheet</a>)<br />
+By submitting your edit, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!";
 
 // The string that is prepended before an admin's name on the nav bar. Defaults
 // to a diamond shape (&#9670;).
@@ -336,6 +337,7 @@ textarea { min-height: 35rem; font-size: 1.25rem; }
 textarea, textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); box-sizing: border-box; }
 textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-weight: bolder; }
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
+.editing_message { margin: 0.8rem; }
 
 .page-tags-display { margin: 0.5rem 0 0 0; padding: 0; list-style-type: none; }
 .page-tags-display li { display: inline-block; margin: 0.5rem; padding: 0.5rem; background: #D2C3DD; white-space: nowrap; }
@@ -3105,7 +3107,7 @@ register_module([
 			$content .= "<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save' class='editform'>
 			<textarea name='content'>$pagetext</textarea>
 			<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' />
-			<p>$settings->editing_message</p>
+			<p class='editing_message'>$settings->editing_message</p>
 			<input type='submit' value='Save Page' />
 		</form>";
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
