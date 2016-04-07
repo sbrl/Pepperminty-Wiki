@@ -255,9 +255,18 @@ register_module([
 				
 				case "video":
 				case "audio":
-					$im = errorimage("TODO: Proxy the video / audio through");
-					header("image/png");
-					imagepng($im);
+					// Get the file size
+					$filesize = filesize($filepath);
+					
+					// Send some headers
+					header("content-length: $filesize");
+					header("content-type: $mime_type");
+					
+					// Open the file and send it to the user
+					$handle = fopen($filepath, "rb");
+					fpassthru($handle);
+					fclose($handle);
+					exit();
 					break;
 				
 				default:
@@ -325,8 +334,15 @@ register_module([
 						break;
 					
 					case "video":
-						$preview_html .= "<video src='$previewUrl' controls preload='metadata'>Your browser doesn't support the HTML5 video tag, but you can still <a href='$previewUrl'>download it</a> if you'd like.</video>";
+						$preview_html .= "\t\t\t<figure class='preview'>
+				<video src='$previewUrl' controls preload='metadata'>Your browser doesn't support HTML5 video, but you can still <a href='$previewUrl'>download it</a> if you'd like.</video>
+			</figure>";
 						break;
+						
+					case "audio":
+						$preview_html .= "\t\t\t<figure class='preview'>
+				<audio src='$previewUrl' controls preload='metadata'>Your browser doesn't support HTML5 audio, but you can still <a href='$previewUrl'>download it</a> if you'd like.</audio>
+			</figure>";
 				}
 				
 				$fileInfo = [];

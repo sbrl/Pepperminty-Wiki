@@ -200,7 +200,7 @@ $settings->upload_allowed_file_types = [
 	"video/mp4",
 	"video/webm",
 	"audio/mp4",
-	"audio/mp3"
+	"audio/mpeg"
 ];
 
 // The default file type for previews.
@@ -218,7 +218,8 @@ $settings->mime_extension_mappings_location = "/etc/mime.types";
 // Used to override the above file if it assigns weird extensions
 // to any mime types.
 $settings->mime_mappings_overrides = [
-	"text/plain" => "txt"
+	"text/plain" => "txt",
+	"audio/mpeg" => "mp3"
 ];
 
 // The minimum and maximum allowed sizes of generated preview images in pixels.
@@ -313,7 +314,7 @@ input[type=button], input[type=submit] { cursor: pointer; }
 .sidebar li:before { content: \"\"; position: absolute; width: 1rem; top: 0.8rem; left: -1.2rem; border-bottom: 2px dashed rgba(50, 50, 50, 0.4); }
 
 .preview { text-align: center; }
-.preview img { max-width: 100%; }
+.preview img, .preview video, .preview audio { max-width: 100%; }
 .image-controls ul { list-style-type: none; margin: 5px; padding: 5px; }
 .image-controls li { display: inline-block; margin: 5px; padding: 5px; }
 .link-display { margin-left: 0.5rem; }
