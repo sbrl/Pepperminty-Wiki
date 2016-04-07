@@ -351,7 +351,7 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .tag-list li { display: inline-block; margin: 1rem; }
 .mini-tag { background: #d2c3dd; padding: 0.2rem 0.4rem; color: #fb701a; text-decoration: none; }
 
-.help-section-header::after { content: attr(id); float: right; color: rgba(0, 0, 0, 0.4); font-size: 0.8rem; font-weight: normal; }
+.help-section-header::after { content: \"#\" attr(id); float: right; color: rgba(0, 0, 0, 0.4); font-size: 0.8rem; font-weight: normal; }
 
 .cursor-query { cursor: help; }
 
@@ -2627,6 +2627,29 @@ register_module([
 			$output_mime = $settings->preview_file_type;
 			if(isset($_GET["type"]) and in_array($_GET["type"], [ "image/png", "image/jpeg", "image/webp" ]))
 				$output_mime = $_GET["type"];
+			
+			/// ETag handling ///
+			// TODO: Test this
+			error_log("Note to self: Please remember to test this etag code!");
+			// Generate the etag and send it to the client
+			$preview_etag = sha1("$output_mime|$target_size|$filepath|$mime_type");
+			$allheaders = getallheaders();
+			$allheaders = array_change_key_case($allheaders, CASE_LOWER);
+			error_log(var_export($allheaders, true));
+			if(!isset($allheaders["if-none-match"]))
+			{
+				header("etag: $preview_etag");
+			}
+			else
+			{
+				if($allheaders["if-none-match"] === $preview_etag)
+				{
+					http_response_code(304);
+					header("x-generation-time: " . (microtime(true) - $start_time));
+					exit();
+				}
+			}
+			/// ETag handling end ///
 			
 			$preview_image = new Imagick();
 			switch(substr($mime_type, 0, strpos($mime_type, "/")))
