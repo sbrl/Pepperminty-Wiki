@@ -4122,7 +4122,7 @@ register_module([
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.6",
+	"version" => "0.6.1",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds a some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",
@@ -4243,6 +4243,9 @@ class PeppermintParsedown extends ParsedownExtra
 					}
 					$variableValue .= "</ol>\n";
 					break;
+				case "~":
+					if(!empty($this->paramStack))
+						$variableValue = $this->escapeText($env->page);
 				// TODO: Add a option that displays a list of subpages here
 			}
 			if(isset($params[$variableKey]))
