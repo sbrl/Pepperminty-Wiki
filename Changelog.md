@@ -1,21 +1,29 @@
 # Changelog
 # v0.11-dev
 # Added
- - Unlocked the uploading of any file type. Note that only the file types specified in the settings are allowed to be uploaded.
+ - Unlocked the uploading of any file type. Note that only the file types specified in the settings are allowed to be uploaded.7
+	- Uploaded video and audio files can now be viewed on their respective pages
+    - The file preview tool is now aware that not everything will be an image.
  - Enhanced the recent changes page.
-    - New pages show up with an 'N' next to them (as they do in a MediaWiki installation)
-    - Page deletions show up in red with a line though them
-    - Uploads show with an arrow next to them along with the size of the uploaded file
+	- New pages show up with an 'N' next to them (as they do in a MediaWiki installation)
+	- Page deletions show up in red with a line though them
+	- Uploads show with an arrow next to them along with the size of the uploaded file
  - Added mathematical expression parsing between dollar signs.
- - Generated previews now have etags. This should speed up subsequent loading times significantly.
+ - Generated previews now have etags. This should speed up load times of subsequent requests significantly.
 
 # Changed
  - Enhanced the dev help page some more
- - Changed the uploaded file preview generation to use imagemagick. You now need to have the `imagick` php extension installed (linux installation: `sudo apt-get install php-imagick`).
+ - Changed the uploaded file preview generation to use imagemagick. You now need to have the `imagick` php extension installed (installation on linux: `sudo apt-get install php-imagick`).
+ - The uploaded file preview generation action will now return audio and video files as-is. This allows for HTML5 video / audio tags to be used to view audio and video files.
 
 # Fixed
  - Fixed the downloader
  - Fixed an issue with the recent changes page and redirects causing a large number of warnings
+ - Fixed a number of issues with the image syntax
+	- Image urls may now contain ampersands ('&')
+ - Fixed a number of issues with the image preview generator
+	- Requests for a previews of pages that don't have an associated file won't break anymore. An error image will now be returned instead.
+    - A number of things that were not compatible with PHP 7 have been updated to ensure compatibility.
 
 # Notes
  - Test the etag code!
