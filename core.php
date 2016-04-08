@@ -806,9 +806,10 @@ class page_renderer
 	public static function generate_all_pages_datalist()
 	{
 		global $pageindex;
-
+		$arrayPageIndex = get_object_vars($pageindex);
+		ksort($arrayPageIndex);
 		$result = "<datalist id='allpages'>\n";
-		foreach($pageindex as $pagename => $pagedetails)
+		foreach($arrayPageIndex as $pagename => $pagedetails)
 		{
 			$result .= "\t\t\t<option value='$pagename' />\n";
 		}

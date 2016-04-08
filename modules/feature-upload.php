@@ -220,7 +220,6 @@ register_module([
 			$preview_etag = sha1("$output_mime|$target_size|$filepath|$mime_type");
 			$allheaders = getallheaders();
 			$allheaders = array_change_key_case($allheaders, CASE_LOWER);
-			error_log(var_export($allheaders, true));
 			if(!isset($allheaders["if-none-match"]))
 			{
 				header("etag: $preview_etag");

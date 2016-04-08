@@ -1207,9 +1207,10 @@ class page_renderer
 	public static function generate_all_pages_datalist()
 	{
 		global $pageindex;
-
+		$arrayPageIndex = get_object_vars($pageindex);
+		ksort($arrayPageIndex);
 		$result = "<datalist id='allpages'>\n";
-		foreach($pageindex as $pagename => $pagedetails)
+		foreach($arrayPageIndex as $pagename => $pagedetails)
 		{
 			$result .= "\t\t\t<option value='$pagename' />\n";
 		}
@@ -2640,7 +2641,6 @@ register_module([
 			$preview_etag = sha1("$output_mime|$target_size|$filepath|$mime_type");
 			$allheaders = getallheaders();
 			$allheaders = array_change_key_case($allheaders, CASE_LOWER);
-			error_log(var_export($allheaders, true));
 			if(!isset($allheaders["if-none-match"]))
 			{
 				header("etag: $preview_etag");
