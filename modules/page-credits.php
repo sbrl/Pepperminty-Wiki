@@ -24,6 +24,18 @@ register_module([
 					"thing_url" => "https://github.com/sbrl/Pepprminty-Wiki",
 					"icon" => "https://avatars0.githubusercontent.com/u/9929737?v=3&s=24"
 				],
+				"Mime type to file extension mapper" => [
+					"author" => "Chaos",
+					"author_url" => "https://stackoverflow.com/users/47529/chaos",
+					"thing_url" => "https://stackoverflow.com/a/1147952/1460422",
+					"icon" => "https://www.gravatar.com/avatar/aaee40db39ad6b164cfb89cb6ad4d176?s=328&d=identicon&s=24"
+				],
+				"Parsedown" => [
+					"author" => "erusev and others",
+					"author_url" => "https://github.com/erusev/",
+					"thing_url" => "https://github.com/erusev/parsedown/",
+					"icon" => "https://avatars1.githubusercontent.com/u/184170?v=3&s=24"
+				],
 				"Slightly modified version of Slimdown" => [
 					"author" => "Johnny Broadway",
 					"author_url" => "https://github.com/jbroadway",

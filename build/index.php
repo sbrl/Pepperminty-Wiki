@@ -506,7 +506,7 @@ function human_filesize($bytes, $decimals = 2)
 }
 
 /**
- * Calculates the time sincce a particular timestamp and returns a
+ * Calculates the time since a particular timestamp and returns a
  * human-readable result.
  * From http://goo.gl/zpgLgq.
  * @param	integer	$time	The timestamp to convert.
@@ -697,9 +697,12 @@ function mb_stripos_all($haystack, $needle) {
 /**
  * Returns the system's mime type mappings, considering the first extension
  * listed to be cacnonical.
+ * From http://stackoverflow.com/a/1147952/1460422 by chaos.
+ * Edited by Starbeamrainbowlabs.
  * @return array	An array of mime type mappings.
  */
-function system_mime_type_extensions() {
+function system_mime_type_extensions()
+{
 	global $settings;
 	$out = array();
 	$file = fopen($settings->mime_extension_mappings_location, 'r');
@@ -717,16 +720,60 @@ function system_mime_type_extensions() {
 	fclose($file);
 	return $out;
 }
+
 /**
  * Converts a given mime type to it's associated file extension.
+ * From http://stackoverflow.com/a/1147952/1460422 by chaos.
+ * Edited by Starbeamrainbowlabs.
  * @param  string $type The mime type to convert.
  * @return string       The extension for the given mime type.
  */
-function system_mime_type_extension($type) {
+function system_mime_type_extension($type)
+{
 	static $exts;
 	if(!isset($exts))
 		$exts = system_mime_type_extensions();
 	return isset($exts[$type]) ? $exts[$type] : null;
+}
+
+/**
+ * Returns the system MIME type mapping of extensions to MIME types.
+ * From http://stackoverflow.com/a/1147952/1460422 by chaos.
+ * Edited by Starbeamrainbowlabs.
+ * @return array An array mapping file extensions to their associated mime types.
+ */
+function system_extension_mime_types()
+{
+	global $settings;
+    $out = array();
+    $file = fopen($settings->mime_extension_mappings_location, 'r');
+    while(($line = fgets($file)) !== false) {
+        $line = trim(preg_replace('/#.*/', '', $line));
+        if(!$line)
+            continue;
+        $parts = preg_split('/\s+/', $line);
+        if(count($parts) == 1)
+            continue;
+        $type = array_shift($parts);
+        foreach($parts as $part)
+            $out[$part] = $type;
+    }
+    fclose($file);
+    return $out;
+}
+/**
+ * Converts a given file extension to it's associated mime type.
+ * From http://stackoverflow.com/a/1147952/1460422 by chaos.
+ * Edited by Starbeamrainbowlabs.
+ * @param  string $ext The extension to convert.
+ * @return string      The mime type associated with the given extension.
+ */
+function system_extension_mime_type($ext) {
+	static $types;
+    if(!isset($types))
+        $types = system_extension_mime_types();
+    $ext = strtolower($ext);
+    return isset($types[$ext]) ? $types[$ext] : null;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2603,6 +2650,14 @@ register_module([
 		add_action("preview", function() {
 			global $settings, $env, $pageindex, $start_time;
 			
+			if(empty($pageindex->{$env->page}->uploadedfilepath))
+			{
+				$im = errorimage("The page '$env->page' doesn't have an associated file.");
+				header("content-type: image/png");
+				imagepng($im);
+				exit();
+			}
+			
 			$filepath = $env->storage_prefix . $pageindex->{$env->page}->uploadedfilepath;
 			$mime_type = $pageindex->{$env->page}->uploadedfilemime;
 			
@@ -2874,6 +2929,18 @@ register_module([
 					"author_url" => "https://starbeamrmainbowlabs.com/",
 					"thing_url" => "https://github.com/sbrl/Pepprminty-Wiki",
 					"icon" => "https://avatars0.githubusercontent.com/u/9929737?v=3&s=24"
+				],
+				"Mime type to file extension mapper" => [
+					"author" => "Chaos",
+					"author_url" => "https://stackoverflow.com/users/47529/chaos",
+					"thing_url" => "https://stackoverflow.com/a/1147952/1460422",
+					"icon" => "https://www.gravatar.com/avatar/aaee40db39ad6b164cfb89cb6ad4d176?s=328&d=identicon&s=24"
+				],
+				"Parsedown" => [
+					"author" => "erusev and others",
+					"author_url" => "https://github.com/erusev/",
+					"thing_url" => "https://github.com/erusev/parsedown/",
+					"icon" => "https://avatars1.githubusercontent.com/u/184170?v=3&s=24"
 				],
 				"Slightly modified version of Slimdown" => [
 					"author" => "Johnny Broadway",
@@ -4140,8 +4207,12 @@ class PeppermintParsedown extends ParsedownExtra
 		// Variable parsing
 		if(preg_match("/\{\{\{([^}]+)\}\}\}/", $fragment["text"], $matches))
 		{
-			$stackEntry = array_slice($this->paramStack, -1)[0];
-			$params = !empty($stackEntry) ? $stackEntry["params"] : false;
+			$params = [];
+			if(!empty($this->paramStack))
+			{
+				$stackEntry = array_slice($this->paramStack, -1)[0];
+				$params = !empty($stackEntry) ? $stackEntry["params"] : false;
+			}
 			
 			$variableKey = trim($matches[1]);
 			
@@ -4168,6 +4239,8 @@ class PeppermintParsedown extends ParsedownExtra
 						$variableValue .= "\t<li>" . $curStackEntry["pagename"] . "</li>\n";
 					}
 					$variableValue .= "</ol>\n";
+					break;
+				// TODO: Add a option that displays a list of subpages here
 			}
 			if(isset($params[$variableKey]))
 			{
@@ -4199,11 +4272,11 @@ class PeppermintParsedown extends ParsedownExtra
 	
 	protected function templateHandler($source)
 	{
-		global $pageindex, $paths;
+		global $pageindex, $env;
 		
 		
 		$parts = explode("|", trim($source, "{}"));
-		$parts = array_map(trim, $parts);
+		$parts = array_map("trim", $parts);
 		
 		// Extract the name of the temaplate page
 		$templatePagename = array_shift($parts);
@@ -4222,7 +4295,7 @@ class PeppermintParsedown extends ParsedownExtra
 			{
 				// This param contains an equals sign, so it's a named parameter
 				$keyValuePair = explode("=", $part, 2);
-				$keyValuePair = array_map(trim, $keyValuePair);
+				$keyValuePair = array_map("trim", $keyValuePair);
 				$params[$keyValuePair[0]] = $keyValuePair[1];
 			}
 			else
@@ -4239,7 +4312,7 @@ class PeppermintParsedown extends ParsedownExtra
 			"params" => $params
 		];
 		
-		$templateFilePath = $paths->storage_prefix . $pageindex->$templatePagename->filename;
+		$templateFilePath = $env->storage_prefix . $pageindex->$templatePagename->filename;
 		
 		$parsedTemplateSource = $this->text(file_get_contents($templateFilePath));
 		
@@ -4290,7 +4363,7 @@ class PeppermintParsedown extends ParsedownExtra
 	
 	protected function inlineExtendedImage($fragment)
 	{
-		if(preg_match('/^!\[(.*)\]\(([^ |)]+)\s*\|([^|)]*)(?:\|([^)]*))?\)/', $fragment["text"], $matches))
+		if(preg_match('/^!\[(.*)\]\(([^ |)]+)\s*(?:\|([^|)]*)(?:\|([^)]*))?)?\)/', $fragment["text"], $matches))
 		{
 			/*
 			 * 0 - Everything
@@ -4300,34 +4373,38 @@ class PeppermintParsedown extends ParsedownExtra
 			 * 4 - Second Param (optional)
 			 */
 			
-			var_dump($matches);
-			
 			$altText = $matches[1];
-			$imageUrl = $matches[2];
-			$param1 = strtolower(trim($matches[3]));
+			$imageUrl = str_replace("&amp;", "&", $matches[2]); // Decode & to allow it in preview urls
+			$param1 = !empty($matches[3]) ? strtolower(trim($matches[3])) : false;
 			$param2 = empty($matches[4]) ? false : strtolower(trim($matches[4]));
 			$floatDirection = false;
 			$imageSize = false;
 			
 			if($this->isFloatValue($param1))
 			{
+				// Param 1 is a valid css float: ... value
 				$floatDirection = $param1;
 				$imageSize = $this->parseSizeSpec($param2);
 			}
 			else if($this->isFloatValue($param2))
 			{
+				// Param 2 is a valid css float: ... value
 				$floatDirection = $param2;
 				$imageSize = $this->parseSizeSpec($param1);
 			}
+			else if($param1 === false and $param2 === false)
+			{
+				// Neither params were specified
+				$floatDirection = false;
+				$imageSize = false;
+			}
 			else
 			{
+				// Neither of them are floats, but at least one is specified
+				// This must mean that the first param is a size spec like
+				// 250x128.
 				$imageSize = $this->parseSizeSpec($param1);
 			}
-			
-			// If they are both invalid then something very strange is going on
-			// Let the built in parsedown image handler deal with it
-			if($imageSize === false && $floatDirection === false)
-				return;
 			
 			$style = "";
 			if($imageSize !== false)
@@ -4335,17 +4412,54 @@ class PeppermintParsedown extends ParsedownExtra
 			if($floatDirection)
 				$style .= " float: $floatDirection;";
 			
-			return [
-				"extent" => strlen($matches[0]),
-				"element" => [
-					"name" => "img",
-					"attributes" => [
-						"src" => $imageUrl,
-						"alt" => $altText,
-						"style" => trim($style)
-					]
-				]
-			];
+			$urlExtension = pathinfo($imageUrl, PATHINFO_EXTENSION);
+			$urlType = system_extension_mime_type($urlExtension);
+			switch(substr($urlType, 0, strpos($urlType, "/")))
+			{
+				case "audio":
+					return [
+						"extent" => strlen($matches[0]),
+						"element" => [
+							"name" => "audio",
+							"text" => $altText,
+							"attributes" => [
+								"src" => $imageUrl,
+								"controls" => "controls",
+								"preload" => "metadata",
+								"style" => trim($style)
+							]
+						]
+					];
+				case "video":
+					return [
+						"extent" => strlen($matches[0]),
+						"element" => [
+							"name" => "video",
+							"text" => $altText,
+							"attributes" => [
+								"src" => $imageUrl,
+								"controls" => "controls",
+								"preload" => "metadata",
+								"style" => trim($style)
+							]
+						]
+					];
+				
+				case "image":
+				default:
+					// If we can't work out what it is, then assume it's an image
+					return [
+						"extent" => strlen($matches[0]),
+						"element" => [
+							"name" => "img",
+							"attributes" => [
+								"src" => $imageUrl,
+								"alt" => $altText,
+								"style" => trim($style)
+							]
+						]
+					];
+			}
 		}
 	}
 	

@@ -182,6 +182,14 @@ register_module([
 		add_action("preview", function() {
 			global $settings, $env, $pageindex, $start_time;
 			
+			if(empty($pageindex->{$env->page}->uploadedfilepath))
+			{
+				$im = errorimage("The page '$env->page' doesn't have an associated file.");
+				header("content-type: image/png");
+				imagepng($im);
+				exit();
+			}
+			
 			$filepath = $env->storage_prefix . $pageindex->{$env->page}->uploadedfilepath;
 			$mime_type = $pageindex->{$env->page}->uploadedfilemime;
 			

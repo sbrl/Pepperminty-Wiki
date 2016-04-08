@@ -89,8 +89,12 @@ class PeppermintParsedown extends ParsedownExtra
 		// Variable parsing
 		if(preg_match("/\{\{\{([^}]+)\}\}\}/", $fragment["text"], $matches))
 		{
-			$stackEntry = array_slice($this->paramStack, -1)[0];
-			$params = !empty($stackEntry) ? $stackEntry["params"] : false;
+			$params = [];
+			if(!empty($this->paramStack))
+			{
+				$stackEntry = array_slice($this->paramStack, -1)[0];
+				$params = !empty($stackEntry) ? $stackEntry["params"] : false;
+			}
 			
 			$variableKey = trim($matches[1]);
 			
@@ -117,6 +121,8 @@ class PeppermintParsedown extends ParsedownExtra
 						$variableValue .= "\t<li>" . $curStackEntry["pagename"] . "</li>\n";
 					}
 					$variableValue .= "</ol>\n";
+					break;
+				// TODO: Add a option that displays a list of subpages here
 			}
 			if(isset($params[$variableKey]))
 			{
@@ -148,11 +154,11 @@ class PeppermintParsedown extends ParsedownExtra
 	
 	protected function templateHandler($source)
 	{
-		global $pageindex, $paths;
+		global $pageindex, $env;
 		
 		
 		$parts = explode("|", trim($source, "{}"));
-		$parts = array_map(trim, $parts);
+		$parts = array_map("trim", $parts);
 		
 		// Extract the name of the temaplate page
 		$templatePagename = array_shift($parts);
@@ -171,7 +177,7 @@ class PeppermintParsedown extends ParsedownExtra
 			{
 				// This param contains an equals sign, so it's a named parameter
 				$keyValuePair = explode("=", $part, 2);
-				$keyValuePair = array_map(trim, $keyValuePair);
+				$keyValuePair = array_map("trim", $keyValuePair);
 				$params[$keyValuePair[0]] = $keyValuePair[1];
 			}
 			else
@@ -188,7 +194,7 @@ class PeppermintParsedown extends ParsedownExtra
 			"params" => $params
 		];
 		
-		$templateFilePath = $paths->storage_prefix . $pageindex->$templatePagename->filename;
+		$templateFilePath = $env->storage_prefix . $pageindex->$templatePagename->filename;
 		
 		$parsedTemplateSource = $this->text(file_get_contents($templateFilePath));
 		
@@ -239,7 +245,7 @@ class PeppermintParsedown extends ParsedownExtra
 	
 	protected function inlineExtendedImage($fragment)
 	{
-		if(preg_match('/^!\[(.*)\]\(([^ |)]+)\s*\|([^|)]*)(?:\|([^)]*))?\)/', $fragment["text"], $matches))
+		if(preg_match('/^!\[(.*)\]\(([^ |)]+)\s*(?:\|([^|)]*)(?:\|([^)]*))?)?\)/', $fragment["text"], $matches))
 		{
 			/*
 			 * 0 - Everything
@@ -249,34 +255,38 @@ class PeppermintParsedown extends ParsedownExtra
 			 * 4 - Second Param (optional)
 			 */
 			
-			var_dump($matches);
-			
 			$altText = $matches[1];
-			$imageUrl = $matches[2];
-			$param1 = strtolower(trim($matches[3]));
+			$imageUrl = str_replace("&amp;", "&", $matches[2]); // Decode & to allow it in preview urls
+			$param1 = !empty($matches[3]) ? strtolower(trim($matches[3])) : false;
 			$param2 = empty($matches[4]) ? false : strtolower(trim($matches[4]));
 			$floatDirection = false;
 			$imageSize = false;
 			
 			if($this->isFloatValue($param1))
 			{
+				// Param 1 is a valid css float: ... value
 				$floatDirection = $param1;
 				$imageSize = $this->parseSizeSpec($param2);
 			}
 			else if($this->isFloatValue($param2))
 			{
+				// Param 2 is a valid css float: ... value
 				$floatDirection = $param2;
 				$imageSize = $this->parseSizeSpec($param1);
 			}
+			else if($param1 === false and $param2 === false)
+			{
+				// Neither params were specified
+				$floatDirection = false;
+				$imageSize = false;
+			}
 			else
 			{
+				// Neither of them are floats, but at least one is specified
+				// This must mean that the first param is a size spec like
+				// 250x128.
 				$imageSize = $this->parseSizeSpec($param1);
 			}
-			
-			// If they are both invalid then something very strange is going on
-			// Let the built in parsedown image handler deal with it
-			if($imageSize === false && $floatDirection === false)
-				return;
 			
 			$style = "";
 			if($imageSize !== false)
@@ -284,17 +294,54 @@ class PeppermintParsedown extends ParsedownExtra
 			if($floatDirection)
 				$style .= " float: $floatDirection;";
 			
-			return [
-				"extent" => strlen($matches[0]),
-				"element" => [
-					"name" => "img",
-					"attributes" => [
-						"src" => $imageUrl,
-						"alt" => $altText,
-						"style" => trim($style)
-					]
-				]
-			];
+			$urlExtension = pathinfo($imageUrl, PATHINFO_EXTENSION);
+			$urlType = system_extension_mime_type($urlExtension);
+			switch(substr($urlType, 0, strpos($urlType, "/")))
+			{
+				case "audio":
+					return [
+						"extent" => strlen($matches[0]),
+						"element" => [
+							"name" => "audio",
+							"text" => $altText,
+							"attributes" => [
+								"src" => $imageUrl,
+								"controls" => "controls",
+								"preload" => "metadata",
+								"style" => trim($style)
+							]
+						]
+					];
+				case "video":
+					return [
+						"extent" => strlen($matches[0]),
+						"element" => [
+							"name" => "video",
+							"text" => $altText,
+							"attributes" => [
+								"src" => $imageUrl,
+								"controls" => "controls",
+								"preload" => "metadata",
+								"style" => trim($style)
+							]
+						]
+					];
+				
+				case "image":
+				default:
+					// If we can't work out what it is, then assume it's an image
+					return [
+						"extent" => strlen($matches[0]),
+						"element" => [
+							"name" => "img",
+							"attributes" => [
+								"src" => $imageUrl,
+								"alt" => $altText,
+								"style" => trim($style)
+							]
+						]
+					];
+			}
 		}
 	}
 	

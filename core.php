@@ -105,7 +105,7 @@ function human_filesize($bytes, $decimals = 2)
 }
 
 /**
- * Calculates the time sincce a particular timestamp and returns a
+ * Calculates the time since a particular timestamp and returns a
  * human-readable result.
  * From http://goo.gl/zpgLgq.
  * @param	integer	$time	The timestamp to convert.
@@ -296,9 +296,12 @@ function mb_stripos_all($haystack, $needle) {
 /**
  * Returns the system's mime type mappings, considering the first extension
  * listed to be cacnonical.
+ * From http://stackoverflow.com/a/1147952/1460422 by chaos.
+ * Edited by Starbeamrainbowlabs.
  * @return array	An array of mime type mappings.
  */
-function system_mime_type_extensions() {
+function system_mime_type_extensions()
+{
 	global $settings;
 	$out = array();
 	$file = fopen($settings->mime_extension_mappings_location, 'r');
@@ -316,16 +319,60 @@ function system_mime_type_extensions() {
 	fclose($file);
 	return $out;
 }
+
 /**
  * Converts a given mime type to it's associated file extension.
+ * From http://stackoverflow.com/a/1147952/1460422 by chaos.
+ * Edited by Starbeamrainbowlabs.
  * @param  string $type The mime type to convert.
  * @return string       The extension for the given mime type.
  */
-function system_mime_type_extension($type) {
+function system_mime_type_extension($type)
+{
 	static $exts;
 	if(!isset($exts))
 		$exts = system_mime_type_extensions();
 	return isset($exts[$type]) ? $exts[$type] : null;
+}
+
+/**
+ * Returns the system MIME type mapping of extensions to MIME types.
+ * From http://stackoverflow.com/a/1147952/1460422 by chaos.
+ * Edited by Starbeamrainbowlabs.
+ * @return array An array mapping file extensions to their associated mime types.
+ */
+function system_extension_mime_types()
+{
+	global $settings;
+    $out = array();
+    $file = fopen($settings->mime_extension_mappings_location, 'r');
+    while(($line = fgets($file)) !== false) {
+        $line = trim(preg_replace('/#.*/', '', $line));
+        if(!$line)
+            continue;
+        $parts = preg_split('/\s+/', $line);
+        if(count($parts) == 1)
+            continue;
+        $type = array_shift($parts);
+        foreach($parts as $part)
+            $out[$part] = $type;
+    }
+    fclose($file);
+    return $out;
+}
+/**
+ * Converts a given file extension to it's associated mime type.
+ * From http://stackoverflow.com/a/1147952/1460422 by chaos.
+ * Edited by Starbeamrainbowlabs.
+ * @param  string $ext The extension to convert.
+ * @return string      The mime type associated with the given extension.
+ */
+function system_extension_mime_type($ext) {
+	static $types;
+    if(!isset($types))
+        $types = system_extension_mime_types();
+    $ext = strtolower($ext);
+    return isset($types[$ext]) ? $types[$ext] : null;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
