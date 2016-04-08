@@ -123,6 +123,8 @@ register_module([
 			
 			// Read in the new page content
 			$pagedata = $_POST["content"];
+			/*** Note needed anymore as Parsedown has an option that does ***
+			 *** this for us, and is _way_ more intelligent about it.	  ***
 			// Santise it if necessary
 			if($settings->clean_raw_html)
 			{
@@ -132,6 +134,7 @@ register_module([
 				// the less than sign ('<') that is used to open HTML tags.
 				$pagedata = str_replace("&gt;", ">", $pagedata);
 			}
+			 ***/
 			
 			// Read in the new page tags, so long as there are actually some tags to read in
 			$page_tags = [];

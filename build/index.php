@@ -3318,6 +3318,8 @@ register_module([
 			
 			// Read in the new page content
 			$pagedata = $_POST["content"];
+			/*** Note needed anymore as Parsedown has an option that does ***
+			 *** this for us, and is _way_ more intelligent about it.	  ***
 			// Santise it if necessary
 			if($settings->clean_raw_html)
 			{
@@ -3327,6 +3329,7 @@ register_module([
 				// the less than sign ('<') that is used to open HTML tags.
 				$pagedata = str_replace("&gt;", ">", $pagedata);
 			}
+			 ***/
 			
 			// Read in the new page tags, so long as there are actually some tags to read in
 			$page_tags = [];
@@ -4155,6 +4158,11 @@ register_module([
 		$parser = new PeppermintParsedown();
 		$parser->setInternalLinkBase("?page=%s");
 		add_parser("parsedown", function($source) use ($parser) {
+			global $settings;
+			if($settings->clean_raw_html)
+				$parser->setMarkupEscaped(true);
+			else
+				$parser->setMarkupEscaped(false);
 			$result = $parser->text($source);
 			
 			return $result;

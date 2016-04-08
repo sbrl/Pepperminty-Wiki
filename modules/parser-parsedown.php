@@ -11,6 +11,11 @@ register_module([
 		$parser = new PeppermintParsedown();
 		$parser->setInternalLinkBase("?page=%s");
 		add_parser("parsedown", function($source) use ($parser) {
+			global $settings;
+			if($settings->clean_raw_html)
+				$parser->setMarkupEscaped(true);
+			else
+				$parser->setMarkupEscaped(false);
 			$result = $parser->text($source);
 			
 			return $result;
