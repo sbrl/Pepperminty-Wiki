@@ -212,7 +212,9 @@ class PeppermintParsedown extends ParsedownExtra
 	
 	protected function inlineInternalLink($fragment)
 	{
-		if(preg_match('/^\[\[(.*)\]\]/', $fragment["text"], $matches))
+		global $pageindex;
+		
+		if(preg_match('/^\[\[([^\]]*)\]\]/', $fragment["text"], $matches))
 		{
 			$display = $linkPage = $matches[1];
 			if(strpos($matches[1], "|"))
@@ -229,7 +231,7 @@ class PeppermintParsedown extends ParsedownExtra
 				$this->internalLinkBase
 			);
 			
-			return [
+			$result = [
 				"extent" => strlen($matches[0]),
 				"element" => [
 					"name" => "a",
@@ -239,6 +241,11 @@ class PeppermintParsedown extends ParsedownExtra
 					]
 				]
 			];
+			
+			if(empty($pageindex->$linkPage))
+				$result["element"]["attributes"]["class"] = "redlink";
+			
+			return $result;
 		}
 		return;
 	}

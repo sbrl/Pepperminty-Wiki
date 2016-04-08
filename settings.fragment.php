@@ -327,6 +327,9 @@ h1 { text-align: center; }
 .logo.small { max-width: 2rem; max-height: 2rem; }
 main:not(.printable) { padding: 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 
+a.redlink:link { color: rgb(230, 7, 7); }
+a.redlink:visited { color: rgb(130, 15, 15); #8b1a1a }
+
 .search-result { position: relative; }
 .search-result::before { content: attr(data-result-number); position: relative; top: 3.2rem; color: rgba(33, 33, 33, 0.3); font-size: 2rem; }
 .search-result::after { content: \"Rank: \" attr(data-rank); position: absolute; top: 3.8rem; right: 0.7rem; color: rgba(50, 50, 50, 0.3); }
