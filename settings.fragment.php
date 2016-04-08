@@ -327,6 +327,8 @@ h1 { text-align: center; }
 .logo.small { max-width: 2rem; max-height: 2rem; }
 main:not(.printable) { padding: 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 
+blockquote { padding-left: 1em; border-left: 0.2em solid #442772; border-radius: 0.2rem; }
+
 a.redlink:link { color: rgb(230, 7, 7); }
 a.redlink:visited { color: rgb(130, 15, 15); #8b1a1a }
 
