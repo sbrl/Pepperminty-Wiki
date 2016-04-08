@@ -11,6 +11,7 @@
  - Added mathematical expression parsing between dollar signs.
  - Generated previews now have etags. This should speed up load times of subsequent requests significantly.
  - Added an extra debug variable that displays the top level page name (i.e. the page that has been requested). It can be used like this: `{{{~}}}`
+ - Links to non-existent pages are now coloured red by default.
 
 # Changed
  - Enhanced the dev help page some more
