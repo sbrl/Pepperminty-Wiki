@@ -19,9 +19,10 @@
 # Fixed
  - Fixed the downloader
  - Fixed an issue with the recent changes page and redirects causing a large number of warnings
- - Fixed a number of issues with the image syntax
+ - Fixed a number of issues with the parser
 	- Image urls may now contain ampersands ('&')
     - Several warnings that were cropping up here and there due to bugs have been squashed
+    - Fixed an issue with multiple links in the same paragraph
  - Fixed a number of issues with the image preview generator
 	- Requests for a previews of pages that don't have an associated file won't break anymore. An error image will now be returned instead.
     - A number of things that were not compatible with PHP 7 have been updated to ensure compatibility.
