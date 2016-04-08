@@ -375,6 +375,22 @@ function system_extension_mime_type($ext) {
     return isset($types[$ext]) ? $types[$ext] : null;
 }
 
+function stack_trace($log_trace = true)
+{
+	$result = "";
+	$stackTrace = debug_backtrace();
+	$stackHeight = count($stackTrace);
+	foreach ($stackTrace as $i => $stackEntry)
+	{
+		$result .= "#" . ($stackHeight - $i) . " - " . $stackEntry["file"] . ":" . $stackEntry["line"] . " (" . $stackEntry["function"] . ":" . count($stackEntry["args"]) . ")\n";
+	}
+	
+	if($log_trace)
+		error_log($result);
+	
+	return $result;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -935,7 +951,6 @@ $actions = new stdClass();
 function add_action($action_name, $func)
 {
 	global $actions;
-	//echo("adding $action_name\n");
 	$actions->$action_name = $func;
 }
 

@@ -125,7 +125,13 @@ register_module([
 			$pagedata = $_POST["content"];
 			// Santise it if necessary
 			if($settings->clean_raw_html)
+			{
 				$pagedata = htmlentities($pagedata, ENT_QUOTES);
+				// Un-sanitize greater than signs ('>') as these are commonly
+				// used for blockquotes. This should be a security risk as it is
+				// the less than sign ('<') that is used to open HTML tags.
+				$pagedata = str_replace("&gt;", ">", $pagedata);
+			}
 			
 			// Read in the new page tags, so long as there are actually some tags to read in
 			$page_tags = [];

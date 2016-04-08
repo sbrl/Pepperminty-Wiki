@@ -779,6 +779,22 @@ function system_extension_mime_type($ext) {
     return isset($types[$ext]) ? $types[$ext] : null;
 }
 
+function stack_trace($log_trace = true)
+{
+	$result = "";
+	$stackTrace = debug_backtrace();
+	$stackHeight = count($stackTrace);
+	foreach ($stackTrace as $i => $stackEntry)
+	{
+		$result .= "#" . ($stackHeight - $i) . " - " . $stackEntry["file"] . ":" . $stackEntry["line"] . " (" . $stackEntry["function"] . ":" . count($stackEntry["args"]) . ")\n";
+	}
+	
+	if($log_trace)
+		error_log($result);
+	
+	return $result;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1339,7 +1355,6 @@ $actions = new stdClass();
 function add_action($action_name, $func)
 {
 	global $actions;
-	//echo("adding $action_name\n");
 	$actions->$action_name = $func;
 }
 
@@ -3303,7 +3318,13 @@ register_module([
 			$pagedata = $_POST["content"];
 			// Santise it if necessary
 			if($settings->clean_raw_html)
+			{
 				$pagedata = htmlentities($pagedata, ENT_QUOTES);
+				// Un-sanitize greater than signs ('>') as these are commonly
+				// used for blockquotes. This should be a security risk as it is
+				// the less than sign ('<') that is used to open HTML tags.
+				$pagedata = str_replace("&gt;", ">", $pagedata);
+			}
 			
 			// Read in the new page tags, so long as there are actually some tags to read in
 			$page_tags = [];
