@@ -71,10 +71,11 @@ register_module([
 				$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
 			}
 			$content .= "<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save' class='editform'>
+			<input type='hidden' name='prev-content-hash' value='" . sha1($pagetext) . "' />
 			<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
 			<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
 			<p class='editing_message'>$settings->editing_message</p>
-			<input type='submit' value='Save Page' tabindex='3' />
+			<input name='submit-edit' type='submit' value='Save Page' tabindex='3' />
 		</form>";
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});
@@ -89,6 +90,7 @@ register_module([
 		 */
 		add_action("save", function() {
 			global $pageindex, $settings, $env, $save_preprocessors, $paths; 
+			
 			if(!$settings->editing)
 			{
 				header("location: index.php?page=$env->page");
@@ -148,6 +150,31 @@ register_module([
 				// Trim off all the whitespace
 				foreach($page_tags as &$tag)
 					$tag = trim($tag);
+			}
+			
+			// Check for edit conflicts
+			$existing_content_hash = sha1_file($env->storage_prefix . $pageindex->{$env->page}->filename);
+			if(isset($_POST["prev-content-hash"]) and
+				$existing_content_hash != $_POST["prev-content-hash"])
+			{
+				$existingPageData = htmlentities(file_get_contents($env->storage_prefix . $env->storage_prefix . $pageindex->{$env->page}->filename));
+				// An edit conflict has occurred! We should get the user to fix it.
+				$content = "<h1>Resolving edit conflict - $env->page</h1>";
+				if(!$env->is_logged_in and $settings->anonedits)
+				{
+					$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
+				}
+				$content .= "<p>An edit conflict has arisen because someone else has saved an edit to $env->page since you started editing it. Both texts are shown below. To continue, please merge your changes with the existing content. Note that only the text in the existing content box will be saved.</p>
+				<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save' class='editform'>
+				<h2>Existing content</h2>
+				<textarea name='content' autofocus tabindex='1'>$existingPageData</textarea>
+				<h2>Your content</h2>
+				<textarea>$pagedata</textarea>
+				<input type='text' name='tags' value='" . $_POST["tags"] . "' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
+				<p class='editing_message'>$settings->editing_message</p>
+				<input name='submit-edit' type='submit' value='Resolve Conflict' tabindex='3' />
+			</form>";
+				exit(page_renderer::render_main("Edit Conflict - $env->page - $settings->sitename", $content));
 			}
 			
 			// Update the inverted search index
