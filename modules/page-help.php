@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Help page",
-	"version" => "0.9.1",
+	"version" => "0.9.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a rather useful help page. Access through the 'help' action. This module also exposes help content added to Pepperminty Wiki's inbuilt invisible help section system.",
 	"id" => "page-help",
@@ -16,7 +16,7 @@ register_module([
 		 * ██   ██ ███████ ███████ ██      
 		 */
 		add_action("help", function() {
-			global $settings, $version, $help_sections, $actions;
+			global $paths, $settings, $version, $help_sections, $actions;
 			
 			// Sort the help sections by key
 			ksort($help_sections, SORT_NATURAL);
@@ -44,6 +44,7 @@ register_module([
 				$content .= "<p>" . implode(", ", array_keys(get_object_vars($actions))) . "</p>";
 				$content .= "<h3>Environment</h3>\n";
 				$content .= "<p>$settings->sitename's root directory is " . (!is_writeable(__DIR__) ? "not " : "") . "writeable.</p>";
+				$content .= "<p>The page index is currently " . human_filesize(filesize($paths->pageindex)) . " in size.</p>";
 			}
 			else
 			{
@@ -53,7 +54,7 @@ register_module([
 		<p>Welcome to $settings->sitename!</p>
 		<p>$settings->sitename is powered by Pepperminty Wiki, a complete wiki in a box you can drop into your server and expect it to just <em>work</em>.</p>";
 				
-				// todo Insert a table of contents here?
+				// Todo Insert a table of contents here?
 				
 				foreach($help_sections as $index => $section)
 				{
