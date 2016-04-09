@@ -1,7 +1,7 @@
 # Changelog
 # v0.11-dev
 # Added
- - Unlocked the uploading of any file type. Note that only the file types specified in the settings are allowed to be uploaded.7
+ - Unlocked the uploading of any file type. Note that only the file types specified in the settings are allowed to be uploaded.
 	- Uploaded video and audio files can now be viewed on their respective pages
     - The file preview tool is now aware that not everything will be an image.
  - Enhanced the recent changes page.
@@ -10,7 +10,9 @@
 	- Uploads show with an arrow next to them along with the size of the uploaded file
  - Added mathematical expression parsing between dollar signs.
  - Generated previews now have etags. This should speed up load times of subsequent requests significantly.
- - Added an extra debug variable that displays the top level page name (i.e. the page that has been requested). It can be used like this: `{{{~}}}`
+ - Added some extra built-in variables to the parser.
+    - `{{{~}}}`: Displays the top level page name (i.e. the page that has been requested).
+    - `{{{*}}}`: Displays a comma-separated list of subpages of the requested page.
  - Links to non-existent pages are now coloured red by default.
 
 # Changed

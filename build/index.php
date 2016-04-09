@@ -4234,9 +4234,16 @@ class PeppermintParsedown extends ParsedownExtra
 		$this->InlineTypes["{"][] = "Template";
 	}
 	
+	/*
+	 * ████████ ███████ ███    ███ ██████  ██       █████  ████████ ██ ███    ██  ██████
+	 *    ██    ██      ████  ████ ██   ██ ██      ██   ██    ██    ██ ████   ██ ██
+	 *    ██    █████   ██ ████ ██ ██████  ██      ███████    ██    ██ ██ ██  ██ ██   ███
+	 *    ██    ██      ██  ██  ██ ██      ██      ██   ██    ██    ██ ██  ██ ██ ██    ██
+	 *    ██    ███████ ██      ██ ██      ███████ ██   ██    ██    ██ ██   ████  ██████
+	 */
 	protected function inlineTemplate($fragment)
 	{
-		global $env;
+		global $env, $pageindex;
 		
 		// Variable parsing
 		if(preg_match("/\{\{\{([^}]+)\}\}\}/", $fragment["text"], $matches))
@@ -4253,7 +4260,7 @@ class PeppermintParsedown extends ParsedownExtra
 			$variableValue = false;
 			switch ($variableKey)
 			{
-				case "@":
+				case "@": // Lists all subpages
 					if(!empty($params))
 					{
 						$variableValue = "<table>
@@ -4265,7 +4272,7 @@ class PeppermintParsedown extends ParsedownExtra
 						$variableValue .= "</table>";
 					}
 					break;
-				case "#":
+				case "#": // Shows a stack trace
 					$variableValue = "<ol start=\"0\">\n";
 					$variableValue .= "\t<li>$env->page</li>\n";
 					foreach($this->paramStack as $curStackEntry)
@@ -4274,10 +4281,21 @@ class PeppermintParsedown extends ParsedownExtra
 					}
 					$variableValue .= "</ol>\n";
 					break;
-				case "~":
+				case "~": // Show requested page's name
 					if(!empty($this->paramStack))
 						$variableValue = $this->escapeText($env->page);
-				// TODO: Add a option that displays a list of subpages here
+					break;
+				case "*": // Lists subpages
+					$subpages = get_subpages($pageindex, $env->page);
+					$variableValue = [];
+					foreach($subpages as $pagename => $depth)
+					{
+						$variableValue[] = $pagename;
+					}
+					$variableValue = implode(", ", $variableValue);
+					if(strlen($variableValue) === 0)
+						$variableValue = "<em>(none yet!)</em>";
+					break;
 			}
 			if(isset($params[$variableKey]))
 			{
@@ -4285,7 +4303,7 @@ class PeppermintParsedown extends ParsedownExtra
 				$variableValue = $this->escapeText($variableValue);
 			}
 			
-			if($variableValue)
+			if($variableValue !== false)
 			{
 				return [
 					"extent" => strlen($matches[0]),
