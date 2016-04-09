@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.13.1",
+	"version" => "0.13.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -71,10 +71,10 @@ register_module([
 				$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
 			}
 			$content .= "<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save' class='editform'>
-			<textarea name='content'>$pagetext</textarea>
-			<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' />
+			<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
+			<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
 			<p class='editing_message'>$settings->editing_message</p>
-			<input type='submit' value='Save Page' />
+			<input type='submit' value='Save Page' tabindex='3' />
 		</form>";
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});
