@@ -19,6 +19,8 @@
  - Enhanced the dev help page some more
  - Changed the uploaded file preview generation to use imagemagick. You now need to have the `imagick` php extension installed (installation on linux: `sudo apt-get install php-imagick`).
  - The uploaded file preview generation action will now return audio and video files as-is. This allows for HTML5 video / audio tags to be used to view audio and video files.
+ - Made username box autofocus on login page.
+ - Added tab indexes to editing form
 
 # Fixed
  - Fixed the downloader
