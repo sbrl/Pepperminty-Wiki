@@ -100,11 +100,11 @@
     },
     {
         "name": "Page editor",
-        "version": "0.13",
+        "version": "0.13.1",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1460145881,
+        "lastupdate": 1460195723,
         "optional": false
     },
     {
@@ -190,11 +190,11 @@
     },
     {
         "name": "Parsedown",
-        "version": "0.7",
+        "version": "0.7.1",
         "author": "Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Please be careful, as this module adds a some weight to your installation, and also *requires* write access to the disk on first load.",
         "id": "parser-parsedown",
-        "lastupdate": 1460190367,
+        "lastupdate": 1460190783,
         "optional": false
     }
 ]

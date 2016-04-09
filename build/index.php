@@ -3206,7 +3206,7 @@ register_module([
 
 register_module([
 	"name" => "Page editor",
-	"version" => "0.13",
+	"version" => "0.13.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -3243,10 +3243,10 @@ register_module([
 				$pagetext = file_get_contents($filename);
 			}
 			
-			if((!$env->is_logged_in and !$settings->anonedits) or // if we aren't logged in  and anonymous edits are disbled
-			   !$settings->editing or// or editing is disabled
+			if((!$env->is_logged_in and !$settings->anonedits) or // if we aren't logged in and anonymous edits are disabled
+			   !$settings->editing or // or editing is disabled
 			   (
-				   isset($pageindex->$page) and // the page exists
+				   isset($pageindex->$page) and // or if the page exists
 				   isset($pageindex->$page->protect) and // the protect property exists
 				   $pageindex->$page->protect and // the protect property is true
 				   !$env->is_admin // the user isn't an admin
@@ -3256,7 +3256,11 @@ register_module([
 				if(!$creatingpage)
 				{
 					// The page already exists - let the user view the page source
-					exit(page_renderer::render_main("Viewing source for $env->page", "<p>$settings->sitename does not allow anonymous users to make edits. If you are in fact logged in, then this page is probably protected, and you aren't an administrator or moderator. You can view the source of $env->page below, but you can't edit it.</p><textarea name='content' readonly>$pagetext</textarea>"));
+					if($env->is_logged_in)
+						exit(page_renderer::render_main("Viewing source for $env->page", "<p>$env->page is protected, and you aren't an administrator or moderator. You can view the source of $env->page below, but you can't edit it.</p><textarea name='content' readonly>$pagetext</textarea>"));
+					else
+						exit(page_renderer::render_main("Viewing source for $env->page", "<p>$settings->sitename does not allow anonymous users to make edits. You can view the source of $env->page below, but you can't edit it. You could, however, try <a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.</p><textarea name='content' readonly>$pagetext</textarea>"));
+						
 				}
 				else
 				{
@@ -4159,7 +4163,7 @@ register_module([
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.7",
+	"version" => "0.7.1",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds a some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",
@@ -4191,7 +4195,16 @@ register_module([
 		</table>
 		<h4>Templating</h4>
 		<p>$settings->sitename also supports including one page in another page as a <em>template</em>. The syntax is very similar to that of Mediawiki. For example, <code>{{Announcement banner}}</code> will include the contents of the \"Announcement banner\" page, assuming it exists.</p>
-		<p>You can also use variables. Again, the syntax here is very similar to that of Mediawiki - they can be referenced in the included page by surrrounding the variable name in triple curly braces (e.g. <code>{{{Announcement text}}}</code>), and set when including a page with the bar syntax (e.g. <code>{{Announcement banner | importance = high | text = Maintenance has been planned for tonight.}}</code>). Currently the only restriction in templates and variables is that you may not include a closing curly brace (<code>}</code>) in the page name, variable name, or value.</p>");
+		<p>You can also use variables. Again, the syntax here is very similar to that of Mediawiki - they can be referenced in the included page by surrrounding the variable name in triple curly braces (e.g. <code>{{{Announcement text}}}</code>), and set when including a page with the bar syntax (e.g. <code>{{Announcement banner | importance = high | text = Maintenance has been planned for tonight.}}</code>). Currently the only restriction in templates and variables is that you may not include a closing curly brace (<code>}</code>) in the page name, variable name, or value.</p>
+		<p>$settings->sitename also supports a number of special built-in variables. Their syntax and function are described below:</p>
+		<table>
+			<tr><th>Type this</th><th>To get this</th></tr>
+			<tr><td><code>{{{@}}}</code></td><td>Lists all variables and their values in a table.</td></tr>
+			<tr><td><code>{{{#}}}</code></td><td>Shows a 'stack trace', outlining all the parent includes of the current page being parsed.</td></tr>
+			<tr><td><code>{{{~}}}</code></td><td>Outputs the requested pagee's name.</td></tr>
+			<tr><td><code>{{{*}}}</code></td><td>Outputs a comma separated list of all the subpages of the current page.</td></tr>
+			<tr><td><code>{{{+}}}</code></td><td>Shows a gallery containing all the files that are sub pages of the current page.</td></tr>
+		</table>");
 	}
 ]);
 
@@ -4271,7 +4284,7 @@ class PeppermintParsedown extends ParsedownExtra
 			$variableValue = false;
 			switch ($variableKey)
 			{
-				case "@": // Lists all subpages
+				case "@": // Lists all variables and their values
 					if(!empty($params))
 					{
 						$variableValue = "<table>
@@ -4307,7 +4320,7 @@ class PeppermintParsedown extends ParsedownExtra
 					if(strlen($variableValue) === 0)
 						$variableValue = "<em>(none yet!)</em>";
 					break;
-				case "+":
+				case "+": // Shows a file gallery for subpages with files
 					// If the upload module isn't present, then there's no point
 					// in checking for uploaded files
 					if(!module_exists("feature-upload"))

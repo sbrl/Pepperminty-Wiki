@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.13",
+	"version" => "0.13.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -38,10 +38,10 @@ register_module([
 				$pagetext = file_get_contents($filename);
 			}
 			
-			if((!$env->is_logged_in and !$settings->anonedits) or // if we aren't logged in  and anonymous edits are disbled
-			   !$settings->editing or// or editing is disabled
+			if((!$env->is_logged_in and !$settings->anonedits) or // if we aren't logged in and anonymous edits are disabled
+			   !$settings->editing or // or editing is disabled
 			   (
-				   isset($pageindex->$page) and // the page exists
+				   isset($pageindex->$page) and // or if the page exists
 				   isset($pageindex->$page->protect) and // the protect property exists
 				   $pageindex->$page->protect and // the protect property is true
 				   !$env->is_admin // the user isn't an admin
@@ -51,7 +51,11 @@ register_module([
 				if(!$creatingpage)
 				{
 					// The page already exists - let the user view the page source
-					exit(page_renderer::render_main("Viewing source for $env->page", "<p>$settings->sitename does not allow anonymous users to make edits. If you are in fact logged in, then this page is probably protected, and you aren't an administrator or moderator. You can view the source of $env->page below, but you can't edit it.</p><textarea name='content' readonly>$pagetext</textarea>"));
+					if($env->is_logged_in)
+						exit(page_renderer::render_main("Viewing source for $env->page", "<p>$env->page is protected, and you aren't an administrator or moderator. You can view the source of $env->page below, but you can't edit it.</p><textarea name='content' readonly>$pagetext</textarea>"));
+					else
+						exit(page_renderer::render_main("Viewing source for $env->page", "<p>$settings->sitename does not allow anonymous users to make edits. You can view the source of $env->page below, but you can't edit it. You could, however, try <a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.</p><textarea name='content' readonly>$pagetext</textarea>"));
+						
 				}
 				else
 				{

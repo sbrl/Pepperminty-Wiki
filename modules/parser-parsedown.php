@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.7",
+	"version" => "0.7.1",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds a some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",
@@ -33,7 +33,16 @@ register_module([
 		</table>
 		<h4>Templating</h4>
 		<p>$settings->sitename also supports including one page in another page as a <em>template</em>. The syntax is very similar to that of Mediawiki. For example, <code>{{Announcement banner}}</code> will include the contents of the \"Announcement banner\" page, assuming it exists.</p>
-		<p>You can also use variables. Again, the syntax here is very similar to that of Mediawiki - they can be referenced in the included page by surrrounding the variable name in triple curly braces (e.g. <code>{{{Announcement text}}}</code>), and set when including a page with the bar syntax (e.g. <code>{{Announcement banner | importance = high | text = Maintenance has been planned for tonight.}}</code>). Currently the only restriction in templates and variables is that you may not include a closing curly brace (<code>}</code>) in the page name, variable name, or value.</p>");
+		<p>You can also use variables. Again, the syntax here is very similar to that of Mediawiki - they can be referenced in the included page by surrrounding the variable name in triple curly braces (e.g. <code>{{{Announcement text}}}</code>), and set when including a page with the bar syntax (e.g. <code>{{Announcement banner | importance = high | text = Maintenance has been planned for tonight.}}</code>). Currently the only restriction in templates and variables is that you may not include a closing curly brace (<code>}</code>) in the page name, variable name, or value.</p>
+		<p>$settings->sitename also supports a number of special built-in variables. Their syntax and function are described below:</p>
+		<table>
+			<tr><th>Type this</th><th>To get this</th></tr>
+			<tr><td><code>{{{@}}}</code></td><td>Lists all variables and their values in a table.</td></tr>
+			<tr><td><code>{{{#}}}</code></td><td>Shows a 'stack trace', outlining all the parent includes of the current page being parsed.</td></tr>
+			<tr><td><code>{{{~}}}</code></td><td>Outputs the requested pagee's name.</td></tr>
+			<tr><td><code>{{{*}}}</code></td><td>Outputs a comma separated list of all the subpages of the current page.</td></tr>
+			<tr><td><code>{{{+}}}</code></td><td>Shows a gallery containing all the files that are sub pages of the current page.</td></tr>
+		</table>");
 	}
 ]);
 
@@ -113,7 +122,7 @@ class PeppermintParsedown extends ParsedownExtra
 			$variableValue = false;
 			switch ($variableKey)
 			{
-				case "@": // Lists all subpages
+				case "@": // Lists all variables and their values
 					if(!empty($params))
 					{
 						$variableValue = "<table>
@@ -149,7 +158,7 @@ class PeppermintParsedown extends ParsedownExtra
 					if(strlen($variableValue) === 0)
 						$variableValue = "<em>(none yet!)</em>";
 					break;
-				case "+":
+				case "+": // Shows a file gallery for subpages with files
 					// If the upload module isn't present, then there's no point
 					// in checking for uploaded files
 					if(!module_exists("feature-upload"))
