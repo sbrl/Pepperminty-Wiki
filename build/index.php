@@ -2489,7 +2489,7 @@ class search
 
 register_module([
 	"name" => "Uploader",
-	"version" => "0.5",
+	"version" => "0.5.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File:' prefix.",
 	"id" => "feature-upload",
@@ -2812,10 +2812,9 @@ register_module([
 				$previewUrl = "?action=preview&size=$settings->default_preview_size&page=" . rawurlencode($env->page);
 				
 				$preview_html = "";
-				
-				error_log($fileTypeDisplay);
 				switch($fileTypeDisplay)
 				{
+					case "application":
 					case "image":
 						$preview_sizes = [ 256, 512, 768, 1024, 1440 ];
 						$preview_html .= "\t\t\t<figure class='preview'>
@@ -4148,7 +4147,7 @@ register_module([
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.6.1",
+	"version" => "0.6.2",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds a some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",
