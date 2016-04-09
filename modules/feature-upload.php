@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Uploader",
-	"version" => "0.5",
+	"version" => "0.5.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File:' prefix.",
 	"id" => "feature-upload",
@@ -324,8 +324,6 @@ register_module([
 				$previewUrl = "?action=preview&size=$settings->default_preview_size&page=" . rawurlencode($env->page);
 				
 				$preview_html = "";
-				
-				error_log($fileTypeDisplay);
 				switch($fileTypeDisplay)
 				{
 					case "image":
