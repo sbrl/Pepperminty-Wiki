@@ -3719,7 +3719,7 @@ function generate_page_list($pagelist)
 
 register_module([
 	"name" => "Login",
-	"version" => "0.8",
+	"version" => "0.8.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
@@ -3750,7 +3750,7 @@ register_module([
 				$content .= "\t\t<p><em>$settings->sitename requires that you login before continuing.</em></p>\n";
 			$content .= "\t\t<form method='post' action='$login_form_action_url'>
 				<label for='user'>Username:</label>
-				<input type='text' name='user' id='user' />
+				<input type='text' name='user' id='user' autofocus />
 				<br />
 				<label for='pass'>Password:</label>
 				<input type='password' name='pass' id='pass' />

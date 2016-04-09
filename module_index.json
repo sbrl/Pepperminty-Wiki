@@ -136,11 +136,11 @@
     },
     {
         "name": "Login",
-        "version": "0.8",
+        "version": "0.8.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastupdate": 1450705429,
+        "lastupdate": 1460196125,
         "optional": false
     },
     {
