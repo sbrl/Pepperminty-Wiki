@@ -103,6 +103,7 @@ Key				| Value			| Explanation
 `show_subpages`	| boolean		| Whether to show a list of subpages at the bottom of the page.
 `subpages_display_depth` | number | The depth to which we should display when listing subpages at the bottom of the page.
 `max_recent_changes` | number	| The maximum number of recent changes to display on the recent changes page.
+`optimize_pages`	|	boolean	| Whether to optimise all webpages generated. Currently this option only minifies inline css.
 `users`			| array of users | An array of usernames and passwords - passwords should be hashed with sha256. Put one user / password on each line, remembering the comma at the end. The last user in the list doesn't need a comma after their details though. Tip: use the `hash` action to hash passwords appropriately for Pepperminty Wiki, but remember to use an incognito window!
 `require_login_view` | boolean	| Whether to require that users login before they do anything else. If you combine this setting with the `data_storage_dir` option to move the storage directory outside your web root, this will completely hide your wiki from anyone who isn't logged in.
 `data_storage_dir`	| path		| The directory in which to store all files, except this main index.php. A single dot ('.') denotes the current directory. Remember to omit the trailing slash from the directory name, as it is added automatically by Pepperminty Wiki. Combine with `require_login_view` in order to completely hide your wiki from anonymous users.

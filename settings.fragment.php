@@ -257,6 +257,8 @@ $settings->defaultaction = "view";
 // A VIRUS INTO YOUR WIKI
 $settings->updateurl = "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/master/index.php";
 
+// Whether to optimise all webpages generated.
+$settings->optimize_pages = true;
 
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////////// Other Modules ////////////////////////////////

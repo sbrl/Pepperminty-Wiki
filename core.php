@@ -375,6 +375,11 @@ function system_extension_mime_type($ext) {
     return isset($types[$ext]) ? $types[$ext] : null;
 }
 
+/**
+ * Generates a stack trace.
+ * @param  bool		$log_trace	Whether to send the stack trace to the error log.
+ * @return string				A string prepresentation of a stack trace.
+ */
 function stack_trace($log_trace = true)
 {
 	$result = "";
@@ -788,7 +793,34 @@ class page_renderer
 		if(preg_match("/^[^\/]*\/\/|^\//", $settings->css))
 			return "<link rel='stylesheet' href='$settings->css' />";
 		else
-			return "<style>$settings->css</style>";
+		{
+			$css = $settings->css;
+			if(!empty($settings->optimize_pages))
+			{
+				// CSS Minification ideas by Jean from catswhocode.com
+				// Link: http://www.catswhocode.com/blog/3-ways-to-compress-css-files-using-php
+				// Remove comments
+				$css = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', "", $css);
+				// Cut down whitespace
+				$css = preg_replace('/\s+/', " ", $css);
+				// Remove whitespace after colons and semicolons
+				$css = str_replace([
+					" :",
+					": ",
+					"; ",
+					" { ",
+					" } "
+				], [
+					":",
+					":",
+					";",
+					"{",
+					"}"
+				], $css);
+				
+			}
+			return "<style>$css</style>";
+		}
 	}
 
 	public static $nav_divider = "<span class='nav-divider inflexible'> | </span>";
