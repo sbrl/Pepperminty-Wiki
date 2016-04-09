@@ -349,6 +349,10 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
 .editing_message { margin: 0.8rem; }
 
+.file-gallery { margin: 0.5em; padding: 0.5em; list-style-type: none; }
+.file-gallery > li { display: inline-block; min-width: attr(data-gallery-width); padding: 1em; text-align: center; }
+.file-gallery > li img, .file-gallery > li video, .file-gallery > li audio { display: block; margin: 0 auto; background-color: white; }
+
 .page-tags-display { margin: 0.5rem 0 0 0; padding: 0; list-style-type: none; }
 .page-tags-display li { display: inline-block; margin: 0.5rem; padding: 0.5rem; background: #D2C3DD; white-space: nowrap; }
 .page-tags-display li a { color: #FB701A; text-decoration: none; }
@@ -2767,7 +2771,7 @@ register_module([
 				
 				default:
 					http_response_code(501);
-					$preview = errorimage("Unrecognised file type '$mime_type'.");
+					$preview = errorimage("Unrecognised file type '$mime_type'.", $target_size);
 					header("content-type: image/png");
 					imagepng($preview);
 					exit();
@@ -2904,10 +2908,17 @@ function parse_size($size) {
 	}
 }
 
-function errorimage($text)
+function errorimage($text, $target_size)
 {
 	$width = 640;
 	$height = 480;
+	
+	if(!empty($target_size))
+	{
+		$width = $target_size;
+		$height = $target_size * (2 / 3);
+	}
+	
 	$image = imagecreatetruecolor($width, $height);
 	imagefill($image, 0, 0, imagecolorallocate($image, 238, 232, 242)); // Set the background to #eee8f2
 	$fontwidth = imagefontwidth(3);
@@ -3495,7 +3506,7 @@ register_module([
 
 register_module([
 	"name" => "Help page",
-	"version" => "0.9.1",
+	"version" => "0.9.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a rather useful help page. Access through the 'help' action. This module also exposes help content added to Pepperminty Wiki's inbuilt invisible help section system.",
 	"id" => "page-help",
@@ -3510,7 +3521,7 @@ register_module([
 		 * ██   ██ ███████ ███████ ██      
 		 */
 		add_action("help", function() {
-			global $settings, $version, $help_sections, $actions;
+			global $paths, $settings, $version, $help_sections, $actions;
 			
 			// Sort the help sections by key
 			ksort($help_sections, SORT_NATURAL);
@@ -3538,6 +3549,7 @@ register_module([
 				$content .= "<p>" . implode(", ", array_keys(get_object_vars($actions))) . "</p>";
 				$content .= "<h3>Environment</h3>\n";
 				$content .= "<p>$settings->sitename's root directory is " . (!is_writeable(__DIR__) ? "not " : "") . "writeable.</p>";
+				$content .= "<p>The page index is currently " . human_filesize(filesize($paths->pageindex)) . " in size.</p>";
 			}
 			else
 			{
@@ -3547,7 +3559,7 @@ register_module([
 		<p>Welcome to $settings->sitename!</p>
 		<p>$settings->sitename is powered by Pepperminty Wiki, a complete wiki in a box you can drop into your server and expect it to just <em>work</em>.</p>";
 				
-				// todo Insert a table of contents here?
+				// Todo Insert a table of contents here?
 				
 				foreach($help_sections as $index => $section)
 				{
@@ -4147,7 +4159,7 @@ register_module([
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.6.2",
+	"version" => "0.7",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds a some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",
@@ -4294,6 +4306,50 @@ class PeppermintParsedown extends ParsedownExtra
 					$variableValue = implode(", ", $variableValue);
 					if(strlen($variableValue) === 0)
 						$variableValue = "<em>(none yet!)</em>";
+					break;
+				case "+":
+					// If the upload module isn't present, then there's no point
+					// in checking for uploaded files
+					if(!module_exists("feature-upload"))
+						break;
+					
+					$variableValue = [];
+					$subpages = get_subpages($pageindex, $env->page);
+					foreach($subpages as $pagename => $depth)
+					{
+						// Make sure that this is an uploaded file
+						if(!$pageindex->$pagename->uploadedfile)
+							continue;
+						
+						$mime_type = $pageindex->$pagename->uploadedfilemime;
+						
+						$previewSize = 300;
+						$previewUrl = "?action=preview&size=$previewSize&page=" . rawurlencode($pagename);
+						
+						$previewHtml = "";
+						switch(substr($mime_type, 0, strpos($mime_type, "/")))
+						{
+							case "video":
+								$previewHtml .= "<video src='$previewUrl' controls preload='metadata'>$pagename</video>\n";
+								break;
+							case "audio":
+								$previewHtml .= "<audio src='$previewUrl' controls preload='metadata'>$pagename</audio>\n";
+								break;
+							case "application":
+							case "image":
+							default:
+								$previewHtml .= "<img src='$previewUrl' />\n";
+								break;
+						}
+						$previewHtml = "<a href='?page=" . rawurlencode($pagename) . "'>$previewHtml$pagename</a>";
+						
+						$variableValue[$pagename] = "<li style='min-width: $previewSize" . "px; min-height: $previewSize" . "px;'>$previewHtml</li>";
+					}
+					
+					if(count($variableValue) === 0)
+						$variableValue["default"] = "<li><em>(No files found)</em></li>\n";
+					$variableValue = implode("\n", $variableValue);
+					$variableValue = "<ul class='file-gallery'>$variableValue</ul>";
 					break;
 			}
 			if(isset($params[$variableKey]))

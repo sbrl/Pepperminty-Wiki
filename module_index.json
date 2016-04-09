@@ -68,7 +68,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File:' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1460185045,
+        "lastupdate": 1460189726,
         "optional": false
     },
     {
@@ -118,11 +118,11 @@
     },
     {
         "name": "Help page",
-        "version": "0.9.1",
+        "version": "0.9.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a rather useful help page. Access through the 'help' action. This module also exposes help content added to Pepperminty Wiki's inbuilt invisible help section system.",
         "id": "page-help",
-        "lastupdate": 1459002158,
+        "lastupdate": 1460186049,
         "optional": false
     },
     {
@@ -190,11 +190,11 @@
     },
     {
         "name": "Parsedown",
-        "version": "0.6.2",
+        "version": "0.7",
         "author": "Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Please be careful, as this module adds a some weight to your installation, and also *requires* write access to the disk on first load.",
         "id": "parser-parsedown",
-        "lastupdate": 1460184701,
+        "lastupdate": 1460190367,
         "optional": false
     }
 ]

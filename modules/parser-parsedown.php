@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.6.2",
+	"version" => "0.7",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds a some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",
@@ -148,6 +148,50 @@ class PeppermintParsedown extends ParsedownExtra
 					$variableValue = implode(", ", $variableValue);
 					if(strlen($variableValue) === 0)
 						$variableValue = "<em>(none yet!)</em>";
+					break;
+				case "+":
+					// If the upload module isn't present, then there's no point
+					// in checking for uploaded files
+					if(!module_exists("feature-upload"))
+						break;
+					
+					$variableValue = [];
+					$subpages = get_subpages($pageindex, $env->page);
+					foreach($subpages as $pagename => $depth)
+					{
+						// Make sure that this is an uploaded file
+						if(!$pageindex->$pagename->uploadedfile)
+							continue;
+						
+						$mime_type = $pageindex->$pagename->uploadedfilemime;
+						
+						$previewSize = 300;
+						$previewUrl = "?action=preview&size=$previewSize&page=" . rawurlencode($pagename);
+						
+						$previewHtml = "";
+						switch(substr($mime_type, 0, strpos($mime_type, "/")))
+						{
+							case "video":
+								$previewHtml .= "<video src='$previewUrl' controls preload='metadata'>$pagename</video>\n";
+								break;
+							case "audio":
+								$previewHtml .= "<audio src='$previewUrl' controls preload='metadata'>$pagename</audio>\n";
+								break;
+							case "application":
+							case "image":
+							default:
+								$previewHtml .= "<img src='$previewUrl' />\n";
+								break;
+						}
+						$previewHtml = "<a href='?page=" . rawurlencode($pagename) . "'>$previewHtml$pagename</a>";
+						
+						$variableValue[$pagename] = "<li style='min-width: $previewSize" . "px; min-height: $previewSize" . "px;'>$previewHtml</li>";
+					}
+					
+					if(count($variableValue) === 0)
+						$variableValue["default"] = "<li><em>(No files found)</em></li>\n";
+					$variableValue = implode("\n", $variableValue);
+					$variableValue = "<ul class='file-gallery'>$variableValue</ul>";
 					break;
 			}
 			if(isset($params[$variableKey]))

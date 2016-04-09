@@ -346,6 +346,10 @@ textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-wei
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
 .editing_message { margin: 0.8rem; }
 
+.file-gallery { margin: 0.5em; padding: 0.5em; list-style-type: none; }
+.file-gallery > li { display: inline-block; min-width: attr(data-gallery-width); padding: 1em; text-align: center; }
+.file-gallery > li img, .file-gallery > li video, .file-gallery > li audio { display: block; margin: 0 auto; background-color: white; }
+
 .page-tags-display { margin: 0.5rem 0 0 0; padding: 0; list-style-type: none; }
 .page-tags-display li { display: inline-block; margin: 0.5rem; padding: 0.5rem; background: #D2C3DD; white-space: nowrap; }
 .page-tags-display li a { color: #FB701A; text-decoration: none; }

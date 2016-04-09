@@ -279,7 +279,7 @@ register_module([
 				
 				default:
 					http_response_code(501);
-					$preview = errorimage("Unrecognised file type '$mime_type'.");
+					$preview = errorimage("Unrecognised file type '$mime_type'.", $target_size);
 					header("content-type: image/png");
 					imagepng($preview);
 					exit();
@@ -416,10 +416,17 @@ function parse_size($size) {
 	}
 }
 
-function errorimage($text)
+function errorimage($text, $target_size)
 {
 	$width = 640;
 	$height = 480;
+	
+	if(!empty($target_size))
+	{
+		$width = $target_size;
+		$height = $target_size * (2 / 3);
+	}
+	
 	$image = imagecreatetruecolor($width, $height);
 	imagefill($image, 0, 0, imagecolorallocate($image, 238, 232, 242)); // Set the background to #eee8f2
 	$fontwidth = imagefontwidth(3);
