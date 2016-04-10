@@ -1,6 +1,6 @@
 # Changelog
-# v0.11-beta1
-# Added
+## v0.11-beta1
+### Added
  - Unlocked the uploading of any file type. Note that only the file types specified in the settings are allowed to be uploaded.
 	- Uploaded video and audio files can now be viewed on their respective pages
     - The file preview tool is now aware that not everything will be an image.
@@ -15,14 +15,14 @@
     - `{{{*}}}`: Displays a comma-separated list of subpages of the requested page.
  - Links to non-existent pages are now coloured red by default.
 
-# Changed
+### Changed
  - Enhanced the dev help page some more
  - Changed the uploaded file preview generation to use imagemagick. You now need to have the `imagick` php extension installed (installation on linux: `sudo apt-get install php-imagick`).
  - The uploaded file preview generation action will now return audio and video files as-is. This allows for HTML5 video / audio tags to be used to view audio and video files.
  - Made username box autofocus on login page.
  - Added tab indexes to editing form
 
-# Fixed
+### Fixed
  - Fixed the downloader
  - Fixed an issue with the recent changes page and redirects causing a large number of warnings
  - Fixed a number of issues with the parser
@@ -32,6 +32,7 @@
  - Fixed a number of issues with the image preview generator
 	- Requests for a previews of pages that don't have an associated file won't break anymore. An error image will now be returned instead.
     - A number of things that were not compatible with PHP 7 have been updated to ensure compatibility.
+ - Conflict resolution. If someone saves an edit to a page  after you started editing, you will get a conflict resolution page.
 
 # Notes
  - Test the etag code!
