@@ -418,7 +418,7 @@ Actions:
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////// Do not edit below this line unless you know what you are doing! ///////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-$version = "v0.11-dev";
+$version = "v0.11-beta1";
 /// Environment ///
 $env = new stdClass();
 $env->action = $settings->defaultaction;
@@ -808,6 +808,26 @@ function stack_trace($log_trace = true)
 	return $result;
 }
 
+/**
+ * Polyfill getallheaders()
+ */
+if (!function_exists('getallheaders'))  {
+    function getallheaders()
+    {
+        if (!is_array($_SERVER)) {
+            return array();
+        }
+
+        $headers = array();
+        foreach ($_SERVER as $name => $value) {
+            if (substr($name, 0, 5) == 'HTTP_') {
+                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+            }
+        }
+        return $headers;
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1061,7 +1081,7 @@ class page_renderer
 
 		<footer>
 			<p>{footer-message}</p>
-			<p>Powered by Pepperminty Wiki v0.11-dev, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
+			<p>Powered by Pepperminty Wiki v0.11-beta1, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
 			<p>Your local friendly administrators are {admins-name-list}.</p>
 			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
 		</footer>
@@ -1073,7 +1093,7 @@ class page_renderer
 			<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
 			<p>{footer-message}</p>
 			<p><em>Timed at {generation-date}</em></p>
-			<p><em>Powered by Pepperminty Wiki v0.11-dev.</em></p>
+			<p><em>Powered by Pepperminty Wiki v0.11-beta1.</em></p>
 		</footer>";
 
 	// An array of functions that have been registered to process the
@@ -1128,7 +1148,7 @@ class page_renderer
 			"{body}" => $body_template,
 
 			"{sitename}" => $logo_html,
-			"v0.11-dev" => $version,
+			"v0.11-beta1" => $version,
 			"{favicon-url}" => $settings->favicon,
 			"{header-html}" => self::get_header_html(),
 
@@ -2527,7 +2547,7 @@ class search
 
 register_module([
 	"name" => "Uploader",
-	"version" => "0.5.2",
+	"version" => "0.5.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File:' prefix.",
 	"id" => "feature-upload",
@@ -2651,7 +2671,7 @@ register_module([
 					if(!move_uploaded_file($temp_filename, $env->storage_prefix . $new_filename))
 					{
 						http_response_code(409);
-						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that $settings->sitename has been attacked. Please contact " . $settings->admindetails . ", your $settings->sitename Administrator.</p>"));
+						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that either is a configuration error, or $settings->sitename has been attacked. Please contact " . $settings->admindetails["name"] . ", your $settings->sitename Administrator.</p>"));
 					}
 					
 					$description = $_POST["description"];
