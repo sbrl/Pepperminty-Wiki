@@ -243,6 +243,16 @@ register_module([
 			}
 			/// ETag handling end ///
 			
+			/* Disabled until we work out what to do about caching previews *
+			$previewFilename = "$filepath.preview.$outputFormat";
+			if($target_size === $settings->default_preview_size)
+			{
+				// The request is for the default preview size
+				// Check to see if we have a preview pre-rendered
+				
+			}
+			*/
+			
 			$preview = new Imagick();
 			switch(substr($mime_type, 0, strpos($mime_type, "/")))
 			{
@@ -262,6 +272,14 @@ register_module([
 				
 				case "video":
 				case "audio":
+					if($settings->data_storage_dir == ".")
+					{
+						// The data storage directory is the current directory
+						// Redirect to the file isntead
+						http_response_code(307);
+						header("location: " . $pageindex->{$env->page}->uploadedfilepath);
+						exit();
+					}
 					// TODO: Add support for ranges here.
 					// Get the file size
 					$filesize = filesize($filepath);
@@ -291,8 +309,14 @@ register_module([
 			// Send the completed preview image to the user
 			header("content-type: $output_mime");
 			header("x-generation-time: " . (microtime(true) - $start_time) . "s");
-			$preview->setImageFormat(substr($output_mime, strpos($output_mime, "/") + 1));
+			$outputFormat = substr($output_mime, strpos($output_mime, "/") + 1);
+			$preview->setImageFormat($outputFormat);
 			echo($preview->getImageBlob());
+			/* Disabled while we work out what to do about caching previews *
+			// Save a preview file if there isn't one alreaddy
+			if(!file_exists($previewFilename))
+				file_put_contents($previewFilename, $preview->getImageBlob());
+			*/
 		});
 		
 		/*
