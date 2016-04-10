@@ -1,4 +1,9 @@
 # Changelog
+## v0.11
+
+## Changed
+ - Set title of image to alt text
+
 ## v0.11-beta2
 
 ### Changed

@@ -239,7 +239,7 @@ class PeppermintParsedown extends ParsedownExtra
 		$parts = explode("|", trim($source, "{}"));
 		$parts = array_map("trim", $parts);
 		
-		// Extract the name of the temaplate page
+		// Extract the name of the template page
 		$templatePagename = array_shift($parts);
 		// If the page that we are supposed to use as the tempalte doesn't
 		// exist, then there's no point in continuing.
@@ -337,7 +337,7 @@ class PeppermintParsedown extends ParsedownExtra
 			 * 0 - Everything
 			 * 1 - Alt text
 			 * 2 - Url
-			 * 3 - First param
+			 * 3 - First param (optional)
 			 * 4 - Second Param (optional)
 			 */
 			
@@ -423,6 +423,7 @@ class PeppermintParsedown extends ParsedownExtra
 							"attributes" => [
 								"src" => $imageUrl,
 								"alt" => $altText,
+								"title" => $altText,
 								"style" => trim($style)
 							]
 						]
