@@ -125,7 +125,7 @@ register_module([
 					if(!move_uploaded_file($temp_filename, $env->storage_prefix . $new_filename))
 					{
 						http_response_code(409);
-						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that $settings->sitename has been attacked. Please contact " . $settings->admindetails . ", your $settings->sitename Administrator.</p>"));
+						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that either is a configuration error, or $settings->sitename has been attacked. Please contact " . $settings->admindetails["name"] . ", your $settings->sitename Administrator.</p>"));
 					}
 					
 					$description = $_POST["description"];
