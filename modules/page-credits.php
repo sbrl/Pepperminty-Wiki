@@ -36,6 +36,11 @@ register_module([
 					"thing_url" => "https://github.com/erusev/parsedown/",
 					"icon" => "https://avatars1.githubusercontent.com/u/184170?v=3&s=24"
 				],
+				"CSS Minification Code" => [
+					"author" => "Jean",
+					"author_url" => "http://www.catswhocode.com/",
+					"thing_url" => "http://www.catswhocode.com/blog/3-ways-to-compress-css-files-using-php"
+				],
 				"Slightly modified version of Slimdown" => [
 					"author" => "Johnny Broadway",
 					"author_url" => "https://github.com/jbroadway",
