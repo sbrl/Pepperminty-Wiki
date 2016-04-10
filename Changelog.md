@@ -1,5 +1,5 @@
 # Changelog
-# v0.11-dev
+# v0.11-beta1
 # Added
  - Unlocked the uploading of any file type. Note that only the file types specified in the settings are allowed to be uploaded.
 	- Uploaded video and audio files can now be viewed on their respective pages
