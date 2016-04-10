@@ -1,4 +1,13 @@
 # Changelog
+## v0.11-beta2
+
+### Changed
+- Redirect to audio / video in preview generator if the data storage directory is the current directory
+
+### Fixed
+ - Polyfill `getallheaders()` if it isn't present
+ - Bugfix failed upload message
+
 ## v0.11-beta1
 ### Added
  - Unlocked the uploading of any file type. Note that only the file types specified in the settings are allowed to be uploaded.
