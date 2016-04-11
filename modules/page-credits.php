@@ -31,7 +31,7 @@ register_module([
 					"icon" => "https://www.gravatar.com/avatar/aaee40db39ad6b164cfb89cb6ad4d176?s=328&d=identicon&s=24"
 				],
 				"Parsedown" => [
-					"author" => "erusev and others",
+					"author" => "Emanuil Rusev and others",
 					"author_url" => "https://github.com/erusev/",
 					"thing_url" => "https://github.com/erusev/parsedown/",
 					"icon" => "https://avatars1.githubusercontent.com/u/184170?v=3&s=24"

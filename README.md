@@ -9,7 +9,7 @@ Pepperminty Wiki is a complete wiki contained in a single file, inspired by @am2
 ## Screenshots
 ![Main Page Example](https://i.imgur.com/8TokPXw.png)
 
-Above: A Main Page with the sidebar enabled.
+Above: A Main Page.
 
 ## Features
 - Configurable settings
@@ -41,7 +41,7 @@ A Live demo of the latest stable version can be found over at [my website](//sta
 ### Requirements
 - PHP-enabled webserver
 - PHP session support (for logging in, see [here](https://php.net/manual/en/session.installation.php) for more information)
-- The following PHP extensions: mbstring, imagick (for preview generation), and fileinfo (for proper mime type checking of uploaded files)
+- The following PHP extensions: mbstring, imagick (for preview generation), fileinfo (for proper mime type checking of uploaded files), and zip (for compress exports)
 - Write access to own folder (only for editing)
 
 ### Getting your own copy
