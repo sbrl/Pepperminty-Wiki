@@ -19,17 +19,20 @@ Above: A Main Page.
 - Markdown-powered syntax
 	- Templating support
 	- Additional syntax for resizing and floating images
+	- File galleries
+	- Client side mathematical expression parsing, courtesy of [MathJax](https://www.mathjax.org/)
 - Internal links
+	- Links to non-existent pages show up in red
 - Printable page view
 - Customisable theme
 - ~~Basic 'search' bar~~ A full text search engine!
 - (Optional) Sidebar with a tree of all the current pages
+- Tags
 - List of all pages and details
 	- List of all tags and pages with any given tag
 	- List of recent changes
 - Inbuilt help page
-- Tags
-- Image upload
+- File upload
 - Page protection
 - Customisable module based system
 	- Allows you to add or remove features at will
