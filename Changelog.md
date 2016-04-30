@@ -1,6 +1,7 @@
 # Changelog
 ## v0.12-dev
  - Implemented delayed indexing (#66)
+ - Added the time a page was last modified to the footer (#67)
 
 ## v0.11
 

@@ -4266,13 +4266,14 @@ register_module([
 				time() - $pageindex->{$env->page}->lastmodified < $settings->delayed_indexing_time)
 				header("x-robots-tag: noindex");
 			
-			// Content only mode: Sends only the raw rendered page
+			// Content only mode: Send only the raw rendered page
 			if(isset($_GET["contentonly"]) and $_GET["contentonly"] === "yes")
 				exit(parse_page_source($content));
 			// Printable: Sends a printable version of the page
 			if(isset($_GET["printable"]) and $_GET["printable"] === "yes")
 				exit(page_renderer::render_minimal($title, $content));
 			// Normal page
+			$settings->footer_message = "Last edited at " . date('h:ia T \o\n j F Y') . ".</p>\n<p>"; // Add the last edited time to the footer
 			exit(page_renderer::render_main($title, $content));
 		});
 	}
