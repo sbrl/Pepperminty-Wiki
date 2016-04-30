@@ -509,7 +509,7 @@ else
 {
 	$pageindex_read_start = microtime(true);
 	$pageindex = json_decode(file_get_contents($paths->pageindex));
-	header("x-pageindex-decode-time: " . round(microtime(true) - $pageindex_read_start, 6) . "ms");
+	header("x-pageindex-decode-time: " . round((microtime(true) - $pageindex_read_start)*1000, 3) . "ms");
 }
 
 //////////////////////////
@@ -656,7 +656,7 @@ class page_renderer
 	</head>
 	<body>
 		{body}
-		<!-- Took {generation-time-taken} seconds to generate -->
+		<!-- Took {generation-time-taken}ms to generate -->
 	</body>
 </html>
 ";
@@ -775,7 +775,7 @@ class page_renderer
 		], [
 		], $result);
 
-		$result = str_replace("{generation-time-taken}", microtime(true) - $start_time, $result);
+		$result = str_replace("{generation-time-taken}", round((microtime(true) - $start_time)*1000, 2), $result);
 		return $result;
 	}
 	public static function render_main($title, $content)

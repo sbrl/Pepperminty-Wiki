@@ -100,7 +100,7 @@ register_module([
 				}
 			}
 			
-			$content .= "\n\t\t<!-- Took " . (microtime(true) - $parsing_start) . " seconds to parse page source -->\n";
+			$content .= "\n\t\t<!-- Took " . round((microtime(true) - $parsing_start) * 1000, 2) . "ms to parse page source -->\n";
 			
 			// Prevent indexing of this page if it's still within the noindex
 			// time period
