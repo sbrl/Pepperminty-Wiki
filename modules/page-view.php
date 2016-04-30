@@ -102,6 +102,12 @@ register_module([
 			
 			$content .= "\n\t\t<!-- Took " . (microtime(true) - $parsing_start) . " seconds to parse page source -->\n";
 			
+			// Prevent indexing of this page if it's still within the noindex
+			// time period
+			if(isset($settings->delayed_indexing_time) and
+				time() - $pageindex->{$env->page}->lastmodified < $settings->delayed_indexing_time)
+				header("x-robots-tag: noindex");
+			
 			// Content only mode: Sends only the raw rendered page
 			if(isset($_GET["contentonly"]) and $_GET["contentonly"] === "yes")
 				exit(parse_page_source($content));

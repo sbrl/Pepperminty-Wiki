@@ -134,6 +134,10 @@ $settings->data_storage_dir = ".";
 // It is strongly advised that you change this!
 $settings->sitesecret = "ed420502615bac9037f8f12abd4c9f02";
 
+// The amount of time, in seconds, that pages should be blocked from being
+// indexed by search engines after their last edit. Aka delayed indexing.
+$settings->delayed_indexing_time = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Navigation //////////////////////////////////
