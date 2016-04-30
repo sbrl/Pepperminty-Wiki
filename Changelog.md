@@ -1,4 +1,7 @@
 # Changelog
+## v0.12-dev
+ - Implemented delayed indexing (#66)
+
 ## v0.11
 
 ## Changed
