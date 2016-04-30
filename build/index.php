@@ -4273,7 +4273,7 @@ register_module([
 			if(isset($_GET["printable"]) and $_GET["printable"] === "yes")
 				exit(page_renderer::render_minimal($title, $content));
 			// Normal page
-			$settings->footer_message = "Last edited at " . date('h:ia T \o\n j F Y') . ".</p>\n<p>"; // Add the last edited time to the footer
+			$settings->footer_message = "Last edited at " . date('h:ia T \o\n j F Y', $pageindex->{$env->page}->lastmodified) . ".</p>\n<p>"; // Add the last edited time to the footer
 			exit(page_renderer::render_main($title, $content));
 		});
 	}
