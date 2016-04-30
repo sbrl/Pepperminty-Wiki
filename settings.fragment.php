@@ -331,7 +331,7 @@ h1 { text-align: center; }
 .sitename { margin-top: 5rem; margin-bottom: 3rem; font-size: 2.5rem; }
 .logo { max-width: 4rem; max-height: 4rem; vertical-align: middle; }
 .logo.small { max-width: 2rem; max-height: 2rem; }
-main:not(.printable) { padding: 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
+main:not(.printable) { padding: 2rem 2rem 0.5rem 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 
 blockquote { padding-left: 1em; border-left: 0.2em solid #442772; border-radius: 0.2rem; }
 
