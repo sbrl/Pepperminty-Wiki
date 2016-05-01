@@ -100,11 +100,11 @@
     },
     {
         "name": "Page editor",
-        "version": "0.13.2",
+        "version": "0.14",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1460201129,
+        "lastupdate": 1462111205,
         "optional": false
     },
     {
@@ -172,11 +172,11 @@
     },
     {
         "name": "Page viewer",
-        "version": "0.12.1",
+        "version": "0.13",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You really should include this one.",
         "id": "page-view",
-        "lastupdate": 1462015525,
+        "lastupdate": 1462110488,
         "optional": false
     },
     {

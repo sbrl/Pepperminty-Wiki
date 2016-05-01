@@ -287,7 +287,7 @@ $settings->sessionprefix = preg_replace("/[^0-9a-z]/i", "", strtolower($settings
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a
 // <link rel='stylesheet' /> tag.
-$settings->css = "body { margin: 2rem 0; font-family: sans-serif; color: #111111; background: #eee8f2; }
+$settings->css = "body { margin: 2rem 0; background: #eee8f2; line-height: 1.45em; color: #111111; font-family: sans-serif; }
 
 nav { display: flex; background-color: #8a62a7; color: #ffa74d;  }
 nav.top { position: absolute; top: 0; left: 0; right: 0; box-shadow: inset 0 -0.6rem 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
@@ -344,13 +344,12 @@ a.redlink:visited { color: rgb(130, 15, 15); #8b1a1a }
 .search-result > h2 { margin-left: 2rem; }
 
 label:not(.link-display-label) { display: inline-block; min-width: 7rem; }
-input[type=text]:not(.link-display), input[type=password], textarea { margin: 0.5rem 0.8rem; }
+input[type=text]:not(.link-display), input[type=password], textarea { margin: 0.5rem 0; }
 input[type=text], input[type=password], textarea, #search-box { padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
-textarea { min-height: 35rem; font-size: 1.25rem; }
+textarea { min-height: 35rem; line-height: 1.3em; font-size: 1.25rem; }
 textarea, textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); box-sizing: border-box; }
-textarea ~ input[type=submit] { margin: 0.5rem 0.8rem; padding: 0.5rem; font-weight: bolder; }
+textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: bolder; }
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
-.editing_message { margin: 0.8rem; }
 
 .file-gallery { margin: 0.5em; padding: 0.5em; list-style-type: none; }
 .file-gallery > li { display: inline-block; min-width: attr(data-gallery-width); padding: 1em; text-align: center; }
@@ -381,6 +380,10 @@ summary { cursor: pointer; }
 .nochange { color: rgb(132, 123, 199); font-style: italic; }
 .significant { font-weight: bolder; font-size: 1.1rem; }
 .deletion, .deletion > .editor { text-decoration: line-through; }
+
+.highlighted-diff { white-space: pre-wrap; }
+.diff-added { background-color: rgba(31, 171, 36, 0.6); color: rgba(23, 125, 27, 1); }
+.diff-removed { background-color: rgba(255, 96, 96, 0.6); color: rgba(191, 38, 38, 1); }
 
 .newpage::before { content: \"N\"; margin: 0 0.3em 0 -1em; font-weight: bolder; text-decoration: underline dotted; }
 .upload::before { content: \"\\1f845\"; margin: 0 0.1em 0 -1.1em; }

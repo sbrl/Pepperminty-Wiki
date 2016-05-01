@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.13.2",
+	"version" => "0.14",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -74,7 +74,7 @@ register_module([
 			<input type='hidden' name='prev-content-hash' value='" . sha1($pagetext) . "' />
 			<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
 			<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
-			<p class='editing_message'>$settings->editing_message</p>
+			<p class='editing-message'>$settings->editing_message</p>
 			<input name='submit-edit' type='submit' value='Save Page' tabindex='3' />
 		</form>";
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
@@ -164,16 +164,42 @@ register_module([
 				{
 					$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
 				}
-				$content .= "<p>An edit conflict has arisen because someone else has saved an edit to $env->page since you started editing it. Both texts are shown below. To continue, please merge your changes with the existing content. Note that only the text in the existing content box will be saved.</p>
-				<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save' class='editform'>
+				$content .= "<p>An edit conflict has arisen because someone else has saved an edit to $env->page since you started editing it. Both texts are shown below, along the differences between the 2 conflicting revisions. To continue, please merge your changes with the existing content. Note that only the text in the existing content box will be kept when you press the \"Resolve Conflict\" button at the bottom of the page.</p>
+			
+			<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save' class='editform'>
 				<h2>Existing content</h2>
-				<textarea name='content' autofocus tabindex='1'>$existingPageData</textarea>
+				<textarea id='original-content' name='content' autofocus tabindex='1'>$existingPageData</textarea>
+				
+				<h2>Differences</h2>
+				<div id='highlighted-diff' class='highlighted-diff'></div>
+				<!--<pre class='highlighted-diff-wrapper'><code id='highlighted-diff'></code></pre>-->
+				
 				<h2>Your content</h2>
-				<textarea>$pagedata</textarea>
+				<textarea id='new-content'>$pagedata</textarea>
 				<input type='text' name='tags' value='" . $_POST["tags"] . "' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
 				<p class='editing_message'>$settings->editing_message</p>
 				<input name='submit-edit' type='submit' value='Resolve Conflict' tabindex='3' />
 			</form>";
+				
+				// Insert a reference to jsdiff to generate the diffs
+				$diffScript = <<<'DIFFSCRIPT'
+window.addEventListener("load", function(event) {
+	var destination = document.getElementById("highlighted-diff"),
+		diff = JsDiff.diffWords(document.getElementById("original-content").value, document.getElementById("new-content").value),
+		output = "";
+	diff.forEach(function(change) {
+		var classes = "token";
+		if(change.added) classes += " diff-added";
+		if(change.removed) classes += " diff-removed";
+		output += `<span class='${classes}'>${change.value}</span>`;
+	});
+	destination.innerHTML = output;
+});
+DIFFSCRIPT;
+
+				$content .= "\n<script src='https://cdnjs.cloudflare.com/ajax/libs/jsdiff/2.2.2/diff.min.js'></script>
+		<script>$diffScript</script>\n";
+				
 				exit(page_renderer::render_main("Edit Conflict - $env->page - $settings->sitename", $content));
 			}
 			
