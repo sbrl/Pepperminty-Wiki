@@ -4,7 +4,7 @@
  * ================
  * Inspired by Minty Wiki by am2064
 	* Link: https://github.com/am2064/Minty-Wiki
- *
+ * 
  * Credits:
 	* Code by @Starbeamrainbowlabs
 	* Parsedown - by erusev and others on github from http://parsedown.org/
@@ -324,6 +324,8 @@ input[type=button], input[type=submit] { cursor: pointer; }
 .image-controls ul { list-style-type: none; margin: 5px; padding: 5px; }
 .image-controls li { display: inline-block; margin: 5px; padding: 5px; }
 .link-display { margin-left: 0.5rem; }
+
+figcaption { text-align: center; }
 
 .printable { padding: 2rem; }
 

@@ -331,22 +331,25 @@ class PeppermintParsedown extends ParsedownExtra
 	
 	protected function inlineExtendedImage($fragment)
 	{
-		if(preg_match('/^!\[(.*)\]\(([^ |)]+)\s*(?:\|([^|)]*)(?:\|([^)]*))?)?\)/', $fragment["text"], $matches))
+		///^!\[(.*)\]\(([^ |)]+)\s*(?:\|([^|)]*)(?:\|([^)]*))?)?\)/
+		if(preg_match('/^!\[(.*)\]\(([^ |)]+)\s*(?:\|([^|)]*))?(?:\|([^|)]*))?(?:\|([^)]*))?\)/', $fragment["text"], $matches))
 		{
 			/*
 			 * 0 - Everything
 			 * 1 - Alt text
 			 * 2 - Url
 			 * 3 - First param (optional)
-			 * 4 - Second Param (optional)
+			 * 4 - Second param (optional)
+			 * 5 - Third param (optional)
 			 */
-			
 			$altText = $matches[1];
 			$imageUrl = str_replace("&amp;", "&", $matches[2]); // Decode & to allow it in preview urls
-			$param1 = !empty($matches[3]) ? strtolower(trim($matches[3])) : false;
+			$param1 = empty($matches[3]) ? false : strtolower(trim($matches[3]));
 			$param2 = empty($matches[4]) ? false : strtolower(trim($matches[4]));
+			$param3 = empty($matches[5]) ? false : strtolower(trim($matches[5]));
 			$floatDirection = false;
 			$imageSize = false;
+			$imageCaption = false;
 			
 			if($this->isFloatValue($param1))
 			{
@@ -358,6 +361,11 @@ class PeppermintParsedown extends ParsedownExtra
 			{
 				// Param 2 is a valid css float: ... value
 				$floatDirection = $param2;
+				$imageSize = $this->parseSizeSpec($param1);
+			}
+			else if($this->isFloatValue($param3))
+			{
+				$floatDirection = $param3;
 				$imageSize = $this->parseSizeSpec($param1);
 			}
 			else if($param1 === false and $param2 === false)
@@ -374,6 +382,11 @@ class PeppermintParsedown extends ParsedownExtra
 				$imageSize = $this->parseSizeSpec($param1);
 			}
 			
+			if($param2 !== false && strtolower(trim($param2)) == "caption")
+				$imageCaption = true;
+			if($param3 !== false && strtolower(trim($param3)) == "caption")
+				$imageCaption = true;
+			
 			$style = "";
 			if($imageSize !== false)
 				$style .= " max-width: " . $imageSize["x"] . "px; max-height: " . $imageSize["y"] . "px;";
@@ -382,10 +395,11 @@ class PeppermintParsedown extends ParsedownExtra
 			
 			$urlExtension = pathinfo($imageUrl, PATHINFO_EXTENSION);
 			$urlType = system_extension_mime_type($urlExtension);
+			$result = [];
 			switch(substr($urlType, 0, strpos($urlType, "/")))
 			{
 				case "audio":
-					return [
+					$result = [
 						"extent" => strlen($matches[0]),
 						"element" => [
 							"name" => "audio",
@@ -398,8 +412,9 @@ class PeppermintParsedown extends ParsedownExtra
 							]
 						]
 					];
+					break;
 				case "video":
-					return [
+					$result = [
 						"extent" => strlen($matches[0]),
 						"element" => [
 							"name" => "video",
@@ -412,11 +427,11 @@ class PeppermintParsedown extends ParsedownExtra
 							]
 						]
 					];
-				
+					break;
 				case "image":
 				default:
 					// If we can't work out what it is, then assume it's an image
-					return [
+					$result = [
 						"extent" => strlen($matches[0]),
 						"element" => [
 							"name" => "img",
@@ -428,7 +443,31 @@ class PeppermintParsedown extends ParsedownExtra
 							]
 						]
 					];
+					break;
 			}
+			
+			if($imageCaption)
+			{
+				$rawStyle = $result["element"]["attributes"]["style"];
+				$containerStyle = preg_replace('/^.*float/', "float", $rawStyle);
+				$mediaStyle = preg_replace('/\s*float.*;/', "", $rawStyle);
+				$result["element"] = [
+					"name" => "figure",
+					"text" => [
+						$result["element"],
+						[
+							"name" => "figcaption",
+							"text" => htmlentities($altText)
+						],
+					],
+					"attributes" => [
+						"style" => $containerStyle
+					],
+					"handler" => "elements"
+				];
+				$result["element"]["text"][0]["attributes"]["style"] = $mediaStyle;
+			}
+			return $result;
 		}
 	}
 	
