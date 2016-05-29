@@ -3,6 +3,7 @@
  - Implemented delayed indexing (#66)
  - Added the time a page was last modified to the footer (#67)
  - Added unified diff to edit conflict resolution pages (#64)
+ - Added image captions (#65)
 
 ## v0.11
 
