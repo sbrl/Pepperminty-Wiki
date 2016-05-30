@@ -4,6 +4,7 @@
  - Added the time a page was last modified to the footer (#67)
  - Added unified diff to edit conflict resolution pages (#64)
  - Added image captions (#65)
+ - Added short syntax for images (#24)
 
 ## v0.11
 
