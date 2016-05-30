@@ -4645,6 +4645,7 @@ class PeppermintParsedown extends ParsedownExtra
 	
 	protected function inlineExtendedImage($fragment)
 	{
+		global $pageindex;
 		///^!\[(.*)\]\(([^ |)]+)\s*(?:\|([^|)]*)(?:\|([^)]*))?)?\)/
 		if(preg_match('/^!\[(.*)\]\(([^ |)]+)\s*(?:\|([^|)]*))?(?:\|([^|)]*))?(?:\|([^)]*))?\)/', $fragment["text"], $matches))
 		{
@@ -4700,6 +4701,12 @@ class PeppermintParsedown extends ParsedownExtra
 				$imageCaption = true;
 			if($param3 !== false && strtolower(trim($param3)) == "caption")
 				$imageCaption = true;
+			
+			if(isset($pageindex->$imageUrl) and $pageindex->$imageUrl->uploadedfile)
+			{
+				// We have a short url! Expand it.
+				$imageUrl = "index.php?action=preview&size=" . max($imageSize["x"], $imageSize["y"]) ."&page=" . rawurlencode($imageUrl);
+			}
 			
 			$style = "";
 			if($imageSize !== false)
@@ -4771,7 +4778,7 @@ class PeppermintParsedown extends ParsedownExtra
 						$result["element"],
 						[
 							"name" => "figcaption",
-							"text" => htmlentities($altText)
+							"text" => $altText
 						],
 					],
 					"attributes" => [
