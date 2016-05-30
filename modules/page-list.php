@@ -75,12 +75,12 @@ register_module([
 					$pagelist[] = $pagename;
 			}
 			
-			$content = "<h1>$tag</h1>\n";
+			$content = "<h1>Tag List: $tag</h1>\n";
 			$content .= generate_page_list($pagelist);
 			
 			$content .= "<p>(<a href='?action=list-tags'>All tags</a>)</p>\n";
 			
-			exit(page_renderer::render("$tag - Page List - $settings->sitename", $content));
+			exit(page_renderer::render("$tag - Tag List - $settings->sitename", $content));
 		});
 		
 		add_help_section("30-all-pages-tags", "Listing pages and tags", "<p>All the pages and tags on $settings->sitename are listed on a pair of pages to aid navigation. The list of all pages on $settings->sitename can be found by clicking &quot;All Pages&quot; on the top bar. The list of all the tags currently in use can be found by clicking &quot;All Tags&quot; in the &quot;More...&quot; menu in the top right.</p>

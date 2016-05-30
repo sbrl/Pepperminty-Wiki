@@ -5,6 +5,7 @@
  - Added unified diff to edit conflict resolution pages (#64)
  - Added image captions (#65)
  - Added short syntax for images (#24)
+ - Added text "Tag List: " to tag listing pages
 
 ## v0.11
 
