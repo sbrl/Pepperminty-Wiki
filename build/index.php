@@ -290,7 +290,8 @@ $settings->sessionprefix = preg_replace("/[^0-9a-z]/i", "", strtolower($settings
 // A string of css to include. Will be included in the <head> of every page
 // inside a <style> tag. This may also be a url - urls will be referenced via a
 // <link rel='stylesheet' /> tag.
-$settings->css = "body { margin: 2rem 0; background: #eee8f2; line-height: 1.45em; color: #111111; font-family: sans-serif; }
+$settings->css = <<<THEMECSS
+body { margin: 2rem 0; background: #eee8f2; line-height: 1.45em; color: #111111; font-family: sans-serif; }
 
 nav { display: flex; background-color: #8a62a7; color: #ffa74d;  }
 nav.top { position: absolute; top: 0; left: 0; right: 0; box-shadow: inset 0 -0.6rem 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
@@ -319,8 +320,8 @@ input[type=button], input[type=submit] { cursor: pointer; }
 .sidebar ul { position: relative; margin: 0.3rem 0.3rem 0.3rem 1rem; padding: 0.3rem 0.3rem 0.3rem 1rem; list-style-type: none; }
 .sidebar li { position: relative; margin: 0.3rem; padding: 0.3rem; }
 
-.sidebar ul:before { content: \"\"; position: absolute; top: 0; left: 0; height: 100%; border-left: 2px dashed rgba(50, 50, 50, 0.4); }
-.sidebar li:before { content: \"\"; position: absolute; width: 1rem; top: 0.8rem; left: -1.2rem; border-bottom: 2px dashed rgba(50, 50, 50, 0.4); }
+.sidebar ul:before { content: ""; position: absolute; top: 0; left: 0; height: 100%; border-left: 2px dashed rgba(50, 50, 50, 0.4); }
+.sidebar li:before { content: ""; position: absolute; width: 1rem; top: 0.8rem; left: -1.2rem; border-bottom: 2px dashed rgba(50, 50, 50, 0.4); }
 
 .preview { text-align: center; }
 .preview img, .preview video, .preview audio { max-width: 100%; }
@@ -345,7 +346,7 @@ a.redlink:visited { color: rgb(130, 15, 15); #8b1a1a }
 
 .search-result { position: relative; }
 .search-result::before { content: attr(data-result-number); position: relative; top: 3.2rem; color: rgba(33, 33, 33, 0.3); font-size: 2rem; }
-.search-result::after { content: \"Rank: \" attr(data-rank); position: absolute; top: 3.8rem; right: 0.7rem; color: rgba(50, 50, 50, 0.3); }
+.search-result::after { content: "Rank: " attr(data-rank); position: absolute; top: 3.8rem; right: 0.7rem; color: rgba(50, 50, 50, 0.3); }
 .search-result > h2 { margin-left: 2rem; }
 
 label:not(.link-display-label) { display: inline-block; min-width: 7rem; }
@@ -363,7 +364,7 @@ textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: 
 .page-tags-display { margin: 0.5rem 0 0 0; padding: 0; list-style-type: none; }
 .page-tags-display li { display: inline-block; margin: 0.5rem; padding: 0.5rem; background: #D2C3DD; white-space: nowrap; }
 .page-tags-display li a { color: #FB701A; text-decoration: none; }
-.page-tags-display li::before { content: \"\\A\"; position: relative; top: 0.03rem; left: -0.9rem; width: 0; height: 0; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; border-right: 0.5rem solid #D2C3DD; }
+.page-tags-display li::before { content: "\\A"; position: relative; top: 0.03rem; left: -0.9rem; width: 0; height: 0; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; border-right: 0.5rem solid #D2C3DD; }
 
 .page-list { list-style-type: none; margin: 0.3rem; padding: 0.3rem; }
 .page-list li:not(.header) { margin: 0.3rem; padding: 0.3rem; }
@@ -374,7 +375,7 @@ textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: 
 .tag-list li { display: inline-block; margin: 1rem; }
 .mini-tag { background: #d2c3dd; padding: 0.2rem 0.4rem; color: #fb701a; text-decoration: none; }
 
-.help-section-header::after { content: \"#\" attr(id); float: right; color: rgba(0, 0, 0, 0.4); font-size: 0.8rem; font-weight: normal; }
+.help-section-header::after { content: "#" attr(id); float: right; color: rgba(0, 0, 0, 0.4); font-size: 0.8rem; font-weight: normal; }
 
 .cursor-query { cursor: help; }
 
@@ -390,11 +391,12 @@ summary { cursor: pointer; }
 .diff-added { background-color: rgba(31, 171, 36, 0.6); color: rgba(23, 125, 27, 1); }
 .diff-removed { background-color: rgba(255, 96, 96, 0.6); color: rgba(191, 38, 38, 1); }
 
-.newpage::before { content: \"N\"; margin: 0 0.3em 0 -1em; font-weight: bolder; text-decoration: underline dotted; }
-.upload::before { content: \"\\1f845\"; margin: 0 0.1em 0 -1.1em; }
+.newpage::before { content: "N"; margin: 0 0.3em 0 -1em; font-weight: bolder; text-decoration: underline dotted; }
+.upload::before { content: "\1f845"; margin: 0 0.1em 0 -1.1em; }
 
 footer { padding: 2rem; }
-/* #ffdb6d #36962c */";
+/* #ffdb6d #36962c */
+THEMECSS;
 
 /*** Notes ***
 Actions:
