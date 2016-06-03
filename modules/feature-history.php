@@ -1,9 +1,9 @@
 <?php
 register_module([
 	"name" => "Page History",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
-	"description" => "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet).",
+	"description" => "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
 	"id" => "feature-history",
 	"code" => function() {
 		
@@ -15,10 +15,34 @@ register_module([
 		 * ██   ██ ██ ███████    ██     ██████  ██   ██    ██
 		 */
 		add_action("history", function() {
-			global $settings;
+			global $settings, $env, $pageindex;
 			
-			http_response_code(501);
-			exit(page_renderer::render_main("Coming soon", "<p>Page history is coming soon!</p>"));
+			
+			$content = "<h1>History for $env->page</h1>\n";
+			if(!empty($pageindex->{$env->page}->history))
+			{
+				$content .= "\t\t<ul class='page-list'>\n";
+				foreach($pageindex->{$env->page}->history as $revisionData)
+				{
+					// Only display edits for now
+					if($revisionData->type != "edit")
+					continue;
+					
+					// The number (and the sign) of the size difference to display
+					$size_display = ($revisionData->sizediff > 0 ? "+" : "") . $revisionData->sizediff;
+					$size_display_class = $revisionData->sizediff > 0 ? "larger" : ($revisionData->sizediff < 0 ? "smaller" : "nochange");
+					if($revisionData->sizediff > 500 or $revisionData->sizediff < -500)
+					$size_display_class .= " significant";
+					$size_title_display = human_filesize($revisionData->newsize - $revisionData->sizediff) . " -> " .  human_filesize($revisionData->newsize);
+					
+					$content .= "<li>#$revisionData->rid " . render_rchange_editor($revisionData->editor) . " " . render_rchange_timestamp($revisionData->timestamp) . " <span class='cursor-query $size_display_class' title='$size_title_display'>($size_display)</span>";
+				}
+			}
+			else
+			{
+				$content .= "<p style='text-align: center;'><em>(None yet! Try editing this page and then coming back here.)</em></p>\n";
+			}
+			exit(page_renderer::render_main("$env->page - History - $settings->sitename", $content));
 		});
 		
 		
@@ -44,7 +68,8 @@ register_module([
 				"rid" => $nextRid,
 				"timestamp" => time(),
 				"filename" => $ridFilename,
-				"bytechange" => strlen($newsource) - strlen($oldsource),
+				"newsize" => strlen($newsource),
+				"sizediff" => strlen($newsource) - strlen($oldsource),
 				"editor" => $pageinfo->lasteditor
 			];
 			
