@@ -6,6 +6,7 @@
  - Added image captions (#65)
  - Added short syntax for images (#24)
  - Added text "Tag List: " to tag listing pages
+ - Page history! Current you can't do anything with the previous revisions - that will come in a future release.
 
 ## v0.11
 
