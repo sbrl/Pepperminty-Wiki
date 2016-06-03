@@ -36,6 +36,15 @@
         "optional": false
     },
     {
+        "name": "Page History",
+        "version": "0.1",
+        "author": "Starbeamrainbowlabs",
+        "description": "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet).",
+        "id": "feature-history",
+        "lastupdate": 1464939567,
+        "optional": false
+    },
+    {
         "name": "Recent Changes",
         "version": "0.3.2",
         "author": "Starbeamrainbowlabs",
@@ -104,7 +113,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1462111205,
+        "lastupdate": 1464851031,
         "optional": false
     },
     {
