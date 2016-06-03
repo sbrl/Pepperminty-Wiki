@@ -1,8 +1,10 @@
 # All wiki pages
 *.md
+# All the previous revisions
+*.md.r*
 # Include the README
 !README.md
-# ..  but ignore READMEs in the build folder
+# ...but ignore READMEs in the build folder
 build/README.md
 # And the Module API Docs
 !Module_API_Docs.md
