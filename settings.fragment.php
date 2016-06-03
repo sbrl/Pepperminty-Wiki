@@ -326,6 +326,8 @@ input[type=button], input[type=submit] { cursor: pointer; }
 .image-controls li { display: inline-block; margin: 5px; padding: 5px; }
 .link-display { margin-left: 0.5rem; }
 
+figure { display: inline-block; }
+figure > :first-child { display: block; }
 figcaption { text-align: center; }
 
 .printable { padding: 2rem; }

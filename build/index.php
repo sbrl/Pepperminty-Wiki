@@ -329,6 +329,8 @@ input[type=button], input[type=submit] { cursor: pointer; }
 .image-controls li { display: inline-block; margin: 5px; padding: 5px; }
 .link-display { margin-left: 0.5rem; }
 
+figure { display: inline-block; }
+figure > :first-child { display: block; }
 figcaption { text-align: center; }
 
 .printable { padding: 2rem; }
@@ -4781,8 +4783,10 @@ class PeppermintParsedown extends ParsedownExtra
 				$imageSize = $this->parseSizeSpec($param1);
 			}
 			
-			if($param2 !== false && strtolower(trim($param2)) == "caption")
+			if($param1 !== false && strtolower(trim($param1)) == "caption")
 				$imageCaption = true;
+				if($param2 !== false && strtolower(trim($param2)) == "caption")
+					$imageCaption = true;
 			if($param3 !== false && strtolower(trim($param3)) == "caption")
 				$imageCaption = true;
 			

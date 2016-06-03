@@ -387,8 +387,10 @@ class PeppermintParsedown extends ParsedownExtra
 				$imageSize = $this->parseSizeSpec($param1);
 			}
 			
-			if($param2 !== false && strtolower(trim($param2)) == "caption")
+			if($param1 !== false && strtolower(trim($param1)) == "caption")
 				$imageCaption = true;
+				if($param2 !== false && strtolower(trim($param2)) == "caption")
+					$imageCaption = true;
 			if($param3 !== false && strtolower(trim($param3)) == "caption")
 				$imageCaption = true;
 			
