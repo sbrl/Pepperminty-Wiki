@@ -79,7 +79,7 @@ register_module([
 			else
 			{
 				$content .= "<h1>Revision #$revisionNumber of $env->page</h1>\n";
-				$content .= "<p class='revision-note'><em>(Revision created by $revisionData->editor " . render_rchange_timestamp($revisionData->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a>.)</em></p>\n";
+				$content .= "<p class='revision-note'><em>(Revision created by $revisionData->editor " . render_rchange_timestamp($revisionData->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a> or see a <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of all revisions</a> for this page.)</em></p>\n";
 			}
 			
 			// Add an extra message if the requester was redirected from another page

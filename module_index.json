@@ -37,11 +37,11 @@
     },
     {
         "name": "Page History",
-        "version": "0.2",
+        "version": "0.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
         "id": "feature-history",
-        "lastupdate": 1465044619,
+        "lastupdate": 1465067564,
         "optional": false
     },
     {
@@ -185,7 +185,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You really should include this one.",
         "id": "page-view",
-        "lastupdate": 1465066305,
+        "lastupdate": 1465067673,
         "optional": false
     },
     {

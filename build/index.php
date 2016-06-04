@@ -1746,7 +1746,7 @@ function render_sidebar($pageindex, $root_pagename = "")
 
 register_module([
 	"name" => "Page History",
-	"version" => "0.2",
+	"version" => "0.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
 	"id" => "feature-history",
@@ -1780,7 +1780,7 @@ register_module([
 					$size_display_class .= " significant";
 					$size_title_display = human_filesize($revisionData->newsize - $revisionData->sizediff) . " -> " .  human_filesize($revisionData->newsize);
 					
-					$content .= "<li>#$revisionData->rid " . render_rchange_editor($revisionData->editor) . " " . render_rchange_timestamp($revisionData->timestamp) . " <span class='cursor-query $size_display_class' title='$size_title_display'>($size_display)</span>";
+					$content .= "<li><a href='?page=" . rawurlencode($env->page) . "&revision=$revisionData->rid'>#$revisionData->rid</a> " . render_rchange_editor($revisionData->editor) . " " . render_rchange_timestamp($revisionData->timestamp) . " <span class='cursor-query $size_display_class' title='$size_title_display'>($size_display)</span>";
 				}
 			}
 			else
@@ -4406,7 +4406,7 @@ register_module([
 			else
 			{
 				$content .= "<h1>Revision #$revisionNumber of $env->page</h1>\n";
-				$content .= "<p class='revision-note'><em>(Revision created by $revisionData->editor " . render_rchange_timestamp($revisionData->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a>.)</em></p>\n";
+				$content .= "<p class='revision-note'><em>(Revision created by $revisionData->editor " . render_rchange_timestamp($revisionData->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a> or see a <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of all revisions</a> for this page.)</em></p>\n";
 			}
 			
 			// Add an extra message if the requester was redirected from another page
