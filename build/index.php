@@ -3002,11 +3002,14 @@ register_module([
 				{
 					case "application":
 					case "image":
+						if($mime_type == "application/pdf")
+							$fileTypeDisplay = "file";
+						
 						$preview_sizes = [ 256, 512, 768, 1024, 1440 ];
 						$preview_html .= "\t\t\t<figure class='preview'>
 				<img src='$previewUrl' />
 				<nav class='image-controls'>
-					<ul><li><a href='" . ($env->storage_prefix == "./" ? $filepath : "?action=preview&size=original&page=" . rawurlencode($env->page)) . "'>&#x01f304; Original image</a></li>";
+					<ul><li><a href='" . ($env->storage_prefix == "./" ? $filepath : "?action=preview&size=original&page=" . rawurlencode($env->page)) . "'>&#x01f304; Original $fileTypeDisplay</a></li>";
 						if($mime_type !== "image/svg+xml")
 						{
 							$preview_html .= "<li>Other Sizes: ";
