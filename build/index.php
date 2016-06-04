@@ -1791,41 +1791,45 @@ register_module([
 		});
 		
 		
-		register_save_preprocessor(function(&$pageinfo, &$newsource, &$oldsource) {
-			global $pageindex, $paths, $env;
-			if(!isset($pageinfo->history))
-				$pageinfo->history = [];
-			
-			// Save the *new source* as a revision
-			// This results in 2 copies of the current source, but this is ok
-			// since any time someone changes something, it create a new
-			// revision
-			// Note that we can't save the old source here because we'd have no
-			// clue who edited it since $pageinfo has already been updated by
-			// this point
-			
-			// TODO Store tag changes here
-			$nextRid = count($pageinfo->history); // The next revision id
-			$ridFilename = "$pageinfo->filename.r$nextRid";
-			// Insert a new entry into the history
-			$pageinfo->history[] = [
-				"type" => "edit", // We might want to store other types later (e.g. page moves)
-				"rid" => $nextRid,
-				"timestamp" => time(),
-				"filename" => $ridFilename,
-				"newsize" => strlen($newsource),
-				"sizediff" => strlen($newsource) - strlen($oldsource),
-				"editor" => $pageinfo->lasteditor
-			];
-			
-			// Save the new source as a revision
-			file_put_contents("$env->storage_prefix$ridFilename", $newsource);
-			
-			// Save the edited pageindex
-			file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
-		});
+		register_save_preprocessor("history_add_revision");
 	}
 ]);
+
+function history_add_revision(&$pageinfo, &$newsource, &$oldsource, $save_pageindex = true) {
+	global $pageindex, $paths, $env;
+	
+	if(!isset($pageinfo->history))
+		$pageinfo->history = [];
+	
+	// Save the *new source* as a revision
+	// This results in 2 copies of the current source, but this is ok
+	// since any time someone changes something, it create a new
+	// revision
+	// Note that we can't save the old source here because we'd have no
+	// clue who edited it since $pageinfo has already been updated by
+	// this point
+	
+	// TODO Store tag changes here
+	$nextRid = count($pageinfo->history); // The next revision id
+	$ridFilename = "$pageinfo->filename.r$nextRid";
+	// Insert a new entry into the history
+	$pageinfo->history[] = [
+		"type" => "edit", // We might want to store other types later (e.g. page moves)
+		"rid" => $nextRid,
+		"timestamp" => time(),
+		"filename" => $ridFilename,
+		"newsize" => strlen($newsource),
+		"sizediff" => strlen($newsource) - strlen($oldsource),
+		"editor" => $pageinfo->lasteditor
+	];
+	
+	// Save the new source as a revision
+	file_put_contents("$env->storage_prefix$ridFilename", $newsource);
+	
+	// Save the edited pageindex
+	if($save_pageindex)
+		file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
+}
 
 
 
@@ -2798,6 +2802,13 @@ register_module([
 					// Assign the new entry to the image's filepath as that
 					// should be the page name.
 					$pageindex->$new_filename = $entry;
+					
+					// Generate a revision to keep the apge history up to date
+					if(module_exists("feature-history"))
+					{
+						$oldsource = ""; // Only variables can be passed by reference, not literals
+						history_add_revision($entry, $description, $oldsource, false);
+					}
 					
 					// Save the pageindex
 					file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
