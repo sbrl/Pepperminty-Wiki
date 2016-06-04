@@ -4359,7 +4359,7 @@ register_module([
 				{
 					// Editing is disabled, show an error message
 					http_response_code(404);
-					exit(page_renderer::render_main("$env->page - 404 - $settings->sitename", "<p>$env->page does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
+					exit(page_renderer::render_main("404: Page not found - $env->page - $settings->sitename", "<p>$env->page does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
 				}
 			}
 			
@@ -4386,6 +4386,13 @@ register_module([
 				// We have a revision number!
 				$isHistoryRevision = true;
 				$revisionNumber = intval($_GET["revision"]);
+				
+				// Make sure that the revision exists for later on
+				if(!isset($pageindex->{$env->page}->history[$revisionNumber]))
+				{
+					http_response_code(404);
+					exit(page_renderer::render_main("404: Revision Not Found - $env->page - $settings->sitename", "<p>Revision #$revisionNumer of $env->page doesn't appear to exist. Try viewing the <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of revisions for $env->page</a>, or viewing <a href='?page=" . rawurlencode($env->page) . "'>the latest revision</a> instead.</p>"));
+				}
 			}
 			
 			
@@ -4405,7 +4412,14 @@ register_module([
 			if(isset($_GET["redirected_from"]))
 				$content .= "<p><em>Redirected from <a href='?page=" . rawurlencode($_GET["redirected_from"]) . "&redirect=no'>" . $_GET["redirected_from"] . "</a>.</em></p>";
 			
-			$pageFilename = "$env->storage_prefix$env->page.md";
+			// Construct the filename
+			$pageFilename = "$env->storage_prefix";
+			if($isHistoryRevision)
+			{
+				$pageFilename .= $pageindex->{$env->page}->history[$revisionNumber]->filename;
+			}
+			else
+				$pageFilename .= $pageindex->{$env->page}->filename;
 			
 			$parsing_start = microtime(true);
 			
