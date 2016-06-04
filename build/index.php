@@ -4003,7 +4003,7 @@ function generate_page_list($pagelist)
 
 register_module([
 	"name" => "Login",
-	"version" => "0.8.1",
+	"version" => "0.8.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
@@ -4011,12 +4011,11 @@ register_module([
 		global $settings;
 		
 		/*
-		 *  _             _
-		 * | | ___   __ _(_)_ __
-		 * | |/ _ \ / _` | | '_ \
-		 * | | (_) | (_| | | | | |
-		 * |_|\___/ \__, |_|_| |_|
-		 *          |___/  %login%
+		 * ██       ██████   ██████  ██ ███    ██
+		 * ██      ██    ██ ██       ██ ████   ██
+		 * ██      ██    ██ ██   ███ ██ ██ ██  ██
+		 * ██      ██    ██ ██    ██ ██ ██  ██ ██
+		 * ███████  ██████   ██████  ██ ██   ████
 		 */
 		add_action("login", function() {
 			global $settings;
@@ -4044,13 +4043,19 @@ register_module([
 			exit(page_renderer::render_main($title, $content));
 		});
 		
+		
 		/*
-		 *       _               _    _             _
-		 *   ___| |__   ___  ___| | _| | ___   __ _(_)_ __
-		 *  / __| '_ \ / _ \/ __| |/ / |/ _ \ / _` | | '_ \
-		 * | (__| | | |  __/ (__|   <| | (_) | (_| | | | | |
-		 *  \___|_| |_|\___|\___|_|\_\_|\___/ \__, |_|_| |_|
-		 *     %checklogin%                   |___/
+ 		 * ██████ ██   ██ ███████  ██████ ██   ██
+		 * ██      ██   ██ ██      ██      ██  ██
+		 * ██      ███████ █████   ██      █████
+		 * ██      ██   ██ ██      ██      ██  ██
+ 		 * ██████ ██   ██ ███████  ██████ ██   ██
+ 		 * 
+		 * ██       ██████   ██████  ██ ███    ██
+		 * ██      ██    ██ ██       ██ ████   ██
+		 * ██      ██    ██ ██   ███ ██ ██ ██  ██
+		 * ██      ██    ██ ██    ██ ██ ██  ██ ██
+		 * ███████  ██████   ██████  ██ ██   ████
 		 */
 		add_action("checklogin", function() {
 			global $settings, $env;
@@ -4079,14 +4084,20 @@ register_module([
 				else
 				{
 					http_response_code(302);
-					header("location: index.php?action=login&failed=yes");
+					$nextUrl = "index.php?action=login&failed=yes";
+					if(!empty($_GET["returnto"]))
+						$nextUrl .= "&returnto=" . rawurlencode($_GET["returnto"]);
+					header("location: $nextUrl");
 					exit();
 				}
 			}
 			else
 			{
 				http_response_code(302);
-				header("location: index.php?action=login&failed=yes&badrequest=yes");
+				$nextUrl = "index.php?action=login&failed=yes&badrequest=yes";
+				if(!empty($_GET["returnto"]))
+					$nextUrl .= "&returnto=" . rawurlencode($_GET["returnto"]);
+				header("location: $nextUrl");
 				exit();
 			}
 		});
