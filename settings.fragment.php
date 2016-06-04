@@ -322,7 +322,7 @@ input[type=button], input[type=submit] { cursor: pointer; }
 .sidebar li:before { content: ""; position: absolute; width: 1rem; top: 0.8rem; left: -1.2rem; border-bottom: 2px dashed rgba(50, 50, 50, 0.4); }
 
 .preview { text-align: center; }
-.preview img, .preview video, .preview audio { --checkerboard-bg: rgba(200, 200, 200, 0.2); max-width: 100%; background-color: #eee; background-image: linear-gradient(45deg, var(--checkerboard-bg) 25%, transparent 25%, transparent 75%, var(--checkerboard-bg) 75%, var(--checkerboard-bg)), linear-gradient(45deg, var(--checkerboard-bg) 25%, transparent 25%, transparent 75%, var(--checkerboard-bg) 75%, var(--checkerboard-bg)); background-size:2em 2em; background-position:0 0, 1em 1em; }
+.preview:hover img, .preview:hover video, .preview:hover audio { --checkerboard-bg: rgba(200, 200, 200, 0.2); max-width: 100%; background-color: #eee; background-image: linear-gradient(45deg, var(--checkerboard-bg) 25%, transparent 25%, transparent 75%, var(--checkerboard-bg) 75%, var(--checkerboard-bg)), linear-gradient(45deg, var(--checkerboard-bg) 25%, transparent 25%, transparent 75%, var(--checkerboard-bg) 75%, var(--checkerboard-bg)); background-size:2em 2em; background-position:0 0, 1em 1em; }
 .image-controls ul { list-style-type: none; margin: 5px; padding: 5px; }
 .image-controls li { display: inline-block; margin: 5px; padding: 5px; }
 .link-display { margin-left: 0.5rem; }
