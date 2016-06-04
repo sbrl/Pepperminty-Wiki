@@ -2803,7 +2803,7 @@ register_module([
 					// should be the page name.
 					$pageindex->$new_filename = $entry;
 					
-					// Generate a revision to keep the apge history up to date
+					// Generate a revision to keep the page history up to date
 					if(module_exists("feature-history"))
 					{
 						$oldsource = ""; // Only variables can be passed by reference, not literals
@@ -4328,7 +4328,7 @@ register_module([
 
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.13",
+	"version" => "0.14",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
@@ -4380,18 +4380,36 @@ register_module([
 				}
 			}
 			
+			$isHistoryRevision = false;
+			if(isset($_GET["revision"]) and is_numeric($_GET["revision"]))
+			{
+				// We have a revision number!
+				$isHistoryRevision = true;
+				$revisionNumber = intval($_GET["revision"]);
+			}
+			
+			
 			$title = "$env->page - $settings->sitename";
 			if(isset($pageindex->$page->protect) && $pageindex->$page->protect === true)
 				$title = $settings->protectedpagechar . $title;
-			$content = "<h1>$env->page</h1>\n";
+			$content = "";
+			if(!$isHistoryRevision)
+				$content .= "<h1>$env->page</h1>\n";
+			else
+			{
+				$content .= "<h1>Revision #$revisionNumber of $env->page</h1>\n";
+				$content .= "<p class='revision-note'><em>(<a href='?page=" . rawurlencode($env->page) . "'>See current</a>)</em></p>\n";
+			}
 			
 			// Add an extra message if the requester was redirected from another page
 			if(isset($_GET["redirected_from"]))
 				$content .= "<p><em>Redirected from <a href='?page=" . rawurlencode($_GET["redirected_from"]) . "&redirect=no'>" . $_GET["redirected_from"] . "</a>.</em></p>";
 			
+			$pageFilename = "$env->storage_prefix$env->page.md";
+			
 			$parsing_start = microtime(true);
 			
-			$content .= parse_page_source(file_get_contents("$env->storage_prefix$env->page.md"));
+			$content .= parse_page_source(file_get_contents($pageFilename));
 			
 			if(!empty($pageindex->$page->tags))
 			{

@@ -153,7 +153,7 @@ register_module([
 					// should be the page name.
 					$pageindex->$new_filename = $entry;
 					
-					// Generate a revision to keep the apge history up to date
+					// Generate a revision to keep the page history up to date
 					if(module_exists("feature-history"))
 					{
 						$oldsource = ""; // Only variables can be passed by reference, not literals
