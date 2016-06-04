@@ -7,7 +7,10 @@
  - Added short syntax for images (#24)
  - Added text "Tag List: " to tag listing pages
  - Page history! Current you can't do anything with the previous revisions - that will come in a future release.
- - Added checkerboard pattern behind transparent images on their preview pages.
+ - Added checkerboard pattern behind transparent images on mouse hover on their preview pages.
+ - Improved support for SVGS.
+	 - SVGs are sent as-is instead of a preview image unless `$settings->render_svg_previews` is set to `true`.
+	 - Added code to find the dimensions of an SVG.
 
 ## v0.11
 
@@ -27,7 +30,7 @@
 ### Added
  - Unlocked the uploading of any file type. Note that only the file types specified in the settings are allowed to be uploaded.
 	- Uploaded video and audio files can now be viewed on their respective pages
-    - The file preview tool is now aware that not everything will be an image.
+	- The file preview tool is now aware that not everything will be an image.
  - Enhanced the recent changes page.
 	- New pages show up with an 'N' next to them (as they do in a MediaWiki installation)
 	- Page deletions show up in red with a line though them
@@ -35,8 +38,8 @@
  - Added mathematical expression parsing between dollar signs.
  - Generated previews now have etags. This should speed up load times of subsequent requests significantly.
  - Added some extra built-in variables to the parser.
-    - `{{{~}}}`: Displays the top level page name (i.e. the page that has been requested).
-    - `{{{*}}}`: Displays a comma-separated list of subpages of the requested page.
+	- `{{{~}}}`: Displays the top level page name (i.e. the page that has been requested).
+	- `{{{*}}}`: Displays a comma-separated list of subpages of the requested page.
  - Links to non-existent pages are now coloured red by default.
 
 ### Changed
@@ -51,11 +54,11 @@
  - Fixed an issue with the recent changes page and redirects causing a large number of warnings
  - Fixed a number of issues with the parser
 	- Image urls may now contain ampersands ('&')
-    - Several warnings that were cropping up here and there due to bugs have been squashed
-    - Fixed an issue with multiple links in the same paragraph
+	- Several warnings that were cropping up here and there due to bugs have been squashed
+	- Fixed an issue with multiple links in the same paragraph
  - Fixed a number of issues with the image preview generator
 	- Requests for a previews of pages that don't have an associated file won't break anymore. An error image will now be returned instead.
-    - A number of things that were not compatible with PHP 7 have been updated to ensure compatibility.
+	- A number of things that were not compatible with PHP 7 have been updated to ensure compatibility.
  - Conflict resolution. If someone saves an edit to a page  after you started editing, you will get a conflict resolution page.
 
 # Notes
