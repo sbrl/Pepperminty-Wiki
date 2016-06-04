@@ -59,6 +59,7 @@ register_module([
 				// We have a revision number!
 				$isHistoryRevision = true;
 				$revisionNumber = intval($_GET["revision"]);
+				$revisionData = $pageindex->{$env->page}->history[$revisionNumber];
 				
 				// Make sure that the revision exists for later on
 				if(!isset($pageindex->{$env->page}->history[$revisionNumber]))
@@ -78,7 +79,7 @@ register_module([
 			else
 			{
 				$content .= "<h1>Revision #$revisionNumber of $env->page</h1>\n";
-				$content .= "<p class='revision-note'><em>(<a href='?page=" . rawurlencode($env->page) . "'>See current</a>)</em></p>\n";
+				$content .= "<p class='revision-note'><em>(Revision created by $revisionData->editor " . render_rchange_timestamp($revisionData->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a>.)</em></p>\n";
 			}
 			
 			// Add an extra message if the requester was redirected from another page
