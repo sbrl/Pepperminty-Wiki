@@ -7,6 +7,7 @@
  - Added short syntax for images (#24)
  - Added text "Tag List: " to tag listing pages
  - Page history! Current you can't do anything with the previous revisions - that will come in a future release.
+ - Added checkerboard pattern behind transparent images on their preview pages.
 
 ## v0.11
 
