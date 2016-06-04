@@ -171,6 +171,7 @@ $settings->nav_links = [
 // An array of additional links in the above format that will be shown under
 // "More" subsection.
 $settings->nav_links_extra = [
+	[ "&#x1f553; Page History", "?action=history&page={page}" ],
 	[ "&#x1f3ab; All&nbsp;Tags", "index.php?action=list-tags" ],
 	[ "Recent changes", "?action=recent-changes" ],
 	[ "&#x1f845; Upload", "index.php?action=upload" ],
