@@ -204,6 +204,7 @@ $settings->upload_allowed_file_types = [
 	"image/png",
 	"image/gif",
 	"image/webp",
+	"image/svg+xml",
 	"video/mp4",
 	"video/webm",
 	"audio/mp4",
@@ -2646,9 +2647,9 @@ class search
 
 register_module([
 	"name" => "Uploader",
-	"version" => "0.5.4",
+	"version" => "0.5.5",
 	"author" => "Starbeamrainbowlabs",
-	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File:' prefix.",
+	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
 	"code" => function() {
 		global $settings;
