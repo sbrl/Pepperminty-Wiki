@@ -87,7 +87,9 @@ register_module([
 					{
 						case "image":
 							$extra_data = [];
-							$imagesize = getimagesize($temp_filename, $extra_data);
+							// Check SVG uploads with a special function
+							$imagesize = $mime_type !== "image/svg+xml" ? getimagesize($temp_filename, $extra_data) : upload_check_svg($temp_filename);
+							
 							// Make sure that the image size is defined
 							if(!is_int($imagesize[0]) or !is_int($imagesize[1]))
 							{
@@ -95,7 +97,6 @@ register_module([
 								exit(page_renderer::render("Upload Error - $settings->sitename", "<p>Although the file that you uploaded appears to be an image, $settings->sitename has been unable to determine it's dimensions. The uploaded file has been discarded. <a href='?action=upload'>Go back to try again</a>.</p>
 								<p>You may wish to consider <a href='https://github.com/sbrl/Pepperminty-Wiki'>opening an issue</a> against Pepperminty Wiki (the software that powers $settings->sitename) if this isn't the first time that you have seen this message.</p>"));
 							}
-							
 							break;
 					}
 					
@@ -193,7 +194,10 @@ register_module([
 			$filepath = $env->storage_prefix . $pageindex->{$env->page}->uploadedfilepath;
 			$mime_type = $pageindex->{$env->page}->uploadedfilemime;
 			
-			if(isset($_GET["size"]) and $_GET["size"] == "original")
+			// If the size is set or original, then send (or redirect to) the original image
+			// Also do the same for SVGs if svg rendering is disabled.
+			if(isset($_GET["size"]) and $_GET["size"] == "original" or
+				(empty($settings->render_svg_previews) && $mime_type == "image/svg+xml"))
 			{
 				// Get the file size
 				$filesize = filesize($filepath);
@@ -343,7 +347,7 @@ register_module([
 				// We are looking at a page that is paired with an uploaded file
 				$filepath = $pageindex->{$env->page}->uploadedfilepath;
 				$mime_type = $pageindex->{$env->page}->uploadedfilemime;
-				$dimensions = getimagesize($env->storage_prefix . $filepath);
+				$dimensions = $mime_type !== "image/svg+xml" ? getimagesize($env->storage_prefix . $filepath) : getsvgsize($env->storage_prefix . $filepath);
 				$fileTypeDisplay = substr($mime_type, 0, strpos($mime_type, "/"));
 				$previewUrl = "?action=preview&size=$settings->default_preview_size&page=" . rawurlencode($env->page);
 				
@@ -354,14 +358,17 @@ register_module([
 					case "image":
 						$preview_sizes = [ 256, 512, 768, 1024, 1440 ];
 						$preview_html .= "\t\t\t<figure class='preview'>
-			<img src='$previewUrl' />
-			<nav class='image-controls'>
-				<ul><li><a href='" . ($env->storage_prefix == "./" ? $filepath : "?action=preview&size=original&page=" . rawurlencode($env->page)) . "'>&#x01f304; Original image</a></li>
-				<li>Other Sizes: ";
-				foreach($preview_sizes as $size)
-					$preview_html .= "<a href='?action=preview&page=" . rawurlencode($env->page) . "&size=$size'>$size" . "px</a> ";
-				$preview_html .= "</li></ul></nav>
-			</figure>";
+				<img src='$previewUrl' />
+				<nav class='image-controls'>
+					<ul><li><a href='" . ($env->storage_prefix == "./" ? $filepath : "?action=preview&size=original&page=" . rawurlencode($env->page)) . "'>&#x01f304; Original image</a></li>";
+						if($mime_type !== "image/svg+xml")
+						{
+							$preview_html .= "<li>Other Sizes: ";
+							foreach($preview_sizes as $size)
+								$preview_html .= "<a href='?action=preview&page=" . rawurlencode($env->page) . "&size=$size'>$size" . "px</a> ";
+							$preview_html .= "</li>";
+						}
+						$preview_html .= "</ul></nav>\n\t\t\t</figure>";
 						break;
 					
 					case "video":
@@ -383,7 +390,8 @@ register_module([
 				switch($fileTypeDisplay)
 				{
 					case "image":
-						$fileInfo["Original dimensions"] = "$dimensions[0] x $dimensions[1]";
+						$dimensionsKey = $mime_type !== "image/svg+xml" ? "Original demensions" : "Native size";
+						$fileInfo[$dimensionsKey] = "$dimensions[0] x $dimensions[1]";
 						break;
 				}
 				$fileInfo["Uploaded by"] = $pageindex->{$env->page}->lasteditor;
@@ -438,6 +446,39 @@ function parse_size($size) {
 	} else {
 		return round($size);
 	}
+}
+
+function upload_check_svg($temp_filename)
+{
+	global $settings;
+	// Check for script tags
+	if(strpos(file_get_contents($temp_filename), "<script") !== false)
+	{
+		http_response_code(415);
+		exit(page_renderer::render("Upload Error - $settings->sitename", "<p>$settings->sitename detected that you uploaded an SVG image and performed some extra security checks on your file. Whilst performing these checks it was discovered that the file you uploaded contains some Javascript, which could be dangerous. The uploaded file has been discarded. <a href='?action=upload'>Go back to try again</a>.</p>
+		<p>You may wish to consider <a href='https://github.com/sbrl/Pepperminty-Wiki'>opening an issue</a> against Pepperminty Wiki (the software that powers $settings->sitename) if this isn't the first time that you have seen this message.</p>"));
+	}
+	
+	// Find and return the size of the SVG image
+	return getsvgsize($temp_filename);
+}
+
+function getsvgsize($svgFilename)
+{
+	$svg = simplexml_load_file($svgFilename); // Load it as XML
+	if($svg === false)
+	{
+		http_response_code(415);
+		exit(page_renderer::render("Upload Error - $settings->sitename", "<p>When $settings->sitename tried to open your SVG file for checking, it found some invalid syntax. The uploaded file has been discarded. <a href='?action=upload'>Go back to try again</a>.</p>"));
+	}
+	$rootAttrs = $svg->attributes();
+	$imageSize = false;
+	if(isset($rootAttrs->width) and isset($rootAttrs->height))
+		$imageSize = [ intval($rootAttrs->width), intval($rootAttrs->height) ];
+	else if(isset($rootAttrs->viewBox))
+		$imageSize = array_map("intval", array_slice(explode(" ", $rootAttrs->viewBox), -2, 2));
+	
+	return $imageSize;
 }
 
 function errorimage($text, $target_size)
