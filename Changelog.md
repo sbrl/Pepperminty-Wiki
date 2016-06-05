@@ -13,6 +13,7 @@
 	 - Added code to find the dimensions of an SVG.
  - Fixed an issue where you wouldn't be redirected correctly if you typed your password incorrectly
  - Reduced the amount of space that the login bit in the top left takes up.
+ - Fixed a bug in the idindex generator.
 
 ## v0.11
 
