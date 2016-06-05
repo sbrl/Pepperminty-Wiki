@@ -590,10 +590,10 @@ class ids
 		global $idindex, $paths;
 
 		$nextid = count(array_keys(get_object_vars($idindex)));
-
-		if(isset($idindex->$nextid))
-			throw new Exception("The pageid is corrupt! Pepperminty Wiki generated the id $nextid, but that id is already in use.");
-
+		// Increment the generated id until it's unique
+		while(isset($idindex->nextid))
+			$nextid++;
+		
 		// Update the id index
 		$idindex->$nextid = utf8_encode($pagename);
 

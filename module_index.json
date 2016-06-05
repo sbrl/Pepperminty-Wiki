@@ -100,11 +100,11 @@
     },
     {
         "name": "Page deleter",
-        "version": "0.9",
+        "version": "0.10",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to delete pages.",
         "id": "page-delete",
-        "lastupdate": 1459694163,
+        "lastupdate": 1465136119,
         "optional": false
     },
     {
@@ -163,11 +163,11 @@
     },
     {
         "name": "Page mover",
-        "version": "0.8.1",
+        "version": "0.9",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
         "id": "page-move",
-        "lastupdate": 1465133466,
+        "lastupdate": 1465133690,
         "optional": false
     },
     {

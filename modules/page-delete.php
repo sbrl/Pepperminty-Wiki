@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page deleter",
-	"version" => "0.9",
+	"version" => "0.10",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to delete pages.",
 	"id" => "page-delete",
@@ -19,19 +19,24 @@ register_module([
 			global $pageindex, $settings, $env, $paths, $modules;
 			if(!$settings->editing)
 			{
-				exit(page_renderer::render_main("Deleting $env->page - error", "<p>You tried to delete $env->page, but editing is disabled on this wiki.</p>
+				exit(page_renderer::render_main("Error: Editing disabled - Deleting $env->page", "<p>You tried to delete $env->page, but editing is disabled on this wiki.</p>
 				<p>If you wish to delete this page, please re-enable editing on this wiki first.</p>
 				<p><a href='index.php?page=$env->page'>Go back to $env->page</a>.</p>
 				<p>Nothing has been changed.</p>"));
 			}
 			if(!$env->is_admin)
 			{
-				exit(page_renderer::render_main("Deleting $env->page - error", "<p>You tried to delete $env->page, but you are not an admin so you don't have permission to do that.</p>
+				exit(page_renderer::render_main("Error: Insufficient permissions - Deleting $env->page", "<p>You tried to delete $env->page, but you are not an admin so you don't have permission to do that.</p>
 				<p>You should try <a href='index.php?action=login'>logging in</a> as an admin.</p>"));
 			}
+			if(!isset($pageindex->{$env->page}))
+			{
+				exit(page_renderer::render_main("Error: Non-existent page - Deleting $env->page", "<p>You tried to delete $env->page, but that page doesn't appear to exist in the first page. <a href='?'>Go back</a> to the $settings->defaultpage.</p>"));
+			}
+			
 			if(!isset($_GET["delete"]) or $_GET["delete"] !== "yes")
 			{
-				exit(page_renderer::render_main("Deleting $env->page", "<p>You are about to <strong>delete</strong> $env->page. You can't undo this!</p>
+				exit(page_renderer::render_main("Deleting $env->page", "<p>You are about to <strong>delete</strong> $env->page" . (module_exists("feature-history")?" and all its revisions":"") . ". You can't undo this!</p>
 				<p><a href='index.php?action=delete&page=$env->page&delete=yes'>Click here to delete $env->page.</a></p>
 				<p><a href='index.php?action=view&page=$env->page'>Click here to go back.</a>"));
 			}
@@ -40,6 +45,12 @@ register_module([
 			if(!empty($pageindex->$page->uploadedfile))
 			{
 				unlink($env->storage_prefix . $pageindex->$page->uploadedfilepath);
+			}
+			
+			// While we're at it, we should delete all the revisions too
+			foreach($pageindex->{$env->page}->history as $revisionData)
+			{
+				unlink($env->storage_prefix . $revisionData->filename);
 			}
 			
 			// Delete the page from the page index
