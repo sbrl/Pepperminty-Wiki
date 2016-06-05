@@ -6,11 +6,12 @@
  - Added image captions (#65)
  - Added short syntax for images (#24)
  - Added text "Tag List: " to tag listing pages
- - Page history! Current you can't do anything with the previous revisions - that will come in a future release.
+ - Page history! Currently you can't do anything with the previous revisions - that will come in a future release.
  - Added checkerboard pattern behind transparent images on mouse hover on their preview pages.
  - Improved support for SVGS.
 	 - SVGs are sent as-is instead of a preview image unless `$settings->render_svg_previews` is set to `true`.
 	 - Added code to find the dimensions of an SVG.
+ - Fixed an issue where you wouldn't be redirected correctly if you typed your password incorrectly
 
 ## v0.11
 
