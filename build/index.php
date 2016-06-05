@@ -4225,7 +4225,7 @@ register_module([
 				exit(page_renderer::render_main("Moving $env->page - Error - $settings->sitename", "<p>Whilst moving the file associated with $env->page, $settings->sitename detected a pre-existing file on the server's file system. Because $settings->sitename can't determine whether the existing file is important to another component of $settings->sitename or it's host web server, the move have been aborted - just in case.</p>
 				<p>If you know that this move is actually safe, please get your site administrator (" . $settings->admindetails["name"] . ") to perform the move manually. Their contact address can be found at the bottom of every page (including this one).</p>"));
 			
-			//move the page in the page index
+			// Move the page in the page index
 			$pageindex->$new_name = new stdClass();
 			foreach($pageindex->$page as $key => $value)
 			{
@@ -4233,6 +4233,7 @@ register_module([
 			}
 			unset($pageindex->$page);
 			$pageindex->$new_name->filename = $new_name;
+			
 			// If this page has an associated file, then we should move that too
 			if(!empty($pageindex->$new_name->uploadedfile))
 			{
@@ -4243,6 +4244,23 @@ register_module([
 				// Move the file on disk
 				rename($env->storage_prefix . $env->page, $env->storage_prefix . $new_name);
 			}
+			
+			// Come to think about it, we should probably move the history while we're at it
+			foreach($pageindex->$new_name->history as &$revisionData)
+			{
+				// We're only interested in edits
+				if($revisionData->type !== "edit") continue;
+				$newRevisionName = $pageindex->$new_name->filename . ".r$revisionData->rid";
+				// Move the revision to it's new name
+				rename(
+					$env->storage_prefix . $revisionData->filename,
+					$env->storage_prefix . $newRevisionName
+				);
+				// Update the pageindex entry
+				$revisionData->filename = $newRevisionName;
+			}
+			
+			// Save the updated pageindex
 			file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
 			
 			// Move the page on the disk
