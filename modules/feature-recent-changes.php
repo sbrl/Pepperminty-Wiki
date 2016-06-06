@@ -222,27 +222,4 @@ function render_recent_change($rchange)
 	return $result;
 }
 
-function render_rchange_timestamp($timestamp)
-{
-	return "<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $timestamp) . "'>" . human_time_since($timestamp) . "</time>";
-}
-
-function render_rchange_pagename($rchange)
-{
-	global $pageindex;
-	
-	// Render the page's name
-	$pageDisplayName = $rchange->page;
-	if(isset($pageindex->$pageDisplayName) and !empty($pageindex->$pageDisplayName->redirect))
-		$pageDisplayName = "<em>$pageDisplayName</em>";
-	$pageDisplayLink = "<a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a>";
-	
-	return $pageDisplayName;
-}
-
-function render_rchange_editor($editorName)
-{
-	return "<span class='editor'>&#9998; $editorName</span>";
-}
-
 ?>

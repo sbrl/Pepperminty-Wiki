@@ -393,7 +393,7 @@ summary { cursor: pointer; }
 .diff-removed { background-color: rgba(255, 96, 96, 0.6); color: rgba(191, 38, 38, 1); }
 
 .newpage::before { content: "N"; margin: 0 0.3em 0 -1em; font-weight: bolder; text-decoration: underline dotted; }
-.upload::before { content: "\1f845"; margin: 0 0.1em 0 -1.1em; }
+.upload::before { content: "\\1f845"; margin: 0 0.1em 0 -1.1em; }
 
 footer { padding: 2rem; }
 /* #ffdb6d #36962c */

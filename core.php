@@ -402,9 +402,8 @@ function stack_trace($log_trace = true)
 if (!function_exists('getallheaders'))  {
     function getallheaders()
     {
-        if (!is_array($_SERVER)) {
-            return array();
-        }
+        if (!is_array($_SERVER))
+            return [];
 
         $headers = array();
         foreach ($_SERVER as $name => $value) {
@@ -414,6 +413,38 @@ if (!function_exists('getallheaders'))  {
         }
         return $headers;
     }
+}
+/**
+ * Renders a timestamp in HTML.
+ * @param  int $timestamp The timestamp to render.
+ * @return string         HTML representing the given timestamp.
+ */
+function render_rchange_timestamp($timestamp)
+{
+	return "<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $timestamp) . "'>" . human_time_since($timestamp) . "</time>";
+}
+/**
+ * Renders a page name in HTML.
+ * @param  object $rchange The recent change to render as a page name
+ * @return string          HTML representing the name of the given page.
+ */
+function render_rchange_pagename($rchange)
+{
+	global $pageindex;
+	$pageDisplayName = $rchange->page;
+	if(isset($pageindex->$pageDisplayName) and !empty($pageindex->$pageDisplayName->redirect))
+		$pageDisplayName = "<em>$pageDisplayName</em>";
+	$pageDisplayLink = "<a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a>";
+	return $pageDisplayName;
+}
+/**
+ * Renders an editor's name in HTML.
+ * @param  string $editorName The name of the editor to render.
+ * @return string             HTML representing the given editor's name.
+ */
+function render_rchange_editor($editorName)
+{
+	return "<span class='editor'>&#9998; $editorName</span>";
 }
 
 ///////////////////////////////////////////////////////////////////////////////

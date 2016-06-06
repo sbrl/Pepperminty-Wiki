@@ -396,7 +396,7 @@ summary { cursor: pointer; }
 .diff-removed { background-color: rgba(255, 96, 96, 0.6); color: rgba(191, 38, 38, 1); }
 
 .newpage::before { content: "N"; margin: 0 0.3em 0 -1em; font-weight: bolder; text-decoration: underline dotted; }
-.upload::before { content: "\1f845"; margin: 0 0.1em 0 -1.1em; }
+.upload::before { content: "\\1f845"; margin: 0 0.1em 0 -1.1em; }
 
 footer { padding: 2rem; }
 /* #ffdb6d #36962c */
@@ -829,9 +829,8 @@ function stack_trace($log_trace = true)
 if (!function_exists('getallheaders'))  {
     function getallheaders()
     {
-        if (!is_array($_SERVER)) {
-            return array();
-        }
+        if (!is_array($_SERVER))
+            return [];
 
         $headers = array();
         foreach ($_SERVER as $name => $value) {
@@ -841,6 +840,38 @@ if (!function_exists('getallheaders'))  {
         }
         return $headers;
     }
+}
+/**
+ * Renders a timestamp in HTML.
+ * @param  int $timestamp The timestamp to render.
+ * @return string         HTML representing the given timestamp.
+ */
+function render_rchange_timestamp($timestamp)
+{
+	return "<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $timestamp) . "'>" . human_time_since($timestamp) . "</time>";
+}
+/**
+ * Renders a page name in HTML.
+ * @param  object $rchange The recent change to render as a page name
+ * @return string          HTML representing the name of the given page.
+ */
+function render_rchange_pagename($rchange)
+{
+	global $pageindex;
+	$pageDisplayName = $rchange->page;
+	if(isset($pageindex->$pageDisplayName) and !empty($pageindex->$pageDisplayName->redirect))
+		$pageDisplayName = "<em>$pageDisplayName</em>";
+	$pageDisplayLink = "<a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a>";
+	return $pageDisplayName;
+}
+/**
+ * Renders an editor's name in HTML.
+ * @param  string $editorName The name of the editor to render.
+ * @return string             HTML representing the given editor's name.
+ */
+function render_rchange_editor($editorName)
+{
+	return "<span class='editor'>&#9998; $editorName</span>";
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2055,29 +2086,6 @@ function render_recent_change($rchange)
 	$result = "\t\t\t<li$resultAttributes>$result</li>\n";
 	
 	return $result;
-}
-
-function render_rchange_timestamp($timestamp)
-{
-	return "<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $timestamp) . "'>" . human_time_since($timestamp) . "</time>";
-}
-
-function render_rchange_pagename($rchange)
-{
-	global $pageindex;
-	
-	// Render the page's name
-	$pageDisplayName = $rchange->page;
-	if(isset($pageindex->$pageDisplayName) and !empty($pageindex->$pageDisplayName->redirect))
-		$pageDisplayName = "<em>$pageDisplayName</em>";
-	$pageDisplayLink = "<a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a>";
-	
-	return $pageDisplayName;
-}
-
-function render_rchange_editor($editorName)
-{
-	return "<span class='editor'>&#9998; $editorName</span>";
 }
 
 
