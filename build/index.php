@@ -1798,7 +1798,7 @@ register_module([
 			if(!empty($pageindex->{$env->page}->history))
 			{
 				$content .= "\t\t<ul class='page-list'>\n";
-				foreach($pageindex->{$env->page}->history as $revisionData)
+				foreach(array_reverse($pageindex->{$env->page}->history) as $revisionData)
 				{
 					// Only display edits for now
 					if($revisionData->type != "edit")
