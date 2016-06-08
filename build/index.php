@@ -846,7 +846,7 @@ if (!function_exists('getallheaders'))  {
  * @param  int $timestamp The timestamp to render.
  * @return string         HTML representing the given timestamp.
  */
-function render_rchange_timestamp($timestamp)
+function render_timestamp($timestamp)
 {
 	return "<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $timestamp) . "'>" . human_time_since($timestamp) . "</time>";
 }
@@ -855,7 +855,7 @@ function render_rchange_timestamp($timestamp)
  * @param  object $rchange The recent change to render as a page name
  * @return string          HTML representing the name of the given page.
  */
-function render_rchange_pagename($rchange)
+function render_pagename($rchange)
 {
 	global $pageindex;
 	$pageDisplayName = $rchange->page;
@@ -869,7 +869,7 @@ function render_rchange_pagename($rchange)
  * @param  string $editorName The name of the editor to render.
  * @return string             HTML representing the given editor's name.
  */
-function render_rchange_editor($editorName)
+function render_editor($editorName)
 {
 	return "<span class='editor'>&#9998; $editorName</span>";
 }
@@ -1811,7 +1811,7 @@ register_module([
 					$size_display_class .= " significant";
 					$size_title_display = human_filesize($revisionData->newsize - $revisionData->sizediff) . " -> " .  human_filesize($revisionData->newsize);
 					
-					$content .= "<li><a href='?page=" . rawurlencode($env->page) . "&revision=$revisionData->rid'>#$revisionData->rid</a> " . render_rchange_editor($revisionData->editor) . " " . render_rchange_timestamp($revisionData->timestamp) . " <span class='cursor-query $size_display_class' title='$size_title_display'>($size_display)</span>";
+					$content .= "<li><a href='?page=" . rawurlencode($env->page) . "&revision=$revisionData->rid'>#$revisionData->rid</a> " . render_editor($revisionData->editor) . " " . render_timestamp($revisionData->timestamp) . " <span class='cursor-query $size_display_class' title='$size_title_display'>($size_display)</span>";
 				}
 			}
 			else
@@ -2018,15 +2018,15 @@ function render_recent_changes($recent_changes)
 			end($rchange_results);
 			$rchange_last = $recent_changes[key($rchange_results)];
 			
-			$pageDisplayHtml = render_rchange_pagename($rchange_first);
-			$timeDisplayHtml = render_rchange_timestamp($rchange_first->timestamp);
+			$pageDisplayHtml = render_pagename($rchange_first);
+			$timeDisplayHtml = render_timestamp($rchange_first->timestamp);
 			$users = [];
 			foreach($rchange_results as $key => $rchange_result)
 			{
 				if(!in_array($recent_changes[$key]->user, $users))
 					$users[] = $recent_changes[$key]->user; 
 			}
-			$userDisplayHtml = render_rchange_editor(implode(", ", $users));
+			$userDisplayHtml = render_editor(implode(", ", $users));
 			
 			// TODO: COllect up and render a list of participating users
 			$next_entry = "<li><details><summary>$pageDisplayHtml $userDisplayHtml $timeDisplayHtml</summary><ul class='page-list'>$next_entry</ul></details></li>";
@@ -2047,9 +2047,9 @@ function render_recent_changes($recent_changes)
 
 function render_recent_change($rchange)
 {
-	$pageDisplayHtml = render_rchange_pagename($rchange);
-	$editorDisplayHtml = render_rchange_editor($rchange->user);
-	$timeDisplayHtml = render_rchange_timestamp($rchange->timestamp);
+	$pageDisplayHtml = render_pagename($rchange);
+	$editorDisplayHtml = render_editor($rchange->user);
+	$timeDisplayHtml = render_timestamp($rchange->timestamp);
 	
 	$result = "";
 	$resultClasses = [];
@@ -4454,7 +4454,7 @@ register_module([
 			else
 			{
 				$content .= "<h1>Revision #$revisionNumber of $env->page</h1>\n";
-				$content .= "<p class='revision-note'><em>(Revision created by $revisionData->editor " . render_rchange_timestamp($revisionData->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a> or see a <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of all revisions</a> for this page.)</em></p>\n";
+				$content .= "<p class='revision-note'><em>(Revision created by $revisionData->editor " . render_timestamp($revisionData->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a> or see a <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of all revisions</a> for this page.)</em></p>\n";
 			}
 			
 			// Add an extra message if the requester was redirected from another page

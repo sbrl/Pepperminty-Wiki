@@ -152,15 +152,15 @@ function render_recent_changes($recent_changes)
 			end($rchange_results);
 			$rchange_last = $recent_changes[key($rchange_results)];
 			
-			$pageDisplayHtml = render_rchange_pagename($rchange_first);
-			$timeDisplayHtml = render_rchange_timestamp($rchange_first->timestamp);
+			$pageDisplayHtml = render_pagename($rchange_first);
+			$timeDisplayHtml = render_timestamp($rchange_first->timestamp);
 			$users = [];
 			foreach($rchange_results as $key => $rchange_result)
 			{
 				if(!in_array($recent_changes[$key]->user, $users))
 					$users[] = $recent_changes[$key]->user; 
 			}
-			$userDisplayHtml = render_rchange_editor(implode(", ", $users));
+			$userDisplayHtml = render_editor(implode(", ", $users));
 			
 			// TODO: COllect up and render a list of participating users
 			$next_entry = "<li><details><summary>$pageDisplayHtml $userDisplayHtml $timeDisplayHtml</summary><ul class='page-list'>$next_entry</ul></details></li>";
@@ -181,9 +181,9 @@ function render_recent_changes($recent_changes)
 
 function render_recent_change($rchange)
 {
-	$pageDisplayHtml = render_rchange_pagename($rchange);
-	$editorDisplayHtml = render_rchange_editor($rchange->user);
-	$timeDisplayHtml = render_rchange_timestamp($rchange->timestamp);
+	$pageDisplayHtml = render_pagename($rchange);
+	$editorDisplayHtml = render_editor($rchange->user);
+	$timeDisplayHtml = render_timestamp($rchange->timestamp);
 	
 	$result = "";
 	$resultClasses = [];

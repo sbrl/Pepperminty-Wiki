@@ -419,7 +419,7 @@ if (!function_exists('getallheaders'))  {
  * @param  int $timestamp The timestamp to render.
  * @return string         HTML representing the given timestamp.
  */
-function render_rchange_timestamp($timestamp)
+function render_timestamp($timestamp)
 {
 	return "<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $timestamp) . "'>" . human_time_since($timestamp) . "</time>";
 }
@@ -428,7 +428,7 @@ function render_rchange_timestamp($timestamp)
  * @param  object $rchange The recent change to render as a page name
  * @return string          HTML representing the name of the given page.
  */
-function render_rchange_pagename($rchange)
+function render_pagename($rchange)
 {
 	global $pageindex;
 	$pageDisplayName = $rchange->page;
@@ -442,7 +442,7 @@ function render_rchange_pagename($rchange)
  * @param  string $editorName The name of the editor to render.
  * @return string             HTML representing the given editor's name.
  */
-function render_rchange_editor($editorName)
+function render_editor($editorName)
 {
 	return "<span class='editor'>&#9998; $editorName</span>";
 }
