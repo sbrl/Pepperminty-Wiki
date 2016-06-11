@@ -1,0 +1,139 @@
+{
+	"sitename": {"type": "text", "description": "Your wiki's name.", "default": "Pepperminty Wiki"},
+	"defaultpage": {"type": "text", "description": "The name of the page that will act as the home page for the wiki. This page will be served if you don't specify a page.", "default": "Main Page"},
+	"admindetails": {
+		"name": {"type": "text", "description": "Your name as the wiki administrator.", "default": "Administrator"},
+		"email": {"type": "email", "description": "Your email address as the wiki administrator. Will be displayed as a support contact address.", "default": "admin@localhost"},
+	},
+	"favicon": {"type": "url", "description": "A url that points to the favicon you want to use for your wiki. By default this is set to a data: url of a Peppermint (Credit: by bluefrog23, source: https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23)", "default": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAB3VBMVEXhERHbKCjeVVXjb2/kR0fhKirdHBziDg6qAADaHh7qLy/pdXXUNzfMAADYPj7ZPDzUNzfbHx/fERHpamrqMTHgExPdHx/bLCzhLS3fVFTjT0/ibm7kRkbiLi7aKirdISHeFBTqNDTpeHjgERHYJCTVODjYQkLaPj6/AADVOTnpbW3cIyPdFRXcJCThMjLiTU3ibW3fVVXaKyvcERH4ODj+8fH/////fHz+Fxf4KSn0UFD/CAj/AAD/Xl7/wMD/EhL//v70xMT/+Pj/iYn/HBz/g4P/IyP/Kyv/7Oz0QUH/9PT/+vr/ior/Dg7/vr7/aGj/QED/bGz/AQH/ERH/Jib/R0f/goL/0dH/qan/YWH/7e3/Cwv4R0f/MTH/enr/vLz/u7v/cHD/oKD/n5//aWn+9/f/k5P/0tL/trb/QUH/cXH/dHT/wsL/DQ3/p6f/DAz/1dX/XV3/kpL/i4v/Vlb/2Nj/9/f/pKT+7Oz/V1f/iIj/jIz/r6//Zmb/lZX/j4//T0//Dw/4MzP/GBj/+fn/o6P/TEz/xMT/b2//Tk7/OTn/HR3/hIT/ODj/Y2P/CQn/ZGT/6Oj0UlL/Gxv//f3/Bwf/YmL/6+v0w8P/Cgr/tbX0QkL+9fX4Pz/qNzd0dFHLAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfeCxINNSdmw510AAAA5ElEQVQYGQXBzSuDAQCA8eexKXOwmSZepa1JiPJxsJOrCwcnuchBjg4O/gr7D9zk4uAgJzvuMgcTpYxaUZvSm5mUj7TX7ycAqvoLIJBwStVbP0Hom1Z/ejoxrbaR1Jz6nWinbKWttGRgMSSjanPktRY6mB9WtRNTn7Ilh7LxnNpKq2/x5LnBitfz+hx0qxUaxhZ6vwqq9bx6f2XXvuUl9SVQS38NR7cvln3v15tZ9bQpuWDtZN3Lgh5DWJex3Y+z1KrVhw21+CiM74WZo83DiXq0dVBDYNJkFEU7WrwDAZhRtQrwDzwKQbT6GboLAAAAAElFTkSuQmCC"},
+	"logo_url": {"type": "url", "description": "A url that points to the site's logo. Leave blank to disable. When enabled the logo will be inserted next to the site name on every page.", "default": "//starbeamrainbowlabs.com/images/logos/peppermint.png"},
+	"logo_position": {"type": "text", "description": "The side of the site name at which the logo should be placed.", "default": "left"},
+	"show_subpages": {"type": "text", "description": "Whether to show a list of subpages at the bottom of the page.", "default": true},
+	"subpages_display_depth": {"type": "text", "description": "The depth to which we should display when listing subpages at the bottom the page.", "default": 3},
+	"footer_message": {"type": "text", "description": "A message that will appear at the bottom of every page. May contain HTML.", "default": "All content is under <a href='?page=License' target='_blank'>this license</a>. Please make sure that you read and understand the license, especially if you are thinking about copying some (or all) of this site's content, as it may restrict you from doing so."},
+	"editing_message": {"type": "text", "description": "A message that will appear just before the submit button on the editing page. May contain HTML.", "default": "<a href='?action=help#20-parser-default' target='_blank'>Formatting help</a> (<a href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet' target='_blank'>Markdown Cheatsheet</a>)<br />\nBy submitting your edit or uploading your file, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!"},
+	"admindisplaychar": {"type": "text", "description": "The string that is prepended before an admin's name on the nav bar. Defaults to a diamond shape (&#9670;).", "default": "&#9670;"},
+	"protectedpagechar": {"type": "text", "description": "The string that is prepended a page's name in the page title if it is protected. Defaults to a lock symbol. (&#128274;)", "default": "&#128274;"},
+	"editing": {"type": "checkbox", "description": "Whether editing is enabled.", "default": true},
+	"anonedits": {"type": "checkbox", "description": "Whether users who aren't logged in are allowed to edit your wiki.", "default": false},
+	"maxpagesize": {"type": "number", "description": "The maximum page size in characters.", "default": 135000},
+	"parser": {"type": "text", "description": "The parser to use when rendering pages. Defaults to an extended version of parsedown (http://parsedown.org/)", "default": "parsedown"},
+	"clean_raw_html": {"type": "checkbox", "description": "Whether page sources should be cleaned of HTML before rendering. It is STRONGLY recommended that you keep this option turned on.", "default": true},
+	"enable_math_rendering": {"type": "checkbox", "description": "Whether to enable client side rendering of mathematical expressions with MathJax (https://www.mathjax.org/). Math expressions should be enclosed inside of dollar signs ($). Turn off if you don't use it.", "default": true},
+	"users": {"type": "map", "description": "An array of usernames and passwords - passwords should be hashed with sha256 (or sha3 if you have that option turned on)", "default": {
+		"admin": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+		"user": "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34"
+	}},
+	"admins": {"type": "array", "description": "An array of usernames that are administrators. Administrators can delete and move pages.", "default": [ "admin" ]},
+	"use_sha3": {"type": "checkbox", "description": "Whether to use the new sha3 hashing algorithm for passwords etc.", "default": false},
+	"require_login_view": {"type": "checkbox", "description": "Whether to require that users login before they do anything else. Best used with the data_storage_dir option.", "default": false},
+	"data_storage_dir": {"type": "text", "description": "The directory in which to store all files, except the main index.php.", "default": "."},
+	"sitesecret": {"type": "text", "description": "The secret key used to perform 'dangerous' actions, like updating the wiki. It is strongly advised that you change this!", "default": "ed420502615bac9037f8f12abd4c9f02"},
+	"delayed_indexing_time": {"type": "number", "description": "The amount of time, in seconds, that pages should be blocked from being indexed by search engines after their last edit. Aka delayed indexing.", "default": 0},
+	"nav_links": {"type": "array", "description": "An array of links and display text to display at the top of the site.
+Format:
+	\"Display Text\": \"Link\"
+You can also use strings here and they will be printed as-is, except the
+following special strings:
+	user-status		Expands to the user's login information
+					e.g. \"Logged in as {name}. | Logout\".
+					e.g. \"Browsing as Anonymous. | Login\".
+	search			Expands to a search box.
+	divider			Expands to a divider to separate stuff.
+	more			Expands to the \"More...\" submenu.", "default": [
+		"user-status",
+		[
+			"Home",
+			"index.php"
+		],
+		"search",
+		[
+			"Read",
+			"index.php?page={page}"
+		],
+		[
+			"Edit",
+			"index.php?action=edit&page={page}"
+		],
+		[
+			"All&nbsp;Pages",
+			"index.php?action=list"
+		],
+		"menu"
+	]},
+	"nav_links_extra": {"type": "array", "description": "An array of additional links in the above format that will be shown under \"More\" subsection.", "default": [
+		[
+			"&#x1f553; Page History",
+			"?action=history&page={page}"
+		],
+		[
+			"&#x1f3ab; All&nbsp;Tags",
+			"index.php?action=list-tags"
+		],
+		[
+			"Recent changes",
+			"?action=recent-changes"
+		],
+		[
+			"&#x1f845; Upload",
+			"index.php?action=upload"
+		],
+		[
+			"&#x2327; &#9670;Delete",
+			"index.php?action=delete&page={page}"
+		],
+		[
+			"&#x2398; &#9670;Move",
+			"index.php?action=move&page={page}"
+		],
+		[
+			"&#x1f510; &#9670;Toggle Protection",
+			"index.php?action=protect&page={page}"
+		]
+	]},
+	"nav_links_bottom": {"type": "text", "description": "An array of links in the above format that will be shown at the bottom of the page.", "default": [
+		[
+			"&#x1f5b6; Printable version",
+			"index.php?action=view&printable=yes&page={page}"
+		],
+		[
+			"Credits",
+			"index.php?action=credits"
+		],
+		[
+			"Help",
+			"index.php?action=help"
+		]
+	]},
+	"upload_enabled": {"type": "checkbox", "description": "Whether to allow uploads to the server.", "default": true},
+	"upload_allowed_file_types": {"type": "array", "description": "An array of mime types that are allowed to be uploaded.", "default": [
+		"image/jpeg",
+		"image/png",
+		"image/gif",
+		"image/webp",
+		"image/svg+xml",
+		"video/mp4",
+		"video/webm",
+		"audio/mp4",
+		"audio/mpeg"
+	]},
+	"preview_file_type": {"type": "text", "description": "The default file type for previews.", "default": "image/png"},
+	"default_preview_size": {"type": "number", "description": "The default size of preview images in pixels.", "default": 640},
+	"mime_extension_mappings_location": {"type": "text", "description": "The location of a file that maps mime types onto file extensions and vice versa. Used to generate the file extension for an uploaded file. See the configuration guide for windows instructions.", "default": "/etc/mime.types"},
+	"mime_mappings_overrides": {"type": "map", "description": "Override mappings to convert mime types into the appropriate file extension. Used to override the above file if it assigns weird extensions to any mime types.", "default": {
+		"text/plain": "txt",
+		"audio/mpeg": "mp3"
+	}},
+	"min_preview_size": {"type": "number", "description": "The minimum allowed size of generated preview images in pixels.", "default": 1},
+	"max_preview_size": {"type": "number", "description": "The maximum allowed size of generated preview images in pixels.", "default": 2048},
+	"search_characters_context": {"type": "number", "description": "The number of characters that should be displayed either side of a matching term in the context below each search result.", "default": 200},
+	"search_title_matches_weighting": {"type": "number", "description": "The weighting to give to search term matches found in a page's title.", "default": 10},
+	"search_tags_matches_weighting": {"type": "number", "description": "The weighting to give to search term matches found in a page's tags.", "default": 3},
+	"defaultaction": {"type": "text", "description": "The default action. This action will be performed if no other action is specified. It is recommended you set this to \"view\" - that way the user automatically views the default page (see above).", "default": "view"},
+	"updateurl": {"type": "url", "description": "The url from which to fetch updates. Defaults to the master (development) branch. MAKE SURE THAT THIS POINTS TO A *HTTPS* URL, OTHERWISE SOMEONE COULD INJECT A VIRUS INTO YOUR WIKI!", "default": "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/master/index.php"},
+	"optimize_pages": {"type": "checkbox", "description": "Whether to optimise all webpages generated.", "default": true},
+	"max_recent_changes": {"type": "number", "description": "The maximum number of recent changes to display on the recent changes page.", "default": 512},
+	"export_allow_only_admins": {"type": "checkbox", "description": "Whether to only allow adminstrators to export the your wiki as a zip using the page-export module.", "default": false},
+	"sessionprefix": {"type": "text", "description": "You shouldn't need to change this. The prefix that should be used in the names of the session variables. Defaults to \"auto\", which automatically generates this field. See the readme for more information.", "default": "auto"},
+	"css": {"type": "textarea", "description": "A string of css to include. Will be included in the &lt;head&gt; of every page inside a &lt;style&gt; tag. This may also be a url - urls will be referenced via a &lt;link rel='stylesheet' /&gt; tag."}
+}
