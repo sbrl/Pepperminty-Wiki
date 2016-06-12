@@ -7,6 +7,14 @@ register_module([
 	"id" => "action-raw",
 	"code" => function() {
 		global $settings;
+		/**
+		 * @api {get} ?action=raw&page={pageName} Get the raw source code of a page
+		 * @apiName RawSource
+		 * @apiGroup Page
+		 * @apiPermission Anonymous
+		 * 
+		 * @apiParam {string}	page	The page to return the source of.
+		 */
 		
 		/*
 		 * ██████   █████  ██     ██ 

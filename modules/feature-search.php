@@ -6,6 +6,14 @@ register_module([
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
 	"code" => function() {
+		/**
+		 * @api {get} ?action=index&page={pageName} Get an index of words for a given page
+		 * @apiName SearchIndex
+		 * @apiGroup Search
+		 * @apiPermission Anonymous
+		 * 
+		 * @apiParam {string}	page	The page to generate a word index page.
+		 */
 		
 		/*
 		 * ██ ███    ██ ██████  ███████ ██   ██ 
@@ -31,6 +39,14 @@ register_module([
 			var_dump($index);
 		});
 		
+		/**
+		 * @api {get} ?action=invindex-rebuild Rebuild the inverted search index from scratch
+		 * @apiDescription	Causes the inverted search index to be completely rebuilt from scratch. Can take a while for large wikis!
+		 * @apiName			SearchInvindexRebuild
+		 * @apiGroup		Search
+		 * @apiPermission Anonymous
+		 */
+		
 		/*
 		 * ██ ███    ██ ██    ██ ██ ███    ██ ██████  ███████ ██   ██          
 		 * ██ ████   ██ ██    ██ ██ ████   ██ ██   ██ ██       ██ ██           
@@ -47,6 +63,15 @@ register_module([
 		add_action("invindex-rebuild", function() {
 			search::rebuild_invindex();
 		});
+		
+		/**
+		 * @api {get} ?action=search&query={text}	Search the wiki for a given query string
+		 * @apiName Search
+		 * @apiGroup Search
+		 * @apiPermission Anonymous
+		 * 
+		 * @apiParam {string}	query	The query string to search for.
+		 */
 		
 		/*
 		 * ███████ ███████  █████  ██████   ██████ ██   ██ 

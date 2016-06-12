@@ -7,6 +7,13 @@ register_module([
 	"id" => "feature-recent-changes",
 	"code" => function() {
 		global $settings, $env, $paths;
+		/**
+		 * @api {get} ?action=recentchanges Get a list of recent changes
+		 * @apiName RecentChanges
+		 * @apiGroup Stats
+		 * @apiPermission Anonymous
+		 */
+		
 		// Add the recent changes json file to $paths for convenience.
 		$paths->recentchanges = $env->storage_prefix . "recent-changes.json";
 		// Create the recent changes json file if it doesn't exist

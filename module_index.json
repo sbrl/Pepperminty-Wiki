@@ -1,11 +1,11 @@
 [
     {
         "name": "Password hashing action",
-        "version": "0.5",
+        "version": "0.6",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a utility action (that anyone can use) called hash that hashes a given string. Useful when changing a user's password.",
         "id": "action-hash",
-        "lastupdate": 1451133514,
+        "lastupdate": 1465757909,
         "optional": false
     },
     {
@@ -14,7 +14,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Exposes Pepperminty Wiki's new page protection mechanism and makes the protect button in the 'More...' menu on the top bar work.",
         "id": "action-protect",
-        "lastupdate": 1451133581,
+        "lastupdate": 1465751051,
         "optional": false
     },
     {
@@ -23,7 +23,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a 'raw' action that shows you the raw source of a page.",
         "id": "action-raw",
-        "lastupdate": 1453559572,
+        "lastupdate": 1465757909,
         "optional": false
     },
     {
@@ -41,7 +41,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
         "id": "feature-history",
-        "lastupdate": 1465405521,
+        "lastupdate": 1465757909,
         "optional": false
     },
     {
@@ -50,7 +50,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds recent changes. Access through the 'recent-changes' action.",
         "id": "feature-recent-changes",
-        "lastupdate": 1465404004,
+        "lastupdate": 1465757910,
         "optional": false
     },
     {
@@ -68,7 +68,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
         "id": "feature-search",
-        "lastupdate": 1458824925,
+        "lastupdate": 1465757892,
         "optional": false
     },
     {
@@ -77,7 +77,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1465044942,
+        "lastupdate": 1465761247,
         "optional": false
     },
     {

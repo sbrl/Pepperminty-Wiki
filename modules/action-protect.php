@@ -6,6 +6,14 @@ register_module([
 	"description" => "Exposes Pepperminty Wiki's new page protection mechanism and makes the protect button in the 'More...' menu on the top bar work.",
 	"id" => "action-protect",
 	"code" => function() {
+		/**
+		 * @api {get} ?action=protect&page={pageName} Toggle the protection of a page.
+		 * @apiName Protect
+		 * @apiGroup Page
+		 * @apiPermission Moderator
+		 * 
+		 * @apiParam {string}	page	The page name to toggle the protection of.
+		 */
 		
 		/*
 		 * ██████  ██████   ██████  ████████ ███████  ██████ ████████ 
