@@ -12,7 +12,8 @@ peppermint:
 
 docs: setupApiDoc
 	@echo [peppermint/docs] Building docs
-	apidoc -f '.*\.php' -e index.php
+	apidoc -vvv -o './RestApiDocs/' -f '.*\.php' -e index.php
+	rm -rf doc/
 
 setupApiDoc:
 	@echo [peppermint] Checking for apiDoc
