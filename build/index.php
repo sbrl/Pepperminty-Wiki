@@ -164,9 +164,13 @@ if($env->is_logged_in)
 * @apiDefine Anonymous	Anybody may use this call.
 */
 /**
- * @apiDefine UserNotLoggedInError
- * @apiError	UserNotLoggedIn	You didn't log in before sending this request.
+ * @apiDefine	UserNotLoggedInError
+ * @apiError	UserNotLoggedInError	You didn't log in before sending this request.
  */
+ /**
+  * @apiDefine	UserNotModeratorError
+  * @apiError	UserNotModeratorError	You weren't loggged in as a moderator before sending this request.
+  */
 
 
 ////////////////////
@@ -2407,8 +2411,10 @@ register_module([
 		 * @apiName UploadFile
 		 * @apiGroup Upload
 		 * @apiPermission User
-		 *
-		 * @apiParam {file} file		The file to upload.
+		 * 
+		 * @apiParam {string}	name		The name of the file to upload.
+		 * @apiParam {string}	description	A description of the file.
+		 * @apiParam {file}		file		The file to upload.
 		 *
 		 * @apiUse	UserNotLoggedInError
 		 * @apiError	UploadsDisabledError	Uploads are currently disabled in the wiki's settings.
@@ -2590,6 +2596,19 @@ register_module([
 					break;
 			}
 		});
+		
+		/**
+		 * @api {get} ?action=preview Get a preview of a file
+		 * @apiName PreviewFile
+		 * @apiGroup Upload
+		 * @apiPermission Anonymous
+		 * 
+		 * @apiParam {string}	page		The name of the file to preview.
+		 * @apiParam {number}	size		Optional. The size fo the resulting preview. Will be clamped to fit within the bounds specified in the wiki's settings. May also be set to the keyword 'original', which will cause the original file to be returned with it's appropriate mime type instead.
+		 *
+		 * @apiError	PreviewNoFileError	No file was found associated with the specified page.
+		 * @apiError	PreviewUnknownFileTypeError	Pepperminty Wiki was unable to generate a preview for the requested file's type.
+		 */
 		
 		/*
 		 * ██████  ██████  ███████ ██    ██ ██ ███████ ██     ██ 
@@ -2936,6 +2955,12 @@ register_module([
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
 	"code" => function() {
+		/**
+		 * @api {get} ?action=credits Get the credits page
+		 * @apiName Credits
+		 * @apiGroup Utility
+		 * @apiPermission Anonymous
+		 */
 		
 		/*
 		 *  ██████ ██████  ███████ ██████  ██ ████████ ███████ 
@@ -3054,6 +3079,14 @@ register_module([
 	"id" => "page-debug-info",
 	"code" => function() {
 		global $settings, $env;
+		/**
+		 * @api {get} ?action=debug	Get a debug dump
+		 * @apiName Debug
+		 * @apiGroup Utility
+		 * @apiPermission Moderator
+		 *
+		 * @apiUse UserNotModeratorError
+		 */
 		
 		/*
 		 * ██████  ███████ ██████  ██    ██  ██████  
@@ -3123,6 +3156,19 @@ register_module([
 	"id" => "page-delete",
 	"code" => function() {
 		global $settings;
+		/**
+		 * @api {post} ?action=upload Delete a file
+		 * @apiDescription	Delete a page and all its associated data.
+		 * @apiName DeletePage
+		 * @apiGroup Page
+		 * @apiPermission Moderator
+		 * 
+		 * @apiParam {string}	page		The name of the page to delete.
+		 * @apiParam {string}	delete		Set to 'yes' to actually delete the page.
+		 *
+		 * @apiUse	UserNotModeratorError
+		 * @apiError	PageNonExistentError	The specified page doesn't exist
+		 */
 		
 		/*
 		 * ██████  ███████ ██      ███████ ████████ ███████ 

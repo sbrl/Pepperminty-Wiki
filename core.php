@@ -97,9 +97,13 @@ if($env->is_logged_in)
 * @apiDefine Anonymous	Anybody may use this call.
 */
 /**
- * @apiDefine UserNotLoggedInError
- * @apiError	UserNotLoggedIn	You didn't log in before sending this request.
+ * @apiDefine	UserNotLoggedInError
+ * @apiError	UserNotLoggedInError	You didn't log in before sending this request.
  */
+ /**
+  * @apiDefine	UserNotModeratorError
+  * @apiError	UserNotModeratorError	You weren't loggged in as a moderator before sending this request.
+  */
 
 
 ////////////////////

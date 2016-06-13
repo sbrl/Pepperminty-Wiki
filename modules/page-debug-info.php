@@ -7,6 +7,14 @@ register_module([
 	"id" => "page-debug-info",
 	"code" => function() {
 		global $settings, $env;
+		/**
+		 * @api {get} ?action=debug	Get a debug dump
+		 * @apiName Debug
+		 * @apiGroup Utility
+		 * @apiPermission Moderator
+		 *
+		 * @apiUse UserNotModeratorError
+		 */
 		
 		/*
 		 * ██████  ███████ ██████  ██    ██  ██████  

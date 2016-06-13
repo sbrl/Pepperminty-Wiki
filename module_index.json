@@ -77,7 +77,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1465761892,
+        "lastupdate": 1465814688,
         "optional": false
     },
     {
@@ -86,7 +86,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
-        "lastupdate": 1460285448,
+        "lastupdate": 1465815023,
         "optional": false
     },
     {
@@ -95,7 +95,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a debug action for administrator use only that collects a load of useful information to make reporting bugs easier.",
         "id": "page-debug-info",
-        "lastupdate": 1453562632,
+        "lastupdate": 1465815112,
         "optional": false
     },
     {
@@ -104,7 +104,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to delete pages.",
         "id": "page-delete",
-        "lastupdate": 1465136119,
+        "lastupdate": 1465815312,
         "optional": false
     },
     {

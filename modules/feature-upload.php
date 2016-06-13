@@ -18,8 +18,10 @@ register_module([
 		 * @apiName UploadFile
 		 * @apiGroup Upload
 		 * @apiPermission User
-		 *
-		 * @apiParam {file} file		The file to upload.
+		 * 
+		 * @apiParam {string}	name		The name of the file to upload.
+		 * @apiParam {string}	description	A description of the file.
+		 * @apiParam {file}		file		The file to upload.
 		 *
 		 * @apiUse	UserNotLoggedInError
 		 * @apiError	UploadsDisabledError	Uploads are currently disabled in the wiki's settings.
@@ -201,6 +203,19 @@ register_module([
 					break;
 			}
 		});
+		
+		/**
+		 * @api {get} ?action=preview Get a preview of a file
+		 * @apiName PreviewFile
+		 * @apiGroup Upload
+		 * @apiPermission Anonymous
+		 * 
+		 * @apiParam {string}	page		The name of the file to preview.
+		 * @apiParam {number}	size		Optional. The size fo the resulting preview. Will be clamped to fit within the bounds specified in the wiki's settings. May also be set to the keyword 'original', which will cause the original file to be returned with it's appropriate mime type instead.
+		 *
+		 * @apiError	PreviewNoFileError	No file was found associated with the specified page.
+		 * @apiError	PreviewUnknownFileTypeError	Pepperminty Wiki was unable to generate a preview for the requested file's type.
+		 */
 		
 		/*
 		 * ██████  ██████  ███████ ██    ██ ██ ███████ ██     ██ 

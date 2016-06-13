@@ -6,6 +6,12 @@ register_module([
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
 	"code" => function() {
+		/**
+		 * @api {get} ?action=credits Get the credits page
+		 * @apiName Credits
+		 * @apiGroup Utility
+		 * @apiPermission Anonymous
+		 */
 		
 		/*
 		 *  ██████ ██████  ███████ ██████  ██ ████████ ███████ 

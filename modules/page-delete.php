@@ -7,6 +7,19 @@ register_module([
 	"id" => "page-delete",
 	"code" => function() {
 		global $settings;
+		/**
+		 * @api {post} ?action=upload Delete a file
+		 * @apiDescription	Delete a page and all its associated data.
+		 * @apiName DeletePage
+		 * @apiGroup Page
+		 * @apiPermission Moderator
+		 * 
+		 * @apiParam {string}	page		The name of the page to delete.
+		 * @apiParam {string}	delete		Set to 'yes' to actually delete the page.
+		 *
+		 * @apiUse	UserNotModeratorError
+		 * @apiError	PageNonExistentError	The specified page doesn't exist
+		 */
 		
 		/*
 		 * ██████  ███████ ██      ███████ ████████ ███████ 
