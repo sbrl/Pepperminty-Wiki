@@ -24,7 +24,7 @@ if(!file_exists("peppermint.json"))
 {
 	// Copy the default settings over to the main settings array
 	foreach ($guiConfig as $key => $value)
-		$settings->$key = $value->default
+		$settings->$key = $value->default;
 	// Generate a random secret
 	$settings->secret = bin2hex(openssl_random_pseudo_bytes($bits));
 	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));

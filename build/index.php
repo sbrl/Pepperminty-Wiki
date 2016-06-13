@@ -27,7 +27,7 @@ if(!file_exists("peppermint.json"))
 {
 	// Copy the default settings over to the main settings array
 	foreach ($guiConfig as $key => $value)
-		$settings->$key = $value->default
+		$settings->$key = $value->default;
 	// Generate a random secret
 	$settings->secret = bin2hex(openssl_random_pseudo_bytes($bits));
 	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
@@ -2400,18 +2400,24 @@ register_module([
 		 * @api {get} ?action=upload Get a page to let you upload a file.
 		 * @apiName UploadFilePage
 		 * @apiGroup Upload
-	 */
+		*/
 		
- 		/**
- 		 * @api {post} ?action=upload Upload a file
- 		 * @apiName UploadFile
- 		 * @apiGroup Upload
- 		 * @apiPermission User
- 		 *
- 		 * @apiParam {file} file		The file to upload.
- 		 *
- 		 * @apiUse UserNotLoggedInError
- 		 */
+		/**
+		 * @api {post} ?action=upload Upload a file
+		 * @apiName UploadFile
+		 * @apiGroup Upload
+		 * @apiPermission User
+		 *
+		 * @apiParam {file} file		The file to upload.
+		 *
+		 * @apiUse	UserNotLoggedInError
+		 * @apiError	UploadsDisabledError	Uploads are currently disabled in the wiki's settings.
+		 * @apiError	UnknownFileTypeError	The type of the file you uploaded is not currently allowed in the wiki's settings.
+		 * @apiError	ImageDimensionsFiledError	PeppermintyWiki couldn't obtain the dimensions of the image you uploaded.
+		 * @apiError	DangerousFileError		The file uploaded appears to be dangerous.
+		 * @apiError	DuplicateFileError		The filename specified is a duplicate of a file that already exists.
+		 * @apiError	FileTamperedError		Pepperminty Wiki couldn't verify that the file wasn't tampered with during theupload process.
+		 */
 		
 		/*
 		 * ██    ██ ██████  ██       ██████   █████  ██████  
