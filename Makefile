@@ -10,7 +10,7 @@ peppermint:
 
 docs: setupApiDoc
 	@echo [peppermint/docs] Building docs
-	apidoc -vvv -o './RestApiDocs/' -f '.*\.php' -e index.php
+	apidoc -o './RestApiDocs/' -f '.*\.php' -e index.php
 	rm -rf doc/
 
 setupApiDoc:
