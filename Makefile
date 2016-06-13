@@ -1,10 +1,8 @@
 .DEFAULT_GOAL := peppermint
-peppermint := peppermint
-docs := docs
 
 .PHONY: setupApiDoc peppermint docs
 
-ApiDocPresent := $(shell sh -c apidoc --help 1\>/dev/null)
+ApiDocPresent := $(shell sh -c apidoc --help 1\>/dev/null && rm -rf doc/)
 
 peppermint:
 	@echo [peppermint/build] Rebuilding Pepperminty Wiki
