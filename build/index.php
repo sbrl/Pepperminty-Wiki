@@ -167,10 +167,14 @@ if($env->is_logged_in)
  * @apiDefine	UserNotLoggedInError
  * @apiError	UserNotLoggedInError	You didn't log in before sending this request.
  */
- /**
-  * @apiDefine	UserNotModeratorError
-  * @apiError	UserNotModeratorError	You weren't loggged in as a moderator before sending this request.
-  */
+/**
+* @apiDefine	UserNotModeratorError
+* @apiError	UserNotModeratorError	You weren't loggged in as a moderator before sending this request.
+*/
+/**
+* @apiDefine	PageParameter
+* @apiParam	{string}	page	The page to operate on.
+*/
 
 
 ////////////////////
@@ -2404,6 +2408,7 @@ register_module([
 		 * @api {get} ?action=upload Get a page to let you upload a file.
 		 * @apiName UploadFilePage
 		 * @apiGroup Upload
+		 * @apiPermission User
 		*/
 		
 		/**
@@ -2598,7 +2603,7 @@ register_module([
 		});
 		
 		/**
-		 * @api {get} ?action=preview Get a preview of a file
+		 * @api {get} ?action=preview&page={pageName}[&size={someSize}] Get a preview of a file
 		 * @apiName PreviewFile
 		 * @apiGroup Upload
 		 * @apiPermission Anonymous
@@ -3157,7 +3162,7 @@ register_module([
 	"code" => function() {
 		global $settings;
 		/**
-		 * @api {post} ?action=upload Delete a file
+		 * @api {post} ?action=delete Delete a page
 		 * @apiDescription	Delete a page and all its associated data.
 		 * @apiName DeletePage
 		 * @apiGroup Page
@@ -3270,6 +3275,17 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/**
+		 * @api {get} ?action=edit&page={pageName}[&newpage=yes]	Get an editing page
+		 * @apiDescription	Gets an editing page for a given page. If you don't have permission to edit the page in question, a view source pagee is returned instead.
+		 * @apiName			EditPage
+		 * @apiGroup		Page
+		 * @apiPermission	Anonymous
+		 * 
+		 * @apiUse PageParameter
+		 * @apiParam	{string}	newpage		Set to 'yes' if a new page is being created. Only affects a few bits of text here and there, and the HTTP response code recieved on success from the `save` action.
+		 */
+		
 		/*
 		 *           _ _ _
 		 *   ___  __| (_) |_
@@ -3341,6 +3357,21 @@ register_module([
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});
 		
+		/**
+		 * @api {post} ?action=save&page={pageName}	Save an edit to a page.
+		 * @apiDescription	Saves an edit to a page. If an edit conflict is encountered, then a conflict resolution page is returned instead.
+		 * @apiName			EditPage
+		 * @apiGroup		Page
+		 * @apiPermission	Anonymous
+		 * 
+		 * @apiUse	PageParameter
+		 * @apiParam	{string}	newpage		GET only. Set to 'yes' to indicate that this is a new page that is being saved. Only affects the HTTP response code you recieve upon success.
+		 * @apiParam	{string}	content		POST only. The new content to save to the given filename.
+		 * @apiParam	{string}	tags		POST only. A comma-separated list of tags to assign to the current page. Will replace the existing list of tags, if any are present.
+		 * @apiParam	{string}	prev-content-hash	POST only. The hash of the original content before editing. If this hash is found to be different to a hash computed of the currentl saved content, a conflict resolution page will be returned instead of saving the provided content.
+		 * 
+		 * @apiError	UnsufficientPermissionError	You don't currently have sufficient permissions to save an edit.
+		 */
 		/*
 		 *
 		 *  ___  __ ___   _____
@@ -3553,6 +3584,18 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/**
+		 * @api		{get}	?action=export	Export the all the wiki's content
+		 * @apiDescription	Export all the wiki's content. Please ask for permission before making a request to this URI. Note that some wikis may only allow moderators to export content.
+		 * @apiName		Export
+		 * @apiGroup	Utility
+		 * @apiPermission	Anonymous
+		 *
+		 * @apiError	InsufficientExportPermissionsError	The wiki has the export_allow_only_admins option turned on, and you aren't logged into a moderator account.
+		 * @apiError	CouldntOpenTempFileError		Pepperminty Wiki couldn't open a temporary file to send the compressed archive to.
+		 * @apiError	CouldntCloseTempFileError		Pepperminty Wiki couldn't close the temporary file to finish creating the zip archive ready for downloading.
+		 */
+		
 		/*
 		 * ███████ ██   ██ ██████   ██████  ██████  ████████ 
 		 * ██       ██ ██  ██   ██ ██    ██ ██   ██    ██    
@@ -3617,6 +3660,16 @@ register_module([
 	"id" => "page-help",
 	"code" => function() {
 		global $settings;
+		
+		/**
+		 * @api		{get}	?action=help[&dev=yes]	Get a help page
+		 * @apiDescription	Get a customised help page. This page will be slightly different for every wiki, depending on their name, settings, and installed modules.
+		 * @apiName		Help
+		 * @apiGroup	Utility
+		 * @apiPermission	Anonymous
+		 *
+		 * @apiParam	{string}	dev		Set to 'yes' to get a developer help page instead. The developer help page gives some general information about which modules and help page sections are registered, and other various (non-sensitive) settings.
+		 */
 		
 		/*
 		 * ██   ██ ███████ ██      ██████  
@@ -3699,6 +3752,14 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/**
+		 * @api		{get}	?action=list	List all pages 
+		 * @apiDescription	Gets a list of all the pages currently stored on the wiki.
+		 * @apiName		ListPages
+		 * @apiGroup	Page
+		 * @apiPermission	Anonymous
+		 */
+		
 		/*
 		 * ██      ██ ███████ ████████ 
 		 * ██      ██ ██         ██    
@@ -3718,6 +3779,16 @@ register_module([
 			$content .= generate_page_list(array_keys($sorted_pageindex));
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});
+		
+		/**
+		 * @api		{get}	?action=list-tags[&tag=]	Get a list of tags or pages with a certain tag
+		 * @apiDescription	Gets a list of all tags on the wiki. Adding the `tag` parameter causes a list of pages with the given tag to be returned instead.
+		 * @apiName		ListTags
+		 * @apiGroup	Utility
+		 * @apiPermission	Anonymous
+		 * 
+		 * @apiParam	{string}	tag		Optional. If provided a list of all the pages with that tag is returned instead.
+		 */
 		
 		/*
 		 * ██      ██ ███████ ████████ ████████  █████   ██████  ███████ 
@@ -3827,6 +3898,16 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/**
+		 * @api		{get}	?action=login[&failed=yes][&returnto={someUrl}]	Get the login page
+		 * @apiName		Login
+		 * @apiGroup	Authorisation
+		 * @apiPermission	Anonymous
+		 * 
+		 * @apiParam	{string}	failed		Setting to yes causes a login failure message to be displayed above the login form.
+		 * @apiParam	{string}	returnto	Set to the url to redirect to upon a successful login.
+		 */
+		
 		/*
 		 * ██       ██████   ██████  ██ ███    ██
 		 * ██      ██    ██ ██       ██ ████   ██
@@ -3860,6 +3941,18 @@ register_module([
 			exit(page_renderer::render_main($title, $content));
 		});
 		
+		/**
+		 * @api		{post}	?action=checklogin	Perform a login
+		 * @apiName		CheckLogin
+		 * @apiGroup	Authorisation
+		 * @apiPermission	Anonymous
+		 * 
+		 * @apiParam	{string}	user		The user name to login with.
+		 * @apiParam	{string}	password	The password to login with.
+		 * @apiParam	{string}	returnto	The URL to redirect to upon a successful login.
+		 *
+		 * @apiError	InvalidCredentialsError	The supplied credentials were invalid. Note that this error is actually a redirect to ?action=login&failed=yes (with the returnto parameter appended if you supplied one)
+		 */
 		
 		/*
  		 * ██████ ██   ██ ███████  ██████ ██   ██
@@ -3957,6 +4050,15 @@ register_module([
 	"description" => "Adds an action to let users user out. For security reasons it is wise to add this module since logging in automatically opens a session that is valid for 30 days.",
 	"id" => "page-logout",
 	"code" => function() {
+		
+		/**
+		 * @api		{post}	?action=logout	Logout
+		 * @apiDescription	Logout. Make sure that your bot requests this URL when it is finished - this call not only clears your cookies but also clears the server's session file as well. Note that you can request this when you are already logged out and it will completely wipe your session on the server.
+		 * @apiName		Logout
+		 * @apiGroup	Authorisation
+		 * @apiPermission	Anonymous
+		 */
+		
 		/*
 		 * ██       ██████   ██████   ██████  ██    ██ ████████ 
 		 * ██      ██    ██ ██       ██    ██ ██    ██    ██    
@@ -3990,6 +4092,21 @@ register_module([
 	"id" => "page-move",
 	"code" => function() {
 		global $settings;
+		
+		/**
+		 * @api		{get}	?action=move[new_name={newPageName}]	Move a page
+		 * @apiName		Move
+		 * @apiGroup	Page
+		 * @apiPermission	Moderator
+		 * 
+		 * @apiParam	{string}	new_name	The new name to move the page to. If not set a page will be returned containing a move page form.
+		 *
+		 * @apiUse UserNotModeratorError
+		 * @apiError	EditingDisabledError	Editing is disabled on this wiki, so pages can't be moved.
+		 * @apiError	PageExistsAtDestinationError	A page already exists with the specified new name.
+		 * @apiError	NonExistentPageError		The page you're trying to move doesn't exist in the first place.
+		 * @apiError	PreExistingFileError		A pre-existing file on the server's file system was detected.
+		 */
 		
 		/*
 		 * ███    ███  ██████  ██    ██ ███████ 
@@ -4092,7 +4209,7 @@ register_module([
 		});
 		
 		// Register a help section
-		add_help_section("60-move", "Moving Pages", "<p>If you are logged in as an adminitrator, then you have the power to move pages. To do this, click &quot;Delete&quot; in the &quot;More...&quot; menu when browsing the pge you wish to move. Type in the new name of the page, and then click &quot;Move Page&quot;.</p>");
+		add_help_section("60-move", "Moving Pages", "<p>If you are logged in as an administrator, then you have the power to move pages. To do this, click &quot;Delete&quot; in the &quot;More...&quot; menu when browsing the pge you wish to move. Type in the new name of the page, and then click &quot;Move Page&quot;.</p>");
 	}
 ]);
 
@@ -4106,6 +4223,21 @@ register_module([
 	"description" => "Adds an update page that downloads the latest stable version of Pepperminty Wiki. This module is currently outdated as it doesn't save your module preferences.",
 	"id" => "page-update",
 	"code" => function() {
+		
+		/**
+		 * @api		{get}	?action=move[do=yes]	Update the wiki
+		 * @apiDescription	Update the wiki by downloading  a new version of Pepperminty Wiki from the URL specified in the settings. Note that unless you change the url from it's default, all custom modules installed will be removed. **Note also that this plugin is currently out of date. Use with extreme caution!**
+		 * @apiName			Update
+		 * @apiGroup		Utility
+		 * @apiPermission	Moderator
+		 * 
+		 * @apiParam	{string}	do		Set to 'yes' to actually do the upgrade. Omission causes a page asking whether an update is desired instead.
+		 * @apiParam	{string}	secret	The wiki's secret string that's stored in the settings.
+		 *
+		 * @apiUse UserNotModeratorError
+		 * @apiParam	InvalidSecretError	The supplied secret doesn't match up with the secret stored in the wiki's settings.
+		 */
+		
 		/*
 		 * ██    ██ ██████  ██████   █████  ████████ ███████ 
 		 * ██    ██ ██   ██ ██   ██ ██   ██    ██    ██      
@@ -4122,7 +4254,7 @@ register_module([
 				exit(page_renderer::render_main("Update - Error", "<p>You must be an administrator to do that.</p>"));
 			}
 			
-			if(!isset($_GET["do"]) or $_GET["do"] !== "true")
+			if(!isset($_GET["do"]) or $_GET["do"] !== "true" or $_GET["do"] !== "yes")
 			{
 				exit(page_renderer::render_main("Update $settings->sitename", "<p>This page allows you to update $settings->sitename.</p>
 				<p>Currently, $settings->sitename is using $settings->version of Pepperminty Wiki.</p>
@@ -4180,6 +4312,20 @@ register_module([
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
 	"code" => function() {
+		/**
+		 * @api	{get}	?action=view[&page={pageName}][&revision=rid][&printable=yes]	View a page
+		 * @apiName			View
+		 * @apiGroup		Page
+		 * @apiPermission	Anonymous
+		 * 
+		 * @apiUse PageParameter
+		 * @apiParam	{number}	revision	The revision number to display.
+		 * @apiParam	{string}	printable	Set to 'yes' to get a printable version of the specified page instead.
+		 *
+		 * @apiError	NonExistentPageError	The page doesn't exist and editing is disabled in the wiki's settings. If editing isn't disabled, you will be redirected to the edit apge instead.
+		 * @apiError	NonExistentRevisionError	The specified revision was not found.
+		 */
+		
 		/*
 		 * ██    ██ ██ ███████ ██     ██ 
 		 * ██    ██ ██ ██      ██     ██ 
