@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := peppermint
 
-.PHONY: setupApiDoc peppermint docs
+.PHONY: setupApiDoc peppermint docs gh-pages
 
 ApiDocPresent := $(shell sh -c apidoc --help 1\>/dev/null && rm -rf doc/)
 
@@ -21,3 +21,11 @@ ifndef ApiDocPresent
 	npm install apidoc --global
 endif
 	@echo [peppermint] Check complete
+
+gh-pages:
+	@echo [peppermint/gh-pages] Syncing master branch with gh-pages branch
+	git checkout gh-pages
+	git rebase master
+	git push origin gh-pages
+	git checkout master
+	@echo '[peppermint/gh-pages] Sync complete.'
