@@ -140,6 +140,8 @@ Key				| Value			| Explanation
 ## Module API Reference
 I have documented (most of) the current API that you can use to create your own modules. You can find it in the [Module_API_Docs.md](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Module_API_Docs.md) file in this repository.
 
+I've also documented Pepperminty Wiki's entire REST API using [apiDoc](http://apidocjs.com/). You can view the docs [here](https://sbrl.github.io/Pepperminty-Wiki/RestApiDocs/).
+
 If you do create a module, I'd love to hear about it. Even better, [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls/new)!
 
 ## Real World Usage
