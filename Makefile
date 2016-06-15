@@ -27,7 +27,7 @@ gh-pages:
 	@echo [peppermint/gh-pages] Making sure the working directory is clean.
 	# From http://unix.stackexchange.com/a/155077/64687
 	git diff --exit-code
-	git diff cached --exit-code
+	git diff --cached --exit-code
 	
 	git checkout gh-pages
 	git rebase master
