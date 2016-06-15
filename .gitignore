@@ -29,6 +29,3 @@ build/Files/*
 
 # The testing zone for the $paths
 data_test
-
-# Ignore the auto-generated API docs for now
-RestApiDocs/
