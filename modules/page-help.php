@@ -8,6 +8,16 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/**
+		 * @api		{get}	?action=help[&dev=yes]	Get a help page
+		 * @apiDescription	Get a customised help page. This page will be slightly different for every wiki, depending on their name, settings, and installed modules.
+		 * @apiName		Help
+		 * @apiGroup	Utility
+		 * @apiPermission	Anonymous
+		 *
+		 * @apiParam	{string}	dev		Set to 'yes' to get a developer help page instead. The developer help page gives some general information about which modules and help page sections are registered, and other various (non-sensitive) settings.
+		 */
+		
 		/*
 		 * ██   ██ ███████ ██      ██████  
 		 * ██   ██ ██      ██      ██   ██ 

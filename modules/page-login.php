@@ -8,6 +8,16 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/**
+		 * @api		{get}	?action=login[&failed=yes][&returnto={someUrl}]	Get the login page
+		 * @apiName		Login
+		 * @apiGroup	Authorisation
+		 * @apiPermission	Anonymous
+		 * 
+		 * @apiParam	{string}	failed		Setting to yes causes a login failure message to be displayed above the login form.
+		 * @apiParam	{string}	returnto	Set to the url to redirect to upon a successful login.
+		 */
+		
 		/*
 		 * ██       ██████   ██████  ██ ███    ██
 		 * ██      ██    ██ ██       ██ ████   ██
@@ -41,6 +51,18 @@ register_module([
 			exit(page_renderer::render_main($title, $content));
 		});
 		
+		/**
+		 * @api		{post}	?action=checklogin	Perform a login
+		 * @apiName		CheckLogin
+		 * @apiGroup	Authorisation
+		 * @apiPermission	Anonymous
+		 * 
+		 * @apiParam	{string}	user		The user name to login with.
+		 * @apiParam	{string}	password	The password to login with.
+		 * @apiParam	{string}	returnto	The URL to redirect to upon a successful login.
+		 *
+		 * @apiError	InvalidCredentialsError	The supplied credentials were invalid. Note that this error is actually a redirect to ?action=login&failed=yes (with the returnto parameter appended if you supplied one)
+		 */
 		
 		/*
  		 * ██████ ██   ██ ███████  ██████ ██   ██

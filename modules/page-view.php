@@ -6,6 +6,20 @@ register_module([
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
 	"code" => function() {
+		/**
+		 * @api	{get}	?action=view[&page={pageName}][&revision=rid][&printable=yes]	View a page
+		 * @apiName			View
+		 * @apiGroup		Page
+		 * @apiPermission	Anonymous
+		 * 
+		 * @apiUse PageParameter
+		 * @apiParam	{number}	revision	The revision number to display.
+		 * @apiParam	{string}	printable	Set to 'yes' to get a printable version of the specified page instead.
+		 *
+		 * @apiError	NonExistentPageError	The page doesn't exist and editing is disabled in the wiki's settings. If editing isn't disabled, you will be redirected to the edit apge instead.
+		 * @apiError	NonExistentRevisionError	The specified revision was not found.
+		 */
+		
 		/*
 		 * ██    ██ ██ ███████ ██     ██ 
 		 * ██    ██ ██ ██      ██     ██ 

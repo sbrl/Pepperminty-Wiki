@@ -6,6 +6,21 @@ register_module([
 	"description" => "Adds an update page that downloads the latest stable version of Pepperminty Wiki. This module is currently outdated as it doesn't save your module preferences.",
 	"id" => "page-update",
 	"code" => function() {
+		
+		/**
+		 * @api		{get}	?action=move[do=yes]	Update the wiki
+		 * @apiDescription	Update the wiki by downloading  a new version of Pepperminty Wiki from the URL specified in the settings. Note that unless you change the url from it's default, all custom modules installed will be removed. **Note also that this plugin is currently out of date. Use with extreme caution!**
+		 * @apiName			Update
+		 * @apiGroup		Utility
+		 * @apiPermission	Moderator
+		 * 
+		 * @apiParam	{string}	do		Set to 'yes' to actually do the upgrade. Omission causes a page asking whether an update is desired instead.
+		 * @apiParam	{string}	secret	The wiki's secret string that's stored in the settings.
+		 *
+		 * @apiUse UserNotModeratorError
+		 * @apiParam	InvalidSecretError	The supplied secret doesn't match up with the secret stored in the wiki's settings.
+		 */
+		
 		/*
 		 * ██    ██ ██████  ██████   █████  ████████ ███████ 
 		 * ██    ██ ██   ██ ██   ██ ██   ██    ██    ██      
@@ -22,7 +37,7 @@ register_module([
 				exit(page_renderer::render_main("Update - Error", "<p>You must be an administrator to do that.</p>"));
 			}
 			
-			if(!isset($_GET["do"]) or $_GET["do"] !== "true")
+			if(!isset($_GET["do"]) or $_GET["do"] !== "true" or $_GET["do"] !== "yes")
 			{
 				exit(page_renderer::render_main("Update $settings->sitename", "<p>This page allows you to update $settings->sitename.</p>
 				<p>Currently, $settings->sitename is using $settings->version of Pepperminty Wiki.</p>

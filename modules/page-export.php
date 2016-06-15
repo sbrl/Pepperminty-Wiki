@@ -8,6 +8,18 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/**
+		 * @api		{get}	?action=export	Export the all the wiki's content
+		 * @apiDescription	Export all the wiki's content. Please ask for permission before making a request to this URI. Note that some wikis may only allow moderators to export content.
+		 * @apiName		Export
+		 * @apiGroup	Utility
+		 * @apiPermission	Anonymous
+		 *
+		 * @apiError	InsufficientExportPermissionsError	The wiki has the export_allow_only_admins option turned on, and you aren't logged into a moderator account.
+		 * @apiError	CouldntOpenTempFileError		Pepperminty Wiki couldn't open a temporary file to send the compressed archive to.
+		 * @apiError	CouldntCloseTempFileError		Pepperminty Wiki couldn't close the temporary file to finish creating the zip archive ready for downloading.
+		 */
+		
 		/*
 		 * ███████ ██   ██ ██████   ██████  ██████  ████████ 
 		 * ██       ██ ██  ██   ██ ██    ██ ██   ██    ██    

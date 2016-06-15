@@ -9,6 +9,17 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/**
+		 * @api {get} ?action=edit&page={pageName}[&newpage=yes]	Get an editing page
+		 * @apiDescription	Gets an editing page for a given page. If you don't have permission to edit the page in question, a view source pagee is returned instead.
+		 * @apiName			EditPage
+		 * @apiGroup		Page
+		 * @apiPermission	Anonymous
+		 * 
+		 * @apiUse PageParameter
+		 * @apiParam	{string}	newpage		Set to 'yes' if a new page is being created. Only affects a few bits of text here and there, and the HTTP response code recieved on success from the `save` action.
+		 */
+		
 		/*
 		 *           _ _ _
 		 *   ___  __| (_) |_
@@ -80,6 +91,21 @@ register_module([
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});
 		
+		/**
+		 * @api {post} ?action=save&page={pageName}	Save an edit to a page.
+		 * @apiDescription	Saves an edit to a page. If an edit conflict is encountered, then a conflict resolution page is returned instead.
+		 * @apiName			EditPage
+		 * @apiGroup		Page
+		 * @apiPermission	Anonymous
+		 * 
+		 * @apiUse	PageParameter
+		 * @apiParam	{string}	newpage		GET only. Set to 'yes' to indicate that this is a new page that is being saved. Only affects the HTTP response code you recieve upon success.
+		 * @apiParam	{string}	content		POST only. The new content to save to the given filename.
+		 * @apiParam	{string}	tags		POST only. A comma-separated list of tags to assign to the current page. Will replace the existing list of tags, if any are present.
+		 * @apiParam	{string}	prev-content-hash	POST only. The hash of the original content before editing. If this hash is found to be different to a hash computed of the currentl saved content, a conflict resolution page will be returned instead of saving the provided content.
+		 * 
+		 * @apiError	UnsufficientPermissionError	You don't currently have sufficient permissions to save an edit.
+		 */
 		/*
 		 *
 		 *  ___  __ ___   _____

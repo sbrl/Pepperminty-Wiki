@@ -104,6 +104,10 @@ if($env->is_logged_in)
   * @apiDefine	UserNotModeratorError
   * @apiError	UserNotModeratorError	You weren't loggged in as a moderator before sending this request.
   */
+ /**
+  * @apiDefine	PageParameter
+  * @apiParam	{string}	page	The page to operate on.
+  */
 
 
 ////////////////////

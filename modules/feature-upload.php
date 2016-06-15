@@ -11,6 +11,7 @@ register_module([
 		 * @api {get} ?action=upload Get a page to let you upload a file.
 		 * @apiName UploadFilePage
 		 * @apiGroup Upload
+		 * @apiPermission User
 		*/
 		
 		/**
@@ -205,7 +206,7 @@ register_module([
 		});
 		
 		/**
-		 * @api {get} ?action=preview Get a preview of a file
+		 * @api {get} ?action=preview&page={pageName}[&size={someSize}] Get a preview of a file
 		 * @apiName PreviewFile
 		 * @apiGroup Upload
 		 * @apiPermission Anonymous

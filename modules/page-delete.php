@@ -8,7 +8,7 @@ register_module([
 	"code" => function() {
 		global $settings;
 		/**
-		 * @api {post} ?action=upload Delete a file
+		 * @api {post} ?action=delete Delete a page
 		 * @apiDescription	Delete a page and all its associated data.
 		 * @apiName DeletePage
 		 * @apiGroup Page

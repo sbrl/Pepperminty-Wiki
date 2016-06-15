@@ -8,6 +8,14 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/**
+		 * @api		{get}	?action=list	List all pages 
+		 * @apiDescription	Gets a list of all the pages currently stored on the wiki.
+		 * @apiName		ListPages
+		 * @apiGroup	Page
+		 * @apiPermission	Anonymous
+		 */
+		
 		/*
 		 * ██      ██ ███████ ████████ 
 		 * ██      ██ ██         ██    
@@ -27,6 +35,16 @@ register_module([
 			$content .= generate_page_list(array_keys($sorted_pageindex));
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});
+		
+		/**
+		 * @api		{get}	?action=list-tags[&tag=]	Get a list of tags or pages with a certain tag
+		 * @apiDescription	Gets a list of all tags on the wiki. Adding the `tag` parameter causes a list of pages with the given tag to be returned instead.
+		 * @apiName		ListTags
+		 * @apiGroup	Utility
+		 * @apiPermission	Anonymous
+		 * 
+		 * @apiParam	{string}	tag		Optional. If provided a list of all the pages with that tag is returned instead.
+		 */
 		
 		/*
 		 * ██      ██ ███████ ████████ ████████  █████   ██████  ███████ 

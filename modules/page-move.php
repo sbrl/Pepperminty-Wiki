@@ -8,6 +8,21 @@ register_module([
 	"code" => function() {
 		global $settings;
 		
+		/**
+		 * @api		{get}	?action=move[new_name={newPageName}]	Move a page
+		 * @apiName		Move
+		 * @apiGroup	Page
+		 * @apiPermission	Moderator
+		 * 
+		 * @apiParam	{string}	new_name	The new name to move the page to. If not set a page will be returned containing a move page form.
+		 *
+		 * @apiUse UserNotModeratorError
+		 * @apiError	EditingDisabledError	Editing is disabled on this wiki, so pages can't be moved.
+		 * @apiError	PageExistsAtDestinationError	A page already exists with the specified new name.
+		 * @apiError	NonExistentPageError		The page you're trying to move doesn't exist in the first place.
+		 * @apiError	PreExistingFileError		A pre-existing file on the server's file system was detected.
+		 */
+		
 		/*
 		 * ███    ███  ██████  ██    ██ ███████ 
 		 * ████  ████ ██    ██ ██    ██ ██      
@@ -109,7 +124,7 @@ register_module([
 		});
 		
 		// Register a help section
-		add_help_section("60-move", "Moving Pages", "<p>If you are logged in as an adminitrator, then you have the power to move pages. To do this, click &quot;Delete&quot; in the &quot;More...&quot; menu when browsing the pge you wish to move. Type in the new name of the page, and then click &quot;Move Page&quot;.</p>");
+		add_help_section("60-move", "Moving Pages", "<p>If you are logged in as an administrator, then you have the power to move pages. To do this, click &quot;Delete&quot; in the &quot;More...&quot; menu when browsing the pge you wish to move. Type in the new name of the page, and then click &quot;Move Page&quot;.</p>");
 	}
 ]);
 
