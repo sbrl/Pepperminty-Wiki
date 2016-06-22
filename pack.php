@@ -39,10 +39,14 @@ $settings = file_get_contents("settings.fragment.php");
 $settings = str_replace([ "<?php", "?>" ], "", $settings);
 $core = str_replace([
 	"{settings}",
-	"{version}"
+	"{version}",
+	"{guiconfig}",
+	"{default-css}"
 ], [
 	$settings,
-	trim(file_get_contents("version"))
+	trim(file_get_contents("version")),
+	trim(file_get_contents("peppermint.guiconfig.json")),
+	trim(file_get_contents("theme_default.css"))
 ], $core);
 
 $result = $core;

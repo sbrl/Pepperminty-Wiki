@@ -73,11 +73,11 @@
     },
     {
         "name": "Uploader",
-        "version": "0.5.5",
+        "version": "0.5.6",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1466014493,
+        "lastupdate": 1466582736,
         "optional": false
     },
     {
@@ -113,7 +113,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1466014200,
+        "lastupdate": 1466582736,
         "optional": false
     },
     {
@@ -122,7 +122,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that you can use to export your wiki as a .zip file. Uses $settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
         "id": "page-export",
-        "lastupdate": 1466009796,
+        "lastupdate": 1466582751,
         "optional": false
     },
     {
@@ -145,11 +145,11 @@
     },
     {
         "name": "Login",
-        "version": "0.8.2",
+        "version": "0.8.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastupdate": 1466011446,
+        "lastupdate": 1466582638,
         "optional": false
     },
     {
@@ -167,7 +167,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
         "id": "page-move",
-        "lastupdate": 1466012072,
+        "lastupdate": 1466582736,
         "optional": false
     },
     {

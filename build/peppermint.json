@@ -1,0 +1,129 @@
+{
+    "sitename": "Pepperminty Wiki",
+    "defaultpage": "Main Page",
+    "admindetails_name": "Administrator",
+    "admindetails_email": "admin@localhost",
+    "favicon": "data:image\/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAB3VBMVEXhERHbKCjeVVXjb2\/kR0fhKirdHBziDg6qAADaHh7qLy\/pdXXUNzfMAADYPj7ZPDzUNzfbHx\/fERHpamrqMTHgExPdHx\/bLCzhLS3fVFTjT0\/ibm7kRkbiLi7aKirdISHeFBTqNDTpeHjgERHYJCTVODjYQkLaPj6\/AADVOTnpbW3cIyPdFRXcJCThMjLiTU3ibW3fVVXaKyvcERH4ODj+8fH\/\/\/\/\/fHz+Fxf4KSn0UFD\/CAj\/AAD\/Xl7\/wMD\/EhL\/\/v70xMT\/+Pj\/iYn\/HBz\/g4P\/IyP\/Kyv\/7Oz0QUH\/9PT\/+vr\/ior\/Dg7\/vr7\/aGj\/QED\/bGz\/AQH\/ERH\/Jib\/R0f\/goL\/0dH\/qan\/YWH\/7e3\/Cwv4R0f\/MTH\/enr\/vLz\/u7v\/cHD\/oKD\/n5\/\/aWn+9\/f\/k5P\/0tL\/trb\/QUH\/cXH\/dHT\/wsL\/DQ3\/p6f\/DAz\/1dX\/XV3\/kpL\/i4v\/Vlb\/2Nj\/9\/f\/pKT+7Oz\/V1f\/iIj\/jIz\/r6\/\/Zmb\/lZX\/j4\/\/T0\/\/Dw\/4MzP\/GBj\/+fn\/o6P\/TEz\/xMT\/b2\/\/Tk7\/OTn\/HR3\/hIT\/ODj\/Y2P\/CQn\/ZGT\/6Oj0UlL\/Gxv\/\/f3\/Bwf\/YmL\/6+v0w8P\/Cgr\/tbX0QkL+9fX4Pz\/qNzd0dFHLAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfeCxINNSdmw510AAAA5ElEQVQYGQXBzSuDAQCA8eexKXOwmSZepa1JiPJxsJOrCwcnuchBjg4O\/gr7D9zk4uAgJzvuMgcTpYxaUZvSm5mUj7TX7ycAqvoLIJBwStVbP0Hom1Z\/ejoxrbaR1Jz6nWinbKWttGRgMSSjanPktRY6mB9WtRNTn7Ilh7LxnNpKq2\/x5LnBitfz+hx0qxUaxhZ6vwqq9bx6f2XXvuUl9SVQS38NR7cvln3v15tZ9bQpuWDtZN3Lgh5DWJex3Y+z1KrVhw21+CiM74WZo83DiXq0dVBDYNJkFEU7WrwDAZhRtQrwDzwKQbT6GboLAAAAAElFTkSuQmCC",
+    "logo_url": "\/\/starbeamrainbowlabs.com\/images\/logos\/peppermint.png",
+    "logo_position": "left",
+    "show_subpages": true,
+    "subpages_display_depth": 3,
+    "footer_message": "All content is under <a href='?page=License' target='_blank'>this license<\/a>. Please make sure that you read and understand the license, especially if you are thinking about copying some (or all) of this site's content, as it may restrict you from doing so.",
+    "editing_message": "<a href='?action=help#20-parser-default' target='_blank'>Formatting help<\/a> (<a href='https:\/\/github.com\/adam-p\/markdown-here\/wiki\/Markdown-Cheatsheet' target='_blank'>Markdown Cheatsheet<\/a>)<br \/>\nBy submitting your edit or uploading your file, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license<\/a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!",
+    "admindisplaychar": "&#9670;",
+    "protectedpagechar": "&#128274;",
+    "editing": true,
+    "anonedits": false,
+    "maxpagesize": 135000,
+    "parser": "parsedown",
+    "clean_raw_html": true,
+    "enable_math_rendering": true,
+    "users": {
+        "admin": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+        "user": "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34"
+    },
+    "admins": [
+        "admin"
+    ],
+    "use_sha3": false,
+    "require_login_view": false,
+    "data_storage_dir": ".",
+    "delayed_indexing_time": 0,
+    "nav_links": [
+        "user-status",
+        [
+            "Home",
+            "index.php"
+        ],
+        "search",
+        [
+            "Read",
+            "index.php?page={page}"
+        ],
+        [
+            "Edit",
+            "index.php?action=edit&page={page}"
+        ],
+        [
+            "All&nbsp;Pages",
+            "index.php?action=list"
+        ],
+        "menu"
+    ],
+    "nav_links_extra": [
+        [
+            "&#x1f553; Page History",
+            "?action=history&page={page}"
+        ],
+        [
+            "&#x1f3ab; All&nbsp;Tags",
+            "index.php?action=list-tags"
+        ],
+        [
+            "Recent changes",
+            "?action=recent-changes"
+        ],
+        [
+            "&#x1f845; Upload",
+            "index.php?action=upload"
+        ],
+        [
+            "&#x2327; &#9670;Delete",
+            "index.php?action=delete&page={page}"
+        ],
+        [
+            "&#x2398; &#9670;Move",
+            "index.php?action=move&page={page}"
+        ],
+        [
+            "&#x1f510; &#9670;Toggle Protection",
+            "index.php?action=protect&page={page}"
+        ]
+    ],
+    "nav_links_bottom": [
+        [
+            "&#x1f5b6; Printable version",
+            "index.php?action=view&printable=yes&page={page}"
+        ],
+        [
+            "Credits",
+            "index.php?action=credits"
+        ],
+        [
+            "Help",
+            "index.php?action=help"
+        ]
+    ],
+    "upload_enabled": true,
+    "upload_allowed_file_types": [
+        "image\/jpeg",
+        "image\/png",
+        "image\/gif",
+        "image\/webp",
+        "image\/svg+xml",
+        "video\/mp4",
+        "video\/webm",
+        "audio\/mp4",
+        "audio\/mpeg"
+    ],
+    "preview_file_type": "image\/png",
+    "default_preview_size": 640,
+    "mime_extension_mappings_location": "\/etc\/mime.types",
+    "mime_mappings_overrides": {
+        "text\/plain": "txt",
+        "audio\/mpeg": "mp3"
+    },
+    "min_preview_size": 1,
+    "max_preview_size": 2048,
+    "search_characters_context": 200,
+    "search_title_matches_weighting": 10,
+    "search_tags_matches_weighting": 3,
+    "defaultaction": "view",
+    "updateurl": "https:\/\/raw.githubusercontent.com\/sbrl\/pepperminty-wiki\/master\/index.php",
+    "optimize_pages": true,
+    "max_recent_changes": 512,
+    "export_allow_only_admins": false,
+    "sessionprefix": "auto",
+    "css": "auto",
+    "secret": "9eb151c6f3bb6f73a59596f4ed450ff8"
+}

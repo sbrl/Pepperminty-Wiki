@@ -15,9 +15,10 @@
 	* #2 - Incorrect closing tag - nibreh <https://github.com/nibreh/>
 	* #8 - Rogue <datalist /> tag - nibreh <https://github.com/nibreh/>
  */
-$guiConfig = <<<GUICONFIG
+$guiConfig = <<<'GUICONFIG'
 {guiconfig}
 GUICONFIG;
+
 $guiConfig = json_decode($guiConfig);
 $settings = new stdClass();
 if(!file_exists("peppermint.json"))
@@ -26,7 +27,7 @@ if(!file_exists("peppermint.json"))
 	foreach ($guiConfig as $key => $value)
 		$settings->$key = $value->default;
 	// Generate a random secret
-	$settings->secret = bin2hex(openssl_random_pseudo_bytes($bits));
+	$settings->secret = bin2hex(openssl_random_pseudo_bytes(16));
 	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
 }
 else
@@ -35,8 +36,8 @@ else
 if($settings->css === "auto")
 {
 	$settings->css = <<<THEMECSS
-	{defaults-css}
-	THEMECSS;
+{default-css}
+THEMECSS;
 }
 
 /*** Notes ***

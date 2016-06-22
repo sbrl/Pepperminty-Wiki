@@ -296,7 +296,7 @@ DIFFSCRIPT;
 			{
 				http_response_code(507);
 				exit(page_renderer::render_main("Error saving page - $settings->sitename", "<p>$settings->sitename failed to write your changes to the server's disk. Your changes have not been saved, but you might be able to recover your edit by pressing the back button in your browser.</p>
-				<p>Please tell the administrator of this wiki (" . $settings->admindetails["name"] . ") about this problem.</p>"));
+				<p>Please tell the administrator of this wiki (" . $settings->admindetails_name . ") about this problem.</p>"));
 			}
 		});
 		

@@ -73,7 +73,7 @@ register_module([
 			if(isset($pageindex->$page->uploadedfile) and
 				file_exists($new_name))
 				exit(page_renderer::render_main("Moving $env->page - Error - $settings->sitename", "<p>Whilst moving the file associated with $env->page, $settings->sitename detected a pre-existing file on the server's file system. Because $settings->sitename can't determine whether the existing file is important to another component of $settings->sitename or it's host web server, the move have been aborted - just in case.</p>
-				<p>If you know that this move is actually safe, please get your site administrator (" . $settings->admindetails["name"] . ") to perform the move manually. Their contact address can be found at the bottom of every page (including this one).</p>"));
+				<p>If you know that this move is actually safe, please get your site administrator (" . $settings->admindetails_name . ") to perform the move manually. Their contact address can be found at the bottom of every page (including this one).</p>"));
 			
 			// Move the page in the page index
 			$pageindex->$new_name = new stdClass();

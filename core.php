@@ -31,8 +31,8 @@ $paths->upload_file_prefix = "Files/"; // The prefix to append to uploaded files
 session_start();
 ///////// Login System /////////
 // Clear expired sessions
-if(isset($_SESSION["$settings->sessionprefix-expiretime"]) and
-   $_SESSION["$settings->sessionprefix-expiretime"] < time())
+if(isset($_SESSION[$settings->sessionprefix . "-expiretime"]) and
+   $_SESSION[$settings->sessionprefix . "-expiretime"] < time())
 {
 	// Clear the session variables
 	$_SESSION = [];
@@ -108,8 +108,6 @@ if($env->is_logged_in)
 * @apiDefine	PageParameter
 * @apiParam	{string}	page	The page to operate on.
 */
-
-
 ////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -757,8 +755,8 @@ class page_renderer
 		if(!is_callable($function))
 		{
 			http_response_code(500);
-			$admin_name = $settings->admindetails["name"];
-			$admin_email = hide_email($settings->admindetails["email"]);
+			$admin_name = $settings->admindetails_name;
+			$admin_email = hide_email($settings->admindetails_email);
 			exit(page_renderer::render("$settings->sitename - Module Error", "<p>$settings->sitename has got a misbehaving module installed that tried to register an invalid HTML handler with the page renderer. Please contact $settings->sitename's administrator $admin_name at <a href='mailto:$admin_email'>$admin_email</a>."));
 		}
 
@@ -802,8 +800,8 @@ class page_renderer
 			"{navigation-bar}" => self::render_navigation_bar($settings->nav_links, $settings->nav_links_extra, "top"),
 			"{navigation-bar-bottom}" => self::render_navigation_bar($settings->nav_links_bottom, [], "bottom"),
 
-			"{admin-details-name}" => $settings->admindetails["name"],
-			"{admin-details-email}" => $settings->admindetails["email"],
+			"{admin-details-name}" => $settings->admindetails_name,
+			"{admin-details-email}" => $settings->admindetails_email,
 
 			"{admins-name-list}" => implode(", ", $settings->admins),
 
@@ -1086,7 +1084,7 @@ function parse_page_source($source)
 {
 	global $settings, $parsers;
 	if(!isset($parsers[$settings->parser]))
-		exit(page_renderer::render_main("Parsing error - $settings->sitename", "<p>Parsing some page source data failed. This is most likely because $settings->sitename has the parser setting set incorrectly. Please contact <a href='mailto:" . hide_email($settings->admindetails["email"]) . "'>" . $settings->admindetails["name"] . "</a>, your $settings->sitename Administrator."));
+		exit(page_renderer::render_main("Parsing error - $settings->sitename", "<p>Parsing some page source data failed. This is most likely because $settings->sitename has the parser setting set incorrectly. Please contact <a href='mailto:" . hide_email($settings->admindetails_email) . "'>" . $settings->admindetails_name . "</a>, your $settings->sitename Administrator."));
 
 /* Not needed atm because escaping happens when saving, not when rendering *
 	if($settings->clean_raw_html)

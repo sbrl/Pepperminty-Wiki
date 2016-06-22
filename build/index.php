@@ -18,9 +18,135 @@ $start_time = microtime(true);
 	* #2 - Incorrect closing tag - nibreh <https://github.com/nibreh/>
 	* #8 - Rogue <datalist /> tag - nibreh <https://github.com/nibreh/>
  */
-$guiConfig = <<<GUICONFIG
-{guiconfig}
+$guiConfig = <<<'GUICONFIG'
+{
+	"sitename": {"type": "text", "description": "Your wiki's name.", "default": "Pepperminty Wiki"},
+	"defaultpage": {"type": "text", "description": "The name of the page that will act as the home page for the wiki. This page will be served if you don't specify a page.", "default": "Main Page"},
+	"admindetails_name": {"type": "text", "description": "Your name as the wiki administrator.", "default": "Administrator"},
+	"admindetails_email": {"type": "email", "description": "Your email address as the wiki administrator. Will be displayed as a support contact address.", "default": "admin@localhost"},
+	"favicon": {"type": "url", "description": "A url that points to the favicon you want to use for your wiki. By default this is set to a data: url of a Peppermint (Credit: by bluefrog23, source: https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23)", "default": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAB3VBMVEXhERHbKCjeVVXjb2/kR0fhKirdHBziDg6qAADaHh7qLy/pdXXUNzfMAADYPj7ZPDzUNzfbHx/fERHpamrqMTHgExPdHx/bLCzhLS3fVFTjT0/ibm7kRkbiLi7aKirdISHeFBTqNDTpeHjgERHYJCTVODjYQkLaPj6/AADVOTnpbW3cIyPdFRXcJCThMjLiTU3ibW3fVVXaKyvcERH4ODj+8fH/////fHz+Fxf4KSn0UFD/CAj/AAD/Xl7/wMD/EhL//v70xMT/+Pj/iYn/HBz/g4P/IyP/Kyv/7Oz0QUH/9PT/+vr/ior/Dg7/vr7/aGj/QED/bGz/AQH/ERH/Jib/R0f/goL/0dH/qan/YWH/7e3/Cwv4R0f/MTH/enr/vLz/u7v/cHD/oKD/n5//aWn+9/f/k5P/0tL/trb/QUH/cXH/dHT/wsL/DQ3/p6f/DAz/1dX/XV3/kpL/i4v/Vlb/2Nj/9/f/pKT+7Oz/V1f/iIj/jIz/r6//Zmb/lZX/j4//T0//Dw/4MzP/GBj/+fn/o6P/TEz/xMT/b2//Tk7/OTn/HR3/hIT/ODj/Y2P/CQn/ZGT/6Oj0UlL/Gxv//f3/Bwf/YmL/6+v0w8P/Cgr/tbX0QkL+9fX4Pz/qNzd0dFHLAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfeCxINNSdmw510AAAA5ElEQVQYGQXBzSuDAQCA8eexKXOwmSZepa1JiPJxsJOrCwcnuchBjg4O/gr7D9zk4uAgJzvuMgcTpYxaUZvSm5mUj7TX7ycAqvoLIJBwStVbP0Hom1Z/ejoxrbaR1Jz6nWinbKWttGRgMSSjanPktRY6mB9WtRNTn7Ilh7LxnNpKq2/x5LnBitfz+hx0qxUaxhZ6vwqq9bx6f2XXvuUl9SVQS38NR7cvln3v15tZ9bQpuWDtZN3Lgh5DWJex3Y+z1KrVhw21+CiM74WZo83DiXq0dVBDYNJkFEU7WrwDAZhRtQrwDzwKQbT6GboLAAAAAElFTkSuQmCC"},
+	"logo_url": {"type": "url", "description": "A url that points to the site's logo. Leave blank to disable. When enabled the logo will be inserted next to the site name on every page.", "default": "//starbeamrainbowlabs.com/images/logos/peppermint.png"},
+	"logo_position": {"type": "text", "description": "The side of the site name at which the logo should be placed.", "default": "left"},
+	"show_subpages": {"type": "text", "description": "Whether to show a list of subpages at the bottom of the page.", "default": true},
+	"subpages_display_depth": {"type": "text", "description": "The depth to which we should display when listing subpages at the bottom the page.", "default": 3},
+	"footer_message": {"type": "text", "description": "A message that will appear at the bottom of every page. May contain HTML.", "default": "All content is under <a href='?page=License' target='_blank'>this license</a>. Please make sure that you read and understand the license, especially if you are thinking about copying some (or all) of this site's content, as it may restrict you from doing so."},
+	"editing_message": {"type": "text", "description": "A message that will appear just before the submit button on the editing page. May contain HTML.", "default": "<a href='?action=help#20-parser-default' target='_blank'>Formatting help</a> (<a href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet' target='_blank'>Markdown Cheatsheet</a>)<br />\nBy submitting your edit or uploading your file, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!"},
+	"admindisplaychar": {"type": "text", "description": "The string that is prepended before an admin's name on the nav bar. Defaults to a diamond shape (&#9670;).", "default": "&#9670;"},
+	"protectedpagechar": {"type": "text", "description": "The string that is prepended a page's name in the page title if it is protected. Defaults to a lock symbol. (&#128274;)", "default": "&#128274;"},
+	"editing": {"type": "checkbox", "description": "Whether editing is enabled.", "default": true},
+	"anonedits": {"type": "checkbox", "description": "Whether users who aren't logged in are allowed to edit your wiki.", "default": false},
+	"maxpagesize": {"type": "number", "description": "The maximum page size in characters.", "default": 135000},
+	"parser": {"type": "text", "description": "The parser to use when rendering pages. Defaults to an extended version of parsedown (http://parsedown.org/)", "default": "parsedown"},
+	"clean_raw_html": {"type": "checkbox", "description": "Whether page sources should be cleaned of HTML before rendering. It is STRONGLY recommended that you keep this option turned on.", "default": true},
+	"enable_math_rendering": {"type": "checkbox", "description": "Whether to enable client side rendering of mathematical expressions with MathJax (https://www.mathjax.org/). Math expressions should be enclosed inside of dollar signs ($). Turn off if you don't use it.", "default": true},
+	"users": {"type": "map", "description": "An array of usernames and passwords - passwords should be hashed with sha256 (or sha3 if you have that option turned on)", "default": {
+		"admin": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+		"user": "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34"
+	}},
+	"admins": {"type": "array", "description": "An array of usernames that are administrators. Administrators can delete and move pages.", "default": [ "admin" ]},
+	"use_sha3": {"type": "checkbox", "description": "Whether to use the new sha3 hashing algorithm for passwords etc.", "default": false},
+	"require_login_view": {"type": "checkbox", "description": "Whether to require that users login before they do anything else. Best used with the data_storage_dir option.", "default": false},
+	"data_storage_dir": {"type": "text", "description": "The directory in which to store all files, except the main index.php.", "default": "."},
+	"delayed_indexing_time": {"type": "number", "description": "The amount of time, in seconds, that pages should be blocked from being indexed by search engines after their last edit. Aka delayed indexing.", "default": 0},
+	"nav_links": {"type": "array", "description": "<p>An array of links and display text to display at the top of the site.<br />Format: <code>\"Display Text\": \"Link\"</code></p><p>You can also use strings here and they will be printed as-is, except the following special strings:</p><ul><li><code>user-status</code> - Expands to the user's login information. e.g. \"Logged in as {name}. | Logout\", or e.g. \"Browsing as Anonymous. | Login\".</li><li><code>search</code> - Expands to a search box.</li><li><code>divider</code> - Expands to a divider to separate stuff.</li><li><code>more</code> - Expands to the \"More...\" submenu.</li></ul>", "default": [
+		"user-status",
+		[
+			"Home",
+			"index.php"
+		],
+		"search",
+		[
+			"Read",
+			"index.php?page={page}"
+		],
+		[
+			"Edit",
+			"index.php?action=edit&page={page}"
+		],
+		[
+			"All&nbsp;Pages",
+			"index.php?action=list"
+		],
+		"menu"
+	]},
+	"nav_links_extra": {"type": "array", "description": "An array of additional links in the above format that will be shown under \"More\" subsection.", "default": [
+		[
+			"&#x1f553; Page History",
+			"?action=history&page={page}"
+		],
+		[
+			"&#x1f3ab; All&nbsp;Tags",
+			"index.php?action=list-tags"
+		],
+		[
+			"Recent changes",
+			"?action=recent-changes"
+		],
+		[
+			"&#x1f845; Upload",
+			"index.php?action=upload"
+		],
+		[
+			"&#x2327; &#9670;Delete",
+			"index.php?action=delete&page={page}"
+		],
+		[
+			"&#x2398; &#9670;Move",
+			"index.php?action=move&page={page}"
+		],
+		[
+			"&#x1f510; &#9670;Toggle Protection",
+			"index.php?action=protect&page={page}"
+		]
+	]},
+	"nav_links_bottom": {"type": "text", "description": "An array of links in the above format that will be shown at the bottom of the page.", "default": [
+		[
+			"&#x1f5b6; Printable version",
+			"index.php?action=view&printable=yes&page={page}"
+		],
+		[
+			"Credits",
+			"index.php?action=credits"
+		],
+		[
+			"Help",
+			"index.php?action=help"
+		]
+	]},
+	"upload_enabled": {"type": "checkbox", "description": "Whether to allow uploads to the server.", "default": true},
+	"upload_allowed_file_types": {"type": "array", "description": "An array of mime types that are allowed to be uploaded.", "default": [
+		"image/jpeg",
+		"image/png",
+		"image/gif",
+		"image/webp",
+		"image/svg+xml",
+		"video/mp4",
+		"video/webm",
+		"audio/mp4",
+		"audio/mpeg"
+	]},
+	"preview_file_type": {"type": "text", "description": "The default file type for previews.", "default": "image/png"},
+	"default_preview_size": {"type": "number", "description": "The default size of preview images in pixels.", "default": 640},
+	"mime_extension_mappings_location": {"type": "text", "description": "The location of a file that maps mime types onto file extensions and vice versa. Used to generate the file extension for an uploaded file. See the configuration guide for windows instructions.", "default": "/etc/mime.types"},
+	"mime_mappings_overrides": {"type": "map", "description": "Override mappings to convert mime types into the appropriate file extension. Used to override the above file if it assigns weird extensions to any mime types.", "default": {
+		"text/plain": "txt",
+		"audio/mpeg": "mp3"
+	}},
+	"min_preview_size": {"type": "number", "description": "The minimum allowed size of generated preview images in pixels.", "default": 1},
+	"max_preview_size": {"type": "number", "description": "The maximum allowed size of generated preview images in pixels.", "default": 2048},
+	"search_characters_context": {"type": "number", "description": "The number of characters that should be displayed either side of a matching term in the context below each search result.", "default": 200},
+	"search_title_matches_weighting": {"type": "number", "description": "The weighting to give to search term matches found in a page's title.", "default": 10},
+	"search_tags_matches_weighting": {"type": "number", "description": "The weighting to give to search term matches found in a page's tags.", "default": 3},
+	"defaultaction": {"type": "text", "description": "The default action. This action will be performed if no other action is specified. It is recommended you set this to \"view\" - that way the user automatically views the default page (see above).", "default": "view"},
+	"updateurl": {"type": "url", "description": "The url from which to fetch updates. Defaults to the master (development) branch. MAKE SURE THAT THIS POINTS TO A *HTTPS* URL, OTHERWISE SOMEONE COULD INJECT A VIRUS INTO YOUR WIKI!", "default": "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/master/index.php"},
+	"optimize_pages": {"type": "checkbox", "description": "Whether to optimise all webpages generated.", "default": true},
+	"max_recent_changes": {"type": "number", "description": "The maximum number of recent changes to display on the recent changes page.", "default": 512},
+	"export_allow_only_admins": {"type": "checkbox", "description": "Whether to only allow adminstrators to export the your wiki as a zip using the page-export module.", "default": false},
+	"sessionprefix": {"type": "text", "description": "You shouldn't need to change this. The prefix that should be used in the names of the session variables. Defaults to \"auto\", which automatically generates this field. See the readme for more information.", "default": "auto"},
+	"css": {"type": "textarea", "description": "A string of css to include. Will be included in the &lt;head&gt; of every page inside a &lt;style&gt; tag. This may also be a url - urls will be referenced via a &lt;link rel='stylesheet' /&gt; tag.", "default": "auto"}
+}
 GUICONFIG;
+
 $guiConfig = json_decode($guiConfig);
 $settings = new stdClass();
 if(!file_exists("peppermint.json"))
@@ -29,7 +155,7 @@ if(!file_exists("peppermint.json"))
 	foreach ($guiConfig as $key => $value)
 		$settings->$key = $value->default;
 	// Generate a random secret
-	$settings->secret = bin2hex(openssl_random_pseudo_bytes($bits));
+	$settings->secret = bin2hex(openssl_random_pseudo_bytes(16));
 	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
 }
 else
@@ -38,8 +164,114 @@ else
 if($settings->css === "auto")
 {
 	$settings->css = <<<THEMECSS
-	{defaults-css}
-	THEMECSS;
+body { margin: 2rem 0; background: #eee8f2; line-height: 1.45em; color: #111111; font-family: sans-serif; }
+
+nav { display: flex; background-color: #8a62a7; color: #ffa74d;  }
+nav.top { position: absolute; top: 0; left: 0; right: 0; box-shadow: inset 0 -0.6rem 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
+nav.bottom { position: absolute; left: 0; right: 0; box-shadow: inset 0 0.8rem 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
+
+nav > span { flex: 1; text-align: center; line-height: 2; display: inline-block; margin: 0; padding: 0.3rem 0.5rem; border-left: 3px solid #442772; border-right: 3px solid #442772; }
+nav:not(.nav-more-menu) a { text-decoration: none; font-weight: bolder; color: inherit; }
+.nav-divider { color: transparent; }
+
+.nav-more { position: relative; background-color: #442772; }
+.nav-more label { cursor: pointer; }
+.nav-more-menu { display: none; position: absolute; flex-direction: column; top: 2.6rem; right: -0.2rem; background-color: #8a62a7; border-top: 3px solid #442772; border-bottom: 3px solid #442772;}
+input[type=checkbox]:checked ~ .nav-more-menu { display: block; box-shadow: 0.4rem 0.4rem 1rem 0 rgba(50, 50, 50, 0.5); }
+.nav-more-menu span { min-width: 10rem; }
+
+.inflexible { flex: none; }
+.off-screen { position: absolute; top: -1000px; left: -1000px;}
+
+input[type=search] { width: 14rem; padding: 0.3rem 0.4rem; font-size: 1rem; color: white; background: rgba(255, 255, 255, 0.4); border: 0; border-radius: 0.3rem; }
+input[type=search]::-webkit-input-placeholder { color : rgba(255, 255, 255, 0.75); }
+input[type=button], input[type=submit] { cursor: pointer; }
+
+.sidebar { position: relative; z-index: 100; margin-top: 0.6rem; padding: 1rem 3rem 2rem 0.4rem; background: #9e7eb4; box-shadow: inset -0.6rem 0 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
+.sidebar a { color: #ffa74d; }
+
+.sidebar ul { position: relative; margin: 0.3rem 0.3rem 0.3rem 1rem; padding: 0.3rem 0.3rem 0.3rem 1rem; list-style-type: none; }
+.sidebar li { position: relative; margin: 0.3rem; padding: 0.3rem; }
+
+.sidebar ul:before { content: ""; position: absolute; top: 0; left: 0; height: 100%; border-left: 2px dashed rgba(50, 50, 50, 0.4); }
+.sidebar li:before { content: ""; position: absolute; width: 1rem; top: 0.8rem; left: -1.2rem; border-bottom: 2px dashed rgba(50, 50, 50, 0.4); }
+
+.preview { text-align: center; }
+.preview:hover img, .preview:hover video, .preview:hover audio { --checkerboard-bg: rgba(200, 200, 200, 0.2); max-width: 100%; background-color: #eee; background-image: linear-gradient(45deg, var(--checkerboard-bg) 25%, transparent 25%, transparent 75%, var(--checkerboard-bg) 75%, var(--checkerboard-bg)), linear-gradient(45deg, var(--checkerboard-bg) 25%, transparent 25%, transparent 75%, var(--checkerboard-bg) 75%, var(--checkerboard-bg)); background-size:2em 2em; background-position:0 0, 1em 1em; }
+.image-controls ul { list-style-type: none; margin: 5px; padding: 5px; }
+.image-controls li { display: inline-block; margin: 5px; padding: 5px; }
+.link-display { margin-left: 0.5rem; }
+
+figure:not(.preview) { display: inline-block; }
+figure:not(.preview) > :first-child { display: block; }
+figcaption { text-align: center; }
+
+.printable { padding: 2rem; }
+
+h1 { text-align: center; }
+.sitename { margin-top: 5rem; margin-bottom: 3rem; font-size: 2.5rem; }
+.logo { max-width: 4rem; max-height: 4rem; vertical-align: middle; }
+.logo.small { max-width: 2rem; max-height: 2rem; }
+main:not(.printable) { padding: 2rem 2rem 0.5rem 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
+
+blockquote { padding-left: 1em; border-left: 0.2em solid #442772; border-radius: 0.2rem; }
+
+a.redlink:link { color: rgb(230, 7, 7); }
+a.redlink:visited { color: rgb(130, 15, 15); #8b1a1a }
+
+.search-result { position: relative; }
+.search-result::before { content: attr(data-result-number); position: relative; top: 3.2rem; color: rgba(33, 33, 33, 0.3); font-size: 2rem; }
+.search-result::after { content: "Rank: " attr(data-rank); position: absolute; top: 3.8rem; right: 0.7rem; color: rgba(50, 50, 50, 0.3); }
+.search-result > h2 { margin-left: 2rem; }
+
+label:not(.link-display-label) { display: inline-block; min-width: 7rem; }
+input[type=text]:not(.link-display), input[type=password], textarea { margin: 0.5rem 0; }
+input[type=text], input[type=password], textarea, #search-box { padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
+textarea { min-height: 35rem; line-height: 1.3em; font-size: 1.25rem; }
+textarea, textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); box-sizing: border-box; }
+textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: bolder; }
+.editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
+
+.file-gallery { margin: 0.5em; padding: 0.5em; list-style-type: none; }
+.file-gallery > li { display: inline-block; min-width: attr(data-gallery-width); padding: 1em; text-align: center; }
+.file-gallery > li img, .file-gallery > li video, .file-gallery > li audio { display: block; margin: 0 auto; background-color: white; }
+
+.page-tags-display { margin: 0.5rem 0 0 0; padding: 0; list-style-type: none; }
+.page-tags-display li { display: inline-block; margin: 0.5rem; padding: 0.5rem; background: #D2C3DD; white-space: nowrap; }
+.page-tags-display li a { color: #FB701A; text-decoration: none; }
+.page-tags-display li::before { content: "\\A"; position: relative; top: 0.03rem; left: -0.9rem; width: 0; height: 0; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; border-right: 0.5rem solid #D2C3DD; }
+
+.page-list { list-style-type: none; margin: 0.3rem; padding: 0.3rem; }
+.page-list li:not(.header) { margin: 0.3rem; padding: 0.3rem; }
+.page-list li .size { margin-left: 0.7rem; color: rgba(30, 30, 30, 0.5); }
+.page-list li .editor { display: inline-block; margin: 0 0.5rem; }
+.page-list li .tags { margin: 0 1rem; }
+.tag-list { list-style-type: none; margin: 0.5rem; padding: 0.5rem; }
+.tag-list li { display: inline-block; margin: 1rem; }
+.mini-tag { background: #d2c3dd; padding: 0.2rem 0.4rem; color: #fb701a; text-decoration: none; }
+
+.help-section-header::after { content: "#" attr(id); float: right; color: rgba(0, 0, 0, 0.4); font-size: 0.8rem; font-weight: normal; }
+
+.cursor-query { cursor: help; }
+
+summary { cursor: pointer; }
+
+.larger { color: rgb(9, 180, 0); }
+.smaller, .deletion { color: rgb(207, 28, 17); }
+.nochange { color: rgb(132, 123, 199); font-style: italic; }
+.significant { font-weight: bolder; font-size: 1.1rem; }
+.deletion, .deletion > .editor { text-decoration: line-through; }
+
+.highlighted-diff { white-space: pre-wrap; }
+.diff-added { background-color: rgba(31, 171, 36, 0.6); color: rgba(23, 125, 27, 1); }
+.diff-removed { background-color: rgba(255, 96, 96, 0.6); color: rgba(191, 38, 38, 1); }
+
+.newpage::before { content: "N"; margin: 0 0.3em 0 -1em; font-weight: bolder; text-decoration: underline dotted; }
+.upload::before { content: "\\1f845"; margin: 0 0.1em 0 -1.1em; }
+
+footer { padding: 2rem; }
+/* #ffdb6d #36962c */
+THEMECSS;
 }
 
 /*** Notes ***
@@ -98,8 +330,8 @@ $paths->upload_file_prefix = "Files/"; // The prefix to append to uploaded files
 session_start();
 ///////// Login System /////////
 // Clear expired sessions
-if(isset($_SESSION["$settings->sessionprefix-expiretime"]) and
-   $_SESSION["$settings->sessionprefix-expiretime"] < time())
+if(isset($_SESSION[$settings->sessionprefix . "-expiretime"]) and
+   $_SESSION[$settings->sessionprefix . "-expiretime"] < time())
 {
 	// Clear the session variables
 	$_SESSION = [];
@@ -175,8 +407,6 @@ if($env->is_logged_in)
 * @apiDefine	PageParameter
 * @apiParam	{string}	page	The page to operate on.
 */
-
-
 ////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -824,8 +1054,8 @@ class page_renderer
 		if(!is_callable($function))
 		{
 			http_response_code(500);
-			$admin_name = $settings->admindetails["name"];
-			$admin_email = hide_email($settings->admindetails["email"]);
+			$admin_name = $settings->admindetails_name;
+			$admin_email = hide_email($settings->admindetails_email);
 			exit(page_renderer::render("$settings->sitename - Module Error", "<p>$settings->sitename has got a misbehaving module installed that tried to register an invalid HTML handler with the page renderer. Please contact $settings->sitename's administrator $admin_name at <a href='mailto:$admin_email'>$admin_email</a>."));
 		}
 
@@ -869,8 +1099,8 @@ class page_renderer
 			"{navigation-bar}" => self::render_navigation_bar($settings->nav_links, $settings->nav_links_extra, "top"),
 			"{navigation-bar-bottom}" => self::render_navigation_bar($settings->nav_links_bottom, [], "bottom"),
 
-			"{admin-details-name}" => $settings->admindetails["name"],
-			"{admin-details-email}" => $settings->admindetails["email"],
+			"{admin-details-name}" => $settings->admindetails_name,
+			"{admin-details-email}" => $settings->admindetails_email,
 
 			"{admins-name-list}" => implode(", ", $settings->admins),
 
@@ -1153,7 +1383,7 @@ function parse_page_source($source)
 {
 	global $settings, $parsers;
 	if(!isset($parsers[$settings->parser]))
-		exit(page_renderer::render_main("Parsing error - $settings->sitename", "<p>Parsing some page source data failed. This is most likely because $settings->sitename has the parser setting set incorrectly. Please contact <a href='mailto:" . hide_email($settings->admindetails["email"]) . "'>" . $settings->admindetails["name"] . "</a>, your $settings->sitename Administrator."));
+		exit(page_renderer::render_main("Parsing error - $settings->sitename", "<p>Parsing some page source data failed. This is most likely because $settings->sitename has the parser setting set incorrectly. Please contact <a href='mailto:" . hide_email($settings->admindetails_email) . "'>" . $settings->admindetails_name . "</a>, your $settings->sitename Administrator."));
 
 /* Not needed atm because escaping happens when saving, not when rendering *
 	if($settings->clean_raw_html)
@@ -2398,7 +2628,7 @@ class search
 
 register_module([
 	"name" => "Uploader",
-	"version" => "0.5.5",
+	"version" => "0.5.6",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -2446,7 +2676,7 @@ register_module([
 					// Send upload page
 					
 					if(!$settings->upload_enabled)
-						exit(page_renderer::render("Upload Disabled - $setting->sitename", "<p>You can't upload anything at the moment because $settings->sitename has uploads disabled. Try contacting " . $settings->admindetails["name"] . ", your site Administrator. <a href='javascript:history.back();'>Go back</a>.</p>"));
+						exit(page_renderer::render("Upload Disabled - $setting->sitename", "<p>You can't upload anything at the moment because $settings->sitename has uploads disabled. Try contacting $settings->admindetails_name, your site Administrator. <a href='javascript:history.back();'>Go back</a>.</p>"));
 					if(!$env->is_logged_in)
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You are not currently logged in, so you can't upload anything.</p>
 		<p>Try <a href='?action=login&returnto=" . rawurlencode("?action=upload") . "'>logging in</a> first.</p>"));
@@ -2548,7 +2778,7 @@ register_module([
 					if(!move_uploaded_file($temp_filename, $env->storage_prefix . $new_filename))
 					{
 						http_response_code(409);
-						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that either is a configuration error, or $settings->sitename has been attacked. Please contact " . $settings->admindetails["name"] . ", your $settings->sitename Administrator.</p>"));
+						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that either is a configuration error, or $settings->sitename has been attacked. Please contact " . $settings->admindetails_name . ", your $settings->sitename Administrator.</p>"));
 					}
 					
 					$description = $_POST["description"];
@@ -2854,7 +3084,7 @@ register_module([
 		});
 		
 		// Register a section on the help page on uploading files
-		add_help_section("28-uploading-files", "Uploading Files", "<p>$settings->sitename supports the uploading of files, though it is up to " . $settings->admindetails["name"] . ", $settings->sitename's administrator as to whether it is enabled or not (uploads are currently " . (($settings->upload_enabled) ? "enabled" : "disabled") . ").</p>
+		add_help_section("28-uploading-files", "Uploading Files", "<p>$settings->sitename supports the uploading of files, though it is up to " . $settings->admindetails_name . ", $settings->sitename's administrator as to whether it is enabled or not (uploads are currently " . (($settings->upload_enabled) ? "enabled" : "disabled") . ").</p>
 		<p>Currently Pepperminty Wiki (the software that $settings->sitename uses) only supports the uploading of images, although more file types should be supported in the future (<a href='//github.com/sbrl/Pepperminty-Wiki/issues'>open an issue on GitHub</a> if you are interested in support for more file types).</p>
 		<p>Uploading a file is actually quite simple. Click the &quot;Upload&quot; option in the &quot;More...&quot; menu to go to the upload page. The upload page will tell you what types of file $settings->sitename allows, and the maximum supported filesize for files that you upload (this is usually set by the web server that the wiki is running on).</p>
 		<p>Use the file chooser to select the file that you want to upload, and then decide on a name for it. Note that the name that you choose should not include the file extension, as this will be determined automatically. Enter a description that will appear on the file's page, and then click upload.</p>");
@@ -3562,7 +3792,7 @@ DIFFSCRIPT;
 			{
 				http_response_code(507);
 				exit(page_renderer::render_main("Error saving page - $settings->sitename", "<p>$settings->sitename failed to write your changes to the server's disk. Your changes have not been saved, but you might be able to recover your edit by pressing the back button in your browser.</p>
-				<p>Please tell the administrator of this wiki (" . $settings->admindetails["name"] . ") about this problem.</p>"));
+				<p>Please tell the administrator of this wiki (" . $settings->admindetails_name . ") about this problem.</p>"));
 			}
 		});
 		
@@ -3619,7 +3849,7 @@ register_module([
 			if($zip->open($tmpfilename, ZipArchive::CREATE) !== true)
 			{
 				http_response_code(507);
-				exit(page_renderer::render("Export error - $settings->sitename", "Pepperminty Wiki was unable to open a temporary file to store the exported data in. Please contact $settings->sitename's administrator (" . $settings->admindetails["name"] . " at " . hide_email($settings->admindetails["email"]) . ") for assistance."));
+				exit(page_renderer::render("Export error - $settings->sitename", "Pepperminty Wiki was unable to open a temporary file to store the exported data in. Please contact $settings->sitename's administrator (" . $settings->admindetails_name . " at " . hide_email($settings->admindetails_email) . ") for assistance."));
 			}
 			
 			foreach($pageindex as $entry)
@@ -3630,7 +3860,7 @@ register_module([
 			if($zip->close() !== true)
 			{
 				http_response_code(500);
-				exit(page_renderer::render("Export error - $settings->sitename", "Pepperminty wiki was unable to close the temporary zip file after creating it. Please contact $settings->sitename's administrator (" . $settings->admindetails["name"] . " at " . hide_email($settings->admindetails["email"]) . ") for assistance."));
+				exit(page_renderer::render("Export error - $settings->sitename", "Pepperminty wiki was unable to close the temporary zip file after creating it. Please contact $settings->sitename's administrator (" . $settings->admindetails_name . " at " . hide_email($settings->admindetails_email) . ") for assistance."));
 			}
 			
 			header("content-type: application/zip");
@@ -3891,7 +4121,7 @@ function generate_page_list($pagelist)
 
 register_module([
 	"name" => "Login",
-	"version" => "0.8.2",
+	"version" => "0.8.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
@@ -4014,7 +4244,7 @@ register_module([
 		
 		// Register a section on logging in on the help page.
 		add_help_section("30-login", "Logging in", "<p>In order to edit $settings->sitename and have your edit attributed to you, you need to be logged in. Depending on the settings, logging in may be a required step if you want to edit at all. Thankfully, loggging in is not hard. Simply click the &quot;Login&quot; link in the top left, type your username and password, and then click login.</p>
-		<p>If you do not have an account yet and would like one, try contacting <a href='mailto:" . hide_email($settings->admindetails["email"]) . "'>" . $settings->admindetails["name"] . "</a>, $settings->sitename's administrator and ask them nicely to see if they can create you an account.</p>");
+		<p>If you do not have an account yet and would like one, try contacting <a href='mailto:" . hide_email($settings->admindetails_email) . "'>$settings->admindetails_name</a>, $settings->sitename's administrator and ask them nicely to see if they can create you an account.</p>");
 	}
 ]);
 
@@ -4158,7 +4388,7 @@ register_module([
 			if(isset($pageindex->$page->uploadedfile) and
 				file_exists($new_name))
 				exit(page_renderer::render_main("Moving $env->page - Error - $settings->sitename", "<p>Whilst moving the file associated with $env->page, $settings->sitename detected a pre-existing file on the server's file system. Because $settings->sitename can't determine whether the existing file is important to another component of $settings->sitename or it's host web server, the move have been aborted - just in case.</p>
-				<p>If you know that this move is actually safe, please get your site administrator (" . $settings->admindetails["name"] . ") to perform the move manually. Their contact address can be found at the bottom of every page (including this one).</p>"));
+				<p>If you know that this move is actually safe, please get your site administrator (" . $settings->admindetails_name . ") to perform the move manually. Their contact address can be found at the bottom of every page (including this one).</p>"));
 			
 			// Move the page in the page index
 			$pageindex->$new_name = new stdClass();
