@@ -51,7 +51,7 @@ else
 {
 	$env->user = $_SESSION[$settings->sessionprefix . "-user"];
 	$env->pass = $_SESSION[$settings->sessionprefix . "-pass"];
-	if($settings->users[$env->user] == $env->pass)
+	if($settings->users->{$env->user} == $env->pass)
 	{
 		// The user is logged in
 		$env->is_logged_in = true;
@@ -927,7 +927,7 @@ class page_renderer
 						if($env->is_logged_in)
 						{
 							$result .= "<span class='inflexible'>" . self::render_username($env->user) . " <small>(<a href='index.php?action=logout'>Logout</a>)</small></span>";
-							$result .= page_renderer::$nav_divider;
+							//$result .= page_renderer::$nav_divider;
 						}
 						else
 							$result .= "<span><a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>Login</a></span>";

@@ -350,7 +350,7 @@ else
 {
 	$env->user = $_SESSION[$settings->sessionprefix . "-user"];
 	$env->pass = $_SESSION[$settings->sessionprefix . "-pass"];
-	if($settings->users[$env->user] == $env->pass)
+	if($settings->users->{$env->user} == $env->pass)
 	{
 		// The user is logged in
 		$env->is_logged_in = true;
@@ -1226,7 +1226,7 @@ class page_renderer
 						if($env->is_logged_in)
 						{
 							$result .= "<span class='inflexible'>" . self::render_username($env->user) . " <small>(<a href='index.php?action=logout'>Logout</a>)</small></span>";
-							$result .= page_renderer::$nav_divider;
+							//$result .= page_renderer::$nav_divider;
 						}
 						else
 							$result .= "<span><a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>Login</a></span>";
@@ -4121,7 +4121,7 @@ function generate_page_list($pagelist)
 
 register_module([
 	"name" => "Login",
-	"version" => "0.8.3",
+	"version" => "0.8.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
@@ -4206,7 +4206,7 @@ register_module([
 				//the user wants to log in
 				$user = $_POST["user"];
 				$pass = $_POST["pass"];
-				if($settings->users[$user] == hash_password($pass))
+				if($settings->users->$user == hash_password($pass))
 				{
 					$env->is_logged_in = true;
 					$expiretime = time() + 60*60*24*30; //30 days from now
