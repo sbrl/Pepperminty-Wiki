@@ -1,19 +1,30 @@
 # Changelog
-## v0.12-dev
+## v0.12-beta2
+
+### Changed
+ - Changed revision display text ("Revision created by..." -> "Revision saved by...")
+
+## v0.12-beta1
+
+### Added
+ - Page history! Currently you can't do anything with the previous revisions - that will come in a future release.
  - Implemented delayed indexing (#66)
  - Added the time a page was last modified to the footer (#67)
  - Added unified diff to edit conflict resolution pages (#64)
  - Added image captions (#65)
  - Added short syntax for images (#24)
+
+### Changed 
  - Added text "Tag List: " to tag listing pages
- - Page history! Currently you can't do anything with the previous revisions - that will come in a future release.
  - Added checkerboard pattern behind transparent images on mouse hover on their preview pages.
  - Improved support for SVGS.
 	 - SVGs are sent as-is instead of a preview image unless `$settings->render_svg_previews` is set to `true`.
 	 - Added code to find the dimensions of an SVG.
- - Fixed an issue where you wouldn't be redirected correctly if you typed your password incorrectly
  - Reduced the amount of space that the login bit in the top left takes up.
+
+### Fixed
  - Fixed a bug in the idindex generator.
+ - Fixed an issue where you wouldn't be redirected correctly if you typed your password incorrectly
 
 ## v0.11
 

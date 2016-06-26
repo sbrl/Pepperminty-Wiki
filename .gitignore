@@ -19,6 +19,8 @@ idindex.json
 invindex.json
 # The recent changes list
 recent-changes.json
+# The new settings file
+peppermint.json
 
 # The automatically downloaded parsedown files
 Parsedown.php
