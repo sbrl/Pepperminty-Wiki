@@ -305,7 +305,7 @@ Actions:
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////// Do not edit below this line unless you know what you are doing! ///////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-$version = "v0.12-dev";
+$version = "v0.12-beta1";
 /// Environment ///
 $env = new stdClass();
 $env->action = $settings->defaultaction;
@@ -1025,7 +1025,7 @@ class page_renderer
 
 		<footer>
 			<p>{footer-message}</p>
-			<p>Powered by Pepperminty Wiki v0.12-dev, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
+			<p>Powered by Pepperminty Wiki v0.12-beta1, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
 			<p>Your local friendly administrators are {admins-name-list}.</p>
 			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
 		</footer>
@@ -1037,7 +1037,7 @@ class page_renderer
 			<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
 			<p>{footer-message}</p>
 			<p><em>Timed at {generation-date}</em></p>
-			<p><em>Powered by Pepperminty Wiki v0.12-dev.</em></p>
+			<p><em>Powered by Pepperminty Wiki v0.12-beta1.</em></p>
 		</footer>";
 
 	// An array of functions that have been registered to process the
@@ -1092,7 +1092,7 @@ class page_renderer
 			"{body}" => $body_template,
 
 			"{sitename}" => $logo_html,
-			"v0.12-dev" => $version,
+			"v0.12-beta1" => $version,
 			"{favicon-url}" => $settings->favicon,
 			"{header-html}" => self::get_header_html(),
 
