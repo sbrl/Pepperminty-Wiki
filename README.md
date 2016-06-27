@@ -84,7 +84,7 @@ These commands are also in `build.sh`. You can run that if you want. Here's an e
 3. Actually builds Pepperminty Wiki. Outputs to `index.php`.
 
 ## Configuring
-To configure your new install, open `index.php` in your favourite text editor and take a look at the comments. They should be self explanatory, but if you need any help, just contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new).
+To configure your new install, make sure that you've loaded the wiki in your browser at least once. Then open `peppermint.json` in your favourite text editor. An explanation of each of the settings can be found below. If you need any help, just contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new).
 
 Below are all the configuration directives that Pepperminty Wiki (and all the modules included in the repository) understand.
 
@@ -115,7 +115,8 @@ Key				| Value			| Explanation
 `admins`			| array of usernames | An array of usernames that are administrators. Administrators can delete and move pages.
 `admindisplaychar`	| string	| The string that is prepended before an admin's name on the nav bar. Defaults to a diamond shape (&#9670;).
 `protectedpagechar`	| string	| The string that is prepended a page's name in the page title if it is protected. Defaults to a lock symbol. (&#128274;)
-`admindetails`		| associative array | Contact details for the site administrator. Since users can only be added by editing this file, people will need a contact address to use to ask for an account. Displayed at the bottom of the page, and will be appropriately obfusticated to deter spammers.
+`admindetails_name`	| string	| The name of the site administrator. Since users can only be added by editing the settings file, people will need a contact name and address to use to ask for an account. Displayed at the bottom of the page.
+`admindetails_email`| string	| The email address of the site administrator. Used in conjunction with the above. Will be appropriately obfusticated to deter spammers when displayed.
 `export_allow_only_admins` | boolean | Whether to only allow adminstrators to export the your wiki as a zip using the page-export module.
 `nav_links`			| array		| An array of links and display text to display at the top of the site. See the comment in the settings file for more details.
 `nav_links_extra`	| array		| An array of additional links in the above format that will be shown under "More" subsection, in the same format as the above.
