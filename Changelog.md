@@ -2,7 +2,7 @@
 ## v0.12-beta2
 
 ### Changed
- - Changed revision display text ("Revision created by..." -> "Revision saved by...")
+ - Changed the revision display text ("Revision created by..." -> "Revision saved by...")
 
 ## v0.12-beta1
 
