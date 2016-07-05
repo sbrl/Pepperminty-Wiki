@@ -1,4 +1,9 @@
 # Changelog
+
+## v0.12
+
+(No changes were made between the last beta release and this release)
+
 ## v0.12-beta2
 
 ### Changed
