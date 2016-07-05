@@ -1,10 +1,9 @@
-# Pepperminty Wiki
+# Pepperminty Wiki [![Build Status](https://travis-ci.org/sbrl/Pepperminty-Wiki.svg?branch=master)](https://travis-ci.org/sbrl/Pepperminty-Wiki) [![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](https://raw.githubusercontent.com/sbrl/Pepperminty-Wiki/master/LICENSE)
 A Wiki in a box
 
-[![Build Status](https://travis-ci.org/sbrl/Pepperminty-Wiki.svg?branch=master)](https://travis-ci.org/sbrl/Pepperminty-Wiki)
-[![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](https://raw.githubusercontent.com/sbrl/Pepperminty-Wiki/master/LICENSE)
-
 Pepperminty Wiki is a complete wiki contained in a single file, inspired by @am2064's [Minty Wiki](https://github.com/am2064/Minty-Wiki). It's open source too (under MPL-2.0), so contributions are welcome!
+
+**Latest Version:** v0.12 (stable) v0.13-dev (development)
 
 ## Screenshots
 ![Main Page Example](https://i.imgur.com/8TokPXw.png)
@@ -20,7 +19,9 @@ Above: A Main Page.
 	- Templating support
 	- Additional syntax for resizing and floating images
 	- File galleries
+	- Short syntax for referencing uploaded files
 	- Client side mathematical expression parsing, courtesy of [MathJax](https://www.mathjax.org/)
+	- Links to non-existent pages appear red
 - Internal links
 	- Links to non-existent pages show up in red
 - Printable page view
@@ -86,6 +87,8 @@ These commands are also in `build.sh`. You can run that if you want. Here's an e
 ## Configuring
 To configure your new install, make sure that you've loaded the wiki in your browser at least once. Then open `peppermint.json` in your favourite text editor. An explanation of each of the settings can be found below. If you need any help, just contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new).
 
+Please note that configuration of Pepperminty Wiki will be done through a GUI soon.
+
 Below are all the configuration directives that Pepperminty Wiki (and all the modules included in the repository) understand.
 
 Key				| Value			| Explanation
@@ -146,7 +149,7 @@ I've also documented Pepperminty Wiki's entire REST API using [apiDoc](http://ap
 If you do create a module, I'd love to hear about it. Even better, [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls/new)!
 
 ## Real World Usage
-None yet! Contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) and tell me about where you are using Pepperminty Wiki and I will add you to this section!
+None yet! Contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) and tell me about where you are using Pepperminty Wiki and I'll add you to this section!
 
 ## Todo
 Here's a list of things that I want to add at some point (please feel free to [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls) and help out!).
