@@ -4044,6 +4044,8 @@ register_module([
 					}
 				}
 				
+				sort($all_tags, SORT_NATURAL);
+				
 				$content = "<h1>All tags</h1>
 				<ul class='tag-list'>\n";
 				foreach($all_tags as $tag)
