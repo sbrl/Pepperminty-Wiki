@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.13-dev
+
+### Fixed
+ - Sort the list of all the tags on a wiki (#88)
+ - Explicitly set permissions on parent directories created (#86)
+ - Allow `<tab>` characters to be entered into the editing page textarea
+
 ## v0.12
 
 (No changes were made between the last beta release and this release)
