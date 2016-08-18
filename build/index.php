@@ -3591,6 +3591,7 @@ register_module([
 			<script>
 				// Adapted from https://jsfiddle.net/2wAzx/13/
 				document.querySelector(\"[name=content]\").addEventListener(\"keydown\", (event) => {
+					if(event.keyCode !== 9) return true;
 					var currentValue = event.target.value, startPos = event.target.selectionStart, endPos = event.target.selectionEnd;
 					event.target.value = currentValue.substring(0, startPos) + \"\\t\" + currentValue.substring(endPos);
 					event.target.selectionStart = event.target.selectionEnd = startPos + 1;
