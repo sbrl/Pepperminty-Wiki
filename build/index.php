@@ -3602,6 +3602,7 @@ register_module([
 		 * 
 		 * @apiError	UnsufficientPermissionError	You don't currently have sufficient permissions to save an edit.
 		 */
+		
 		/*
 		 *
 		 *  ___  __ ___   _____
@@ -3646,7 +3647,7 @@ register_module([
 			if(!is_dir(dirname("$env->storage_prefix$env->page.md")))
 			{
 				// Recursively create the directory if needed
-				mkdir(dirname("$env->storage_prefix$env->page.md"), null, true);
+				mkdir(dirname("$env->storage_prefix$env->page.md"), 0775, true);
 			}
 			
 			// Read in the new page content
