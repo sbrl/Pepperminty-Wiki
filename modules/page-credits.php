@@ -53,6 +53,11 @@ register_module([
 					"thing_url" => "https://gist.github.com/jbroadway/2836900",
 					"icon" => "https://avatars2.githubusercontent.com/u/87886?v=3&s=24"
 				],
+				"Insert tab characters into textareas" => [
+					"author" => "Unknown",
+					"author_url" => "http://stackoverflow.com/q/6140632/1460422",
+					"thing_url" => "https://jsfiddle.net/2wAzx/13/",
+				],
 				"Default Favicon" => [
 					"author" => "bluefrog23",
 					"author_url" => "https://openclipart.org/user-detail/bluefrog23/",

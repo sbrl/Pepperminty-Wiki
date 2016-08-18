@@ -87,6 +87,16 @@ register_module([
 			<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
 			<p class='editing-message'>$settings->editing_message</p>
 			<input name='submit-edit' type='submit' value='Save Page' tabindex='3' />
+			<script>
+				// Adapted from https://jsfiddle.net/2wAzx/13/
+				document.querySelector(\"[name=content]\").addEventListener(\"keydown\", (event) => {
+					var currentValue = event.target.value, startPos = event.target.selectionStart, endPos = event.target.selectionEnd;
+					event.target.value = currentValue.substring(0, startPos) + \"\\t\" + currentValue.substring(endPos);
+					event.target.selectionStart = event.target.selectionEnd = startPos + 1;
+					event.stopPropagation(); event.preventDefault();
+					return false;
+				});
+			</script>
 		</form>";
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});

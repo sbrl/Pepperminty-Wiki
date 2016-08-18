@@ -86,7 +86,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
-        "lastupdate": 1465815023,
+        "lastupdate": 1471548456,
         "optional": false
     },
     {
@@ -113,7 +113,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1471525437,
+        "lastupdate": 1471548511,
         "optional": false
     },
     {
