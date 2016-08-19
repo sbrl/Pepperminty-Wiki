@@ -5028,14 +5028,25 @@ class PeppermintParsedown extends ParsedownExtra
 		
 		if(preg_match('/^\[\[([^\]]*)\]\]/', $fragment["text"], $matches))
 		{
-			$display = $linkPage = $matches[1];
+			$display = $linkPage = trim($matches[1]);
 			if(strpos($matches[1], "|"))
 			{
 				// We have a bar character
 				$parts = explode("|", $matches[1], 2);
-				$linkPage = $parts[0];
-				$display = $parts[1];
+				$linkPage = trim($parts[0]); // The page to link to
+				$display = trim($parts[1]); // The text to display
 			}
+			
+			// If the page doesn't exist, check varying different
+			// capitalisations to see if it exists under some variant.
+			if(empty($pageindex->$linkPage))
+			{
+				if(!empty($pageindex->{ucfirst($linkPage)}))
+					$linkPage = ucfirst($linkPage);
+				else if(!empty($pageindex->{ucwords($linkPage)}))
+					$linkPage = ucwords($linkPage);
+			}
+			
 			
 			// Construct the full url
 			$linkUrl = str_replace(
