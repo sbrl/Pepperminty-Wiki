@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page mover",
-	"version" => "0.9",
+	"version" => "0.9.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to move pages.",
 	"id" => "page-move",

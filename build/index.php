@@ -2076,7 +2076,7 @@ register_module([
 
 register_module([
 	"name" => "Search",
-	"version" => "0.2.1",
+	"version" => "0.3.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
@@ -4353,7 +4353,7 @@ register_module([
 
 register_module([
 	"name" => "Page mover",
-	"version" => "0.9",
+	"version" => "0.9.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to move pages.",
 	"id" => "page-move",
@@ -4574,7 +4574,7 @@ register_module([
 
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.14",
+	"version" => "0.15",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
@@ -4759,7 +4759,7 @@ register_module([
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.8",
+	"version" => "0.9.3",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",

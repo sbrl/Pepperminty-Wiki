@@ -5,6 +5,8 @@
 ### Added
  - Added a class to the search term highlighting to aid theming (#92)
  - Check for pages with various uppercased letter combinations for matching pages (#87)
+ - Support hashes in internal links (#96)
+ - Support hashes on redirect pages (#96)
 
 ## Changed
  - Made the background of tags slightly lighter (#91)
