@@ -5,6 +5,9 @@
 ### Added
  - Added a class to the search term highlighting to aid theming (#92)
 
+## Changelog
+ - Made the background of tags slightly lighter (#91)
+
 ### Fixed
  - Sort the list of all the tags on a wiki (#88)
  - Explicitly set permissions on parent directories created (#86)

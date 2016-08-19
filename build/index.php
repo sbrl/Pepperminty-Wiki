@@ -217,7 +217,7 @@ main:not(.printable) { padding: 2rem 2rem 0.5rem 2rem; background: #faf8fb; box-
 blockquote { padding-left: 1em; border-left: 0.2em solid #442772; border-radius: 0.2rem; }
 
 a.redlink:link { color: rgb(230, 7, 7); }
-a.redlink:visited { color: rgb(130, 15, 15); #8b1a1a }
+a.redlink:visited { color: rgb(130, 15, 15); /*#8b1a1a*/ }
 
 .search-result { position: relative; }
 .search-result::before { content: attr(data-result-number); position: relative; top: 3.2rem; color: rgba(33, 33, 33, 0.3); font-size: 2rem; }
@@ -237,9 +237,9 @@ textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: 
 .file-gallery > li img, .file-gallery > li video, .file-gallery > li audio { display: block; margin: 0 auto; background-color: white; }
 
 .page-tags-display { margin: 0.5rem 0 0 0; padding: 0; list-style-type: none; }
-.page-tags-display li { display: inline-block; margin: 0.5rem; padding: 0.5rem; background: #D2C3DD; white-space: nowrap; }
-.page-tags-display li a { color: #FB701A; text-decoration: none; }
-.page-tags-display li::before { content: "\\A"; position: relative; top: 0.03rem; left: -0.9rem; width: 0; height: 0; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; border-right: 0.5rem solid #D2C3DD; }
+.page-tags-display li { display: inline-block; margin: 0.5rem; padding: 0.5rem; background: #e2d5eb; white-space: nowrap; }
+.page-tags-display li a { color: #fb701a; text-decoration: none; }
+.page-tags-display li::before { content: "\\A"; position: relative; top: 0.03rem; left: -0.9rem; width: 0; height: 0; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; border-right: 0.5rem solid #e2d5eb; }
 
 .page-list { list-style-type: none; margin: 0.3rem; padding: 0.3rem; }
 .page-list li:not(.header) { margin: 0.3rem; padding: 0.3rem; }
@@ -248,7 +248,7 @@ textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: 
 .page-list li .tags { margin: 0 1rem; }
 .tag-list { list-style-type: none; margin: 0.5rem; padding: 0.5rem; }
 .tag-list li { display: inline-block; margin: 1rem; }
-.mini-tag { background: #d2c3dd; padding: 0.2rem 0.4rem; color: #fb701a; text-decoration: none; }
+.mini-tag { background: #e2d5eb; padding: 0.2rem 0.4rem; color: #fb701a; text-decoration: none; }
 
 .help-section-header::after { content: "#" attr(id); float: right; color: rgba(0, 0, 0, 0.4); font-size: 0.8rem; font-weight: normal; }
 
