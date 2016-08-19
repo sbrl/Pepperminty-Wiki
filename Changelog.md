@@ -2,6 +2,9 @@
 
 ## v0.13-dev
 
+### Added
+ - Added a class to the search term highlighting to aid theming (#92)
+
 ### Fixed
  - Sort the list of all the tags on a wiki (#88)
  - Explicitly set permissions on parent directories created (#86)

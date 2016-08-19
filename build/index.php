@@ -2616,7 +2616,7 @@ class search
 		foreach($qterms as $qterm)
 		{
 			// From http://stackoverflow.com/a/2483859/1460422
-			$context = preg_replace("/" . str_replace("/", "\/", preg_quote($qterm)) . "/i", "<strong>$0</strong>", $context);
+			$context = preg_replace("/" . str_replace("/", "\/", preg_quote($qterm)) . "/i", "<strong class='search-term-highlight'>$0</strong>", $context);
 		}
 		
 		return $context;
