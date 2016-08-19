@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.13-dev
+## v0.12.1-dev
 
 ### Added
  - Added a class to the search term highlighting to aid theming (#92)
