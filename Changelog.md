@@ -7,6 +7,7 @@
  - Check for pages with various uppercased letter combinations for matching pages (#87)
  - Support hashes in internal links (#96)
  - Support hashes on redirect pages (#96)
+ - Added some tips to the parsedown parser help section.
 
 ## Changed
  - Made the background of tags slightly lighter (#91)
