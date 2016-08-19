@@ -153,7 +153,7 @@ register_module([
 				// number as people expect it to start from 1
 				$content .= "<div class='search-result' data-result-number='" . ($i + 1) . "' data-rank='" . $result["rank"] . "'>\n";
 				$content .= "	<h2><a href='$link'>" . $result["pagename"] . "</a></h2>\n";
-				$content .= "	<p>$context</p>\n";
+				$content .= "	<p class='search-context'>$context</p>\n";
 				$content .= "</div>\n";
 				
 				$i++;

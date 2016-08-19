@@ -223,6 +223,8 @@ a.redlink:visited { color: rgb(130, 15, 15); /*#8b1a1a*/ }
 .search-result::before { content: attr(data-result-number); position: relative; top: 3.2rem; color: rgba(33, 33, 33, 0.3); font-size: 2rem; }
 .search-result::after { content: "Rank: " attr(data-rank); position: absolute; top: 3.8rem; right: 0.7rem; color: rgba(50, 50, 50, 0.3); }
 .search-result > h2 { margin-left: 2rem; }
+.search-context { max-height: 20em; overflow: hidden; }
+.search-context::after { content: ""; position: absolute; bottom: 0; width: 100%; height: 3em; display: block; background: linear-gradient(to bottom, transparent, #faf8fb); pointer-events: none; }
 
 label:not(.link-display-label) { display: inline-block; min-width: 7rem; }
 input[type=text]:not(.link-display), input[type=password], textarea { margin: 0.5rem 0; }
@@ -2226,7 +2228,7 @@ register_module([
 				// number as people expect it to start from 1
 				$content .= "<div class='search-result' data-result-number='" . ($i + 1) . "' data-rank='" . $result["rank"] . "'>\n";
 				$content .= "	<h2><a href='$link'>" . $result["pagename"] . "</a></h2>\n";
-				$content .= "	<p>$context</p>\n";
+				$content .= "	<p class='search-context'>$context</p>\n";
 				$content .= "</div>\n";
 				
 				$i++;
