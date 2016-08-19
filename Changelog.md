@@ -6,8 +6,10 @@
  - Added a class to the search term highlighting to aid theming (#92)
  - Check for pages with various uppercased letter combinations for matching pages (#87)
 
-## Changelog
+## Changed
  - Made the background of tags slightly lighter (#91)
+ - Improved the appearance of the search context below each result.
+ - Tweaked display of result numbers in the search results.
 
 ### Fixed
 - Critical: Make sure that all wiki related files are stored in the data directory (#89)
