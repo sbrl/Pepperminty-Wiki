@@ -227,10 +227,10 @@ function check_subpage_parents($pagename)
 
 	$parent_pagename = substr($pagename, 0, strrpos($pagename, "/"));
 	$parent_page_filename = "$parent_pagename.md";
-	if(!file_exists($parent_page_filename))
+	if(!file_exists($env->storage_prefix . $parent_page_filename))
 	{
 		// This parent page doesn't exist! Create it and add it to the page index.
-		touch($parent_page_filename, 0);
+		touch($env->storage_prefix . $parent_page_filename, 0);
 
 		$newentry = new stdClass();
 		$newentry->filename = $parent_page_filename;

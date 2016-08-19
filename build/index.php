@@ -526,10 +526,10 @@ function check_subpage_parents($pagename)
 
 	$parent_pagename = substr($pagename, 0, strrpos($pagename, "/"));
 	$parent_page_filename = "$parent_pagename.md";
-	if(!file_exists($parent_page_filename))
+	if(!file_exists($env->storage_prefix . $parent_page_filename))
 	{
 		// This parent page doesn't exist! Create it and add it to the page index.
-		touch($parent_page_filename, 0);
+		touch($env->storage_prefix . $parent_page_filename, 0);
 
 		$newentry = new stdClass();
 		$newentry->filename = $parent_page_filename;
@@ -2340,7 +2340,7 @@ class search
 			
 			self::merge_into_invindex($invindex, ids::getid($pagename), $index);
 		}
-		
+		error_log("Saving inverted index to $paths->searchindex");
 		self::save_invindex($paths->searchindex, $invindex);
 	}
 	
@@ -3734,14 +3734,16 @@ DIFFSCRIPT;
 				exit(page_renderer::render_main("Edit Conflict - $env->page - $settings->sitename", $content));
 			}
 			
+			// -----~~~==~~~-----
+			
 			// Update the inverted search index
 			
 			// Construct an index for the old and new page content
 			$oldindex = [];
 			$oldpagedata = ""; // We need the old page data in order to pass it to the preprocessor
-			if(file_exists("$env->page.md"))
+			if(file_exists("$env->storage_prefix$env->page.md"))
 			{
-				$oldpagedata = file_get_contents("$env->page.md");
+				$oldpagedata = file_get_contents("$env->storage_prefix$env->page.md");
 				$oldindex = search::index($oldpagedata);
 			}
 			$newindex = search::index($pagedata);
@@ -3751,13 +3753,13 @@ DIFFSCRIPT;
 			$removals = [];
 			search::compare_indexes($oldindex, $newindex, $additions, $removals);
 			// Load in the inverted index
-			$invindex = search::load_invindex("./invindex.json");
+			$invindex = search::load_invindex($env->storage_prefix . "invindex.json");
 			// Merge the changes into the inverted index
 			search::merge_into_invindex($invindex, ids::getid($env->page), $additions, $removals);
 			// Save the inverted index back to disk
-			search::save_invindex("invindex.json", $invindex);
+			search::save_invindex($env->storage_prefix . "invindex.json", $invindex);
 			
-			
+			// -----~~~==~~~-----
 			
 			if(file_put_contents("$env->storage_prefix$env->page.md", $pagedata) !== false)
 			{

@@ -267,7 +267,7 @@ class search
 			
 			self::merge_into_invindex($invindex, ids::getid($pagename), $index);
 		}
-		
+		error_log("Saving inverted index to $paths->searchindex");
 		self::save_invindex($paths->searchindex, $invindex);
 	}
 	
