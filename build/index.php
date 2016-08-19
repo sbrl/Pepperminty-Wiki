@@ -3201,7 +3201,7 @@ function errorimage($text, $target_size)
 
 register_module([
 	"name" => "Credits",
-	"version" => "0.7.4",
+	"version" => "0.7.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
@@ -3518,7 +3518,7 @@ register_module([
 
 register_module([
 	"name" => "Page editor",
-	"version" => "0.14",
+	"version" => "0.15",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -4010,7 +4010,7 @@ register_module([
 
 register_module([
 	"name" => "Page list",
-	"version" => "0.10.1",
+	"version" => "0.10.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that lists all the pages in the index along with their metadata.",
 	"id" => "page-list",

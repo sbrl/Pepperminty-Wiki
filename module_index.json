@@ -82,11 +82,11 @@
     },
     {
         "name": "Credits",
-        "version": "0.7.4",
+        "version": "0.7.5",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
-        "lastupdate": 1471548456,
+        "lastupdate": 1471632910,
         "optional": false
     },
     {
@@ -109,11 +109,11 @@
     },
     {
         "name": "Page editor",
-        "version": "0.14",
+        "version": "0.15",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1471596690,
+        "lastupdate": 1471632938,
         "optional": false
     },
     {
@@ -136,11 +136,11 @@
     },
     {
         "name": "Page list",
-        "version": "0.10.1",
+        "version": "0.10.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1471546961,
+        "lastupdate": 1471632969,
         "optional": false
     },
     {
