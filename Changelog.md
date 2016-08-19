@@ -5,7 +5,8 @@
 ### Fixed
  - Sort the list of all the tags on a wiki (#88)
  - Explicitly set permissions on parent directories created (#86)
- - Allow `<tab>` characters to be entered into the editing page textarea
+ - Allow `<tab>` characters to be entered into the editing page textarea (#84)
+ - Make sure that all wiki related files are stored in the data directory (#89)
 
 ## v0.12
 
