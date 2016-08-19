@@ -20,6 +20,7 @@
  - Explicitly set permissions on parent directories created (#86)
  - Allow `<tab>` characters to be entered into the editing page textarea (#84)
  - Fixed search context generation (#30)
+ - Fixed bug in page moving code.
 
 ## v0.12
 
