@@ -10,10 +10,12 @@
  - Made the background of tags slightly lighter (#91)
 
 ### Fixed
+- Critical: Make sure that all wiki related files are stored in the data directory (#89)
+- Critical: Fixed a HTML injection attack possible through search context generation (#94)
  - Sort the list of all the tags on a wiki (#88)
  - Explicitly set permissions on parent directories created (#86)
  - Allow `<tab>` characters to be entered into the editing page textarea (#84)
- - Make sure that all wiki related files are stored in the data directory (#89)
+ - Fixed search context generation (#30)
 
 ## v0.12
 
