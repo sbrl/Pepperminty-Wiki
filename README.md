@@ -3,7 +3,7 @@ A Wiki in a box
 
 Pepperminty Wiki is a complete wiki contained in a single file, inspired by @am2064's [Minty Wiki](https://github.com/am2064/Minty-Wiki). It's open source too (under MPL-2.0), so contributions are welcome!
 
-**Latest Version:** v0.12 (stable) v0.13-dev (development)
+**Latest Version:** v0.12 (stable) v0.12.1-dev (development)
 
 ## Screenshots
 ![Main Page Example](https://i.imgur.com/8TokPXw.png)

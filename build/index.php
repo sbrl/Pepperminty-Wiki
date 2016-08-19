@@ -305,7 +305,7 @@ Actions:
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////// Do not edit below this line unless you know what you are doing! ///////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-$version = "v0.12";
+$version = "v0.12.1-dev";
 /// Environment ///
 $env = new stdClass();
 $env->action = $settings->defaultaction;
@@ -1025,7 +1025,7 @@ class page_renderer
 
 		<footer>
 			<p>{footer-message}</p>
-			<p>Powered by Pepperminty Wiki v0.12, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
+			<p>Powered by Pepperminty Wiki v0.12.1-dev, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
 			<p>Your local friendly administrators are {admins-name-list}.</p>
 			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
 		</footer>
@@ -1037,7 +1037,7 @@ class page_renderer
 			<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
 			<p>{footer-message}</p>
 			<p><em>Timed at {generation-date}</em></p>
-			<p><em>Powered by Pepperminty Wiki v0.12.</em></p>
+			<p><em>Powered by Pepperminty Wiki v0.12.1-dev.</em></p>
 		</footer>";
 
 	// An array of functions that have been registered to process the
@@ -1092,7 +1092,7 @@ class page_renderer
 			"{body}" => $body_template,
 
 			"{sitename}" => $logo_html,
-			"v0.12" => $version,
+			"v0.12.1-dev" => $version,
 			"{favicon-url}" => $settings->favicon,
 			"{header-html}" => self::get_header_html(),
 
@@ -2210,6 +2210,7 @@ register_module([
 				$link = "?page=" . rawurlencode($result["pagename"]);
 				$pagesource = file_get_contents($env->storage_prefix . $result["pagename"] . ".md");
 				$context = search::extract_context($_GET["query"], $pagesource);
+				//echo("Generated search context for " . $result["pagename"] . ": $context\n");
 				$context = search::highlight_context($_GET["query"], $context);
 				/*if(strlen($context) == 0)
 				{
@@ -2340,7 +2341,7 @@ class search
 			
 			self::merge_into_invindex($invindex, ids::getid($pagename), $index);
 		}
-		error_log("Saving inverted index to $paths->searchindex");
+		
 		self::save_invindex($paths->searchindex, $invindex);
 	}
 	
@@ -2557,9 +2558,10 @@ class search
 			}
 		}
 		
+		// Sort the matches by offset
 		usort($matches, function($a, $b) {
 			if($a[1] == $b[1]) return 0;
-			return ($a[1] < $b[1]) ? +1 : -1;
+			return ($a[1] > $b[1]) ? +1 : -1;
 		});
 		
 		$contexts = [];
@@ -2567,8 +2569,7 @@ class search
 		$matches_count = count($matches);
 		while($basepos < $matches_count)
 		{
-			// Store the next match along - all others will be relative to that
-			// one
+			// Store the next match along - all others will be relative to that one
 			$group = [$matches[$basepos]];
 			
 			// Start scanning at the next one along - we always store the first match
@@ -2594,6 +2595,9 @@ class search
 			
 			$context_start = $group[0][1] - $settings->search_characters_context;
 			$context_end = $group[count($group) - 1][1] + $settings->search_characters_context;
+			
+			//echo("Got context. Start: $context_start, End: $context_end\n");
+			//echo("Group:"); var_dump($group);
 			
 			$context = substr($source, $context_start, $context_end - $context_start);
 			

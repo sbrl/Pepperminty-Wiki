@@ -137,6 +137,7 @@ register_module([
 				$link = "?page=" . rawurlencode($result["pagename"]);
 				$pagesource = file_get_contents($env->storage_prefix . $result["pagename"] . ".md");
 				$context = search::extract_context($_GET["query"], $pagesource);
+				//echo("Generated search context for " . $result["pagename"] . ": $context\n");
 				$context = search::highlight_context($_GET["query"], $context);
 				/*if(strlen($context) == 0)
 				{
@@ -267,7 +268,7 @@ class search
 			
 			self::merge_into_invindex($invindex, ids::getid($pagename), $index);
 		}
-		error_log("Saving inverted index to $paths->searchindex");
+		
 		self::save_invindex($paths->searchindex, $invindex);
 	}
 	
@@ -484,9 +485,10 @@ class search
 			}
 		}
 		
+		// Sort the matches by offset
 		usort($matches, function($a, $b) {
 			if($a[1] == $b[1]) return 0;
-			return ($a[1] < $b[1]) ? +1 : -1;
+			return ($a[1] > $b[1]) ? +1 : -1;
 		});
 		
 		$contexts = [];
@@ -494,8 +496,7 @@ class search
 		$matches_count = count($matches);
 		while($basepos < $matches_count)
 		{
-			// Store the next match along - all others will be relative to that
-			// one
+			// Store the next match along - all others will be relative to that one
 			$group = [$matches[$basepos]];
 			
 			// Start scanning at the next one along - we always store the first match
@@ -521,6 +522,9 @@ class search
 			
 			$context_start = $group[0][1] - $settings->search_characters_context;
 			$context_end = $group[count($group) - 1][1] + $settings->search_characters_context;
+			
+			//echo("Got context. Start: $context_start, End: $context_end\n");
+			//echo("Group:"); var_dump($group);
 			
 			$context = substr($source, $context_start, $context_end - $context_start);
 			
