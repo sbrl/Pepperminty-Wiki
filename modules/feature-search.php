@@ -136,8 +136,10 @@ register_module([
 			{
 				$link = "?page=" . rawurlencode($result["pagename"]);
 				$pagesource = file_get_contents($env->storage_prefix . $result["pagename"] . ".md");
+				
+				//echo("Extracting context for result " . $result["pagename"] . ".\n");
 				$context = search::extract_context($_GET["query"], $pagesource);
-				//echo("Generated search context for " . $result["pagename"] . ": $context\n");
+				//echo("'Generated search context for " . $result["pagename"] . ": $context'\n");
 				$context = search::highlight_context($_GET["query"], $context);
 				/*if(strlen($context) == 0)
 				{
@@ -491,6 +493,8 @@ class search
 			return ($a[1] > $b[1]) ? +1 : -1;
 		});
 		
+		$sourceLength = strlen($source);
+		
 		$contexts = [];
 		$basepos = 0;
 		$matches_count = count($matches);
@@ -523,6 +527,9 @@ class search
 			$context_start = $group[0][1] - $settings->search_characters_context;
 			$context_end = $group[count($group) - 1][1] + $settings->search_characters_context;
 			
+			if($context_start < 0) $context_start = 0;
+			if($context_end > $sourceLength) $context_end = $sourceLength;
+			
 			//echo("Got context. Start: $context_start, End: $context_end\n");
 			//echo("Group:"); var_dump($group);
 			
@@ -530,7 +537,10 @@ class search
 			
 			// Strip the markdown from the context - it's most likely going to
 			// be broken anyway.
-			$context = self::strip_markup($context);
+			//$context = self::strip_markup($context);
+			
+			// Escape special characters to protect against attacks
+			$context = htmlentities($context);
 			
 			$contexts[] = $context;
 			
