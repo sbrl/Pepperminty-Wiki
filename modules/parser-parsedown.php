@@ -295,7 +295,7 @@ class PeppermintParsedown extends ParsedownExtra
 	
 	protected function inlineInternalLink($fragment)
 	{
-		global $pageindex;
+		global $pageindex, $env;
 		
 		if(preg_match('/^\[\[([^\]]*)\]\]/', $fragment["text"], $matches))
 		{
@@ -306,6 +306,18 @@ class PeppermintParsedown extends ParsedownExtra
 				$parts = explode("|", $matches[1], 2);
 				$linkPage = trim($parts[0]); // The page to link to
 				$display = trim($parts[1]); // The text to display
+			}
+			
+			$hashCode = "";
+			if(strpos($linkPage, "#") !== false)
+			{
+				// We want to link to a subsection of a page
+				$hashCode = substr($linkPage, strpos($linkPage, "#") + 1);
+				$linkPage = substr($linkPage, 0, strpos($linkPage, "#"));
+				
+				// If $linkPage is empty then we want to link to the current page
+				if(strlen($linkPage) === 0)
+					$linkPage = $env->page;
 			}
 			
 			// If the page doesn't exist, check varying different
@@ -324,6 +336,9 @@ class PeppermintParsedown extends ParsedownExtra
 				"%s", rawurlencode($linkPage),
 				$this->internalLinkBase
 			);
+			
+			if(strlen($hashCode) > 0)
+				$linkUrl .= "#$hashCode";
 			
 			$result = [
 				"extent" => strlen($matches[0]),

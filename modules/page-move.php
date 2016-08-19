@@ -82,7 +82,7 @@ register_module([
 				$pageindex->$new_name->$key = $value;
 			}
 			unset($pageindex->$page);
-			$pageindex->$new_name->filename = $new_name;
+			$pageindex->$new_name->filename = "$new_name.md";
 			
 			// If this page has an associated file, then we should move that too
 			if(!empty($pageindex->$new_name->uploadedfile))
