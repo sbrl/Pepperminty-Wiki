@@ -4434,7 +4434,7 @@ register_module([
 				$pageindex->$new_name->$key = $value;
 			}
 			unset($pageindex->$page);
-			$pageindex->$new_name->filename = $new_name;
+			$pageindex->$new_name->filename = "$new_name.md";
 			
 			// If this page has an associated file, then we should move that too
 			if(!empty($pageindex->$new_name->uploadedfile))
@@ -4589,7 +4589,7 @@ register_module([
 		 * @apiParam	{number}	revision	The revision number to display.
 		 * @apiParam	{string}	printable	Set to 'yes' to get a printable version of the specified page instead.
 		 *
-		 * @apiError	NonExistentPageError	The page doesn't exist and editing is disabled in the wiki's settings. If editing isn't disabled, you will be redirected to the edit apge instead.
+		 * @apiError	NonExistentPageError	The page doesn't exist and editing is disabled in the wiki's settings. If editing isn't disabled, you will be redirected to the edit page instead.
 		 * @apiError	NonExistentRevisionError	The specified revision was not found.
 		 */
 		
@@ -4635,7 +4635,20 @@ register_module([
 				{
 					// Todo send an explanatory page along with the redirect
 					http_response_code(307);
-					header("location: ?action=$env->action&page=" . $pageindex->$page->redirect_target . "&redirected_from=$env->page");
+					$redirectUrl = "?action=$env->action&redirected_from=$env->page";
+					
+					$hashCode = "";
+					$newPage = $pageindex->$page->redirect_target;
+					if(strpos($newPage, "#") !== false)
+					{
+						$hashCode = substr($newPage, strpos($newPage, "#") + 1);
+						$newPage = substr($newPage, 0, strpos($newPage, "#"));
+					}
+					$newPage .= "&page=" . $pageindex->$page->redirect_target;
+					if(strlen($hashCode) > 0)
+						$newPage .= "#$hashCode";
+					
+					header("location: $redirectUrl");
 					exit();
 				}
 			}
