@@ -622,6 +622,17 @@ function mb_stripos_all($haystack, $needle) {
 }
 
 /**
+ * Tests whether a string ends with a given substring.
+ * @param  string $whole The string to test against.
+ * @param  string $end   The substring test for.
+ * @return bool          Whether $whole ends in $end.
+ */
+function endsWith($whole, $end)
+{
+    return (strpos($whole, $end, strlen($whole) - strlen($end)) !== false);
+}
+
+/**
  * Returns the system's mime type mappings, considering the first extension
  * listed to be cacnonical.
  * From http://stackoverflow.com/a/1147952/1460422 by chaos.
@@ -3998,6 +4009,17 @@ register_module([
 				
 				$content .= "<li>The id index is currently " . human_filesize(filesize($paths->idindex)) . " in size, and took " . $env->perfdata->idindex_decode_time . "ms to decode.</li>";
 				
+				$wikiSize = 0;
+				$wikiFiles = glob_recursive($env->storage_prefix . "*");
+				foreach($wikiFiles as $filename)
+				{
+					if(endsWith($filename, ".php")) continue; // Skip php files
+					$wikiSize += filesize($filename);
+				}
+				
+				$content .= "<li>$settings->sitename is currently " . human_filesize($wikiSize) . " in size.</li>\n";
+				
+				$content .= "</ul>";
 			}
 			else
 			{

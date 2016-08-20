@@ -64,6 +64,17 @@ register_module([
 				
 				$content .= "<li>The id index is currently " . human_filesize(filesize($paths->idindex)) . " in size, and took " . $env->perfdata->idindex_decode_time . "ms to decode.</li>";
 				
+				$wikiSize = 0;
+				$wikiFiles = glob_recursive($env->storage_prefix . "*");
+				foreach($wikiFiles as $filename)
+				{
+					if(endsWith($filename, ".php")) continue; // Skip php files
+					$wikiSize += filesize($filename);
+				}
+				
+				$content .= "<li>$settings->sitename is currently " . human_filesize($wikiSize) . " in size.</li>\n";
+				
+				$content .= "</ul>";
 			}
 			else
 			{
