@@ -316,6 +316,7 @@ $env->user = "Anonymous";
 $env->is_logged_in = false;
 $env->is_admin = false;
 $env->storage_prefix = $settings->data_storage_dir . DIRECTORY_SEPARATOR;
+$env->perfdata = new stdClass();
 /// Paths ///
 $paths = new stdClass();
 $paths->pageindex = "pageindex.json"; // The pageindex
@@ -867,7 +868,8 @@ else
 {
 	$pageindex_read_start = microtime(true);
 	$pageindex = json_decode(file_get_contents($paths->pageindex));
-	header("x-pageindex-decode-time: " . round((microtime(true) - $pageindex_read_start)*1000, 3) . "ms");
+	$env->perfdata->pageindex_decode_time = round((microtime(true) - $pageindex_read_start)*1000, 3);
+	header("x-pageindex-decode-time: " . $env->perfdata->pageindex_decode_time . "ms");
 }
 
 //////////////////////////
@@ -875,7 +877,9 @@ else
 //////////////////////////
 if(!file_exists($paths->idindex))
 	file_put_contents($paths->idindex, "{}");
+$idindex_decode_start = microtime(true);
 $idindex = json_decode(file_get_contents($paths->idindex));
+$env->perfdata->idindex_decode_time = round((microtime(true) - $idindex_decode_start)*1000, 3);
 class ids
 {
 	/*
@@ -2391,6 +2395,14 @@ class search
 	public static function load_invindex($invindex_filename) {
 		$invindex = json_decode(file_get_contents($invindex_filename), true);
 		return $invindex;
+	}
+	
+	public static function measure_invindex_load_time($invindex_filename) {
+		global $env;
+		
+		$searchindex_decode_start = microtime(true);
+		search::load_invindex($invindex_filename);
+		$env->perfdata->searchindex_decode_time = round((microtime(true) - $searchindex_decode_start)*1000, 3);
 	}
 	
 	/*
@@ -3944,7 +3956,7 @@ register_module([
 		 * ██   ██ ███████ ███████ ██      
 		 */
 		add_action("help", function() {
-			global $paths, $settings, $version, $help_sections, $actions;
+			global $env, $paths, $settings, $version, $help_sections, $actions;
 			
 			// Sort the help sections by key
 			ksort($help_sections, SORT_NATURAL);
@@ -3971,8 +3983,17 @@ register_module([
 				<p>The following actions are currently registered:</p>\n";
 				$content .= "<p>" . implode(", ", array_keys(get_object_vars($actions))) . "</p>";
 				$content .= "<h3>Environment</h3>\n";
-				$content .= "<p>$settings->sitename's root directory is " . (!is_writeable(__DIR__) ? "not " : "") . "writeable.</p>";
-				$content .= "<p>The page index is currently " . human_filesize(filesize($paths->pageindex)) . " in size.</p>";
+				$content .= "<ul>\n";
+				$content .= "<li>$settings->sitename's root directory is " . (!is_writeable(__DIR__) ? "not " : "") . "writeable.</li>\n";
+				$content .= "<li>The page index is currently " . human_filesize(filesize($paths->pageindex)) . " in size, and took " . $env->perfdata->pageindex_decode_time . "ms to decode.</li>";
+				if(module_exists("feature-search"))
+				{
+					search::measure_invindex_load_time($paths->searchindex);
+					$content .= "<li>The search index is currently " . human_filesize(filesize($paths->searchindex)) . " in size, and took " . $env->perfdata->searchindex_decode_time . "ms to decode.</li>";
+				}
+				
+				$content .= "<li>The id index is currently " . human_filesize(filesize($paths->idindex)) . " in size, and took " . $env->perfdata->idindex_decode_time . "ms to decode.</li>";
+				
 			}
 			else
 			{
@@ -4783,7 +4804,7 @@ register_module([
 		"<p>$settings->sitename's editor uses an extended version of <a href='http://parsedown.org/'>Parsedown</a> to render pages, which is a fantastic open source Github flavoured markdown parser. You can find a quick reference guide on Github flavoured markdown <a href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'>here</a> by <a href='https://github.com/adam-p/'>adam-p</a>, or if you prefer a book <a href='https://www.gitbook.com/book/roachhd/master-markdown/details'>Mastering Markdown</a> by KB is a good read, and free too!</p>
 		<h3>Tips</h3>
 		<ul>
-			<li>Put 2 spaces at the end of a line to add a soft line break. Leave a blank line to add a head line break (i.e. new paragraph).</li>
+			<li>Put 2 spaces at the end of a line to add a soft line break. Leave a blank line to add a head line break (i.e. a new paragraph).</li>
 			<li>You can add an id to a header that you can link to. Put it in curly braces after the heading name like this: <code># Heading Name {#HeadingId}</code>. Then you can link to like like this: <code>[[Page name#HeadingId}]]</code>. You can also link to a heading id on the current page by omitting the page name: <code>[[#HeadingId]]</code>.</li>
 		</ul>
 		<h3>Extra Syntax</h3>

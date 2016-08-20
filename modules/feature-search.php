@@ -318,6 +318,14 @@ class search
 		return $invindex;
 	}
 	
+	public static function measure_invindex_load_time($invindex_filename) {
+		global $env;
+		
+		$searchindex_decode_start = microtime(true);
+		search::load_invindex($invindex_filename);
+		$env->perfdata->searchindex_decode_time = round((microtime(true) - $searchindex_decode_start)*1000, 3);
+	}
+	
 	/*
 	 * @summary Merge an index into an inverted index.
 	 */

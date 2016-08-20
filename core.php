@@ -15,6 +15,7 @@ $env->user = "Anonymous";
 $env->is_logged_in = false;
 $env->is_admin = false;
 $env->storage_prefix = $settings->data_storage_dir . DIRECTORY_SEPARATOR;
+$env->perfdata = new stdClass();
 /// Paths ///
 $paths = new stdClass();
 $paths->pageindex = "pageindex.json"; // The pageindex
@@ -566,7 +567,8 @@ else
 {
 	$pageindex_read_start = microtime(true);
 	$pageindex = json_decode(file_get_contents($paths->pageindex));
-	header("x-pageindex-decode-time: " . round((microtime(true) - $pageindex_read_start)*1000, 3) . "ms");
+	$env->perfdata->pageindex_decode_time = round((microtime(true) - $pageindex_read_start)*1000, 3);
+	header("x-pageindex-decode-time: " . $env->perfdata->pageindex_decode_time . "ms");
 }
 
 //////////////////////////
@@ -574,7 +576,9 @@ else
 //////////////////////////
 if(!file_exists($paths->idindex))
 	file_put_contents($paths->idindex, "{}");
+$idindex_decode_start = microtime(true);
 $idindex = json_decode(file_get_contents($paths->idindex));
+$env->perfdata->idindex_decode_time = round((microtime(true) - $idindex_decode_start)*1000, 3);
 class ids
 {
 	/*

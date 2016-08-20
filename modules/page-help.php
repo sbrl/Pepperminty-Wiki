@@ -26,7 +26,7 @@ register_module([
 		 * ██   ██ ███████ ███████ ██      
 		 */
 		add_action("help", function() {
-			global $paths, $settings, $version, $help_sections, $actions;
+			global $env, $paths, $settings, $version, $help_sections, $actions;
 			
 			// Sort the help sections by key
 			ksort($help_sections, SORT_NATURAL);
@@ -53,8 +53,17 @@ register_module([
 				<p>The following actions are currently registered:</p>\n";
 				$content .= "<p>" . implode(", ", array_keys(get_object_vars($actions))) . "</p>";
 				$content .= "<h3>Environment</h3>\n";
-				$content .= "<p>$settings->sitename's root directory is " . (!is_writeable(__DIR__) ? "not " : "") . "writeable.</p>";
-				$content .= "<p>The page index is currently " . human_filesize(filesize($paths->pageindex)) . " in size.</p>";
+				$content .= "<ul>\n";
+				$content .= "<li>$settings->sitename's root directory is " . (!is_writeable(__DIR__) ? "not " : "") . "writeable.</li>\n";
+				$content .= "<li>The page index is currently " . human_filesize(filesize($paths->pageindex)) . " in size, and took " . $env->perfdata->pageindex_decode_time . "ms to decode.</li>";
+				if(module_exists("feature-search"))
+				{
+					search::measure_invindex_load_time($paths->searchindex);
+					$content .= "<li>The search index is currently " . human_filesize(filesize($paths->searchindex)) . " in size, and took " . $env->perfdata->searchindex_decode_time . "ms to decode.</li>";
+				}
+				
+				$content .= "<li>The id index is currently " . human_filesize(filesize($paths->idindex)) . " in size, and took " . $env->perfdata->idindex_decode_time . "ms to decode.</li>";
+				
 			}
 			else
 			{
