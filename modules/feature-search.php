@@ -95,8 +95,9 @@ register_module([
 			
 			$invindex = search::load_invindex($paths->searchindex);
 			$results = search::query_invindex($_GET["query"], $invindex);
+			$resultCount = count($results);
 
-			$search_end = microtime(true) - $search_start;
+			$env->perfdata->search_time = round((microtime(true) - $search_start)*1000, 3);
 
 			$title = $_GET["query"] . " - Search results - $settings->sitename";
 			
@@ -109,14 +110,16 @@ register_module([
 			$content .= "	<input type='hidden' name='action' value='search' />\n";
 			$content .= "</form>";
 			
+			$content .= "<p>Found $resultCount " . ($resultCount === 1 ? "result" : "results") . " in " . $env->perfdata->search_time . "ms. ";
+			
 			$query = $_GET["query"];
 			if(isset($pageindex->$query))
 			{
-				$content .= "<p>There's a page on $settings->sitename called <a href='?page=" . rawurlencode($query) . "'>$query</a>.</p>";
+				$content .= "There's a page on $settings->sitename called <a href='?page=" . rawurlencode($query) . "'>$query</a>.";
 			}
 			else
 			{
-				$content .= "<p>There isn't a page called $query on $settings->sitename, but you ";
+				$content .= "There isn't a page called $query on $settings->sitename, but you ";
 				if((!$settings->anonedits && !$env->is_logged_in) || !$settings->editing)
 				{
 					$content .= "do not have permission to create it.";
@@ -127,9 +130,10 @@ register_module([
 				}
 				else
 				{
-					$content .= "can <a href='?action=edit&page=" . rawurlencode($query) . "'>create it</a>.</p>";
+					$content .= "can <a href='?action=edit&page=" . rawurlencode($query) . "'>create it</a>.";
 				}
 			}
+			$content .= "</p>";
 			
 			$i = 0; // todo use $_GET["offset"] and $_GET["result-count"] or something
 			foreach($results as $result)
