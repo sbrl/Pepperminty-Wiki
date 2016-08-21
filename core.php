@@ -253,7 +253,11 @@ function check_subpage_parents($pagename)
  */
 function makepathsafe($string)
 {
-	$string = preg_replace("/[^0-9a-zA-Z\_\-\ \/\.]/i", "", $string);
+	// Old restrictive system
+	//$string = preg_replace("/[^0-9a-zA-Z\_\-\ \/\.]/i", "", $string);
+	// Remove reserved characters
+	$string = preg_replace("/[?%*:|\"><()\\[\\]]/i", "", $string);
+	// Collapse multiple dots into a single dot
 	$string = preg_replace("/\.+/", ".", $string);
 	return $string;
 }
