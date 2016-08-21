@@ -165,6 +165,7 @@ register_module([
 			
 			$content .= "</section>\n";
 			
+			header("content-type: text/html; charset=UTF-8");
 			exit(page_renderer::render($title, $content));
 			
 			//header("content-type: text/plain");

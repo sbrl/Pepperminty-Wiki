@@ -1,5 +1,6 @@
 <?php
 $start_time = microtime(true);
+mb_internal_encoding("UTF-8");
 
 {settings}
 
@@ -218,7 +219,7 @@ function get_subpages($pageindex, $pagename)
  */
 function check_subpage_parents($pagename)
 {
-	global $pageindex, $paths;
+	global $pageindex, $paths, $env;
 	// Save the new pageindex and return if there aren't any more parent pages to check
 	if(strpos($pagename, "/") === false)
 	{

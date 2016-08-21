@@ -1,5 +1,6 @@
 <?php
 $start_time = microtime(true);
+mb_internal_encoding("UTF-8");
 
 
 /*
@@ -519,7 +520,7 @@ function get_subpages($pageindex, $pagename)
  */
 function check_subpage_parents($pagename)
 {
-	global $pageindex, $paths;
+	global $pageindex, $paths, $env;
 	// Save the new pageindex and return if there aren't any more parent pages to check
 	if(strpos($pagename, "/") === false)
 	{
@@ -2259,6 +2260,7 @@ register_module([
 			
 			$content .= "</section>\n";
 			
+			header("content-type: text/html; charset=UTF-8");
 			exit(page_renderer::render($title, $content));
 			
 			//header("content-type: text/plain");
@@ -3824,7 +3826,7 @@ DIFFSCRIPT;
 				$pageindex->$page->lastmodified = time();
 				if($env->is_logged_in)
 					$pageindex->$page->lasteditor = utf8_encode($env->user);
-				else
+				else // TODO: Add an option to record the user's IP here instead
 					$pageindex->$page->lasteditor = utf8_encode("anonymous");
 				$pageindex->$page->tags = $page_tags;
 				

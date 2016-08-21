@@ -68,7 +68,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
         "id": "feature-search",
-        "lastupdate": 1471697540,
+        "lastupdate": 1471791401,
         "optional": false
     },
     {
@@ -113,7 +113,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1471632938,
+        "lastupdate": 1471809336,
         "optional": false
     },
     {

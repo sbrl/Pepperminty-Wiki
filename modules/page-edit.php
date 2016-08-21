@@ -276,7 +276,7 @@ DIFFSCRIPT;
 				$pageindex->$page->lastmodified = time();
 				if($env->is_logged_in)
 					$pageindex->$page->lasteditor = utf8_encode($env->user);
-				else
+				else // TODO: Add an option to record the user's IP here instead
 					$pageindex->$page->lasteditor = utf8_encode("anonymous");
 				$pageindex->$page->tags = $page_tags;
 				
