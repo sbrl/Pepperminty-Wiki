@@ -4692,12 +4692,16 @@ register_module([
 					$newPage = $pageindex->$page->redirect_target;
 					if(strpos($newPage, "#") !== false)
 					{
+						// Extract the part after the hash symbol
 						$hashCode = substr($newPage, strpos($newPage, "#") + 1);
+						// Remove the hash from the new page name
 						$newPage = substr($newPage, 0, strpos($newPage, "#"));
 					}
-					$newPage .= "&page=" . $pageindex->$page->redirect_target;
+					$redirectUrl .= "&page=$newPage";
+					if(!empty($pageindex->$newPage->redirect))
+						$redirectUrl .= "&redirect=no";
 					if(strlen($hashCode) > 0)
-						$newPage .= "#$hashCode";
+						$redirectUrl .= "#$hashCode";
 					
 					header("location: $redirectUrl");
 					exit();
