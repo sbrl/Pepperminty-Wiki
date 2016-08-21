@@ -367,7 +367,7 @@ class PeppermintParsedown extends ParsedownExtra
 	protected function inlineExtendedImage($fragment)
 	{
 		global $pageindex;
-		///^!\[(.*)\]\(([^ |)]+)\s*(?:\|([^|)]*)(?:\|([^)]*))?)?\)/
+		
 		if(preg_match('/^!\[(.*)\]\(([^|)]+)\s*(?:\|([^|)]*))?(?:\|([^|)]*))?(?:\|([^)]*))?\)/', $fragment["text"], $matches))
 		{
 			/*
