@@ -15,6 +15,7 @@
  - Made the background of tags slightly lighter (#91)
  - Improved the appearance of the search context below each result.
  - Tweaked display of result numbers in the search results.
+ - Allowed spaces in the filenames of images in the image syntax.
 
 ### Fixed
 - Critical: Make sure that all wiki related files are stored in the data directory (#89)
