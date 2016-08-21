@@ -368,7 +368,7 @@ class PeppermintParsedown extends ParsedownExtra
 	{
 		global $pageindex;
 		///^!\[(.*)\]\(([^ |)]+)\s*(?:\|([^|)]*)(?:\|([^)]*))?)?\)/
-		if(preg_match('/^!\[(.*)\]\(([^ |)]+)\s*(?:\|([^|)]*))?(?:\|([^|)]*))?(?:\|([^)]*))?\)/', $fragment["text"], $matches))
+		if(preg_match('/^!\[(.*)\]\(([^|)]+)\s*(?:\|([^|)]*))?(?:\|([^|)]*))?(?:\|([^)]*))?\)/', $fragment["text"], $matches))
 		{
 			/*
 			 * 0 - Everything

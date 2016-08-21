@@ -2091,7 +2091,7 @@ register_module([
 
 register_module([
 	"name" => "Search",
-	"version" => "0.3.2",
+	"version" => "0.3.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
@@ -3946,7 +3946,7 @@ register_module([
 
 register_module([
 	"name" => "Help page",
-	"version" => "0.9.2",
+	"version" => "0.9.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a rather useful help page. Access through the 'help' action. This module also exposes help content added to Pepperminty Wiki's inbuilt invisible help section system.",
 	"id" => "page-help",
@@ -5173,7 +5173,7 @@ class PeppermintParsedown extends ParsedownExtra
 	{
 		global $pageindex;
 		///^!\[(.*)\]\(([^ |)]+)\s*(?:\|([^|)]*)(?:\|([^)]*))?)?\)/
-		if(preg_match('/^!\[(.*)\]\(([^ |)]+)\s*(?:\|([^|)]*))?(?:\|([^|)]*))?(?:\|([^)]*))?\)/', $fragment["text"], $matches))
+		if(preg_match('/^!\[(.*)\]\(([^|)]+)\s*(?:\|([^|)]*))?(?:\|([^|)]*))?(?:\|([^)]*))?\)/', $fragment["text"], $matches))
 		{
 			/*
 			 * 0 - Everything
