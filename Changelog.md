@@ -10,6 +10,7 @@
  - Added some tips to the parsedown parser help section
  - Added some more stats to the dev help page (#97)
  - Added the time taken to search to the search results page (#97)
+ - Added support for unicode characters in page names (#95)
 
 ## Changed
  - Made the background of tags slightly lighter (#91)
