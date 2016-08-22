@@ -26,6 +26,7 @@
  - Allow `<tab>` characters to be entered into the editing page textarea (#84)
  - Fixed search context generation (#30)
  - Fixed bug in page moving code.
+ - Prevented the page index data for parent pages from disappearing when a child page is edited (#98)
 
 ## v0.12
 
