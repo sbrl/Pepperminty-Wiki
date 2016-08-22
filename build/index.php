@@ -5126,9 +5126,6 @@ class PeppermintParsedown extends ParsedownExtra
 	 * ██      ██ ██  ██ ██ ██  ██       ██
 	 * ███████ ██ ██   ████ ██   ██ ███████
 	 */
-	
-
-	
 	protected function inlineInternalLink($fragment)
 	{
 		global $pageindex, $env;
@@ -5208,14 +5205,11 @@ class PeppermintParsedown extends ParsedownExtra
 	 * ██ ██  ██  ██ ██   ██ ██    ██ ██           ██
 	 * ██ ██      ██ ██   ██  ██████  ███████ ███████
  	 */
-	
-
-	
 	protected function inlineExtendedImage($fragment)
 	{
 		global $pageindex;
 		
-		if(preg_match('/^!\[(.*)\]\(([^|)]+)\s*(?:\|([^|)]*))?(?:\|([^|)]*))?(?:\|([^)]*))?\)/', $fragment["text"], $matches))
+		if(preg_match('/^!\[(.*)\]\(([^|¦)]+)\s*(?:(?:\||¦)([^|¦)]*))?(?:(?:\||¦)([^|¦)]*))?(?:(?:\||¦)([^)]*))?\)/', $fragment["text"], $matches))
 		{
 			/*
 			 * 0 - Everything
