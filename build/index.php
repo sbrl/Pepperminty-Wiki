@@ -1277,7 +1277,7 @@ class page_renderer
 			else
 			{
 				// Output the item as a link to a url
-				$result .= "<span><a href='" . str_replace("{page}", $env->page, $item[1]) . "'>$item[0]</a></span>";
+				$result .= "<span><a href='" . str_replace("{page}", rawurlencode($env->page), $item[1]) . "'>$item[0]</a></span>";
 			}
 		}
 
