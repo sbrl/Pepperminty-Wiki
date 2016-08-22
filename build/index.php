@@ -3121,7 +3121,7 @@ register_module([
 				switch($fileTypeDisplay)
 				{
 					case "image":
-						$dimensionsKey = $mime_type !== "image/svg+xml" ? "Original demensions" : "Native size";
+						$dimensionsKey = $mime_type !== "image/svg+xml" ? "Original dimensions" : "Native size";
 						$fileInfo[$dimensionsKey] = "$dimensions[0] x $dimensions[1]";
 						break;
 				}
