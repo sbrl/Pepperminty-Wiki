@@ -5060,7 +5060,7 @@ class PeppermintParsedown extends ParsedownExtra
 		global $pageindex, $env;
 		
 		
-		$parts = explode("|", trim($source, "{}"));
+		$parts = preg_split("/\\||¦/", trim($source, "{}"));
 		$parts = array_map("trim", $parts);
 		
 		// Extract the name of the template page
@@ -5120,10 +5120,10 @@ class PeppermintParsedown extends ParsedownExtra
 		if(preg_match('/^\[\[([^\]]*)\]\]/', $fragment["text"], $matches))
 		{
 			$display = $linkPage = trim($matches[1]);
-			if(strpos($matches[1], "|"))
+			if(strpos($matches[1], "|") !== false || strpos($matches[1], "¦") !== false)
 			{
 				// We have a bar character
-				$parts = explode("|", $matches[1], 2);
+				$parts = preg_split("/\\||¦/", $matches[1], 2);
 				$linkPage = trim($parts[0]); // The page to link to
 				$display = trim($parts[1]); // The text to display
 			}
