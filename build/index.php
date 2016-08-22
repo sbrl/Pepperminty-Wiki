@@ -2677,7 +2677,7 @@ class search
 
 register_module([
 	"name" => "Uploader",
-	"version" => "0.5.6",
+	"version" => "0.5.7",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -2805,8 +2805,8 @@ register_module([
 					
 					// Override the detected file extension if a file extension
 					// is explicitly specified in the settings
-					if(isset($settings->mime_mappings_overrides[$mime_type]))
-						$file_extension = $settings->mime_mappings_overrides[$mime_type];
+					if(isset($settings->mime_mappings_overrides->$mime_type))
+						$file_extension = $settings->mime_mappings_overrides->$mime_type;
 					
 					if(in_array($file_extension, [ "php", ".htaccess", "asp" ]))
 					{
@@ -2821,8 +2821,8 @@ register_module([
 					if(isset($pageindex->$new_filename))
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>A page or file has already been uploaded with the name '$new_filename'. Try deleting it first. If you do not have permission to delete things, try contacting one of the moderators.</p>"));
 					
-					if(!file_exists("Files"))
-						mkdir("Files", 0664);
+					if(!file_exists($env->storage_prefix . "Files"))
+						mkdir($env->storage_prefix . "Files", 0775);
 					
 					if(!move_uploaded_file($temp_filename, $env->storage_prefix . $new_filename))
 					{
@@ -2871,7 +2871,7 @@ register_module([
 							"timestamp" => time(),
 							"page" => $new_filename,
 							"user" => $env->user,
-							"filesize" => filesize($entry->uploadedfilepath)
+							"filesize" => filesize($env->storage_prefix . $entry->uploadedfilepath)
 						]);
 					}
 					
@@ -3110,7 +3110,7 @@ register_module([
 				$fileInfo = [];
 				$fileInfo["Name"] = str_replace("File/", "", $filepath);
 				$fileInfo["Type"] = $mime_type;
-				$fileInfo["Size"] = human_filesize(filesize($filepath));
+				$fileInfo["Size"] = human_filesize(filesize($env->storage_prefix . $filepath));
 				switch($fileTypeDisplay)
 				{
 					case "image":

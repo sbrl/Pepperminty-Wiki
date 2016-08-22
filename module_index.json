@@ -73,11 +73,11 @@
     },
     {
         "name": "Uploader",
-        "version": "0.5.6",
+        "version": "0.5.7",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1466582736,
+        "lastupdate": 1471874150,
         "optional": false
     },
     {
@@ -203,7 +203,7 @@
         "author": "Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
         "id": "parser-parsedown",
-        "lastupdate": 1471860654,
+        "lastupdate": 1471860869,
         "optional": false
     }
 ]
