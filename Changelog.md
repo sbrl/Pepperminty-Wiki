@@ -19,14 +19,16 @@
  - Allowed spaces in the filenames of images in the image syntax.
 
 ### Fixed
-- Critical: Make sure that all wiki related files are stored in the data directory (#89)
-- Critical: Fixed a HTML injection attack possible through search context generation (#94)
+ - Critical: Make sure that all wiki related files are stored in the data directory (#89)
+ - Critical: Fixed a HTML injection attack possible through search context generation (#94)
  - Sort the list of all the tags on a wiki (#88)
  - Explicitly set permissions on parent directories created (#86)
  - Allow `<tab>` characters to be entered into the editing page textarea (#84)
  - Fixed search context generation (#30)
  - Fixed bug in page moving code.
  - Prevented the page index data for parent pages from disappearing when a child page is edited (#98)
+ - Fixed file uploading when the data storage directory not the current directory (#100)
+ - Fixed pressing the edit button on pages that have a single quote in their name
 
 ## v0.12
 
