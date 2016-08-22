@@ -4816,7 +4816,7 @@ register_module([
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.9.5",
+	"version" => "0.9.6",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",
