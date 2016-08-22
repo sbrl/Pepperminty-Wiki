@@ -451,8 +451,11 @@ class PeppermintParsedown extends ParsedownExtra
 			if($param3 !== false && strtolower(trim($param3)) == "caption")
 				$imageCaption = true;
 			
+			//echo("Image url: $imageUrl, Pageindex entry: " . var_export(isset($pageindex->$imageUrl), true) . "\n");
+			
 			if(isset($pageindex->$imageUrl) and $pageindex->$imageUrl->uploadedfile)
 			{
+				//echo("Found pageindex entry: "); var_dump($pageindex->$imageUrl->uploadedfile);
 				// We have a short url! Expand it.
 				$imageUrl = "index.php?action=preview&size=" . max($imageSize["x"], $imageSize["y"]) ."&page=" . rawurlencode($imageUrl);
 			}

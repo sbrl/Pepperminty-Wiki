@@ -1244,7 +1244,7 @@ class page_renderer
 				switch($item)
 				{
 					//keywords
-					case "user-status":
+					case "user-status": // Renders the user status box
 						if($env->is_logged_in)
 						{
 							$result .= "<span class='inflexible'>" . self::render_username($env->user) . " <small>(<a href='index.php?action=logout'>Logout</a>)</small></span>";
@@ -1254,15 +1254,15 @@ class page_renderer
 							$result .= "<span><a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>Login</a></span>";
 						break;
 
-					case "search": // Displays a search bar
+					case "search": // Renders the search bar
 						$result .= "<span class='inflexible'><form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /><input type='hidden' name='search-redirect' value='true' /></form></span>";
 						break;
 
-					case "divider": // Displays a divider
+					case "divider": // Renders a divider
 						$result .= page_renderer::$nav_divider;
 						break;
 
-					case "menu":
+					case "menu": // Renders the "More..." menu
 						$result .= "<span class='inflexible nav-more'><label for='more-menu-toggler'>More...</label>
 <input type='checkbox' class='off-screen' id='more-menu-toggler' />";
 						$result .= page_renderer::render_navigation_bar($nav_links_extra, [], "nav-more-menu");
@@ -2734,16 +2734,23 @@ register_module([
 		<p>$settings->sitename currently supports uploading of the following file types: " . implode(", ", $settings->upload_allowed_file_types) . ".</p>
 		<form method='post' action='?action=upload' enctype='multipart/form-data'>
 			<label for='file'>Select a file to upload.</label>
-			<input type='file' name='file' />
+			<input type='file' name='file' id='file-upload-selector' />
 			<br />
 			<label for='name'>Name:</label>
-			<input type='text' name='name'  />
+			<input type='text' name='name' id='file-upload-name'  />
 			<br />
 			<label for='description'>Description:</label>
 			<textarea name='description'></textarea>
 			<p class='editing_message'>$settings->editing_message</p>
 			<input type='submit' value='Upload' />
-		</form>"));
+		</form>
+		<script>
+			document.getElementById('file-upload-selector').addEventListener('change', function() {
+				var newName = event.target.value.substring(event.target.value.lastIndexOf(\"\\\\\") + 1, event.target.value.lastIndexOf(\".\"));
+				console.log('Changing content of name box to:', newName);
+				document.getElementById('file-upload-name').value = newName;
+			});
+		</script>"));
 					
 					break;
 				
@@ -5266,8 +5273,11 @@ class PeppermintParsedown extends ParsedownExtra
 			if($param3 !== false && strtolower(trim($param3)) == "caption")
 				$imageCaption = true;
 			
+			//echo("Image url: $imageUrl, Pageindex entry: " . var_export(isset($pageindex->$imageUrl), true) . "\n");
+			
 			if(isset($pageindex->$imageUrl) and $pageindex->$imageUrl->uploadedfile)
 			{
+				//echo("Found pageindex entry: "); var_dump($pageindex->$imageUrl->uploadedfile);
 				// We have a short url! Expand it.
 				$imageUrl = "index.php?action=preview&size=" . max($imageSize["x"], $imageSize["y"]) ."&page=" . rawurlencode($imageUrl);
 			}

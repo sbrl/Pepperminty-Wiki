@@ -943,7 +943,7 @@ class page_renderer
 				switch($item)
 				{
 					//keywords
-					case "user-status":
+					case "user-status": // Renders the user status box
 						if($env->is_logged_in)
 						{
 							$result .= "<span class='inflexible'>" . self::render_username($env->user) . " <small>(<a href='index.php?action=logout'>Logout</a>)</small></span>";
@@ -953,15 +953,15 @@ class page_renderer
 							$result .= "<span><a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>Login</a></span>";
 						break;
 
-					case "search": // Displays a search bar
+					case "search": // Renders the search bar
 						$result .= "<span class='inflexible'><form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /><input type='hidden' name='search-redirect' value='true' /></form></span>";
 						break;
 
-					case "divider": // Displays a divider
+					case "divider": // Renders a divider
 						$result .= page_renderer::$nav_divider;
 						break;
 
-					case "menu":
+					case "menu": // Renders the "More..." menu
 						$result .= "<span class='inflexible nav-more'><label for='more-menu-toggler'>More...</label>
 <input type='checkbox' class='off-screen' id='more-menu-toggler' />";
 						$result .= page_renderer::render_navigation_bar($nav_links_extra, [], "nav-more-menu");

@@ -58,16 +58,23 @@ register_module([
 		<p>$settings->sitename currently supports uploading of the following file types: " . implode(", ", $settings->upload_allowed_file_types) . ".</p>
 		<form method='post' action='?action=upload' enctype='multipart/form-data'>
 			<label for='file'>Select a file to upload.</label>
-			<input type='file' name='file' />
+			<input type='file' name='file' id='file-upload-selector' />
 			<br />
 			<label for='name'>Name:</label>
-			<input type='text' name='name'  />
+			<input type='text' name='name' id='file-upload-name'  />
 			<br />
 			<label for='description'>Description:</label>
 			<textarea name='description'></textarea>
 			<p class='editing_message'>$settings->editing_message</p>
 			<input type='submit' value='Upload' />
-		</form>"));
+		</form>
+		<script>
+			document.getElementById('file-upload-selector').addEventListener('change', function() {
+				var newName = event.target.value.substring(event.target.value.lastIndexOf(\"\\\\\") + 1, event.target.value.lastIndexOf(\".\"));
+				console.log('Changing content of name box to:', newName);
+				document.getElementById('file-upload-name').value = newName;
+			});
+		</script>"));
 					
 					break;
 				

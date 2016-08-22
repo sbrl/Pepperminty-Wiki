@@ -11,6 +11,7 @@
  - Added some more stats to the dev help page (#97)
  - Added the time taken to search to the search results page (#97)
  - Added support for unicode characters in page names (#95)
+ - Autofill the name box on the file upload page when a new file is selected (#101)
 
 ## Changed
  - Made the background of tags slightly lighter (#91)
