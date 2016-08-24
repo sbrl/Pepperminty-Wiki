@@ -4243,12 +4243,18 @@ register_module([
 		 * ███████  ██████   ██████  ██ ██   ████
 		 */
 		add_action("login", function() {
-			global $settings;
+			global $settings, $env;
 			
 			// Build the action url that will actually perform the login
 			$login_form_action_url = "index.php?action=checklogin";
 			if(isset($_GET["returnto"]))
 				$login_form_action_url .= "&returnto=" . rawurlencode($_GET["returnto"]);
+			
+			if($env->is_logged_in && !empty($_GET["returnto"]))
+			{
+				http_response_code(307);
+				header("location: " . $_GET["returnto"]);
+			}
 			
 			$title = "Login to $settings->sitename";
 			$content = "<h1>Login to $settings->sitename</h1>\n";
