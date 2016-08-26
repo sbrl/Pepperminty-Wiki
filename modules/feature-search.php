@@ -66,7 +66,7 @@ register_module([
 		
 		
 		/**
-		 * @api {get} ?action=idindex-show Show the id index.
+		 * @api {get} ?action=idindex-show Show the id index
 		 * @apiDescription	Outputs the id index. Useful if you need to verify that it's working as expected.
 		 * @apiName			SearchShowIdIndex
 		 * @apiGroup		Search
