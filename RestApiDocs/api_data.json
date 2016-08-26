@@ -592,7 +592,7 @@
   {
     "type": "get",
     "url": "?action=idindex-show",
-    "title": "Show the id index.",
+    "title": "Show the id index",
     "description": "<p>Outputs the id index. Useful if you need to verify that it's working as expected.</p>",
     "name": "SearchShowIdIndex",
     "group": "Search",
