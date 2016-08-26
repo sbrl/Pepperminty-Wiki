@@ -496,7 +496,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "NonExistentPageError",
-            "description": "<p>The page doesn't exist and editing is disabled in the wiki's settings. If editing isn't disabled, you will be redirected to the edit apge instead.</p>"
+            "description": "<p>The page doesn't exist and editing is disabled in the wiki's settings. If editing isn't disabled, you will be redirected to the edit page instead.</p>"
           },
           {
             "group": "Error 4xx",
@@ -577,6 +577,24 @@
     "title": "Rebuild the inverted search index from scratch",
     "description": "<p>Causes the inverted search index to be completely rebuilt from scratch. Can take a while for large wikis!</p>",
     "name": "SearchInvindexRebuild",
+    "group": "Search",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "./modules/feature-search.php",
+    "groupTitle": "Search"
+  },
+  {
+    "type": "get",
+    "url": "?action=idindex-show",
+    "title": "Show the id index.",
+    "description": "<p>Outputs the id index. Useful if you need to verify that it's working as expected.</p>",
+    "name": "SearchShowIdIndex",
     "group": "Search",
     "permission": [
       {

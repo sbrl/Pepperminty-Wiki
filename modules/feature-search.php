@@ -44,7 +44,7 @@ register_module([
 		 * @apiDescription	Causes the inverted search index to be completely rebuilt from scratch. Can take a while for large wikis!
 		 * @apiName			SearchInvindexRebuild
 		 * @apiGroup		Search
-		 * @apiPermission Anonymous
+		 * @apiPermission	Anonymous
 		 */
 		
 		/*
@@ -62,6 +62,20 @@ register_module([
 		 */
 		add_action("invindex-rebuild", function() {
 			search::rebuild_invindex();
+		});
+		
+		
+		/**
+		 * @api {get} ?action=idindex-show Show the id index.
+		 * @apiDescription	Outputs the id index. Useful if you need to verify that it's working as expected.
+		 * @apiName			SearchShowIdIndex
+		 * @apiGroup		Search
+		 * @apiPermission	Anonymous
+		 */
+		add_action("idindex-show", function() {
+			global $idindex;
+			header("content-type: application/json; charset=UTF-8");
+			exit(json_encode($idindex, JSON_PRETTY_PRINT));
 		});
 		
 		/**
@@ -255,7 +269,7 @@ class search
 	public static function tokenize($source)
 	{
 		$source = strtolower($source);
-		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/", $source, -1, PREG_SPLIT_NO_EMPTY);
+		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, PREG_SPLIT_NO_EMPTY);
 	}
 	
 	public static function strip_markup($source)
@@ -267,14 +281,20 @@ class search
 	{
 		global $pageindex, $env, $paths;
 		
+		header("content-type: text/event-stream");
+		
 		$invindex = [];
 		foreach($pageindex as $pagename => $pagedetails)
 		{
-			$pagesource = file_get_contents("$env->storage_prefix$pagename.md");
+			echo("Adding $pagename to the new search index.\n\n");
+			$pagesource = utf8_encode(file_get_contents("$env->storage_prefix$pagename.md"));
 			$index = self::index($pagesource);
 			
 			self::merge_into_invindex($invindex, ids::getid($pagename), $index);
 		}
+		
+		echo("Search index rebuilding complete.\n\n");
+		echo("Saving new search index to '$paths->searchindex'.\n\n");
 		
 		self::save_invindex($paths->searchindex, $invindex);
 	}
