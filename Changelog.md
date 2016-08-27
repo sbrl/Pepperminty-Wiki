@@ -45,6 +45,7 @@
  - Fixed file uploading when the data storage directory not the current directory (#100)
  - Fixed pressing the edit button on pages that have a single quote in their name
  - Fixed a spelling mistake on the file preview page - I'm sure I fixed that before...!
+ - Fixed an issue whereby the search index wouldn't update if your pages contained special characters
 
 ## v0.12
 
