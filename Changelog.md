@@ -46,6 +46,7 @@
  - Fixed pressing the edit button on pages that have a single quote in their name
  - Fixed a spelling mistake on the file preview page - I'm sure I fixed that before...!
  - Fixed an issue whereby the search index wouldn't update if your pages contained special characters
+ - Fixed an issue with the recent changes list not updating when the number of recently changes reached setings.max_recent_changes (#104)
 
 ## v0.12
 

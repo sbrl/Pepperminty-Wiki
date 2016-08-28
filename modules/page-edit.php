@@ -183,40 +183,42 @@ register_module([
 			}
 			
 			// Check for edit conflicts
-			$existing_content_hash = sha1_file($env->storage_prefix . $pageindex->{$env->page}->filename);
-			if(isset($_POST["prev-content-hash"]) and
-				$existing_content_hash != $_POST["prev-content-hash"])
+			if(!empty($pageindex->{$env->page}) && file_exists($env->storage_prefix . $pageindex->{$env->page}->filename))
 			{
-				$existingPageData = htmlentities(file_get_contents($env->storage_prefix . $env->storage_prefix . $pageindex->{$env->page}->filename));
-				// An edit conflict has occurred! We should get the user to fix it.
-				$content = "<h1>Resolving edit conflict - $env->page</h1>";
-				if(!$env->is_logged_in and $settings->anonedits)
+				$existing_content_hash = sha1_file($env->storage_prefix . $pageindex->{$env->page}->filename);
+				if(isset($_POST["prev-content-hash"]) and
+				$existing_content_hash != $_POST["prev-content-hash"])
 				{
-					$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
-				}
-				$content .= "<p>An edit conflict has arisen because someone else has saved an edit to $env->page since you started editing it. Both texts are shown below, along the differences between the 2 conflicting revisions. To continue, please merge your changes with the existing content. Note that only the text in the existing content box will be kept when you press the \"Resolve Conflict\" button at the bottom of the page.</p>
-			
-			<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save' class='editform'>
-				<h2>Existing content</h2>
-				<textarea id='original-content' name='content' autofocus tabindex='1'>$existingPageData</textarea>
-				
-				<h2>Differences</h2>
-				<div id='highlighted-diff' class='highlighted-diff'></div>
-				<!--<pre class='highlighted-diff-wrapper'><code id='highlighted-diff'></code></pre>-->
-				
-				<h2>Your content</h2>
-				<textarea id='new-content'>$pagedata</textarea>
-				<input type='text' name='tags' value='" . $_POST["tags"] . "' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
-				<p class='editing_message'>$settings->editing_message</p>
-				<input name='submit-edit' type='submit' value='Resolve Conflict' tabindex='3' />
-			</form>";
-				
-				// Insert a reference to jsdiff to generate the diffs
-				$diffScript = <<<'DIFFSCRIPT'
+					$existingPageData = htmlentities(file_get_contents($env->storage_prefix . $env->storage_prefix . $pageindex->{$env->page}->filename));
+					// An edit conflict has occurred! We should get the user to fix it.
+					$content = "<h1>Resolving edit conflict - $env->page</h1>";
+					if(!$env->is_logged_in and $settings->anonedits)
+					{
+						$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
+					}
+					$content .= "<p>An edit conflict has arisen because someone else has saved an edit to $env->page since you started editing it. Both texts are shown below, along the differences between the 2 conflicting revisions. To continue, please merge your changes with the existing content. Note that only the text in the existing content box will be kept when you press the \"Resolve Conflict\" button at the bottom of the page.</p>
+					
+					<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save' class='editform'>
+					<h2>Existing content</h2>
+					<textarea id='original-content' name='content' autofocus tabindex='1'>$existingPageData</textarea>
+					
+					<h2>Differences</h2>
+					<div id='highlighted-diff' class='highlighted-diff'></div>
+					<!--<pre class='highlighted-diff-wrapper'><code id='highlighted-diff'></code></pre>-->
+					
+					<h2>Your content</h2>
+					<textarea id='new-content'>$pagedata</textarea>
+					<input type='text' name='tags' value='" . $_POST["tags"] . "' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
+					<p class='editing_message'>$settings->editing_message</p>
+					<input name='submit-edit' type='submit' value='Resolve Conflict' tabindex='3' />
+					</form>";
+					
+					// Insert a reference to jsdiff to generate the diffs
+					$diffScript = <<<'DIFFSCRIPT'
 window.addEventListener("load", function(event) {
 	var destination = document.getElementById("highlighted-diff"),
-		diff = JsDiff.diffWords(document.getElementById("original-content").value, document.getElementById("new-content").value),
-		output = "";
+	diff = JsDiff.diffWords(document.getElementById("original-content").value, document.getElementById("new-content").value),
+	output = "";
 	diff.forEach(function(change) {
 		var classes = "token";
 		if(change.added) classes += " diff-added";
@@ -227,10 +229,11 @@ window.addEventListener("load", function(event) {
 });
 DIFFSCRIPT;
 
-				$content .= "\n<script src='https://cdnjs.cloudflare.com/ajax/libs/jsdiff/2.2.2/diff.min.js'></script>
-		<script>$diffScript</script>\n";
-				
-				exit(page_renderer::render_main("Edit Conflict - $env->page - $settings->sitename", $content));
+					$content .= "\n<script src='https://cdnjs.cloudflare.com/ajax/libs/jsdiff/2.2.2/diff.min.js'></script>
+					<script>$diffScript</script>\n";
+					
+					exit(page_renderer::render_main("Edit Conflict - $env->page - $settings->sitename", $content));
+				}
 			}
 			
 			// -----~~~==~~~-----

@@ -23,7 +23,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a 'raw' action that shows you the raw source of a page.",
         "id": "action-raw",
-        "lastupdate": 1476812825,
+        "lastupdate": 1476813024,
         "optional": false
     },
     {
@@ -50,7 +50,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds recent changes. Access through the 'recent-changes' action.",
         "id": "feature-recent-changes",
-        "lastupdate": 1476809773,
+        "lastupdate": 1476813024,
         "optional": false
     },
     {
@@ -68,7 +68,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
         "id": "feature-search",
-        "lastupdate": 1476809773,
+        "lastupdate": 1476813024,
         "optional": false
     },
     {
@@ -77,7 +77,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1476809773,
+        "lastupdate": 1476813024,
         "optional": false
     },
     {
@@ -113,7 +113,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1476809773,
+        "lastupdate": 1476813024,
         "optional": false
     },
     {
@@ -167,7 +167,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
         "id": "page-move",
-        "lastupdate": 1476809773,
+        "lastupdate": 1476813024,
         "optional": false
     },
     {
@@ -185,7 +185,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You really should include this one.",
         "id": "page-view",
-        "lastupdate": 1476812765,
+        "lastupdate": 1476813024,
         "optional": false
     },
     {
@@ -203,7 +203,7 @@
         "author": "Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
         "id": "parser-parsedown",
-        "lastupdate": 1476809773,
+        "lastupdate": 1476813024,
         "optional": false
     }
 ]
