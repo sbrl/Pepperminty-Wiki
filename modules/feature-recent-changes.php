@@ -50,7 +50,7 @@ register_module([
 				$content .= "<p><em>None yet! Try making a few changes and then check back here.</em></p>\n";
 			}
 			
-			echo(page_renderer::render("Recent Changes - $settings->sitename", $content));
+			exit(page_renderer::render("Recent Changes - $settings->sitename", $content));
 		});
 		
 		register_save_preprocessor(function(&$pageinfo, &$newsource, &$oldsource) {
@@ -95,7 +95,7 @@ function add_recent_change($rchange)
 	// Limit the number of entries in the recent changes file if we've
 	// been asked to.
 	if(isset($settings->max_recent_changes))
-		$recentchanges = array_slice($recentchanges, -$settings->max_recent_changes);
+		$recentchanges = array_slice($recentchanges, 0, $settings->max_recent_changes);
 	
 	// Save the recent changes file back to disk
 	file_put_contents($paths->recentchanges, json_encode($recentchanges, JSON_PRETTY_PRINT));

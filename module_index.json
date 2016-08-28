@@ -50,7 +50,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds recent changes. Access through the 'recent-changes' action.",
         "id": "feature-recent-changes",
-        "lastupdate": 1465757910,
+        "lastupdate": 1472387876,
         "optional": false
     },
     {
@@ -68,7 +68,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
         "id": "feature-search",
-        "lastupdate": 1472229999,
+        "lastupdate": 1472230560,
         "optional": false
     },
     {
@@ -77,7 +77,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1471884345,
+        "lastupdate": 1472230366,
         "optional": false
     },
     {
@@ -86,7 +86,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
-        "lastupdate": 1471632910,
+        "lastupdate": 1472230366,
         "optional": false
     },
     {
@@ -113,7 +113,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1471809336,
+        "lastupdate": 1472387737,
         "optional": false
     },
     {
@@ -122,7 +122,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that you can use to export your wiki as a .zip file. Uses $settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
         "id": "page-export",
-        "lastupdate": 1466582751,
+        "lastupdate": 1472230366,
         "optional": false
     },
     {
@@ -131,7 +131,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a rather useful help page. Access through the 'help' action. This module also exposes help content added to Pepperminty Wiki's inbuilt invisible help section system.",
         "id": "page-help",
-        "lastupdate": 1471697534,
+        "lastupdate": 1472230366,
         "optional": false
     },
     {
@@ -140,7 +140,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1471633011,
+        "lastupdate": 1472230366,
         "optional": false
     },
     {
@@ -149,7 +149,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastupdate": 1472061908,
+        "lastupdate": 1472230366,
         "optional": false
     },
     {
@@ -167,7 +167,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
         "id": "page-move",
-        "lastupdate": 1471632807,
+        "lastupdate": 1472230366,
         "optional": false
     },
     {
@@ -185,7 +185,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You really should include this one.",
         "id": "page-view",
-        "lastupdate": 1471784271,
+        "lastupdate": 1472230366,
         "optional": false
     },
     {
@@ -203,7 +203,7 @@
         "author": "Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
         "id": "parser-parsedown",
-        "lastupdate": 1471954922,
+        "lastupdate": 1472230366,
         "optional": false
     }
 ]
