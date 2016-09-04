@@ -1,4 +1,4 @@
-data# Changelog
+# Changelog
 
 ## v0.12.1-dev
 
