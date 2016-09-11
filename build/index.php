@@ -2969,6 +2969,9 @@ register_module([
 			
 			$filepath = $env->storage_prefix . $pageindex->{$env->page}->uploadedfilepath;
 			$mime_type = $pageindex->{$env->page}->uploadedfilemime;
+			$shortFilename = substr($filepath, 1 + (strrpos($filepath, '/') !== false ? strrpos($filepath, '/') : -1));
+			
+			header("content-disposition: inline; filename=\"$shortFilename\"");
 			
 			// If the size is set or original, then send (or redirect to) the original image
 			// Also do the same for SVGs if svg rendering is disabled.
