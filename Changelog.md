@@ -13,6 +13,7 @@
  - Added support for unicode characters in page names (#95)
  - Autofill the name box on the file upload page when a new file is selected (#101)
  - Redirect the user automatically from the login page on refresh if they are already logged in (#102)
+ - Suggest an appropriate filename when saving an automatically generated preview (#105)
 
 ## Changed
  - Made the background of tags slightly lighter (#91)
@@ -34,6 +35,7 @@
  - Fixed a spelling mistake on the file preview page - I'm sure I fixed that before...!
  - Fixed an issue whereby the search index wouldn't update if your pages contained special characters
  - Fixed an issue with the recent changes list not updating when the number of recently changes reached setings.max_recent_changes (#104)
+ - Fixed changes disappearing from the recent changes page (#106)
 
 ## v0.12
 
