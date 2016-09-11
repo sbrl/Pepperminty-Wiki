@@ -136,9 +136,9 @@ function render_recent_changes($recent_changes)
 	for($i = 0; $i < $rchange_count; $i++)
 	{
 		$rchange = $recent_changes[$i];
+		
 		if($last_time !== date("dmY", $rchange->timestamp))
 			$content .= "<li class='header'><h2>" . date("jS F", $rchange->timestamp) . "</h2></li>\n";
-		
 		
 		$rchange_results = [];
 		for($s = $i; $s < $rchange_count; $s++)
@@ -149,9 +149,13 @@ function render_recent_changes($recent_changes)
 			$rchange_results[$s] = render_recent_change($recent_changes[$s]);
 			$i++;
 		}
-		//$content .= render_recent_change($rchange);
+		// Take one from i to account for when we tick over to the next
+		// iteration of the main loop
+		$i -= 1;
 		
 		$next_entry = implode("\n", $rchange_results);
+		// If the change count is greater than 1, then we should enclose it
+		// in a <details /> tag.
 		if(count($rchange_results) > 1)
 		{
 			reset($rchange_results);
@@ -169,7 +173,7 @@ function render_recent_changes($recent_changes)
 			}
 			$userDisplayHtml = render_editor(implode(", ", $users));
 			
-			// TODO: COllect up and render a list of participating users
+			// TODO: Collect up and render a list of participating users
 			$next_entry = "<li><details><summary>$pageDisplayHtml $userDisplayHtml $timeDisplayHtml</summary><ul class='page-list'>$next_entry</ul></details></li>";
 			
 			$content .= "$next_entry\n";
