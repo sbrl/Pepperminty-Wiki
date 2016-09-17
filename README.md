@@ -137,7 +137,7 @@ Key				| Value			| Explanation
 `search_characters_context` | number | The number of characters that should be displayed either side of a matching term in the context below each search result.
 `search_title_matches_weighting` | number | The weighting to give to search term matches found in a page's title.
 `search_tags_matches_weighting` | number | The weighting to give to search term matches found in a page's tags.
-`css`				| string of css | A string of css to include. Will be included in every page. This may also be a url that references an external stylesheet.
+`css`				| string of css | A string of css to include. Will be included in every page. This may also be an absolute url that references an external stylesheet.
 `favicon`			| url		| A url that points to the favicon for your wiki.
 `session_prefix`	| string	| The prefix that should be used in the names of the session variables. Defaults to an all lower case version of the site name with all non alphanumeric characters removed (The special value `auto` does this). Remember that changing this will log everyone out since the session variable's name will have changed. Normally you won't have to change this - This setting is left over from when we used a cookie to store login details. By default this is set to a safe variant of your site name.
 
