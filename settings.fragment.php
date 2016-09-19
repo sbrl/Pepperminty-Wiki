@@ -33,6 +33,12 @@ if(!file_exists("peppermint.json"))
 else
 	$settings = json_decode(file_get_contents("peppermint.json"));
 
+if($settings === null)
+{
+	header("content-type: text/plain");
+	exit("Error: Failed to decode the settings file! Does it contain a syntax error?");
+}
+
 if($settings->css === "auto")
 {
 	$settings->css = <<<THEMECSS
