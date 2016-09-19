@@ -1,6 +1,5 @@
 # Changelog
 
-<<<<<<< 4834b8e4b70f5432b4029ef617d0d8d5222b950b
 ## v0.13-dev
 
 ### Added
@@ -14,10 +13,12 @@
 ### Fixed
  - Fxed huge issue with `contentonly` display mode.
 
-## v0.12.1-dev
-=======
+# v0.12.1-dev
+
+## Fixed
+ - Added error detection to `peppermint.json` loader.
+
 ## v0.12.1-beta1
->>>>>>> Re-update version
 
 ### Added
  - Added a class to the search term highlighting to aid theming (#92)
