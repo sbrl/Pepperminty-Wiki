@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.12.1
+
+## Fixed
+ - Added error detection to the code that loads `peppermint.json`.
+
 ## v0.12.1-beta1
 
 ### Added
