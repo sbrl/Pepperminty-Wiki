@@ -5,6 +5,7 @@
 ## Fixed
  - Added error detection to the code that loads `peppermint.json`.
 
+
 ## v0.12.1-beta1
 
 ### Added
@@ -42,14 +43,17 @@
  - Fixed an issue with the recent changes list not updating when the number of recently changes reached `settings.max_recent_changes` (#104)
  - Fixed changes disappearing from the recent changes page (#106)
 
+
 ## v0.12
 
 (No changes were made between the last beta release and this release)
+
 
 ## v0.12-beta2
 
 ### Changed
  - Changed the revision display text ("Revision created by..." -> "Revision saved by...")
+
 
 ## v0.12-beta1
 
@@ -73,10 +77,12 @@
  - Fixed a bug in the idindex generator.
  - Fixed an issue where you wouldn't be redirected correctly if you typed your password incorrectly
 
+
 ## v0.11
 
 ## Changed
  - Set title of image to alt text
+
 
 ## v0.11-beta2
 
@@ -87,7 +93,9 @@
  - Polyfill `getallheaders()` if it isn't present
  - Bugfix failed upload message
 
+
 ## v0.11-beta1
+
 ### Added
  - Unlocked the uploading of any file type. Note that only the file types specified in the settings are allowed to be uploaded.
 	- Uploaded video and audio files can now be viewed on their respective pages
@@ -125,6 +133,7 @@
 # Notes
  - Test the etag code!
 
+
 ## v0.10
 
 ### Added
@@ -134,11 +143,13 @@
  - Corrected a minor error in the description of the page viewer module.
  - Corrected a minor spelling mistake in the credits page.
 
+
 ## v0.10-beta2
 
 ## Fixed
  - Added the moderator diamond next to the link to the update page in the credits.
  - Corrected the version numbers of a large number of modules that I forgot to change.
+
 
 ## v0.10-beta1
 
