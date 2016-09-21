@@ -13,10 +13,10 @@
 ### Fixed
  - Fxed huge issue with `contentonly` display mode.
 
-# v0.12.1-dev
+## v0.12.1
 
 ## Fixed
- - Added error detection to `peppermint.json` loader.
+ - Added error detection to the code that loads `peppermint.json`.
 
 ## v0.12.1-beta1
 
