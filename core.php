@@ -948,11 +948,11 @@ class page_renderer
 					case "user-status": // Renders the user status box
 						if($env->is_logged_in)
 						{
-							$result .= "<span class='inflexible'>" . self::render_username($env->user) . " <small>(<a href='index.php?action=logout'>Logout</a>)</small></span>";
+							$result .= "<span class='inflexible logged-in'>" . self::render_username($env->user) . " <small>(<a href='index.php?action=logout'>Logout</a>)</small></span>";
 							//$result .= page_renderer::$nav_divider;
 						}
 						else
-							$result .= "<span><a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>Login</a></span>";
+							$result .= "<span class='not-logged-in'><a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>Login</a></span>";
 						break;
 
 					case "search": // Renders the search bar
