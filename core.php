@@ -1004,7 +1004,8 @@ class page_renderer
 		$result = "<datalist id='allpages'>\n";
 		foreach($arrayPageIndex as $pagename => $pagedetails)
 		{
-			$result .= "\t\t\t<option value='$pagename' />\n";
+			$escapedPageName = str_replace('"', '&quot;', $pagename);
+			$result .= "\t\t\t<option value=\"$escapedPageName\" />\n";
 		}
 		$result .= "\t\t</datalist>";
 
