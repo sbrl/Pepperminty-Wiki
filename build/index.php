@@ -144,6 +144,7 @@ $guiConfig = <<<'GUICONFIG'
 	"max_recent_changes": {"type": "number", "description": "The maximum number of recent changes to display on the recent changes page.", "default": 512},
 	"export_allow_only_admins": {"type": "checkbox", "description": "Whether to only allow adminstrators to export the your wiki as a zip using the page-export module.", "default": false},
 	"sessionprefix": {"type": "text", "description": "You shouldn't need to change this. The prefix that should be used in the names of the session variables. Defaults to \"auto\", which automatically generates this field. See the readme for more information.", "default": "auto"},
+	"sessionlifetime": { "type": "number", "description": "Again, you shouldn't need to change this under normal circumstances. This setting controls the lifetime of a login session. Defaults to 24 hours, but it may get cut off sooner depending on the underlying PHP session lifetime.", "default": 86400 },
 	"css": {"type": "textarea", "description": "A string of css to include. Will be included in the &lt;head&gt; of every page inside a &lt;style&gt; tag. This may also be a url - urls will be referenced via a &lt;link rel='stylesheet' /&gt; tag.", "default": "auto"}
 }
 GUICONFIG;
@@ -343,6 +344,8 @@ foreach ($paths as &$path) {
 $paths->upload_file_prefix = "Files/"; // The prefix to add to uploaded files
 
 session_start();
+// Make sure that the login cookie lasts beyond the end of the user's session
+setcookie(session_name(), session_id(), time() + $settings->sessionlifetime);
 ///////// Login System /////////
 // Clear expired sessions
 if(isset($_SESSION[$settings->sessionprefix . "-expiretime"]) and

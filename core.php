@@ -36,6 +36,8 @@ foreach ($paths as &$path) {
 $paths->upload_file_prefix = "Files/"; // The prefix to add to uploaded files
 
 session_start();
+// Make sure that the login cookie lasts beyond the end of the user's session
+setcookie(session_name(), session_id(), time() + $settings->sessionlifetime);
 ///////// Login System /////////
 // Clear expired sessions
 if(isset($_SESSION[$settings->sessionprefix . "-expiretime"]) and
