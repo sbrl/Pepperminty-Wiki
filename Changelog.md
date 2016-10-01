@@ -11,6 +11,8 @@
  - Changed the way different display modes are accessed. You can now use the new `mode` parameter to the `view` action. It supports 4 different modes at present: `normal`, `printable`, `contentonly`, and `parsedsourceonly`.
 
 ### Fixed
+ - The login session lifetime is now configurable (defaults to 24 hours), so you won't keep getting logged out all the time (in theory). (#113)
+ - Recent changes made on different days are now displayed separately, as they should be (#112)
  - Fxed huge issue with `contentonly` display mode.
 
 ## v0.12.1
