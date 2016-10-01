@@ -122,6 +122,36 @@ if($env->is_logged_in)
 ///////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Functions //////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+/**
+ * Get the actual absolute origin of the request sent by the user.
+ * @param  array	$s						The $_SERVER variable contents. Defaults to $_SERVER.
+ * @param  bool		$use_forwarded_host		Whether to utilise the X-Forwarded-Host header when calculating the actual origin.
+ * @return string							The actual origin of the user's request.
+ */
+function url_origin( $s = false, $use_forwarded_host = false )
+{
+	if($s === false) $s = $_SERVER;
+    $ssl      = ( ! empty( $s['HTTPS'] ) && $s['HTTPS'] == 'on' );
+    $sp       = strtolower( $s['SERVER_PROTOCOL'] );
+    $protocol = substr( $sp, 0, strpos( $sp, '/' ) ) . ( ( $ssl ) ? 's' : '' );
+    $port     = $s['SERVER_PORT'];
+    $port     = ( ( ! $ssl && $port=='80' ) || ( $ssl && $port=='443' ) ) ? '' : ':'.$port;
+    $host     = ( $use_forwarded_host && isset( $s['HTTP_X_FORWARDED_HOST'] ) ) ? $s['HTTP_X_FORWARDED_HOST'] : ( isset( $s['HTTP_HOST'] ) ? $s['HTTP_HOST'] : null );
+    $host     = isset( $host ) ? $host : $s['SERVER_NAME'] . $port;
+    return $protocol . '://' . $host;
+}
+
+/**
+ * Get the full url, as requested by the client.
+ * @see		http://stackoverflow.com/a/8891890/1460422	This Stackoverflow answer.
+ * @param	array	$s                  The $_SERVER variable. Defaults to $_SERVER.
+ * @param	bool		$use_forwarded_host Whether to take the X-Forwarded-Host header into account.
+ * @return	string						The full url, as requested by the client.
+ */
+function full_url( $s = false, $use_forwarded_host = false )
+{
+    return url_origin( $s, $use_forwarded_host ) . $s['REQUEST_URI'];
+}
 
 /**
  * Converts a filesize into a human-readable string.
@@ -427,7 +457,7 @@ function system_extension_mime_type($ext) {
 
 /**
  * Generates a stack trace.
- * @param  bool		$log_trace	Whether to send the stack trace to the error log.
+ * @param  bool		$log_trace	Whether to send the stack trace to the error log in addition to returning it.
  * @return string				A string prepresentation of a stack trace.
  */
 function stack_trace($log_trace = true)
@@ -851,11 +881,6 @@ class page_renderer
 
 		$result = str_replace(array_keys($parts), array_values($parts), $result);
 
-		$result = str_replace([
-
-		], [
-		], $result);
-
 		$result = str_replace("{generation-time-taken}", round((microtime(true) - $start_time)*1000, 2), $result);
 		return $result;
 	}
@@ -872,6 +897,9 @@ class page_renderer
 	{
 		global $settings;
 		$result = self::get_css_as_html();
+		
+		if(module_exists("feature-search"))
+			$result .= "\t\t<link type='application/opensearchdescription+xml' rel='search' href='?action=opensearch-description' />";
 		
 		if(!empty($settings->enable_math_rendering))
 			$result .= "<script type='text/x-mathjax-config'>
@@ -892,7 +920,7 @@ class page_renderer
 		global $settings;
 
 		if(preg_match("/^[^\/]*\/\/|^\//", $settings->css))
-			return "<link rel='stylesheet' href='$settings->css' />";
+			return "<link rel='stylesheet' href='$settings->css' />\n";
 		else
 		{
 			$css = $settings->css;
@@ -920,7 +948,7 @@ class page_renderer
 				], $css);
 				
 			}
-			return "<style>$css</style>";
+			return "<style>$css</style>\n";
 		}
 	}
 

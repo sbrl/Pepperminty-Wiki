@@ -185,6 +185,36 @@ register_module([
 			//header("content-type: text/plain");
 			//var_dump($results);
 		});
+		
+		/*
+		 *  ██████  ██████  ███████ ███    ██ ███████ ███████  █████  ██████   ██████ ██   ██
+		 * ██    ██ ██   ██ ██      ████   ██ ██      ██      ██   ██ ██   ██ ██      ██   ██
+		 * ██    ██ ██████  █████   ██ ██  ██ ███████ █████   ███████ ██████  ██      ███████
+		 * ██    ██ ██      ██      ██  ██ ██      ██ ██      ██   ██ ██   ██ ██      ██   ██
+		 *  ██████  ██      ███████ ██   ████ ███████ ███████ ██   ██ ██   ██  ██████ ██   ██
+		 */
+		add_action("opensearch-description", function () {
+			global $settings;
+			$siteRoot = full_url() . "/index.php";
+			if(!isset($_GET["debug"]))
+				header("content-type: application/opensearchdescription+xml");
+			else
+				header("content-type: text/plain");
+			
+			exit(utf8_encode("<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<OpenSearchDescription  xmlns=\"http://a9.com/-/spec/opensearch/1.1/\">
+	<ShortName>Search $settings->sitename</ShortName>
+	<Description>Search $settings->sitename, which is powered by Pepperminty Wiki.</Description>
+	<Tags>$settings->sitename Wiki</Tags>
+	<Image type=\"image/png\">$settings->favicon</Image>
+	<Attribution>Search content available under the license linked to at the bottom of the search results page.</Attribution>
+	<Developer>Starbeamrainbowlabs (https://github.com/sbrl/Pepperminty-Wiki/graphs/contributors)</Developer>
+	<InputEncoding>UTF-8</InputEncoding>
+	<OutputEncoding>UTF-8</OutputEncoding>
+	
+	<Url type=\"text/html\" method=\"get\" template=\"$siteRoot?action=search&amp;query={searchTerms}&amp;offset={startIndex?}&amp;count={count}\" />
+</OpenSearchDescription>"));
+		});
 	}
 ]);
 

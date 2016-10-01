@@ -25,7 +25,7 @@ $guiConfig = <<<'GUICONFIG'
 	"defaultpage": {"type": "text", "description": "The name of the page that will act as the home page for the wiki. This page will be served if you don't specify a page.", "default": "Main Page"},
 	"admindetails_name": {"type": "text", "description": "Your name as the wiki administrator.", "default": "Administrator"},
 	"admindetails_email": {"type": "email", "description": "Your email address as the wiki administrator. Will be displayed as a support contact address.", "default": "admin@localhost"},
-	"favicon": {"type": "url", "description": "A url that points to the favicon you want to use for your wiki. By default this is set to a data: url of a Peppermint (Credit: by bluefrog23, source: https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23)", "default": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAB3VBMVEXhERHbKCjeVVXjb2/kR0fhKirdHBziDg6qAADaHh7qLy/pdXXUNzfMAADYPj7ZPDzUNzfbHx/fERHpamrqMTHgExPdHx/bLCzhLS3fVFTjT0/ibm7kRkbiLi7aKirdISHeFBTqNDTpeHjgERHYJCTVODjYQkLaPj6/AADVOTnpbW3cIyPdFRXcJCThMjLiTU3ibW3fVVXaKyvcERH4ODj+8fH/////fHz+Fxf4KSn0UFD/CAj/AAD/Xl7/wMD/EhL//v70xMT/+Pj/iYn/HBz/g4P/IyP/Kyv/7Oz0QUH/9PT/+vr/ior/Dg7/vr7/aGj/QED/bGz/AQH/ERH/Jib/R0f/goL/0dH/qan/YWH/7e3/Cwv4R0f/MTH/enr/vLz/u7v/cHD/oKD/n5//aWn+9/f/k5P/0tL/trb/QUH/cXH/dHT/wsL/DQ3/p6f/DAz/1dX/XV3/kpL/i4v/Vlb/2Nj/9/f/pKT+7Oz/V1f/iIj/jIz/r6//Zmb/lZX/j4//T0//Dw/4MzP/GBj/+fn/o6P/TEz/xMT/b2//Tk7/OTn/HR3/hIT/ODj/Y2P/CQn/ZGT/6Oj0UlL/Gxv//f3/Bwf/YmL/6+v0w8P/Cgr/tbX0QkL+9fX4Pz/qNzd0dFHLAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfeCxINNSdmw510AAAA5ElEQVQYGQXBzSuDAQCA8eexKXOwmSZepa1JiPJxsJOrCwcnuchBjg4O/gr7D9zk4uAgJzvuMgcTpYxaUZvSm5mUj7TX7ycAqvoLIJBwStVbP0Hom1Z/ejoxrbaR1Jz6nWinbKWttGRgMSSjanPktRY6mB9WtRNTn7Ilh7LxnNpKq2/x5LnBitfz+hx0qxUaxhZ6vwqq9bx6f2XXvuUl9SVQS38NR7cvln3v15tZ9bQpuWDtZN3Lgh5DWJex3Y+z1KrVhw21+CiM74WZo83DiXq0dVBDYNJkFEU7WrwDAZhRtQrwDzwKQbT6GboLAAAAAElFTkSuQmCC"},
+	"favicon": {"type": "url", "description": "A url that points to the favicon you want to use for your wiki. This image  By default this is set to a data: url of a Peppermint (Credit: by bluefrog23, source: https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23)", "default": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAB3VBMVEXhERHbKCjeVVXjb2/kR0fhKirdHBziDg6qAADaHh7qLy/pdXXUNzfMAADYPj7ZPDzUNzfbHx/fERHpamrqMTHgExPdHx/bLCzhLS3fVFTjT0/ibm7kRkbiLi7aKirdISHeFBTqNDTpeHjgERHYJCTVODjYQkLaPj6/AADVOTnpbW3cIyPdFRXcJCThMjLiTU3ibW3fVVXaKyvcERH4ODj+8fH/////fHz+Fxf4KSn0UFD/CAj/AAD/Xl7/wMD/EhL//v70xMT/+Pj/iYn/HBz/g4P/IyP/Kyv/7Oz0QUH/9PT/+vr/ior/Dg7/vr7/aGj/QED/bGz/AQH/ERH/Jib/R0f/goL/0dH/qan/YWH/7e3/Cwv4R0f/MTH/enr/vLz/u7v/cHD/oKD/n5//aWn+9/f/k5P/0tL/trb/QUH/cXH/dHT/wsL/DQ3/p6f/DAz/1dX/XV3/kpL/i4v/Vlb/2Nj/9/f/pKT+7Oz/V1f/iIj/jIz/r6//Zmb/lZX/j4//T0//Dw/4MzP/GBj/+fn/o6P/TEz/xMT/b2//Tk7/OTn/HR3/hIT/ODj/Y2P/CQn/ZGT/6Oj0UlL/Gxv//f3/Bwf/YmL/6+v0w8P/Cgr/tbX0QkL+9fX4Pz/qNzd0dFHLAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfeCxINNSdmw510AAAA5ElEQVQYGQXBzSuDAQCA8eexKXOwmSZepa1JiPJxsJOrCwcnuchBjg4O/gr7D9zk4uAgJzvuMgcTpYxaUZvSm5mUj7TX7ycAqvoLIJBwStVbP0Hom1Z/ejoxrbaR1Jz6nWinbKWttGRgMSSjanPktRY6mB9WtRNTn7Ilh7LxnNpKq2/x5LnBitfz+hx0qxUaxhZ6vwqq9bx6f2XXvuUl9SVQS38NR7cvln3v15tZ9bQpuWDtZN3Lgh5DWJex3Y+z1KrVhw21+CiM74WZo83DiXq0dVBDYNJkFEU7WrwDAZhRtQrwDzwKQbT6GboLAAAAAElFTkSuQmCC"},
 	"logo_url": {"type": "url", "description": "A url that points to the site's logo. Leave blank to disable. When enabled the logo will be inserted next to the site name on every page.", "default": "//starbeamrainbowlabs.com/images/logos/peppermint.png"},
 	"logo_position": {"type": "text", "description": "The side of the site name at which the logo should be placed.", "default": "left"},
 	"show_subpages": {"type": "text", "description": "Whether to show a list of subpages at the bottom of the page.", "default": true},
@@ -430,6 +430,36 @@ if($env->is_logged_in)
 ///////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Functions //////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+/**
+ * Get the actual absolute origin of the request sent by the user.
+ * @param  array	$s						The $_SERVER variable contents. Defaults to $_SERVER.
+ * @param  bool		$use_forwarded_host		Whether to utilise the X-Forwarded-Host header when calculating the actual origin.
+ * @return string							The actual origin of the user's request.
+ */
+function url_origin( $s = false, $use_forwarded_host = false )
+{
+	if($s === false) $s = $_SERVER;
+    $ssl      = ( ! empty( $s['HTTPS'] ) && $s['HTTPS'] == 'on' );
+    $sp       = strtolower( $s['SERVER_PROTOCOL'] );
+    $protocol = substr( $sp, 0, strpos( $sp, '/' ) ) . ( ( $ssl ) ? 's' : '' );
+    $port     = $s['SERVER_PORT'];
+    $port     = ( ( ! $ssl && $port=='80' ) || ( $ssl && $port=='443' ) ) ? '' : ':'.$port;
+    $host     = ( $use_forwarded_host && isset( $s['HTTP_X_FORWARDED_HOST'] ) ) ? $s['HTTP_X_FORWARDED_HOST'] : ( isset( $s['HTTP_HOST'] ) ? $s['HTTP_HOST'] : null );
+    $host     = isset( $host ) ? $host : $s['SERVER_NAME'] . $port;
+    return $protocol . '://' . $host;
+}
+
+/**
+ * Get the full url, as requested by the client.
+ * @see		http://stackoverflow.com/a/8891890/1460422	This Stackoverflow answer.
+ * @param	array	$s                  The $_SERVER variable. Defaults to $_SERVER.
+ * @param	bool		$use_forwarded_host Whether to take the X-Forwarded-Host header into account.
+ * @return	string						The full url, as requested by the client.
+ */
+function full_url( $s = false, $use_forwarded_host = false )
+{
+    return url_origin( $s, $use_forwarded_host ) . $s['REQUEST_URI'];
+}
 
 /**
  * Converts a filesize into a human-readable string.
@@ -735,7 +765,7 @@ function system_extension_mime_type($ext) {
 
 /**
  * Generates a stack trace.
- * @param  bool		$log_trace	Whether to send the stack trace to the error log.
+ * @param  bool		$log_trace	Whether to send the stack trace to the error log in addition to returning it.
  * @return string				A string prepresentation of a stack trace.
  */
 function stack_trace($log_trace = true)
@@ -1159,11 +1189,6 @@ class page_renderer
 
 		$result = str_replace(array_keys($parts), array_values($parts), $result);
 
-		$result = str_replace([
-
-		], [
-		], $result);
-
 		$result = str_replace("{generation-time-taken}", round((microtime(true) - $start_time)*1000, 2), $result);
 		return $result;
 	}
@@ -1180,6 +1205,9 @@ class page_renderer
 	{
 		global $settings;
 		$result = self::get_css_as_html();
+		
+		if(module_exists("feature-search"))
+			$result .= "\t\t<link type='application/opensearchdescription+xml' rel='search' href='?action=opensearch-description' />";
 		
 		if(!empty($settings->enable_math_rendering))
 			$result .= "<script type='text/x-mathjax-config'>
@@ -1200,7 +1228,7 @@ class page_renderer
 		global $settings;
 
 		if(preg_match("/^[^\/]*\/\/|^\//", $settings->css))
-			return "<link rel='stylesheet' href='$settings->css' />";
+			return "<link rel='stylesheet' href='$settings->css' />\n";
 		else
 		{
 			$css = $settings->css;
@@ -1228,7 +1256,7 @@ class page_renderer
 				], $css);
 				
 			}
-			return "<style>$css</style>";
+			return "<style>$css</style>\n";
 		}
 	}
 
@@ -2321,6 +2349,36 @@ register_module([
 			
 			//header("content-type: text/plain");
 			//var_dump($results);
+		});
+		
+		/*
+		 *  ██████  ██████  ███████ ███    ██ ███████ ███████  █████  ██████   ██████ ██   ██
+		 * ██    ██ ██   ██ ██      ████   ██ ██      ██      ██   ██ ██   ██ ██      ██   ██
+		 * ██    ██ ██████  █████   ██ ██  ██ ███████ █████   ███████ ██████  ██      ███████
+		 * ██    ██ ██      ██      ██  ██ ██      ██ ██      ██   ██ ██   ██ ██      ██   ██
+		 *  ██████  ██      ███████ ██   ████ ███████ ███████ ██   ██ ██   ██  ██████ ██   ██
+		 */
+		add_action("opensearch-description", function () {
+			global $settings;
+			$siteRoot = full_url() . "/index.php";
+			if(!isset($_GET["debug"]))
+				header("content-type: application/opensearchdescription+xml");
+			else
+				header("content-type: text/plain");
+			
+			exit(utf8_encode("<?xml version=\"1.0\" encoding=\"UTF-8\"
+<OpenSearchDescription  xmlns=\"http://a9.com/-/spec/opensearch/1.1/\">
+	<ShortName>Search $settings->sitename</ShortName>
+	<Description>Search $settings->sitename, which is powered by Pepperminty Wiki.</Description>
+	<Tags>$settings->sitename Wiki</Tags>
+	<Image type=\"image/png\">$settings->favicon</Image>
+	<Attribution>Search content available under the license linked to at the bottom of the search results page.</Attribution>
+	<Developer>Starbeamrainbowlabs (https://github.com/sbrl/Pepperminty-Wiki/graphs/contributors)</Developer>
+	<InputEncoding>UTF-8</InputEncoding>
+	<OutputEncoding>UTF-8</OutputEncoding>
+	
+	<Url type=\"text/html\" method=\"get\" template=\"$siteRoot?action=search&amp;query={searchTerms}&amp;offset={startIndex?}&amp;count={count}\" />
+</OpenSearchDescription>"));
 		});
 	}
 ]);
