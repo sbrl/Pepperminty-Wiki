@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Search",
-	"version" => "0.3.3",
+	"version" => "0.3.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",

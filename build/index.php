@@ -1892,7 +1892,7 @@ function history_add_revision(&$pageinfo, &$newsource, &$oldsource, $save_pagein
 
 register_module([
 	"name" => "Recent Changes",
-	"version" => "0.3.2",
+	"version" => "0.3.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds recent changes. Access through the 'recent-changes' action.",
 	"id" => "feature-recent-changes",
@@ -2167,7 +2167,7 @@ register_module([
 
 register_module([
 	"name" => "Search",
-	"version" => "0.3.3",
+	"version" => "0.3.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
