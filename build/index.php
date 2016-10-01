@@ -2008,10 +2008,11 @@ function render_recent_changes($recent_changes)
 			if(date("dmY", $recent_changes[$i]->timestamp) !== date("dmY", $recent_changes[$s]->timestamp))
 				break;
 			
-			// If we have found a change that has been made on the same page as
-			// the one that we are scanning for, move it up next to the change
-			// we are scanning for.
-			if($recent_changes[$i]->page == $recent_changes[$s]->page)
+			// If we have found a change that has been made on the same page and
+			// on the same day as the one that we are scanning for, move it up
+			// next to the change we are scanning for.
+			if($recent_changes[$i]->page == $recent_changes[$s]->page &&
+				date("j", $recent_changes[$i]->timestamp) === date("j", $recent_changes[$s]->timestamp))
 			{
 				// FUTURE: We may need to remove and insert instead of swapping changes around if this causes some changes to appear out of order.
 				$temp = $recent_changes[$i + 1];
