@@ -4767,7 +4767,7 @@ register_module([
 
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.16.1",
+	"version" => "0.16.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
@@ -4913,7 +4913,7 @@ register_module([
 				time() - $pageindex->{$env->page}->lastmodified < $settings->delayed_indexing_time)
 				header("x-robots-tag: noindex");
 			
-			$settings->footer_message = "Last edited at " . date('h:ia T \o\n j F Y', $pageindex->{$env->page}->lastmodified) . ".</p>\n<p>"; // Add the last edited time to the footer
+			$settings->footer_message = "Last edited at " . date('h:ia T \o\n j F Y', $pageindex->{$env->page}->lastmodified) . ".</p>\n<p>" . $settings->footer_message; // Add the last edited time to the footer
 			
 			switch(strtolower(trim($_GET["mode"])))
 			{
