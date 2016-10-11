@@ -4941,7 +4941,7 @@ register_module([
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.9.6",
+	"version" => "0.9.7",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",
@@ -5352,6 +5352,7 @@ class PeppermintParsedown extends ParsedownExtra
 			$floatDirection = false;
 			$imageSize = false;
 			$imageCaption = false;
+			$shortImageUrl = false;
 			
 			if($this->isFloatValue($param1))
 			{
@@ -5395,8 +5396,8 @@ class PeppermintParsedown extends ParsedownExtra
 			
 			if(isset($pageindex->$imageUrl) and $pageindex->$imageUrl->uploadedfile)
 			{
-				//echo("Found pageindex entry: "); var_dump($pageindex->$imageUrl->uploadedfile);
 				// We have a short url! Expand it.
+				$shortImageUrl = $imageUrl;
 				$imageUrl = "index.php?action=preview&size=" . max($imageSize["x"], $imageSize["y"]) ."&page=" . rawurlencode($imageUrl);
 			}
 			
@@ -5459,6 +5460,20 @@ class PeppermintParsedown extends ParsedownExtra
 					break;
 			}
 			
+			// ~ Image linker ~
+			
+			$imageHref = $shortImageUrl !== false ? "?page=" . rawurlencode($shortImageUrl) : $imageUrl;
+			$result["element"] = [
+				"name" => "a",
+				"attributes" => [
+					"href" => $imageHref
+				],
+				"text" => [$result["element"]],
+				"handler" => "elements"
+			];
+			
+			// ~
+			
 			if($imageCaption)
 			{
 				$rawStyle = $result["element"]["attributes"]["style"];
@@ -5466,15 +5481,15 @@ class PeppermintParsedown extends ParsedownExtra
 				$mediaStyle = preg_replace('/\s*float.*;/', "", $rawStyle);
 				$result["element"] = [
 					"name" => "figure",
+					"attributes" => [
+						"style" => $containerStyle
+					],
 					"text" => [
 						$result["element"],
 						[
 							"name" => "figcaption",
 							"text" => $altText
 						],
-					],
-					"attributes" => [
-						"style" => $containerStyle
 					],
 					"handler" => "elements"
 				];
