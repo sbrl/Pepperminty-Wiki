@@ -3,6 +3,7 @@
 ## v0.13-dev
 
 ### Added
+ - Added header to upload file page.
  - Added history support to the `raw` action.
 
 ### Changed
@@ -10,7 +11,7 @@
  - Added `$env->page_filename`, which points to the current page on disk.
  - Changed the way different display modes are accessed. You can now use the new `mode` parameter to the `view` action. It supports 4 different modes at present: `normal`, `printable`, `contentonly`, and `parsedsourceonly`.
 
-### Fixed
+## Fixed
  - The login session lifetime is now configurable (defaults to 24 hours), so you won't keep getting logged out all the time (in theory). (#113)
  - Recent changes made on different days are now displayed separately, as they should be (#112)
  - Always display footer message at the bottom of the page.
