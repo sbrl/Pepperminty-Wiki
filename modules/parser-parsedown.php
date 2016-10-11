@@ -405,7 +405,7 @@ class PeppermintParsedown extends ParsedownExtra
 			 * 5 - Third param (optional)
 			 */
 			$altText = $matches[1];
-			$imageUrl = str_replace("&amp;", "&", $matches[2]); // Decode & to allow it in preview urls
+			$imageUrl = trim(str_replace("&amp;", "&", $matches[2])); // Decode & to allow it in preview urls
 			$param1 = empty($matches[3]) ? false : strtolower(trim($matches[3]));
 			$param2 = empty($matches[4]) ? false : strtolower(trim($matches[4]));
 			$param3 = empty($matches[5]) ? false : strtolower(trim($matches[5]));

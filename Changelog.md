@@ -15,6 +15,7 @@
  - The login session lifetime is now configurable (defaults to 24 hours), so you won't keep getting logged out all the time (in theory). (#113)
  - Recent changes made on different days are now displayed separately, as they should be (#112)
  - Always display footer message at the bottom of the page.
+ - Trim the image url before short image url detection (#108)
  - Fxed huge issue with `contentonly` display mode.
 
 ## v0.12.1
