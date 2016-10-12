@@ -123,5 +123,5 @@
 	"export_allow_only_admins": {"type": "checkbox", "description": "Whether to only allow adminstrators to export the your wiki as a zip using the page-export module.", "default": false},
 	"sessionprefix": {"type": "text", "description": "You shouldn't need to change this. The prefix that should be used in the names of the session variables. Defaults to \"auto\", which automatically generates this field. See the readme for more information.", "default": "auto"},
 	"sessionlifetime": { "type": "number", "description": "Again, you shouldn't need to change this under normal circumstances. This setting controls the lifetime of a login session. Defaults to 24 hours, but it may get cut off sooner depending on the underlying PHP session lifetime.", "default": 86400 },
-	"css": {"type": "textarea", "description": "A string of css to include. Will be included in the &lt;head&gt; of every page inside a &lt;style&gt; tag. This may also be a url - urls will be referenced via a &lt;link rel='stylesheet' /&gt; tag.", "default": "auto"}
+	"css": {"type": "textarea", "description": "A string of css to include. Will be included in the &lt;head&gt; of every page inside a &lt;style&gt; tag. This may also be an absolute url - urls will be referenced via a &lt;link rel='stylesheet' /&gt; tag.", "default": "auto"}
 }
