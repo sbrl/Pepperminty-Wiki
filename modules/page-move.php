@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page mover",
-	"version" => "0.9.1",
+	"version" => "0.9.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to move pages.",
 	"id" => "page-move",
@@ -9,7 +9,7 @@ register_module([
 		global $settings;
 		
 		/**
-		 * @api		{get}	?action=move[new_name={newPageName}]	Move a page
+		 * @api		{get}	?action=move[&new_name={newPageName}]	Move a page
 		 * @apiName		Move
 		 * @apiGroup	Page
 		 * @apiPermission	Moderator

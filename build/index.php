@@ -145,7 +145,7 @@ $guiConfig = <<<'GUICONFIG'
 	"export_allow_only_admins": {"type": "checkbox", "description": "Whether to only allow adminstrators to export the your wiki as a zip using the page-export module.", "default": false},
 	"sessionprefix": {"type": "text", "description": "You shouldn't need to change this. The prefix that should be used in the names of the session variables. Defaults to \"auto\", which automatically generates this field. See the readme for more information.", "default": "auto"},
 	"sessionlifetime": { "type": "number", "description": "Again, you shouldn't need to change this under normal circumstances. This setting controls the lifetime of a login session. Defaults to 24 hours, but it may get cut off sooner depending on the underlying PHP session lifetime.", "default": 86400 },
-	"css": {"type": "textarea", "description": "A string of css to include. Will be included in the &lt;head&gt; of every page inside a &lt;style&gt; tag. This may also be a url - urls will be referenced via a &lt;link rel='stylesheet' /&gt; tag.", "default": "auto"}
+	"css": {"type": "textarea", "description": "A string of css to include. Will be included in the &lt;head&gt; of every page inside a &lt;style&gt; tag. This may also be an absolute url - urls will be referenced via a &lt;link rel='stylesheet' /&gt; tag.", "default": "auto"}
 }
 GUICONFIG;
 
@@ -1788,6 +1788,62 @@ function render_sidebar($pageindex, $root_pagename = "")
 	
 	return $result == "<ul></ul>\n" ? "" : $result;
 }
+
+
+
+
+register_module([
+	"name" => "Settings GUI",
+	"version" => "0.1",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
+	"id" => "feature-guiconfig",
+	"code" => function() {
+		global $settings;
+		/**
+		 * @api {get} ?action=configure Change the global wiki settings
+		 * @apiName ConfigureSettings
+		 * @apiGroup Utility
+		 * @apiPermission Moderator
+		 */
+		
+		/*
+		 *  ██████  ██████  ███    ██ ███████ ██  ██████  ██    ██ ██████  ███████
+		 * ██      ██    ██ ████   ██ ██      ██ ██       ██    ██ ██   ██ ██
+		 * ██      ██    ██ ██ ██  ██ █████   ██ ██   ███ ██    ██ ██████  █████
+		 * ██      ██    ██ ██  ██ ██ ██      ██ ██    ██ ██    ██ ██   ██ ██
+		 *  ██████  ██████  ██   ████ ██      ██  ██████   ██████  ██   ██ ███████
+ 	 	 */
+		add_action("configure", function() {
+			global $settings, $guiConfig;
+			
+			$content = "";
+			
+			foreach($guiConfig as $configKey => $configData)
+			{
+				$reverse = false;
+				$inputControl = "";
+				$label = "<label for='setting-$configKey'>$configKey</label>";
+				switch($configData->type)
+				{
+					case "text":
+						$inputControl = "<input type='$configData->type' id='$configKey' value='$settings->$configKey' />";
+						break;
+					case "textarea":
+						$inputControl = "<textarea id='$configKey'>$settings->$configKey</textarea>";
+				}
+				
+				$content .= !$reverse ? "$inputControl\n$label\n" : "$label\n$inputControl\n";
+			}
+			
+			exit(file_get_contents("$env->storage_prefix$env->page.md"));
+			exit();
+		});
+		
+		add_help_section("800-raw-page-content", "Viewing Raw Page Content", "<p>Although you can use the edit page to view a page's source, you can also ask $settings->sitename to send you the raw page source and nothing else. This feature is intented for those who want to automate their interaction with $settings->sitename.</p>
+		<p>To use this feature, navigate to the page for which you want to see the source, and then alter the <code>action</code> parameter in the url's query string to be <code>raw</code>. If the <code>action</code> parameter doesn't exist, add it. Note that when used on an file's page this action will return the source of the description and not the file itself.</p>");
+	}
+]);
 
 
 
@@ -4547,7 +4603,7 @@ register_module([
 
 register_module([
 	"name" => "Page mover",
-	"version" => "0.9.1",
+	"version" => "0.9.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to move pages.",
 	"id" => "page-move",
@@ -4555,7 +4611,7 @@ register_module([
 		global $settings;
 		
 		/**
-		 * @api		{get}	?action=move[new_name={newPageName}]	Move a page
+		 * @api		{get}	?action=move[&new_name={newPageName}]	Move a page
 		 * @apiName		Move
 		 * @apiGroup	Page
 		 * @apiPermission	Moderator
