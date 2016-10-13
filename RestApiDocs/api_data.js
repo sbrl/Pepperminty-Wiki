@@ -325,7 +325,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "?action=move[new_name={newPageName}]",
+    "url": "?action=move[&new_name={newPageName}]",
     "title": "Move a page",
     "name": "Move",
     "group": "Page",
@@ -787,6 +787,23 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "./modules/feature-upload.php",
     "groupTitle": "Upload"
+  },
+  {
+    "type": "get",
+    "url": "?action=configure",
+    "title": "Change the global wiki settings",
+    "name": "ConfigureSettings",
+    "group": "Utility",
+    "permission": [
+      {
+        "name": "Moderator",
+        "title": "Only users loggged with a moderator account may use this call.",
+        "description": ""
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "./modules/feature-guiconfig.php",
+    "groupTitle": "Utility"
   },
   {
     "type": "get",
