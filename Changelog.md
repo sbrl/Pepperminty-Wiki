@@ -2,6 +2,9 @@
 
 ## v0.13-dev
 
+### Added
+ - Added history support to the `raw` action.
+
 ### Changed
  - Overhauled internal history logic - history logic is now done in core.
  - Added `$env->page_filename`, which points to the current page on disk.

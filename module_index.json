@@ -19,11 +19,11 @@
     },
     {
         "name": "Raw page source",
-        "version": "0.6",
+        "version": "0.7",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a 'raw' action that shows you the raw source of a page.",
         "id": "action-raw",
-        "lastupdate": 1465757909,
+        "lastupdate": 1476812239,
         "optional": false
     },
     {
@@ -181,11 +181,11 @@
     },
     {
         "name": "Page viewer",
-        "version": "0.15",
+        "version": "0.16",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You really should include this one.",
         "id": "page-view",
-        "lastupdate": 1476811748,
+        "lastupdate": 1476812218,
         "optional": false
     },
     {
