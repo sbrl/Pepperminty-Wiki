@@ -28,7 +28,6 @@ register_module([
 			
 			header("content-type: text/markdown");
 			exit(file_get_contents($env->page_filename));
-			exit();
 		});
 		
 		add_help_section("800-raw-page-content", "Viewing Raw Page Content", "<p>Although you can use the edit page to view a page's source, you can also ask $settings->sitename to send you the raw page source and nothing else. This feature is intented for those who want to automate their interaction with $settings->sitename.</p>
