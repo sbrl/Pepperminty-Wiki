@@ -4832,7 +4832,7 @@ register_module([
 
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.16.2",
+	"version" => "0.16.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
@@ -4980,7 +4980,8 @@ register_module([
 			
 			$settings->footer_message = "Last edited at " . date('h:ia T \o\n j F Y', $pageindex->{$env->page}->lastmodified) . ".</p>\n<p>" . $settings->footer_message; // Add the last edited time to the footer
 			
-			switch(strtolower(trim($_GET["mode"])))
+			$mode = isset($_GET["mode"]) ? strtolower(trim($_GET["mode"])) : "normal";
+			switch($mode)
 			{
 				case "contentonly":
 					// Content only mode: Send only the content of the page
