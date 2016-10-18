@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.16",
+	"version" => "0.16.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
@@ -93,7 +93,7 @@ register_module([
 			else
 			{
 				$content .= "<h1>Revision #{$env->history->revision_number} of $env->page</h1>\n";
-				$content .= "<p class='revision-note'><em>(Revision saved by $revisionData->editor " . render_timestamp($env->history->revision_data->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a> or see a <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of all revisions</a> for this page.)</em></p>\n";
+				$content .= "<p class='revision-note'><em>(Revision saved by {$env->history->revision_data->editor} " . render_timestamp($env->history->revision_data->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a> or see a <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of all revisions</a> for this page.)</em></p>\n";
 			}
 			
 			// Add an extra message if the requester was redirected from another page

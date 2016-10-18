@@ -1320,14 +1320,15 @@ if(isset($_GET["revision"]) and is_numeric($_GET["revision"]))
 	// We have a revision number!
 	$env->is_history_revision = true;
 	$env->history->revision_number = intval($_GET["revision"]);
-	$env->history->revision_data = $pageindex->{$env->page}->history[$revisionNumber];
 	
 	// Make sure that the revision exists for later on
-	if(!isset($pageindex->{$env->page}->history[$revisionNumber]))
+	if(!isset($pageindex->{$env->page}->history[$env->history->revision_number]))
 	{
 		http_response_code(404);
 		exit(page_renderer::render_main("404: Revision Not Found - $env->page - $settings->sitename", "<p>Revision #{$env->history->revision_number} of $env->page doesn't appear to exist. Try viewing the <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of revisions for $env->page</a>, or viewing <a href='?page=" . rawurlencode($env->page) . "'>the latest revision</a> instead.</p>"));
 	}
+	
+	$env->history->revision_data = $pageindex->{$env->page}->history[$env->history->revision_number];
 }
 // Construct the page's filename
 $env->page_filename = $env->storage_prefix;
@@ -4688,7 +4689,7 @@ register_module([
 
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.16",
+	"version" => "0.16.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
@@ -4780,7 +4781,7 @@ register_module([
 			else
 			{
 				$content .= "<h1>Revision #{$env->history->revision_number} of $env->page</h1>\n";
-				$content .= "<p class='revision-note'><em>(Revision saved by $revisionData->editor " . render_timestamp($env->history->revision_data->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a> or see a <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of all revisions</a> for this page.)</em></p>\n";
+				$content .= "<p class='revision-note'><em>(Revision saved by {$env->history->revision_data->editor} " . render_timestamp($env->history->revision_data->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a> or see a <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of all revisions</a> for this page.)</em></p>\n";
 			}
 			
 			// Add an extra message if the requester was redirected from another page
