@@ -1826,11 +1826,19 @@ register_module([
 				$label = "<label for='setting-$configKey'>$configKey</label>";
 				switch($configData->type)
 				{
+					case "url":
+					case "number":
 					case "text":
 						$inputControl = "<input type='$configData->type' id='$configKey' value='$settings->$configKey' />";
 						break;
 					case "textarea":
 						$inputControl = "<textarea id='$configKey'>$settings->$configKey</textarea>";
+					case "checkbox":
+						$reverse = true;
+						$inputControl = "<input type='checkbox' id='$configKey' " . ($settings->$configKey ? " checked" : "") . " />";
+					default:
+						$label = "";
+						$inputControl = "<p><em>Sorry! The <code>$configKey</code> setting isn't editable yet through the gui. Please try editing <code>peppermint.json</code> for the time being.</p>";
 				}
 				
 				$content .= !$reverse ? "$inputControl\n$label\n" : "$label\n$inputControl\n";
