@@ -12,6 +12,11 @@ $version = "{version}";
 $env = new stdClass();
 $env->action = $settings->defaultaction;
 $env->page = "";
+$env->page_filename = "";
+$env->is_history_revision = false;
+$env->history = new stdClass();
+$env->history->revision_number = -1;
+$env->history->revision_data = false;
 $env->user = "Anonymous";
 $env->is_logged_in = false;
 $env->is_admin = false;
@@ -28,7 +33,7 @@ foreach ($paths as &$path) {
 	$path = $env->storage_prefix . $path;
 }
 
-$paths->upload_file_prefix = "Files/"; // The prefix to append to uploaded files
+$paths->upload_file_prefix = "Files/"; // The prefix to add to uploaded files
 
 session_start();
 ///////// Login System /////////
@@ -709,9 +714,6 @@ if(makepathsafe($_GET["page"]) !== $_GET["page"])
 	exit();
 }
 
-// Finish setting up the environment object
-$env->page = $_GET["page"];
-$env->action = strtolower($_GET["action"]);
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -1009,6 +1011,33 @@ class page_renderer
 		return $result;
 	}
 }
+
+/// Finish setting up the environment object ///
+$env->page = $_GET["page"];
+if(isset($_GET["revision"]) and is_numeric($_GET["revision"]))
+{
+	// We have a revision number!
+	$env->is_history_revision = true;
+	$env->history->revision_number = intval($_GET["revision"]);
+	$env->history->revision_data = $pageindex->{$env->page}->history[$revisionNumber];
+	
+	// Make sure that the revision exists for later on
+	if(!isset($pageindex->{$env->page}->history[$revisionNumber]))
+	{
+		http_response_code(404);
+		exit(page_renderer::render_main("404: Revision Not Found - $env->page - $settings->sitename", "<p>Revision #{$env->history->revision_number} of $env->page doesn't appear to exist. Try viewing the <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of revisions for $env->page</a>, or viewing <a href='?page=" . rawurlencode($env->page) . "'>the latest revision</a> instead.</p>"));
+	}
+}
+// Construct the page's filename
+$env->page_filename = $env->storage_prefix;
+if($env->is_history_revision)
+	$env->page_filename .= $pageindex->{$env->page}->history[$env->history->revision_number]->filename;
+else
+	$env->page_filename .= $pageindex->{$env->page}->filename;
+
+$env->action = strtolower($_GET["action"]);
+
+////////////////////////////////////////////////
 
 //////////////////////////////////////
 ///// Extra consistency measures /////

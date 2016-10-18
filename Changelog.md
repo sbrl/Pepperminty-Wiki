@@ -1,4 +1,14 @@
-data# Changelog
+# Changelog
+
+## v0.13-dev
+
+### Changed
+ - Overhauled internal history logic - history logic is now done in core.
+ - Added `$env->page_filename`, which points to the current page on disk.
+ - Changed the way different display modes are accessed. You can now use the new `mode` parameter to the `view` action. It supports 4 different modes at present: `normal`, `printable`, `contentonly`, and `parsedsourceonly`.
+
+### Fixed
+ - Fxed huge issue with `contentonly` display mode.
 
 ## v0.12.1-dev
 

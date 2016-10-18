@@ -103,7 +103,7 @@ $guiConfig = <<<'GUICONFIG'
 	"nav_links_bottom": {"type": "text", "description": "An array of links in the above format that will be shown at the bottom of the page.", "default": [
 		[
 			"&#x1f5b6; Printable version",
-			"index.php?action=view&printable=yes&page={page}"
+			"index.php?action=view&mode=printable&page={page}"
 		],
 		[
 			"Credits",
@@ -313,6 +313,11 @@ $version = "v0.12.1-dev";
 $env = new stdClass();
 $env->action = $settings->defaultaction;
 $env->page = "";
+$env->page_filename = "";
+$env->is_history_revision = false;
+$env->history = new stdClass();
+$env->history->revision_number = -1;
+$env->history->revision_data = false;
 $env->user = "Anonymous";
 $env->is_logged_in = false;
 $env->is_admin = false;
@@ -329,7 +334,7 @@ foreach ($paths as &$path) {
 	$path = $env->storage_prefix . $path;
 }
 
-$paths->upload_file_prefix = "Files/"; // The prefix to append to uploaded files
+$paths->upload_file_prefix = "Files/"; // The prefix to add to uploaded files
 
 session_start();
 ///////// Login System /////////
@@ -1010,9 +1015,6 @@ if(makepathsafe($_GET["page"]) !== $_GET["page"])
 	exit();
 }
 
-// Finish setting up the environment object
-$env->page = $_GET["page"];
-$env->action = strtolower($_GET["action"]);
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -1310,6 +1312,33 @@ class page_renderer
 		return $result;
 	}
 }
+
+/// Finish setting up the environment object ///
+$env->page = $_GET["page"];
+if(isset($_GET["revision"]) and is_numeric($_GET["revision"]))
+{
+	// We have a revision number!
+	$env->is_history_revision = true;
+	$env->history->revision_number = intval($_GET["revision"]);
+	$env->history->revision_data = $pageindex->{$env->page}->history[$revisionNumber];
+	
+	// Make sure that the revision exists for later on
+	if(!isset($pageindex->{$env->page}->history[$revisionNumber]))
+	{
+		http_response_code(404);
+		exit(page_renderer::render_main("404: Revision Not Found - $env->page - $settings->sitename", "<p>Revision #{$env->history->revision_number} of $env->page doesn't appear to exist. Try viewing the <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of revisions for $env->page</a>, or viewing <a href='?page=" . rawurlencode($env->page) . "'>the latest revision</a> instead.</p>"));
+	}
+}
+// Construct the page's filename
+$env->page_filename = $env->storage_prefix;
+if($env->is_history_revision)
+	$env->page_filename .= $pageindex->{$env->page}->history[$env->history->revision_number]->filename;
+else
+	$env->page_filename .= $pageindex->{$env->page}->filename;
+
+$env->action = strtolower($_GET["action"]);
+
+////////////////////////////////////////////////
 
 //////////////////////////////////////
 ///// Extra consistency measures /////
@@ -2161,7 +2190,7 @@ register_module([
 		
 		
 		/**
-		 * @api {get} ?action=idindex-show Show the id index.
+		 * @api {get} ?action=idindex-show Show the id index
 		 * @apiDescription	Outputs the id index. Useful if you need to verify that it's working as expected.
 		 * @apiName			SearchShowIdIndex
 		 * @apiGroup		Search
@@ -4673,7 +4702,7 @@ register_module([
 		 * 
 		 * @apiUse PageParameter
 		 * @apiParam	{number}	revision	The revision number to display.
-		 * @apiParam	{string}	printable	Set to 'yes' to get a printable version of the specified page instead.
+		 * @apiParam	{string}	mode		Optional. The display mode to use. Can hld the following values: 'normal' - The default. Sends a normal page. 'printable' - Sends a printable version of the page. 'contentonly' - Sends only the content of the page, not the extra stuff around it. 'parsedsourceonly' - Sends only the raw rendered source of the page, as it appears just after it has come out of the page parser. Useful for writing external tools (see also the `raw` action).
 		 *
 		 * @apiError	NonExistentPageError	The page doesn't exist and editing is disabled in the wiki's settings. If editing isn't disabled, you will be redirected to the edit page instead.
 		 * @apiError	NonExistentRevisionError	The specified revision was not found.
@@ -4743,51 +4772,26 @@ register_module([
 				}
 			}
 			
-			$isHistoryRevision = false;
-			if(isset($_GET["revision"]) and is_numeric($_GET["revision"]))
-			{
-				// We have a revision number!
-				$isHistoryRevision = true;
-				$revisionNumber = intval($_GET["revision"]);
-				$revisionData = $pageindex->{$env->page}->history[$revisionNumber];
-				
-				// Make sure that the revision exists for later on
-				if(!isset($pageindex->{$env->page}->history[$revisionNumber]))
-				{
-					http_response_code(404);
-					exit(page_renderer::render_main("404: Revision Not Found - $env->page - $settings->sitename", "<p>Revision #$revisionNumer of $env->page doesn't appear to exist. Try viewing the <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of revisions for $env->page</a>, or viewing <a href='?page=" . rawurlencode($env->page) . "'>the latest revision</a> instead.</p>"));
-				}
-			}
-			
-			
 			$title = "$env->page - $settings->sitename";
 			if(isset($pageindex->$page->protect) && $pageindex->$page->protect === true)
 				$title = $settings->protectedpagechar . $title;
 			$content = "";
-			if(!$isHistoryRevision)
+			if(!$env->is_history_revision)
 				$content .= "<h1>$env->page</h1>\n";
 			else
 			{
-				$content .= "<h1>Revision #$revisionNumber of $env->page</h1>\n";
-				$content .= "<p class='revision-note'><em>(Revision saved by $revisionData->editor " . render_timestamp($revisionData->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a> or see a <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of all revisions</a> for this page.)</em></p>\n";
+				$content .= "<h1>Revision #{$env->history->revision_number} of $env->page</h1>\n";
+				$content .= "<p class='revision-note'><em>(Revision saved by $revisionData->editor " . render_timestamp($env->history->revision_data->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a> or see a <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of all revisions</a> for this page.)</em></p>\n";
 			}
 			
 			// Add an extra message if the requester was redirected from another page
 			if(isset($_GET["redirected_from"]))
 				$content .= "<p><em>Redirected from <a href='?page=" . rawurlencode($_GET["redirected_from"]) . "&redirect=no'>" . $_GET["redirected_from"] . "</a>.</em></p>";
 			
-			// Construct the filename
-			$pageFilename = "$env->storage_prefix";
-			if($isHistoryRevision)
-			{
-				$pageFilename .= $pageindex->{$env->page}->history[$revisionNumber]->filename;
-			}
-			else
-				$pageFilename .= $pageindex->{$env->page}->filename;
-			
 			$parsing_start = microtime(true);
 			
-			$content .= parse_page_source(file_get_contents($pageFilename));
+			$rawRenderedSource = parse_page_source(file_get_contents($env->page_filename));
+			$content .= $rawRenderedSource;
 			
 			if(!empty($pageindex->$page->tags))
 			{
@@ -4831,15 +4835,24 @@ register_module([
 				time() - $pageindex->{$env->page}->lastmodified < $settings->delayed_indexing_time)
 				header("x-robots-tag: noindex");
 			
-			// Content only mode: Send only the raw rendered page
-			if(isset($_GET["contentonly"]) and $_GET["contentonly"] === "yes")
-				exit(parse_page_source($content));
-			// Printable: Sends a printable version of the page
-			if(isset($_GET["printable"]) and $_GET["printable"] === "yes")
-				exit(page_renderer::render_minimal($title, $content));
-			// Normal page
 			$settings->footer_message = "Last edited at " . date('h:ia T \o\n j F Y', $pageindex->{$env->page}->lastmodified) . ".</p>\n<p>"; // Add the last edited time to the footer
-			exit(page_renderer::render_main($title, $content));
+			
+			switch(strtolower(trim($_GET["mode"])))
+			{
+				case "contentonly":
+					// Content only mode: Send only the content of the page
+					exit($content);
+				case "parsedsourceonly":
+					// Parsed source only mode: Send only the raw rendered source
+					exit($rawRenderedSource);
+				case "printable":
+					// Printable mode: Sends a printable version of the page
+					exit(page_renderer::render_minimal($title, $content));
+				case "normal":
+				default:
+					// Normal mode: Send a normal page
+					exit(page_renderer::render_main($title, $content));
+			}
 		});
 	}
 ]);
