@@ -1,2 +1,2 @@
 @echo off
-php build.php
+php build.php %*
