@@ -476,8 +476,8 @@
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "printable",
-            "description": "<p>Set to 'yes' to get a printable version of the specified page instead.</p>"
+            "field": "mode",
+            "description": "<p>Optional. The display mode to use. Can hld the following values: 'normal' - The default. Sends a normal page. 'printable' - Sends a printable version of the page. 'contentonly' - Sends only the content of the page, not the extra stuff around it. 'parsedsourceonly' - Sends only the raw rendered source of the page, as it appears just after it has come out of the page parser. Useful for writing external tools (see also the <code>raw</code> action).</p>"
           },
           {
             "group": "Parameter",
@@ -1006,7 +1006,7 @@
   },
   {
     "type": "get",
-    "url": "?action=move[do=yes]",
+    "url": "?action=update[do=yes]",
     "title": "Update the wiki",
     "description": "<p>Update the wiki by downloading  a new version of Pepperminty Wiki from the URL specified in the settings. Note that unless you change the url from it's default, all custom modules installed will be removed. <strong>Note also that this plugin is currently out of date. Use with extreme caution!</strong></p>",
     "name": "Update",
