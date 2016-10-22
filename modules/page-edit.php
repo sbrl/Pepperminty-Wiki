@@ -107,12 +107,14 @@ register_module([
 			$content .= <<<SMARTSAVE
 <!-- Smart saving script -->
 <script>
-	function getSmartSaveKey() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").trim(); }
+	function getSmartSaveKey() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").replace("Editing ", "").trim(); }
 	// Saving
 	document.querySelector("textarea[name=content]").addEventListener("keyup", function(event) { window.localStorage.setItem(getSmartSaveKey(), event.target.value) });
 	// Loading
 	window.addEventListener("load", function(event) {
-		document.querySelector("textarea[name=content]").value = localStorage.getItem(getSmartSaveKey());
+		var editor = document.querySelector("textarea[name=content]");
+		if(editor.value.length > 0) return; // Don't restore if there's data in the editor already
+		editor.value = localStorage.getItem(getSmartSaveKey());
 	});
 </script>
 SMARTSAVE;

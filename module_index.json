@@ -122,7 +122,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1477150472,
+        "lastupdate": 1477151244,
         "optional": false
     },
     {
