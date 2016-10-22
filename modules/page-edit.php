@@ -99,6 +99,24 @@ register_module([
 				});
 			</script>
 		</form>";
+			
+			// ~
+			
+			/// ~~~ Smart saving ~~~ ///
+			
+			$content .= <<<SMARTSAVE
+<!-- Smart saving script -->
+<script>
+	function getSmartSaveKey() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").trim(); }
+	// Saving
+	document.querySelector("textarea[name=content]").addEventListener("keyup", function(event) { window.localStorage.setItem(getSmartSaveKey(), event.target.value) });
+	// Loading
+	window.addEventListener("load", function(event) {
+		document.querySelector("textarea[name=content]").value = localStorage.getItem(getSmartSaveKey());
+	});
+</script>
+SMARTSAVE;
+			
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});
 		

@@ -1372,7 +1372,7 @@ if(isset($_GET["revision"]) and is_numeric($_GET["revision"]))
 $env->page_filename = $env->storage_prefix;
 if($env->is_history_revision)
 	$env->page_filename .= $pageindex->{$env->page}->history[$env->history->revision_number]->filename;
-else
+else if(isset($pageindex->{$env->page}))
 	$env->page_filename .= $pageindex->{$env->page}->filename;
 
 $env->action = strtolower($_GET["action"]);
@@ -3845,6 +3845,24 @@ register_module([
 				});
 			</script>
 		</form>";
+			
+			// ~
+			
+			/// ~~~ Smart saving ~~~ ///
+			
+			$content .= <<<SMARTSAVE
+<!-- Smart saving script -->
+<script>
+	function getSmartSaveKey() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").trim(); }
+	// Saving
+	document.querySelector("textarea[name=content]").addEventListener("keyup", function(event) { window.localStorage.setItem(getSmartSaveKey(), event.target.value) });
+	// Loading
+	window.addEventListener("load", function(event) {
+		document.querySelector("textarea[name=content]").value = localStorage.getItem(getSmartSaveKey());
+	});
+</script>
+SMARTSAVE;
+			
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});
 		
@@ -4743,14 +4761,14 @@ register_module([
 
 register_module([
 	"name" => "Update",
-	"version" => "0.6.1",
+	"version" => "0.6.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an update page that downloads the latest stable version of Pepperminty Wiki. This module is currently outdated as it doesn't save your module preferences.",
 	"id" => "page-update",
 	"code" => function() {
 		
 		/**
-		 * @api		{get}	?action=move[do=yes]	Update the wiki
+		 * @api		{get}	?action=update[do=yes]	Update the wiki
 		 * @apiDescription	Update the wiki by downloading  a new version of Pepperminty Wiki from the URL specified in the settings. Note that unless you change the url from it's default, all custom modules installed will be removed. **Note also that this plugin is currently out of date. Use with extreme caution!**
 		 * @apiName			Update
 		 * @apiGroup		Utility
