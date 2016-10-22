@@ -5,6 +5,7 @@
 ### Added
  - Added header to upload file page.
  - Added history support to the `raw` action.
+ - Added 'smart save' to the page creator / editor. Nobody need ever loose edits ever again!
 
 ### Changed
  - Overhauled internal history logic - history logic is now done in core.
