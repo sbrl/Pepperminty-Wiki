@@ -1064,7 +1064,7 @@ if(isset($_GET["revision"]) and is_numeric($_GET["revision"]))
 $env->page_filename = $env->storage_prefix;
 if($env->is_history_revision)
 	$env->page_filename .= $pageindex->{$env->page}->history[$env->history->revision_number]->filename;
-else
+else if(isset($pageindex->{$env->page}))
 	$env->page_filename .= $pageindex->{$env->page}->filename;
 
 $env->action = strtolower($_GET["action"]);
