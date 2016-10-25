@@ -299,6 +299,7 @@ class search
 	public static function tokenize($source)
 	{
 		$source = strtolower($source);
+		$source = str_replace([ '[', ']', '|', '{', '}' ], " ", $source);
 		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, PREG_SPLIT_NO_EMPTY);
 	}
 	
@@ -317,6 +318,7 @@ class search
 		foreach($pageindex as $pagename => $pagedetails)
 		{
 			echo("Adding $pagename to the new search index.\n\n");
+			flush();
 			$pagesource = utf8_encode(file_get_contents("$env->storage_prefix$pagename.md"));
 			$index = self::index($pagesource);
 			
