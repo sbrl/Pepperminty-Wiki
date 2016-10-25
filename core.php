@@ -469,7 +469,7 @@ function stack_trace($log_trace = true, $full = false)
 	foreach ($stackTrace as $i => $stackEntry)
 	{
 		$result .= "#" . ($stackHeight - $i) . ": ";
-		$result .= (isset($stackEntry["file"]) ? $stackEntry["file"] : "") . ":" . (isset($stackEntry["line"]) ? $stackEntry["line"] : "") . " - ";
+		$result .= (isset($stackEntry["file"]) ? $stackEntry["file"] : "(unknown file)") . ":" . (isset($stackEntry["line"]) ? $stackEntry["line"] : "(unknown line)") . " - ";
 		if(isset($stackEntry["function"]))
 		{
 			$result .= "(in " . $stackEntry["function"];
