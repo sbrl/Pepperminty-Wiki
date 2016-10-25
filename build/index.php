@@ -765,22 +765,58 @@ function system_extension_mime_type($ext) {
 
 /**
  * Generates a stack trace.
- * @param  bool		$log_trace	Whether to send the stack trace to the error log in addition to returning it.
- * @return string				A string prepresentation of a stack trace.
+ * @param	bool	$log_trace	Whether to send the stack trace to the error log.
+ * @param	bool	$full		Whether to output a full description of all the variables involved.
+ * @return	string				A string prepresentation of a stack trace.
  */
-function stack_trace($log_trace = true)
+function stack_trace($log_trace = true, $full = false)
 {
 	$result = "";
 	$stackTrace = debug_backtrace();
 	$stackHeight = count($stackTrace);
 	foreach ($stackTrace as $i => $stackEntry)
 	{
-		$result .= "#" . ($stackHeight - $i) . " - " . $stackEntry["file"] . ":" . $stackEntry["line"] . " (" . $stackEntry["function"] . ":" . count($stackEntry["args"]) . ")\n";
+		$result .= "#" . ($stackHeight - $i) . ": ";
+		$result .= (isset($stackEntry["file"]) ? $stackEntry["file"] : "(unknown file)") . ":" . (isset($stackEntry["line"]) ? $stackEntry["line"] : "(unknown line)") . " - ";
+		if(isset($stackEntry["function"]))
+		{
+			$result .= "(calling " . $stackEntry["function"];
+			if(isset($stackEntry["args"]) && count($stackEntry["args"]))
+			{
+				$result .= ": ";
+				$result .= implode(", ", array_map($full ? "var_dump_ret" : "var_dump_short", $stackEntry["args"]));
+			}
+		}
+		$result .= ")\n";
 	}
-	
 	if($log_trace)
 		error_log($result);
-	
+	return $result;
+}
+/**
+ * Calls var_dump() and returns the output.
+ * @param	mixed	$var	The thing to pass to var_dump().
+ * @return	string			The output captured from var_dump().
+ */
+function var_dump_ret($var)
+{
+	ob_start();
+	var_dump($var);
+	return ob_get_clean();
+}
+
+/**
+ * Calls var_dump(), shortening the output for various types.
+ * @param	mixed 	$var	The thing to pass to var_dump().
+ * @return	string			A shortened version of the var_dump() output.
+ */
+function var_dump_short($var)
+{
+	$result = trim(var_dump_ret($var));
+	if(substr($result, 0, 6) === "object" || substr($result, 0, 5) === "array")
+	{
+		$result = substr($result, 0, strpos($result, " ")) . " { ... }";
+	}
 	return $result;
 }
 
