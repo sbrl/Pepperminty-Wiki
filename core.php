@@ -472,7 +472,7 @@ function stack_trace($log_trace = true, $full = false)
 		$result .= (isset($stackEntry["file"]) ? $stackEntry["file"] : "(unknown file)") . ":" . (isset($stackEntry["line"]) ? $stackEntry["line"] : "(unknown line)") . " - ";
 		if(isset($stackEntry["function"]))
 		{
-			$result .= "(in " . $stackEntry["function"];
+			$result .= "(calling " . $stackEntry["function"];
 			if(isset($stackEntry["args"]) && count($stackEntry["args"]))
 			{
 				$result .= ": ";
