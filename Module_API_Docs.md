@@ -168,6 +168,27 @@ exit(page_renderer::render_username("admin")); // Output would be something like
 ?>
 ```
 
+#### `page_renderer::AddJSLink(string $scriptUrl)`
+Add a remote JS script to rendered pages. Links added via this method translate to something like `<script src='{script url}' defer></script>`.
+```php
+<?php
+
+page_renderer::AddJSLink("http://bobsrockets.com/js/awesomescript.js");
+
+?>
+```
+
+#### `page_renderer::AddJSSnippet(string $snippet)`
+Adds a snippet of javascript to generated pages. The snippet in question will be guaranteed to run after the DOM content has loaded (but the `onload` event may not have fired yet). Snippets added via this method will be translated into something like `<script defer>{snippet}</script>`.
+
+```php
+<?php
+
+page_renderer::AddJSSnippet("alert('Hai!');");
+
+?>
+```
+
 #### `page_renderer::register_part_preprocessor($code)`
 This function's use is more complicated to explain. Pepperminty Wiki renders pages with a very simple templating system. For example, in the template a page's content is denoted by `{content}`. A function registered here will be passed all the components of a page _just_ before they are dropped into the template. Note that the function you pass in here should take a *reference* to the components, as the return value of the function passed is discarded. Here's an example:
 

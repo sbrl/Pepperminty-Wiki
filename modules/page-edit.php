@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.15",
+	"version" => "0.15.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -87,37 +87,31 @@ register_module([
 			<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
 			<p class='editing-message'>$settings->editing_message</p>
 			<input name='submit-edit' type='submit' value='Save Page' tabindex='3' />
-			<script>
-				// Adapted from https://jsfiddle.net/2wAzx/13/
-				document.querySelector(\"[name=content]\").addEventListener(\"keydown\", (event) => {
-					if(event.keyCode !== 9) return true;
-					var currentValue = event.target.value, startPos = event.target.selectionStart, endPos = event.target.selectionEnd;
-					event.target.value = currentValue.substring(0, startPos) + \"\\t\" + currentValue.substring(endPos);
-					event.target.selectionStart = event.target.selectionEnd = startPos + 1;
-					event.stopPropagation(); event.preventDefault();
-					return false;
-				});
-			</script>
 		</form>";
+			page_renderer::AddJSSnippet("// Adapted from https://jsfiddle.net/2wAzx/13/
+document.querySelector(\"[name=content]\").addEventListener(\"keydown\", (event) => {
+	if(event.keyCode !== 9) return true;
+	var currentValue = event.target.value, startPos = event.target.selectionStart, endPos = event.target.selectionEnd;
+	event.target.value = currentValue.substring(0, startPos) + \"\\t\" + currentValue.substring(endPos);
+	event.target.selectionStart = event.target.selectionEnd = startPos + 1;
+	event.stopPropagation(); event.preventDefault();
+	return false;
+});");
 			
 			// ~
 			
 			/// ~~~ Smart saving ~~~ ///
 			
-			$content .= <<<SMARTSAVE
-<!-- Smart saving script -->
-<script>
-	function getSmartSaveKey() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").replace("Editing ", "").trim(); }
-	// Saving
-	document.querySelector("textarea[name=content]").addEventListener("keyup", function(event) { window.localStorage.setItem(getSmartSaveKey(), event.target.value) });
-	// Loading
-	window.addEventListener("load", function(event) {
-		var editor = document.querySelector("textarea[name=content]");
-		if(editor.value.length > 0) return; // Don't restore if there's data in the editor already
-		editor.value = localStorage.getItem(getSmartSaveKey());
-	});
-</script>
-SMARTSAVE;
+			page_renderer::AddJSSnippet('// Smart saving
+function getSmartSaveKey() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").replace("Editing ", "").trim(); }
+// Saving
+document.querySelector("textarea[name=content]").addEventListener("keyup", function(event) { window.localStorage.setItem(getSmartSaveKey(), event.target.value) });
+// Loading
+window.addEventListener("load", function(event) {
+	var editor = document.querySelector("textarea[name=content]");
+	if(editor.value.length > 0) return; // Don\'t restore if there\'s data in the editor already
+	editor.value = localStorage.getItem(getSmartSaveKey());
+});');
 			
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});

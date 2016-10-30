@@ -1241,21 +1241,23 @@ class page_renderer
 	{
 		global $settings;
 		$result = self::get_css_as_html();
+		$result .= self::getJS();
 		
 		if(module_exists("feature-search"))
 			$result .= "\t\t<link type='application/opensearchdescription+xml' rel='search' href='?action=opensearch-description' />";
 		
 		if(!empty($settings->enable_math_rendering))
+		{
 			$result .= "<script type='text/x-mathjax-config'>
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$','$'], ['\\\\(','\\\\)'] ],
-      processEscapes: true,
-      skipTags: ['script','noscript','style','textarea','pre','code']
-    }
-  });
-</script>
-<script async src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML'></script>";
+		MathJax.Hub.Config({
+		tex2jax: {
+		inlineMath: [ ['$','$'], ['\\\\(','\\\\)'] ],
+		processEscapes: true,
+		skipTags: ['script','noscript','style','textarea','pre','code']
+		}
+		});
+	</script>";
+		}
 		
 		return $result;
 	}
@@ -1295,6 +1297,29 @@ class page_renderer
 			return "<style>$css</style>\n";
 		}
 	}
+	
+	private static $jsSnippets = [];
+	private static $jsLinks = [];
+	public function AddJSLink(string $scriptUrl)
+	{
+		$jsLinks[] = $scriptUrl;
+	}
+	public function AddJSSnippet(string $script)
+	{
+		$jsSnippets[] = $script;
+	}
+	
+	private static function getJS()
+	{
+		$result = "";
+		foreach(static::$jsSnippets as $snippet)
+			$result .= "<script defer>$snippet</script>\n";
+		foreach(static::$jsLinks as $link)
+			$result .= "<script src='" . $link . "' defer></script>\n";
+		return $result;
+	}
+	
+	// ~
 
 	public static $nav_divider = "<span class='nav-divider inflexible'> | </span>";
 
@@ -1369,6 +1394,8 @@ class page_renderer
 
 		return $result;
 	}
+	
+	// ~
 
 	public static function generate_all_pages_datalist()
 	{
@@ -1385,6 +1412,11 @@ class page_renderer
 
 		return $result;
 	}
+}
+
+if(!empty($settings->enable_math_rendering))
+{
+	page_renderer::AddJSLink("https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML");
 }
 
 /// Finish setting up the environment object ///
@@ -3785,7 +3817,7 @@ register_module([
 
 register_module([
 	"name" => "Page editor",
-	"version" => "0.15",
+	"version" => "0.15.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -3871,37 +3903,31 @@ register_module([
 			<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
 			<p class='editing-message'>$settings->editing_message</p>
 			<input name='submit-edit' type='submit' value='Save Page' tabindex='3' />
-			<script>
-				// Adapted from https://jsfiddle.net/2wAzx/13/
-				document.querySelector(\"[name=content]\").addEventListener(\"keydown\", (event) => {
-					if(event.keyCode !== 9) return true;
-					var currentValue = event.target.value, startPos = event.target.selectionStart, endPos = event.target.selectionEnd;
-					event.target.value = currentValue.substring(0, startPos) + \"\\t\" + currentValue.substring(endPos);
-					event.target.selectionStart = event.target.selectionEnd = startPos + 1;
-					event.stopPropagation(); event.preventDefault();
-					return false;
-				});
-			</script>
 		</form>";
+			page_renderer::AddJSSnippet("// Adapted from https://jsfiddle.net/2wAzx/13/
+document.querySelector(\"[name=content]\").addEventListener(\"keydown\", (event) => {
+	if(event.keyCode !== 9) return true;
+	var currentValue = event.target.value, startPos = event.target.selectionStart, endPos = event.target.selectionEnd;
+	event.target.value = currentValue.substring(0, startPos) + \"\\t\" + currentValue.substring(endPos);
+	event.target.selectionStart = event.target.selectionEnd = startPos + 1;
+	event.stopPropagation(); event.preventDefault();
+	return false;
+});");
 			
 			// ~
 			
 			/// ~~~ Smart saving ~~~ ///
 			
-			$content .= <<<SMARTSAVE
-<!-- Smart saving script -->
-<script>
-	function getSmartSaveKey() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").replace("Editing ", "").trim(); }
-	// Saving
-	document.querySelector("textarea[name=content]").addEventListener("keyup", function(event) { window.localStorage.setItem(getSmartSaveKey(), event.target.value) });
-	// Loading
-	window.addEventListener("load", function(event) {
-		var editor = document.querySelector("textarea[name=content]");
-		if(editor.value.length > 0) return; // Don't restore if there's data in the editor already
-		editor.value = localStorage.getItem(getSmartSaveKey());
-	});
-</script>
-SMARTSAVE;
+			page_renderer::AddJSSnippet('// Smart saving
+function getSmartSaveKey() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").replace("Editing ", "").trim(); }
+// Saving
+document.querySelector("textarea[name=content]").addEventListener("keyup", function(event) { window.localStorage.setItem(getSmartSaveKey(), event.target.value) });
+// Loading
+window.addEventListener("load", function(event) {
+	var editor = document.querySelector("textarea[name=content]");
+	if(editor.value.length > 0) return; // Don\'t restore if there\'s data in the editor already
+	editor.value = localStorage.getItem(getSmartSaveKey());
+});');
 			
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});

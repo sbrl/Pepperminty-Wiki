@@ -933,21 +933,23 @@ class page_renderer
 	{
 		global $settings;
 		$result = self::get_css_as_html();
+		$result .= self::getJS();
 		
 		if(module_exists("feature-search"))
 			$result .= "\t\t<link type='application/opensearchdescription+xml' rel='search' href='?action=opensearch-description' />";
 		
 		if(!empty($settings->enable_math_rendering))
+		{
 			$result .= "<script type='text/x-mathjax-config'>
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$','$'], ['\\\\(','\\\\)'] ],
-      processEscapes: true,
-      skipTags: ['script','noscript','style','textarea','pre','code']
-    }
-  });
-</script>
-<script async src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML'></script>";
+		MathJax.Hub.Config({
+		tex2jax: {
+		inlineMath: [ ['$','$'], ['\\\\(','\\\\)'] ],
+		processEscapes: true,
+		skipTags: ['script','noscript','style','textarea','pre','code']
+		}
+		});
+	</script>";
+		}
 		
 		return $result;
 	}
@@ -987,6 +989,29 @@ class page_renderer
 			return "<style>$css</style>\n";
 		}
 	}
+	
+	private static $jsSnippets = [];
+	private static $jsLinks = [];
+	public function AddJSLink(string $scriptUrl)
+	{
+		$jsLinks[] = $scriptUrl;
+	}
+	public function AddJSSnippet(string $script)
+	{
+		$jsSnippets[] = $script;
+	}
+	
+	private static function getJS()
+	{
+		$result = "";
+		foreach(static::$jsSnippets as $snippet)
+			$result .= "<script defer>$snippet</script>\n";
+		foreach(static::$jsLinks as $link)
+			$result .= "<script src='" . $link . "' defer></script>\n";
+		return $result;
+	}
+	
+	// ~
 
 	public static $nav_divider = "<span class='nav-divider inflexible'> | </span>";
 
@@ -1061,6 +1086,8 @@ class page_renderer
 
 		return $result;
 	}
+	
+	// ~
 
 	public static function generate_all_pages_datalist()
 	{
@@ -1077,6 +1104,11 @@ class page_renderer
 
 		return $result;
 	}
+}
+
+if(!empty($settings->enable_math_rendering))
+{
+	page_renderer::AddJSLink("https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML");
 }
 
 /// Finish setting up the environment object ///
