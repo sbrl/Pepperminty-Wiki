@@ -8,8 +8,8 @@
 	"logo_position": {"type": "text", "description": "The side of the site name at which the logo should be placed.", "default": "left"},
 	"show_subpages": {"type": "text", "description": "Whether to show a list of subpages at the bottom of the page.", "default": true},
 	"subpages_display_depth": {"type": "text", "description": "The depth to which we should display when listing subpages at the bottom the page.", "default": 3},
-	"footer_message": {"type": "text", "description": "A message that will appear at the bottom of every page. May contain HTML.", "default": "All content is under <a href='?page=License' target='_blank'>this license</a>. Please make sure that you read and understand the license, especially if you are thinking about copying some (or all) of this site's content, as it may restrict you from doing so."},
-	"editing_message": {"type": "text", "description": "A message that will appear just before the submit button on the editing page. May contain HTML.", "default": "<a href='?action=help#20-parser-default' target='_blank'>Formatting help</a> (<a href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet' target='_blank'>Markdown Cheatsheet</a>)<br />\nBy submitting your edit or uploading your file, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!"},
+	"footer_message": {"type": "textarea", "description": "A message that will appear at the bottom of every page. May contain HTML.", "default": "All content is under <a href='?page=License' target='_blank'>this license</a>. Please make sure that you read and understand the license, especially if you are thinking about copying some (or all) of this site's content, as it may restrict you from doing so."},
+	"editing_message": {"type": "textarea", "description": "A message that will appear just before the submit button on the editing page. May contain HTML.", "default": "<a href='?action=help#20-parser-default' target='_blank'>Formatting help</a> (<a href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet' target='_blank'>Markdown Cheatsheet</a>)<br />\nBy submitting your edit or uploading your file, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!"},
 	"admindisplaychar": {"type": "text", "description": "The string that is prepended before an admin's name on the nav bar. Defaults to a diamond shape (&#9670;).", "default": "&#9670;"},
 	"protectedpagechar": {"type": "text", "description": "The string that is prepended a page's name in the page title if it is protected. Defaults to a lock symbol. (&#128274;)", "default": "&#128274;"},
 	"editing": {"type": "checkbox", "description": "Whether editing is enabled.", "default": true},
@@ -18,7 +18,7 @@
 	"parser": {"type": "text", "description": "The parser to use when rendering pages. Defaults to an extended version of parsedown (http://parsedown.org/)", "default": "parsedown"},
 	"clean_raw_html": {"type": "checkbox", "description": "Whether page sources should be cleaned of HTML before rendering. It is STRONGLY recommended that you keep this option turned on.", "default": true},
 	"enable_math_rendering": {"type": "checkbox", "description": "Whether to enable client side rendering of mathematical expressions with MathJax (https://www.mathjax.org/). Math expressions should be enclosed inside of dollar signs ($). Turn off if you don't use it.", "default": true},
-	"users": {"type": "map", "description": "An array of usernames and passwords - passwords should be hashed with sha256 (or sha3 if you have that option turned on)", "default": {
+	"users": {"type": "usertable", "description": "An array of usernames and passwords - passwords should be hashed with sha256 (or sha3 if you have that option turned on)", "default": {
 		"admin": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
 		"user": "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34"
 	}},
@@ -27,7 +27,7 @@
 	"require_login_view": {"type": "checkbox", "description": "Whether to require that users login before they do anything else. Best used with the data_storage_dir option.", "default": false},
 	"data_storage_dir": {"type": "text", "description": "The directory in which to store all files, except the main index.php.", "default": "."},
 	"delayed_indexing_time": {"type": "number", "description": "The amount of time, in seconds, that pages should be blocked from being indexed by search engines after their last edit. Aka delayed indexing.", "default": 0},
-	"nav_links": {"type": "array", "description": "<p>An array of links and display text to display at the top of the site.<br />Format: <code>\"Display Text\": \"Link\"</code></p><p>You can also use strings here and they will be printed as-is, except the following special strings:</p><ul><li><code>user-status</code> - Expands to the user's login information. e.g. \"Logged in as {name}. | Logout\", or e.g. \"Browsing as Anonymous. | Login\".</li><li><code>search</code> - Expands to a search box.</li><li><code>divider</code> - Expands to a divider to separate stuff.</li><li><code>more</code> - Expands to the \"More...\" submenu.</li></ul>", "default": [
+	"nav_links": {"type": "nav", "description": "<p>An array of links and display text to display at the top of the site.<br />Format: <code>\"Display Text\": \"Link\"</code></p><p>You can also use strings here and they will be printed as-is, except the following special strings:</p><ul><li><code>user-status</code> - Expands to the user's login information. e.g. \"Logged in as {name}. | Logout\", or e.g. \"Browsing as Anonymous. | Login\".</li><li><code>search</code> - Expands to a search box.</li><li><code>divider</code> - Expands to a divider to separate stuff.</li><li><code>more</code> - Expands to the \"More...\" submenu.</li></ul>", "default": [
 		"user-status",
 		[
 			"Home",
@@ -48,7 +48,7 @@
 		],
 		"menu"
 	]},
-	"nav_links_extra": {"type": "array", "description": "An array of additional links in the above format that will be shown under \"More\" subsection.", "default": [
+	"nav_links_extra": {"type": "nav", "description": "An array of additional links in the above format that will be shown under \"More\" subsection.", "default": [
 		[
 			"&#x1f553; Page History",
 			"?action=history&page={page}"
@@ -78,7 +78,7 @@
 			"index.php?action=protect&page={page}"
 		]
 	]},
-	"nav_links_bottom": {"type": "text", "description": "An array of links in the above format that will be shown at the bottom of the page.", "default": [
+	"nav_links_bottom": {"type": "nav", "description": "An array of links in the above format that will be shown at the bottom of the page.", "default": [
 		[
 			"&#x1f5b6; Printable version",
 			"index.php?action=view&mode=printable&page={page}"

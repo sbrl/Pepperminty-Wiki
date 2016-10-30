@@ -30,8 +30,8 @@ $guiConfig = <<<'GUICONFIG'
 	"logo_position": {"type": "text", "description": "The side of the site name at which the logo should be placed.", "default": "left"},
 	"show_subpages": {"type": "text", "description": "Whether to show a list of subpages at the bottom of the page.", "default": true},
 	"subpages_display_depth": {"type": "text", "description": "The depth to which we should display when listing subpages at the bottom the page.", "default": 3},
-	"footer_message": {"type": "text", "description": "A message that will appear at the bottom of every page. May contain HTML.", "default": "All content is under <a href='?page=License' target='_blank'>this license</a>. Please make sure that you read and understand the license, especially if you are thinking about copying some (or all) of this site's content, as it may restrict you from doing so."},
-	"editing_message": {"type": "text", "description": "A message that will appear just before the submit button on the editing page. May contain HTML.", "default": "<a href='?action=help#20-parser-default' target='_blank'>Formatting help</a> (<a href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet' target='_blank'>Markdown Cheatsheet</a>)<br />\nBy submitting your edit or uploading your file, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!"},
+	"footer_message": {"type": "textarea", "description": "A message that will appear at the bottom of every page. May contain HTML.", "default": "All content is under <a href='?page=License' target='_blank'>this license</a>. Please make sure that you read and understand the license, especially if you are thinking about copying some (or all) of this site's content, as it may restrict you from doing so."},
+	"editing_message": {"type": "textarea", "description": "A message that will appear just before the submit button on the editing page. May contain HTML.", "default": "<a href='?action=help#20-parser-default' target='_blank'>Formatting help</a> (<a href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet' target='_blank'>Markdown Cheatsheet</a>)<br />\nBy submitting your edit or uploading your file, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!"},
 	"admindisplaychar": {"type": "text", "description": "The string that is prepended before an admin's name on the nav bar. Defaults to a diamond shape (&#9670;).", "default": "&#9670;"},
 	"protectedpagechar": {"type": "text", "description": "The string that is prepended a page's name in the page title if it is protected. Defaults to a lock symbol. (&#128274;)", "default": "&#128274;"},
 	"editing": {"type": "checkbox", "description": "Whether editing is enabled.", "default": true},
@@ -40,7 +40,7 @@ $guiConfig = <<<'GUICONFIG'
 	"parser": {"type": "text", "description": "The parser to use when rendering pages. Defaults to an extended version of parsedown (http://parsedown.org/)", "default": "parsedown"},
 	"clean_raw_html": {"type": "checkbox", "description": "Whether page sources should be cleaned of HTML before rendering. It is STRONGLY recommended that you keep this option turned on.", "default": true},
 	"enable_math_rendering": {"type": "checkbox", "description": "Whether to enable client side rendering of mathematical expressions with MathJax (https://www.mathjax.org/). Math expressions should be enclosed inside of dollar signs ($). Turn off if you don't use it.", "default": true},
-	"users": {"type": "map", "description": "An array of usernames and passwords - passwords should be hashed with sha256 (or sha3 if you have that option turned on)", "default": {
+	"users": {"type": "usertable", "description": "An array of usernames and passwords - passwords should be hashed with sha256 (or sha3 if you have that option turned on)", "default": {
 		"admin": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
 		"user": "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34"
 	}},
@@ -49,7 +49,7 @@ $guiConfig = <<<'GUICONFIG'
 	"require_login_view": {"type": "checkbox", "description": "Whether to require that users login before they do anything else. Best used with the data_storage_dir option.", "default": false},
 	"data_storage_dir": {"type": "text", "description": "The directory in which to store all files, except the main index.php.", "default": "."},
 	"delayed_indexing_time": {"type": "number", "description": "The amount of time, in seconds, that pages should be blocked from being indexed by search engines after their last edit. Aka delayed indexing.", "default": 0},
-	"nav_links": {"type": "array", "description": "<p>An array of links and display text to display at the top of the site.<br />Format: <code>\"Display Text\": \"Link\"</code></p><p>You can also use strings here and they will be printed as-is, except the following special strings:</p><ul><li><code>user-status</code> - Expands to the user's login information. e.g. \"Logged in as {name}. | Logout\", or e.g. \"Browsing as Anonymous. | Login\".</li><li><code>search</code> - Expands to a search box.</li><li><code>divider</code> - Expands to a divider to separate stuff.</li><li><code>more</code> - Expands to the \"More...\" submenu.</li></ul>", "default": [
+	"nav_links": {"type": "nav", "description": "<p>An array of links and display text to display at the top of the site.<br />Format: <code>\"Display Text\": \"Link\"</code></p><p>You can also use strings here and they will be printed as-is, except the following special strings:</p><ul><li><code>user-status</code> - Expands to the user's login information. e.g. \"Logged in as {name}. | Logout\", or e.g. \"Browsing as Anonymous. | Login\".</li><li><code>search</code> - Expands to a search box.</li><li><code>divider</code> - Expands to a divider to separate stuff.</li><li><code>more</code> - Expands to the \"More...\" submenu.</li></ul>", "default": [
 		"user-status",
 		[
 			"Home",
@@ -70,7 +70,7 @@ $guiConfig = <<<'GUICONFIG'
 		],
 		"menu"
 	]},
-	"nav_links_extra": {"type": "array", "description": "An array of additional links in the above format that will be shown under \"More\" subsection.", "default": [
+	"nav_links_extra": {"type": "nav", "description": "An array of additional links in the above format that will be shown under \"More\" subsection.", "default": [
 		[
 			"&#x1f553; Page History",
 			"?action=history&page={page}"
@@ -100,7 +100,7 @@ $guiConfig = <<<'GUICONFIG'
 			"index.php?action=protect&page={page}"
 		]
 	]},
-	"nav_links_bottom": {"type": "text", "description": "An array of links in the above format that will be shown at the bottom of the page.", "default": [
+	"nav_links_bottom": {"type": "nav", "description": "An array of links in the above format that will be shown at the bottom of the page.", "default": [
 		[
 			"&#x1f5b6; Printable version",
 			"index.php?action=view&mode=printable&page={page}"
@@ -234,13 +234,14 @@ a.redlink:visited { color: rgb(130, 15, 15); /*#8b1a1a*/ }
 .search-context { max-height: 20em; overflow: hidden; }
 .search-context::after { content: ""; position: absolute; bottom: 0; width: 100%; height: 3em; display: block; background: linear-gradient(to bottom, transparent, #faf8fb); pointer-events: none; }
 
-label:not(.link-display-label) { display: inline-block; min-width: 7rem; }
-input[type=text]:not(.link-display), input[type=password], textarea { margin: 0.5rem 0; }
-input[type=text], input[type=password], textarea, #search-box { padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
-textarea { min-height: 35rem; line-height: 1.3em; font-size: 1.25rem; }
+label:not(.link-display-label) { display: inline-block; min-width: 16rem; }
+input[type=text]:not(.link-display), input[type=password], input[type=url], input[type=email], input[type=number], textarea { margin: 0.5rem 0; }
+input[type=text], input[type=password], input[type=url], input[type=email], input[type=number], textarea, #search-box { padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
+textarea { min-height: 10em; line-height: 1.3em; font-size: 1.25rem; }
 textarea, textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); box-sizing: border-box; }
 textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: bolder; }
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
+.editfor textarea { min-height: 35rem; }
 
 .file-gallery { margin: 0.5em; padding: 0.5em; list-style-type: none; }
 .file-gallery > li { display: inline-block; min-width: attr(data-gallery-width); padding: 1em; text-align: center; }
@@ -1883,37 +1884,59 @@ register_module([
 		 *  ██████  ██████  ██   ████ ██      ██  ██████   ██████  ██   ██ ███████
  	 	 */
 		add_action("configure", function() {
-			global $settings, $guiConfig;
+			global $settings, $env, $guiConfig;
 			
-			$content = "";
+			if(!$env->is_admin)
+			{
+				$errorMessage = "<p>You don't have permission to change the site settings.</p>\n";
+				if(!$env->is_logged_in)
+					$errorMessage .= "<p>You could try <a href='?action=login&returnto=%3Faction%3Dconfigure'>logging in</a>.</p>";
+				else
+					$errorMessage .= "<p>You could try <a href='?action=logout&returnto=%3Faction%3Dconfigure'>logging out</a> and then <a href='?action=login&returnto=%3Faction%3Dconfigure'>logging in</a> again.</a>.</p>";
+				exit(page_renderer::render_main("Error - $settings->sitename", $errorMessage));
+			}
+			
+			$content = "<h1>Master Control Panel</h1>";
+			$content .= "<p>This page lets you configure the site settings. Please be careful - you can break things easily on this page if you're not careful!</p>";
 			
 			foreach($guiConfig as $configKey => $configData)
 			{
+				// Don't display the site secret~!
+				// Apparently it got lost in translation, but I'll be re-adding
+				// it again at some point I'm sure - so support for it is
+				// included here.
+				if($configKey == "sitesecret") continue;
+				
 				$reverse = false;
 				$inputControl = "";
-				$label = "<label for='setting-$configKey'>$configKey</label>";
+				$label = "<label for='setting-$configKey' title=\"$configData->description\" class='cursor-query'>$configKey</label>";
 				switch($configData->type)
 				{
 					case "url":
+					case "email":
 					case "number":
 					case "text":
-						$inputControl = "<input type='$configData->type' id='$configKey' value='$settings->$configKey' />";
+						$inputControl = "<input type='$configData->type' id='$configKey' value='{$settings->$configKey}' />";
 						break;
 					case "textarea":
-						$inputControl = "<textarea id='$configKey'>$settings->$configKey</textarea>";
+						$inputControl = "<textarea id='$configKey'>{$settings->$configKey}</textarea>";
+						break;
 					case "checkbox":
 						$reverse = true;
 						$inputControl = "<input type='checkbox' id='$configKey' " . ($settings->$configKey ? " checked" : "") . " />";
+						break;
 					default:
 						$label = "";
-						$inputControl = "<p><em>Sorry! The <code>$configKey</code> setting isn't editable yet through the gui. Please try editing <code>peppermint.json</code> for the time being.</p>";
+						$inputControl = "<p><em>Sorry! The <code>$configKey</code> setting isn't editable yet through the gui. Please try editing <code>peppermint.json</code> for the time being.</em></p>";
+						break;
 				}
 				
-				$content .= !$reverse ? "$inputControl\n$label\n" : "$label\n$inputControl\n";
+				$content .= "<div class='setting-configurator'>\n\t";
+				$content .= $reverse ? "$inputControl\n\t$label" : "$label\n\t$inputControl";
+				$content .= "\n</div>\n";
 			}
 			
-			exit(file_get_contents("$env->storage_prefix$env->page.md"));
-			exit();
+			exit(page_renderer::render_main("Master Control Panel - $settings->sitename", $content));
 		});
 		
 		add_help_section("800-raw-page-content", "Viewing Raw Page Content", "<p>Although you can use the edit page to view a page's source, you can also ask $settings->sitename to send you the raw page source and nothing else. This feature is intented for those who want to automate their interaction with $settings->sitename.</p>
