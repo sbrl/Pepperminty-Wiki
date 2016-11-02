@@ -175,7 +175,7 @@ function render_recent_changes($recent_changes)
 			$userDisplayHtml = render_editor(implode(", ", $users));
 			
 			// TODO: Collect up and render a list of participating users
-			$next_entry = "<li><details><summary>$pageDisplayHtml $userDisplayHtml $timeDisplayHtml</summary><ul class='page-list'>$next_entry</ul></details></li>";
+			$next_entry = "<li><details><summary><a href='?page=" . rawurlencode($rchange_first->page) . "'>$pageDisplayHtml</a> $userDisplayHtml $timeDisplayHtml</summary><ul class='page-list'>$next_entry</ul></details></li>";
 			
 			$content .= "$next_entry\n";
 		}
@@ -193,9 +193,23 @@ function render_recent_changes($recent_changes)
 
 function render_recent_change($rchange)
 {
+	global $pageindex;
 	$pageDisplayHtml = render_pagename($rchange);
 	$editorDisplayHtml = render_editor($rchange->user);
 	$timeDisplayHtml = render_timestamp($rchange->timestamp);
+	
+	$revisionId = false;
+	if(isset($pageindex->{$rchange->page}))
+	{
+		foreach($pageindex->{$rchange->page}->history as $historyEntry)
+		{
+			if($historyEntry->timestamp == $rchange->timestamp)
+			{
+				$revisionId = $historyEntry->rid;
+				break;
+			}
+		}
+	}
 	
 	$result = "";
 	$resultClasses = [];
@@ -214,7 +228,7 @@ function render_recent_change($rchange)
 			if(!empty($rchange->newpage))
 				$resultClasses[] = "newpage";
 			
-			$result .= "<a href='?page=$rchange->page'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$size_title_display'>($size_display)</span>";
+			$result .= "<a href='?page=" . rawurlencode($rchange->page) . ($revisionId !== false ? "&revision=$revisionId" : "") . "'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$size_title_display'>($size_display)</span>";
 			break;
 		
 		case "deletion":

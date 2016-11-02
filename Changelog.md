@@ -11,6 +11,7 @@
  - Overhauled internal history logic - history logic is now done in core.
  - Added `$env->page_filename`, which points to the current page on disk.
  - Changed the way different display modes are accessed. You can now use the new `mode` parameter to the `view` action. It supports 4 different modes at present: `normal`, `printable`, `contentonly`, and `parsedsourceonly`.
+ - Improved recent changes links a bit.
 
 ## Fixed
  - The login session lifetime is now configurable (defaults to 24 hours), so you won't keep getting logged out all the time (in theory). (#113)
