@@ -48,7 +48,7 @@ register_module([
 			<tr><th>Type this</th><th>To get this</th></tr>
 			<tr><td><code>{{{@}}}</code></td><td>Lists all variables and their values in a table.</td></tr>
 			<tr><td><code>{{{#}}}</code></td><td>Shows a 'stack trace', outlining all the parent includes of the current page being parsed.</td></tr>
-			<tr><td><code>{{{~}}}</code></td><td>Outputs the requested pagee's name.</td></tr>
+			<tr><td><code>{{{~}}}</code></td><td>Outputs the requested page's name.</td></tr>
 			<tr><td><code>{{{*}}}</code></td><td>Outputs a comma separated list of all the subpages of the current page.</td></tr>
 			<tr><td><code>{{{+}}}</code></td><td>Shows a gallery containing all the files that are sub pages of the current page.</td></tr>
 		</table>");
