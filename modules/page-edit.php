@@ -88,29 +88,34 @@ register_module([
 			<p class='editing-message'>$settings->editing_message</p>
 			<input name='submit-edit' type='submit' value='Save Page' tabindex='3' />
 		</form>";
-			page_renderer::AddJSSnippet("// Adapted from https://jsfiddle.net/2wAzx/13/
-document.querySelector(\"[name=content]\").addEventListener(\"keydown\", (event) => {
-	if(event.keyCode !== 9) return true;
-	var currentValue = event.target.value, startPos = event.target.selectionStart, endPos = event.target.selectionEnd;
-	event.target.value = currentValue.substring(0, startPos) + \"\\t\" + currentValue.substring(endPos);
-	event.target.selectionStart = event.target.selectionEnd = startPos + 1;
-	event.stopPropagation(); event.preventDefault();
-	return false;
+			// Allow tab characters in the page editor
+			page_renderer::AddJSSnippet("window.addEventListener('load', function(event) {
+	// Adapted from https://jsfiddle.net/2wAzx/13/
+	document.querySelector(\"[name=content]\").addEventListener(\"keydown\", (event) => {
+		if(event.keyCode !== 9) return true;
+		var currentValue = event.target.value, startPos = event.target.selectionStart, endPos = event.target.selectionEnd;
+		event.target.value = currentValue.substring(0, startPos) + \"\\t\" + currentValue.substring(endPos);
+		event.target.selectionStart = event.target.selectionEnd = startPos + 1;
+		event.stopPropagation(); event.preventDefault();
+		return false;
+	});
 });");
 			
 			// ~
 			
 			/// ~~~ Smart saving ~~~ ///
 			
-			page_renderer::AddJSSnippet('// Smart saving
-function getSmartSaveKey() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").replace("Editing ", "").trim(); }
-// Saving
-document.querySelector("textarea[name=content]").addEventListener("keyup", function(event) { window.localStorage.setItem(getSmartSaveKey(), event.target.value) });
-// Loading
-window.addEventListener("load", function(event) {
-	var editor = document.querySelector("textarea[name=content]");
-	if(editor.value.length > 0) return; // Don\'t restore if there\'s data in the editor already
-	editor.value = localStorage.getItem(getSmartSaveKey());
+			page_renderer::AddJSSnippet('document.addEventListener("load", function(event) {
+	// Smart saving
+	function getSmartSaveKey() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").replace("Editing ", "").trim(); }
+	// Saving
+	document.querySelector("textarea[name=content]").addEventListener("keyup", function(event) { window.localStorage.setItem(getSmartSaveKey(), event.target.value) });
+	// Loading
+	window.addEventListener("load", function(event) {
+		var editor = document.querySelector("textarea[name=content]");
+		if(editor.value.length > 0) return; // Don\'t restore if there\'s data in the editor already
+		editor.value = localStorage.getItem(getSmartSaveKey());
+	});
 });');
 			
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));

@@ -1245,7 +1245,7 @@ class page_renderer
 		$result .= self::getJS();
 		
 		if(module_exists("feature-search"))
-			$result .= "\t\t<link type='application/opensearchdescription+xml' rel='search' href='?action=opensearch-description' />";
+			$result .= "\t\t<link type='application/opensearchdescription+xml' rel='search' href='?action=opensearch-description' />\n";
 		
 		if(!empty($settings->enable_math_rendering))
 		{
@@ -1303,18 +1303,18 @@ class page_renderer
 	private static $jsLinks = [];
 	public function AddJSLink(string $scriptUrl)
 	{
-		$jsLinks[] = $scriptUrl;
+		static::$jsLinks[] = $scriptUrl;
 	}
 	public function AddJSSnippet(string $script)
 	{
-		$jsSnippets[] = $script;
+		static::$jsSnippets[] = $script;
 	}
 	
 	private static function getJS()
 	{
-		$result = "";
+		$result = "<!-- Javascript -->\n";
 		foreach(static::$jsSnippets as $snippet)
-			$result .= "<script defer>$snippet</script>\n";
+			$result .= "<script defer>\n$snippet\n</script>\n";
 		foreach(static::$jsLinks as $link)
 			$result .= "<script src='" . $link . "' defer></script>\n";
 		return $result;
@@ -3941,29 +3941,34 @@ register_module([
 			<p class='editing-message'>$settings->editing_message</p>
 			<input name='submit-edit' type='submit' value='Save Page' tabindex='3' />
 		</form>";
-			page_renderer::AddJSSnippet("// Adapted from https://jsfiddle.net/2wAzx/13/
-document.querySelector(\"[name=content]\").addEventListener(\"keydown\", (event) => {
-	if(event.keyCode !== 9) return true;
-	var currentValue = event.target.value, startPos = event.target.selectionStart, endPos = event.target.selectionEnd;
-	event.target.value = currentValue.substring(0, startPos) + \"\\t\" + currentValue.substring(endPos);
-	event.target.selectionStart = event.target.selectionEnd = startPos + 1;
-	event.stopPropagation(); event.preventDefault();
-	return false;
+			// Allow tab characters in the page editor
+			page_renderer::AddJSSnippet("window.addEventListener('load', function(event) {
+	// Adapted from https://jsfiddle.net/2wAzx/13/
+	document.querySelector(\"[name=content]\").addEventListener(\"keydown\", (event) => {
+		if(event.keyCode !== 9) return true;
+		var currentValue = event.target.value, startPos = event.target.selectionStart, endPos = event.target.selectionEnd;
+		event.target.value = currentValue.substring(0, startPos) + \"\\t\" + currentValue.substring(endPos);
+		event.target.selectionStart = event.target.selectionEnd = startPos + 1;
+		event.stopPropagation(); event.preventDefault();
+		return false;
+	});
 });");
 			
 			// ~
 			
 			/// ~~~ Smart saving ~~~ ///
 			
-			page_renderer::AddJSSnippet('// Smart saving
-function getSmartSaveKey() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").replace("Editing ", "").trim(); }
-// Saving
-document.querySelector("textarea[name=content]").addEventListener("keyup", function(event) { window.localStorage.setItem(getSmartSaveKey(), event.target.value) });
-// Loading
-window.addEventListener("load", function(event) {
-	var editor = document.querySelector("textarea[name=content]");
-	if(editor.value.length > 0) return; // Don\'t restore if there\'s data in the editor already
-	editor.value = localStorage.getItem(getSmartSaveKey());
+			page_renderer::AddJSSnippet('document.addEventListener("load", function(event) {
+	// Smart saving
+	function getSmartSaveKey() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").replace("Editing ", "").trim(); }
+	// Saving
+	document.querySelector("textarea[name=content]").addEventListener("keyup", function(event) { window.localStorage.setItem(getSmartSaveKey(), event.target.value) });
+	// Loading
+	window.addEventListener("load", function(event) {
+		var editor = document.querySelector("textarea[name=content]");
+		if(editor.value.length > 0) return; // Don\'t restore if there\'s data in the editor already
+		editor.value = localStorage.getItem(getSmartSaveKey());
+	});
 });');
 			
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
@@ -5174,7 +5179,7 @@ register_module([
 			<tr><th>Type this</th><th>To get this</th></tr>
 			<tr><td><code>{{{@}}}</code></td><td>Lists all variables and their values in a table.</td></tr>
 			<tr><td><code>{{{#}}}</code></td><td>Shows a 'stack trace', outlining all the parent includes of the current page being parsed.</td></tr>
-			<tr><td><code>{{{~}}}</code></td><td>Outputs the requested pagee's name.</td></tr>
+			<tr><td><code>{{{~}}}</code></td><td>Outputs the requested page's name.</td></tr>
 			<tr><td><code>{{{*}}}</code></td><td>Outputs a comma separated list of all the subpages of the current page.</td></tr>
 			<tr><td><code>{{{+}}}</code></td><td>Shows a gallery containing all the files that are sub pages of the current page.</td></tr>
 		</table>");

@@ -936,7 +936,7 @@ class page_renderer
 		$result .= self::getJS();
 		
 		if(module_exists("feature-search"))
-			$result .= "\t\t<link type='application/opensearchdescription+xml' rel='search' href='?action=opensearch-description' />";
+			$result .= "\t\t<link type='application/opensearchdescription+xml' rel='search' href='?action=opensearch-description' />\n";
 		
 		if(!empty($settings->enable_math_rendering))
 		{
@@ -994,18 +994,18 @@ class page_renderer
 	private static $jsLinks = [];
 	public function AddJSLink(string $scriptUrl)
 	{
-		$jsLinks[] = $scriptUrl;
+		static::$jsLinks[] = $scriptUrl;
 	}
 	public function AddJSSnippet(string $script)
 	{
-		$jsSnippets[] = $script;
+		static::$jsSnippets[] = $script;
 	}
 	
 	private static function getJS()
 	{
-		$result = "";
+		$result = "<!-- Javascript -->\n";
 		foreach(static::$jsSnippets as $snippet)
-			$result .= "<script defer>$snippet</script>\n";
+			$result .= "<script defer>\n$snippet\n</script>\n";
 		foreach(static::$jsLinks as $link)
 			$result .= "<script src='" . $link . "' defer></script>\n";
 		return $result;
