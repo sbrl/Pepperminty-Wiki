@@ -110,7 +110,7 @@ register_module([
 				$content .= "<ul class='page-tags-display'>\n";
 				foreach($pageindex->$page->tags as $tag)
 				{
-					$content .= "<li><a href='?action=list-tags&tag=$tag'>$tag</a></li>\n";
+					$content .= "<li><a href='?action=list-tags&tag=" . rawurlencode($tag) . "'>$tag</a></li>\n";
 				}
 				$content .= "\n</ul>\n";
 			}
