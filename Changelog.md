@@ -6,12 +6,15 @@
  - Added header to upload file page.
  - Added history support to the `raw` action.
  - Added 'smart save' to the page creator / editor. Nobody need ever loose edits ever again!
+ - Added dynamic server-calculated page suggestions. Very helpful for larger wikis. Currently works best in firefox.
+ - Added Alt + Enter support to the page search box. Works just like your browser's address bar - opens results in a new tab instead of the current one.
 
 ### Changed
  - Overhauled internal history logic - history logic is now done in core.
  - Added `$env->page_filename`, which points to the current page on disk.
  - Changed the way different display modes are accessed. You can now use the new `mode` parameter to the `view` action. It supports 4 different modes at present: `normal`, `printable`, `contentonly`, and `parsedsourceonly`.
  - Improved recent changes links a bit.
+ - Improved tabbing through the file upload form.
 
 ## Fixed
  - The login session lifetime is now configurable (defaults to 24 hours), so you won't keep getting logged out all the time (in theory). (#113)
