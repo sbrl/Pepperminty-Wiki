@@ -1415,10 +1415,23 @@ class page_renderer
 	}
 }
 
+// Math rendering support
 if(!empty($settings->enable_math_rendering))
 {
 	page_renderer::AddJSLink("https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML");
 }
+// alt+enter suport in the search box
+page_renderer::AddJSSnippet('// Alt + Enter support in the top search box
+window.addEventListener("load", function(event) {
+	document.querySelector("input[type=search]").addEventListener("keyup", function(event) {
+		// Listen for Alt + Enter
+		if(event.keyCode == 13 && event.altKey) {
+			event.target.form.setAttribute("target", "_blank");
+			event.target.form.submit();
+		}
+	});
+});
+');
 
 /// Finish setting up the environment object ///
 $env->page = $_GET["page"];
