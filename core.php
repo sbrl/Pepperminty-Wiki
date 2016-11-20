@@ -1119,6 +1119,7 @@ window.addEventListener("load", function(event) {
 		if(event.keyCode == 13 && event.altKey) {
 			event.target.form.setAttribute("target", "_blank");
 			event.target.form.submit();
+			event.target.form.removeAttribute("target");
 		}
 	});
 });
