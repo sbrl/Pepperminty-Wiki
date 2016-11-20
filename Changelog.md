@@ -6,7 +6,7 @@
  - Added header to upload file page.
  - Added history support to the `raw` action.
  - Added 'smart save' to the page creator / editor. Nobody need ever loose edits ever again!
- - Added dynamic server-calculated page suggestions. Very helpful for larger wikis. Currently works best in firefox.
+ - Added dynamic server-calculated page suggestions. Very helpful for larger wikis. Currently works best in firefox. Part of the `feature-search` module.
  - Added Alt + Enter support to the page search box. Works just like your browser's address bar - opens results in a new tab instead of the current one.
 
 ### Changed
