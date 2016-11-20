@@ -138,6 +138,7 @@ $guiConfig = <<<'GUICONFIG'
 	"search_characters_context": {"type": "number", "description": "The number of characters that should be displayed either side of a matching term in the context below each search result.", "default": 200},
 	"search_title_matches_weighting": {"type": "number", "description": "The weighting to give to search term matches found in a page's title.", "default": 10},
 	"search_tags_matches_weighting": {"type": "number", "description": "The weighting to give to search term matches found in a page's tags.", "default": 3},
+	"dynamic_page_suggestion_count": {"type": "number", "description": "The number of dynamic page name suggestions to fetch from the server when typing in the page search box. Note that lowering this number doesn't <em>really</em> improve performance. Set to 0 to disable.", "default": 7 },
 	"defaultaction": {"type": "text", "description": "The default action. This action will be performed if no other action is specified. It is recommended you set this to \"view\" - that way the user automatically views the default page (see above).", "default": "view"},
 	"updateurl": {"type": "url", "description": "The url from which to fetch updates. Defaults to the master (development) branch. MAKE SURE THAT THIS POINTS TO A *HTTPS* URL, OTHERWISE SOMEONE COULD INJECT A VIRUS INTO YOUR WIKI!", "default": "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/master/index.php"},
 	"optimize_pages": {"type": "checkbox", "description": "Whether to optimise all webpages generated.", "default": true},
@@ -2354,6 +2355,8 @@ register_module([
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
 	"code" => function() {
+		global $settings;
+		
 		/**
 		 * @api {get} ?action=index&page={pageName} Get an index of words for a given page
 		 * @apiName SearchIndex
@@ -2563,12 +2566,93 @@ register_module([
 	<Url type=\"text/html\" method=\"get\" template=\"$siteRoot?action=search&amp;query={searchTerms}&amp;offset={startIndex?}&amp;count={count}\" />
 </OpenSearchDescription>"));
 		});
+		
+		add_action("suggest-pages", function() {
+			global $settings, $pageindex;
+			
+			if($settings->dynamic_page_suggestion_count === 0)
+			{
+				header("content-type: application/json");
+				header("content-length: 2");
+				exit("[]");
+			}
+			
+			if(empty($_GET["query"])) {
+				http_response_code(400);
+				header("content-type: text/plain");
+				exit("Error: You didn't specify the 'query' GET parameter.");
+			}
+			
+			// Rank each page name
+			$results = [];
+			foreach($pageindex as $pageName => $entry) {
+				$results[] = [
+					"pagename" => $pageName,
+					// Costs: Insert: 1, Replace: 8, Delete: 6
+					"distance" => levenshtein($_GET["query"], $pageName, 1, 8, 6)
+				];
+			}
+			
+			// Sort the page names by distance form the original query
+			usort($results, function($a, $b) {
+				if($a["distance"] == $b["distance"])
+					return strcmp($a["pagename"], $b["pagename"]);
+				return $a["distance"] < $b["distance"] ? -1 : 1;
+			});
+			
+			// Send the results to the user
+			header("content-type: application/json");
+			exit(json_encode(array_slice($results, 0, $settings->dynamic_page_suggestion_count)));
+		});
+		
+		if($settings->dynamic_page_suggestion_count > 0)
+		{
+			page_renderer::AddJSSnippet('/// Dynamic page suggestion system
+// Micro snippet 8 - Promisified GET (fetched 20th Nov 2016)
+function get(u){return new Promise(function(r,t,a){a=new XMLHttpRequest();a.onload=function(b,c){b=a.status;c=a.response;if(b>199&&b<300){r(c)}else{t(c)}};a.open("GET",u,true);a.send(null)})}
+
+window.addEventListener("load", function(event) {
+	var searchBox = document.querySelector("input[type=search]");
+	searchBox.dataset.lastValue = "";
+	searchBox.addEventListener("keyup", function(event) {
+		// Make sure that we don\'t keep sending requests to the server if nothing has changed
+		if(searchBox.dataset.lastValue == event.target.value)
+			return;
+		searchBox.dataset.lastValue = event.target.value;
+		// Fetch the suggestions from the server
+		get("?action=suggest-pages&query=" + encodeURIComponent(event.target.value)).then(function(response) {
+			var suggestions = JSON.parse(response),
+				dataList = document.getElementById("allpages");
+			
+			// If the server sent no suggestions, then we shouldn\'t replace the contents of the datalist
+			if(suggestions.length == 0)
+				return;
+			
+			console.info(`Fetched suggestions for ${event.target.value}:`, suggestions.map(s => s.pagename));
+			
+			// Remove all the existing suggestions
+			while(dataList.firstChild) {
+				dataList.removeChild(dataList.firstChild);
+			}
+			
+			// Add the new suggestions to the datalist
+			suggestions.forEach(function(suggestion) {
+				var suggestionElement = document.createElement("option");
+				suggestionElement.value = suggestion.pagename;
+				suggestionElement.dataset.distance = suggestion.distance;
+				dataList.appendChild(suggestionElement);
+			});
+		});
+	});
+});
+');
+		}
 	}
 ]);
 
 class search
 {
-	// Words that we should exclude from the inverted index.
+	// Words that we should exclude from the inverted index
 	public static $stop_words = [
 		"a", "about", "above", "above", "across", "after", "afterwards", "again",
 		"against", "all", "almost", "alone", "along", "already", "also",
@@ -2582,12 +2666,12 @@ class search
 		"describe", "detail", "do", "done", "down", "due", "during", "each",
 		"eg", "eight", "either", "eleven", "else", "elsewhere", "empty",
 		"enough", "etc", "even", "ever", "every", "everyone", "everything",
-		"everywhere", "except", "few", "fifteen", "fify", "fill", "find",
-		"fire", "first", "five", "for", "former", "formerly", "forty", "found",
+		"everywhere", "except", "few", "fill", "find",
+		"fire", "first", "five", "for", "former", "formerly", "found",
 		"four", "from", "front", "full", "further", "get", "give", "go", "had",
 		"has", "hasnt", "have", "he", "hence", "her", "here", "hereafter",
 		"hereby", "herein", "hereupon", "hers", "herself", "him", "himself",
-		"his", "how", "however", "hundred", "ie", "if", "in", "inc", "indeed",
+		"his", "how", "however", "ie", "if", "in", "inc", "indeed",
 		"interest", "into", "is", "it", "its", "itself", "keep", "last",
 		"latter", "latterly", "least", "less", "ltd", "made", "many", "may",
 		"me", "meanwhile", "might", "mine", "more", "moreover", "most",
