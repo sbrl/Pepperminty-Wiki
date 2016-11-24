@@ -211,6 +211,7 @@ input[type=button], input[type=submit] { cursor: pointer; }
 .image-controls li { display: inline-block; margin: 5px; padding: 5px; }
 .link-display { margin-left: 0.5rem; }
 
+audio, video, img { max-width: 100%; }
 figure:not(.preview) { display: inline-block; }
 figure:not(.preview) > :first-child { display: block; }
 figcaption { text-align: center; }
