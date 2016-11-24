@@ -44,6 +44,7 @@
  - Autofill the name box on the file upload page when a new file is selected (#101)
  - Redirect the user automatically from the login page on refresh if they are already logged in (#102)
  - Suggest an appropriate filename when saving an automatically generated preview (#105)
+ - When using the default theme images will now not flow beyond the edge of the page.
 
 ## Changed
  - Made the background of tags slightly lighter (#91)
