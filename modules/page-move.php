@@ -68,7 +68,7 @@ register_module([
 			if($env->page == $new_name)
 				exit(page_renderer::render_main("Moving $env->page - Error", "<p>You tried to move $page, but the new name you gave is the same as it's current name.</p>
 				<p>It is possible that you tried to use some characters in the new name that are not allowed and were removed.</p>
-				<p>Page names may only contain alphanumeric characters, dashes, and underscores.</p>"));
+				<p>Page names may not contain any of these characters: <code>?%*:|\"&gt;&lt;()[]</code></p>"));
 			
 			if(isset($pageindex->$page->uploadedfile) and
 				file_exists($new_name))

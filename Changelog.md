@@ -24,6 +24,7 @@
  - Fxed huge issue with `contentonly` display mode.
  - Improved the search engine indexing algorithm. It now shouldn't choke on certain special characters (`[]{}|`) and will treat them as word boundaries.
  - Fixed tag links at the bottom of pages for tags with a single quote (`'`) in them.
+ - Correct error message when attempting to move a page
 
 ## v0.12.1
 
