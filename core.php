@@ -1097,7 +1097,7 @@ class page_renderer
 		$result = "<datalist id='allpages'>\n";
 		
 		// If dynamic page sugggestions are enabled, then we should send a loading message instead.
-		if($settings->dynamic_page_suggestion_count > 0)
+		if($settings->dynamic_page_suggestion_count === 0)
 		{
 			$result .= "<option value='Loading suggestions...' />";
 		}
