@@ -287,12 +287,14 @@ window.addEventListener("load", function(event) {
 			}
 			
 			// Add the new suggestions to the datalist
+			var optionsFrag = document.createDocumentFragment();
 			suggestions.forEach(function(suggestion) {
 				var suggestionElement = document.createElement("option");
 				suggestionElement.value = suggestion.pagename;
 				suggestionElement.dataset.distance = suggestion.distance;
-				dataList.appendChild(suggestionElement);
+				optionsFrag.appendChild(suggestionElement);
 			});
+			dataList.appendChild(optionsFrag);
 		});
 	});
 });
