@@ -39,6 +39,20 @@ if($settings === null)
 	exit("Error: Failed to decode the settings file! Does it contain a syntax error?");
 }
 
+// Fill in any missing properties
+$settingsUpgraded = false;
+foreach($guiConfig as $key => $propertyData)
+{
+	if(!isset($settings->$key))
+	{
+		$settings->$key = $propertyData->default;
+		$settingsUpgraded = true;
+	}
+}
+if($settingsUpgraded)
+	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
+
+// Insert the default CSS if requested
 if($settings->css === "auto")
 {
 	$settings->css = <<<THEMECSS
@@ -46,29 +60,4 @@ if($settings->css === "auto")
 THEMECSS;
 }
 
-/*** Notes ***
-Actions:
-	view - view a page
-		page - page name
-		printable=[yes/no] - make output printable
-	edit - open editor for page
-		page - page name
-	save - save edits to page
-		page - page name
-	list - list pages
-		category - the category to list [optional] [unimplemented]
-	login - login to the site
-	logout - logout
-	checklogin - check login credentials and set cookie
-	hash - hash a string with sha256
-		string - string to hash
-	help - get help
-	update - update the wiki
-		do - set to `true` to actually update the wiki
-		secret - set to the value of the site's secret
-	credits - view the credits
-	delete - delete a page
-		page - page name
-		delete=yes - actually do the deletion (otherwise we display a prompt)
- *************/
 ?>
