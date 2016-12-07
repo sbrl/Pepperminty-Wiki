@@ -18,6 +18,15 @@
         "optional": false
     },
     {
+        "name": "Random Page",
+        "version": "0.1",
+        "author": "Starbeamrainbowlabs",
+        "description": "Adds an action called 'random' that redirects you to a random page.",
+        "id": "action-random",
+        "lastupdate": 1481143095,
+        "optional": false
+    },
+    {
         "name": "Raw page source",
         "version": "0.7",
         "author": "Starbeamrainbowlabs",

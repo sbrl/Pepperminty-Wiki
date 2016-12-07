@@ -250,6 +250,7 @@ a.redlink:visited { color: rgb(130, 15, 15); /*#8b1a1a*/ }
 .search-context { max-height: 20em; overflow: hidden; }
 .search-context::after { content: ""; position: absolute; bottom: 0; width: 100%; height: 3em; display: block; background: linear-gradient(to bottom, transparent, #faf8fb); pointer-events: none; }
 
+textarea[name=content] { height: 30em; }
 label:not(.link-display-label) { display: inline-block; min-width: 16rem; }
 input[type=text]:not(.link-display), input[type=password], input[type=url], input[type=email], input[type=number], textarea { margin: 0.5rem 0; }
 input[type=text], input[type=password], input[type=url], input[type=email], input[type=number], textarea, #search-box { padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
@@ -1710,6 +1711,38 @@ register_module([
 				exit(page_renderer::render_main("Error protecting page", "<p>You are not allowed to protect pages because you are not logged in as a mod or admin. Please try logging out if you are logged in and then try logging in as an administrator.</p>"));
 			}
 		});
+	}
+]);
+
+
+
+
+register_module([
+	"name" => "Random Page",
+	"version" => "0.1",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds an action called 'random' that redirects you to a random page.",
+	"id" => "action-random",
+	"code" => function() {
+		global $settings;
+		/**
+		 * @api {get} ?action=random Redirects to a random page.
+		 * @apiName RawSource
+		 * @apiGroup Page
+		 * @apiPermission Anonymous
+		 */
+		
+		add_action("random", function() {
+			global $pageindex;
+			
+			$pageNames = array_keys(get_object_vars($pageindex));
+			$randomPageName = $pageNames[array_rand($pageNames)];
+			
+			http_response_code(307);
+			header("location: ?page=" . rawurlencode($randomPageName));
+		});
+		
+		add_help_section("26-random-redirect", "Jumping to a random page", "<p>$settings->sitename has a function that can send you to a random page. To use it, click <a href='?action=random'>here</a>.</p>");
 	}
 ]);
 
