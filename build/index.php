@@ -80,6 +80,10 @@ $guiConfig = <<<'GUICONFIG'
 			"index.php?action=list-tags"
 		],
 		[
+			"&zigrarr; Random Page",
+			"?action=random"
+		],
+		[
 			"Recent changes",
 			"?action=recent-changes"
 		],
@@ -197,9 +201,9 @@ nav > span { flex: 1; text-align: center; line-height: 2; display: inline-block;
 nav:not(.nav-more-menu) a { text-decoration: none; font-weight: bolder; color: inherit; }
 .nav-divider { color: transparent; }
 
-.nav-more { position: relative; background-color: #442772; }
+.nav-more { position: relative; background-color: #442772; min-width: 10em; }
 .nav-more label { cursor: pointer; }
-.nav-more-menu { display: none; position: absolute; flex-direction: column; top: 2.6rem; right: -0.2rem; background-color: #8a62a7; border-top: 3px solid #442772; border-bottom: 3px solid #442772;}
+.nav-more-menu { display: none; position: absolute; flex-direction: column; top: 2.6rem; right: -0.2rem; background-color: #8a62a7; border-top: 3px solid #442772; border-bottom: 3px solid #442772; }
 input[type=checkbox]:checked ~ .nav-more-menu { display: block; box-shadow: 0.4rem 0.4rem 1rem 0 rgba(50, 50, 50, 0.5); }
 .nav-more-menu span { min-width: 10rem; }
 
@@ -251,7 +255,7 @@ a.redlink:visited { color: rgb(130, 15, 15); /*#8b1a1a*/ }
 .search-context::after { content: ""; position: absolute; bottom: 0; width: 100%; height: 3em; display: block; background: linear-gradient(to bottom, transparent, #faf8fb); pointer-events: none; }
 
 textarea[name=content] { height: 30em; }
-label:not(.link-display-label) { display: inline-block; min-width: 16rem; }
+label:not(.link-display-label) { display: inline-block; /*min-width: 16rem;*/ }
 input[type=text]:not(.link-display), input[type=password], input[type=url], input[type=email], input[type=number], textarea { margin: 0.5rem 0; }
 input[type=text], input[type=password], input[type=url], input[type=email], input[type=number], textarea, #search-box { padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
 textarea { min-height: 10em; line-height: 1.3em; font-size: 1.25rem; }
