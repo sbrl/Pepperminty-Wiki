@@ -58,6 +58,10 @@
 			"index.php?action=list-tags"
 		],
 		[
+			"&zigrarr; Random Page",
+			"?action=random"
+		],
+		[
 			"Recent changes",
 			"?action=recent-changes"
 		],
