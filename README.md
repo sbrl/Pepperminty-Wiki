@@ -3,12 +3,14 @@ A Wiki in a box
 
 Pepperminty Wiki is a complete wiki contained in a single file, inspired by @am2064's [Minty Wiki](https://github.com/am2064/Minty-Wiki). It's open source too (under MPL-2.0), so contributions are welcome!
 
-**Latest Version:** v0.12 (stable) v0.12.1-dev (development)
+Developed by Starbeamrainbowlabs (though contributions from others are welcome!), Pepperminty Wiki has a variety of useful (and cool!) features - such as file upload, a dynamic help page, page revision history, page tags, and more! Other amazing features are in the works too (like threaded page commenting, autoupdate, and user settings), so check the release notes to see what's been added recently.
+
+**Latest Version:** v0.12.1 (stable) v0.13-dev (development)
 
 ## Screenshots
 ![Main Page Example](https://i.imgur.com/8TokPXw.png)
 
-Above: A Main Page.
+Above: The Main Page used for testing purposes.
 
 ## Features
 - Configurable settings
@@ -22,18 +24,23 @@ Above: A Main Page.
 	- Short syntax for referencing uploaded files
 	- Client side mathematical expression parsing, courtesy of [MathJax](https://www.mathjax.org/)
 	- Links to non-existent pages appear red
+- Full page revision history (comparison / manipulation coming soon)
+- Optional time-delayed google search indexing
+- Simple edit conflict detection
 - Internal links
 	- Links to non-existent pages show up in red
 - Printable page view
 - Customisable theme
 - ~~Basic 'search' bar~~ A full text search engine!
+	- _Dynamic server-side suggestions (coming in v0.13!)_
 - (Optional) Sidebar with a tree of all the current pages
 - Tags
 - List of all pages and details
 	- List of all tags and pages with any given tag
 	- List of recent changes
-- Inbuilt help page
-- File upload
+- Inbuilt help page (modules can add their own sections to it)
+- File upload and preview
+	- Simple syntax for including media in a page (explanation on help page)
 - Page protection
 - Customisable module based system
 	- Allows you to add or remove features at will
@@ -154,12 +161,12 @@ None yet! Contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issue
 ## Todo
 Here's a list of things that I want to add at some point (please feel free to [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls) and help out!).
 
-- ~~Page history~~ (coming in 0.12!)
 - Better page history
 - Password changing
 - Intelligent auto-updating system that doesn't wipe your settings / module choices
 - Preview changes before you save them (#59)
 - Commenting on pages
+- (See more on the [issue tracker](https://github.com/sbrl/Pepperminty-Wiki/issues)!)
 - ...?
 
 Is the feature you want to see not on this list? [Open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) or [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls)!
