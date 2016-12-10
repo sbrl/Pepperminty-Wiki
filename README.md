@@ -161,11 +161,13 @@ None yet! Contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issue
 ## Todo
 Here's a list of things that I want to add at some point (please feel free to [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls) and help out!).
 
-- Better page history
-- Password changing
+- Better page history (revert to revision, compare revisions, etc.)
+- User settings like avatars, changing own passsword, etc. (#69 needs fixing first, then #107)
 - Intelligent auto-updating system that doesn't wipe your settings / module choices
+- A module registry of some sort (ideas welcome!)
 - Preview changes before you save them (#59)
-- Commenting on pages
+- Threaded page commenting system (#19)
+- Image maps (#103)
 - (See more on the [issue tracker](https://github.com/sbrl/Pepperminty-Wiki/issues)!)
 - ...?
 
