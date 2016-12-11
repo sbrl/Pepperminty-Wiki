@@ -19,9 +19,11 @@ $guiConfig = <<<'GUICONFIG'
 {guiconfig}
 GUICONFIG;
 
+$settingsFilename = "peppermint.json";
+
 $guiConfig = json_decode($guiConfig);
 $settings = new stdClass();
-if(!file_exists("peppermint.json"))
+if(!file_exists($settingsFilename))
 {
 	// Copy the default settings over to the main settings array
 	foreach ($guiConfig as $key => $value)

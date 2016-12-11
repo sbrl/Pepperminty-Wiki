@@ -9,19 +9,19 @@ mb_internal_encoding("UTF-8");
 ///////////////////////////////////////////////////////////////////////////////////////////////
 $version = "{version}";
 /// Environment ///
-$env = new stdClass();
-$env->action = $settings->defaultaction;
-$env->page = "";
-$env->page_filename = "";
-$env->is_history_revision = false;
-$env->history = new stdClass();
-$env->history->revision_number = -1;
-$env->history->revision_data = false;
-$env->user = "Anonymous";
-$env->is_logged_in = false;
-$env->is_admin = false;
-$env->storage_prefix = $settings->data_storage_dir . DIRECTORY_SEPARATOR;
-$env->perfdata = new stdClass();
+$env = new stdClass(); // The environment object
+$env->action = $settings->defaultaction; // The action requested by the user
+$env->page = ""; // The page name
+$env->page_filename = ""; // The filename that the page is stored in
+$env->is_history_revision = false; // Whether we are looking at a history revision
+$env->history = new stdClass(); // History revision information
+$env->history->revision_number = -1; // The revision number of the current page
+$env->history->revision_data = false; // The revision data object from the page index
+$env->user = "Anonymous"; // The user's name
+$env->is_logged_in = false;  // Whether the user is logged in
+$env->is_admin = false; // Whether the user is an admin (moderator)
+$env->storage_prefix = $settings->data_storage_dir . DIRECTORY_SEPARATOR; // The data storage directory
+$env->perfdata = new stdClass(); // Performance data
 /// Paths ///
 $paths = new stdClass();
 $paths->pageindex = "pageindex.json"; // The pageindex
@@ -33,6 +33,7 @@ foreach ($paths as &$path) {
 	$path = $env->storage_prefix . $path;
 }
 
+$paths->settings_file = $settingsFilename; // The master settings file
 $paths->upload_file_prefix = "Files/"; // The prefix to add to uploaded files
 
 session_start();
