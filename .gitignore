@@ -6,6 +6,8 @@
 !README.md
 # ...but ignore READMEs in the build folder
 build/README.md
+# ...and the backup peppermint.json files created when using the settings GUI
+peppermint.json.bak
 # And the Module API Docs
 !Module_API_Docs.md
 # And the changelog
