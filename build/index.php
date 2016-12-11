@@ -154,9 +154,11 @@ $guiConfig = <<<'GUICONFIG'
 }
 GUICONFIG;
 
+$settingsFilename = "peppermint.json";
+
 $guiConfig = json_decode($guiConfig);
 $settings = new stdClass();
-if(!file_exists("peppermint.json"))
+if(!file_exists($settingsFilename))
 {
 	// Copy the default settings over to the main settings array
 	foreach ($guiConfig as $key => $value)
@@ -313,19 +315,19 @@ if($settings->css === "auto")
 ///////////////////////////////////////////////////////////////////////////////////////////////
 $version = "v0.13-dev";
 /// Environment ///
-$env = new stdClass();
-$env->action = $settings->defaultaction;
-$env->page = "";
-$env->page_filename = "";
-$env->is_history_revision = false;
-$env->history = new stdClass();
-$env->history->revision_number = -1;
-$env->history->revision_data = false;
-$env->user = "Anonymous";
-$env->is_logged_in = false;
-$env->is_admin = false;
-$env->storage_prefix = $settings->data_storage_dir . DIRECTORY_SEPARATOR;
-$env->perfdata = new stdClass();
+$env = new stdClass(); // The environment object
+$env->action = $settings->defaultaction; // The action requested by the user
+$env->page = ""; // The page name
+$env->page_filename = ""; // The filename that the page is stored in
+$env->is_history_revision = false; // Whether we are looking at a history revision
+$env->history = new stdClass(); // History revision information
+$env->history->revision_number = -1; // The revision number of the current page
+$env->history->revision_data = false; // The revision data object from the page index
+$env->user = "Anonymous"; // The user's name
+$env->is_logged_in = false;  // Whether the user is logged in
+$env->is_admin = false; // Whether the user is an admin (moderator)
+$env->storage_prefix = $settings->data_storage_dir . DIRECTORY_SEPARATOR; // The data storage directory
+$env->perfdata = new stdClass(); // Performance data
 /// Paths ///
 $paths = new stdClass();
 $paths->pageindex = "pageindex.json"; // The pageindex
@@ -337,6 +339,7 @@ foreach ($paths as &$path) {
 	$path = $env->storage_prefix . $path;
 }
 
+$paths->settings_file = $settingsFilename; // The master settings file
 $paths->upload_file_prefix = "Files/"; // The prefix to add to uploaded files
 
 session_start();
@@ -1947,7 +1950,8 @@ register_module([
 			}
 			
 			$content = "<h1>Master Control Panel</h1>\n";
-			$content .= "<p>This page lets you configure the site settings. Please be careful - you can break things easily on this page if you're not careful!</p>\n";
+			$content .= "<p>This page lets you configure $settings->sitename's master settings. Please be careful - you can break things easily on this page if you're not careful!</p>\n";
+			$content .= "<p>Mouse over the name of each the settings to see a description of what it does.</p>\n";
 			$content .= "<form action='?action=configure-save' method='post'>\n";
 			
 			foreach($guiConfig as $configKey => $configData)
@@ -2015,7 +2019,7 @@ register_module([
  		
 		
 		add_action("configure-save", function () {
-			global $env, $settings, $defaultCSS;
+			global $env, $settings, $paths, $defaultCSS;
 			
 		    // If the user isn't an admin, then the regular configuration page will display an appropriate error
 			if(!$env->is_admin)
@@ -2055,8 +2059,18 @@ register_module([
 				$newSettings->$configKey = $configValue;
 			}
 			
-			header("content-type: application/json");
-			exit(json_encode($newSettings, JSON_PRETTY_PRINT));
+			// Take a backup of the current settings file
+			rename($paths->settings_file, "$paths->settings_file.bak");
+			// Save the new settings file
+			file_put_contents($paths->settings_file, json_encode($newSettings, JSON_PRETTY_PRINT));
+			
+			$content = "<h1>Master settings updated sucessfully</h1>\n";
+			$content .= "<p>$settings->sitename's master settings file has been updated successfully. A backup of the original settings has been created under the name <code>peppermint.json.bak</code>, just in case. You can <a href='?action=configure'>go back</a> and continue editing the master settings file, or you can go to the <a href='?action=view&page=" . rawurlencode($settings->defaultpage) . "'>" . htmlentities($settings->defaultpage) . "</a>.</p>\n";
+			$content .= "<p>For reference, the newly generated master settings file is as follows:</p>\n";
+			$content .= "<textarea name='content'>";
+				$content .= json_encode($newSettings, JSON_PRETTY_PRINT);
+			$content .= "</textarea>\n";
+			exit(page_renderer::render_main("Master Settings Updated - $settings->sitename", $content));
 		});
 		
 		add_help_section("800-raw-page-content", "Viewing Raw Page Content", "<p>Although you can use the edit page to view a page's source, you can also ask $settings->sitename to send you the raw page source and nothing else. This feature is intented for those who want to automate their interaction with $settings->sitename.</p>
