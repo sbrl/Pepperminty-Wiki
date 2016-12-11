@@ -104,7 +104,7 @@ register_module([
 			// ~
 			
 			/// ~~~ Smart saving ~~~ ///
-			
+			// TODO: Add a button to press that restores the content that you were working on before.
 			page_renderer::AddJSSnippet('document.addEventListener("load", function(event) {
 	// Smart saving
 	function getSmartSaveKey() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").replace("Editing ", "").trim(); }

@@ -53,11 +53,10 @@ if($settingsUpgraded)
 	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
 
 // Insert the default CSS if requested
-if($settings->css === "auto")
-{
-	$settings->css = <<<THEMECSS
+$defaultCSS = <<<THEMECSS
 {default-css}
 THEMECSS;
-}
+if($settings->css === "auto")
+	$settings->css = $defaultCSS;
 
 ?>

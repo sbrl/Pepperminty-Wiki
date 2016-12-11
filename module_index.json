@@ -50,7 +50,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
         "id": "feature-guiconfig",
-        "lastupdate": 1477824489,
+        "lastupdate": 1481481455,
         "optional": false
     },
     {
@@ -68,7 +68,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds recent changes. Access through the 'recent-changes' action.",
         "id": "feature-recent-changes",
-        "lastupdate": 1478108942,
+        "lastupdate": 1481374758,
         "optional": false
     },
     {
@@ -131,7 +131,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1478354728,
+        "lastupdate": 1481374823,
         "optional": false
     },
     {

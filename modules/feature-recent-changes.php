@@ -174,7 +174,6 @@ function render_recent_changes($recent_changes)
 			}
 			$userDisplayHtml = render_editor(implode(", ", $users));
 			
-			// TODO: Collect up and render a list of participating users
 			$next_entry = "<li><details><summary><a href='?page=" . rawurlencode($rchange_first->page) . "'>$pageDisplayHtml</a> $userDisplayHtml $timeDisplayHtml</summary><ul class='page-list'>$next_entry</ul></details></li>";
 			
 			$content .= "$next_entry\n";

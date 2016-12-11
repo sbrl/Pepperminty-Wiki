@@ -188,9 +188,7 @@ if($settingsUpgraded)
 	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
 
 // Insert the default CSS if requested
-if($settings->css === "auto")
-{
-	$settings->css = <<<THEMECSS
+$defaultCSS = <<<THEMECSS
 body { margin: 2rem 0; background: #eee8f2; line-height: 1.45em; color: #111111; font-family: sans-serif; }
 
 nav { display: flex; background-color: #8a62a7; color: #ffa74d;  }
@@ -304,7 +302,8 @@ summary { cursor: pointer; }
 footer { padding: 2rem; }
 /* #ffdb6d #36962c */
 THEMECSS;
-}
+if($settings->css === "auto")
+	$settings->css = $defaultCSS;
 
 
 
@@ -1921,7 +1920,7 @@ register_module([
 	"code" => function() {
 		global $settings;
 		/**
-		 * @api {get} ?action=configure Change the global wiki settings
+		 * @api {get} ?action=configure Get a page to change the global wiki settings
 		 * @apiName ConfigureSettings
 		 * @apiGroup Utility
 		 * @apiPermission Moderator
@@ -1939,16 +1938,17 @@ register_module([
 			
 			if(!$env->is_admin)
 			{
-				$errorMessage = "<p>You don't have permission to change the site settings.</p>\n";
+				$errorMessage = "<p>You don't have permission to change $settings->sitename's master settings.</p>\n";
 				if(!$env->is_logged_in)
 					$errorMessage .= "<p>You could try <a href='?action=login&returnto=%3Faction%3Dconfigure'>logging in</a>.</p>";
 				else
-					$errorMessage .= "<p>You could try <a href='?action=logout&returnto=%3Faction%3Dconfigure'>logging out</a> and then <a href='?action=login&returnto=%3Faction%3Dconfigure'>logging in</a> again.</a>.</p>";
+					$errorMessage .= "<p>You could try <a href='?action=logout&returnto=%3Faction%3Dconfigure'>logging out</a> and then <a href='?action=login&returnto=%3Faction%3Dconfigure'>logging in</a> again with a different account that has the appropriate privileges.</a>.</p>";
 				exit(page_renderer::render_main("Error - $settings->sitename", $errorMessage));
 			}
 			
-			$content = "<h1>Master Control Panel</h1>";
-			$content .= "<p>This page lets you configure the site settings. Please be careful - you can break things easily on this page if you're not careful!</p>";
+			$content = "<h1>Master Control Panel</h1>\n";
+			$content .= "<p>This page lets you configure the site settings. Please be careful - you can break things easily on this page if you're not careful!</p>\n";
+			$content .= "<form action='?action=configure-save' method='post'>\n";
 			
 			foreach($guiConfig as $configKey => $configData)
 			{
@@ -1967,14 +1967,14 @@ register_module([
 					case "email":
 					case "number":
 					case "text":
-						$inputControl = "<input type='$configData->type' id='$configKey' value='{$settings->$configKey}' />";
+						$inputControl = "<input type='$configData->type' id='$configKey' name='$configKey' value='{$settings->$configKey}' />";
 						break;
 					case "textarea":
-						$inputControl = "<textarea id='$configKey'>{$settings->$configKey}</textarea>";
+						$inputControl = "<textarea id='$configKey' name='$configKey'>{$settings->$configKey}</textarea>";
 						break;
 					case "checkbox":
 						$reverse = true;
-						$inputControl = "<input type='checkbox' id='$configKey' " . ($settings->$configKey ? " checked" : "") . " />";
+						$inputControl = "<input type='checkbox' id='$configKey' name='$configKey' " . ($settings->$configKey ? " checked" : "") . " />";
 						break;
 					default:
 						$label = "";
@@ -1987,7 +1987,76 @@ register_module([
 				$content .= "\n</div>\n";
 			}
 			
+			$content .= "<input type='submit' value='Save Settings' />";
+			$content .= "</form>\n";
+			
 			exit(page_renderer::render_main("Master Control Panel - $settings->sitename", $content));
+		});
+		
+		/**
+		 * @api {post} ?action=configure-save Save changes to the global wiki settings
+		 * @apiName ConfigureSettings
+		 * @apiGroup Utility
+		 * @apiPermission Moderator
+		 */
+		
+		/*
+		 *  ██████  ██████  ███    ██ ███████ ██  ██████  ██    ██ ██████  ███████
+		 * ██      ██    ██ ████   ██ ██      ██ ██       ██    ██ ██   ██ ██
+		 * ██      ██    ██ ██ ██  ██ █████   ██ ██   ███ ██    ██ ██████  █████ █████
+		 * ██      ██    ██ ██  ██ ██ ██      ██ ██    ██ ██    ██ ██   ██ ██
+		 *  ██████  ██████  ██   ████ ██      ██  ██████   ██████  ██   ██ ███████
+		 * ███████  █████  ██    ██ ███████
+		 * ██      ██   ██ ██    ██ ██
+		 * ███████ ███████ ██    ██ █████
+		 *      ██ ██   ██  ██  ██  ██
+		 * ███████ ██   ██   ████   ███████
+		 */
+ 		
+		
+		add_action("configure-save", function () {
+			global $env, $settings, $defaultCSS;
+			
+		    // If the user isn't an admin, then the regular configuration page will display an appropriate error
+			if(!$env->is_admin)
+			{
+				http_response_code(307);
+				header("location: ?action=configure");
+				exit();
+			}
+			
+			// Build a new settings object
+			$newSettings = new stdClass();
+			foreach($settings as $configKey => $rawValue)
+			{
+				$configValue = $rawValue;
+				if(isset($_POST[$configKey]))
+				{
+					$decodedConfigValue = json_decode($_POST[$configKey]);
+					if(json_last_error() === JSON_ERROR_NONE)
+						$configValue = $decodedConfigValue;
+					else
+						$configValue = $_POST[$configKey];
+					
+					// Convert boolean settings to a boolean, since POST
+					// parameters don't decode correctly.
+					if(is_bool($settings->$configKey))
+						$configValue = in_array($configValue, [ 1, "on"], true) ? true : false;
+					
+					// If the CSS hasn't changed, then we can replace it with
+					// 'auto' - this will ensure that upon update the new
+					// default CSS will be used. Also make sure we ignore line
+					// ending nonsense & differences here, since they really
+					// don't matter
+					if($configKey === "css" && str_replace("\r\n", "\n", $defaultCSS) === str_replace("\r\n", "\n", $configValue))
+						$configValue = "auto";
+				}
+				
+				$newSettings->$configKey = $configValue;
+			}
+			
+			header("content-type: application/json");
+			exit(json_encode($newSettings, JSON_PRETTY_PRINT));
 		});
 		
 		add_help_section("800-raw-page-content", "Viewing Raw Page Content", "<p>Although you can use the edit page to view a page's source, you can also ask $settings->sitename to send you the raw page source and nothing else. This feature is intented for those who want to automate their interaction with $settings->sitename.</p>
@@ -2271,7 +2340,6 @@ function render_recent_changes($recent_changes)
 			}
 			$userDisplayHtml = render_editor(implode(", ", $users));
 			
-			// TODO: Collect up and render a list of participating users
 			$next_entry = "<li><details><summary><a href='?page=" . rawurlencode($rchange_first->page) . "'>$pageDisplayHtml</a> $userDisplayHtml $timeDisplayHtml</summary><ul class='page-list'>$next_entry</ul></details></li>";
 			
 			$content .= "$next_entry\n";
@@ -4093,7 +4161,7 @@ register_module([
 			// ~
 			
 			/// ~~~ Smart saving ~~~ ///
-			
+			// TODO: Add a button to press that restores the content that you were working on before.
 			page_renderer::AddJSSnippet('document.addEventListener("load", function(event) {
 	// Smart saving
 	function getSmartSaveKey() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").replace("Editing ", "").trim(); }
