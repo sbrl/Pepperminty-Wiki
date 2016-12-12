@@ -19,11 +19,18 @@
 	"clean_raw_html": {"type": "checkbox", "description": "Whether page sources should be cleaned of HTML before rendering. It is STRONGLY recommended that you keep this option turned on.", "default": true},
 	"enable_math_rendering": {"type": "checkbox", "description": "Whether to enable client side rendering of mathematical expressions with MathJax (https://www.mathjax.org/). Math expressions should be enclosed inside of dollar signs ($). Turn off if you don't use it.", "default": true},
 	"users": {"type": "usertable", "description": "An array of usernames and passwords - passwords should be hashed with sha256 (or sha3 if you have that option turned on)", "default": {
-		"admin": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
-		"user": "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34"
+		"admin": {
+			"email": "admin@somewhere.com",
+			"password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
+		},
+		"user": {
+			"email": "example@example.net",
+			"password": "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34"
+		}
 	}},
 	"admins": {"type": "array", "description": "An array of usernames that are administrators. Administrators can delete and move pages.", "default": [ "admin" ]},
-	"use_sha3": {"type": "checkbox", "description": "Whether to use the new sha3 hashing algorithm for passwords etc.", "default": false},
+	"anonymous_user_name": { "type": "text", "description": "THe default name for anonymous users.", "default": "Anonymous" },
+	"use_sha3": {"type": "checkbox", "description": "Whether to use the new sha3 hashing algorithm for passwords etc.", "default": false },
 	"require_login_view": {"type": "checkbox", "description": "Whether to require that users login before they do anything else. Best used with the data_storage_dir option.", "default": false},
 	"data_storage_dir": {"type": "text", "description": "The directory in which to store all files, except the main index.php.", "default": "."},
 	"delayed_indexing_time": {"type": "number", "description": "The amount of time, in seconds, that pages should be blocked from being indexed by search engines after their last edit. Aka delayed indexing.", "default": 0},
@@ -80,6 +87,10 @@
 		[
 			"&#x1f510; &#9670;Toggle Protection",
 			"index.php?action=protect&page={page}"
+		],
+		[
+			"&#x2699; &#9670;Edit master settings",
+			"index.php?action=configure"
 		]
 	]},
 	"nav_links_bottom": {"type": "nav", "description": "An array of links in the above format that will be shown at the bottom of the page.", "default": [

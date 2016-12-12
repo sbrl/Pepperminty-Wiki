@@ -72,9 +72,9 @@ register_module([
 		
 		/*
  		 * ██████ ██   ██ ███████  ██████ ██   ██
-		 * ██      ██   ██ ██      ██      ██  ██
-		 * ██      ███████ █████   ██      █████
-		 * ██      ██   ██ ██      ██      ██  ██
+		 * ██     ██   ██ ██      ██      ██  ██
+		 * ██     ███████ █████   ██      █████
+		 * ██     ██   ██ ██      ██      ██  ██
  		 * ██████ ██   ██ ███████  ██████ ██   ██
  		 * 
 		 * ██       ██████   ██████  ██ ███    ██
@@ -92,7 +92,7 @@ register_module([
 				//the user wants to log in
 				$user = $_POST["user"];
 				$pass = $_POST["pass"];
-				if($settings->users->$user == hash_password($pass))
+				if($settings->users->$user->password == hash_password($pass))
 				{
 					$env->is_logged_in = true;
 					$expiretime = time() + 60*60*24*30; //30 days from now

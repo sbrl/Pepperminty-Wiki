@@ -50,7 +50,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
         "id": "feature-guiconfig",
-        "lastupdate": 1481484345,
+        "lastupdate": 1481488416,
         "optional": false
     },
     {
@@ -167,7 +167,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastupdate": 1472230366,
+        "lastupdate": 1481567842,
         "optional": false
     },
     {

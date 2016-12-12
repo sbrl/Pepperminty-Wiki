@@ -17,7 +17,7 @@ $env->is_history_revision = false; // Whether we are looking at a history revisi
 $env->history = new stdClass(); // History revision information
 $env->history->revision_number = -1; // The revision number of the current page
 $env->history->revision_data = false; // The revision data object from the page index
-$env->user = "Anonymous"; // The user's name
+$env->user = $settings->anonymous_user_name; // The user's name
 $env->is_logged_in = false;  // Whether the user is logged in
 $env->is_admin = false; // Whether the user is an admin (moderator)
 $env->storage_prefix = $settings->data_storage_dir . DIRECTORY_SEPARATOR; // The data storage directory
@@ -47,21 +47,18 @@ if(isset($_SESSION[$settings->sessionprefix . "-expiretime"]) and
 	// Clear the session variables
 	$_SESSION = [];
 	session_destroy();
-	$env->is_logged_in = false;
-	$env->user = "Anonymous";
 }
 
-if(!isset($_SESSION[$settings->sessionprefix . "-user"]) and
-  !isset($_SESSION[$settings->sessionprefix . "-pass"]))
+if(isset($_SESSION[$settings->sessionprefix . "-user"]) and
+  isset($_SESSION[$settings->sessionprefix . "-pass"]))
 {
-	// The user is not logged in
-	$env->is_logged_in = false;
-}
-else
-{
+	// Grab the session variables
+	// Note that the 'pass' field here is actually a hash of the password set
+	// by the login action
 	$env->user = $_SESSION[$settings->sessionprefix . "-user"];
 	$env->pass = $_SESSION[$settings->sessionprefix . "-pass"];
-	if($settings->users->{$env->user} == $env->pass)
+	
+	if($settings->users->{$env->user}->password == $env->pass)
 	{
 		// The user is logged in
 		$env->is_logged_in = true;
@@ -75,11 +72,12 @@ else
 		$env->user = "Anonymous";
 		$env->pass = "";
 		// Clear the session data
-		$_SESSION = []; //delete all the variables
-		session_destroy(); //destroy the session
+		$_SESSION = []; // Delete all the variables
+		session_destroy(); // Destroy the session
 	}
 }
-//check to see if the currently logged in user is an admin
+
+// Check to see if the currently logged in user is an admin
 $env->is_admin = false;
 if($env->is_logged_in)
 {

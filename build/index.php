@@ -41,11 +41,18 @@ $guiConfig = <<<'GUICONFIG'
 	"clean_raw_html": {"type": "checkbox", "description": "Whether page sources should be cleaned of HTML before rendering. It is STRONGLY recommended that you keep this option turned on.", "default": true},
 	"enable_math_rendering": {"type": "checkbox", "description": "Whether to enable client side rendering of mathematical expressions with MathJax (https://www.mathjax.org/). Math expressions should be enclosed inside of dollar signs ($). Turn off if you don't use it.", "default": true},
 	"users": {"type": "usertable", "description": "An array of usernames and passwords - passwords should be hashed with sha256 (or sha3 if you have that option turned on)", "default": {
-		"admin": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
-		"user": "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34"
+		"admin": {
+			"email": "admin@somewhere.com",
+			"password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
+		},
+		"user": {
+			"email": "example@example.net",
+			"password": "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34"
+		}
 	}},
 	"admins": {"type": "array", "description": "An array of usernames that are administrators. Administrators can delete and move pages.", "default": [ "admin" ]},
-	"use_sha3": {"type": "checkbox", "description": "Whether to use the new sha3 hashing algorithm for passwords etc.", "default": false},
+	"anonymous_user_name": { "type": "text", "description": "THe default name for anonymous users.", "default": "Anonymous" },
+	"use_sha3": {"type": "checkbox", "description": "Whether to use the new sha3 hashing algorithm for passwords etc.", "default": false },
 	"require_login_view": {"type": "checkbox", "description": "Whether to require that users login before they do anything else. Best used with the data_storage_dir option.", "default": false},
 	"data_storage_dir": {"type": "text", "description": "The directory in which to store all files, except the main index.php.", "default": "."},
 	"delayed_indexing_time": {"type": "number", "description": "The amount of time, in seconds, that pages should be blocked from being indexed by search engines after their last edit. Aka delayed indexing.", "default": 0},
@@ -102,6 +109,10 @@ $guiConfig = <<<'GUICONFIG'
 		[
 			"&#x1f510; &#9670;Toggle Protection",
 			"index.php?action=protect&page={page}"
+		],
+		[
+			"&#x2699; &#9670;Edit master settings",
+			"index.php?action=configure"
 		]
 	]},
 	"nav_links_bottom": {"type": "nav", "description": "An array of links in the above format that will be shown at the bottom of the page.", "default": [
@@ -323,7 +334,7 @@ $env->is_history_revision = false; // Whether we are looking at a history revisi
 $env->history = new stdClass(); // History revision information
 $env->history->revision_number = -1; // The revision number of the current page
 $env->history->revision_data = false; // The revision data object from the page index
-$env->user = "Anonymous"; // The user's name
+$env->user = $settings->anonymous_user_name; // The user's name
 $env->is_logged_in = false;  // Whether the user is logged in
 $env->is_admin = false; // Whether the user is an admin (moderator)
 $env->storage_prefix = $settings->data_storage_dir . DIRECTORY_SEPARATOR; // The data storage directory
@@ -353,21 +364,18 @@ if(isset($_SESSION[$settings->sessionprefix . "-expiretime"]) and
 	// Clear the session variables
 	$_SESSION = [];
 	session_destroy();
-	$env->is_logged_in = false;
-	$env->user = "Anonymous";
 }
 
-if(!isset($_SESSION[$settings->sessionprefix . "-user"]) and
-  !isset($_SESSION[$settings->sessionprefix . "-pass"]))
+if(isset($_SESSION[$settings->sessionprefix . "-user"]) and
+  isset($_SESSION[$settings->sessionprefix . "-pass"]))
 {
-	// The user is not logged in
-	$env->is_logged_in = false;
-}
-else
-{
+	// Grab the session variables
+	// Note that the 'pass' field here is actually a hash of the password set
+	// by the login action
 	$env->user = $_SESSION[$settings->sessionprefix . "-user"];
 	$env->pass = $_SESSION[$settings->sessionprefix . "-pass"];
-	if($settings->users->{$env->user} == $env->pass)
+	
+	if($settings->users->{$env->user}->password == $env->pass)
 	{
 		// The user is logged in
 		$env->is_logged_in = true;
@@ -381,11 +389,12 @@ else
 		$env->user = "Anonymous";
 		$env->pass = "";
 		// Clear the session data
-		$_SESSION = []; //delete all the variables
-		session_destroy(); //destroy the session
+		$_SESSION = []; // Delete all the variables
+		session_destroy(); // Destroy the session
 	}
 }
-//check to see if the currently logged in user is an admin
+
+// Check to see if the currently logged in user is an admin
 $env->is_admin = false;
 if($env->is_logged_in)
 {
@@ -4825,9 +4834,9 @@ register_module([
 		
 		/*
  		 * ██████ ██   ██ ███████  ██████ ██   ██
-		 * ██      ██   ██ ██      ██      ██  ██
-		 * ██      ███████ █████   ██      █████
-		 * ██      ██   ██ ██      ██      ██  ██
+		 * ██     ██   ██ ██      ██      ██  ██
+		 * ██     ███████ █████   ██      █████
+		 * ██     ██   ██ ██      ██      ██  ██
  		 * ██████ ██   ██ ███████  ██████ ██   ██
  		 * 
 		 * ██       ██████   ██████  ██ ███    ██
@@ -4845,7 +4854,7 @@ register_module([
 				//the user wants to log in
 				$user = $_POST["user"];
 				$pass = $_POST["pass"];
-				if($settings->users->$user == hash_password($pass))
+				if($settings->users->$user->password == hash_password($pass))
 				{
 					$env->is_logged_in = true;
 					$expiretime = time() + 60*60*24*30; //30 days from now
