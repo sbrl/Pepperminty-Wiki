@@ -266,7 +266,7 @@ a.redlink:visited { color: rgb(130, 15, 15); /*#8b1a1a*/ }
 .search-context::after { content: ""; position: absolute; bottom: 0; width: 100%; height: 3em; display: block; background: linear-gradient(to bottom, transparent, #faf8fb); pointer-events: none; }
 
 textarea[name=content] { height: 30em; }
-label:not(.link-display-label) { display: inline-block; /*min-width: 16rem;*/ }
+main label:not(.link-display-label) { display: inline-block; min-width: 16rem; }
 input[type=text]:not(.link-display), input[type=password], input[type=url], input[type=email], input[type=number], textarea { margin: 0.5rem 0; }
 input[type=text], input[type=password], input[type=url], input[type=email], input[type=number], textarea, #search-box { padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
 textarea { min-height: 10em; line-height: 1.3em; font-size: 1.25rem; }
@@ -3758,6 +3758,67 @@ function errorimage($text, $target_size)
 	
 	return $image;
 }
+
+
+
+
+register_module([
+	"name" => "User Preferences",
+	"version" => "0.1",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds a user preferences page, letting pople do things like change their email address and password.",
+	"id" => "feature-user-preferences",
+	"code" => function() {
+		global $settings;
+		/**
+		 * @api {get} ?action=user-preferences Get a user preferences configuration page.
+		 * @apiName UserPreferences
+		 * @apiGroup Utility
+		 * @apiPermission User
+		 */
+		
+		 /*
+ 		 * ██    ██ ███████ ███████ ██████
+ 		 * ██    ██ ██      ██      ██   ██
+ 		 * ██    ██ ███████ █████   ██████  █████
+ 		 * ██    ██      ██ ██      ██   ██
+ 		 *  ██████  ███████ ███████ ██   ██
+ 		 * 
+ 		 * ██████  ██████  ███████ ███████ ███████
+ 		 * ██   ██ ██   ██ ██      ██      ██
+ 		 * ██████  ██████  █████   █████   ███████
+ 		 * ██      ██   ██ ██      ██           ██
+ 		 * ██      ██   ██ ███████ ██      ███████
+ 		 */
+		add_action("user-preferences", function() {
+			global $env;
+			
+			if(!$env->is_logged_in)
+			{
+				exit(page_renderer::render_main("Error  - $settings->sitename", "<p>Since you aren't logged in, you can't change your preferences. This is because stored preferences are tied to each registered user account. You can login <a href='?action=login&returnto=" . rawurlencode("?action=user-preferences") . "'>here</a>.</p>"));
+			}
+			
+			$content = "<h2>User Preferences</h2>\n";
+			$content .= "<label for='username'>Username:</label>\n";
+			$content .= "<input type='text' name='username' value='$env->user' readonly />\n";
+			$content .= "<h3>Change Password</h3\n>";
+			$content .= "<form method='post' action='?action=change-password'>\n";
+			$content .= "<label for='old-pass'>Old Password:</label>\n";
+			$content .= "<input type='password' name='old-pass'  />\n";
+			$content .= "<br />\n";
+			$content .= "<label for='new-pass'>New Password:</label>\n";
+			$content .= "<input type='password' name='new-pass' />\n";
+			$content .= "<br />\n";
+			$content .= "<label for='new-pass-confirm'>Confirm New Password:</label>\n";
+			$content .= "<input type='password' name='new-pass-confirm' />\n";
+			$content .= "</form>\n";
+			
+			exit(page_renderer::render_main("User Preferences - $settings->sitename", $content));
+		});
+		
+		add_help_section("910-user-preferences", "User Preferences", "<p>(help text coming soon)</p>");
+	}
+]);
 
 
 
