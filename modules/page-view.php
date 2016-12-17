@@ -147,7 +147,7 @@ register_module([
 				time() - $pageindex->{$env->page}->lastmodified < $settings->delayed_indexing_time)
 				header("x-robots-tag: noindex");
 			
-			$settings->footer_message = "Last edited at " . date('h:ia T \o\n j F Y', $pageindex->{$env->page}->lastmodified) . ".</p>\n<p>" . $settings->footer_message; // Add the last edited time to the footer
+			$settings->footer_message = "$env->page was last edited by {$pageindex->{$env->page}->lasteditor} at " . date('h:ia T \o\n j F Y', $pageindex->{$env->page}->lastmodified) . ".</p>\n<p>" . $settings->footer_message; // Add the last edited time to the footer
 			
 			$mode = isset($_GET["mode"]) ? strtolower(trim($_GET["mode"])) : "normal";
 			switch($mode)
