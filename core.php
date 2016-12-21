@@ -20,6 +20,7 @@ $env->history->revision_data = false; // The revision data object from the page 
 $env->user = $settings->anonymous_user_name; // The user's name
 $env->is_logged_in = false;  // Whether the user is logged in
 $env->is_admin = false; // Whether the user is an admin (moderator)
+$env->user_data = new stdClass(); // A logged in user's data
 $env->storage_prefix = $settings->data_storage_dir . DIRECTORY_SEPARATOR; // The data storage directory
 $env->perfdata = new stdClass(); // Performance data
 /// Paths ///
@@ -62,6 +63,7 @@ if(isset($_SESSION[$settings->sessionprefix . "-user"]) and
 	{
 		// The user is logged in
 		$env->is_logged_in = true;
+		$env->user_data = $settings->{$env->user};
 	}
 	else
 	{
@@ -69,7 +71,7 @@ if(isset($_SESSION[$settings->sessionprefix . "-user"]) and
 		// Unset the session variables, treat them as an anonymous user,
 		// and get out of here
 		$env->is_logged_in = false;
-		$env->user = "Anonymous";
+		$env->user = $settings->anonymous_user_name;
 		$env->pass = "";
 		// Clear the session data
 		$_SESSION = []; // Delete all the variables
@@ -560,6 +562,23 @@ function render_pagename($rchange)
 function render_editor($editorName)
 {
 	return "<span class='editor'>&#9998; $editorName</span>";
+}
+
+/**
+ * Saves the currently logged in uesr's data back to peppermint.json.
+ * @return bool Whethert he user's data was saved successfully. Returns false if the user isn't logged in.
+ */
+function save_userdata()
+{
+	global $env, $settings, $paths;
+	
+	if(!$env->is_logged_in)
+		return false;
+	
+	$settings->users->{$env->user} = $env->user_data;
+	file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT));
+	
+	return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

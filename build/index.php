@@ -337,6 +337,7 @@ $env->history->revision_data = false; // The revision data object from the page 
 $env->user = $settings->anonymous_user_name; // The user's name
 $env->is_logged_in = false;  // Whether the user is logged in
 $env->is_admin = false; // Whether the user is an admin (moderator)
+$env->user_data = new stdClass(); // A logged in user's data
 $env->storage_prefix = $settings->data_storage_dir . DIRECTORY_SEPARATOR; // The data storage directory
 $env->perfdata = new stdClass(); // Performance data
 /// Paths ///
@@ -379,6 +380,7 @@ if(isset($_SESSION[$settings->sessionprefix . "-user"]) and
 	{
 		// The user is logged in
 		$env->is_logged_in = true;
+		$env->user_data = $settings->{$env->user};
 	}
 	else
 	{
@@ -386,7 +388,7 @@ if(isset($_SESSION[$settings->sessionprefix . "-user"]) and
 		// Unset the session variables, treat them as an anonymous user,
 		// and get out of here
 		$env->is_logged_in = false;
-		$env->user = "Anonymous";
+		$env->user = $settings->anonymous_user_name;
 		$env->pass = "";
 		// Clear the session data
 		$_SESSION = []; // Delete all the variables
@@ -877,6 +879,23 @@ function render_pagename($rchange)
 function render_editor($editorName)
 {
 	return "<span class='editor'>&#9998; $editorName</span>";
+}
+
+/**
+ * Saves the currently logged in uesr's data back to peppermint.json.
+ * @return bool Whethert he user's data was saved successfully. Returns false if the user isn't logged in.
+ */
+function save_userdata()
+{
+	global $env, $settings, $paths;
+	
+	if(!$env->is_logged_in)
+		return false;
+	
+	$settings->users->{$env->user} = $env->user_data;
+	file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT));
+	
+	return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -3773,7 +3792,7 @@ register_module([
 		/**
 		 * @api {get} ?action=user-preferences Get a user preferences configuration page.
 		 * @apiName UserPreferences
-		 * @apiGroup Utility
+		 * @apiGroup Settings
 		 * @apiPermission User
 		 */
 		
@@ -3803,18 +3822,51 @@ register_module([
 			$content .= "<input type='text' name='username' value='$env->user' readonly />\n";
 			$content .= "<h3>Change Password</h3\n>";
 			$content .= "<form method='post' action='?action=change-password'>\n";
-			$content .= "<label for='old-pass'>Old Password:</label>\n";
-			$content .= "<input type='password' name='old-pass'  />\n";
+			$content .= "<label for='old-pass'>Current Password:</label>\n";
+			$content .= "<input type='password' name='current-pass'  />\n";
 			$content .= "<br />\n";
 			$content .= "<label for='new-pass'>New Password:</label>\n";
 			$content .= "<input type='password' name='new-pass' />\n";
 			$content .= "<br />\n";
 			$content .= "<label for='new-pass-confirm'>Confirm New Password:</label>\n";
 			$content .= "<input type='password' name='new-pass-confirm' />\n";
+			$content .= "<br />\n";
+			$content .= "<input type='submit' value='Change Password' />\n";
 			$content .= "</form>\n";
 			
 			exit(page_renderer::render_main("User Preferences - $settings->sitename", $content));
 		});
+		
+		add_action("change-password", function() {
+		    global $env;
+			// Make sure the new password was typed correctly
+			// This comes before the current password check since that's more intensive
+			if($_POST["new-pass"] !== $_POST["new-pass-confirm"]) {
+				exit(page_renderer::render_main("Password mismatch - $settings->sitename", "<p>The new password you typed twice didn't match. <a href='javascript:history.back();'>Go back</a>.</p>"));
+			}
+			// Check the current password
+			if(hash_password($_POST["current-pass"]) !== $env->user_data->password) {
+				exit(page_renderer::render_main("Password mismatch - $settings->sitename", "<p>Error: You typed your current password incorrectly. <a href='javascript:history.back();'>Go back</a>.</p>"));
+			}
+			
+			// All's good! Go ahead and change the password.
+			$env->user_data->password = hash_password($_POST["current-pass"]);
+			// Save the userdata back to disk
+			save_userdata();
+		});
+		
+		/**
+		 * @api	{post}	?action=change-password	Change your password
+		 * @apiName			ChangePassword
+		 * @apiGroup		Settings
+		 * @apiPermission	User
+		 *
+		 * @apiParam	{string}	current-pass		Your current password.
+		 * @apiParam	{string}	new-pass			Your new password.
+		 * @apiParam	{string}	new-pass-confirm	Your new password again, to make sure you've typed it correctly.
+		 *
+		 * @apiError	PasswordMismatchError	The new password fields don't match.
+		 */
 		
 		add_help_section("910-user-preferences", "User Preferences", "<p>(help text coming soon)</p>");
 	}
