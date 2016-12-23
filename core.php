@@ -63,7 +63,7 @@ if(isset($_SESSION[$settings->sessionprefix . "-user"]) and
 	{
 		// The user is logged in
 		$env->is_logged_in = true;
-		$env->user_data = $settings->{$env->user};
+		$env->user_data = $settings->users->{$env->user};
 	}
 	else
 	{
