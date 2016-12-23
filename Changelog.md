@@ -8,6 +8,8 @@
  - Added 'smart save' to the page creator / editor. Nobody need ever loose edits ever again!
  - Added dynamic server-calculated page suggestions. Very helpful for larger wikis. Currently works best in firefox. Part of the `feature-search` module.
  - Added Alt + Enter support to the page search box. Works just like your browser's address bar - opens results in a new tab instead of the current one.
+ - Initial UI for configuring settings! Some things still have to be done by editing the file, but it's certainly a start :D
+ - [Module API] Added `$env->user_data` and `save_userdata()` to interact with the logged in users' data
 
 ### Changed
  - Overhauled internal history logic - history logic is now done in core.
@@ -15,6 +17,7 @@
  - Changed the way different display modes are accessed. You can now use the new `mode` parameter to the `view` action. It supports 4 different modes at present: `normal`, `printable`, `contentonly`, and `parsedsourceonly`.
  - Improved recent changes links a bit.
  - Improved tabbing through the file upload form.
+ - Changed the way users' data is stored to support arbitrary per-user data
 
 ## Fixed
  - The login session lifetime is now configurable (defaults to 24 hours), so you won't keep getting logged out all the time (in theory). (#113)
