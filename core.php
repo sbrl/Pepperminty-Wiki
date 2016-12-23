@@ -1059,7 +1059,7 @@ class page_renderer
 						{
 							$result .= "<span class='inflexible logged-in" . ($env->is_logged_in ? " moderator" : " normal-user") . "'>";
 							if(module_exists("feature-user-preferences")) {
-								$result .= "<a href='?action=user-preferences'>$settings->user_preferences_button_text</a> ";
+								$result .= "<a href='?action=user-preferences'>$settings->user_preferences_button_text</a>";
 							}
 							$result .= self::render_username($env->user) . " <small>(<a href='index.php?action=logout'>Logout</a>)</small>";
 							$result .= "</span>";
