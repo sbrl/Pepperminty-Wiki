@@ -51,7 +51,8 @@ $guiConfig = <<<'GUICONFIG'
 		}
 	}},
 	"admins": {"type": "array", "description": "An array of usernames that are administrators. Administrators can delete and move pages.", "default": [ "admin" ]},
-	"anonymous_user_name": { "type": "text", "description": "THe default name for anonymous users.", "default": "Anonymous" },
+	"anonymous_user_name": { "type": "text", "description": "The default name for anonymous users.", "default": "Anonymous" },
+	"user_preferences_button_text": { "type": "text", "description": "The text to display on the button that lets logged in users chang  their settings. Defaults to a cog (aka a 'gear' in unicode-land).", "default": "&#x2699;" },
 	"use_sha3": {"type": "checkbox", "description": "Whether to use the new sha3 hashing algorithm for passwords etc.", "default": false },
 	"require_login_view": {"type": "checkbox", "description": "Whether to require that users login before they do anything else. Best used with the data_storage_dir option.", "default": false},
 	"data_storage_dir": {"type": "text", "description": "The directory in which to store all files, except the main index.php.", "default": "."},
@@ -1374,7 +1375,12 @@ class page_renderer
 					case "user-status": // Renders the user status box
 						if($env->is_logged_in)
 						{
-							$result .= "<span class='inflexible logged-in" . ($env->is_logged_in ? " moderator" : " normal-user") . "'>" . self::render_username($env->user) . " <small>(<a href='index.php?action=logout'>Logout</a>)</small></span>";
+							$result .= "<span class='inflexible logged-in" . ($env->is_logged_in ? " moderator" : " normal-user") . "'>";
+							if(module_exists("feature-user-preferences")) {
+								$result .= "<a href='?action=user-preferences'>$settings->user_preferences_button_text</a> ";
+							}
+							$result .= self::render_username($env->user) . " <small>(<a href='index.php?action=logout'>Logout</a>)</small>";
+							$result .= "</span>";
 							//$result .= page_renderer::$nav_divider;
 						}
 						else

@@ -9,6 +9,10 @@
  - Added dynamic server-calculated page suggestions. Very helpful for larger wikis. Currently works best in firefox. Part of the `feature-search` module.
  - Added Alt + Enter support to the page search box. Works just like your browser's address bar - opens results in a new tab instead of the current one.
  - Initial UI for configuring settings! Some things still have to be done by editing the file, but it's certainly a start :D
+ - User preferences!
+     - Accessible via the (by default) small cog next to your username when you're logged in
+     - The cog is customisable via the new `user_preferences_button_text` setting.
+     - You can change your password
  - [Module API] Added `$env->user_data` and `save_userdata()` to interact with the logged in users' data
 
 ### Changed
