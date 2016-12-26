@@ -5859,7 +5859,7 @@ class PeppermintParsedown extends ParsedownExtra
 				]
 			];
 			
-			if(empty($pageindex->$linkPage))
+			if(empty($pageindex->{makepathsafe($linkPage)}))
 				$result["element"]["attributes"]["class"] = "redlink";
 			
 			return $result;
