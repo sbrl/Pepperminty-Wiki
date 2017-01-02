@@ -3851,6 +3851,18 @@ register_module([
 			exit(page_renderer::render_main("User Preferences - $settings->sitename", $content));
 		});
 		
+		/**
+		 * @api	{post}	?action=change-password	Change your password
+		 * @apiName			ChangePassword
+		 * @apiGroup		Settings
+		 * @apiPermission	User
+		 *
+		 * @apiParam	{string}	current-pass		Your current password.
+		 * @apiParam	{string}	new-pass			Your new password.
+		 * @apiParam	{string}	new-pass-confirm	Your new password again, to make sure you've typed it correctly.
+		 *
+		 * @apiError	PasswordMismatchError	The new password fields don't match.
+		 */
 		add_action("change-password", function() {
 		    global $env, $settings;
 			
@@ -3873,19 +3885,6 @@ register_module([
 			header("location: ?action=user-preferences&success=yes&operation=change-password");
 			exit(page_renderer::render_main("Password Changed Successfully", "<p>You password was changed successfully. <a href='?action=user-preferences'>Go back to the user preferences page</a>.</p>"));
 		});
-		
-		/**
-		 * @api	{post}	?action=change-password	Change your password
-		 * @apiName			ChangePassword
-		 * @apiGroup		Settings
-		 * @apiPermission	User
-		 *
-		 * @apiParam	{string}	current-pass		Your current password.
-		 * @apiParam	{string}	new-pass			Your new password.
-		 * @apiParam	{string}	new-pass-confirm	Your new password again, to make sure you've typed it correctly.
-		 *
-		 * @apiError	PasswordMismatchError	The new password fields don't match.
-		 */
 		
 		add_help_section("910-user-preferences", "User Preferences", "<p>(help text coming soon)</p>");
 	}

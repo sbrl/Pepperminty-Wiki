@@ -421,6 +421,23 @@
   },
   {
     "type": "get",
+    "url": "?action=random",
+    "title": "Redirects to a random page.",
+    "name": "RawSource",
+    "group": "Page",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "./modules/action-random.php",
+    "groupTitle": "Page"
+  },
+  {
+    "type": "get",
     "url": "?action=raw&page={pageName}",
     "title": "Get the raw source code of a page",
     "name": "RawSource",
@@ -608,6 +625,79 @@
     "groupTitle": "Search"
   },
   {
+    "type": "post",
+    "url": "?action=change-password",
+    "title": "Change your password",
+    "name": "ChangePassword",
+    "group": "Settings",
+    "permission": [
+      {
+        "name": "User",
+        "title": "Only users loggged in may use this call.",
+        "description": ""
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "current-pass",
+            "description": "<p>Your current password.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "new-pass",
+            "description": "<p>Your new password.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "new-pass-confirm",
+            "description": "<p>Your new password again, to make sure you've typed it correctly.</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "PasswordMismatchError",
+            "description": "<p>The new password fields don't match.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./modules/feature-user-preferences.php",
+    "groupTitle": "Settings"
+  },
+  {
+    "type": "get",
+    "url": "?action=user-preferences",
+    "title": "Get a user preferences configuration page.",
+    "name": "UserPreferences",
+    "group": "Settings",
+    "permission": [
+      {
+        "name": "User",
+        "title": "Only users loggged in may use this call.",
+        "description": ""
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "./modules/feature-user-preferences.php",
+    "groupTitle": "Settings"
+  },
+  {
     "type": "get",
     "url": "?action=recentchanges",
     "title": "Get a list of recent changes",
@@ -791,7 +881,24 @@
   {
     "type": "get",
     "url": "?action=configure",
-    "title": "Change the global wiki settings",
+    "title": "Get a page to change the global wiki settings",
+    "name": "ConfigureSettings",
+    "group": "Utility",
+    "permission": [
+      {
+        "name": "Moderator",
+        "title": "Only users loggged with a moderator account may use this call.",
+        "description": ""
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "./modules/feature-guiconfig.php",
+    "groupTitle": "Utility"
+  },
+  {
+    "type": "post",
+    "url": "?action=configure-save",
+    "title": "Save changes to the global wiki settings",
     "name": "ConfigureSettings",
     "group": "Utility",
     "permission": [
