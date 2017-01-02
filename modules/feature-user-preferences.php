@@ -6,7 +6,7 @@ register_module([
 	"description" => "Adds a user preferences page, letting pople do things like change their email address and password.",
 	"id" => "feature-user-preferences",
 	"code" => function() {
-		global $settings;
+		global $env, $settings;
 		/**
 		 * @api {get} ?action=user-preferences Get a user preferences configuration page.
 		 * @apiName UserPreferences
@@ -98,7 +98,12 @@ register_module([
 			exit(page_renderer::render_main("Password Changed Successfully", "<p>You password was changed successfully. <a href='?action=user-preferences'>Go back to the user preferences page</a>.</p>"));
 		});
 		
-		add_help_section("910-user-preferences", "User Preferences", "<p>(help text coming soon)</p>");
+		// Display a help section on the user preferences, but only if the user
+		// is logged in and so able to access them
+		if($env->is_logged_in)
+		{
+			add_help_section("910-user-preferences", "User Preferences", "<p>As you are logged in, $settings->sitename lets you configure a selection of personal preferences. These can be viewed and tweaked to you liking over on the <a href='?action=user-preferences'>preferences page</a>, which can be accessed at any time by clicking the cog icon (it looks something like this: <a href='?action=user-preferences'>$settings->user_preferences_button_text</a>), though the administrator of $settings->sitename ($settings->admindetails_name) may have changed its appearance.</p>");
+		}
 	}
 ]);
 
