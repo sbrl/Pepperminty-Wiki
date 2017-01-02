@@ -3789,7 +3789,7 @@ function errorimage($text, $target_size)
 
 register_module([
 	"name" => "User Preferences",
-	"version" => "0.1",
+	"version" => "0.1.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a user preferences page, letting pople do things like change their email address and password.",
 	"id" => "feature-user-preferences",
@@ -4028,7 +4028,7 @@ register_module([
 
 register_module([
 	"name" => "Debug Information",
-	"version" => "0.1",
+	"version" => "0.1.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a debug action for administrator use only that collects a load of useful information to make reporting bugs easier.",
 	"id" => "page-debug-info",
@@ -4094,7 +4094,7 @@ register_module([
 		
 		if($env->is_admin)
 		{
-			add_help_section("810-debug-information", "Gathering debug information", "<p>As a moderator, $settings->sitename gives you the ability to generate a report on $settings->sitename's installation of Pepperminty Wiki for debugging purposes.</p>
+			add_help_section("950-debug-information", "Gathering debug information", "<p>As a moderator, $settings->sitename gives you the ability to generate a report on $settings->sitename's installation of Pepperminty Wiki for debugging purposes.</p>
 			<p>To generate such a report, visit the <code>debug</code> action or <a href='?action=debug'>click here</a>.</p>");
 		}
 	}

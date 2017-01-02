@@ -100,11 +100,11 @@
     },
     {
         "name": "User Preferences",
-        "version": "0.1",
+        "version": "0.1.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a user preferences page, letting pople do things like change their email address and password.",
         "id": "feature-user-preferences",
-        "lastupdate": 1483389429,
+        "lastupdate": 1483389541,
         "optional": false
     },
     {
@@ -118,11 +118,11 @@
     },
     {
         "name": "Debug Information",
-        "version": "0.1",
+        "version": "0.1.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a debug action for administrator use only that collects a load of useful information to make reporting bugs easier.",
         "id": "page-debug-info",
-        "lastupdate": 1465815112,
+        "lastupdate": 1483389558,
         "optional": false
     },
     {
