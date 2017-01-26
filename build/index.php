@@ -884,7 +884,7 @@ function render_editor($editorName)
 
 /**
  * Saves the currently logged in uesr's data back to peppermint.json.
- * @return bool Whethert he user's data was saved successfully. Returns false if the user isn't logged in.
+ * @return bool Whether the user's data was saved successfully. Returns false if the user isn't logged in.
  */
 function save_userdata()
 {
@@ -3129,6 +3129,8 @@ class search
 		// Loop over each nterm and find it in the source
 		foreach($nterms as $nterm)
 		{
+			if(in_array($nterm, static::$stop_words))
+				continue;
 			$all_offsets = mb_stripos_all($source, $nterm);
 			// Skip over adding matches if there aren't any
 			if($all_offsets === false)
@@ -3208,6 +3210,8 @@ class search
 		
 		foreach($qterms as $qterm)
 		{
+			if(in_array($qterm, static::$stop_words))
+				continue;
 			// From http://stackoverflow.com/a/2483859/1460422
 			$context = preg_replace("/" . str_replace("/", "\/", preg_quote($qterm)) . "/i", "<strong class='search-term-highlight'>$0</strong>", $context);
 		}
@@ -3849,6 +3853,42 @@ register_module([
 			$content .= "</form>\n";
 			
 			exit(page_renderer::render_main("User Preferences - $settings->sitename", $content));
+		});
+		
+		add_action("save-preferences", function() {
+			global $env, $settings;
+			
+			if(!$env->is_logged_in)
+			{
+				http_response_code(400);
+				exit(page_renderer::render_main("Error Saving Preferences - $settings->sitename", "<p>You aren't logged in, so you can't save your preferences. Try <a href='?action=login&returnto=" . rawurlencode("?action=user-preferences") . "'>logging in</a> first.</p>"));
+			}
+			
+			if(isset($_POST["email-address"]))
+			{
+				if(mb_strlen($_POST["email-address"]) > 320)
+				{
+					http_response_code(413);
+					exit(page_renderer::render_main("Error Saving Email Address - $settings->sitename", "<p>The email address you supplied (<code>{$_POST['email-address']}</code>) is too long. Email addresses can only be 320 characters long. <a href='javascript:window.history.back();'>Go back</a>."));
+				}
+				
+				if(mb_strpos($_POST["email-address"], "@") === false)
+				{
+					http_response_code(422);
+					exit(page_renderer::render_main("Error Saving Email Address - $settings->sitename", "<p>The email address you supplied (<code>{$_POST['email-address']}</code>) doesn't appear to be valid. <a href='javascript:window.history.back();'>Go back</a>."));
+				}
+				
+				$env->user_data->emailAddress = $_POST["email-address"];
+			}
+			
+			if(!save_userdata())
+			{
+				http_response_code(503);
+				exit(page_renderer::render_main("Error Saving Preferences - $settings->sitename", "<p>$settings->sitename had some trouble saving your preferences! Please contact $settings->admindetails_name, $settings->sitename's administrator and tell them about this error if it still occurs in 5 minutes. They can be contacted by email at this address: <a href='mailto:" . hide_email($settings->admindetails_email) . "'>" . hide_email($settings->admindetails_email) . "</a>.</p>"));
+			}
+			
+			
+			exit(page_renderer::render_main("Preferences Saved Successfully - $settings->sitename", "<p></p>"));
 		});
 		
 		/**
