@@ -627,6 +627,8 @@ class search
 		// Loop over each nterm and find it in the source
 		foreach($nterms as $nterm)
 		{
+			if(in_array($nterm, static::$stop_words))
+				continue;
 			$all_offsets = mb_stripos_all($source, $nterm);
 			// Skip over adding matches if there aren't any
 			if($all_offsets === false)
@@ -706,6 +708,8 @@ class search
 		
 		foreach($qterms as $qterm)
 		{
+			if(in_array($qterm, static::$stop_words))
+				continue;
 			// From http://stackoverflow.com/a/2483859/1460422
 			$context = preg_replace("/" . str_replace("/", "\/", preg_quote($qterm)) . "/i", "<strong class='search-term-highlight'>$0</strong>", $context);
 		}
