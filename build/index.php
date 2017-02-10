@@ -3831,6 +3831,11 @@ register_module([
 				"change-password" => "Password changed successfully!"
 			];
 			
+			if(!isset($env->user_data->emailAddress)) {
+				$env->user_data->emailAddress = "";
+				save_userdata();
+			}
+			
 			$content = "<h2>User Preferences</h2>\n";
 			if(isset($_GET["success"]) && $_GET["success"] === "yes")
 			{
@@ -3838,18 +3843,24 @@ register_module([
 			}
 			$content .= "<label for='username'>Username:</label>\n";
 			$content .= "<input type='text' name='username' value='$env->user' readonly />\n";
+			$content .= "<form method='post' action='?action=save-preferences'>\n";
+			$content .= "	<label for='email'>Email Address:</label>\n";
+			$content .= "	<input type='email' placeholder='e.g. bob@bobsrockets.com' value='{$env->user_data->emailAddress}' />\n";
+			$content .= "	<p><small>Used to send you notifications etc. Never shared with anyone except $settings->admindetails_name, $settings->sitename's administrator.</small></p>\n";
+			$content .= "	<input type='submit' value='Save Preferences' />\n";
+			$content .= "</form>\n";
 			$content .= "<h3>Change Password</h3\n>";
 			$content .= "<form method='post' action='?action=change-password'>\n";
-			$content .= "<label for='old-pass'>Current Password:</label>\n";
-			$content .= "<input type='password' name='current-pass'  />\n";
-			$content .= "<br />\n";
-			$content .= "<label for='new-pass'>New Password:</label>\n";
-			$content .= "<input type='password' name='new-pass' />\n";
-			$content .= "<br />\n";
-			$content .= "<label for='new-pass-confirm'>Confirm New Password:</label>\n";
-			$content .= "<input type='password' name='new-pass-confirm' />\n";
-			$content .= "<br />\n";
-			$content .= "<input type='submit' value='Change Password' />\n";
+			$content .= "	<label for='old-pass'>Current Password:</label>\n";
+			$content .= "	<input type='password' name='current-pass'  />\n";
+			$content .= "	<br />\n";
+			$content .= "	<label for='new-pass'>New Password:</label>\n";
+			$content .= "	<input type='password' name='new-pass' />\n";
+			$content .= "	<br />\n";
+			$content .= "	<label for='new-pass-confirm'>Confirm New Password:</label>\n";
+			$content .= "	<input type='password' name='new-pass-confirm' />\n";
+			$content .= "	<br />\n";
+			$content .= "	<input type='submit' value='Change Password' />\n";
 			$content .= "</form>\n";
 			
 			exit(page_renderer::render_main("User Preferences - $settings->sitename", $content));
@@ -3881,14 +3892,14 @@ register_module([
 				$env->user_data->emailAddress = $_POST["email-address"];
 			}
 			
+			// Save the user's preferences
 			if(!save_userdata())
 			{
 				http_response_code(503);
 				exit(page_renderer::render_main("Error Saving Preferences - $settings->sitename", "<p>$settings->sitename had some trouble saving your preferences! Please contact $settings->admindetails_name, $settings->sitename's administrator and tell them about this error if it still occurs in 5 minutes. They can be contacted by email at this address: <a href='mailto:" . hide_email($settings->admindetails_email) . "'>" . hide_email($settings->admindetails_email) . "</a>.</p>"));
 			}
 			
-			
-			exit(page_renderer::render_main("Preferences Saved Successfully - $settings->sitename", "<p></p>"));
+			exit(page_renderer::render_main("Preferences Saved Successfully - $settings->sitename", "<p>Your preferences have been saved successfully! You could go back your <a href='?action=user-preferences'>preferences page</a>, or on to the <a href='?page=" . rawurlencode($settings->defaultpage) . "'>$settings->defaultpage</a>.</p>"));
 		});
 		
 		/**

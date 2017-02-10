@@ -104,7 +104,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a user preferences page, letting pople do things like change their email address and password.",
         "id": "feature-user-preferences",
-        "lastupdate": 1485463715,
+        "lastupdate": 1486756068,
         "optional": false
     },
     {
