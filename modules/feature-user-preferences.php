@@ -52,8 +52,8 @@ register_module([
 			$content .= "<label for='username'>Username:</label>\n";
 			$content .= "<input type='text' name='username' value='$env->user' readonly />\n";
 			$content .= "<form method='post' action='?action=save-preferences'>\n";
-			$content .= "	<label for='email'>Email Address:</label>\n";
-			$content .= "	<input type='email' placeholder='e.g. bob@bobsrockets.com' value='{$env->user_data->emailAddress}' />\n";
+			$content .= "	<label for='email-address'>Email Address:</label>\n";
+			$content .= "	<input type='email' id='email-address' name='email-address' placeholder='e.g. bob@bobsrockets.com' value='{$env->user_data->emailAddress}' />\n";
 			$content .= "	<p><small>Used to send you notifications etc. Never shared with anyone except $settings->admindetails_name, $settings->sitename's administrator.</small></p>\n";
 			$content .= "	<input type='submit' value='Save Preferences' />\n";
 			$content .= "</form>\n";
