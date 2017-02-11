@@ -22,6 +22,7 @@
  - Improved recent changes links a bit.
  - Improved tabbing through the file upload form.
  - Changed the way users' data is stored to support arbitrary per-user data
+ - Sorted list of registered actions on the dev help page
 
 ## Fixed
  - The login session lifetime is now configurable (defaults to 24 hours), so you won't keep getting logged out all the time (in theory). (#113)

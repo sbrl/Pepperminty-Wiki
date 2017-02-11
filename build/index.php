@@ -4790,9 +4790,11 @@ register_module([
 				}
 				$content .= "\t\t\t<tr><th colspan='2' style='text-align: right;'>Total:</th><td>" . human_filesize($totalSize) . "</td></tr>\n";
 				$content .= "\t\t</table>\n";
-				$content .= "<h3>Registered Actions</h3>
-				<p>The following actions are currently registered:</p>\n";
-				$content .= "<p>" . implode(", ", array_keys(get_object_vars($actions))) . "</p>";
+				$content .= "<h3>Registered Actions</h3>";
+				$registeredActions = array_keys(get_object_vars($actions));
+				sort($registeredActions);
+				$content .= "<p>The following actions are currently registered:</p>\n";
+				$content .= "<p>" . implode(", ", $registeredActions) . "</p>";
 				$content .= "<h3>Environment</h3>\n";
 				$content .= "<ul>\n";
 				$content .= "<li>$settings->sitename's root directory is " . (!is_writeable(__DIR__) ? "not " : "") . "writeable.</li>\n";
