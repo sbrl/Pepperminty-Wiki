@@ -49,29 +49,56 @@ register_module([
 				$pagetext = file_get_contents($filename);
 			}
 			
+			$isOtherUsersPage = false;
+			if(
+				$settings->user_page_prefix == mb_substr($env->page, 0, mb_strlen($settings->user_page_prefix)) and // The current page is a user page of some sort
+				(
+					!$env->is_logged_in or // the user isn't logged in.....
+					extract_user_from_userpage($env->page) !== $env->user // ...or it's not under this user's own name
+				)
+			) {
+				$isOtherUsersPage = true;
+			}
+			
 			if((!$env->is_logged_in and !$settings->anonedits) or // if we aren't logged in and anonymous edits are disabled
-			   !$settings->editing or // or editing is disabled
-			   (
-				   isset($pageindex->$page) and // or if the page exists
-				   isset($pageindex->$page->protect) and // the protect property exists
-				   $pageindex->$page->protect and // the protect property is true
-				   !$env->is_admin // the user isn't an admin
-			   )
+				!$settings->editing or // or editing is disabled
+				(
+					isset($pageindex->$page) and // or if the page exists
+					isset($pageindex->$page->protect) and // the protect property exists
+					$pageindex->$page->protect and // the protect property is true
+					!$env->is_admin // the user isn't an admin
+				) or
+				$isOtherUsersPage // this page actually belongs to another user
 			)
 			{
 				if(!$creatingpage)
 				{
 					// The page already exists - let the user view the page source
+					$sourceViewContent = "<p>$settings->sitename does not allow anonymous users to make edits. You can view the source of $env->page below, but you can't edit it. You could, however, try <a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.</p>\n";
+					
 					if($env->is_logged_in)
-						exit(page_renderer::render_main("Viewing source for $env->page", "<p>$env->page is protected, and you aren't an administrator or moderator. You can view the source of $env->page below, but you can't edit it.</p><textarea name='content' readonly>$pagetext</textarea>"));
-					else
-						exit(page_renderer::render_main("Viewing source for $env->page", "<p>$settings->sitename does not allow anonymous users to make edits. You can view the source of $env->page below, but you can't edit it. You could, however, try <a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.</p><textarea name='content' readonly>$pagetext</textarea>"));
-						
+						$sourceViewContent = "<p>$env->page is protected, and you aren't an administrator or moderator. You can view the source of $env->page below, but you can't edit it.</p>\n";
+					
+					if($isOtherUsersPage)
+						$sourceViewContent = "<p>$env->page is a special user page which acutally belongs to " . extract_user_from_userpage($env->page) . ", another user on $settings->sitename. Because of this, you are not allowed to edit it (though you can always edit your own page and any pages under it if you're logged in). You can, however, vieww it's source below.</p>";
+					
+					// Append a view of the page's source
+					$sourceViewContent .= "<textarea name='content' readonly>$pagetext</textarea>";
+					
+					exit(page_renderer::render_main("Viewing source for $env->page", $sourceViewContent));
 				}
 				else
 				{
+					$errorMessage = "<p>The page <code>$env->page</code> does not exist, but you do not have permission to create it.</p><p>If you haven't already, perhaps you should try <a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.</p>\n";
+					
+					if($isOtherUsersPage) {
+						$errorMessage = "<p>The page <code>" . htmlentities($env->page) . "</code> doesn't exist, but you can't create it because it's a page belonging to another user.</p>\n";
+						if(!$env->is_logged_in)
+							$errorMessage .= "<p>You could try <a href='?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.</p>\n";
+					}
+						
 					http_response_code(404);
-					exit(page_renderer::render_main("404 - $env->page", "<p>The page <code>$env->page</code> does not exist, but you do not have permission to create it.</p><p>If you haven't already, perhaps you should try <a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.</p>"));
+					exit(page_renderer::render_main("404 - $env->page", $errorMessage));
 				}
 			}
 			
