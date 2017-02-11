@@ -581,6 +581,29 @@ function save_userdata()
 	return true;
 }
 
+/**
+ * Figures out the path to the user page for a given username.
+ * Does not check to make sure the user acutally exists. 
+ * @param  string $username The username to get the path to their user page for.
+ * @return string           The path to the given user's page.
+ */
+function get_user_pagename($username) {
+	global $settings;
+	return "$settings->user_page_prefix/$username";
+}
+/**
+ * Extracts a username from a user page path.
+ * @param  string $userPagename The suer page path to extract from.
+ * @return string               The name of the user that the user page belongs to.
+ */
+function extract_user_from_userpage($userPagename) {
+	global $settings;
+	$matches = [];
+	preg_match("/$settings->user_page_prefix\\/([^\\/]+)\\/?/", $userPagename, $matches);
+	
+	return $matches[1];
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////

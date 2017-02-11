@@ -52,7 +52,8 @@ $guiConfig = <<<'GUICONFIG'
 	}},
 	"admins": {"type": "array", "description": "An array of usernames that are administrators. Administrators can delete and move pages.", "default": [ "admin" ]},
 	"anonymous_user_name": { "type": "text", "description": "The default name for anonymous users.", "default": "Anonymous" },
-	"user_preferences_button_text": { "type": "text", "description": "The text to display on the button that lets logged in users chang  their settings. Defaults to a cog (aka a 'gear' in unicode-land).", "default": "&#x2699; " },
+	"user_page_prefix": { "type": "text", "description": "The prefix for user pages. All user pages will be considered to be under this page. User pages have special editing restrictions that prevent anyone other thant he user they belong to from editing them. Should not include the trailing forward slash.", "default": "Users" },
+	"user_preferences_button_text": { "type": "text", "description": "The text to display on the button that lets logged in users change their settings. Defaults to a cog (aka a 'gear' in unicode-land).", "default": "&#x2699; " },
 	"use_sha3": {"type": "checkbox", "description": "Whether to use the new sha3 hashing algorithm for passwords etc.", "default": false },
 	"require_login_view": {"type": "checkbox", "description": "Whether to require that users login before they do anything else. Best used with the data_storage_dir option.", "default": false},
 	"data_storage_dir": {"type": "text", "description": "The directory in which to store all files, except the main index.php.", "default": "."},
@@ -897,6 +898,29 @@ function save_userdata()
 	file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT));
 	
 	return true;
+}
+
+/**
+ * Figures out the path to the user page for a given username.
+ * Does not check to make sure the user acutally exists. 
+ * @param  string $username The username to get the path to their user page for.
+ * @return string           The path to the given user's page.
+ */
+function get_user_pagename($username) {
+	global $settings;
+	return "$settings->user_page_prefix/$username";
+}
+/**
+ * Extracts a username from a user page path.
+ * @param  string $userPagename The suer page path to extract from.
+ * @return string               The name of the user that the user page belongs to.
+ */
+function extract_user_from_userpage($userPagename) {
+	global $settings;
+	$matches = [];
+	preg_match("/$settings->user_page_prefix\\/([^\\/]+)\\/?/", $userPagename, $matches);
+	
+	return $matches[1];
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -3793,7 +3817,7 @@ function errorimage($text, $target_size)
 
 register_module([
 	"name" => "User Preferences",
-	"version" => "0.1.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a user preferences page, letting pople do things like change their email address and password.",
 	"id" => "feature-user-preferences",
