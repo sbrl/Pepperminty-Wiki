@@ -15,6 +15,7 @@
      - You can change your password
  - [Module API] Added `$env->user_data` and `save_userdata()` to interact with the logged in users' data
  - User pages! Every page under `Users/` by default belongs to their respective users. e.g. `Users/admin` and all the pages under it belong to the `admin` user, so no other user can edit them.
+     - You can access your own user page by clicking on your username in the top corner when you're logged in.
      - Added the `user_page_prefix` setting to allow customisation of where user pages should be located. Default value: `Users`
      - [Module API] Added `get_user_pagename()` and `extract_user_from_userpage()` to allo  programatic detection etc.
 
