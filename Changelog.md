@@ -14,6 +14,9 @@
      - The cog is customisable via the new `user_preferences_button_text` setting.
      - You can change your password
  - [Module API] Added `$env->user_data` and `save_userdata()` to interact with the logged in users' data
+ - User pages! Every page under `Users/` by default belongs to their respective users. e.g. `Users/admin` and all the pages under it belong to the `admin` user, so no other user can edit them.
+     - Added the `user_page_prefix` setting to allow customisation of where user pages should be located. Default value: `Users`
+     - [Module API] Added `get_user_pagename()` and `extract_user_from_userpage()` to allo  programatic detection etc.
 
 ### Changed
  - Overhauled internal history logic - history logic is now done in core.
