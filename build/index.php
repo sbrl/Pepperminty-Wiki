@@ -874,7 +874,7 @@ function render_pagename($rchange)
 	return $pageDisplayName;
 }
 /**
- * Renders an editor's name in HTML.
+ * Renders an editor's or a group of editors name(s) in HTML.
  * @param  string $editorName The name of the editor to render.
  * @return string             HTML representing the given editor's name.
  */
@@ -1448,7 +1448,7 @@ class page_renderer
 		$result = "";
 		if(in_array($name, $settings->admins))
 			$result .= $settings->admindisplaychar;
-		$result .= $name;
+		$result .= "<a href='?page=" . rawurlencode(get_user_pagename($name)) . "'>$name</a>";
 
 		return $result;
 	}
@@ -2411,6 +2411,8 @@ function render_recent_changes($recent_changes)
 				if(!in_array($recent_changes[$key]->user, $users))
 					$users[] = $recent_changes[$key]->user; 
 			}
+			foreach($users as &$user)
+				$user = page_renderer::render_username($user);
 			$userDisplayHtml = render_editor(implode(", ", $users));
 			
 			$next_entry = "<li><details><summary><a href='?page=" . rawurlencode($rchange_first->page) . "'>$pageDisplayHtml</a> $userDisplayHtml $timeDisplayHtml</summary><ul class='page-list'>$next_entry</ul></details></li>";
@@ -2433,7 +2435,7 @@ function render_recent_change($rchange)
 {
 	global $pageindex;
 	$pageDisplayHtml = render_pagename($rchange);
-	$editorDisplayHtml = render_editor($rchange->user);
+	$editorDisplayHtml = render_editor(page_renderer::render_username($rchange->user));
 	$timeDisplayHtml = render_timestamp($rchange->timestamp);
 	
 	$revisionId = false;

@@ -555,7 +555,7 @@ function render_pagename($rchange)
 	return $pageDisplayName;
 }
 /**
- * Renders an editor's name in HTML.
+ * Renders an editor's or a group of editors name(s) in HTML.
  * @param  string $editorName The name of the editor to render.
  * @return string             HTML representing the given editor's name.
  */
@@ -1129,7 +1129,7 @@ class page_renderer
 		$result = "";
 		if(in_array($name, $settings->admins))
 			$result .= $settings->admindisplaychar;
-		$result .= $name;
+		$result .= "<a href='?page=" . rawurlencode(get_user_pagename($name)) . "'>$name</a>";
 
 		return $result;
 	}

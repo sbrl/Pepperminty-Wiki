@@ -172,6 +172,8 @@ function render_recent_changes($recent_changes)
 				if(!in_array($recent_changes[$key]->user, $users))
 					$users[] = $recent_changes[$key]->user; 
 			}
+			foreach($users as &$user)
+				$user = page_renderer::render_username($user);
 			$userDisplayHtml = render_editor(implode(", ", $users));
 			
 			$next_entry = "<li><details><summary><a href='?page=" . rawurlencode($rchange_first->page) . "'>$pageDisplayHtml</a> $userDisplayHtml $timeDisplayHtml</summary><ul class='page-list'>$next_entry</ul></details></li>";
@@ -194,7 +196,7 @@ function render_recent_change($rchange)
 {
 	global $pageindex;
 	$pageDisplayHtml = render_pagename($rchange);
-	$editorDisplayHtml = render_editor($rchange->user);
+	$editorDisplayHtml = render_editor(page_renderer::render_username($rchange->user));
 	$timeDisplayHtml = render_timestamp($rchange->timestamp);
 	
 	$revisionId = false;
