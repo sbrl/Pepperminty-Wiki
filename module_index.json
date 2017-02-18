@@ -207,6 +207,15 @@
         "optional": false
     },
     {
+        "name": "User list",
+        "version": "0.1",
+        "author": "Starbeamrainbowlabs",
+        "description": "Adds a 'user-list' action that generates a list of users. Supports json output with 'format=json' in the queyr string.",
+        "id": "page-user-list",
+        "lastupdate": 1487454626,
+        "optional": false
+    },
+    {
         "name": "Page viewer",
         "version": "0.16.4",
         "author": "Starbeamrainbowlabs",
