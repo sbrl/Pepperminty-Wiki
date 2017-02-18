@@ -1129,7 +1129,7 @@ class page_renderer
 		$result = "";
 		if(in_array($name, $settings->admins))
 			$result .= $settings->admindisplaychar;
-		$result .= "<a href='?page=" . rawurlencode(get_user_pagename($name)) . "'>$name</a>";
+		$result .= "<a href='?page=" . rawurlencode(get_user_pagename($name)) . "'>" . htmlentities($name) . "</a>";
 
 		return $result;
 	}
