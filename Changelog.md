@@ -18,6 +18,7 @@
      - You can access your own user page by clicking on your username in the top corner when you're logged in.
      - Added the `user_page_prefix` setting to allow customisation of where user pages should be located. Default value: `Users`
      - [Module API] Added `get_user_pagename()` and `extract_user_from_userpage()` to allo  programatic detection etc.
+ - Added a `user-list` action that, well, outputs a list of users. Includes links to their respective user pages (though redlinks aren't implemented here yet).
 
 ### Changed
  - Overhauled internal history logic - history logic is now done in core.
