@@ -19,7 +19,7 @@
      - Added the `user_page_prefix` setting to allow customisation of where user pages should be located. Default value: `Users`
      - [Module API] Added `get_user_pagename()` and `extract_user_from_userpage()` to allo  programatic detection etc.
  - Added a `user-list` action that, well, outputs a list of users. Includes links to their respective user pages (though redlinks aren't implemented here yet).
- - Internal links like `[[Page name]]s` will now link to the correct page in include the rest of the word. Note that this functionality _can't_ be mixed with displayy text, like this: `[[Page name|Display text]]s` - the rest of the word will be silently ignored in the link!
+ - Internal links like `[[Page name]]s` will now link to the correct page in include the rest of the word. Note that this functionality _can't_ be mixed with display text, like this: `[[Page name|Display text]]s` - the rest of the word will be silently ignored in the link!
 
 ### Changed
  - Overhauled internal history logic - history logic is now done in core.
