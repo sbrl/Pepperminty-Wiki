@@ -19,6 +19,7 @@
      - Added the `user_page_prefix` setting to allow customisation of where user pages should be located. Default value: `Users`
      - [Module API] Added `get_user_pagename()` and `extract_user_from_userpage()` to allo  programatic detection etc.
  - Added a `user-list` action that, well, outputs a list of users. Includes links to their respective user pages (though redlinks aren't implemented here yet).
+ - Internal links like `[[Page name]]s` will now link to the correct page in include the rest of the word. Note that this functionality _can't_ be mixed with displayy text, like this: `[[Page name|Display text]]s` - the rest of the word will be silently ignored in the link!
 
 ### Changed
  - Overhauled internal history logic - history logic is now done in core.
@@ -34,7 +35,7 @@
  - Recent changes made on different days are now displayed separately, as they should be (#112)
  - Always display footer message at the bottom of the page.
  - Trim the image url before short image url detection (#108)
- - Fxed huge issue with `contentonly` display mode.
+ - Fixed huge issue with `contentonly` display mode.
  - Improved the search engine indexing algorithm. It now shouldn't choke on certain special characters (`[]{}|`) and will treat them as word boundaries.
  - Fixed tag links at the bottom of pages for tags with a single quote (`'`) in them.
  - Correct error message when attempting to move a page

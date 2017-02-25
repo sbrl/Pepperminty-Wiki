@@ -5967,9 +5967,9 @@ class PeppermintParsedown extends ParsedownExtra
 	{
 		global $pageindex, $env;
 		
-		if(preg_match('/^\[\[([^\]]*)\]\]/', $fragment["text"], $matches))
+		if(preg_match('/^\[\[([^\]]*)\]\]([^\s!?",.()\[\]{}*=+\/]*)/u', $fragment["text"], $matches))
 		{
-			$display = $linkPage = trim($matches[1]);
+			$display = $linkPage = trim($matches[1]) . trim($matches[2]);
 			if(strpos($matches[1], "|") !== false || strpos($matches[1], "¦") !== false)
 			{
 				// We have a bar character
