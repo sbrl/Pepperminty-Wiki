@@ -111,6 +111,7 @@ register_module([
 			$content .= "<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save' class='editform'>
 			<input type='hidden' name='prev-content-hash' value='" . sha1($pagetext) . "' />
 			<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
+			<pre class='fit-text-mirror'></pre>
 			<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
 			<p class='editing-message'>$settings->editing_message</p>
 			<input name='submit-edit' type='submit' value='Save Page' tabindex='3' />
@@ -127,6 +128,25 @@ register_module([
 		return false;
 	});
 });");
+			
+			// Utilise the mirror to automatically resize the textarea to fit it's content
+			page_renderer::AddJSSnippet('function updateTextSize(textarea, mirror, event) {
+	let textareaFontSize = parseFloat(getComputedStyle(textarea).fontSize);
+	
+	let textareaWidth = textarea.getBoundingClientRect().width;// - parseInt(textarea.style.padding);
+	mirror.style.width = `${textareaWidth}px`;
+	mirror.innerText = textarea.value;
+	textarea.style.height = `${mirror.offsetHeight + (textareaFontSize * 5)}px`;
+}
+function trackTextSize(textarea) {
+	let mirror = textarea.nextElementSibling;
+	textarea.addEventListener("input", updateTextSize.bind(null, textarea, mirror));
+	updateTextSize(textarea, mirror, null);
+}
+window.addEventListener("load", function(event) {
+	trackTextSize(document.querySelector("textarea[name=content]"));
+});
+');
 			
 			// ~
 			

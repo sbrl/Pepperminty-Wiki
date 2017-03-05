@@ -267,15 +267,17 @@ a.redlink:visited { color: rgb(130, 15, 15); /*#8b1a1a*/ }
 .search-context { max-height: 20em; overflow: hidden; }
 .search-context::after { content: ""; position: absolute; bottom: 0; width: 100%; height: 3em; display: block; background: linear-gradient(to bottom, transparent, #faf8fb); pointer-events: none; }
 
-textarea[name=content] { height: 30em; }
+textarea[name=content] { resize: none; }
+.fit-text-mirror { position: absolute; left: -10000vw; word-wrap: break-word; white-space: pre-wrap; }
 main label:not(.link-display-label) { display: inline-block; min-width: 16rem; }
 input[type=text]:not(.link-display), input[type=password], input[type=url], input[type=email], input[type=number], textarea { margin: 0.5rem 0; }
-input[type=text], input[type=password], input[type=url], input[type=email], input[type=number], textarea, #search-box { padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
+input[type=text], input[type=password], input[type=url], input[type=email], input[type=number], textarea, textarea[name=content] + pre, #search-box { padding: 0.5rem 0.8rem; background: #d5cbf9; border: 0; border-radius: 0.3rem; font-size: 1rem; color: #442772; }
 textarea { min-height: 10em; line-height: 1.3em; font-size: 1.25rem; }
-textarea, textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); box-sizing: border-box; }
+textarea, textarea[name=content] + pre, textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); box-sizing: border-box; }
 textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: bolder; }
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
-.editfor textarea { min-height: 35rem; }
+
+
 
 .file-gallery { margin: 0.5em; padding: 0.5em; list-style-type: none; }
 .file-gallery > li { display: inline-block; min-width: attr(data-gallery-width); padding: 1em; text-align: center; }
@@ -4405,6 +4407,7 @@ register_module([
 			$content .= "<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save' class='editform'>
 			<input type='hidden' name='prev-content-hash' value='" . sha1($pagetext) . "' />
 			<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
+			<pre class='fit-text-mirror'></pre>
 			<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
 			<p class='editing-message'>$settings->editing_message</p>
 			<input name='submit-edit' type='submit' value='Save Page' tabindex='3' />
@@ -4421,6 +4424,25 @@ register_module([
 		return false;
 	});
 });");
+			
+			// Utilise the mirror to automatically resize the textarea to fit it's content
+			page_renderer::AddJSSnippet('function updateTextSize(textarea, mirror, event) {
+	let textareaFontSize = parseFloat(getComputedStyle(textarea).fontSize);
+	
+	let textareaWidth = textarea.getBoundingClientRect().width;// - parseInt(textarea.style.padding);
+	mirror.style.width = `${textareaWidth}px`;
+	mirror.innerText = textarea.value;
+	textarea.style.height = `${mirror.offsetHeight + (textareaFontSize * 5)}px`;
+}
+function trackTextSize(textarea) {
+	let mirror = textarea.nextElementSibling;
+	textarea.addEventListener("input", updateTextSize.bind(null, textarea, mirror));
+	updateTextSize(textarea, mirror, null);
+}
+window.addEventListener("load", function(event) {
+	trackTextSize(document.querySelector("textarea[name=content]"));
+});
+');
 			
 			// ~
 			
@@ -5653,7 +5675,7 @@ register_module([
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.9.7",
+	"version" => "0.9.8",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",
