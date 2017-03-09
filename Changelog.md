@@ -41,6 +41,7 @@
  - Fixed tag links at the bottom of pages for tags with a single quote (`'`) in them.
  - Correct error message when attempting to move a page
  - Improved security of PHP session cookie by setting HttpOnly flag.
+ - Linked pages with single quotes (`'`) in their names corectly in page lists.
 
 ## v0.12.1
 
