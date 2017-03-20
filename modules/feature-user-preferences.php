@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "User Preferences",
-	"version" => "0.2",
+	"version" => "0.2.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a user preferences page, letting pople do things like change their email address and password.",
 	"id" => "feature-user-preferences",

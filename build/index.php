@@ -1977,7 +1977,7 @@ function render_sidebar($pageindex, $root_pagename = "")
 
 register_module([
 	"name" => "Settings GUI",
-	"version" => "0.1",
+	"version" => "0.1.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
 	"id" => "feature-guiconfig",
@@ -2532,7 +2532,7 @@ register_module([
 
 register_module([
 	"name" => "Search",
-	"version" => "0.4",
+	"version" => "0.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
@@ -2690,6 +2690,8 @@ register_module([
 				
 				//echo("Extracting context for result " . $result["pagename"] . ".\n");
 				$context = search::extract_context($_GET["query"], $pagesource);
+				if(strlen($context) === 0)
+					$context = substr($pagesource, 0, $settings->search_characters_context * 2);
 				//echo("'Generated search context for " . $result["pagename"] . ": $context'\n");
 				$context = search::highlight_context($_GET["query"], $context);
 				/*if(strlen($context) == 0)
@@ -3822,7 +3824,7 @@ function errorimage($text, $target_size)
 
 register_module([
 	"name" => "User Preferences",
-	"version" => "0.2",
+	"version" => "0.2.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a user preferences page, letting pople do things like change their email address and password.",
 	"id" => "feature-user-preferences",

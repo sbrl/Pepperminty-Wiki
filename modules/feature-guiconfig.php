@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Settings GUI",
-	"version" => "0.1",
+	"version" => "0.1.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
 	"id" => "feature-guiconfig",
