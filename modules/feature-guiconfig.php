@@ -36,7 +36,7 @@ register_module([
 			
 			$content = "<h1>Master Control Panel</h1>\n";
 			$content .= "<p>This page lets you configure $settings->sitename's master settings. Please be careful - you can break things easily on this page if you're not careful!</p>\n";
-			$content .= "<p>Mouse over the name of each the settings to see a description of what it does.</p>\n";
+			$content .= "<p>Mouse over the name of each setting to see a description of what it does.</p>\n";
 			$content .= "<form action='?action=configure-save' method='post'>\n";
 			
 			foreach($guiConfig as $configKey => $configData)

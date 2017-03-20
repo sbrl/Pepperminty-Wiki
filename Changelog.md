@@ -13,6 +13,7 @@
      - Accessible via the (by default) small cog next to your username when you're logged in
      - The cog is customisable via the new `user_preferences_button_text` setting.
      - You can change your password
+     - There's link to the master site settings from user preferences for admins.
  - [Module API] Added `$env->user_data` and `save_userdata()` to interact with the logged in users' data
  - User pages! Every page under `Users/` by default belongs to their respective users. e.g. `Users/admin` and all the pages under it belong to the `admin` user, so no other user can edit them.
      - You can access your own user page by clicking on your username in the top corner when you're logged in.

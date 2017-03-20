@@ -71,6 +71,9 @@ register_module([
 			$content .= "	<input type='submit' value='Change Password' />\n";
 			$content .= "</form>\n";
 			
+			if($env->is_admin)
+				$content .= "<p>As an admin, you can also <a href='?action=configure'>edit $settings->sitename's master settings</a>.</p>\n";
+			
 			exit(page_renderer::render_main("User Preferences - $settings->sitename", $content));
 		});
 		

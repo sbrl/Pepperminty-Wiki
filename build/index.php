@@ -2012,7 +2012,7 @@ register_module([
 			
 			$content = "<h1>Master Control Panel</h1>\n";
 			$content .= "<p>This page lets you configure $settings->sitename's master settings. Please be careful - you can break things easily on this page if you're not careful!</p>\n";
-			$content .= "<p>Mouse over the name of each the settings to see a description of what it does.</p>\n";
+			$content .= "<p>Mouse over the name of each setting to see a description of what it does.</p>\n";
 			$content .= "<form action='?action=configure-save' method='post'>\n";
 			
 			foreach($guiConfig as $configKey => $configData)
@@ -3891,6 +3891,9 @@ register_module([
 			$content .= "	<br />\n";
 			$content .= "	<input type='submit' value='Change Password' />\n";
 			$content .= "</form>\n";
+			
+			if($env->is_admin)
+				$content .= "<p>As an admin, you can also <a href='?action=configure'>edit $settings->sitename's master settings</a>.</p>\n";
 			
 			exit(page_renderer::render_main("User Preferences - $settings->sitename", $content));
 		});
