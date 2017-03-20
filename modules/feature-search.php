@@ -170,6 +170,9 @@ register_module([
 						$context .= "...";
 				}*/
 				
+				// Make redirect pages italics
+				if(!empty($pageindex->{$result["pagename"]}->redirect))
+					$result["pagename"] = "<em>{$result["pagename"]}</em>";
 				
 				// We add 1 to $i here to convert it from an index to a result
 				// number as people expect it to start from 1

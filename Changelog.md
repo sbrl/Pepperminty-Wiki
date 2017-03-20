@@ -31,6 +31,7 @@
  - Changed the way users' data is stored to support arbitrary per-user data
  - Sorted list of registered actions on the dev help page
  - The page editor's main content box now automatically expands as you're typing! If you've got a custom theme, you may need to tweak it a bit. Help available on request.
+ - Pages that are redirects how have their names appear in italics in search results.
 
 ## Fixed
  - The login session lifetime is now configurable (defaults to 24 hours), so you won't keep getting logged out all the time (in theory). (#113)
