@@ -18,7 +18,7 @@
  - User pages! Every page under `Users/` by default belongs to their respective users. e.g. `Users/admin` and all the pages under it belong to the `admin` user, so no other user can edit them.
      - You can access your own user page by clicking on your username in the top corner when you're logged in.
      - Added the `user_page_prefix` setting to allow customisation of where user pages should be located. Default value: `Users`
-     - [Module API] Added `get_user_pagename()` and `extract_user_from_userpage()` to allo  programatic detection etc.
+     - [Module API] Added `get_user_pagename()` and `extract_user_from_userpage()` to allow programmatic detection etc.
  - Added a `user-list` action that, well, outputs a list of users. Includes links to their respective user pages (though redlinks aren't implemented here yet).
  - Internal links like `[[Page name]]s` will now link to the correct page in include the rest of the word. Note that this functionality _can't_ be mixed with display text, like this: `[[Page name|Display text]]s` - the rest of the word will be silently ignored in the link!
 
@@ -33,7 +33,7 @@
  - The page editor's main content box now automatically expands as you're typing! If you've got a custom theme, you may need to tweak it a bit. Help available on request.
  - Pages that are redirects how have their names appear in italics in search results.
 
-## Fixed
+### Fixed
  - The login session lifetime is now configurable (defaults to 24 hours), so you won't keep getting logged out all the time (in theory). (#113)
  - Recent changes made on different days are now displayed separately, as they should be (#112)
  - Always display footer message at the bottom of the page.
