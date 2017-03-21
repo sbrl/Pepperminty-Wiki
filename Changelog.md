@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.13-dev
+## v0.13-beta1
 
 ### Added
  - Added header to upload file page.
