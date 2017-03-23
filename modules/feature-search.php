@@ -598,6 +598,11 @@ class search
 		{
 			$qterm = $query_terms[$i];
 			
+			// Stop words aren't worth the bother - make sure we don't search
+			// the title or the tags for them
+			if(in_array($qterm, self::$stop_words))
+				continue;
+			
 			// Only search the inverted index if it actually exists there
 			if(isset($invindex[$qterm]))
 			{

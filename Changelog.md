@@ -9,6 +9,7 @@
 ### Fixed
  - Clear the page id index out when rebuilding the search index from scratch.
      - This is needed to correct some issues where the id index goes all weird and assigns the same id to multiple pages
+ - Don't search page titles or tags for stop words - it skews results since we don't search the page body for them
 
 
 ## v0.13-beta1
