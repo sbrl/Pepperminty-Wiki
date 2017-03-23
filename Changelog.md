@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.13-beta2
+
+### Fixed
+ - Clear the page id index out when rebuilding the search index from scratch.
+     - This is needed to correct some issues where the id index goes all weird and assigns the same id to multiple pages
+
+
 ## v0.13-beta1
 
 ### Added
