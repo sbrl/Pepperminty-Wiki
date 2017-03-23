@@ -1092,6 +1092,20 @@ class ids
 		// Save the id index
 		file_put_contents($paths->idindex, json_encode($idindex));
 	}
+	
+	/**
+	 * Clears the id index completely. Will break the inverted search index!
+	 */
+	public static function clear()
+	{
+		global $paths, $idindex;
+		// Delete the old id index
+		unlink($paths->idindex);
+		// Create the new id index
+		file_put_contents($paths->idindex, "{}");
+		// Reset the in-memory id index
+		$idindex = new stdClass();
+	}
 
 	/*
 	 * @summary Assigns an id to a pagename. Doesn't check to make sure that
@@ -2935,15 +2949,21 @@ class search
 		
 		header("content-type: text/event-stream");
 		
+		// Clear the id index out
+		ids::clear();
+		
+		// Reindex each page in turn
 		$invindex = [];
 		foreach($pageindex as $pagename => $pagedetails)
 		{
-			echo("Adding $pagename to the new search index.\n\n");
-			flush();
 			$pagesource = utf8_encode(file_get_contents("$env->storage_prefix$pagename.md"));
 			$index = self::index($pagesource);
 			
-			self::merge_into_invindex($invindex, ids::getid($pagename), $index);
+			$pageid = ids::getid($pagename);
+			self::merge_into_invindex($invindex, $pageid, $index);
+			
+			echo("Added $pagename (id #$pageid) to the new search index.\n\n");
+			flush();
 		}
 		
 		echo("Search index rebuilding complete.\n\n");
@@ -3129,12 +3149,41 @@ class search
 			$pagedata["pagename"] = ids::getpagename($pageid);
 			$pagedata["rank"] = 0;
 			
+			$pageOffsets = [];
+			
+			// Loop over each search term found on this page
 			foreach($pagedata["nterms"] as $pterm => $entry)
 			{
+				// Add the number of occurrences of this search term to the ranking
 				$pagedata["rank"] += $entry["freq"];
 				
-				// todo rank by context here
+				// Add the offsets to a listof all offsets on this page
+				foreach($entry["offsets"] as $offset)
+					$pageOffsets[] = $offset;
 			}
+			/*
+			// Sort the list of offsets
+			$pageOffsets = array_unique($pageOffsets);
+			sort($pageOffsets);
+			var_dump($pageOffsets);
+			
+			// Calcualate the clump distances via a variable moving window size
+			$pageOffsetsCount = count($pageOffsets);
+			$clumpDistanceWindow = min($count, $pageOffsetsCount); // a.k.a. count($query_terms) - see above
+			$clumpDistances = [];
+			for($i = 0; $i < $pageOffsetsCount - $clumpDistanceWindow; $i++)
+				$clumpDistances[] = $pageOffsets[$i] - $pageOffsets[$i + $clumpDistanceWindow];
+			
+			// Sort the new list of clump distances
+			sort($clumpDistances);
+			// Calcualate a measureof how clumped the offsets are
+			$tightClumpLimit = floor((count($clumpDistances) - 1) / 0.25);
+			$tightClumpsMeasure = $clumpDistances[$tightClumpLimit] - $clumpDistances[0];
+			$clumpsRange = $clumpDistances[count($clumpDistances) - 1] - $clumpDistances[0];
+			
+			$clumpiness = $tightClumpsMeasure / $clumpsRange;
+			echo("{$pagedata["pagename"]} - $clumpiness");
+			*/
 			
 			// Consider matches in the title / tags
 			if(isset($pagedata["title-matches"]))

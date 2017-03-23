@@ -771,6 +771,20 @@ class ids
 		// Save the id index
 		file_put_contents($paths->idindex, json_encode($idindex));
 	}
+	
+	/**
+	 * Clears the id index completely. Will break the inverted search index!
+	 */
+	public static function clear()
+	{
+		global $paths, $idindex;
+		// Delete the old id index
+		unlink($paths->idindex);
+		// Create the new id index
+		file_put_contents($paths->idindex, "{}");
+		// Reset the in-memory id index
+		$idindex = new stdClass();
+	}
 
 	/*
 	 * @summary Assigns an id to a pagename. Doesn't check to make sure that
