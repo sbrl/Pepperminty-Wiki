@@ -1044,7 +1044,7 @@ class ids
 			if($entry == $pagename)
 				return $id;
 		}
-
+		
 		// This pagename doesn't have an id - assign it one quick!
 		return self::assign($pagename);
 	}
@@ -2736,6 +2736,54 @@ register_module([
 			
 			//header("content-type: text/plain");
 			//var_dump($results);
+		});
+		
+/*
+ *  ██████  ██    ██ ███████ ██████  ██    ██
+ * ██    ██ ██    ██ ██      ██   ██  ██  ██
+ * ██    ██ ██    ██ █████   ██████    ████  █████
+ * ██ ▄▄ ██ ██    ██ ██      ██   ██    ██
+ *  ██████   ██████  ███████ ██   ██    ██
+ *     ▀▀
+ * ███████ ███████  █████  ██████   ██████ ██   ██ ██ ███    ██ ██████  ███████ ██   ██
+ * ██      ██      ██   ██ ██   ██ ██      ██   ██ ██ ████   ██ ██   ██ ██       ██ ██
+ * ███████ █████   ███████ ██████  ██      ███████ ██ ██ ██  ██ ██   ██ █████     ███
+ *      ██ ██      ██   ██ ██   ██ ██      ██   ██ ██ ██  ██ ██ ██   ██ ██       ██ ██
+ * ███████ ███████ ██   ██ ██   ██  ██████ ██   ██ ██ ██   ████ ██████  ███████ ██   ██
+ */
+
+		/**
+		 * @api {get} ?action=query-searchindex&query={text}	Inspect the internals of the search results for a query
+		 * @apiName Search
+		 * @apiGroup Search
+		 * @apiPermission Anonymous
+		 * 
+		 * @apiParam {string}	query	The query string to search for.
+		 */
+		add_action("query-searchindex", function() {
+			global $env, $paths;
+			
+			if(empty($_GET["query"])) {
+				http_response_code(400);
+				header("content-type: text/plain");
+				exit("Error: No query specified. Specify it with the 'query' GET parameter.");
+			}
+			
+			$env->perfdata->searchindex_decode_start = microtime(true);
+			$searchIndex = search::load_invindex($paths->searchindex);
+			$env->perfdata->searchindex_decode_time = (microtime(true) - $env->perfdata->searchindex_decode_start) * 1000;
+			$env->perfdata->searchindex_query_start = microtime(true);
+			$searchResults = search::query_invindex($_GET["query"], $searchIndex);
+			$env->perfdata->searchindex_query_time = (microtime(true) - $env->perfdata->searchindex_query_start) * 1000;
+			
+			header("content-type: application/json");
+			$result = new stdClass();
+			$result->time_format = "ms";
+			$result->decode_time = $env->perfdata->searchindex_decode_time;
+			$result->query_time = $env->perfdata->searchindex_query_time;
+			$result->total_time = $result->decode_time + $result->query_time;
+			$result->search_results = $searchResults;
+			exit(json_encode($result, JSON_PRETTY_PRINT));
 		});
 		
 		/*

@@ -723,7 +723,7 @@ class ids
 			if($entry == $pagename)
 				return $id;
 		}
-
+		
 		// This pagename doesn't have an id - assign it one quick!
 		return self::assign($pagename);
 	}
