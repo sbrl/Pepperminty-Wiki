@@ -2,6 +2,10 @@
 
 ## v0.13-beta2
 
+### Added
+ - Added new `query-searchindex` action to inspect the internals of the search engine
+     - It returns the (ordered) search rankings as json, along with some additional debugging data
+
 ### Fixed
  - Clear the page id index out when rebuilding the search index from scratch.
      - This is needed to correct some issues where the id index goes all weird and assigns the same id to multiple pages
