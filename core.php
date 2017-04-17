@@ -364,6 +364,15 @@ function mb_stripos_all($haystack, $needle) {
 }
 
 /**
+ * Tests whether a string starts with a specified substring.
+ * @param 	string	$haystack	The string to check against.
+ * @param 	string	$needle		The substring to look for.
+ * @return	bool				Whether the string starts with the specified substring.
+ */
+function startsWith($haystack, $needle) {
+	return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== false;
+}
+/**
  * Tests whether a string ends with a given substring.
  * @param  string $whole The string to test against.
  * @param  string $end   The substring test for.
