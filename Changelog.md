@@ -2,6 +2,9 @@
 
 ## v0.14-dev
 
+### Added
+ - Added stacked bar to help you visualise what's taking up all the space in your wiki
+
 ### Fixed
  - Fixed error image generation in the image previewer under certain conditions.
 
