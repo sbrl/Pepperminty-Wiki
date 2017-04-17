@@ -158,7 +158,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a rather useful help page. Access through the 'help' action. This module also exposes help content added to Pepperminty Wiki's inbuilt invisible help section system.",
         "id": "page-help",
-        "lastupdate": 1486826875,
+        "lastupdate": 1492429520,
         "optional": false
     },
     {

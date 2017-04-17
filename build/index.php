@@ -4982,7 +4982,7 @@ register_module([
 		add_help_section("5-navigation", "Navigating", "<p>All the navigation links can be found on the top bar, along with a search box (if your site administrator has enabled it). There is also a &quot;More...&quot; menu in the top right that contains some additional links that you may fine useful.</p>
 		<p>This page, along with the credits page, can be found on the bar at the bottom of every page.</p>");
 		
-		add_help_section("999-extra", "Extra Information", "<p>You can find out whch version of Pepperminty Wiki $settings->sitename is using by visiting the <a href='?action=credits'>credits</a> page.</p>
+		add_help_section("1-extra", "Extra Information", "<p>You can find out whch version of Pepperminty Wiki $settings->sitename is using by visiting the <a href='?action=credits'>credits</a> page.</p>
 		<p>Information for developers can be found on <a href='?action=help&dev=yes'>this page</a>.</p>");
 	}
 ]);
