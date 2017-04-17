@@ -93,6 +93,9 @@ textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: 
 
 .help-section-header::after { content: "#" attr(id); float: right; color: rgba(0, 0, 0, 0.4); font-size: 0.8rem; font-weight: normal; }
 
+.stacked-bar { display: flex; }
+.stacked-bar-part	{ break-inside: avoid; white-space: pre; padding: 0.2em 0.3em; }
+
 .cursor-query { cursor: help; }
 
 summary { cursor: pointer; }
