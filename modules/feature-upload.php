@@ -540,7 +540,7 @@ function getsvgsize($svgFilename)
 	return $imageSize;
 }
 
-function errorimage($text, $target_size)
+function errorimage($text, $target_size = null)
 {
 	$width = 640;
 	$height = 480;
