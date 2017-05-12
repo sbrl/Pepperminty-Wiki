@@ -613,6 +613,53 @@ function extract_user_from_userpage($userPagename) {
 	return $matches[1];
 }
 
+/**
+ * Sends a plain text email to a user, replacing {username} with the specified username.
+ * @param  string $username The username to send the email to.
+ * @param  string $subject  The subject of the email.
+ * @param  string $body     The body of the email.
+ * @return boolean          Whether the email was sent successfully or not. Currently, this may fail if the user doesn't have a registered email address.
+ */
+function email_user($username, $subject, $body)
+{
+	global $version, $settings;
+	
+	// If the user doesn't have an email address, then we can't email them :P
+	if(empty($settings->users->{$username}->emailAddress))
+		return false;
+	
+	$subject = str_replace("{username}", $username, $subject);
+	$body = str_replace("{username}", $username, $body);
+	
+	$headers = [
+		"content-type" => "text/plain",
+		"x-mailer" => "$settings->sitename Pepperminty-Wiki/$version PHP/" . phpversion(),
+		"reply-to" => "$settings->admindetails_name <$settings->admindetails_email>"
+	];
+	$compiled_headers = "";
+	foreach($headers as $header => $value)
+		$compiled_headers .= "$header: $value\r\n";
+	
+	mail($settings->users->{$username->emailAddress}, $subject, $body, $compiled_headers, "-t");
+	return true;
+}
+/**
+ * Sends a plain text email to a list of users, replacing {username} with each user's name.
+ * @param  string[]	$usernames	A list of usernames to email.
+ * @param  string	$subject	The subject of the email.
+ * @param  string	$body		The body of the email.
+ * @return integer				The number of emails sent successfully.
+ */
+function email_users($usernames, $subject, $body)
+{
+	$emailsSent = 0;
+	foreach($usernames as $username)
+	{
+		$emailsSent += email_user($username, $subject, $body) ? 1 : 0;
+	}
+	return $emailsSent;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
