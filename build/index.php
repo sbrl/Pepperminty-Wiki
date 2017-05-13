@@ -2189,7 +2189,7 @@ register_module([
 					$comments_html .= "<form class='comment-reply-form' method='post' action='?action=comment&page=" . rawurlencode($env->page) . "'>\n" . 
 						"<h3>Post a Comment</h3>\n" . 
 						"\t<textarea name='message' placeholder='Type your comment here. You can use the same syntax you use when writing pages.'></textarea>\n" . 
-						"\t<input type='hidden' name='reply-to' />\n" . 
+						"\t<input type='hidden' name='replyto' />\n" . 
 						"\t<input type='submit' value='Post Comment' />\n" . 
 						"</form>\n";
 				}
@@ -2197,7 +2197,7 @@ register_module([
 					$comments_html .= "<form class='comment-reply-form disabled no-login'>\n" . 
 					"\t<textarea disabled name='message' placeholder='Type your comment here. You can use the same syntax you use when writing pages.'></textarea>\n" . 
 					"\t<p><a href='?action=login&returnto=" . rawurlencode("?action=view&page=" . rawurlencode($env->page)) . "'>Login</a> to post a comment.</p>\n" . 
-					"\t<input type='hidden' name='reply-to' />\n" . 
+					"\t<input type='hidden' name='replyto' />\n" . 
 					"\t<input disabled type='submit' value='Post Comment' />\n" . 
 					"</form>\n";
 				}
@@ -2227,7 +2227,7 @@ function display_reply_form(event)
 	var replyForm = document.querySelector(".comment-reply-form").cloneNode(true);
 	replyForm.classList.add("nested");
 	// Set the comment we're replying to
-	replyForm.querySelector("[name=reply-to]").value = event.target.parentElement.parentElement.dataset.commentId;
+	replyForm.querySelector("[name=replyto]").value = event.target.parentElement.parentElement.dataset.commentId;
 	// Display the newly-cloned commenting form
 	event.target.parentElement.parentElement.querySelector(".reply-box-container").appendChild(replyForm);
 }
@@ -2354,7 +2354,7 @@ function render_comments($comments_data, $depth = 0)
 		$result .= "\t\t<a class='permalink-button' href='#comment-$comment->id' title='Permalink to this comment'>&#x1f517;</a>\n";
 		$result .= "\t\t<time datetime='" . date("c", strtotime($comment->timestamp)) . "' title='The time this comment was posted'>&#x1f557; " . date("l jS \of F Y \a\\t h:ia T", strtotime($comment->timestamp)) . "</time>\n";
 		$result .= "\t</p>\n";
-		$result .= "\t" . render_comments($comment->replies) . "\n";
+		$result .= "\t" . render_comments($comment->replies, $depth + 1) . "\n";
 		$result .= "\t</div>";
 	}
 	$result .= "</div>";
