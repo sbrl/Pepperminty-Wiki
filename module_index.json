@@ -45,6 +45,15 @@
         "optional": false
     },
     {
+        "name": "Page Comments",
+        "version": "0.1",
+        "author": "Starbeamrainbowlabs",
+        "description": "Adds threaded comments to the bottom of every page.",
+        "id": "feature-comments",
+        "lastupdate": 1494686069,
+        "optional": false
+    },
+    {
         "name": "Settings GUI",
         "version": "0.1.1",
         "author": "Starbeamrainbowlabs",
@@ -104,7 +113,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a user preferences page, letting pople do things like change their email address and password.",
         "id": "feature-user-preferences",
-        "lastupdate": 1490040319,
+        "lastupdate": 1492444821,
         "optional": false
     },
     {

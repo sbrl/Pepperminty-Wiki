@@ -109,6 +109,8 @@
 			"index.php?action=help"
 		]
 	]},
+	"comment_max_length": {"type": "number", "description": "The maximum allowed length, in characters, for comments", "default": 5000 },
+	"comment_min_length": {"type": "number", "description": "The minimum allowed length, in characters, for comments", "default": 10 },
 	"upload_enabled": {"type": "checkbox", "description": "Whether to allow uploads to the server.", "default": true},
 	"upload_allowed_file_types": {"type": "array", "description": "An array of mime types that are allowed to be uploaded.", "default": [
 		"image/jpeg",
