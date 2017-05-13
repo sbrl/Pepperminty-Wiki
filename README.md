@@ -5,7 +5,7 @@ Pepperminty Wiki is a complete wiki contained in a single file, inspired by @am2
 
 Developed by Starbeamrainbowlabs (though contributions from others are welcome!), Pepperminty Wiki has a variety of useful (and cool!) features - such as file upload, a dynamic help page, page revision history, page tags, and more! Other amazing features are in the works too (like threaded page commenting, autoupdate, and user settings), so check the release notes to see what's been added recently.
 
-**Latest Version:** v0.12.1 (stable) v0.13-dev (development)
+**Latest Version:** v0.13 (stable) v0.14-dev (development)
 
 ## Screenshots
 ![Main Page Example](https://i.imgur.com/8TokPXw.png)
@@ -50,7 +50,7 @@ A Live demo of the latest stable version can be found over at [my website](//sta
 
 ## Getting Started
 ### Requirements
-- PHP-enabled webserver
+- PHP-enabled webserver (must be PHP 7+)
 - PHP session support (for logging in, see [here](https://php.net/manual/en/session.installation.php) for more information)
 - The following PHP extensions: mbstring, imagick (for preview generation), fileinfo (for proper mime type checking of uploaded files), and zip (for compress exports)
 - Write access to own folder (only for editing)
