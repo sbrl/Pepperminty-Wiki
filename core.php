@@ -298,6 +298,8 @@ function makepathsafe($string)
 	$string = preg_replace("/[?%*:|\"><()\\[\\]]/i", "", $string);
 	// Collapse multiple dots into a single dot
 	$string = preg_replace("/\.+/", ".", $string);
+	// Don't allow slashes at the beginning
+	$string = ltrim($string, "\\/");
 	return $string;
 }
 
@@ -924,7 +926,7 @@ class page_renderer
 		<main>
 		{content}
 		</main>
-
+		{extra}
 		<footer>
 			<p>{footer-message}</p>
 			<p>Powered by Pepperminty Wiki {version}, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
@@ -1015,6 +1017,7 @@ class page_renderer
 			/// Secondary Parts ///
 
 			"{content}" => $content,
+			"{extra}" => "",
 			"{title}" => $title,
 		];
 
