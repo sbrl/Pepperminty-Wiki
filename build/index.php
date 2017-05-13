@@ -1565,7 +1565,7 @@ class page_renderer
 // Math rendering support
 if(!empty($settings->enable_math_rendering))
 {
-	page_renderer::AddJSLink("https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML");
+	page_renderer::AddJSLink("https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML");
 }
 // alt+enter suport in the search box
 page_renderer::AddJSSnippet('// Alt + Enter support in the top search box
@@ -2179,15 +2179,15 @@ register_module([
 			page_renderer::register_part_preprocessor(function(&$parts) {
 				global $env;
 				$comments_filename = get_comment_filename($env->page);
-				$comments_data = file_exists($comments_filename) ? json_decode(file_get_contents($comment_filename)) : [];
+				$comments_data = file_exists($comments_filename) ? json_decode(file_get_contents($comments_filename)) : [];
 				
 				
 				$comments_html = "<aside class='comments'>" . 
-					"<h2>Comments</h2>\n" . 
-					"<h3>Post a Comment</h3>\n";
+					"<h2>Comments</h2>\n";
 				
 				if($env->is_logged_in) {
 					$comments_html .= "<form class='comment-reply-form' method='post' action='?action=comment&page=" . rawurlencode($env->page) . "'>\n" . 
+						"<h3>Post a Comment</h3>\n" . 
 						"\t<textarea name='message' placeholder='Type your comment here. You can use the same syntax you use when writing pages.'></textarea>\n" . 
 						"\t<input type='hidden' name='reply-to' />\n" . 
 						"\t<input type='submit' value='Post Comment' />\n" . 
@@ -2197,15 +2197,44 @@ register_module([
 					$comments_html .= "<form class='comment-reply-form disabled no-login'>\n" . 
 					"\t<textarea disabled name='message' placeholder='Type your comment here. You can use the same syntax you use when writing pages.'></textarea>\n" . 
 					"\t<p><a href='?action=login&returnto=" . rawurlencode("?action=view&page=" . rawurlencode($env->page)) . "'>Login</a> to post a comment.</p>\n" . 
+					"\t<input type='hidden' name='reply-to' />\n" . 
 					"\t<input disabled type='submit' value='Post Comment' />\n" . 
 					"</form>\n";
 				}
+				
 				$comments_html .= render_comments($comments_data);
 				
 				$comments_html .= "</aside>\n";
 				
 				$parts["{extra}"] = $comments_html . $parts["{extra}"];
 			});
+			
+			$reply_js_snippet = <<<'REPLYJS'
+///////////////////////////////////
+///////// Commenting Form /////////
+///////////////////////////////////
+window.addEventListener("load", function(event) {
+	var replyButtons = document.querySelectorAll(".reply-button");
+	for(let i = 0; i < replyButtons.length; i++) {
+		replyButtons[i].addEventListener("click", display_reply_form);
+		replyButtons[i].addEventListener("touchend", display_reply_form);
+	}
+});
+
+function display_reply_form(event)
+{
+	// Deep-clone the comment form
+	var replyForm = document.querySelector(".comment-reply-form").cloneNode(true);
+	replyForm.classList.add("nested");
+	// Set the comment we're replying to
+	replyForm.querySelector("[name=reply-to]").value = event.target.parentElement.parentElement.dataset.commentId;
+	// Display the newly-cloned commenting form
+	event.target.parentElement.parentElement.querySelector(".reply-box-container").appendChild(replyForm);
+}
+
+REPLYJS;
+			page_renderer::AddJSSnippet($reply_js_snippet);
+			
 		}
 	}
 ]);
@@ -2230,7 +2259,7 @@ function get_comment_filename($pagename)
 function generate_comment_id()
 {
 	$result = base64_encode(random_bytes(16));
-	$result = str_replace(["+", "/"], ["-", "_"], $result);
+	$result = str_replace(["+", "/", "="], ["-", "_"], $result);
 	return $result;
 }
 
@@ -2314,7 +2343,7 @@ function render_comments($comments_data, $depth = 0)
 	$result = "<div class='comments-list" . ($depth > 0 ? " nested" : "") . "' data-depth='$depth'>";
 	
 	foreach($comments_data as $comment) {
-		$result .= "\t<div class='comment' id='comment-$comment->id'>\n";
+		$result .= "\t<div class='comment' id='comment-$comment->id' data-comment-id='$comment->id'>\n";
 		$result .= "\t<p class='comment-header'>$comment->username said:</p>";
 		$result .= "\t<div class='comment-body'>\n";
 		$result .= "\t\t" . parse_page_source($comment->message);
@@ -2322,11 +2351,11 @@ function render_comments($comments_data, $depth = 0)
 		$result .= "\t<div class='reply-box-container'></div>\n";
 		$result .= "\t<p class='comment-footer'>";
 		$result .= "\t\t<button class='reply-button'>Reply</button>\n";
-		$result .= "\t\t<a class='permalink-button' href='#comment-$comment->id'>&#x1f517;</a>\n";
-		$result .= "\t\t&#x1f557; <time datetime='" . date("c", $comment->timestamp) . "'>" . date("l jS \of F Y \a\\t h:ia T", $comment->timestamp) . "</time>\n";
+		$result .= "\t\t<a class='permalink-button' href='#comment-$comment->id' title='Permalink to this comment'>&#x1f517;</a>\n";
+		$result .= "\t\t<time datetime='" . date("c", strtotime($comment->timestamp)) . "' title='The time this comment was posted'>&#x1f557; " . date("l jS \of F Y \a\\t h:ia T", strtotime($comment->timestamp)) . "</time>\n";
 		$result .= "\t</p>\n";
 		$result .= "\t" . render_comments($comment->replies) . "\n";
-		$ersult .= "\t</div>";
+		$result .= "\t</div>";
 	}
 	$result .= "</div>";
 	
