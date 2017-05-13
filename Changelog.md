@@ -5,6 +5,9 @@
 ### Added
  - Added stacked bar to help you visualise what's taking up all the space in your wiki
 
+### Changed
+ - Updated MathJax CDN link, as cdn.mathjax.org is being retired ([source](https://www.mathjax.org/cdn-shutting-down/)).
+
 ### Fixed
  - Fixed error image generation in the image previewer under certain conditions.
 

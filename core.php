@@ -1238,7 +1238,7 @@ class page_renderer
 // Math rendering support
 if(!empty($settings->enable_math_rendering))
 {
-	page_renderer::AddJSLink("https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML");
+	page_renderer::AddJSLink("https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML");
 }
 // alt+enter suport in the search box
 page_renderer::AddJSSnippet('// Alt + Enter support in the top search box
