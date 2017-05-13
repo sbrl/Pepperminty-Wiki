@@ -25,6 +25,8 @@ invindex.json
 recent-changes.json
 # The new settings file
 peppermint.json
+# The comments files
+build/*.comments.json
 
 # The automatically downloaded parsedown files
 Parsedown.php
