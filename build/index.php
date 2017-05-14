@@ -255,7 +255,7 @@ h1 { text-align: center; }
 .sitename { margin-top: 5rem; margin-bottom: 3rem; font-size: 2.5rem; }
 .logo { max-width: 4rem; max-height: 4rem; vertical-align: middle; }
 .logo.small { max-width: 2rem; max-height: 2rem; }
-main:not(.printable) { padding: 2rem 2rem 0.5rem 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
+main:not(.printable) { position: relative; z-index: 1000; padding: 2rem 2rem 0.5rem 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 
 blockquote { padding-left: 1em; border-left: 0.2em solid #442772; border-radius: 0.2rem; }
 
@@ -322,8 +322,24 @@ summary { cursor: pointer; }
 .newpage::before { content: "N"; margin: 0 0.3em 0 -1em; font-weight: bolder; text-decoration: underline dotted; }
 .upload::before { content: "\\1f845"; margin: 0 0.1em 0 -1.1em; }
 
+.comments { padding: 1em 2em; background: hsl(31, 64%, 85%); box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
+.comments textarea { background: hsl(270, 60%, 86%); }
+.comments ::-webkit-input-placeholder { color: hsla(240, 61%, 67%, 0.61); }
+.comments .not-logged-in { padding: 0.3em 0.65em; background: hsla(27, 92%, 68%, 0.64); border-radius: 0.2em; font-style: italic; }
+
+.comment { margin: 1em 0; padding: 0.01em 0; background: hsla(30, 84%, 72%, 0.54); }
+.comment-header { padding: 0 1em; }
+.comment .name { font-weight: bold; }
+.comment-body { padding: 0 1em; }
+.comment-footer { padding-left: 1em; }
+.comment-footer-item { padding: 0 0.3em; }
+.permalink-button { text-decoration: none; }
+.comments-list .comments-list .comment { margin: 1em; }
+
+.reply-box-container.active { padding: 1em; background: hsla(32, 82%, 62%, 0.3); }
+
 footer { padding: 2rem; }
-/* #ffdb6d #36962c */
+/* #ffdb6d #36962c hsl(36, 78%, 80%) hsl(262, 92%, 68%, 0.42) */
 THEMECSS;
 if($settings->css === "auto")
 	$settings->css = $defaultCSS;
@@ -2144,7 +2160,7 @@ register_module([
 				
 				foreach($comment_thread as $thread_comment) {
 					// Don't notify the comment poster of their own comment :P
-					if($thread_comment->id = $new_comment->id)
+					if($thread_comment->id == $new_comment->id)
 						continue;
 						
 					$email_body = "Hello, {username}!\n" +
@@ -2196,9 +2212,9 @@ register_module([
 				else {
 					$comments_html .= "<form class='comment-reply-form disabled no-login'>\n" . 
 					"\t<textarea disabled name='message' placeholder='Type your comment here. You can use the same syntax you use when writing pages.'></textarea>\n" . 
-					"\t<p><a href='?action=login&returnto=" . rawurlencode("?action=view&page=" . rawurlencode($env->page)) . "'>Login</a> to post a comment.</p>\n" . 
+					"\t<p class='not-logged-in'><a href='?action=login&returnto=" . rawurlencode("?action=view&page=" . rawurlencode($env->page)) . "'>Login</a> to post a comment.</p>\n" . 
 					"\t<input type='hidden' name='replyto' />\n" . 
-					"\t<input disabled type='submit' value='Post Comment' />\n" . 
+					"\t<input disabled type='submit' value='Post Comment' title='Login to post a comment.' />\n" . 
 					"</form>\n";
 				}
 				
@@ -2227,9 +2243,14 @@ function display_reply_form(event)
 	var replyForm = document.querySelector(".comment-reply-form").cloneNode(true);
 	replyForm.classList.add("nested");
 	// Set the comment we're replying to
-	replyForm.querySelector("[name=replyto]").value = event.target.parentElement.parentElement.dataset.commentId;
+	replyForm.querySelector("[name=replyto]").value = event.target.parentElement.parentElement.parentElement.dataset.commentId;
 	// Display the newly-cloned commenting form
-	event.target.parentElement.parentElement.querySelector(".reply-box-container").appendChild(replyForm);
+	var replyBoxContiner = event.target.parentElement.parentElement.parentElement.querySelector(".reply-box-container");
+	replyBoxContiner.classList.add("active");
+	replyBoxContiner.appendChild(replyForm);
+	// Hide the reply button so it can't be pressed more than once - that could
+	// be awkward :P
+	event.target.parentElement.removeChild(event.target);
 }
 
 REPLYJS;
@@ -2344,15 +2365,15 @@ function render_comments($comments_data, $depth = 0)
 	
 	foreach($comments_data as $comment) {
 		$result .= "\t<div class='comment' id='comment-$comment->id' data-comment-id='$comment->id'>\n";
-		$result .= "\t<p class='comment-header'>$comment->username said:</p>";
+		$result .= "\t<p class='comment-header'><span class='name'>$comment->username</span> said:</p>";
 		$result .= "\t<div class='comment-body'>\n";
 		$result .= "\t\t" . parse_page_source($comment->message);
 		$result .= "\t</div>\n";
 		$result .= "\t<div class='reply-box-container'></div>\n";
 		$result .= "\t<p class='comment-footer'>";
-		$result .= "\t\t<button class='reply-button'>Reply</button>\n";
-		$result .= "\t\t<a class='permalink-button' href='#comment-$comment->id' title='Permalink to this comment'>&#x1f517;</a>\n";
-		$result .= "\t\t<time datetime='" . date("c", strtotime($comment->timestamp)) . "' title='The time this comment was posted'>&#x1f557; " . date("l jS \of F Y \a\\t h:ia T", strtotime($comment->timestamp)) . "</time>\n";
+		$result .= "\t\t<span class='comment-footer-item'><button class='reply-button'>Reply</button></span>\n";
+		$result .= "\t\t<span class='comment-footer-item'><a class='permalink-button' href='#comment-$comment->id' title='Permalink to this comment'>&#x1f517;</a></span>\n";
+		$result .= "\t\t<span class='comment-footer-item'><time datetime='" . date("c", strtotime($comment->timestamp)) . "' title='The time this comment was posted'>&#x1f557; " . date("l jS \of F Y \a\\t h:ia T", strtotime($comment->timestamp)) . "</time></span>\n";
 		$result .= "\t</p>\n";
 		$result .= "\t" . render_comments($comment->replies, $depth + 1) . "\n";
 		$result .= "\t</div>";

@@ -89,7 +89,7 @@ register_module([
 				
 				foreach($comment_thread as $thread_comment) {
 					// Don't notify the comment poster of their own comment :P
-					if($thread_comment->id = $new_comment->id)
+					if($thread_comment->id == $new_comment->id)
 						continue;
 						
 					$email_body = "Hello, {username}!\n" +
@@ -141,9 +141,9 @@ register_module([
 				else {
 					$comments_html .= "<form class='comment-reply-form disabled no-login'>\n" . 
 					"\t<textarea disabled name='message' placeholder='Type your comment here. You can use the same syntax you use when writing pages.'></textarea>\n" . 
-					"\t<p><a href='?action=login&returnto=" . rawurlencode("?action=view&page=" . rawurlencode($env->page)) . "'>Login</a> to post a comment.</p>\n" . 
+					"\t<p class='not-logged-in'><a href='?action=login&returnto=" . rawurlencode("?action=view&page=" . rawurlencode($env->page)) . "'>Login</a> to post a comment.</p>\n" . 
 					"\t<input type='hidden' name='replyto' />\n" . 
-					"\t<input disabled type='submit' value='Post Comment' />\n" . 
+					"\t<input disabled type='submit' value='Post Comment' title='Login to post a comment.' />\n" . 
 					"</form>\n";
 				}
 				
@@ -172,9 +172,14 @@ function display_reply_form(event)
 	var replyForm = document.querySelector(".comment-reply-form").cloneNode(true);
 	replyForm.classList.add("nested");
 	// Set the comment we're replying to
-	replyForm.querySelector("[name=replyto]").value = event.target.parentElement.parentElement.dataset.commentId;
+	replyForm.querySelector("[name=replyto]").value = event.target.parentElement.parentElement.parentElement.dataset.commentId;
 	// Display the newly-cloned commenting form
-	event.target.parentElement.parentElement.querySelector(".reply-box-container").appendChild(replyForm);
+	var replyBoxContiner = event.target.parentElement.parentElement.parentElement.querySelector(".reply-box-container");
+	replyBoxContiner.classList.add("active");
+	replyBoxContiner.appendChild(replyForm);
+	// Hide the reply button so it can't be pressed more than once - that could
+	// be awkward :P
+	event.target.parentElement.removeChild(event.target);
 }
 
 REPLYJS;
@@ -289,15 +294,15 @@ function render_comments($comments_data, $depth = 0)
 	
 	foreach($comments_data as $comment) {
 		$result .= "\t<div class='comment' id='comment-$comment->id' data-comment-id='$comment->id'>\n";
-		$result .= "\t<p class='comment-header'>$comment->username said:</p>";
+		$result .= "\t<p class='comment-header'><span class='name'>$comment->username</span> said:</p>";
 		$result .= "\t<div class='comment-body'>\n";
 		$result .= "\t\t" . parse_page_source($comment->message);
 		$result .= "\t</div>\n";
 		$result .= "\t<div class='reply-box-container'></div>\n";
 		$result .= "\t<p class='comment-footer'>";
-		$result .= "\t\t<button class='reply-button'>Reply</button>\n";
-		$result .= "\t\t<a class='permalink-button' href='#comment-$comment->id' title='Permalink to this comment'>&#x1f517;</a>\n";
-		$result .= "\t\t<time datetime='" . date("c", strtotime($comment->timestamp)) . "' title='The time this comment was posted'>&#x1f557; " . date("l jS \of F Y \a\\t h:ia T", strtotime($comment->timestamp)) . "</time>\n";
+		$result .= "\t\t<span class='comment-footer-item'><button class='reply-button'>Reply</button></span>\n";
+		$result .= "\t\t<span class='comment-footer-item'><a class='permalink-button' href='#comment-$comment->id' title='Permalink to this comment'>&#x1f517;</a></span>\n";
+		$result .= "\t\t<span class='comment-footer-item'><time datetime='" . date("c", strtotime($comment->timestamp)) . "' title='The time this comment was posted'>&#x1f557; " . date("l jS \of F Y \a\\t h:ia T", strtotime($comment->timestamp)) . "</time></span>\n";
 		$result .= "\t</p>\n";
 		$result .= "\t" . render_comments($comment->replies, $depth + 1) . "\n";
 		$result .= "\t</div>";

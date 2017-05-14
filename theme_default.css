@@ -47,7 +47,7 @@ h1 { text-align: center; }
 .sitename { margin-top: 5rem; margin-bottom: 3rem; font-size: 2.5rem; }
 .logo { max-width: 4rem; max-height: 4rem; vertical-align: middle; }
 .logo.small { max-width: 2rem; max-height: 2rem; }
-main:not(.printable) { padding: 2rem 2rem 0.5rem 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
+main:not(.printable) { position: relative; z-index: 1000; padding: 2rem 2rem 0.5rem 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 
 blockquote { padding-left: 1em; border-left: 0.2em solid #442772; border-radius: 0.2rem; }
 
@@ -114,5 +114,21 @@ summary { cursor: pointer; }
 .newpage::before { content: "N"; margin: 0 0.3em 0 -1em; font-weight: bolder; text-decoration: underline dotted; }
 .upload::before { content: "\\1f845"; margin: 0 0.1em 0 -1.1em; }
 
+.comments { padding: 1em 2em; background: hsl(31, 64%, 85%); box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
+.comments textarea { background: hsl(270, 60%, 86%); }
+.comments ::-webkit-input-placeholder { color: hsla(240, 61%, 67%, 0.61); }
+.comments .not-logged-in { padding: 0.3em 0.65em; background: hsla(27, 92%, 68%, 0.64); border-radius: 0.2em; font-style: italic; }
+
+.comment { margin: 1em 0; padding: 0.01em 0; background: hsla(30, 84%, 72%, 0.54); }
+.comment-header { padding: 0 1em; }
+.comment .name { font-weight: bold; }
+.comment-body { padding: 0 1em; }
+.comment-footer { padding-left: 1em; }
+.comment-footer-item { padding: 0 0.3em; }
+.permalink-button { text-decoration: none; }
+.comments-list .comments-list .comment { margin: 1em; }
+
+.reply-box-container.active { padding: 1em; background: hsla(32, 82%, 62%, 0.3); }
+
 footer { padding: 2rem; }
-/* #ffdb6d #36962c */
+/* #ffdb6d #36962c hsl(36, 78%, 80%) hsl(262, 92%, 68%, 0.42) */
