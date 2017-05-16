@@ -92,7 +92,7 @@ register_module([
 					if($thread_comment->id == $new_comment->id)
 						continue;
 						
-					$email_body = "Hello, {username}!\n" +
+					$email_body = "Hello, {username}!\n" . 
 						"It's $settings->sitename here, letting you know that " . 
 						"someone replied to your comment (or a reply to your comment) on $env->page.\n" . 
 						"\n" . 
