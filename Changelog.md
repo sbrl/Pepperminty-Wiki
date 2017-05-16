@@ -3,6 +3,7 @@
 ## v0.14-dev
 
 ### Added
+ - Commenting! You'll need to update any custom themes you've created if you're including the commenting module in your build.
  - Added stacked bar to help you visualise what's taking up all the space in your wiki
 
 ### Changed
