@@ -50,7 +50,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds threaded comments to the bottom of every page.",
         "id": "feature-comments",
-        "lastupdate": 1495289583,
+        "lastupdate": 1495292573,
         "optional": false
     },
     {
@@ -230,7 +230,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You really should include this one.",
         "id": "page-view",
-        "lastupdate": 1482008539,
+        "lastupdate": 1495291771,
         "optional": false
     },
     {

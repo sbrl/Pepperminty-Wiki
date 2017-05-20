@@ -137,7 +137,7 @@ register_module([
 				
 				
 				$comments_html = "<aside class='comments'>" . 
-					"<h2>Comments</h2>\n";
+					"<h2 id='comments'>Comments</h2>\n";
 				
 				if($env->is_logged_in) {
 					$comments_html .= "<form class='comment-reply-form' method='post' action='?action=comment&page=" . rawurlencode($env->page) . "'>\n" . 
@@ -160,7 +160,11 @@ register_module([
 				
 				$comments_html .= "</aside>\n";
 				
+				$to_comments_link = "<a href='#comments'>Jump to comments</a>";
+				
 				$parts["{extra}"] = $comments_html . $parts["{extra}"];
+				
+				$parts["{content}"] = str_replace_once("</h1>", "</h1>\n$to_comments_link", $parts["{content}"]);
 			});
 			
 			$reply_js_snippet = <<<'REPLYJS'

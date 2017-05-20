@@ -729,6 +729,20 @@ function endsWith($whole, $end)
 {
     return (strpos($whole, $end, strlen($whole) - strlen($end)) !== false);
 }
+/**
+ * Replaces the first occurrence of $find with $replace.
+ * @param  string $find    The string to search for.
+ * @param  string $replace The string to replace the search string with.
+ * @param  string $subject The string ot perform the search and replace on.
+ * @return string		   The source string after the find and replace has been performed.
+ */
+function str_replace_once($find, $replace, $subject)
+{
+	$index = strpos($subject, $find);
+	if($index !== false)
+		return substr_replace($subject, $replace, $index, strlen($find));
+	return $subject;
+}
 
 /**
  * Returns the system's mime type mappings, considering the first extension
@@ -2210,7 +2224,7 @@ register_module([
 				
 				
 				$comments_html = "<aside class='comments'>" . 
-					"<h2>Comments</h2>\n";
+					"<h2 id='comments'>Comments</h2>\n";
 				
 				if($env->is_logged_in) {
 					$comments_html .= "<form class='comment-reply-form' method='post' action='?action=comment&page=" . rawurlencode($env->page) . "'>\n" . 
@@ -2233,7 +2247,12 @@ register_module([
 				
 				$comments_html .= "</aside>\n";
 				
+				$to_comments_link = "<a href='#comments'>Jump to comments</a>";
+				
 				$parts["{extra}"] = $comments_html . $parts["{extra}"];
+				
+				// fixme
+				$parts["{content}"] = str_replace_once("</h1>", "</h1>\n$to_comments_link", $parts["{content}"]);
 			});
 			
 			$reply_js_snippet = <<<'REPLYJS'
@@ -6098,7 +6117,7 @@ register_module([
 			$page = $env->page;
 			if(!isset($pageindex->$page))
 			{
-				// todo make this intelligent so we only redirect if the user is acutally able to create the page
+				// todo make this intelligent so we only redirect if the user is actually able to create the page
 				if($settings->editing)
 				{
 					// Editing is enabled, redirect to the editing page

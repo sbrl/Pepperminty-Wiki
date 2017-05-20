@@ -34,7 +34,7 @@ register_module([
 			$page = $env->page;
 			if(!isset($pageindex->$page))
 			{
-				// todo make this intelligent so we only redirect if the user is acutally able to create the page
+				// todo make this intelligent so we only redirect if the user is actually able to create the page
 				if($settings->editing)
 				{
 					// Editing is enabled, redirect to the editing page
