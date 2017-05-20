@@ -5,6 +5,7 @@
 ### Added
  - Commenting! You'll need to update any custom themes you've created if you're including the commenting module in your build.
  - Added stacked bar to help you visualise what's taking up all the space in your wiki
+ - Added link to edit master settings in the credits
 
 ### Changed
  - Updated MathJax CDN link, as cdn.mathjax.org is being retired ([source](https://www.mathjax.org/cdn-shutting-down/)).
