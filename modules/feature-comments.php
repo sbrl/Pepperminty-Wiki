@@ -164,6 +164,7 @@ register_module([
 				
 				$parts["{extra}"] = $comments_html . $parts["{extra}"];
 				
+				// fixme
 				$parts["{content}"] = str_replace_once("</h1>", "</h1>\n$to_comments_link", $parts["{content}"]);
 			});
 			
