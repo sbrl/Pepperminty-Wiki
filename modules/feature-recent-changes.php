@@ -241,6 +241,9 @@ function render_recent_change($rchange)
 			$resultClasses[] = "upload";
 			$result .= "<a href='?page=$rchange->page'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml (" . human_filesize($rchange->filesize) . ")";
 			break;
+		case "comment":
+			$resultClasses[] = "new-comment";
+			$result .= "<a href='?page=$rchange->page#$rchange->comment_id'>$pageDisplayHtml</a>";
 	}
 	
 	$resultAttributes = " " . (count($resultClasses) > 0 ? "class='" . implode(" ", $resultClasses) . "'" : "");

@@ -112,6 +112,18 @@ register_module([
 				exit(page_renderer::renderer_main("Error posting comment - $settings->sitename", "<p>$settings->sitename ran into a problem whilst saving your comment to disk! Please contact <a href='mailto:" . hide_email($settings->admindetails_email) . "'>$settings->admindetails_name</a>, $settings->sitename's administrator and tell them about this problem.</p>"));
 			}
 			
+			// Add a recent change if the recent changes module is installed
+			if(module_exists("feature-recent-changes")) {
+				add_recent_change([
+					"type" => "comment",
+					"timestamp" => time(),
+					"page" => $env->page,
+					"user" => $env->user,
+					"reply_depth" => count($comment_thread),
+					"comment_id" => $new_comment->id
+				]);
+			}
+			
 			http_response_code(307);
 			header("location: ?action=view&page=" . rawurlencode($env->page) . "&commentsuccess=yes#comment-$new_comment->id");
 			exit(page_renderer::render_main("Comment posted successfully - $settings->sitename", "<p>Your comment on $env->page was posted successfully. If your browser doesn't redirect you automagically, please <a href='?action=view&page=" . rawurlencode($env->page) . "commentsuccess=yes#comment-$new_comment->id'>click here</a> to go to the comment you posted on the page you were viewing.</p>"));

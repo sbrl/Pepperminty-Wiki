@@ -322,6 +322,7 @@ summary { cursor: pointer; }
 
 .newpage::before { content: "N"; margin: 0 0.3em 0 -1em; font-weight: bolder; text-decoration: underline dotted; }
 .upload::before { content: "\\1f845"; margin: 0 0.1em 0 -1.1em; }
+.new-comment::before { content: "\\1f4ac"; margin: 0 0.1em 0 -1.1em; }
 
 .comments { padding: 1em 2em; background: hsl(31, 64%, 85%); box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 .comments textarea { background: hsl(270, 60%, 86%); }
@@ -2184,6 +2185,18 @@ register_module([
 				exit(page_renderer::renderer_main("Error posting comment - $settings->sitename", "<p>$settings->sitename ran into a problem whilst saving your comment to disk! Please contact <a href='mailto:" . hide_email($settings->admindetails_email) . "'>$settings->admindetails_name</a>, $settings->sitename's administrator and tell them about this problem.</p>"));
 			}
 			
+			// Add a recent change if the recent changes module is installed
+			if(module_exists("feature-recent-changes")) {
+				add_recent_change([
+					"type" => "comment",
+					"timestamp" => time(),
+					"page" => $env->page,
+					"user" => $env->user,
+					"reply_depth" => count($comment_thread),
+					"comment_id" => $new_comment->id
+				]);
+			}
+			
 			http_response_code(307);
 			header("location: ?action=view&page=" . rawurlencode($env->page) . "&commentsuccess=yes#comment-$new_comment->id");
 			exit(page_renderer::render_main("Comment posted successfully - $settings->sitename", "<p>Your comment on $env->page was posted successfully. If your browser doesn't redirect you automagically, please <a href='?action=view&page=" . rawurlencode($env->page) . "commentsuccess=yes#comment-$new_comment->id'>click here</a> to go to the comment you posted on the page you were viewing.</p>"));
@@ -2893,6 +2906,9 @@ function render_recent_change($rchange)
 			$resultClasses[] = "upload";
 			$result .= "<a href='?page=$rchange->page'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml (" . human_filesize($rchange->filesize) . ")";
 			break;
+		case "comment":
+			$resultClasses[] = "new-comment";
+			$result .= "<a href='?page=$rchange->page#$rchange->comment_id'>$pageDisplayHtml</a>";
 	}
 	
 	$resultAttributes = " " . (count($resultClasses) > 0 ? "class='" . implode(" ", $resultClasses) . "'" : "");
