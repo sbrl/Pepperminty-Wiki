@@ -77,21 +77,18 @@ register_module([
 				$parent_comment = find_comment($comment_data, $reply_to);
 				if($parent_comment === false) {
 					http_response_code(422);
-					exit(page_renderer::render_main("Error posting comment - $settings->sitename", "<p>$settings->sitename couldn't post your comment because it couldn't find the parent comment you replied to. It's possible that $settings->adamindetails_name, $settings->sitename's administrator, deleted the comment. Here's the comment you tried to post:</p>
+					exit(page_renderer::render_main("Error posting comment - $settings->sitename", "<p>$settings->sitename couldn't post your comment because it couldn't find the parent comment you replied to. It's possible that $settings->admindetails_name, $settings->sitename's administrator, deleted the comment. Here's the comment you tried to post:</p>
 					<textarea readonly>$message</textarea>"));
 				}
 				
 				$parent_comment->replies[] = $new_comment;
 				
-				$comment_thread = fetch_comment_thread($comment_data, $new_comment->id);
+				// Get an array of all the parent comments we need to notify
+				$comment_thread = fetch_comment_thread($comment_data, $parent_comment->id);
 				
 				$email_subject = "[Notification] $env->user replied to your comment on $env->page - $settings->sitename";
 				
 				foreach($comment_thread as $thread_comment) {
-					// Don't notify the comment poster of their own comment :P
-					if($thread_comment->id == $new_comment->id)
-						continue;
-						
 					$email_body = "Hello, {username}!\n" . 
 						"It's $settings->sitename here, letting you know that " . 
 						"someone replied to your comment (or a reply to your comment) on $env->page.\n" . 
@@ -229,15 +226,15 @@ function find_comment($comment_data, $comment_id)
 			return $comment;
 		
 		if(count($comment->replies) > 0) {
-			$subtrees = $comment->replies;
+			$subtrees[] = $comment->replies;
 		}
 	}
 	
 	foreach($subtrees as $subtree)
 	{
-		$subtree_result = find_comment($subtree);
+		$subtree_result = find_comment($subtree, $comment_id);
 		if($subtree_result !== false)
-			return $subtree;
+			return $subtree_result;
 	}
 	
 	return false;
