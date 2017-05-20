@@ -200,7 +200,7 @@ function render_recent_change($rchange)
 	$timeDisplayHtml = render_timestamp($rchange->timestamp);
 	
 	$revisionId = false;
-	if(isset($pageindex->{$rchange->page}))
+	if(isset($pageindex->{$rchange->page}) && isset($pageindex->{$rchange->page}->history))
 	{
 		foreach($pageindex->{$rchange->page}->history as $historyEntry)
 		{

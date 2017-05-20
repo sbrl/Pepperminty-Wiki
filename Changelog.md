@@ -12,6 +12,7 @@
 
 ### Fixed
  - Fixed error image generation in the image previewer under certain conditions.
+ - Fixed warnings from being spewed all over the place under cirtain circumstances on the recent changes page
 
 ## v0.13
 (No changes were made between the last beta release and this release)
