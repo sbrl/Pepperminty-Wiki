@@ -218,7 +218,7 @@ nav:not(.nav-more-menu) a { text-decoration: none; font-weight: bolder; color: i
 
 .nav-more { position: relative; background-color: #442772; min-width: 10em; }
 .nav-more label { cursor: pointer; }
-.nav-more-menu { display: none; position: absolute; flex-direction: column; top: 2.6rem; right: -0.2rem; background-color: #8a62a7; border-top: 3px solid #442772; border-bottom: 3px solid #442772; }
+.nav-more-menu { display: none; z-index: 10000; position: absolute; flex-direction: column; top: 2.6rem; right: -0.2rem; background-color: #8a62a7; border-top: 3px solid #442772; border-bottom: 3px solid #442772; }
 input[type=checkbox]:checked ~ .nav-more-menu { display: block; box-shadow: 0.4rem 0.4rem 1rem 0 rgba(50, 50, 50, 0.5); }
 .nav-more-menu span { min-width: 10rem; }
 
@@ -2163,7 +2163,7 @@ register_module([
 					if($thread_comment->id == $new_comment->id)
 						continue;
 						
-					$email_body = "Hello, {username}!\n" +
+					$email_body = "Hello, {username}!\n" . 
 						"It's $settings->sitename here, letting you know that " . 
 						"someone replied to your comment (or a reply to your comment) on $env->page.\n" . 
 						"\n" . 
