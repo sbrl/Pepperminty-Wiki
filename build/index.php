@@ -987,7 +987,7 @@ function email_user($username, $subject, $body)
 	foreach($headers as $header => $value)
 		$compiled_headers .= "$header: $value\r\n";
 	
-	mail($settings->users->{$username->emailAddress}, $subject, $body, $compiled_headers, "-t");
+	mail($settings->users->{$username}->emailAddress, $subject, $body, $compiled_headers, "-t");
 	return true;
 }
 /**
