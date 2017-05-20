@@ -384,6 +384,20 @@ function endsWith($whole, $end)
 {
     return (strpos($whole, $end, strlen($whole) - strlen($end)) !== false);
 }
+/**
+ * Replaces the first occurrence of $find with $replace.
+ * @param  string $find    The string to search for.
+ * @param  string $replace The string to replace the search string with.
+ * @param  string $subject The string ot perform the search and replace on.
+ * @return string		   The source string after the find and replace has been performed.
+ */
+function str_replace_once($find, $replace, $subject)
+{
+	$index = strpos($subject, $find);
+	if($index !== false)
+		return substr_replace($subject, $replace, $index, strlen($find));
+	return $subject;
+}
 
 /**
  * Returns the system's mime type mappings, considering the first extension
