@@ -243,7 +243,7 @@ function render_recent_change($rchange)
 			break;
 		case "comment":
 			$resultClasses[] = "new-comment";
-			$result .= "<a href='?page=$rchange->page#$rchange->comment_id'>$pageDisplayHtml</a>";
+			$result .= "<a href='?page=$rchange->page#comment-" . (!empty($rchange->comment_id) ? "$rchange->comment_id" : "unknown_comment_id") . "'>$pageDisplayHtml</a> $editorDisplayHtml";
 	}
 	
 	$resultAttributes = " " . (count($resultClasses) > 0 ? "class='" . implode(" ", $resultClasses) . "'" : "");
