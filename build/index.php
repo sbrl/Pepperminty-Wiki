@@ -133,6 +133,7 @@ $guiConfig = <<<'GUICONFIG'
 	]},
 	"comment_max_length": {"type": "number", "description": "The maximum allowed length, in characters, for comments", "default": 5000 },
 	"comment_min_length": {"type": "number", "description": "The minimum allowed length, in characters, for comments", "default": 10 },
+	"comment_time_icon": {"type": "text", "description": "The icon to show next to the time that a comment was posted.", "default": "&#x1f557;" },
 	"upload_enabled": {"type": "checkbox", "description": "Whether to allow uploads to the server.", "default": true},
 	"upload_allowed_file_types": {"type": "array", "description": "An array of mime types that are allowed to be uploaded.", "default": [
 		"image/jpeg",
@@ -2072,7 +2073,7 @@ function render_sidebar($pageindex, $root_pagename = "")
 
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
@@ -2354,6 +2355,8 @@ function fetch_comment_thread($comment_data, $comment_id)
  */
 function render_comments($comments_data, $depth = 0)
 {
+	global $settings;
+	
 	if(count($comments_data) == 0) {
 		if($depth == 0)
 			return "<p><em>No comments here! Start the conversation above.</em></p>";
@@ -2373,7 +2376,7 @@ function render_comments($comments_data, $depth = 0)
 		$result .= "\t<p class='comment-footer'>";
 		$result .= "\t\t<span class='comment-footer-item'><button class='reply-button'>Reply</button></span>\n";
 		$result .= "\t\t<span class='comment-footer-item'><a class='permalink-button' href='#comment-$comment->id' title='Permalink to this comment'>&#x1f517;</a></span>\n";
-		$result .= "\t\t<span class='comment-footer-item'><time datetime='" . date("c", strtotime($comment->timestamp)) . "' title='The time this comment was posted'>&#x1f557; " . date("l jS \of F Y \a\\t h:ia T", strtotime($comment->timestamp)) . "</time></span>\n";
+		$result .= "\t\t<span class='comment-footer-item'><time datetime='" . date("c", strtotime($comment->timestamp)) . "' title='The time this comment was posted'>$settings->comment_time_icon " . date("l jS \of F Y \a\\t h:ia T", strtotime($comment->timestamp)) . "</time></span>\n";
 		$result .= "\t</p>\n";
 		$result .= "\t" . render_comments($comment->replies, $depth + 1) . "\n";
 		$result .= "\t</div>";
@@ -4487,7 +4490,7 @@ register_module([
 
 register_module([
 	"name" => "Credits",
-	"version" => "0.7.5",
+	"version" => "0.7.6",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
@@ -4598,7 +4601,7 @@ register_module([
 	$credits_html
 	<h2>Site status</h2>
 	<table>
-		<tr><th>Site name:</th><td>$settings->sitename (<a href='?action=update'>$settings->admindisplaychar Update</a>, <a href='?action=export'>Export as zip - Check for permission first</a>)</td></tr>
+		<tr><th>Site name:</th><td>$settings->sitename (<a href='?action=update'>{$settings->admindisplaychar}Update</a>, <a href='?action=configure'>{$settings->admindisplaychar}Edit master settings</a>, <a href='?action=export'>Export as zip - Check for permission first</a>)</td></tr>
 		<tr><th>Pepperminty Wiki version:</th><td>$version</td></tr>
 		<tr><th>Number of pages:</th><td>" . count(get_object_vars($pageindex)) . "</td></tr>
 		<tr><th>Number of modules:</th><td>" . count($modules) . "</td></tr>

@@ -46,11 +46,11 @@
     },
     {
         "name": "Page Comments",
-        "version": "0.1",
+        "version": "0.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds threaded comments to the bottom of every page.",
         "id": "feature-comments",
-        "lastupdate": 1494959920,
+        "lastupdate": 1495278880,
         "optional": false
     },
     {
@@ -118,11 +118,11 @@
     },
     {
         "name": "Credits",
-        "version": "0.7.5",
+        "version": "0.7.6",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
-        "lastupdate": 1472230366,
+        "lastupdate": 1495279824,
         "optional": false
     },
     {

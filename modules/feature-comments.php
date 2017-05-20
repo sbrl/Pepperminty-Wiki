@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
@@ -283,6 +283,8 @@ function fetch_comment_thread($comment_data, $comment_id)
  */
 function render_comments($comments_data, $depth = 0)
 {
+	global $settings;
+	
 	if(count($comments_data) == 0) {
 		if($depth == 0)
 			return "<p><em>No comments here! Start the conversation above.</em></p>";
@@ -302,7 +304,7 @@ function render_comments($comments_data, $depth = 0)
 		$result .= "\t<p class='comment-footer'>";
 		$result .= "\t\t<span class='comment-footer-item'><button class='reply-button'>Reply</button></span>\n";
 		$result .= "\t\t<span class='comment-footer-item'><a class='permalink-button' href='#comment-$comment->id' title='Permalink to this comment'>&#x1f517;</a></span>\n";
-		$result .= "\t\t<span class='comment-footer-item'><time datetime='" . date("c", strtotime($comment->timestamp)) . "' title='The time this comment was posted'>&#x1f557; " . date("l jS \of F Y \a\\t h:ia T", strtotime($comment->timestamp)) . "</time></span>\n";
+		$result .= "\t\t<span class='comment-footer-item'><time datetime='" . date("c", strtotime($comment->timestamp)) . "' title='The time this comment was posted'>$settings->comment_time_icon " . date("l jS \of F Y \a\\t h:ia T", strtotime($comment->timestamp)) . "</time></span>\n";
 		$result .= "\t</p>\n";
 		$result .= "\t" . render_comments($comment->replies, $depth + 1) . "\n";
 		$result .= "\t</div>";
