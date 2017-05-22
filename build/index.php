@@ -280,8 +280,8 @@ textarea { min-height: 10em; line-height: 1.3em; font-size: 1.25rem; }
 textarea, textarea[name=content] + pre, textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); box-sizing: border-box; }
 textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: bolder; }
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
-
-
+.jump-to-comments { position: relative; top: -2.5em; display: block; text-align: right; pointer-events: none; }
+.jump-to-comments > a { pointer-events: all; }
 
 .file-gallery { margin: 0.5em; padding: 0.5em; list-style-type: none; }
 .file-gallery > li { display: inline-block; min-width: attr(data-gallery-width); padding: 1em; text-align: center; }
@@ -2247,11 +2247,10 @@ register_module([
 				
 				$comments_html .= "</aside>\n";
 				
-				$to_comments_link = "<a href='#comments'>Jump to comments</a>";
+				$to_comments_link = "<div class='jump-to-comments'><a href='#comments'>Jump to comments</a></div>";
 				
 				$parts["{extra}"] = $comments_html . $parts["{extra}"];
 				
-				// fixme
 				$parts["{content}"] = str_replace_once("</h1>", "</h1>\n$to_comments_link", $parts["{content}"]);
 			});
 			
