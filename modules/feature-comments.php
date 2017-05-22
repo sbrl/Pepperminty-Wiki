@@ -307,7 +307,10 @@ function render_comments($comments_data, $depth = 0)
 	
 	$result = "<div class='comments-list" . ($depth > 0 ? " nested" : "") . "' data-depth='$depth'>";
 	
-	foreach($comments_data as $comment) {
+	//$comments_data = array_reverse($comments_data);
+	for($i = count($comments_data) - 1; $i >= 0; $i--) {
+		$comment = $comments_data[$i];
+		
 		$result .= "\t<div class='comment' id='comment-$comment->id' data-comment-id='$comment->id'>\n";
 		$result .= "\t<p class='comment-header'><span class='name'>$comment->username</span> said:</p>";
 		$result .= "\t<div class='comment-body'>\n";
