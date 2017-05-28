@@ -102,7 +102,7 @@ function render_sidebar($pageindex, $root_pagename = "")
 			continue;
 
 		// If the page already appears on the sidebar, skip it
-		if(preg_match("/>$pagename<\a>/m",$result)===1)
+		if(preg_match("/>$pagename<\a>/m", $result) === 1)
 			continue;		
 		
 		// If the part of the current pagename that comes after the root
