@@ -230,7 +230,6 @@ input[type=search] { width: 14rem; padding: 0.3rem 0.4rem; font-size: 1rem; colo
 input[type=search]::-webkit-input-placeholder { color : rgba(255, 255, 255, 0.75); }
 input[type=button], input[type=submit] { cursor: pointer; }
 
-.sidebar + .main-container nav.bottom { position: relative; }
 .sidebar { position: relative; z-index: 100; margin-top: 0.6rem; padding: 1rem 3rem 2rem 0.4rem; background: #9e7eb4; box-shadow: inset -0.6rem 0 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
 .sidebar a { color: #ffa74d; }
 
