@@ -2068,9 +2068,6 @@ function render_sidebar($pageindex, $root_pagename = "")
 		if($pagename == $root_pagename)
 			continue;
 		
-		// If the page already appears on the sidebar, skip it
-		if(preg_match("/>$pagename<\a>/m",$result)===1)
-			continue;
 		
 		// If the part of the current pagename that comes after the root
 		// pagename has a slash in it, skip it as it is a sub-sub page.
