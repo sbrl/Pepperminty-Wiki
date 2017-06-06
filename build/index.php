@@ -230,6 +230,7 @@ input[type=search] { width: 14rem; padding: 0.3rem 0.4rem; font-size: 1rem; colo
 input[type=search]::-webkit-input-placeholder { color : rgba(255, 255, 255, 0.75); }
 input[type=button], input[type=submit] { cursor: pointer; }
 
+.sidebar + .main-container nav.bottom { position: relative; }
 .sidebar { position: relative; z-index: 100; margin-top: 0.6rem; padding: 1rem 3rem 2rem 0.4rem; background: #9e7eb4; box-shadow: inset -0.6rem 0 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
 .sidebar a { color: #ffa74d; }
 
@@ -1409,7 +1410,7 @@ class page_renderer
 		$result .= self::getJS();
 		
 		if(module_exists("feature-search"))
-			$result .= "\t\t<link type='application/opensearchdescription+xml' rel='search' href='?action=opensearch-description' />\n";
+			$result .= "\t\t<link rel='search' type='application/opensearchdescription+xml' href='?action=opensearch-description' title='$settings->sitename Search' />\n";
 		
 		if(!empty($settings->enable_math_rendering))
 		{
@@ -2067,7 +2068,10 @@ function render_sidebar($pageindex, $root_pagename = "")
 		// The current page is the same as the root page, skip it
 		if($pagename == $root_pagename)
 			continue;
-		
+
+		// If the page already appears on the sidebar, skip it
+		if(preg_match("/>$pagename<\a>/m", $result) === 1)
+			continue;		
 		
 		// If the part of the current pagename that comes after the root
 		// pagename has a slash in it, skip it as it is a sub-sub page.
@@ -3235,8 +3239,8 @@ register_module([
 			else
 				header("content-type: text/plain");
 			
-			exit(utf8_encode("<?xml version=\"1.0\" encoding=\"UTF-8\"
-<OpenSearchDescription  xmlns=\"http://a9.com/-/spec/opensearch/1.1/\">
+			exit('<?xml version="1.0" encoding="UTF-8"?' . '>' . // hack The build system strips it otherwise O.o I should really fix that.
+"\n<OpenSearchDescription xmlns=\"http://a9.com/-/spec/opensearch/1.1/\">
 	<ShortName>Search $settings->sitename</ShortName>
 	<Description>Search $settings->sitename, which is powered by Pepperminty Wiki.</Description>
 	<Tags>$settings->sitename Wiki</Tags>
@@ -3247,7 +3251,7 @@ register_module([
 	<OutputEncoding>UTF-8</OutputEncoding>
 	
 	<Url type=\"text/html\" method=\"get\" template=\"$siteRoot?action=search&amp;query={searchTerms}&amp;offset={startIndex?}&amp;count={count}\" />
-</OpenSearchDescription>"));
+</OpenSearchDescription>");
 		});
 		
 		add_action("suggest-pages", function() {

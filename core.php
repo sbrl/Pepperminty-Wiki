@@ -1064,7 +1064,7 @@ class page_renderer
 		$result .= self::getJS();
 		
 		if(module_exists("feature-search"))
-			$result .= "\t\t<link type='application/opensearchdescription+xml' rel='search' href='?action=opensearch-description' />\n";
+			$result .= "\t\t<link rel='search' type='application/opensearchdescription+xml' href='?action=opensearch-description' title='$settings->sitename Search' />\n";
 		
 		if(!empty($settings->enable_math_rendering))
 		{

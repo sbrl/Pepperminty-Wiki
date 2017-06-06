@@ -256,8 +256,8 @@ register_module([
 			else
 				header("content-type: text/plain");
 			
-			exit(utf8_encode("<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<OpenSearchDescription  xmlns=\"http://a9.com/-/spec/opensearch/1.1/\">
+			exit('<?xml version="1.0" encoding="UTF-8"?' . '>' . // hack The build system strips it otherwise O.o I should really fix that.
+"\n<OpenSearchDescription xmlns=\"http://a9.com/-/spec/opensearch/1.1/\">
 	<ShortName>Search $settings->sitename</ShortName>
 	<Description>Search $settings->sitename, which is powered by Pepperminty Wiki.</Description>
 	<Tags>$settings->sitename Wiki</Tags>
@@ -268,7 +268,7 @@ register_module([
 	<OutputEncoding>UTF-8</OutputEncoding>
 	
 	<Url type=\"text/html\" method=\"get\" template=\"$siteRoot?action=search&amp;query={searchTerms}&amp;offset={startIndex?}&amp;count={count}\" />
-</OpenSearchDescription>"));
+</OpenSearchDescription>");
 		});
 		
 		add_action("suggest-pages", function() {
