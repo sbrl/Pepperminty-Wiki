@@ -68,7 +68,19 @@ register_module([
 					"author_url" => "https://github.com/nibreh/",
 					"thing_url" => "",
 					"icon" => "https://avatars2.githubusercontent.com/u/7314006?v=3&s=24"
-				]
+				],
+				"PR #135: Fix repeated page names on sidebar" => [
+					"author" => "ikisler",
+					"author_url" => "https://github.com/ikisler",
+					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/pull/135",
+					"icon" => "https://avatars3.githubusercontent.com/u/12506147?v=3&s=24"
+				],
+				"PR #136: Fix issue where bottom nav is cut off" => [
+					"author" => "ikisler",
+					"author_url" => "https://github.com/ikisler",
+					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/pull/136",
+					"icon" => "https://avatars3.githubusercontent.com/u/12506147?v=3&s=24"
+				],
 			];
 			
 			//// Credits html renderer ////
