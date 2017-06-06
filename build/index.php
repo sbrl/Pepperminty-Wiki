@@ -1230,18 +1230,18 @@ class ids
 
 // Work around an Opera + Syntaxtic bug where there is no margin at the left
 // hand side if there isn't a query string when accessing a .php file.
-if(!isset($_GET["action"]) and !isset($_GET["page"]))
+if(!isset($_GET["action"]) and !isset($_GET["page"]) and basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) == "index.php")
 {
 	http_response_code(302);
-	header("location: index.php?action=$settings->defaultaction&page=$settings->defaultpage");
+	header("location: " . dirname(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)));
 	exit();
 }
 
 // Make sure that the action is set
-if(!isset($_GET["action"]))
+if(empty($_GET["action"]))
 	$_GET["action"] = $settings->defaultaction;
 // Make sure that the page is set
-if(!isset($_GET["page"]) or strlen($_GET["page"]) === 0)
+if(empty($_GET["page"]) or strlen($_GET["page"]) === 0)
 	$_GET["page"] = $settings->defaultpage;
 
 // Redirect the user to the safe version of the path if they entered an unsafe character
@@ -3817,6 +3817,7 @@ register_module([
 		 * @apiParam {string}	name		The name of the file to upload.
 		 * @apiParam {string}	description	A description of the file.
 		 * @apiParam {file}		file		The file to upload.
+		 * @apiParam {boolean}	avatar		Whether this upload should be uploaded as the current user's avatar. If specified, any filenames provided will be ignored.
 		 *
 		 * @apiUse	UserNotLoggedInError
 		 * @apiError	UploadsDisabledError	Uploads are currently disabled in the wiki's settings.
@@ -3837,6 +3838,8 @@ register_module([
 		add_action("upload", function() {
 			global $settings, $env, $pageindex, $paths;
 			
+			$is_avatar = !empty($_POST["avatar"]) || !empty($_GET["avatar"]);
+			
 			switch($_SERVER["REQUEST_METHOD"])
 			{
 				case "GET":
@@ -3848,8 +3851,22 @@ register_module([
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You are not currently logged in, so you can't upload anything.</p>
 		<p>Try <a href='?action=login&returnto=" . rawurlencode("?action=upload") . "'>logging in</a> first.</p>"));
 					
+					if($is_avatar) {
+						exit(page_renderer::render("Upload avatar - $settings->sitenamae", "<h1>Upload avatar</h1>
+			<p>Select an image below, and then press upload. $settings->sitename currently supports the following file types (though not all of them may be suitable for an avatar): " . implode(", ", $settings->upload_allowed_file_types) . "</p>
+			<form method='post' action='action=upload' enctype='multipart/form-data'>
+				<label for='file'>Select a file to upload.</label>
+				<input type='file' name='file' id='file-upload-selector' tabindex='1' />
+				<br />
+				
+				<p class='editing_message'>$settings->editing_message</p>
+				<input type='hidden' name='avatar' value='yes' />
+				<input type='submit' value='Upload' tabindex='20' />
+			</form>"));
+					}
+					
 					exit(page_renderer::render("Upload - $settings->sitename", "<h1>Upload file</h1>
-		<p>Select an image below, and then type a name for it in the box. This server currently supports uploads up to " . human_filesize(get_max_upload_size()) . " in size.</p>
+		<p>Select an image or file below, and then type a name for it in the box. This server currently supports uploads up to " . human_filesize(get_max_upload_size()) . " in size.</p>
 		<p>$settings->sitename currently supports uploading of the following file types: " . implode(", ", $settings->upload_allowed_file_types) . ".</p>
 		<form method='post' action='?action=upload' enctype='multipart/form-data'>
 			<label for='file'>Select a file to upload.</label>
@@ -3879,7 +3896,8 @@ register_module([
 					// Make sure uploads are enabled
 					if(!$settings->upload_enabled)
 					{
-						unlink($_FILES["file"]["tmp_name"]);
+						if(!empty($_FILES["file"]))
+							unlink($_FILES["file"]["tmp_name"]);
 						http_response_code(412);
 						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because uploads are currently disabled on $settings->sitename. <a href='index.php'>Go back to the main page</a>.</p>"));
 					}
@@ -3887,14 +3905,15 @@ register_module([
 					// Make sure that the user is logged in
 					if(!$env->is_logged_in)
 					{
-						unlink($_FILES["file"]["tmp_name"]);
+						if(!empty($_FILES["file"]))
+							unlink($_FILES["file"]["tmp_name"]);
 						http_response_code(401);
 						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because you are not logged in.</p><p>Try <a href='?action=login&returnto=" . rawurlencode("?action=upload") . "'>logging in</a> first."));
 					}
 					
 					// Calculate the target name, removing any characters we
 					// are unsure about.
-					$target_name = makepathsafe($_POST["name"]);
+					$target_name = makepathsafe($_POST["name"] ?? "Users/$env->user/Avatar");
 					$temp_filename = $_FILES["file"]["tmp_name"];
 					
 					$mimechecker = finfo_open(FILEINFO_MIME_TYPE);
@@ -3910,6 +3929,11 @@ register_module([
 					}
 					
 					// Perform appropriate checks based on the *real* filetype
+					if($is_avatar && substr($mime_type, 0, strpos($mime_type, "/")) !== "image") {
+						http_response_code(415);
+						exit(page_renderer::render_main("Error uploading avatar - $settings->sitename", "<p>That file appears to be unsuitable as an avatar, as $settings->sitename has detected it to be of type <code>$mime_type</code>, which doesn't appear to be an image. Please try <a href='?action=upload&avatar=yes'>uploading a different file</a> to use as your avatar.</p>"));
+					}
+					
 					switch(substr($mime_type, 0, strpos($mime_type, "/")))
 					{
 						case "image":
@@ -3934,17 +3958,18 @@ register_module([
 					if(isset($settings->mime_mappings_overrides->$mime_type))
 						$file_extension = $settings->mime_mappings_overrides->$mime_type;
 					
-					if(in_array($file_extension, [ "php", ".htaccess", "asp" ]))
+					if(in_array($file_extension, [ "php", ".htaccess", "asp", "aspx" ]))
 					{
 						http_response_code(415);
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded appears to be dangerous and has been discarded. Please contact $settings->sitename's administrator for assistance.</p>
 						<p>Additional information: The file uploaded appeared to be of type <code>$mime_type</code>, which mapped onto the extension <code>$file_extension</code>. This file extension has the potential to be executed accidentally by the web server.</p>"));
 					}
 					
+					// Rewrite the name to include the _actual_ file extension we've cleverly calculated :D
 					$new_filename = "$paths->upload_file_prefix$target_name.$file_extension";
 					$new_description_filename = "$new_filename.md";
 					
-					if(isset($pageindex->$new_filename))
+					if(isset($pageindex->$new_filename) && !$is_avatar)
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>A page or file has already been uploaded with the name '$new_filename'. Try deleting it first. If you do not have permission to delete things, try contacting one of the moderators.</p>"));
 					
 					if(!file_exists($env->storage_prefix . "Files"))

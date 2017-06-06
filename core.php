@@ -885,18 +885,18 @@ class ids
 
 // Work around an Opera + Syntaxtic bug where there is no margin at the left
 // hand side if there isn't a query string when accessing a .php file.
-if(!isset($_GET["action"]) and !isset($_GET["page"]))
+if(!isset($_GET["action"]) and !isset($_GET["page"]) and basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) == "index.php")
 {
 	http_response_code(302);
-	header("location: index.php?action=$settings->defaultaction&page=$settings->defaultpage");
+	header("location: " . dirname(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)));
 	exit();
 }
 
 // Make sure that the action is set
-if(!isset($_GET["action"]))
+if(empty($_GET["action"]))
 	$_GET["action"] = $settings->defaultaction;
 // Make sure that the page is set
-if(!isset($_GET["page"]) or strlen($_GET["page"]) === 0)
+if(empty($_GET["page"]) or strlen($_GET["page"]) === 0)
 	$_GET["page"] = $settings->defaultpage;
 
 // Redirect the user to the safe version of the path if they entered an unsafe character
