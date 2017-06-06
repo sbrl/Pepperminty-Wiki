@@ -6,6 +6,9 @@
  - Commenting! You'll need to update any custom themes you've created if you're including the commenting module in your build.
  - Added stacked bar to help you visualise what's taking up all the space in your wiki
  - Added link to edit master settings in the credits
+ - Initial open search support!
+     - After visiting your wiki once, you'll be able to press `<tab>` when typing the path to your wiki to perform a search.
+     - It'll only work if your wiki is at the top-level of a domain (subdomains are ok). This is a restriction of the protocol, not Pepperminty Wiki!
 
 ### Changed
  - Updated MathJax CDN link, as cdn.mathjax.org is being retired ([source](https://www.mathjax.org/cdn-shutting-down/)).
