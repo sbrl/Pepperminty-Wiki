@@ -3806,10 +3806,12 @@ register_module([
 	"code" => function() {
 		global $settings;
 		/**
-		 * @api {get} ?action=upload Get a page to let you upload a file.
+		 * @api {get} ?action=upload[&avatar=yes] Get a page to let you upload a file.
 		 * @apiName UploadFilePage
 		 * @apiGroup Upload
 		 * @apiPermission User
+		 *
+		 * @paramParam	{boolean}	Optional. If true then a special page to upload your avatar is displayed instead.
 		*/
 		
 		/**
@@ -3856,9 +3858,9 @@ register_module([
 		<p>Try <a href='?action=login&returnto=" . rawurlencode("?action=upload") . "'>logging in</a> first.</p>"));
 					
 					if($is_avatar) {
-						exit(page_renderer::render("Upload avatar - $settings->sitenamae", "<h1>Upload avatar</h1>
+						exit(page_renderer::render("Upload avatar - $settings->sitename", "<h1>Upload avatar</h1>
 			<p>Select an image below, and then press upload. $settings->sitename currently supports the following file types (though not all of them may be suitable for an avatar): " . implode(", ", $settings->upload_allowed_file_types) . "</p>
-			<form method='post' action='action=upload' enctype='multipart/form-data'>
+			<form method='post' action='?action=upload' enctype='multipart/form-data'>
 				<label for='file'>Select a file to upload.</label>
 				<input type='file' name='file' id='file-upload-selector' tabindex='1' />
 				<br />
@@ -3970,19 +3972,39 @@ register_module([
 					}
 					
 					// Rewrite the name to include the _actual_ file extension we've cleverly calculated :D
+					
+					// The path to the place (relative to the wiki data root)
+					// that we're actually going to store the uploaded file itself
 					$new_filename = "$paths->upload_file_prefix$target_name.$file_extension";
+					// The path (relative, as before) to the description file
 					$new_description_filename = "$new_filename.md";
 					
-					if(isset($pageindex->$new_filename) && !$is_avatar)
+					// The page path that the new file will be stored under
+					$new_pagepath = $new_filename;
+					
+					// Rewrite the paths to store avatars in the right place
+					if($is_avatar) {
+						$new_pagepath = $target_name;
+						$new_filename = "$target_name.$file_extension";
+					}
+					
+					if(isset($pageindex->$new_pagepath) && !$is_avatar)
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>A page or file has already been uploaded with the name '$new_filename'. Try deleting it first. If you do not have permission to delete things, try contacting one of the moderators.</p>"));
 					
-					if(!file_exists($env->storage_prefix . "Files"))
-						mkdir($env->storage_prefix . "Files", 0775);
+					// Delete the previously uploaded avatar, if it exists
+					// In the future we _may_ not need this once we have
+					// file history online.
+					if($is_avatar && isset($pageindex->$new_pagepath) && $pageindex->$new_pagepath->uploadedfile)
+						unlink($pageindex->$new_pagepath->uploadedfilepath);
+					
+					// Make sure that the palce we're uploading to exists
+					if(!file_exists(dirname($env->storage_prefix . $new_filename)))
+						mkdir(dirname($env->storage_prefix . $new_filename), 0775, true);
 					
 					if(!move_uploaded_file($temp_filename, $env->storage_prefix . $new_filename))
 					{
 						http_response_code(409);
-						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that either is a configuration error, or $settings->sitename has been attacked. Please contact " . $settings->admindetails_name . ", your $settings->sitename Administrator.</p>"));
+						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that either is a configuration error, or that $settings->sitename has been attacked. Please contact " . $settings->admindetails_name . ", your $settings->sitename Administrator.</p>"));
 					}
 					
 					$description = $_POST["description"];
@@ -3998,7 +4020,7 @@ register_module([
 					// Point to the description's filepath since this property
 					// should point to a markdown file
 					$entry->filename = $new_description_filename; 
-					$entry->size = strlen($description);
+					$entry->size = strlen($description ?? "$env->user's avatar.");
 					$entry->lastmodified = time();
 					$entry->lasteditor = $env->user;
 					$entry->uploadedfile = true;
@@ -4007,7 +4029,7 @@ register_module([
 					// Add the new entry to the pageindex
 					// Assign the new entry to the image's filepath as that
 					// should be the page name.
-					$pageindex->$new_filename = $entry;
+					$pageindex->$new_pagepath = $entry;
 					
 					// Generate a revision to keep the page history up to date
 					if(module_exists("feature-history"))
@@ -4030,7 +4052,7 @@ register_module([
 						]);
 					}
 					
-					header("location: ?action=view&page=$new_filename&upload=success");
+					header("location: ?action=view&page=$new_pagepath&upload=success");
 					
 					break;
 			}

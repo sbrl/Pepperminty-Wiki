@@ -34,6 +34,8 @@ ParsedownExtra.php
 
 # All uploaded files
 build/Files/*
+# All user-specific files
+build/Users/*
 
 # The testing zone for the $paths
 data_test
