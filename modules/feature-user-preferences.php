@@ -8,7 +8,7 @@ register_module([
 	"code" => function() {
 		global $env, $settings;
 		/**
-		 * @api {get} ?action=user-preferences Get a user preferences configuration page.
+		 * @api {get} ?action=user-preferences Get a user preferences configuration page
 		 * @apiName UserPreferences
 		 * @apiGroup Settings
 		 * @apiPermission User
@@ -77,6 +77,12 @@ register_module([
 			exit(page_renderer::render_main("User Preferences - $settings->sitename", $content));
 		});
 		
+		/**
+		 * @api {post} ?action=save-preferences Save your user preferences
+		 * @apiName UserPreferencesSave
+		 * @apiGroup Settings
+		 * @apiPermission User
+		 */
 		add_action("save-preferences", function() {
 			global $env, $settings;
 			
@@ -146,6 +152,58 @@ register_module([
 			http_response_code(307);
 			header("location: ?action=user-preferences&success=yes&operation=change-password");
 			exit(page_renderer::render_main("Password Changed Successfully", "<p>You password was changed successfully. <a href='?action=user-preferences'>Go back to the user preferences page</a>.</p>"));
+		});
+		
+		
+		/*
+		 *  █████  ██    ██  █████  ████████  █████  ██████
+		 * ██   ██ ██    ██ ██   ██    ██    ██   ██ ██   ██
+		 * ███████ ██    ██ ███████    ██    ███████ ██████
+		 * ██   ██  ██  ██  ██   ██    ██    ██   ██ ██   ██
+		 * ██   ██   ████   ██   ██    ██    ██   ██ ██   ██
+		 */
+		
+ 		/**
+ 		 * @api	{get}	?action=avatar&user={username}[&size={size}]	Get a user's avatar
+ 		 * @apiName			Avatar
+ 		 * @apiGroup		Upload
+ 		 * @apiPermission	Anonymous
+ 		 *
+ 		 * @apiParam	{string}	username		The username to fetch the avatar for
+ 		 * @apiParam	{string}	size			The preferred size of the avatar
+ 		 */
+		add_action("avatar", function() {
+			global $settings;
+			
+			$size = intval($_GET["size"] ?? 32);
+			
+			/// Use gravatar if there's some issue with the requested user
+			
+			// No user specified
+			if(empty($_GET["user"])) {
+				http_response_code(307);
+				header("x-reason: no-user-specified");
+				header("location: https://gravatar.com/avatar/?default=blank");
+			}
+			
+			$requested_username = $_GET["user"];
+			
+			// The user hasn't uploaded an avatar
+			if(empty($pageindex->{"Files/$requested_username/Avatar"}) || !$pageindex->{"Files/$requested_username/Avatar"}->uploadedfile) {
+				$user_fragment = !empty($settings->users->$requested_username->emailAddress) ? $settings->users->$requested_username->emailAddress : $requested_username;
+				
+				http_response_code(307);
+				header("x-reason: no-avatar-found");
+				header("x-hash-method: " . ($user_fragment === $requested_username ? "username" : "email_address"));
+				header("location: https://gravatar.com/avatar/" . md5($user_fragment) . "?default=identicon&rating=g&size=$size");
+			}
+			
+			// The user has uploaded an avatar, so we can redirec to the regular previewer :D
+			
+			http_response_code(307);
+			header("x-reason: found-local-avatar");
+			header("location: ?action=preview&size=$size&page=" . urlencode("Users/$requested_username/Avatar"));
+			exit("This user's avatar can be found at Files/$requested_username/Avatar");
 		});
 		
 		// Display a help section on the user preferences, but only if the user
