@@ -89,6 +89,10 @@ $guiConfig = <<<'GUICONFIG'
 			"index.php?action=list-tags"
 		],
 		[
+			"&#x1f465; All Users",
+			"index.php?action=user-list"
+		],
+		[
 			"&zigrarr; Random Page",
 			"?action=random"
 		],
@@ -2110,7 +2114,7 @@ function render_sidebar($pageindex, $root_pagename = "")
 
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.2.1",
+	"version" => "0.2.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
@@ -4435,7 +4439,7 @@ function errorimage($text, $target_size = null)
 
 register_module([
 	"name" => "User Preferences",
-	"version" => "0.3.1",
+	"version" => "0.3.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a user preferences page, letting pople do things like change their email address and password.",
 	"id" => "feature-user-preferences",

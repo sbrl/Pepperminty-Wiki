@@ -46,11 +46,11 @@
     },
     {
         "name": "Page Comments",
-        "version": "0.2.1",
+        "version": "0.2.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds threaded comments to the bottom of every page.",
         "id": "feature-comments",
-        "lastupdate": 1497798675,
+        "lastupdate": 1497799232,
         "optional": false
     },
     {
@@ -109,11 +109,11 @@
     },
     {
         "name": "User Preferences",
-        "version": "0.3.1",
+        "version": "0.3.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a user preferences page, letting pople do things like change their email address and password.",
         "id": "feature-user-preferences",
-        "lastupdate": 1497798274,
+        "lastupdate": 1497799247,
         "optional": false
     },
     {
