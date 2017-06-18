@@ -1720,6 +1720,17 @@ function add_action($action_name, $func)
 	global $actions;
 	$actions->$action_name = $func;
 }
+/**
+ * Figures out whether a given action is currently registered.
+ * Only guaranteed to be accurate in inside an existing action function
+ * @param  string  $action_name The name of the action to search for
+ * @return boolean              Whether an action with the specified name exists.
+ */
+function has_action($action_name)
+{
+	global $actions;
+	return !empty($actions->action_name);
+}
 
 $parsers = [
 	"none" => function() {

@@ -14,6 +14,7 @@
      - An identicon is rendered if a user hasn't specified an email address or uploaded a gravatar yet either
      - Added `avatars_show` and `avatars_size` settings to control the displaying & size of rendered avatars.
      - Added the `avatar` action, which 307 redirects to the appropriate avatar image
+ - Added `has_action` to make detecting enabled features easier (even if they move modules)
 
 ### Changed
  - Updated MathJax CDN link, as cdn.mathjax.org is being retired ([source](https://www.mathjax.org/cdn-shutting-down/)).
