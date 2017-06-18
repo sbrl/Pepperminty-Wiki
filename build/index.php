@@ -2423,7 +2423,7 @@ function render_comments($comments_data, $depth = 0)
 		$comment = $comments_data[$i];
 		
 		$result .= "\t<div class='comment' id='comment-$comment->id' data-comment-id='$comment->id'>\n";
-		$result .= "\t<p class='comment-header'><span class='name'>$comment->username</span> said:</p>";
+		$result .= "\t<p class='comment-header'><span class='name'>" . page_renderer::render_username($comment->username) . "</span> said:</p>";
 		$result .= "\t<div class='comment-body'>\n";
 		$result .= "\t\t" . parse_page_source($comment->message);
 		$result .= "\t</div>\n";
@@ -4630,13 +4630,14 @@ register_module([
 			$requested_username = $_GET["user"];
 			
 			// The user hasn't uploaded an avatar
-			if(empty($pageindex->{"Files/$requested_username/Avatar"}) || !$pageindex->{"Files/$requested_username/Avatar"}->uploadedfile) {
+			if(empty($pageindex->{"User/$requested_username/Avatar"}) || !$pageindex->{"User/$requested_username/Avatar"}->uploadedfile) {
 				$user_fragment = !empty($settings->users->$requested_username->emailAddress) ? $settings->users->$requested_username->emailAddress : $requested_username;
 				
 				http_response_code(307);
 				header("x-reason: no-avatar-found");
 				header("x-hash-method: " . ($user_fragment === $requested_username ? "username" : "email_address"));
 				header("location: https://gravatar.com/avatar/" . md5($user_fragment) . "?default=identicon&rating=g&size=$size");
+				exit();
 			}
 			
 			// The user has uploaded an avatar, so we can redirec to the regular previewer :D

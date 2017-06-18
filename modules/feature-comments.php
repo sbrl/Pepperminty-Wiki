@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.2.1",
+	"version" => "0.2.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
@@ -314,7 +314,7 @@ function render_comments($comments_data, $depth = 0)
 		$comment = $comments_data[$i];
 		
 		$result .= "\t<div class='comment' id='comment-$comment->id' data-comment-id='$comment->id'>\n";
-		$result .= "\t<p class='comment-header'><span class='name'>$comment->username</span> said:</p>";
+		$result .= "\t<p class='comment-header'><span class='name'>" . page_renderer::render_username($comment->username) . "</span> said:</p>";
 		$result .= "\t<div class='comment-body'>\n";
 		$result .= "\t\t" . parse_page_source($comment->message);
 		$result .= "\t</div>\n";
