@@ -49,6 +49,13 @@ register_module([
 			{
 				$content .= "<p class='user-prefs-status-message'><em>" . $statusMessages[$_GET["operation"]] . "</em></p>\n";
 			}
+			// If avatar support is present, allow the user to upload a new avatar
+			if(has_action("avatar") && module_exists("feature-upload")) {
+				$content .= "<a href='?action=upload&avatar=yes' class='preview'><figure>\n";
+				$content .= "\t<img class='avatar' src='?action=avatar&user=" . urlencode($env->user) . "&size=256' title='Your current avatar - click to upload a new one' />\n";
+				$content .= "<figcaption>Upload a new avatar</figcaption>\n";
+				$content .= "</figure></a><br />\n";
+			}
 			$content .= "<label for='username'>Username:</label>\n";
 			$content .= "<input type='text' name='username' value='$env->user' readonly />\n";
 			$content .= "<form method='post' action='?action=save-preferences'>\n";
