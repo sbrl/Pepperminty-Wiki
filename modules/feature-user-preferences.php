@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "User Preferences",
-	"version" => "0.3.1",
+	"version" => "0.3.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a user preferences page, letting pople do things like change their email address and password.",
 	"id" => "feature-user-preferences",
@@ -196,13 +196,14 @@ register_module([
 			$requested_username = $_GET["user"];
 			
 			// The user hasn't uploaded an avatar
-			if(empty($pageindex->{"Files/$requested_username/Avatar"}) || !$pageindex->{"Files/$requested_username/Avatar"}->uploadedfile) {
+			if(empty($pageindex->{"User/$requested_username/Avatar"}) || !$pageindex->{"User/$requested_username/Avatar"}->uploadedfile) {
 				$user_fragment = !empty($settings->users->$requested_username->emailAddress) ? $settings->users->$requested_username->emailAddress : $requested_username;
 				
 				http_response_code(307);
 				header("x-reason: no-avatar-found");
 				header("x-hash-method: " . ($user_fragment === $requested_username ? "username" : "email_address"));
 				header("location: https://gravatar.com/avatar/" . md5($user_fragment) . "?default=identicon&rating=g&size=$size");
+				exit();
 			}
 			
 			// The user has uploaded an avatar, so we can redirec to the regular previewer :D
