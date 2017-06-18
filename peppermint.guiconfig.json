@@ -67,6 +67,10 @@
 			"index.php?action=list-tags"
 		],
 		[
+			"&#x1f465; All Users",
+			"index.php?action=user-list"
+		],
+		[
 			"&zigrarr; Random Page",
 			"?action=random"
 		],
