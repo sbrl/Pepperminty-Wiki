@@ -41,6 +41,7 @@ audio, video, img { max-width: 100%; }
 figure:not(.preview) { display: inline-block; }
 figure:not(.preview) > :first-child { display: block; }
 figcaption { text-align: center; }
+.avatar { vertical-align: middle; }
 
 .printable { padding: 2rem; }
 

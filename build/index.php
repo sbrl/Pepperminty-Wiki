@@ -155,6 +155,8 @@ $guiConfig = <<<'GUICONFIG'
 	}},
 	"min_preview_size": {"type": "number", "description": "The minimum allowed size of generated preview images in pixels.", "default": 1},
 	"max_preview_size": {"type": "number", "description": "The maximum allowed size of generated preview images in pixels.", "default": 2048},
+	"avatars_show": {"type": "checkbox", "description": "Whether or not to show avatars requires the 'user-preferences' and 'upload' modules, though uploads themselvess can be turned off so long as all avatars have already been uploaded - it's only the 'preview' action that's actually used.", "default": true},
+	"avatars_size": {"type": "number", "description": "The image size to render avatars at. Does not affect the size they're stored at - only the inline rendered size (e.g. on the recent changes page etc.)", "default": 32},
 	"search_characters_context": {"type": "number", "description": "The number of characters that should be displayed either side of a matching term in the context below each search result.", "default": 200},
 	"search_title_matches_weighting": {"type": "number", "description": "The weighting to give to search term matches found in a page's title.", "default": 10},
 	"search_tags_matches_weighting": {"type": "number", "description": "The weighting to give to search term matches found in a page's tags.", "default": 3},
@@ -250,6 +252,7 @@ audio, video, img { max-width: 100%; }
 figure:not(.preview) { display: inline-block; }
 figure:not(.preview) > :first-child { display: block; }
 figcaption { text-align: center; }
+.avatar { vertical-align: middle; }
 
 .printable { padding: 2rem; }
 
@@ -1560,9 +1563,13 @@ class page_renderer
 	{
 		global $settings;
 		$result = "";
+		$result .= "<a href='?page=" . rawurlencode(get_user_pagename($name)) . "'>";
+		if($settings->avatars_show)
+			$result .= "<img class='avatar' src='?action=avatar&user=" . urlencode($name) . "&size=$settings->avatars_size' /> ";
 		if(in_array($name, $settings->admins))
 			$result .= $settings->admindisplaychar;
-		$result .= "<a href='?page=" . rawurlencode(get_user_pagename($name)) . "'>" . htmlentities($name) . "</a>";
+		$result .= htmlentities($name);
+		$result .= "</a>";
 
 		return $result;
 	}

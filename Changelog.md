@@ -9,6 +9,11 @@
  - Initial open search support!
      - After visiting your wiki once, you'll be able to press `<tab>` when typing the path to your wiki to perform a search.
      - It'll only work if your wiki is at the top-level of a domain (subdomains are ok). This is a restriction of the protocol, not Pepperminty Wiki!
+ - Avatars!
+     - Gravatar is used if a user hasn't uploaded an avatar yet
+     - An identicon is rendered if a user hasn't specified an email address or uploaded a gravatar yet either
+     - Added `avatars_show` and `avatars_size` settings to control the displaying & size of rendered avatars.
+     - Added the `avatar` action, which 307 redirects to the appropriate avatar image
 
 ### Changed
  - Updated MathJax CDN link, as cdn.mathjax.org is being retired ([source](https://www.mathjax.org/cdn-shutting-down/)).
