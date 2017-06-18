@@ -1020,7 +1020,7 @@ class page_renderer
 			"{admin-details-name}" => $settings->admindetails_name,
 			"{admin-details-email}" => $settings->admindetails_email,
 
-			"{admins-name-list}" => implode(", ", $settings->admins),
+			"{admins-name-list}" => implode(", ", array_map(function($username) { return page_renderer::render_username($username); }, $settings->admins)),
 
 			"{generation-date}" => date("l jS \of F Y \a\\t h:ia T"),
 
