@@ -1,12 +1,12 @@
 <?php
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.2",
+	"version" => "0.2.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
 	"code" => function() {
-		global $env;
+		global $env, $settings;
 		
 		/**
 		 * @api {post} ?action=comment	Comment on a page
@@ -199,6 +199,8 @@ REPLYJS;
 			page_renderer::AddJSSnippet($reply_js_snippet);
 			
 		}
+		
+		add_help_section("29-commenting", "Commenting", "<p>$settings->sitename has a threaded commenting system on every page. You can find it below each page's content, and can either leave a new comment, or reply to an existing one. If you reply to an existing one, then the authors of all the comments above yours will get notified by email of your reply - so long as they have an email address registered in their preferences.</p>");
 	}
 ]);
 
