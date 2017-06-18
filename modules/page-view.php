@@ -50,6 +50,8 @@ register_module([
 				}
 			}
 			
+			header("last-modified: " . gmdate('D, d M Y H:i:s T', $pageindex->{$env->page}->lastmodified));
+			
 			// Perform a redirect if the requested page is a redirect page
 			if(isset($pageindex->$page->redirect) &&
 			   $pageindex->$page->redirect === true)
