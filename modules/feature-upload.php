@@ -209,7 +209,7 @@ register_module([
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that either is a configuration error, or that $settings->sitename has been attacked. Please contact " . $settings->admindetails_name . ", your $settings->sitename Administrator.</p>"));
 					}
 					
-					$description = $_POST["description"];
+					$description = $_POST["description"] ?? "_(No description provided)_\n";
 					
 					// Escape the raw html in the provided description if the setting is enabled
 					if($settings->clean_raw_html)
