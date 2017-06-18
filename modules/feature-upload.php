@@ -248,7 +248,7 @@ register_module([
 						add_recent_change([
 							"type" => "upload",
 							"timestamp" => time(),
-							"page" => $new_filename,
+							"page" => $new_pagepath,
 							"user" => $env->user,
 							"filesize" => filesize($env->storage_prefix . $entry->uploadedfilepath)
 						]);
