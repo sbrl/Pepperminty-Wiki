@@ -104,7 +104,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1497791727,
+        "lastupdate": 1497793903,
         "optional": false
     },
     {
@@ -113,7 +113,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a user preferences page, letting pople do things like change their email address and password.",
         "id": "feature-user-preferences",
-        "lastupdate": 1497791119,
+        "lastupdate": 1497796098,
         "optional": false
     },
     {
@@ -230,7 +230,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You really should include this one.",
         "id": "page-view",
-        "lastupdate": 1495291771,
+        "lastupdate": 1497794006,
         "optional": false
     },
     {

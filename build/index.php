@@ -4112,6 +4112,7 @@ register_module([
 			$shortFilename = substr($filepath, 1 + (strrpos($filepath, '/') !== false ? strrpos($filepath, '/') : -1));
 			
 			header("content-disposition: inline; filename=\"$shortFilename\"");
+			header("last-modified: " . gmdate('D, d M Y H:i:s T', $pageindex->{$env->page}->lastmodified));
 			
 			// If the size is set or original, then send (or redirect to) the original image
 			// Also do the same for SVGs if svg rendering is disabled.
@@ -4607,7 +4608,7 @@ register_module([
  		 * @apiGroup		Upload
  		 * @apiPermission	Anonymous
  		 *
- 		 * @apiParam	{string}	username		The username to fetch the avatar for
+ 		 * @apiParam	{string}	user			The username to fetch the avatar for
  		 * @apiParam	{string}	size			The preferred size of the avatar
  		 */
 		add_action("avatar", function() {
@@ -4649,6 +4650,12 @@ register_module([
 		if($env->is_logged_in)
 		{
 			add_help_section("910-user-preferences", "User Preferences", "<p>As you are logged in, $settings->sitename lets you configure a selection of personal preferences. These can be viewed and tweaked to you liking over on the <a href='?action=user-preferences'>preferences page</a>, which can be accessed at any time by clicking the cog icon (it looks something like this: <a href='?action=user-preferences'>$settings->user_preferences_button_text</a>), though the administrator of $settings->sitename ($settings->admindetails_name) may have changed its appearance.</p>");
+		}
+		
+		if($settings->avatars_show)
+		{
+			add_help_section("915-avatars", "Avatars", "<p>$settings->sitename allows you to upload an avatar and have it displayed next to your name. If you don't have an avatar uploaded yet, then $settings->sitename will take a <a href='https://www.techopedia.com/definition/19744/hash-function'>hash</a> of your email address and ask <a href='https://gravatar.com'>Gravatar</a> for for your Gravatar instead. If you haven't told $settings->sitename what your email address is either, a hash of your username is used instead. If you don't have a gravatar, then $settings->sitename asks Gravatar for an identicon instead.</p>
+			<p>Your avatar on $settings->sitename currently looks like this: <img class='avatar' src='?action=avatar&user=" . urlencode($env->user) . "' />" . ($settings->upload_enabled ? " - you can upload a new one by going to your <a href='?action=user-preferences'>preferences</a>, or <a href='?action=upload&avatar=yes' />clicking here</a>." : ", but $settings->sitename currently has uploads disabled, so you can't upload a new one directly to $settings->sitename. You can, however, set your email address in your <a href='?action=user-preferences'>preferences</a> and <a href='https://en.gravatar.com/'>create a Gravatar</a>, and then it should show up here on $settings->sitename shortly.") . "</p>");
 		}
 	}
 ]);
@@ -6280,6 +6287,8 @@ register_module([
 					exit(page_renderer::render_main("404: Page not found - $env->page - $settings->sitename", "<p>$env->page does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
 				}
 			}
+			
+			header("last-modified: " . gmdate('D, d M Y H:i:s T', $pageindex->{$env->page}->lastmodified));
 			
 			// Perform a redirect if the requested page is a redirect page
 			if(isset($pageindex->$page->redirect) &&
