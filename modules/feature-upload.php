@@ -296,6 +296,7 @@ register_module([
 			$shortFilename = substr($filepath, 1 + (strrpos($filepath, '/') !== false ? strrpos($filepath, '/') : -1));
 			
 			header("content-disposition: inline; filename=\"$shortFilename\"");
+			header("last-modified: " . gmdate('D, d M Y H:i:s T', $pageindex->{$env->page}->lastmodified));
 			
 			// If the size is set or original, then send (or redirect to) the original image
 			// Also do the same for SVGs if svg rendering is disabled.

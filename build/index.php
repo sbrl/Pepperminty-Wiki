@@ -1369,7 +1369,7 @@ class page_renderer
 			"{admin-details-name}" => $settings->admindetails_name,
 			"{admin-details-email}" => $settings->admindetails_email,
 
-			"{admins-name-list}" => implode(", ", $settings->admins),
+			"{admins-name-list}" => implode(", ", array_map(function($username) { return page_renderer::render_username($username); }, $settings->admins)),
 
 			"{generation-date}" => date("l jS \of F Y \a\\t h:ia T"),
 
@@ -2653,7 +2653,7 @@ register_module([
 					$size_display_class .= " significant";
 					$size_title_display = human_filesize($revisionData->newsize - $revisionData->sizediff) . " -> " .  human_filesize($revisionData->newsize);
 					
-					$content .= "<li><a href='?page=" . rawurlencode($env->page) . "&revision=$revisionData->rid'>#$revisionData->rid</a> " . render_editor($revisionData->editor) . " " . render_timestamp($revisionData->timestamp) . " <span class='cursor-query $size_display_class' title='$size_title_display'>($size_display)</span>";
+					$content .= "<li><a href='?page=" . rawurlencode($env->page) . "&revision=$revisionData->rid'>#$revisionData->rid</a> " . render_editor(page_renderer::render_username($revisionData->editor)) . " " . render_timestamp($revisionData->timestamp) . " <span class='cursor-query $size_display_class' title='$size_title_display'>($size_display)</span>";
 				}
 			}
 			else
@@ -4064,7 +4064,7 @@ register_module([
 						add_recent_change([
 							"type" => "upload",
 							"timestamp" => time(),
-							"page" => $new_filename,
+							"page" => $new_pagepath,
 							"user" => $env->user,
 							"filesize" => filesize($env->storage_prefix . $entry->uploadedfilepath)
 						]);

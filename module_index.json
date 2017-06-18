@@ -68,7 +68,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
         "id": "feature-history",
-        "lastupdate": 1465757909,
+        "lastupdate": 1497791855,
         "optional": false
     },
     {
@@ -104,7 +104,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1497791495,
+        "lastupdate": 1497791727,
         "optional": false
     },
     {
