@@ -2110,7 +2110,7 @@ function render_sidebar($pageindex, $root_pagename = "")
 
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.2",
+	"version" => "0.2.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
@@ -3819,7 +3819,7 @@ class search
 
 register_module([
 	"name" => "Uploader",
-	"version" => "0.5.8",
+	"version" => "0.5.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -4435,7 +4435,7 @@ function errorimage($text, $target_size = null)
 
 register_module([
 	"name" => "User Preferences",
-	"version" => "0.2.1",
+	"version" => "0.3.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a user preferences page, letting pople do things like change their email address and password.",
 	"id" => "feature-user-preferences",
@@ -6241,7 +6241,7 @@ register_module([
 
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.16.4",
+	"version" => "0.16.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",

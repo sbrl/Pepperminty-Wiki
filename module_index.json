@@ -46,11 +46,11 @@
     },
     {
         "name": "Page Comments",
-        "version": "0.2",
+        "version": "0.2.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds threaded comments to the bottom of every page.",
         "id": "feature-comments",
-        "lastupdate": 1497797540,
+        "lastupdate": 1497797558,
         "optional": false
     },
     {
@@ -100,20 +100,20 @@
     },
     {
         "name": "Uploader",
-        "version": "0.5.8",
+        "version": "0.5.9",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1497793903,
+        "lastupdate": 1497797573,
         "optional": false
     },
     {
         "name": "User Preferences",
-        "version": "0.2.1",
+        "version": "0.3.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a user preferences page, letting pople do things like change their email address and password.",
         "id": "feature-user-preferences",
-        "lastupdate": 1497796098,
+        "lastupdate": 1497797564,
         "optional": false
     },
     {
@@ -226,11 +226,11 @@
     },
     {
         "name": "Page viewer",
-        "version": "0.16.4",
+        "version": "0.16.5",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You really should include this one.",
         "id": "page-view",
-        "lastupdate": 1497794006,
+        "lastupdate": 1497797582,
         "optional": false
     },
     {
