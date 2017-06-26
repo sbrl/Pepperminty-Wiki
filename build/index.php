@@ -833,6 +833,23 @@ function system_extension_mime_type($ext) {
     $ext = strtolower($ext);
     return isset($types[$ext]) ? $types[$ext] : null;
 }
+/**
+ * Figures out whether a given http accepts header contains a
+ * specified mime type.
+ * @param	string $accept_header	The accept header to search.
+ * @param	string $mime_type		The mime type to search for.
+ * @return	bool					Whether the specified mime type was found
+ * 									in the specified accepts header.
+ */
+function accept_contains_mime($accept_header, $mime_type)
+{
+	$accepted_mimes = explode(",", $accept_header);
+	foreach($accepted_mimes as $accepted_mime) {
+		if(explode(";", $accepted_mime)[0] == $mime_type)
+			return true;
+	}
+	return false;
+}
 
 /**
  * Generates a stack trace.
@@ -1983,6 +2000,56 @@ register_module([
 		
 		add_help_section("800-raw-page-content", "Viewing Raw Page Content", "<p>Although you can use the edit page to view a page's source, you can also ask $settings->sitename to send you the raw page source and nothing else. This feature is intented for those who want to automate their interaction with $settings->sitename.</p>
 		<p>To use this feature, navigate to the page for which you want to see the source, and then alter the <code>action</code> parameter in the url's query string to be <code>raw</code>. If the <code>action</code> parameter doesn't exist, add it. Note that when used on an file's page this action will return the source of the description and not the file itself.</p>");
+	}
+]);
+
+
+
+
+register_module([
+	"name" => "API status",
+	"version" => "0.1",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Provides a basic JSON status action that provices a few useful bits of information for API consumption.",
+	"id" => "api-status",
+	"code" => function() {
+		global $settings;
+		/**
+		 * @api {get} ?action=raw&page={pageName} Get the raw source code of a page
+		 * @apiName RawSource
+		 * @apiGroup Page
+		 * @apiPermission Anonymous
+		 * 
+		 * @apiParam {string}	page	The page to return the source of.
+		 */
+		
+		
+		add_action("status", function() {
+			global $version, $env, $settings, $actions;
+			
+			// Make sure the client can accept JSON
+			if(!accept_contains_mime($_SERVER["HTTP_ACCEPT"] ?? "application/json", "application/json")) {
+				http_response_code(406);
+				header("content-type: text/plain");
+				
+				exit("Unfortunately, this API is currently only available in application/json at the moment, which you haven't indicated you accept in your http accept header. You said this in your accept header:\n" . $_SERVER["HTTP_ACCEPT"]);
+			}
+			
+			$action_names = array_keys(get_object_vars($actions));
+			sort($action_names);
+			
+			$result = new stdClass();
+			$result->status = "ok";
+			$result->version = $version;
+			$result->available_actions = $action_names;
+			$result->wiki_name = $settings->sitename;
+			$result->logo_url = $settings->favicon;
+			
+			header("content-type: application/json");
+			exit(json_encode($result, JSON_PRETTY_PRINT) . "\n");
+		});
+		
+		add_help_section("960-api-status", "Wiki Status API", "<p></p>");
 	}
 ]);
 

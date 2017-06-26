@@ -480,6 +480,23 @@ function system_extension_mime_type($ext) {
     $ext = strtolower($ext);
     return isset($types[$ext]) ? $types[$ext] : null;
 }
+/**
+ * Figures out whether a given http accepts header contains a
+ * specified mime type.
+ * @param	string $accept_header	The accept header to search.
+ * @param	string $mime_type		The mime type to search for.
+ * @return	bool					Whether the specified mime type was found
+ * 									in the specified accepts header.
+ */
+function accept_contains_mime($accept_header, $mime_type)
+{
+	$accepted_mimes = explode(",", $accept_header);
+	foreach($accepted_mimes as $accepted_mime) {
+		if(explode(";", $accepted_mime)[0] == $mime_type)
+			return true;
+	}
+	return false;
+}
 
 /**
  * Generates a stack trace.

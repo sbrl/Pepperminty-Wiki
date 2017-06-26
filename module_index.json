@@ -36,6 +36,15 @@
         "optional": false
     },
     {
+        "name": "API status",
+        "version": "0.1",
+        "author": "Starbeamrainbowlabs",
+        "description": "Provides a basic JSON status action that provices a few useful bits of information for API consumption.",
+        "id": "api-status",
+        "lastupdate": 1498472652,
+        "optional": false
+    },
+    {
         "name": "Sidebar",
         "version": "0.3",
         "author": "Starbeamrainbowlabs",
