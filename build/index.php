@@ -3353,12 +3353,13 @@ register_module([
 		
 		
 		/**
-		 * @api {get} ?action=suggest-pages	Get search suggestions for a query
+		 * @api {get} ?action=suggest-pages[&type={type}]	Get search suggestions for a query
 		 * @apiName OpenSearchDescription
 		 * @apiGroup Search
 		 * @apiPermission Anonymous
 		 *
 		 * @apiParam	{string}	text	The search query string to get search suggestions for.
+		 * @apiParam	{string}	type	The type of result to return. Default value: json. Available values: json, opensearch
 		 */
 		add_action("suggest-pages", function() {
 			global $settings, $pageindex;
@@ -3376,17 +3377,24 @@ register_module([
 				exit("Error: You didn't specify the 'query' GET parameter.");
 			}
 			
+			$type = $_GET["type"] ?? "json";
+			
+			if(!in_array($type, ["json", "opensearch"])) {
+				http_response_code(406);
+				exit("Error: The type '$type' is not one of the supported output types. Available values: json, opensearch. Default: json");
+			}
+			
 			// Rank each page name
 			$results = [];
 			foreach($pageindex as $pageName => $entry) {
 				$results[] = [
 					"pagename" => $pageName,
 					// Costs: Insert: 1, Replace: 8, Delete: 6
-					"distance" => levenshtein($_GET["query"], $pageName, 1, 8, 6)
+					"distance" => levenshtein(mb_strtolower($_GET["query"]), mb_strtolower($pageName), 1, 8, 6)
 				];
 			}
 			
-			// Sort the page names by distance form the original query
+			// Sort the page names by distance from the original query
 			usort($results, function($a, $b) {
 				if($a["distance"] == $b["distance"])
 					return strcmp($a["pagename"], $b["pagename"]);
@@ -3394,8 +3402,20 @@ register_module([
 			});
 			
 			// Send the results to the user
-			header("content-type: application/json");
-			exit(json_encode(array_slice($results, 0, $settings->dynamic_page_suggestion_count)));
+			$suggestions = array_slice($results, 0, $settings->dynamic_page_suggestion_count);
+			switch($type)
+			{
+				case "json":
+					header("content-type: application/json");
+					exit(json_encode($suggestions));
+				case "opensearch":
+					$opensearch_output = [
+						$_GET["query"],
+						array_map(function($suggestion) { return $suggestion["pagename"]; }, $suggestions)
+					];
+					header("content-type: application/x-suggestions+json");
+					exit(json_encode($opensearch_output));
+			}
 		});
 		
 		if($settings->dynamic_page_suggestion_count > 0)
