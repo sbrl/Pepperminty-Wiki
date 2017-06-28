@@ -3038,7 +3038,7 @@ function render_recent_change($rchange)
 
 register_module([
 	"name" => "Redirect pages",
-	"version" => "0.3",
+	"version" => "0.3.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
 	"id" => "feature-redirect",
@@ -3075,7 +3075,7 @@ register_module([
 
 register_module([
 	"name" => "Search",
-	"version" => "0.5",
+	"version" => "0.5.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
@@ -6349,7 +6349,7 @@ register_module([
 
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.16.5",
+	"version" => "0.16.6",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
@@ -6412,7 +6412,7 @@ register_module([
 				{
 					// Todo send an explanatory page along with the redirect
 					http_response_code(307);
-					$redirectUrl = "?action=$env->action&redirected_from=$env->page";
+					$redirectUrl = "?action=$env->action&redirected_from=" . rawurlencode($env->page);
 					
 					$hashCode = "";
 					$newPage = $pageindex->$page->redirect_target;
@@ -6423,7 +6423,7 @@ register_module([
 						// Remove the hash from the new page name
 						$newPage = substr($newPage, 0, strpos($newPage, "#"));
 					}
-					$redirectUrl .= "&page=$newPage";
+					$redirectUrl .= "&page=" . rawurlencode($newPage);
 					if(!empty($pageindex->$newPage->redirect))
 						$redirectUrl .= "&redirect=no";
 					if(strlen($hashCode) > 0)

@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.16.5",
+	"version" => "0.16.6",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
@@ -64,7 +64,7 @@ register_module([
 				{
 					// Todo send an explanatory page along with the redirect
 					http_response_code(307);
-					$redirectUrl = "?action=$env->action&redirected_from=$env->page";
+					$redirectUrl = "?action=$env->action&redirected_from=" . rawurlencode($env->page);
 					
 					$hashCode = "";
 					$newPage = $pageindex->$page->redirect_target;
@@ -75,7 +75,7 @@ register_module([
 						// Remove the hash from the new page name
 						$newPage = substr($newPage, 0, strpos($newPage, "#"));
 					}
-					$redirectUrl .= "&page=$newPage";
+					$redirectUrl .= "&page=" . rawurlencode($newPage);
 					if(!empty($pageindex->$newPage->redirect))
 						$redirectUrl .= "&redirect=no";
 					if(strlen($hashCode) > 0)

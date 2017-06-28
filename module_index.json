@@ -91,20 +91,20 @@
     },
     {
         "name": "Redirect pages",
-        "version": "0.3",
+        "version": "0.3.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
         "id": "feature-redirect",
-        "lastupdate": 1452949822,
+        "lastupdate": 1498646092,
         "optional": false
     },
     {
         "name": "Search",
-        "version": "0.5",
+        "version": "0.5.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
         "id": "feature-search",
-        "lastupdate": 1498645080,
+        "lastupdate": 1498646440,
         "optional": false
     },
     {
@@ -235,11 +235,11 @@
     },
     {
         "name": "Page viewer",
-        "version": "0.16.5",
+        "version": "0.16.6",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You really should include this one.",
         "id": "page-view",
-        "lastupdate": 1497797582,
+        "lastupdate": 1498646088,
         "optional": false
     },
     {
