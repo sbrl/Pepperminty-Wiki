@@ -240,13 +240,19 @@ register_module([
 			$result->search_results = $searchResults;
 			exit(json_encode($result, JSON_PRETTY_PRINT));
 		});
-		
-		/*
-		 *  ██████  ██████  ███████ ███    ██ ███████ ███████  █████  ██████   ██████ ██   ██
-		 * ██    ██ ██   ██ ██      ████   ██ ██      ██      ██   ██ ██   ██ ██      ██   ██
-		 * ██    ██ ██████  █████   ██ ██  ██ ███████ █████   ███████ ██████  ██      ███████
-		 * ██    ██ ██      ██      ██  ██ ██      ██ ██      ██   ██ ██   ██ ██      ██   ██
-		 *  ██████  ██      ███████ ██   ████ ███████ ███████ ██   ██ ██   ██  ██████ ██   ██
+	
+/*
+ *  ██████  ██████  ███████ ███    ██ ███████ ███████  █████  ██████   ██████ ██   ██
+ * ██    ██ ██   ██ ██      ████   ██ ██      ██      ██   ██ ██   ██ ██      ██   ██
+ * ██    ██ ██████  █████   ██ ██  ██ ███████ █████   ███████ ██████  ██      ███████
+ * ██    ██ ██      ██      ██  ██ ██      ██ ██      ██   ██ ██   ██ ██      ██   ██
+ *  ██████  ██      ███████ ██   ████ ███████ ███████ ██   ██ ██   ██  ██████ ██   ██
+ */
+		/**
+		 * @api {get} ?action=opensearch-description	Get the opensearch description file
+		 * @apiName OpenSearchDescription
+		 * @apiGroup Search
+		 * @apiPermission Anonymous
 		 */
 		add_action("opensearch-description", function () {
 			global $settings;
@@ -271,6 +277,15 @@ register_module([
 </OpenSearchDescription>");
 		});
 		
+		
+		/**
+		 * @api {get} ?action=suggest-pages	Get search suggestions for a query
+		 * @apiName OpenSearchDescription
+		 * @apiGroup Search
+		 * @apiPermission Anonymous
+		 *
+		 * @apiParam	{string}	text	The search query string to get search suggestions for.
+		 */
 		add_action("suggest-pages", function() {
 			global $settings, $pageindex;
 			

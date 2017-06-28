@@ -357,9 +357,9 @@ if($settings->css === "auto")
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-/////////////// Do not edit below this line unless you know what you are doing! ///////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+////// Do not edit below this line unless you know what you are doing! //////
+/////////////////////////////////////////////////////////////////////////////
 $version = "v0.14-dev";
 /// Environment ///
 $env = new stdClass(); // The environment object
@@ -606,7 +606,7 @@ function get_subpages($pageindex, $pagename)
 /**
  * Makes sure that a subpage's parents exist.
  * Note this doesn't check the pagename itself.
- * @param The pagename to check.
+ * @param $pagename	The pagename to check.
  */
 function check_subpage_parents($pagename)
 {
@@ -3314,13 +3314,19 @@ register_module([
 			$result->search_results = $searchResults;
 			exit(json_encode($result, JSON_PRETTY_PRINT));
 		});
-		
-		/*
-		 *  ██████  ██████  ███████ ███    ██ ███████ ███████  █████  ██████   ██████ ██   ██
-		 * ██    ██ ██   ██ ██      ████   ██ ██      ██      ██   ██ ██   ██ ██      ██   ██
-		 * ██    ██ ██████  █████   ██ ██  ██ ███████ █████   ███████ ██████  ██      ███████
-		 * ██    ██ ██      ██      ██  ██ ██      ██ ██      ██   ██ ██   ██ ██      ██   ██
-		 *  ██████  ██      ███████ ██   ████ ███████ ███████ ██   ██ ██   ██  ██████ ██   ██
+	
+/*
+ *  ██████  ██████  ███████ ███    ██ ███████ ███████  █████  ██████   ██████ ██   ██
+ * ██    ██ ██   ██ ██      ████   ██ ██      ██      ██   ██ ██   ██ ██      ██   ██
+ * ██    ██ ██████  █████   ██ ██  ██ ███████ █████   ███████ ██████  ██      ███████
+ * ██    ██ ██      ██      ██  ██ ██      ██ ██      ██   ██ ██   ██ ██      ██   ██
+ *  ██████  ██      ███████ ██   ████ ███████ ███████ ██   ██ ██   ██  ██████ ██   ██
+ */
+		/**
+		 * @api {get} ?action=opensearch-description	Get the opensearch description file
+		 * @apiName OpenSearchDescription
+		 * @apiGroup Search
+		 * @apiPermission Anonymous
 		 */
 		add_action("opensearch-description", function () {
 			global $settings;
@@ -3345,6 +3351,15 @@ register_module([
 </OpenSearchDescription>");
 		});
 		
+		
+		/**
+		 * @api {get} ?action=suggest-pages	Get search suggestions for a query
+		 * @apiName OpenSearchDescription
+		 * @apiGroup Search
+		 * @apiPermission Anonymous
+		 *
+		 * @apiParam	{string}	text	The search query string to get search suggestions for.
+		 */
 		add_action("suggest-pages", function() {
 			global $settings, $pageindex;
 			
@@ -3902,7 +3917,7 @@ register_module([
 		 * @apiGroup Upload
 		 * @apiPermission User
 		 *
-		 * @paramParam	{boolean}	Optional. If true then a special page to upload your avatar is displayed instead.
+		 * @apiParam	{boolean}	avatar	Optional. If true then a special page to upload your avatar is displayed instead.
 		*/
 		
 		/**

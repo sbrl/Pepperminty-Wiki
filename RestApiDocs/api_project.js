@@ -4,11 +4,12 @@ define({
   "description": "A wiki in a box. This is the API documentation.",
   "title": "Pepperminty Wiki (0.13-dev)",
   "sampleUrl": false,
-  "apidoc": "0.2.0",
+  "defaultVersion": "0.0.0",
+  "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2017-01-02T20:25:29.776Z",
+    "time": "2017-06-28T08:44:48.635Z",
     "url": "http://apidocjs.com",
-    "version": "0.16.1"
+    "version": "0.17.6"
   }
 });

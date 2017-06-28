@@ -253,7 +253,7 @@ function get_subpages($pageindex, $pagename)
 /**
  * Makes sure that a subpage's parents exist.
  * Note this doesn't check the pagename itself.
- * @param The pagename to check.
+ * @param $pagename	The pagename to check.
  */
 function check_subpage_parents($pagename)
 {

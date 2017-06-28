@@ -13,7 +13,7 @@ register_module([
 		 * @apiGroup Upload
 		 * @apiPermission User
 		 *
-		 * @paramParam	{boolean}	Optional. If true then a special page to upload your avatar is displayed instead.
+		 * @apiParam	{boolean}	avatar	Optional. If true then a special page to upload your avatar is displayed instead.
 		*/
 		
 		/**
