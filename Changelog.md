@@ -8,7 +8,8 @@
  - Added link to edit master settings in the credits
  - Initial open search support!
      - After visiting your wiki once, you'll be able to press `<tab>` when typing the path to your wiki to perform a search.
-     - It'll only work if your wiki is at the top-level of a domain (subdomains are ok). This is a restriction of the protocol, not Pepperminty Wiki!
+     - It'll only work if your wiki is at the top-level of a domain without _anything_ after the `/` (subdomains are ok). This is a restriction of the protocol, not Pepperminty Wiki!
+     - Supports sending search suggestions based on page names in the page index (based on case-insensitive leveshtein distance)
  - Avatars!
      - Gravatar is used if a user hasn't uploaded an avatar yet
      - An identicon is rendered if a user hasn't specified an email address or uploaded a gravatar yet either
@@ -22,6 +23,8 @@
 ### Fixed
  - Fixed error image generation in the image previewer under certain conditions.
  - Fixed warnings from being spewed all over the place under cirtain circumstances on the recent changes page
+ - Fixed url encoding issue in redirects with ampersands in page names (#139)
+ - Allow sending of OpenSearch description even when not logged in on wikis that require a login to work around some browser cookie issues
  - PR #135: Fix repeated page names on sidebar by ikisler
  - PR #136: Fix issue where bottom nav is cut off by ikisler
 
