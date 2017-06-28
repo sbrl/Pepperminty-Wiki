@@ -73,6 +73,8 @@ textarea { min-height: 10em; line-height: 1.3em; font-size: 1.25rem; }
 textarea, textarea[name=content] + pre, textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); box-sizing: border-box; }
 textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: bolder; }
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
+input.edit-page-button[name='submit-edit'] { width: calc(50% - 1.25rem); margin-right: 1rem }
+input.edit-page-button[name='preview-edit'] { width: calc(50% - 1.25rem); margin-left: 1rem }
 .jump-to-comments { position: relative; top: -2.5em; display: block; text-align: right; pointer-events: none; }
 .jump-to-comments > a { pointer-events: all; }
 
