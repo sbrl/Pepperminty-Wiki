@@ -273,7 +273,8 @@ register_module([
 	<InputEncoding>UTF-8</InputEncoding>
 	<OutputEncoding>UTF-8</OutputEncoding>
 	
-	<Url type=\"text/html\" method=\"get\" template=\"$siteRoot?action=search&amp;query={searchTerms}&amp;offset={startIndex?}&amp;count={count}\" />
+	<Url type=\"text/html\" method=\"get\" template=\"$siteRoot?action=view&search-redirect=yes&amp;page={searchTerms}&amp;offset={startIndex?}&amp;count={count}\" />
+	<Url type=\"application/x-suggestions+json\" template=\"$siteRoot?action=suggest-pages&amp;query={searchTerms}&amp;type=opensearch\" />
 </OpenSearchDescription>");
 		});
 		
@@ -293,8 +294,8 @@ register_module([
 			if($settings->dynamic_page_suggestion_count === 0)
 			{
 				header("content-type: application/json");
-				header("content-length: 2");
-				exit("[]");
+				header("content-length: 3");
+				exit("[]\n");
 			}
 			
 			if(empty($_GET["query"])) {

@@ -1689,7 +1689,7 @@ if(!isset($pageindex->{$env->page}) and isset($_GET["search-redirect"]))
 // Note we use $_GET here because $env->action isn't populated at this point
 if($settings->require_login_view === true && // If this site requires a login in order to view pages
    !$env->is_logged_in && // And the user isn't logged in
-   !in_array($_GET["action"], [ "login", "checklogin" ])) // And the user isn't trying to login
+   !in_array($_GET["action"], [ "login", "checklogin", "opensearch-description" ])) // And the user isn't trying to login, or get the opensearch description
 {
 	// Redirect the user to the login page
 	http_response_code(307);
@@ -3347,7 +3347,8 @@ register_module([
 	<InputEncoding>UTF-8</InputEncoding>
 	<OutputEncoding>UTF-8</OutputEncoding>
 	
-	<Url type=\"text/html\" method=\"get\" template=\"$siteRoot?action=search&amp;query={searchTerms}&amp;offset={startIndex?}&amp;count={count}\" />
+	<Url type=\"text/html\" method=\"get\" template=\"$siteRoot?action=view&search-redirect=yes&amp;page={searchTerms}&amp;offset={startIndex?}&amp;count={count}\" />
+	<Url type=\"application/x-suggestions+json\" template=\"$siteRoot?action=suggest-pages&amp;query={searchTerms}&amp;type=opensearch\" />
 </OpenSearchDescription>");
 		});
 		
@@ -3367,8 +3368,8 @@ register_module([
 			if($settings->dynamic_page_suggestion_count === 0)
 			{
 				header("content-type: application/json");
-				header("content-length: 2");
-				exit("[]");
+				header("content-length: 3");
+				exit("[]\n");
 			}
 			
 			if(empty($_GET["query"])) {
