@@ -10,13 +10,14 @@ register_module([
 		global $settings, $env;
 		
 		/**
-		 * @api {post} ?action=preview_edit&page={pageName}[&newpage=yes]	Get a preview of the page
+		 * @api {post} ?action=preview-edit&page={pageName}[&newpage=yes]	Get a preview of the page
 		 * @apiDescription	Gets a preview of the current edit state of a given page
 		 * @apiName 		PreviewPage
 		 * @apiPermission	Anonymous
 		 * 
 		 * @apiUse	PageParameter
 		 * @apiParam	{string}	newpage 	Set to 'yes' if a new page is being created.
+		 * @apiParam	{string}	preview-edit 	Set to a value to preview an edit of a page.
 		 */
 
 		/*
@@ -34,7 +35,7 @@ register_module([
 		 * ███████ ██████  ██    ██    
 		 *
 		 */
-		add_action("preview_edit", function() {
+		add_action("preview-edit", function() {
 			global $pageindex, $settings, $env, $actions;
 
 			if(isset($_POST['preview-edit']) && isset($_POST['content'])) {
@@ -77,6 +78,10 @@ register_module([
 			if((isset($_GET["newpage"]) and $_GET["newpage"] == "true") or $creatingpage)
 			{
 				$title = "Creating $env->page";
+			}
+			else if(isset($_POST['preview-edit']) && isset($_POST['content']))
+			{
+				$title = "Preview Edits for $env->page";
 			}
 			else
 			{
@@ -162,11 +167,11 @@ register_module([
 					$page_tags = $_POST['tags'];
 
 				// Insert the "view" part of the page we're editing
-				$content .= parse_page_source($pagetext);
+				$content .=  "<h4>To continue editing or save, scroll down...</h4>" . parse_page_source($pagetext);
 
 			}
 
-			$content .= "<form method='post' name='edit-form' action='index.php?action=preview_edit&page=' class='editform'>
+			$content .= "<form method='post' name='edit-form' action='index.php?action=preview-edit&page=' class='editform'>
 					<input type='hidden' name='prev-content-hash' value='" . ((isset($old_pagetext)) ? sha1($old_pagetext) : sha1($pagetext)) . "' />
 					<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
 					<pre class='fit-text-mirror'></pre>
