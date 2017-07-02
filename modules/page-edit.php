@@ -167,7 +167,7 @@ register_module([
 					$page_tags = $_POST['tags'];
 
 				// Insert the "view" part of the page we're editing
-				$content .=  "<h4>To continue editing or save, scroll down...</h4>" . parse_page_source($pagetext);
+				$content .=  "<p class='preview-message'><strong>This is only a preview, so your edits haven't been saved! Scroll down to continue editing.</strong></p>" . parse_page_source($pagetext);
 
 			}
 
