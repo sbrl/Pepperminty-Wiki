@@ -260,7 +260,7 @@ figcaption { text-align: center; }
 
 .printable { padding: 2rem; }
 
-h1, h4 { text-align: center; }
+h1 { text-align: center; }
 .sitename { margin-top: 5rem; margin-bottom: 3rem; font-size: 2.5rem; }
 .logo { max-width: 4rem; max-height: 4rem; vertical-align: middle; }
 .logo.small { max-width: 2rem; max-height: 2rem; }
@@ -289,6 +289,7 @@ textarea, textarea[name=content] + pre, textarea ~ input[type=submit], #search-b
 textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: bolder; }
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
 input.edit-page-button[type='submit'] { width: 49.5%; box-sizing: border-box; }
+.preview-message { text-align: center; }
 .jump-to-comments { position: relative; top: -2.5em; display: block; text-align: right; pointer-events: none; }
 .jump-to-comments > a { pointer-events: all; }
 
@@ -5245,8 +5246,8 @@ register_module([
 					<pre class='fit-text-mirror'></pre>
 					<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
 					<p class='editing-message'>$settings->editing_message</p>
-					<input name='submit-edit' class='edit-page-button' type='submit' value='Save Page' tabindex='3' />
 					<input name='preview-edit' class='edit-page-button' type='submit' value='Preview Changes' tabindex='4' />
+					<input name='submit-edit' class='edit-page-button' type='submit' value='Save Page' tabindex='3' />
 					</form>";
 			// Allow tab characters in the page editor
 			page_renderer::AddJSSnippet("window.addEventListener('load', function(event) {

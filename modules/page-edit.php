@@ -177,8 +177,8 @@ register_module([
 					<pre class='fit-text-mirror'></pre>
 					<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
 					<p class='editing-message'>$settings->editing_message</p>
-					<input name='submit-edit' class='edit-page-button' type='submit' value='Save Page' tabindex='3' />
 					<input name='preview-edit' class='edit-page-button' type='submit' value='Preview Changes' tabindex='4' />
+					<input name='submit-edit' class='edit-page-button' type='submit' value='Save Page' tabindex='3' />
 					</form>";
 			// Allow tab characters in the page editor
 			page_renderer::AddJSSnippet("window.addEventListener('load', function(event) {
