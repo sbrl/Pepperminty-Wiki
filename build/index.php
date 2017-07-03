@@ -5112,7 +5112,7 @@ register_module([
 
 register_module([
 	"name" => "Page editor",
-	"version" => "0.15.1",
+	"version" => "0.16",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
