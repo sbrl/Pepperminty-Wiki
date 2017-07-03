@@ -288,6 +288,8 @@ textarea { min-height: 10em; line-height: 1.3em; font-size: 1.25rem; }
 textarea, textarea[name=content] + pre, textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); box-sizing: border-box; }
 textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: bolder; }
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
+input.edit-page-button[type='submit'] { width: 49.5%; box-sizing: border-box; }
+.preview-message { text-align: center; }
 .jump-to-comments { position: relative; top: -2.5em; display: block; text-align: right; pointer-events: none; }
 .jump-to-comments > a { pointer-events: all; }
 
@@ -5113,6 +5115,47 @@ register_module([
 		global $settings, $env;
 		
 		/**
+		 * @api {post} ?action=preview-edit&page={pageName}[&newpage=yes]	Get a preview of the page
+		 * @apiDescription	Gets a preview of the current edit state of a given page
+		 * @apiName 		PreviewPage
+		 * @apiPermission	Anonymous
+		 * 
+		 * @apiUse	PageParameter
+		 * @apiParam	{string}	newpage 	Set to 'yes' if a new page is being created.
+		 * @apiParam	{string}	preview-edit 	Set to a value to preview an edit of a page.
+		 */
+
+		/*
+		 *
+		 * ██████  ██████  ███████ ██    ██ ██ ███████ ██     ██
+		 * ██   ██ ██   ██ ██      ██    ██ ██ ██      ██     ██
+		 * ██████  ██████  █████   ██    ██ ██ █████   ██  █  ██
+		 * ██      ██   ██ ██       ██  ██  ██ ██      ██ ███ ██
+		 * ██      ██   ██ ███████   ████   ██ ███████  ███ ███
+		 *
+		 * ███████ ██████  ██ ████████ 
+		 * ██      ██   ██ ██    ██    
+		 * █████   ██   ██ ██    ██    
+		 * ██      ██   ██ ██    ██    
+		 * ███████ ██████  ██    ██    
+		 *
+		 */
+		add_action("preview-edit", function() {
+			global $pageindex, $settings, $env, $actions;
+
+			if(isset($_POST['preview-edit']) && isset($_POST['content'])) {
+				// preview changes
+				get_object_vars($actions)['edit']();
+			}
+			else {
+				// save page
+				get_object_vars($actions)['save']();
+			}
+
+			
+		});
+
+		/**
 		 * @api {get} ?action=edit&page={pageName}[&newpage=yes]	Get an editing page
 		 * @apiDescription	Gets an editing page for a given page. If you don't have permission to edit the page in question, a view source pagee is returned instead.
 		 * @apiName			EditPage
@@ -5140,6 +5183,10 @@ register_module([
 			if((isset($_GET["newpage"]) and $_GET["newpage"] == "true") or $creatingpage)
 			{
 				$title = "Creating $env->page";
+			}
+			else if(isset($_POST['preview-edit']) && isset($_POST['content']))
+			{
+				$title = "Preview Edits for $env->page";
 			}
 			else
 			{
@@ -5211,14 +5258,33 @@ register_module([
 			{
 				$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
 			}
-			$content .= "<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save' class='editform'>
-			<input type='hidden' name='prev-content-hash' value='" . sha1($pagetext) . "' />
-			<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
-			<pre class='fit-text-mirror'></pre>
-			<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
-			<p class='editing-message'>$settings->editing_message</p>
-			<input name='submit-edit' type='submit' value='Save Page' tabindex='3' />
-		</form>";
+			
+			// Include preview, if set
+			if(isset($_POST['preview-edit']) && isset($_POST['content'])) {
+				// Need this for the prev-content-hash to prevent the conflict page from appearing
+				$old_pagetext = $pagetext;
+
+				// set the page content to the newly edited content
+				$pagetext = $_POST['content'];
+
+				// Set the tags to the new tags, if needed
+				if(isset($_POST['tags']))
+					$page_tags = $_POST['tags'];
+
+				// Insert the "view" part of the page we're editing
+				$content .=  "<p class='preview-message'><strong>This is only a preview, so your edits haven't been saved! Scroll down to continue editing.</strong></p>" . parse_page_source($pagetext);
+
+			}
+
+			$content .= "<form method='post' name='edit-form' action='index.php?action=preview-edit&page=' class='editform'>
+					<input type='hidden' name='prev-content-hash' value='" . ((isset($old_pagetext)) ? sha1($old_pagetext) : sha1($pagetext)) . "' />
+					<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
+					<pre class='fit-text-mirror'></pre>
+					<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
+					<p class='editing-message'>$settings->editing_message</p>
+					<input name='preview-edit' class='edit-page-button' type='submit' value='Preview Changes' tabindex='4' />
+					<input name='submit-edit' class='edit-page-button' type='submit' value='Save Page' tabindex='3' />
+					</form>";
 			// Allow tab characters in the page editor
 			page_renderer::AddJSSnippet("window.addEventListener('load', function(event) {
 	// Adapted from https://jsfiddle.net/2wAzx/13/
