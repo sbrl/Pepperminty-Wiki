@@ -5119,47 +5119,6 @@ register_module([
 	
 	"code" => function() {
 		global $settings, $env;
-		
-		/**
-		 * @api {post} ?action=preview-edit&page={pageName}[&newpage=yes]	Get a preview of the page
-		 * @apiDescription	Gets a preview of the current edit state of a given page
-		 * @apiName 		PreviewPage
-		 * @apiPermission	Anonymous
-		 * 
-		 * @apiUse	PageParameter
-		 * @apiParam	{string}	newpage 	Set to 'yes' if a new page is being created.
-		 * @apiParam	{string}	preview-edit 	Set to a value to preview an edit of a page.
-		 */
-
-		/*
-		 *
-		 * ██████  ██████  ███████ ██    ██ ██ ███████ ██     ██
-		 * ██   ██ ██   ██ ██      ██    ██ ██ ██      ██     ██
-		 * ██████  ██████  █████   ██    ██ ██ █████   ██  █  ██
-		 * ██      ██   ██ ██       ██  ██  ██ ██      ██ ███ ██
-		 * ██      ██   ██ ███████   ████   ██ ███████  ███ ███
-		 *
-		 * ███████ ██████  ██ ████████ 
-		 * ██      ██   ██ ██    ██    
-		 * █████   ██   ██ ██    ██    
-		 * ██      ██   ██ ██    ██    
-		 * ███████ ██████  ██    ██    
-		 *
-		 */
-		add_action("preview-edit", function() {
-			global $pageindex, $settings, $env, $actions;
-
-			if(isset($_POST['preview-edit']) && isset($_POST['content'])) {
-				// preview changes
-				get_object_vars($actions)['edit']();
-			}
-			else {
-				// save page
-				get_object_vars($actions)['save']();
-			}
-
-			
-		});
 
 		/**
 		 * @api {get} ?action=edit&page={pageName}[&newpage=yes]	Get an editing page
@@ -5282,7 +5241,7 @@ register_module([
 
 			}
 
-			$content .= "<form method='post' name='edit-form' action='index.php?action=preview-edit&page=' class='editform'>
+			$content .= "<form method='post' name='edit-form' action='index.php?action=preview-edit&page=$env->page' class='editform'>
 					<input type='hidden' name='prev-content-hash' value='" . ((isset($old_pagetext)) ? sha1($old_pagetext) : sha1($pagetext)) . "' />
 					<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
 					<pre class='fit-text-mirror'></pre>
@@ -5341,6 +5300,47 @@ window.addEventListener("load", function(event) {
 });');
 			
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
+		});
+		
+		/**
+		 * @api {post} ?action=preview-edit&page={pageName}[&newpage=yes]	Get a preview of the page
+		 * @apiDescription	Gets a preview of the current edit state of a given page
+		 * @apiName 		PreviewPage
+		 * @apiPermission	Anonymous
+		 * 
+		 * @apiUse	PageParameter
+		 * @apiParam	{string}	newpage 	Set to 'yes' if a new page is being created.
+		 * @apiParam	{string}	preview-edit 	Set to a value to preview an edit of a page.
+		 */
+
+		/*
+		 *
+		 * ██████  ██████  ███████ ██    ██ ██ ███████ ██     ██
+		 * ██   ██ ██   ██ ██      ██    ██ ██ ██      ██     ██
+		 * ██████  ██████  █████   ██    ██ ██ █████   ██  █  ██
+		 * ██      ██   ██ ██       ██  ██  ██ ██      ██ ███ ██
+		 * ██      ██   ██ ███████   ████   ██ ███████  ███ ███
+		 *
+		 * ███████ ██████  ██ ████████ 
+		 * ██      ██   ██ ██    ██    
+		 * █████   ██   ██ ██    ██    
+		 * ██      ██   ██ ██    ██    
+		 * ███████ ██████  ██    ██    
+		 *
+		 */
+		add_action("preview-edit", function() {
+			global $pageindex, $settings, $env, $actions;
+
+			if(isset($_POST['preview-edit']) && isset($_POST['content'])) {
+				// preview changes
+				get_object_vars($actions)['edit']();
+			}
+			else {
+				// save page
+				get_object_vars($actions)['save']();
+			}
+
+			
 		});
 		
 		/**
