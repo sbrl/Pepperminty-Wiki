@@ -16,6 +16,7 @@
      - Added `avatars_show` and `avatars_size` settings to control the displaying & size of rendered avatars.
      - Added the `avatar` action, which 307 redirects to the appropriate avatar image
  - Added `has_action` to make detecting enabled features easier (even if they move modules)
+ - Edit previewing, thanks to @ikisler
 
 ### Changed
  - Updated MathJax CDN link, as cdn.mathjax.org is being retired ([source](https://www.mathjax.org/cdn-shutting-down/)).

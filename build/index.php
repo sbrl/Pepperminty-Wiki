@@ -4777,7 +4777,7 @@ register_module([
 
 register_module([
 	"name" => "Credits",
-	"version" => "0.7.6",
+	"version" => "0.7.7",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
@@ -4857,6 +4857,12 @@ register_module([
 					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/pull/136",
 					"icon" => "https://avatars3.githubusercontent.com/u/12506147?v=3&s=24"
 				],
+				"PR #140: Edit Previewing" => [
+					"author" => "ikisler",
+					"author_url" => "https://github.com/ikisler",
+					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/pull/140",
+					"icon" => "https://avatars3.githubusercontent.com/u/12506147?v=3&s=24"
+				]
 			];
 			
 			//// Credits html renderer ////
