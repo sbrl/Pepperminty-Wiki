@@ -6,7 +6,7 @@ Pepperminty Wiki is a complete wiki contained in a single file, inspired by @am2
 
 Developed by Starbeamrainbowlabs (though contributions from others are welcome!), Pepperminty Wiki has a variety of useful (and cool!) features - such as file upload, a dynamic help page, page revision history, page tags, and more! Other amazing features are in the works too (like threaded page commenting, autoupdate, and user settings), so check the release notes to see what's been added recently.
 
-**Latest Version:** v0.13 (stable) v0.14-dev (development)
+**Latest Version:** v0.13 (stable) v0.14-dev (development) ([Changelog](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md))
 
 ## Screenshots
 ![Main Page Example](https://i.imgur.com/8TokPXw.png)
@@ -16,11 +16,10 @@ Above: The Main Page used for testing purposes.
 ## Features
 - Configurable settings
 - User login system
-- Page creation
-- Sub pages
+- Page creation (Sub pages supported)
 - Markdown-powered syntax
 	- Templating support
-	- Additional syntax for resizing and floating images
+	- Additional syntax for resizing and floating images (see inbuilt help page)
 	- File galleries
 	- Short syntax for referencing uploaded files
 	- Client side mathematical expression parsing, courtesy of [MathJax](https://www.mathjax.org/)
@@ -28,8 +27,8 @@ Above: The Main Page used for testing purposes.
 - Full page revision history (comparison / manipulation coming soon)
 - Optional time-delayed google search indexing
 - Simple edit conflict detection
-- Internal links
-	- Links to non-existent pages show up in red
+- Edit previewing (since v0.14, thanks to @ikisler)
+- Internal links - Links to non-existent pages show up in red
 - Printable page view
 - Customisable theme
 - ~~Basic 'search' bar~~ A full text search engine!
@@ -97,7 +96,7 @@ To configure your new install, make sure that you've loaded the wiki in your bro
 
 Please note that configuration of Pepperminty Wiki will be done through a GUI soon.
 
-Below are all the configuration directives that Pepperminty Wiki (and all the modules included in the repository) understand.
+Below are all the configuration directives that Pepperminty Wiki (and all the modules included in the repository) understand (though some extra descriptions can be found in [`peppermint.guiconfig.json`](https://github.com/sbrl/Pepperminty-Wiki/blob/master/peppermint.guiconfig.json))
 
 Key				| Value			| Explanation
 ----------------|---------------|----------------------------
@@ -163,16 +162,15 @@ None yet! Contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issue
 Here's a list of things that I want to add at some point (please feel free to [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls) and help out!).
 
 - Better page history (revert to revision, compare revisions, etc.)
-- User settings like avatars, changing own passsword, etc. (#69 needs fixing first, then #107)
 - Intelligent auto-updating system that doesn't wipe your settings / module choices
 - A module registry of some sort (ideas welcome!)
-- Preview changes before you save them (#59)
-- Threaded page commenting system (#19)
 - Image maps (#103)
+- User management for moderators ( + moderator management for the wiki owner) (#127)
+- An app for Android (Sorry, iOS is not practial at the current time. Feel free to make one yourself! I'm happy to help out if you need help with Pepperminty Wiki itself - message on gitter (see above), or open an issue on this repository.)
 - (See more on the [issue tracker](https://github.com/sbrl/Pepperminty-Wiki/issues)!)
 - ...?
 
-Is the feature you want to see not on this list? [Open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) or [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls)!
+Is the feature you want to see not on this list or not implemented yet? [Open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) or [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls)!
 
 # License
 Pepperminty Wiki is released under the Mozilla Public License 2.0. The full license text is included in the `LICENSE` file in this repository.
