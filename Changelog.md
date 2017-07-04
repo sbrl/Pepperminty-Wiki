@@ -1,7 +1,7 @@
 # Changelog
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on Github too.
 
-## v0.14-dev
+## v0.14-beta1
 
 ### Added
  - Commenting! You'll need to update any custom themes you've created if you're including the commenting module in your build.
@@ -24,11 +24,11 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ### Fixed
  - Fixed error image generation in the image previewer under certain conditions.
- - Fixed warnings from being spewed all over the place under cirtain circumstances on the recent changes page
+ - Fixed warnings from being spewed all over the place under certain circumstances on the recent changes page
  - Fixed url encoding issue in redirects with ampersands in page names (#139)
  - Allow sending of OpenSearch description even when not logged in on wikis that require a login to work around some browser cookie issues
- - PR #135: Fix repeated page names on sidebar by ikisler
- - PR #136: Fix issue where bottom nav is cut off by ikisler
+ - PR #135: Fix repeated page names on sidebar by @ikisler
+ - PR #136: Fix issue where bottom nav is cut off by @ikisler
 
 ## v0.13
 (No changes were made between the last beta release and this release)
