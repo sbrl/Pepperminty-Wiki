@@ -1,7 +1,7 @@
 # Changelog
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on Github too.
 
-## v0.14-beta2
+## v0.14
 
 ### Changed
  - Improve the look of the downloader a bit. More work is needed here, apparently - I haven't touched it in _ages_!
