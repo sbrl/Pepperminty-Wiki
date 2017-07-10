@@ -46,7 +46,9 @@ register_module([
 		 * @apiDescription	Causes the inverted search index to be completely rebuilt from scratch. Can take a while for large wikis!
 		 * @apiName			SearchInvindexRebuild
 		 * @apiGroup		Search
-		 * @apiPermission	Anonymous
+		 * @apiPermission	Admin
+		 *
+		 * @apiParam	{string}	secret		Optional. Specify the secret from peppermint.json here in order to rebuild the search index without logging in.
 		 */
 		
 		/*
