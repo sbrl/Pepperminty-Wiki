@@ -102,7 +102,7 @@ register_module([
 			// Create the inverted index if it doesn't exist.
 			// todo In the future perhaps a CLI for this would be good?
 			if(!file_exists($paths->searchindex))
-				search::rebuild_invindex();
+				search::rebuild_invindex(false);
 			
 			if(!isset($_GET["query"]))
 				exit(page_renderer::render("No Search Terms - Error - $settings->sitename", "<p>You didn't specify any search terms. Try typing some into the box above.</p>"));
@@ -482,17 +482,19 @@ class search
 		return str_replace([ "[", "]", "\"", "*", "_", " - ", "`" ], "", $source);
 	}
 	
-	public static function rebuild_invindex()
+	public static function rebuild_invindex($output = true)
 	{
 		global $pageindex, $env, $paths;
 		
-		header("content-type: text/event-stream");
+		if($output)
+			header("content-type: text/event-stream");
 		
 		// Clear the id index out
 		ids::clear();
 		
 		// Reindex each page in turn
 		$invindex = [];
+		$i = 0; $max = count(get_object_vars($pageindex));
 		foreach($pageindex as $pagename => $pagedetails)
 		{
 			$pagesource = utf8_encode(file_get_contents("$env->storage_prefix$pagename.md"));
@@ -501,12 +503,18 @@ class search
 			$pageid = ids::getid($pagename);
 			self::merge_into_invindex($invindex, $pageid, $index);
 			
-			echo("Added $pagename (id #$pageid) to the new search index.\n\n");
-			flush();
+			if($output) {
+				echo("[" . ($i + 1) . " / $max] Added $pagename (id #$pageid) to the new search index.\n\n");
+				flush();
+			}
+			
+			$i++;
 		}
 		
-		echo("Search index rebuilding complete.\n\n");
-		echo("Saving new search index to '$paths->searchindex'.\n\n");
+		if($output) {
+			echo("Search index rebuilding complete.\n\n");
+			echo("Saving new search index to '$paths->searchindex'.\n\n");
+		}
 		
 		self::save_invindex($paths->searchindex, $invindex);
 	}
