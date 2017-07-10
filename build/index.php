@@ -3139,7 +3139,19 @@ register_module([
 		 * ██   ██ ███████ ██████   ██████  ██ ███████ ██████                  
 		 */
 		add_action("invindex-rebuild", function() {
-			search::rebuild_invindex();
+			global $env, $settings;
+			if($env->is_admin ||
+				(
+					!empty($_POST["secret"]) &&
+					$_POST["secret"] === $settings->secret
+				)
+			)
+				search::rebuild_invindex();
+			else
+			{
+				http_response_code(401);
+				exit(page_renderer::render_main("Error - Search index regenerator - $settings->sitename", "<p>Error: You aren't allowed to regenerate the search index. Try logging in as an admin, or setting the <code>secret</code> POST parameter to $settings->sitename's secret - which can be found in $settings->sitename's <code>peppermint.json</code> file.</p>"));
+			}
 		});
 		
 		
