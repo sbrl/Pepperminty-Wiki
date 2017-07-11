@@ -2554,6 +2554,39 @@ register_module([
 			
 			$content = "<h1>Master Control Panel</h1>\n";
 			$content .= "<p>This page lets you configure $settings->sitename's master settings. Please be careful - you can break things easily on this page if you're not careful!</p>\n";
+			$content .= "<h2>Actions</h2>";
+			
+			$content .= "<button class='action-invindex-rebuild'>Rebuild Search Index</button><br />\n";
+			$content .= "<output class='action-invindex-rebuild-latestmessage'></output><br />\n";
+			$content .= "<progress class='action-invindex-rebuild-progress' min='0' max='100' value='0' style='display: none;'></progress><br />\n";
+			
+			$invindex_rebuild_script = <<<SCRIPT
+window.addEventListener("load", function(event) {
+	document.querySelector(".action-invindex-rebuild").addEventListener("click", function(event) {
+		var rebuildActionEvents = new EventSource("?action=invindex-rebuild");
+		var latestMessageElement = document.querySelector(".action-invindex-rebuild-latestmessage");
+		var progressElement = document.querySelector(".action-invindex-rebuild-progress");
+		rebuildActionEvents.addEventListener("message", function(event) {
+			console.log(event);
+			let message = event.data; 
+			latestMessageElement.value = event.data;
+			let parts = message.match(/^\[\s*(\d+)\s+\/\s+(\d+)\s*\]/);
+			if(parts != null) {
+				progressElement.style.display = "";
+				progressElement.min = 0;
+				progressElement.max = parseInt(parts[2]);
+				progressElement.value = parseInt(parts[1]);
+			}
+			if(message.startsWith("Done! Saving new search index to"))
+				rebuildActionEvents.close();
+		});
+	});
+});
+SCRIPT;
+
+			page_renderer::AddJSSnippet($invindex_rebuild_script);
+			
+			$content .= "<h2>Settings</h2>";
 			$content .= "<p>Mouse over the name of each setting to see a description of what it does.</p>\n";
 			$content .= "<form action='?action=configure-save' method='post'>\n";
 			
@@ -3122,7 +3155,9 @@ register_module([
 		 * @apiDescription	Causes the inverted search index to be completely rebuilt from scratch. Can take a while for large wikis!
 		 * @apiName			SearchInvindexRebuild
 		 * @apiGroup		Search
-		 * @apiPermission	Anonymous
+		 * @apiPermission	Admin
+		 *
+		 * @apiParam	{string}	secret		Optional. Specify the secret from peppermint.json here in order to rebuild the search index without logging in.
 		 */
 		
 		/*
@@ -3572,10 +3607,12 @@ class search
 	
 	public static function rebuild_invindex($output = true)
 	{
-		global $pageindex, $env, $paths;
+		global $pageindex, $env, $paths, $settings;
 		
-		if($output)
+		if($output) {
 			header("content-type: text/event-stream");
+			ob_end_flush();
+		}
 		
 		// Clear the id index out
 		ids::clear();
@@ -3583,16 +3620,24 @@ class search
 		// Reindex each page in turn
 		$invindex = [];
 		$i = 0; $max = count(get_object_vars($pageindex));
+		$missing_files = 0;
 		foreach($pageindex as $pagename => $pagedetails)
 		{
-			$pagesource = utf8_encode(file_get_contents("$env->storage_prefix$pagename.md"));
+			$page_filename = $env->storage_prefix . $pagedetails->filename;
+			if(!file_exists($page_filename)) {
+				echo("data: [" . ($i + 1) . " / $max] Error: Can't find $page_filename");
+				flush();
+				$missing_files++;
+				continue;
+			}
+			$pagesource = utf8_encode(file_get_contents($page_filename));
 			$index = self::index($pagesource);
 			
 			$pageid = ids::getid($pagename);
 			self::merge_into_invindex($invindex, $pageid, $index);
 			
 			if($output) {
-				echo("[" . ($i + 1) . " / $max] Added $pagename (id #$pageid) to the new search index.\n\n");
+				echo("data: [" . ($i + 1) . " / $max] Added $pagename (id #$pageid) to the new search index.\n\n");
 				flush();
 			}
 			
@@ -3600,8 +3645,9 @@ class search
 		}
 		
 		if($output) {
-			echo("Search index rebuilding complete.\n\n");
-			echo("Saving new search index to '$paths->searchindex'.\n\n");
+			echo("data: Search index rebuilding complete.\n\n");
+			echo("data: Couldn't find $missing_files pages on disk. If $settings->sitename couldn't find some pages on disk, then you might need to manually correct $settings->sitename's page index (stored in pageindex.json).\n\n");
+			echo("data: Done! Saving new search index to '$paths->searchindex'.\n\n");
 		}
 		
 		self::save_invindex($paths->searchindex, $invindex);
