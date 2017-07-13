@@ -28,6 +28,7 @@ $paths = new stdClass();
 $paths->pageindex = "pageindex.json"; // The pageindex
 $paths->searchindex = "invindex.json"; // The inverted index used for searching
 $paths->idindex = "idindex.json"; // The index that converts ids to page names
+$paths->statsindex = "statsindex.json"; // The calculated statistics cache
 
 // Prepend the storage data directory to all the defined paths.
 foreach ($paths as &$path) {
@@ -1464,6 +1465,25 @@ function add_help_section($index, $title, $content)
 if(!empty($settings->enable_math_rendering))
 	add_help_section("22-mathematical-mxpressions", "Mathematical Expressions", "<p>$settings->sitename supports rendering of mathematical expressions. Mathematical expressions can be included practically anywhere in your page. Expressions should be written in LaTeX and enclosed in dollar signs like this: <code>&#36;x^2&#36;</code>.</p>
 	<p>Note that expression parsing is done on the viewer's computer with javascript (specifically MathJax) and not by $settings->sitename directly (also called client side rendering).</p>");
+
+$statistic_calculators = [];
+/**
+ * Registers a statistic calculator against the system.
+ * @param	array	$stat_data	The statistic object to register.
+ */
+function statistic_add($stat_data) {
+	global $statistic_calculators;
+	$statistic_calculators[$stat_data["id"]] = $stat_data;
+}
+/**
+ * Checks whether a specified statistic has been registered.
+ * @param  string  $stat_id The id of the statistic to check the existence of.
+ * @return boolean          Whether the specified statistic has been registered.
+ */
+function has_statistic($stat_id) {
+	global $statistic_calculators;
+	return !empty($statistic_calculators[$stat_id]);
+}
 
 //////////////////////////////////////////////////////////////////
 

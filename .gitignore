@@ -23,6 +23,8 @@ idindex.json
 invindex.json
 # The recent changes list
 recent-changes.json
+# The statistics cache file
+build/statsindex.json
 # The new settings file
 peppermint.json
 # The comments files

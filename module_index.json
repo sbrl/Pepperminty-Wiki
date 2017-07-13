@@ -68,7 +68,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
         "id": "feature-guiconfig",
-        "lastupdate": 1499800769,
+        "lastupdate": 1499800843,
         "optional": false
     },
     {
@@ -105,6 +105,15 @@
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
         "id": "feature-search",
         "lastupdate": 1499800831,
+        "optional": false
+    },
+    {
+        "name": "Statistics",
+        "version": "0.1",
+        "author": "Starbeamrainbowlabs",
+        "description": "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
+        "id": "feature-stats",
+        "lastupdate": 1499974908,
         "optional": false
     },
     {

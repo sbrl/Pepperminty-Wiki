@@ -170,6 +170,8 @@ $guiConfig = <<<'GUICONFIG'
 	"optimize_pages": {"type": "checkbox", "description": "Whether to optimise all webpages generated.", "default": true},
 	"max_recent_changes": {"type": "number", "description": "The maximum number of recent changes to display on the recent changes page.", "default": 512},
 	"export_allow_only_admins": {"type": "checkbox", "description": "Whether to only allow adminstrators to export the your wiki as a zip using the page-export module.", "default": false},
+	"stats_update_interval": {"type": "number", "description": "The number of seconds which should elapse before a statistics update should be scheduled. Defaults to once a day.", "default": 86400},
+	"stats_update_processingtime": {"type": "number", "description": "The maximum number of milliseconds that should be spent at once calculating statistics. If some statistics couldn't fit within this limit, then they are scheduled and updated on the next page load. Note that this is a target only - if an individual statistic takes longer than this, then it won't be interrupted. Defaults to 100ms.", "default": 100},
 	"sessionprefix": {"type": "text", "description": "You shouldn't need to change this. The prefix that should be used in the names of the session variables. Defaults to \"auto\", which automatically generates this field. See the readme for more information.", "default": "auto"},
 	"sessionlifetime": { "type": "number", "description": "Again, you shouldn't need to change this under normal circumstances. This setting controls the lifetime of a login session. Defaults to 24 hours, but it may get cut off sooner depending on the underlying PHP session lifetime.", "default": 86400 },
 	"css": {"type": "textarea", "description": "A string of css to include. Will be included in the &lt;head&gt; of every page inside a &lt;style&gt; tag. This may also be an absolute url - urls will be referenced via a &lt;link rel='stylesheet' /&gt; tag.", "default": "auto"}
@@ -383,6 +385,7 @@ $paths = new stdClass();
 $paths->pageindex = "pageindex.json"; // The pageindex
 $paths->searchindex = "invindex.json"; // The inverted index used for searching
 $paths->idindex = "idindex.json"; // The index that converts ids to page names
+$paths->statsindex = "statsindex.json"; // The calculated statistics cache
 
 // Prepend the storage data directory to all the defined paths.
 foreach ($paths as &$path) {
@@ -1819,6 +1822,25 @@ function add_help_section($index, $title, $content)
 if(!empty($settings->enable_math_rendering))
 	add_help_section("22-mathematical-mxpressions", "Mathematical Expressions", "<p>$settings->sitename supports rendering of mathematical expressions. Mathematical expressions can be included practically anywhere in your page. Expressions should be written in LaTeX and enclosed in dollar signs like this: <code>&#36;x^2&#36;</code>.</p>
 	<p>Note that expression parsing is done on the viewer's computer with javascript (specifically MathJax) and not by $settings->sitename directly (also called client side rendering).</p>");
+
+$statistic_calculators = [];
+/**
+ * Registers a statistic calculator against the system.
+ * @param	array	$stat_data	The statistic object to register.
+ */
+function statistic_add($stat_data) {
+	global $statistic_calculators;
+	$statistic_calculators[$stat_data["id"]] = $stat_data;
+}
+/**
+ * Checks whether a specified statistic has been registered.
+ * @param  string  $stat_id The id of the statistic to check the existence of.
+ * @return boolean          Whether the specified statistic has been registered.
+ */
+function has_statistic($stat_id) {
+	global $statistic_calculators;
+	return !empty($statistic_calculators[$stat_id]);
+}
 
 //////////////////////////////////////////////////////////////////
 
@@ -3990,6 +4012,164 @@ class search
 }
 
 
+
+
+register_module([
+	"name" => "Statistics",
+	"version" => "0.1",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
+	"id" => "feature-stats",
+	"code" => function() {
+		global $settings;
+		/**
+		 * @api {get} ?action=raw&page={pageName} Get the raw source code of a page
+		 * @apiName RawSource
+		 * @apiGroup Page
+		 * @apiPermission Anonymous
+		 * 
+		 * @apiParam {string}	page	The page to return the source of.
+		 */
+		
+		/*
+		 * ██████   █████  ██     ██ 
+		 * ██   ██ ██   ██ ██     ██ 
+		 * ██████  ███████ ██  █  ██ 
+		 * ██   ██ ██   ██ ██ ███ ██ 
+		 * ██   ██ ██   ██  ███ ███  
+		 */
+		add_action("stats-update", function() {
+			global $env, $paths;
+			
+			update_statistics(true);
+			header("content-type: application/json");
+			echo(file_get_contents($paths->statsindex) . "\n");
+		});
+		
+		add_help_section("150-statistics", "Statistics", "<p></p>");
+		
+		//////////////////////////
+		/// Built-in Statisics ///
+		//////////////////////////
+
+		// The longest pages
+		statistic_add([
+			"id" => "longest-pages",
+			"name" => "Longest Pages",
+			"update" => function($old_stats) {
+				global $pageindex;
+				
+				$result = new stdClass(); // completed, value, state
+				$pages = [];
+				foreach($pageindex as $pagename => $pagedata) {
+					$pages[$pagename] = $pagedata->size;
+				}
+				arsort($pages);
+				
+				$result->value = $pages;
+				$result->completed = true;
+				return $result;
+			}
+		]);
+
+		statistic_add([
+			"id" => "page_count",
+			"name" => "Page Count",
+			"update" => function($old_stats) {
+				global $pageindex;
+				
+				$result = new stdClass(); // completed, value, state
+				$result->completed = true;
+				$result->value = count(get_object_vars($pageindex));
+				return $result;
+			}
+		]);
+
+		statistic_add([
+			"id" => "file_count",
+			"name" => "File Count",
+			"update" => function($old_stats) {
+				global $pageindex;
+				
+				$result = new stdClass(); // completed, value, state
+				$result->completed = true;
+				$result->value = 0;
+				foreach($pageindex as $pagename => $pagedata) {
+					if(!empty($pagedata->uploadedfile) && $pagedata->uploadedfile)
+						$result->value++;
+				}
+				return $result;
+			}
+		]);
+	}
+]);
+
+function update_statistics($update_all = false)
+{
+	global $settings, $statistic_calculators;
+	
+	$stats = stats_load();
+	
+	$start_time = microtime(true);
+	$stats_updated = 0;
+	foreach($statistic_calculators as $stat_id => $stat_calculator)
+	{
+		// If statistic doesn't exist or it's out of date then we should recalculate it.
+		// Otherwise, leave it and continue on to the next stat.
+		if(!empty($stats->$stat_id) && $start_time - $stats->$stat_id->lastupdated < $settings->stats_update_interval)
+			continue;
+		
+		$mod_start_time = microtime(true);
+		
+		// Run the statistic calculator, passing in the existing stats data
+		$calculated = $stat_calculator["update"](!empty($stats->$stat_id) ? $stats->$stat_id : new stdClass());
+		
+		$new_stat_data = new stdClass();
+		$new_stat_data->id = $stat_id;
+		$new_stat_data->name = $stat_calculator["name"];
+		$new_stat_data->lastupdated = $calculated->completed ? $mod_start_time : $stats->$stat_id->lastupdated;
+		$new_stat_data->value = $calculated->value;
+		if(!empty($calculated->state))
+			$new_stat_data->state = $calculated->state;
+		
+		// Save the new statistics
+		$stats->$stat_id = $new_stat_data;
+		
+		$stats_updated++;
+		
+		if(!$update_all && microtime(true) - $start_time >= $stats_update_processingtime)
+			break;
+	}
+	
+	header("x-stats-recalculated: $stats_updated");
+	//round((microtime(true) - $pageindex_read_start)*1000, 3)
+	header("x-stats-calctime: " . round((microtime(true) - $start_time)*1000, 3) . "ms");
+	
+	stats_save($stats);
+}
+
+/**
+ * Loads and returns the statistics cache file.
+ * @return object The loaded & decoded statistics.
+ */
+function stats_load()
+{
+	global $paths;
+	static $stats = null;
+	if($stats == null)
+		$stats = file_exists($paths->statsindex) ? json_decode(file_get_contents($paths->statsindex)) : new stdClass();
+	return $stats;
+}
+/**
+ * Saves the statistics back to disk.
+ * @param	object	The statistics cache to save.
+ * @return	bool	Whether saving succeeded or not.
+ */
+function stats_save($stats)
+{
+	global $paths;
+	return file_put_contents($paths->statsindex, json_encode($stats, JSON_PRETTY_PRINT) . "\n");
+}
 
 
 register_module([
