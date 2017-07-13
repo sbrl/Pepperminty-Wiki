@@ -4039,7 +4039,10 @@ register_module([
 		 * ██   ██ ██   ██  ███ ███  
 		 */
 		add_action("stats-update", function() {
-			global $env, $paths;
+			global $env, $paths, $settings;
+			
+			if(!$env->is_admin)
+				exit(page_renderer::render_main("Error - Recalculating Statistics - $settings->sitename", "<p>You need to be logged in as a moderator or better to get $settings->sitename to recalculate it's statistics. If you're logged in, try <a href='?action=logout'>logging out</a> and logging in again as a moderator. If you aren't logged in, try <a href='?action=login&returnto=%3Faction%3Dstats-update'>logging in</a>.</p>"));
 			
 			update_statistics(true);
 			header("content-type: application/json");
