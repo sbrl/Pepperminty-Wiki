@@ -31,13 +31,30 @@ register_module([
 				$result = new stdClass(); // completed, value, state
 				$pages = [];
 				foreach($pageindex as $pagename => $pagedata) {
+					if(!file_exists($env->storage_prefix . $pagedata->filename)) {
+						continue;
+					}
 					$page_content = file_get_contents($env->storage_prefix . $pagedata->filename);
 					preg_match_all("/\[\[([^\]]+)\]\]/", $page_content, $linked_pages);
-					if(count($linked_pages) < 2)
+					if(count($linked_pages[1]) === 0)
 						continue; // No linked pages here
 					foreach($linked_pages[1] as $linked_page) {
+						// Strip everything after the | and the #
+						if(strpos($linked_page, "|") !== false)
+							$linked_page = substr($linked_page, 0, strpos($linked_page, "|"));
+						if(strpos($linked_page, "#") !== false)
+							$linked_page = substr($linked_page, 0, strpos($linked_page, "#"));
+						if(strlen($linked_page) === 0)
+							continue;
+						// Make sure we try really hard to find this page in the
+						// pageindex
+						if(!empty($pageindex->{ucfirst($linked_page)}))
+							$linked_page = ucfirst($linked_page);
+						else if(!empty($pageindex->{ucwords($linked_page)}))
+							$linked_page = ucwords($linked_page);
+						
 						// We're only interested in pages that don't exist
-						if(!empty($linked_page)) continue;
+						if(!empty($pageindex->$linked_page)) continue;
 						
 						if(empty($pages[$linked_page]))
 							$pages[$linked_page] = 0;
