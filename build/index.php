@@ -101,6 +101,10 @@ $guiConfig = <<<'GUICONFIG'
 			"?action=recent-changes"
 		],
 		[
+			"Statistics",
+			"?action=stats"
+		],
+		[
 			"&#x1f845; Upload",
 			"index.php?action=upload"
 		],
