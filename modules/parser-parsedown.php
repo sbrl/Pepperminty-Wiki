@@ -67,6 +67,16 @@ register_module([
 				$result->value = $pages;
 				$result->completed = true;
 				return $result;
+			},
+			"render" => function($stats_data) {
+				$result = "<h2>$stats_data->name</h2>\n";
+				$result .= "<table class='wanted-pages'>\n";
+				$result .= "\t<tr><th>Page Name</th><th>Linking Pages</th></tr>\n";
+				foreach($stats_data->value as $pagename => $linking_pages) {
+					$result .= "\t<tr><td>$pagename</td><td>$linking_pages</td></tr>\n";
+				}
+				$result .= "</table>\n";
+				return $result;
 			}
 		]);
 		

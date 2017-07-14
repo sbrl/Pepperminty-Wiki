@@ -181,7 +181,15 @@ function human_filesize($bytes, $decimals = 2)
  */
 function human_time_since($time)
 {
-	$timediff = time() - $time;
+	return human_time(time() - $time);
+}
+/**
+ * Renders a given number of seconds as something that humans can understand more easily.
+ * @param 	int		$seconds	The number of seconds to render.
+ * @return	string	The rendered time.
+ */
+function human_time($seconds)
+{
 	$tokens = array (
 		31536000 => 'year',
 		2592000 => 'month',
@@ -192,8 +200,8 @@ function human_time_since($time)
 		1 => 'second'
 	);
 	foreach ($tokens as $unit => $text) {
-		if ($timediff < $unit) continue;
-		$numberOfUnits = floor($timediff / $unit);
+		if ($seconds < $unit) continue;
+		$numberOfUnits = floor($seconds / $unit);
 		return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':'').' ago';
 	}
 }

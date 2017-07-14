@@ -17,17 +17,54 @@ register_module([
 		 */
 		
 		/*
-		███████ ████████  █████  ████████ ███████
-		██         ██    ██   ██    ██    ██
-		███████    ██    ███████    ██    ███████
-		     ██    ██    ██   ██    ██         ██
-		███████    ██    ██   ██    ██    ███████
+		 * ███████ ████████  █████  ████████ ███████
+		 * ██         ██    ██   ██    ██    ██
+		 * ███████    ██    ███████    ██    ███████
+		 *      ██    ██    ██   ██    ██         ██
+		 * ███████    ██    ██   ██    ██    ███████
+		 */
+		add_action("stats", function() {
+			global $settings, $statistic_calculators;
+			
+			$stats = stats_load();
+			
+			$content = "<h1>Statistics</h1>";
+			$content .= "<p>This page contains a selection of statistics about $settings->sitename's content. They are updated automatically about every " . trim(str_replace(["ago", "1 "], [""], human_time($settings->stats_update_interval))) . ", although $settings->sitename's local friendly moderators may update it earlier (you can see their names at the bottom of every page).</p>\n";
+			$stat_scalar_values = [];
+			$stat_contents = [];
+			foreach($statistic_calculators as $stat_id => $stat_calculator) {
+				if(!empty($stat_calculator["render"]))
+					$stat_contents[$stat_calculator["name"]] = $stat_calculator["render"]($stats->$stat_id);
+				else
+					$stat_scalar_values[$stat_calculator["name"]] = $stats->$stat_id->value;
+			}
+			
+			$content .= "<table class='stats-table'>\n";
+			$content .= "\t<tr><th>Statistic</th><th>Value</th></tr>\n\n";
+			foreach($stat_scalar_values as $scalar_name => $scalar_value) {
+				$content .= "\t<tr><td>$scalar_name</td><td>$scalar_value</td></tr>\n";
+			}
+			$content .= "</table>\n";
+			
+			foreach($stat_contents as $stat_content_part)
+				$content .= "$stat_content_part\n";
+			
+			exit(page_renderer::render_main("Statistics - $settings->sitename", $content));
+		});
 		
-		██    ██ ██████  ██████   █████  ████████ ███████
-		██    ██ ██   ██ ██   ██ ██   ██    ██    ██
-		██    ██ ██████  ██   ██ ███████    ██    █████
-		██    ██ ██      ██   ██ ██   ██    ██    ██
-		 ██████  ██      ██████  ██   ██    ██    ███████
+		
+		/*
+		 * ███████ ████████  █████  ████████ ███████
+		 * ██         ██    ██   ██    ██    ██
+		 * ███████    ██    ███████    ██    ███████
+		 *      ██    ██    ██   ██    ██         ██
+		 * ███████    ██    ██   ██    ██    ███████
+		 * 
+		 * ██    ██ ██████  ██████   █████  ████████ ███████
+		 * ██    ██ ██   ██ ██   ██ ██   ██    ██    ██
+		 * ██    ██ ██████  ██   ██ ███████    ██    █████
+		 * ██    ██ ██      ██   ██ ██   ██    ██    ██
+		 *  ██████  ██      ██████  ██   ██    ██    ███████
 		 */
 		add_action("stats-update", function() {
 			global $env, $paths, $settings;
@@ -71,6 +108,17 @@ register_module([
 				
 				$result->value = $pages;
 				$result->completed = true;
+				return $result;
+			},
+			"render" => function($stats_data) {
+				$result = "<h2>$stats_data->name</h2>\n";
+				$result .= "<ol class='stats-list longest-pages-list'>\n";
+				$i = 0;
+				foreach($stats_data->value as $pagename => $page_length) {
+					$result .= "\t<li class='stats-item long-page'>$pagename <em>(" . human_filesize($page_length) . ")</em></li>\n";
+					$i++;
+				}
+				$result .= "</ol>\n";
 				return $result;
 			}
 		]);
