@@ -6866,6 +6866,38 @@ register_module([
 			return $result;
 		});
 		
+		// Wanted pages
+		statistic_add([
+			"id" => "wanted-pages",
+			"name" => "Wanted Pages",
+			"update" => function($old_stats) {
+				global $pageindex, $env;
+				
+				$result = new stdClass(); // completed, value, state
+				$pages = [];
+				foreach($pageindex as $pagename => $pagedata) {
+					$page_content = file_get_contents($env->storage_prefix . $pagedata->filename);
+					preg_match_all("/\[\[([^\]]+)\]\]/", $page_content, $linked_pages);
+					if(count($linked_pages) < 2)
+						continue; // No linked pages here
+					foreach($linked_pages[1] as $linked_page) {
+						// We're only interested in pages that don't exist
+						if(!empty($linked_page)) continue;
+						
+						if(empty($pages[$linked_page]))
+							$pages[$linked_page] = 0;
+						$pages[$linked_page]++;
+					}
+				}
+				
+				arsort($pages);
+				
+				$result->value = $pages;
+				$result->completed = true;
+				return $result;
+			}
+		]);
+		
 		add_help_section("20-parser-default", "Editor Syntax",
 		"<p>$settings->sitename's editor uses an extended version of <a href='http://parsedown.org/'>Parsedown</a> to render pages, which is a fantastic open source Github flavoured markdown parser. You can find a quick reference guide on Github flavoured markdown <a href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'>here</a> by <a href='https://github.com/adam-p/'>adam-p</a>, or if you prefer a book <a href='https://www.gitbook.com/book/roachhd/master-markdown/details'>Mastering Markdown</a> by KB is a good read, and free too!</p>
 		<h3>Tips</h3>
