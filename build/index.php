@@ -4023,20 +4023,26 @@ register_module([
 	"code" => function() {
 		global $settings;
 		/**
-		 * @api {get} ?action=raw&page={pageName} Get the raw source code of a page
-		 * @apiName RawSource
-		 * @apiGroup Page
-		 * @apiPermission Anonymous
-		 * 
-		 * @apiParam {string}	page	The page to return the source of.
+		 * @api {get|post} ?action=stats-update Recalculate the wiki's statistics
+		 * @apiName UpdateStats
+		 * @apiGroup Utility
+		 * @apiPermission Administrator
+		 *
+		 * @apiParam	{string}	secret	POST only, optional. If you're not logged in, you can specify the wiki's sekret (find it in peppermint.json) using this parameter.
 		 */
 		
 		/*
-		 * ██████   █████  ██     ██ 
-		 * ██   ██ ██   ██ ██     ██ 
-		 * ██████  ███████ ██  █  ██ 
-		 * ██   ██ ██   ██ ██ ███ ██ 
-		 * ██   ██ ██   ██  ███ ███  
+		███████ ████████  █████  ████████ ███████
+		██         ██    ██   ██    ██    ██
+		███████    ██    ███████    ██    ███████
+		     ██    ██    ██   ██    ██         ██
+		███████    ██    ██   ██    ██    ███████
+		
+		██    ██ ██████  ██████   █████  ████████ ███████
+		██    ██ ██   ██ ██   ██ ██   ██    ██    ██
+		██    ██ ██████  ██   ██ ███████    ██    █████
+		██    ██ ██      ██   ██ ██   ██    ██    ██
+		 ██████  ██      ██████  ██   ██    ██    ███████
 		 */
 		add_action("stats-update", function() {
 			global $env, $paths, $settings;
