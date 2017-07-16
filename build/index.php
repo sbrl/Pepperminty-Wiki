@@ -3430,7 +3430,7 @@ register_module([
 	<InputEncoding>UTF-8</InputEncoding>
 	<OutputEncoding>UTF-8</OutputEncoding>
 	
-	<Url type=\"text/html\" method=\"get\" template=\"$siteRoot?action=view&search-redirect=yes&amp;page={searchTerms}&amp;offset={startIndex?}&amp;count={count}\" />
+	<Url type=\"text/html\" method=\"get\" template=\"$siteRoot?action=view&amp;search-redirect=yes&amp;page={searchTerms}&amp;offset={startIndex?}&amp;count={count}\" />
 	<Url type=\"application/x-suggestions+json\" template=\"$siteRoot?action=suggest-pages&amp;query={searchTerms}&amp;type=opensearch\" />
 </OpenSearchDescription>");
 		});

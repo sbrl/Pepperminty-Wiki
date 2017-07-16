@@ -3,6 +3,9 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## v0.15-dev
 
+### Fixed
+ - Fixed invalid opensearch description.
+
 ### Changed
  - Make `invindex-rebuild` admin-only, but allow access if the POST param `secret` is set to your secret in `peppermint.json`
 
