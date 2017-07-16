@@ -3,6 +3,12 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## v0.15-dev
 
+### Added
+ - Statistics!
+     - Added a new statistics engine, which you can add your own statistic calculators to with `statistic_add`
+     - Added action `stats` to view the calculated statisics
+     - Statistics are automagically recalculated every day - this can be controlled with `stats_update_interval` and `stats_update_processingtime`
+
 ### Fixed
  - Fixed invalid opensearch description.
 
