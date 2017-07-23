@@ -118,6 +118,19 @@ register_module([
 						http_response_code(401);
 						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because you are not logged in.</p><p>Try <a href='?action=login&returnto=" . rawurlencode("?action=upload") . "'>logging in</a> first."));
 					}
+
+					// Check for php upload errors
+					if($_FILES["file"]["error"] > 0)
+					{
+						if(!empty($_FILES["file"]))
+							unlink($_FILES["file"]["tmp_name"]);
+						if($_FILES["file"]["error"] == 1 || $_FILES["file"]["error"] == 2)
+							http_response_code(413); // file is too large
+						else
+							http_response_code(500); // something else went wrong
+						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because " . (($_FILES["file"]["error"] == 1 || $_FILES["file"]["error"] == 2) ? "the file is too large" : "an error occurred") . ".</p><p>Please contact the administrator for assistance.</p>"));
+
+					}
 					
 					// Calculate the target name, removing any characters we
 					// are unsure about.
