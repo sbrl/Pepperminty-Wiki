@@ -304,7 +304,7 @@ register_module([
 				exit();
 			}
 			
-			$filepath = $env->storage_prefix . $pageindex->{$env->page}->uploadedfilepath;
+			$filepath = getcwd() . "/" . $env->storage_prefix . $pageindex->{$env->page}->uploadedfilepath;
 			$mime_type = $pageindex->{$env->page}->uploadedfilemime;
 			$shortFilename = substr($filepath, 1 + (strrpos($filepath, '/') !== false ? strrpos($filepath, '/') : -1));
 			
