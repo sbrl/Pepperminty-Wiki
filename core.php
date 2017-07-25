@@ -1202,8 +1202,10 @@ class page_renderer
 							$result .= "</span>";
 							//$result .= page_renderer::$nav_divider;
 						}
-						else
-							$result .= "<span class='not-logged-in'><a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>Login</a></span>";
+						else {
+							$returnto_url = $env->action !== "logout" ? $_SERVER["REQUEST_URI"] : "?action=view&page=" . rawurlencode($settings->defaultpage);
+							$result .= "<span class='not-logged-in'><a href='index.php?action=login&returnto=" . rawurlencode($returnto_url) . "'>Login</a></span>";
+						}
 						break;
 
 					case "search": // Renders the search bar
