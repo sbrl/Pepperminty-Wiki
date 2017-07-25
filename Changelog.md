@@ -11,9 +11,11 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ### Fixed
  - Fixed invalid opensearch description.
+ - When deleting a page, if `feature-comments` is installed, all the comments attached to the page are deleted too
 
 ### Changed
  - Make `invindex-rebuild` admin-only, but allow access if the POST param `secret` is set to your secret in `peppermint.json`
+ - Improved the wording of the deletion confirmation and error pages
 
 ## v0.14
 

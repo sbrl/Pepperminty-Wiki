@@ -5365,8 +5365,8 @@ register_module([
 			}
 			if(!$env->is_admin)
 			{
-				exit(page_renderer::render_main("Error: Insufficient permissions - Deleting $env->page", "<p>You tried to delete $env->page, but you are not an admin so you don't have permission to do that.</p>
-				<p>You should try <a href='index.php?action=login'>logging in</a> as an admin.</p>"));
+				exit(page_renderer::render_main("Error: Insufficient permissions - Deleting $env->page", "<p>You tried to delete $env->page, but you as aren't a moderator you don't have permission to do that.</p>
+				<p>You could try <a href='index.php?action=login'>logging in</a> as an admin, or asking one of $settings->sitename's friendly moderators (find their names at the bottom of every page!) to delete it for you.</p>"));
 			}
 			if(!isset($pageindex->{$env->page}))
 			{
@@ -5375,7 +5375,7 @@ register_module([
 			
 			if(!isset($_GET["delete"]) or $_GET["delete"] !== "yes")
 			{
-				exit(page_renderer::render_main("Deleting $env->page", "<p>You are about to <strong>delete</strong> $env->page" . (module_exists("feature-history")?" and all its revisions":"") . ". You can't undo this!</p>
+				exit(page_renderer::render_main("Deleting $env->page", "<p>You are about to <strong>delete</strong> <em>$env->page</em>" . (module_exists("feature-history")?" and all its revisions":"") . (module_exists("feature-comments")?" and all its comments":"") . ". You can't undo this!</p>
 				<p><a href='index.php?action=delete&page=$env->page&delete=yes'>Click here to delete $env->page.</a></p>
 				<p><a href='index.php?action=view&page=$env->page'>Click here to go back.</a>"));
 			}
@@ -5390,6 +5390,14 @@ register_module([
 			foreach($pageindex->{$env->page}->history as $revisionData)
 			{
 				unlink($env->storage_prefix . $revisionData->filename);
+			}
+			
+			// If the commenting module is installed and the page has comments,
+			// delete those too
+			if(module_exists("feature-comments") and
+				file_exists(get_comment_filename($env->page)))
+			{
+				unlink(get_comment_filename($env->page));
 			}
 			
 			// Delete the page from the page index
