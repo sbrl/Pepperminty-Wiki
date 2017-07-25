@@ -1651,6 +1651,9 @@ window.addEventListener("load", function(event) {
 	document.querySelector("input[type=search]").addEventListener("keyup", function(event) {
 		// Listen for Alt + Enter
 		if(event.keyCode == 13 && event.altKey) {
+			event.stopPropagation();
+			event.preventDefault();
+			event.cancelBubble = true;
 			event.target.form.setAttribute("target", "_blank");
 			event.target.form.submit();
 			event.target.form.removeAttribute("target");
