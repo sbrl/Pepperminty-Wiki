@@ -134,7 +134,7 @@ register_module([
 					<input type='hidden' name='prev-content-hash' value='" . ((isset($old_pagetext)) ? sha1($old_pagetext) : sha1($pagetext)) . "' />
 					<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
 					<pre class='fit-text-mirror'></pre>
-					<input type='text' name='tags' value='" . htmlentities($page_tags) . "' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
+					<input type='text' name='tags' value='" . htmlentities($page_tags, ENT_HTML5 | ENT_QUOTES) . "' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
 					<p class='editing-message'>$settings->editing_message</p>
 					<input name='preview-edit' class='edit-page-button' type='submit' value='Preview Changes' tabindex='4' />
 					<input name='submit-edit' class='edit-page-button' type='submit' value='Save Page' tabindex='3' />
@@ -338,7 +338,7 @@ window.addEventListener("load", function(event) {
 					
 					<h2>Your content</h2>
 					<textarea id='new-content'>$pagedata</textarea>
-					<input type='text' name='tags' value='" . $_POST["tags"] . "' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
+					<input type='text' name='tags' value='" . htmlentities($_POST["tags"]) . "' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
 					<p class='editing_message'>$settings->editing_message</p>
 					<input name='submit-edit' type='submit' value='Resolve Conflict' tabindex='3' />
 					</form>";
