@@ -1089,7 +1089,9 @@ class page_renderer
 		$result = self::get_css_as_html();
 		$result .= self::getJS();
 		
-		if(module_exists("feature-search"))
+		// We can't use module_exists here because sometimes global $modules
+		// hasn't populated yet when we get called O.o
+		if(class_exists("search"))
 			$result .= "\t\t<link rel='search' type='application/opensearchdescription+xml' href='?action=opensearch-description' title='$settings->sitename Search' />\n";
 		
 		if(!empty($settings->enable_math_rendering))
