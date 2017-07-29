@@ -136,7 +136,7 @@ register_module([
 			
 			/// Search Box ///
 			$content .= "<form method='get' action=''>\n";
-			$content .= "	<input type='search' id='search-box' name='query' placeholder='Type your query here and then press enter.' value='" . $_GET["query"] . "' />\n";
+			$content .= "	<input type='search' id='search-box' name='query' placeholder='Type your query here and then press enter.' value='" . htmlentities($_GET["query"], ENT_HTML5 | ENT_QUOTES) . "' />\n";
 			$content .= "	<input type='hidden' name='action' value='search' />\n";
 			$content .= "</form>";
 			

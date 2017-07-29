@@ -130,11 +130,11 @@ register_module([
 
 			}
 
-			$content .= "<form method='post' name='edit-form' action='index.php?action=preview-edit&page=$env->page' class='editform'>
+			$content .= "<form method='post' name='edit-form' action='index.php?action=preview-edit&page=" . rawurlencode($env->page) . "' class='editform'>
 					<input type='hidden' name='prev-content-hash' value='" . ((isset($old_pagetext)) ? sha1($old_pagetext) : sha1($pagetext)) . "' />
 					<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
 					<pre class='fit-text-mirror'></pre>
-					<input type='text' name='tags' value='$page_tags' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
+					<input type='text' name='tags' value='" . htmlentities($page_tags) . "' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
 					<p class='editing-message'>$settings->editing_message</p>
 					<input name='preview-edit' class='edit-page-button' type='submit' value='Preview Changes' tabindex='4' />
 					<input name='submit-edit' class='edit-page-button' type='submit' value='Save Page' tabindex='3' />
