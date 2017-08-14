@@ -152,6 +152,9 @@ register_module([
 				return $result;
 			}
 		]);
+		
+		// Perform an automatic recalculation of the statistics if needed
+		update_statistics(false);
 	}
 ]);
 
