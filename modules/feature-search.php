@@ -176,7 +176,7 @@ register_module([
 				if(strlen($context) === 0)
 					$context = substr($pagesource, 0, $settings->search_characters_context * 2);
 				//echo("'Generated search context for " . $result["pagename"] . ": $context'\n");
-				$context = search::highlight_context($_GET["query"], $context);
+				$context = search::highlight_context($_GET["query"], htmlentities($context));
 				/*if(strlen($context) == 0)
 				{
 					$context = search::strip_markup(file_get_contents("$env->page.md", null, null, null, $settings->search_characters_context * 2));
