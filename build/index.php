@@ -4262,7 +4262,7 @@ function stats_save($stats)
 
 register_module([
 	"name" => "Uploader",
-	"version" => "0.5.9",
+	"version" => "0.5.10",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -4338,10 +4338,10 @@ register_module([
 		<p>Select an image or file below, and then type a name for it in the box. This server currently supports uploads up to " . human_filesize(get_max_upload_size()) . " in size.</p>
 		<p>$settings->sitename currently supports uploading of the following file types: " . implode(", ", $settings->upload_allowed_file_types) . ".</p>
 		<form method='post' action='?action=upload' enctype='multipart/form-data'>
-			<label for='file'>Select a file to upload.</label>
+			<label for='file-upload-selector'>Select a file to upload.</label>
 			<input type='file' name='file' id='file-upload-selector' tabindex='1' />
 			<br />
-			<label for='name'>Name:</label>
+			<label for='file-upload-name'>Name:</label>
 			<input type='text' name='name' id='file-upload-name' tabindex='5'  />
 			<br />
 			<label for='description'>Description:</label>
@@ -4350,7 +4350,7 @@ register_module([
 			<input type='submit' value='Upload' tabindex='20' />
 		</form>
 		<script>
-			document.getElementById('file-upload-selector').addEventListener('change', function() {
+			document.getElementById('file-upload-selector').addEventListener('change', function(event) {
 				var newName = event.target.value.substring(event.target.value.lastIndexOf(\"\\\\\") + 1, event.target.value.lastIndexOf(\".\"));
 				console.log('Changing content of name box to:', newName);
 				document.getElementById('file-upload-name').value = newName;

@@ -15,6 +15,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Fixed paths when generating previews in certain environments
  - Fixed handling of pages and tags with single quotes in the name
  - Fixed weirdness on some pages rendered by the Pepperminty Wiki core
+ - Fixed a few minor usability issues on the upload file page.
 
 ### Changed
  - Make `invindex-rebuild` admin-only, but allow access if the POST param `secret` is set to your secret in `peppermint.json`
