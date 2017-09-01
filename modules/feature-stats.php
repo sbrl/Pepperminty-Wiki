@@ -191,7 +191,7 @@ function update_statistics($update_all = false)
 		
 		$stats_updated++;
 		
-		if(!$update_all && microtime(true) - $start_time >= $stats_update_processingtime)
+		if(!$update_all && microtime(true) - $start_time >= $settings->stats_update_processingtime)
 			break;
 	}
 	

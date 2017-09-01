@@ -113,7 +113,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
         "id": "feature-stats",
-        "lastupdate": 1502732758,
+        "lastupdate": 1504261794,
         "optional": false
     },
     {
