@@ -1,12 +1,30 @@
 # Pepperminty Wiki [![Build Status](https://travis-ci.org/sbrl/Pepperminty-Wiki.svg?branch=master)](https://travis-ci.org/sbrl/Pepperminty-Wiki) [![Join the chat at https://gitter.im/Pepperminty-Wiki/Lobby](https://badges.gitter.im/Pepperminty-Wiki/Lobby.svg)](https://gitter.im/Pepperminty-Wiki/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](https://raw.githubusercontent.com/sbrl/Pepperminty-Wiki/master/LICENSE)
 
-A Wiki in a box
+> A Wiki in a box
 
 Pepperminty Wiki is a complete wiki contained in a single file, inspired by @am2064's [Minty Wiki](https://github.com/am2064/Minty-Wiki). It's open source too (under MPL-2.0), so contributions are welcome!
 
 Developed by Starbeamrainbowlabs (though contributions from others are welcome!), Pepperminty Wiki has a variety of useful (and cool!) features - such as file upload, a dynamic help page, page revision history, page tags, and more! Other amazing features are in the works too (like threaded page commenting, autoupdate, and user settings), so check the release notes to see what's been added recently.
 
-**Latest Version:** v0.13 (stable) v0.14-dev (development) ([Changelog](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md))
+**Latest Version:** v0.14 (stable) v0.15-dev (development) ([Changelog](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md))
+
+## Table of Contents
+ - [Screenshots](#screenshots)
+ - [Features](#features)
+ - [Demo](#demo)
+ - [Getting Started](#getting-started)
+	 - [Requirements](#requirements)
+	 - [Getting your own copy](#getting-your-own-copy)
+	 	 - [Method 1: Using the latest pre-built stable release](#method-1-using-the-latest-pre-built-stable-release)
+		 - [Method 2: Grabbing the pre-built verion from the repository](#method-2-grabbing-the-pre-built-verion-from-the-repository)
+		 - [Method 3: Using the online downloader](#method-3-using-the-online-downloader)
+		 - [Method 3.5: Using the downloader offline](#method-35-using-the-downloader-offline)
+		 - [Method 4: Building your own from source](#method-4-building-your-own-from-source)
+ - [Configuring](#configuring)
+ - [Module API Reference](#module-api-reference)
+ - [Real World Usage](#real-world-usage)
+ - [Todo](#todo)
+ - [License](#license)
 
 ## Screenshots
 ![Main Page Example](https://i.imgur.com/8TokPXw.png)
