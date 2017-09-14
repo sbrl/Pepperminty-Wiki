@@ -4,7 +4,7 @@
 
 Pepperminty Wiki is a complete wiki contained in a single file, inspired by @am2064's [Minty Wiki](https://github.com/am2064/Minty-Wiki). It's open source too (under MPL-2.0), so contributions are welcome!
 
-Developed by Starbeamrainbowlabs (though contributions from others are welcome!), Pepperminty Wiki has a variety of useful (and cool!) features - such as file upload, a dynamic help page, page revision history, page tags, and more! Other amazing features are in the works too (like threaded page commenting, autoupdate, and user settings), so check the release notes to see what's been added recently.
+Developed by Starbeamrainbowlabs (though contributions from others are welcome!), Pepperminty Wiki has a variety of useful (and cool!) features - such as file upload, a dynamic help page, page revision history, page tags, and more! Other amazing features are in the works too (like a theme gallery, autoupdate, and user watchlists), so check the release notes to see what's been added recently.
 
 **Latest Version:** v0.14 (stable) v0.15-dev (development) ([Changelog](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md))
 
@@ -43,7 +43,7 @@ Above: The Main Page used for testing purposes.
 	- Client side mathematical expression parsing, courtesy of [MathJax](https://www.mathjax.org/)
 	- Links to non-existent pages appear red
 - Full page revision history (comparison / manipulation coming soon)
-- Optional time-delayed google search indexing
+- Optional time-delayed search indexing
 - Simple edit conflict detection
 - Edit previewing (since v0.14, thanks to @ikisler)
 - Internal links - Links to non-existent pages show up in red
@@ -60,6 +60,8 @@ Above: The Main Page used for testing purposes.
 - File upload and preview
 	- Simple syntax for including media in a page (explanation on help page)
 - Page protection
+- Simple user settings page (set email address, change password)
+- Threaded page comments
 - Customisable module based system
 	- Allows you to add or remove features at will
 
