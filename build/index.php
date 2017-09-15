@@ -595,9 +595,10 @@ function glob_recursive($pattern, $flags = 0)
 
 /**
  * Gets the name of the parent page to the specified page.
+ * @since 0.15
  * @param  string		$pagename	The child page to get the parent
- * 								page name for.
- * @return string|bool	
+ * 									page name for.
+ * @return string|bool
  */
 function get_page_parent($pagename) {
 	if(mb_strpos($pagename, "/") === false)
@@ -1186,6 +1187,9 @@ if(!file_exists($paths->idindex))
 $idindex_decode_start = microtime(true);
 $idindex = json_decode(file_get_contents($paths->idindex));
 $env->perfdata->idindex_decode_time = round((microtime(true) - $idindex_decode_start)*1000, 3);
+/**
+ * Provides an interface to interact with page ids.
+ */
 class ids
 {
 	/*

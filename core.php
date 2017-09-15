@@ -2,7 +2,7 @@
 $start_time = microtime(true);
 mb_internal_encoding("UTF-8");
 
-{settings}
+//{settings}
 
 /////////////////////////////////////////////////////////////////////////////
 ////// Do not edit below this line unless you know what you are doing! //////
@@ -820,6 +820,9 @@ if(!file_exists($paths->idindex))
 $idindex_decode_start = microtime(true);
 $idindex = json_decode(file_get_contents($paths->idindex));
 $env->perfdata->idindex_decode_time = round((microtime(true) - $idindex_decode_start)*1000, 3);
+/**
+ * Provides an interface to interact with page ids.
+ */
 class ids
 {
 	/*

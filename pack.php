@@ -38,7 +38,7 @@ $core = file_get_contents("core.php");
 $settings = file_get_contents("settings.fragment.php");
 $settings = str_replace([ "<?php", "?>" ], "", $settings);
 $core = str_replace([
-	"{settings}",
+	"//{settings}",
 	"{version}",
 	"{guiconfig}",
 	"{default-css}"
