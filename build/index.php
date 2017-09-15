@@ -296,7 +296,13 @@ textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: 
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
 input.edit-page-button[type='submit'] { width: 49.5%; box-sizing: border-box; }
 .preview-message { text-align: center; }
-.jump-to-comments { position: relative; top: -2.5em; display: block; text-align: right; pointer-events: none; }
+@media (min-width: 800px) {
+	.jump-to-comments { position: absolute; top: 3.5em; right: 2em; display: block; text-align: right; pointer-events: none; }
+}
+@media (max-width: 799px) {
+	.jump-to-comments { display: inline-block; }
+	.link-parent-page { display: inline-block; }
+}
 .jump-to-comments > a { pointer-events: all; }
 
 .file-gallery { margin: 0.5em; padding: 0.5em; list-style-type: none; }
@@ -585,6 +591,18 @@ function glob_recursive($pattern, $flags = 0)
 		$files = array_merge($files, glob_recursive($prefix . basename($pattern), $flags));
 	}
 	return $files;
+}
+
+/**
+ * Gets the name of the parent page to the specified page.
+ * @param  string		$pagename	The child page to get the parent
+ * 								page name for.
+ * @return string|bool	
+ */
+function get_page_parent($pagename) {
+	if(mb_strpos($pagename, "/") === false)
+		return false;
+	return mb_substr($pagename, 0, mb_strrpos($pagename, "/"));
 }
 
 /**
@@ -6776,7 +6794,7 @@ register_module([
 
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.16.6",
+	"version" => "0.16.7",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
@@ -6873,9 +6891,14 @@ register_module([
 				$content .= "<p class='revision-note'><em>(Revision saved by {$env->history->revision_data->editor} " . render_timestamp($env->history->revision_data->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a> or see a <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of all revisions</a> for this page.)</em></p>\n";
 			}
 			
+			// Add a visit parent page link if we're a subpage
+			if(get_page_parent($env->page) !== false) {
+				$content .= "<p class='link-parent-page'><em><a href='?action=view&page=" . rawurlencode(get_page_parent($env->page)) . "'>&laquo; " . htmlentities(get_page_parent($env->page)) . "</a></em></p>\n";
+			}
+			
 			// Add an extra message if the requester was redirected from another page
 			if(isset($_GET["redirected_from"]))
-				$content .= "<p><em>Redirected from <a href='?page=" . rawurlencode($_GET["redirected_from"]) . "&redirect=no'>" . $_GET["redirected_from"] . "</a>.</em></p>";
+				$content .= "<p><em>Redirected from <a href='?page=" . rawurlencode($_GET["redirected_from"]) . "&redirect=no'>" . $_GET["redirected_from"] . "</a>.</em></p>\n";
 			
 			$parsing_start = microtime(true);
 			

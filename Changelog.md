@@ -8,6 +8,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Added a new statistics engine, which you can add your own statistic calculators to with `statistic_add`
      - Added action `stats` to view the calculated statisics
      - Statistics are automagically recalculated every day - this can be controlled with `stats_update_interval` and `stats_update_processingtime`
+ - Added new "« Parent Page" to subpages so that you can easily visit their parent pages
+ - Added new `get_page_parent($pagename)` API method.
 
 ### Fixed
  - Fixed invalid opensearch description.

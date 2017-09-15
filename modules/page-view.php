@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.16.6",
+	"version" => "0.16.7",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
@@ -98,9 +98,14 @@ register_module([
 				$content .= "<p class='revision-note'><em>(Revision saved by {$env->history->revision_data->editor} " . render_timestamp($env->history->revision_data->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a> or see a <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of all revisions</a> for this page.)</em></p>\n";
 			}
 			
+			// Add a visit parent page link if we're a subpage
+			if(get_page_parent($env->page) !== false) {
+				$content .= "<p class='link-parent-page'><em><a href='?action=view&page=" . rawurlencode(get_page_parent($env->page)) . "'>&laquo; " . htmlentities(get_page_parent($env->page)) . "</a></em></p>\n";
+			}
+			
 			// Add an extra message if the requester was redirected from another page
 			if(isset($_GET["redirected_from"]))
-				$content .= "<p><em>Redirected from <a href='?page=" . rawurlencode($_GET["redirected_from"]) . "&redirect=no'>" . $_GET["redirected_from"] . "</a>.</em></p>";
+				$content .= "<p><em>Redirected from <a href='?page=" . rawurlencode($_GET["redirected_from"]) . "&redirect=no'>" . $_GET["redirected_from"] . "</a>.</em></p>\n";
 			
 			$parsing_start = microtime(true);
 			

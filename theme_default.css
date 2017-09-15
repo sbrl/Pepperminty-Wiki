@@ -75,7 +75,13 @@ textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: 
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
 input.edit-page-button[type='submit'] { width: 49.5%; box-sizing: border-box; }
 .preview-message { text-align: center; }
-.jump-to-comments { position: relative; top: -2.5em; display: block; text-align: right; pointer-events: none; }
+@media (min-width: 800px) {
+	.jump-to-comments { position: absolute; top: 3.5em; right: 2em; display: block; text-align: right; pointer-events: none; }
+}
+@media (max-width: 799px) {
+	.jump-to-comments { display: inline-block; }
+	.link-parent-page { display: inline-block; }
+}
 .jump-to-comments > a { pointer-events: all; }
 
 .file-gallery { margin: 0.5em; padding: 0.5em; list-style-type: none; }

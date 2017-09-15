@@ -59,7 +59,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds threaded comments to the bottom of every page.",
         "id": "feature-comments",
-        "lastupdate": 1497799232,
+        "lastupdate": 1505489462,
         "optional": false
     },
     {
@@ -244,11 +244,11 @@
     },
     {
         "name": "Page viewer",
-        "version": "0.16.6",
+        "version": "0.16.7",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You really should include this one.",
         "id": "page-view",
-        "lastupdate": 1498646088,
+        "lastupdate": 1505491607,
         "optional": false
     },
     {

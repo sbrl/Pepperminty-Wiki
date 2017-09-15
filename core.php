@@ -227,6 +227,19 @@ function glob_recursive($pattern, $flags = 0)
 }
 
 /**
+ * Gets the name of the parent page to the specified page.
+ * @since 0.15
+ * @param  string		$pagename	The child page to get the parent
+ * 									page name for.
+ * @return string|bool
+ */
+function get_page_parent($pagename) {
+	if(mb_strpos($pagename, "/") === false)
+		return false;
+	return mb_substr($pagename, 0, mb_strrpos($pagename, "/"));
+}
+
+/**
  * Gets a list of all the sub pages of the current page.
  * @param	object	$pageindex	The pageindex to use to search.
  * @param	string	$pagename	The name of the page to list the sub pages of.
