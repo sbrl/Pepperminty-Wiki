@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Uploader",
-	"version" => "0.5.10",
+	"version" => "0.5.11",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -536,11 +536,15 @@ register_module([
 	}
 ]);
 
-//// Pair of functions to calculate the actual maximum upload size supported by the server
-//// Lifted from Drupal by @meustrus from  Stackoverflow. Link to answer:
-//// http://stackoverflow.com/a/25370978/1460422
-// Returns a file size limit in bytes based on the PHP upload_max_filesize
-// and post_max_size
+/**
+ * Calculates the actual maximum upload size supported by the server
+ * Returns a file size limit in bytes based on the PHP upload_max_filesize and
+ * post_max_size
+ * @package feature-upload
+ * @author	Lifted from Drupal by @meustrus from Stackoverflow
+ * @see		http://stackoverflow.com/a/25370978/1460422 Source Stackoverflow answer
+ * @return	integer		The maximum upload size supported bythe server, in bytes.
+ */
 function get_max_upload_size()
 {
 	static $max_size = -1;
@@ -556,7 +560,15 @@ function get_max_upload_size()
 	}
 	return $max_size;
 }
-
+/**
+ * Parses a PHP size to an integer
+ * @package feature-upload
+ * @author	Lifted from Drupal by @meustrus from Stackoverflow
+ * @see		http://stackoverflow.com/a/25370978/1460422 Source Stackoverflow answer
+ * @param	string	$size	The size to parse.
+ * @return	integer			The number of bytees represented by the specified
+ * 							size string.
+ */
 function parse_size($size) {
 	$unit = preg_replace('/[^bkmgtpezy]/i', '', $size); // Remove the non-unit characters from the size.
 	$size = preg_replace('/[^0-9\.]/', '', $size); // Remove the non-numeric characters from the size.
@@ -567,7 +579,13 @@ function parse_size($size) {
 		return round($size);
 	}
 }
-
+/**
+ * Checks an uploaded SVG file to make sure it's (at least somewhat) safe.
+ * Sends an error to the client if a problem is found.
+ * @package feature-upload
+ * @param  string $temp_filename The filename of the SVG file to check.
+ * @return int[]                The size of the SVG image.
+ */
 function upload_check_svg($temp_filename)
 {
 	global $settings;
@@ -583,6 +601,13 @@ function upload_check_svg($temp_filename)
 	return getsvgsize($temp_filename);
 }
 
+/**
+ * Calculates the size of the specified SVG file.
+ * @package feature-upload
+ * @param	string	$svgFilename	The filename to calculate the size of.
+ * @return	int[]					The width and height respectively of the
+ * 									specified SVG file.
+ */
 function getsvgsize($svgFilename)
 {
 	$svg = simplexml_load_file($svgFilename); // Load it as XML
@@ -601,6 +626,15 @@ function getsvgsize($svgFilename)
 	return $imageSize;
 }
 
+/**
+ * Creates an images containing the specified text.
+ * Useful for sending errors back to the client.
+ * @package feature-upload
+ * @param	string	$text			The text to include in the image.
+ * @param	integer	$target_size	The target width to aim for when creating
+ * 									the image.
+ * @return	image					The handle to the generated GD image.
+ */
 function errorimage($text, $target_size = null)
 {
 	$width = 640;

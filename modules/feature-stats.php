@@ -204,7 +204,8 @@ function update_statistics($update_all = false)
 
 /**
  * Loads and returns the statistics cache file.
- * @return object The loaded & decoded statistics.
+ * @package	feature-stats
+ * @return	object		The loaded & decoded statistics.
  */
 function stats_load()
 {
@@ -216,6 +217,7 @@ function stats_load()
 }
 /**
  * Saves the statistics back to disk.
+ * @package	feature-stats
  * @param	object	The statistics cache to save.
  * @return	bool	Whether saving succeeded or not.
  */

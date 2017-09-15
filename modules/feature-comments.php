@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.2.2",
+	"version" => "0.2.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
@@ -207,6 +207,7 @@ REPLYJS;
 /**
  * Given a page name, returns the absolute file path in which that page's
  * comments are stored.
+ * @package feature-comments
  * @param  string $pagename The name pf the page to fetch the comments filename for.
  * @return string           The path to the file that the 
  */
@@ -219,6 +220,7 @@ function get_comment_filename($pagename)
 
 /**
  * Generates a new random comment id.
+ * @package feature-comments
  * @return string A new random comment id.
  */
 function generate_comment_id()
@@ -230,6 +232,7 @@ function generate_comment_id()
 
 /**
  * Finds the comment with specified id by way of an almost-breadth-first search.
+ * @package feature-comments
  * @param  array $comment_data	The comment data to search.
  * @param  string $comment_id	The id of the comment to  find.
  * @return object				The comment data with the specified id, or
@@ -262,6 +265,7 @@ function find_comment($comment_data, $comment_id)
  * Fetches all the parent comments of the specified comment id, including the
  * comment itself at the end.
  * Useful for figuring out who needs notifying when a new comment is posted.
+ * @package feature-comments
  * @param	array		$comment_data	The comment data to search.
  * @param	string		$comment_id		The comment id to fetch the thread for.
  * @return	object[]	A list of the comments in the thread, with the deepest
@@ -291,6 +295,7 @@ function fetch_comment_thread($comment_data, $comment_id)
 
 /**
  * Renders a given comments tree to html.
+ * @package feature-comments
  * @param	object[]	$comments_data	The comments tree to render.
  * @param	integer		$depth			For internal use only. Specifies the depth
  * 										at which the comments are being rendered.

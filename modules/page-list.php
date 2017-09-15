@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page list",
-	"version" => "0.10.2",
+	"version" => "0.10.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that lists all the pages in the index along with their metadata.",
 	"id" => "page-list",
@@ -109,6 +109,12 @@ register_module([
 	}
 ]);
 
+/**
+ * Renders a list of pages as HTML.
+ * @package	page-list
+ * @param	string[]	$pagelist	A list of page names to include in the list.
+ * @return	string					The specified list of pages as HTML.
+ */
 function generate_page_list($pagelist)
 {
 	global $pageindex;

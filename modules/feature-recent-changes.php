@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Recent Changes",
-	"version" => "0.3.3",
+	"version" => "0.3.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds recent changes. Access through the 'recent-changes' action.",
 	"id" => "feature-recent-changes",
@@ -83,7 +83,8 @@ register_module([
 
 /**
  * Adds a new recent change to the recent changes file.
- * @param array $rchange The new change to add.
+ * @package	feature-recent-changes
+ * @param	array	$rchange	The new change to add.
  */
 function add_recent_change($rchange)
 {
@@ -101,6 +102,12 @@ function add_recent_change($rchange)
 	file_put_contents($paths->recentchanges, json_encode($recentchanges, JSON_PRETTY_PRINT));
 }
 
+/**
+ * Renders a list of recent changes to HTML.
+ * @package	feature-recent-changes
+ * @param	array	$recent_changes		The recent changes to render.
+ * @return	string	The given recent changes as HTML.
+ */
 function render_recent_changes($recent_changes)
 {
 	global $pageindex;
@@ -192,6 +199,12 @@ function render_recent_changes($recent_changes)
 	return $content;
 }
 
+/**
+ * Renders a single recent change
+ * @package	feature-recent-changes
+ * @param	object	$rchange	The recent change to render.
+ * @return	string				The recent change, rendered to HTML.
+ */
 function render_recent_change($rchange)
 {
 	global $pageindex;

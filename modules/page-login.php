@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Login",
-	"version" => "0.8.4",
+	"version" => "0.8.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
@@ -134,14 +134,14 @@ register_module([
 	}
 ]);
 
-/*
- * @summary Hashes the given password according to the current settings defined
- * 			in $settings.
+/**
+ * Hashes the given password according to the current settings defined
+ * in $settings.
+ * @package	page-login
+ * @param	string	$pass	The password to hash.
  * 
- * @param $pass {string} The password to hash.
- * 
- * @returns {string} The hashed password. Uses sha3 if $settings->use_sha3 is
- * 					 enabled, or sha256 otherwise.
+ * @return	string	The hashed password. Uses sha3 if $settings->use_sha3 is
+ * 					enabled, or sha256 otherwise.
  */
 function hash_password($pass)
 {

@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Sidebar",
-	"version" => "0.3",
+	"version" => "0.3.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a sidebar to the left hand side of every page. Add '\$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
 	"id" => "extra-sidebar",
@@ -74,13 +74,12 @@ register_module([
 	}
 ]);
 
-/* 
- * @summary Renders the sidebar for a given pageindex.
- * 
- * @param $pageindex {array} - The pageindex to render the sidebar for
- * @param $root_pagename {string} - The pagename that should be considered the root of the rendering. You don't usually need to use this, it is used by the algorithm itself since it is recursive.
- * 
- * @returns {string} A HTML rendering of the sidebar for the given pageindex
+/**
+ * Renders the sidebar for a given pageindex.
+ * @package	extra-sidebar
+ * @param	array		$pageindex		The pageindex to render the sidebar for
+ * @param	string		$root_pagename	The pagename that should be considered the root of the rendering. You don't usually need to use this, it is used by the algorithm itself since it is recursive.
+ * @return	string		A HTML rendering of the sidebar for the given pageindex.
  */
 function render_sidebar($pageindex, $root_pagename = "")
 {

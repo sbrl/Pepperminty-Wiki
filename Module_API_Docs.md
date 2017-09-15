@@ -52,13 +52,13 @@ This is by _far_ the most important index. It contains an entry for each page, u
 
 Currently, Pepperminty Wiki is configured to pretty print the json in the pageindex when saving it to disk, so if you find yourself saving the pageindex please do the same.
 
-Note that in the future, when alternate data storage directories are supported, the `$entry->filename` will *not* contain the `$env->storage_prefix` prefix. You will need to add this manually if you use it.
+Now that alternate data storage directories are supported, the `$entry->filename` will *not* contain the `$env->storage_prefix` prefix. You will need to add this manually if you use it.
 
 ### `idindex.json`
 The id index converts page ids into page names and vice versa. It's loaded into the global variable `$idindex`, but you normally wouldn't need to touch that, as there's a seamless API that you can use instead:
 
 #### `ids::getid($pagename)`
-Gets the id associated with the given pagename. If it doesn'texist it will be created.
+Gets the id associated with the given pagename. If it doesn't exist it will be created.
 
 #### `ids::getpagename($id)`
 Gets the page name associated with the given id. If it doesn't exist `false` will be returned.
