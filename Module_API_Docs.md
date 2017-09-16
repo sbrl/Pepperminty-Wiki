@@ -6,11 +6,11 @@ The core of Pepperminty Wiki exposes several global objects, classes, functions,
  - [Module API](#module-api)
      - [Global Variables](#global-variables)
  - [Files](#files)
-     - [`pageindex.json`](#pageindex.json)
-     - [`idindex.json`](#idindex.json)
-     - [`invindex.json`](#invindex.json)
-     - [`recent-changes.json`](#recent-changes.json)
-     - [`statsindex.json`](#statsindex.json)
+     - [`pageindex.json`](#pageindexjson)
+     - [`idindex.json`](#idindexjson)
+     - [`invindex.json`](#invindexjson)
+     - [`recent-changes.json`](#recent-changesjson)
+     - [`statsindex.json`](#statsindexjson)
 
 ## Rest API
 The REST api provided by Pepperminty Wiki itself is documented for bot owners and software developers alike over on GitHub pages [here](https://sbrl.github.io/Pepperminty-Wiki/docs/RestAPI).
