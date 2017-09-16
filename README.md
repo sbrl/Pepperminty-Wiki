@@ -21,7 +21,7 @@ Developed by Starbeamrainbowlabs (though contributions from others are welcome!)
 		 - [Method 3.5: Using the downloader offline](#method-35-using-the-downloader-offline)
 		 - [Method 4: Building your own from source](#method-4-building-your-own-from-source)
  - [Configuring](#configuring)
- - [Module API Reference](#module-api-reference)
+ - [API Reference](#api-reference)
  - [Real World Usage](#real-world-usage)
  - [Todo](#todo)
  - [License](#license)
@@ -168,15 +168,15 @@ Key				| Value			| Explanation
 `favicon`			| url		| A url that points to the favicon for your wiki.
 `session_prefix`	| string	| The prefix that should be used in the names of the session variables. Defaults to an all lower case version of the site name with all non alphanumeric characters removed (The special value `auto` does this). Remember that changing this will log everyone out since the session variable's name will have changed. Normally you won't have to change this - This setting is left over from when we used a cookie to store login details. By default this is set to a safe variant of your site name.
 
-## Module API Reference
-I have documented (most of) the current API that you can use to create your own modules. You can find it in the [Module_API_Docs.md](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Module_API_Docs.md) file in this repository.
+## API Reference
+I have documented the current API and other things that make Pepperminty Wiki tick that you can use to create your own modules. You can find this documentation in the [Module_API_Docs.md](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Module_API_Docs.md) file in this repository.
 
-I've also documented Pepperminty Wiki's entire REST API using [apiDoc](http://apidocjs.com/). You can view the docs [here](https://sbrl.github.io/Pepperminty-Wiki/docs/RestApiDocs/).
+I've also documented Pepperminty Wiki's entire REST API using [apiDoc](http://apidocjs.com/). You can view the docs [here](https://sbrl.github.io/Pepperminty-Wiki/docs/RestApi/).
 
 If you do create a module, I'd love to hear about it. Even better, [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls/new)!
 
 ## Real World Usage
-None yet! Contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) and tell me about where you are using Pepperminty Wiki and I'll add you to this section!
+None yet! Contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) and tell me about where you are using Pepperminty Wiki and I'll add you to this section :smiley_cat:
 
 ## Todo
 Here's a list of things that I want to add at some point (please feel free to [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls) and help out!).
