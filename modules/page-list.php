@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page list",
-	"version" => "0.10.3",
+	"version" => "0.10.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that lists all the pages in the index along with their metadata.",
 	"id" => "page-list",
@@ -102,6 +102,88 @@ register_module([
 			
 			exit(page_renderer::render("$tag - Tag List - $settings->sitename", $content));
 		});
+		
+		statistic_add([
+			"id" => "tag-count",
+			"name" => "Number of Tags",
+			"type" => "scalar",
+			"update" => function($old_data) {
+				global $pageindex;
+				$all_tags = [];
+				foreach($pageindex as $page_entry) {
+					if(empty($page_entry->tags))
+						continue;
+						
+					foreach($page_entry->tags as $tag) {
+						if(!in_array($tag, $all_tags)) $all_tags[] = $tag;
+					}
+				}
+				
+				$result = new stdClass(); // value, state, completed
+				$result->value = count($all_tags);
+				$result->completed = true;
+				return $result;
+			}
+		]);
+		statistic_add([
+			"id" => "tags-per-page",
+			"name" => "Average Number of Tags per Page",
+			"type" => "scalar",
+			"update" => function($old_data) {
+				global $pageindex;
+				$tag_counts = [];
+				foreach($pageindex as $page_entry)
+					$tag_counts[] = count($page_entry->tags ?? []);
+				
+				$result = new stdClass(); // value, state, completed
+				$result->value = round(array_sum($tag_counts) / count($tag_counts), 3);
+				$result->completed = true;
+				return $result;
+			}
+		]);
+		statistic_add([
+			"id" => "most-tags",
+			"name" => "Most tags on a single page",
+			"type" => "scalar",
+			"update" => function($old_data) {
+				global $pageindex;
+				
+				$highest_tag_count = 0;
+				$highest_tag_page = "";
+				foreach($pageindex as $pagename => $page_entry) {
+					if(count($page_entry->tags ?? []) > $highest_tag_count) {
+						$highest_tag_count = count($page_entry->tags ?? []);
+						$highest_tag_page = $pagename;
+					}
+				}
+				
+				$result = new stdClass(); // value, state, completed
+				$result->value = "$highest_tag_count (<a href='?page=" . rawurlencode($highest_tag_page) . "'>" . htmlentities($highest_tag_page) . "</a>)";
+				$result->completed = true;
+				return $result;
+			}
+		]);
+		statistic_add([
+			"id" => "untagged-pages",
+			"name" => "Untagged Pages",
+			"type" => "page-list",
+			"update" => function($old_data) {
+				global $pageindex;
+				
+				$untagged_pages = [];
+				foreach($pageindex as $pagename => $page_entry) {
+					if(empty($page_entry->tags) || count($page_entry->tags ?? []) == 0)
+						$untagged_pages[] = $pagename;
+				}
+				
+				sort($untagged_pages, SORT_STRING | SORT_FLAG_CASE);
+				
+				$result = new stdClass(); // value, state, completed
+				$result->value = $untagged_pages;
+				$result->completed = true;
+				return $result;
+			}
+		]);
 		
 		add_help_section("30-all-pages-tags", "Listing pages and tags", "<p>All the pages and tags on $settings->sitename are listed on a pair of pages to aid navigation. The list of all pages on $settings->sitename can be found by clicking &quot;All Pages&quot; on the top bar. The list of all the tags currently in use can be found by clicking &quot;All Tags&quot; in the &quot;More...&quot; menu in the top right.</p>
 		<p>Each tag on either page can be clicked, and leads to a list of all pages that possess that particular tag.</p>

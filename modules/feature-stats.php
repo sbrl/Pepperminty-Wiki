@@ -1,19 +1,21 @@
 <?php
 register_module([
 	"name" => "Statistics",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
 	"id" => "feature-stats",
 	"code" => function() {
-		global $settings;
+		global $settings, $env;
+		
 		/**
-		 * @api {get|post} ?action=stats-update Recalculate the wiki's statistics
-		 * @apiName UpdateStats
+		 * @api {get} ?action=stats Show wiki statistics
+		 * @apiName Stats
 		 * @apiGroup Utility
-		 * @apiPermission Administrator
-		 *
-		 * @apiParam	{string}	secret	POST only, optional. If you're not logged in, you can specify the wiki's sekret (find it in peppermint.json) using this parameter.
+		 * @apiPermission Anonymous
+		 * @since v0.15
+		 * @apiParam	{string}	format	Specify the format the data should be returned in. Supported formats: html (default), json.
+		 * @apiParam	{string}	stat	HTML format only. If specified the page for the stat with this id is sent instead of the list of scalar stats.
 		 */
 		
 		/*
@@ -26,7 +28,20 @@ register_module([
 		add_action("stats", function() {
 			global $settings, $statistic_calculators;
 			
+			$allowed_formats = [ "html", "json" ];
+			$format = $_GET["format"] ?? "html";
+			
+			if(!in_array($format, $allowed_formats)) {
+				http_response_code(400);
+				exit(page_renderer::render_main("Format error - $settings->sitename", "<p>Error: The format '$format' is not currently supported by $settings->sitename. Supported formats: " . implode(", ", $allowed_formats) . "."));
+			}
+			
 			$stats = stats_load();
+			
+			if($format == "json") {
+				header("content-type: application/json");
+				exit(json_encode($stats, JSON_PRETTY_PRINT));
+			}
 			
 			$stat_pages_list = "<a href='?action=stats'>Main</a> | ";
 			foreach($statistic_calculators as $stat_id => $stat_calculator) {
@@ -40,12 +55,24 @@ register_module([
 				$stat_calculator = $statistic_calculators[$_GET["stat"]];
 				$content = "<h1>{$stat_calculator["name"]} - Statistics</h1>\n";
 				$content .= "<p>$stat_pages_list</p>\n";
-				$content .= $stat_calculator["render"]($stats->{$_GET["stat"]});
+				switch($stat_calculator["type"]) {
+					case "page-list":
+						if(!module_exists("page-list")) {
+							$content .= "<p>$settings->sitename doesn't current have the page listing module installed, so HTML rendering of this statistic is currently unavailable. Try <a href='mailto:" . hide_email($settings->admindetails_email) . "'>contacting $settings->admindetails_name</a>, $settings->sitename's administrator and asking then to install the <code>page-list</code> module.</p>";
+							break;
+						}
+						$content .= generate_page_list($stats->{$_GET["stat"]}->value);
+						break;
+					
+					case "page":
+						$content .= $stat_calculator["render"]($stats->{$_GET["stat"]});
+						break;
+				}
 			}
 			else
 			{
 				$content = "<h1>Statistics</h1>\n";
-				$content .= "<p>This page contains a selection of statistics about $settings->sitename's content. They are updated automatically about every " . trim(str_replace(["ago", "1 "], [""], human_time($settings->stats_update_interval))) . ", although $settings->sitename's local friendly moderators may update it earlier (you can see their names at the bottom of every page).</p>\n";
+				$content .= "<p>This page contains a selection of statistics about $settings->sitename's content. They are updated automatically about every " . trim(str_replace(["ago", "1 "], [""], human_time($settings->stats_update_interval))) . ", although $settings->sitename's local friendly moderators may update them earlier (you can see their names at the bottom of every page).</p>\n";
 				$content .= "<p>$stat_pages_list</p>\n";
 				
 				$content .= "<table class='stats-table'>\n";
@@ -62,6 +89,15 @@ register_module([
 			exit(page_renderer::render_main("Statistics - $settings->sitename", $content));
 		});
 		
+		/**
+		 * @api {get|post} ?action=stats-update Recalculate the wiki's statistics
+		 * @apiName UpdateStats
+		 * @apiGroup Utility
+		 * @apiPermission Administrator
+		 * @since v0.15
+		 * @apiParam	{string}	secret	POST only, optional. If you're not logged in, you can specify the wiki's sekret instead (find it in peppermint.json) using this parameter.
+		 * @apiParam	{bool}		force	Whether the statistics should be recalculated anyway - even if they have already recently been recalculated. Default: no. Supported values: yes, no.
+		 */
 		
 		/*
 		 * ███████ ████████  █████  ████████ ███████
@@ -91,7 +127,7 @@ register_module([
 			// Delete the old stats cache
 			unlink($paths->statsindex);
 			
-			update_statistics(true);
+			update_statistics(true, ($_GET["force"] ?? "no") == "yes");
 			header("content-type: application/json");
 			echo(file_get_contents($paths->statsindex) . "\n");
 		});
@@ -167,13 +203,24 @@ register_module([
 		]);
 		
 		// Perform an automatic recalculation of the statistics if needed
-		update_statistics(false);
+		if($env->action !== "stats-update")
+			update_statistics(false);
 	}
 ]);
 
-function update_statistics($update_all = false)
+/**
+ * Updates the wiki's statistics.
+ * @package feature-stats
+ * @param  boolean $update_all Whether all the statistics should be checked and recalculated, or just as many as we have time for according to the settings.
+ * @param  boolean $force      Whether we should recalculate statistics that don't currently require recalculating anyway.
+ */
+function update_statistics($update_all = false, $force = false)
 {
 	global $settings, $statistic_calculators;
+	
+	// Clear the existing statistics if we are asked to recalculate them all
+	if($force)
+		stats_save(new stdClass());
 	
 	$stats = stats_load();
 	

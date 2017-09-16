@@ -109,11 +109,11 @@
     },
     {
         "name": "Statistics",
-        "version": "0.1",
+        "version": "0.2",
         "author": "Starbeamrainbowlabs",
         "description": "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
         "id": "feature-stats",
-        "lastupdate": 1505564746,
+        "lastupdate": 1505579268,
         "optional": false
     },
     {
@@ -190,11 +190,11 @@
     },
     {
         "name": "Page list",
-        "version": "0.10.3",
+        "version": "0.10.4",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1505513005,
+        "lastupdate": 1505577933,
         "optional": false
     },
     {
