@@ -1,0 +1,50 @@
+<?php
+register_module([
+	"name" => "API status",
+	"version" => "0.1",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Provides a basic JSON status action that provices a few useful bits of information for API consumption.",
+	"id" => "api-status",
+	"code" => function() {
+		global $settings;
+		/**
+		 * @api {get} ?action=raw&page={pageName} Get the raw source code of a page
+		 * @apiName RawSource
+		 * @apiGroup Page
+		 * @apiPermission Anonymous
+		 * 
+		 * @apiParam {string}	page	The page to return the source of.
+		 */
+		
+		
+		add_action("status", function() {
+			global $version, $env, $settings, $actions;
+			
+			// Make sure the client can accept JSON
+			if(!accept_contains_mime($_SERVER["HTTP_ACCEPT"] ?? "application/json", "application/json")) {
+				http_response_code(406);
+				header("content-type: text/plain");
+				
+				exit("Unfortunately, this API is currently only available in application/json at the moment, which you haven't indicated you accept in your http accept header. You said this in your accept header:\n" . $_SERVER["HTTP_ACCEPT"]);
+			}
+			
+			$action_names = array_keys(get_object_vars($actions));
+			sort($action_names);
+			
+			$result = new stdClass();
+			$result->status = "ok";
+			$result->version = $version;
+			$result->available_actions = $action_names;
+			$result->wiki_name = $settings->sitename;
+			$result->logo_url = $settings->favicon;
+			
+			header("content-type: application/json");
+			exit(json_encode($result, JSON_PRETTY_PRINT) . "\n");
+		});
+		
+		add_help_section("960-api-status", "Wiki Status API", "<p></p>");
+	}
+]);
+
+?>
+

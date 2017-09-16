@@ -2,30 +2,28 @@
 *.md
 # All the previous revisions
 *.md.r*
+
 # Include the README
 !README.md
 # ...but ignore READMEs in the build folder
 build/README.md
+
 # ...and the backup peppermint.json files created when using the settings GUI
 peppermint.json.bak
-# And the Module API Docs
+# But keep the useful markdown files
 !Module_API_Docs.md
-# And the changelog
 !Changelog.md
-# And the development notes
 !Development.md
 
-# The page index
+# Ignore the php documentor cache folder
+docs/ModuleApiCache
+
+# Ignore the various indexes created by pepperminty wiki
 pageindex.json
-# The id index
 idindex.json
-# The search index
 invindex.json
-# The recent changes list
 recent-changes.json
-# The statistics cache file
 build/statsindex.json
-# The new settings file
 peppermint.json
 # The comments files
 build/*.comments.json

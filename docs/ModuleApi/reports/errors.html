@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>     &raquo; Compilation errors
+</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">Pepperminty Wiki Module API</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">84</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">6</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+
+            <ul class="side-nav nav nav-list">
+                <li class="nav-header">Navigation</li>
+                                                                            <li><a href="#modules/feature-recent-changes.php"><i class="icon-file"></i> modules/feature-recent-changes.php</a></li>
+                                                                                                                                                            <li><a href="#modules/page-login.php"><i class="icon-file"></i> modules/page-login.php</a></li>
+                                                                                                    <li><a href="#modules/action-hash.php"><i class="icon-file"></i> modules/action-hash.php</a></li>
+                                                                                                    <li><a href="#modules/page-help.php"><i class="icon-file"></i> modules/page-help.php</a></li>
+                                                                                                    <li><a href="#modules/feature-redirect.php"><i class="icon-file"></i> modules/feature-redirect.php</a></li>
+                                                                                                    <li><a href="#modules/feature-guiconfig.php"><i class="icon-file"></i> modules/feature-guiconfig.php</a></li>
+                                                                                                    <li><a href="#modules/action-random.php"><i class="icon-file"></i> modules/action-random.php</a></li>
+                                                                                                    <li><a href="#modules/parser-default-old.php"><i class="icon-file"></i> modules/parser-default-old.php</a></li>
+                                                                                                    <li><a href="#modules/action-protect.php"><i class="icon-file"></i> modules/action-protect.php</a></li>
+                                                                                                    <li><a href="#pack.php"><i class="icon-file"></i> pack.php</a></li>
+                                                                                                    <li><a href="#modules/page-edit.php"><i class="icon-file"></i> modules/page-edit.php</a></li>
+                                                                                                    <li><a href="#modules/page-debug-info.php"><i class="icon-file"></i> modules/page-debug-info.php</a></li>
+                                                                                                    <li><a href="#modules/page-logout.php"><i class="icon-file"></i> modules/page-logout.php</a></li>
+                                                                                                    <li><a href="#modules/page-user-list.php"><i class="icon-file"></i> modules/page-user-list.php</a></li>
+                                                                                                    <li><a href="#modules/page-credits.php"><i class="icon-file"></i> modules/page-credits.php</a></li>
+                                                                                                    <li><a href="#modules/feature-stats.php"><i class="icon-file"></i> modules/feature-stats.php</a></li>
+                                                                                                    <li><a href="#modules/page-view.php"><i class="icon-file"></i> modules/page-view.php</a></li>
+                                                                                                    <li><a href="#modules/feature-upload.php"><i class="icon-file"></i> modules/feature-upload.php</a></li>
+                                                                                                    <li><a href="#settings.fragment.php"><i class="icon-file"></i> settings.fragment.php</a></li>
+                                                                                                    <li><a href="#modules/extra-sidebar.php"><i class="icon-file"></i> modules/extra-sidebar.php</a></li>
+                                                                                                    <li><a href="#modules/action-raw.php"><i class="icon-file"></i> modules/action-raw.php</a></li>
+                                                                                                    <li><a href="#modules/page-update.php"><i class="icon-file"></i> modules/page-update.php</a></li>
+                                                                                                    <li><a href="#modules/feature-history.php"><i class="icon-file"></i> modules/feature-history.php</a></li>
+                                                                                                    <li><a href="#modules/feature-comments.php"><i class="icon-file"></i> modules/feature-comments.php</a></li>
+                                                                                                    <li><a href="#modules/page-delete.php"><i class="icon-file"></i> modules/page-delete.php</a></li>
+                                                                                                    <li><a href="#modules/page-export.php"><i class="icon-file"></i> modules/page-export.php</a></li>
+                                                                                                    <li><a href="#modules/page-list.php"><i class="icon-file"></i> modules/page-list.php</a></li>
+                                                                                                    <li><a href="#modules/parser-parsedown.php"><i class="icon-file"></i> modules/parser-parsedown.php</a></li>
+                                                                                                    <li><a href="#modules/feature-user-preferences.php"><i class="icon-file"></i> modules/feature-user-preferences.php</a></li>
+                                                                                                    <li><a href="#download.php"><i class="icon-file"></i> download.php</a></li>
+                                                                                                    <li><a href="#modules/api-status.php"><i class="icon-file"></i> modules/api-status.php</a></li>
+                                                                                                    <li><a href="#modules/feature-search.php"><i class="icon-file"></i> modules/feature-search.php</a></li>
+                                                                                                    <li><a href="#modules/page-move.php"><i class="icon-file"></i> modules/page-move.php</a></li>
+                                                                    </ul>
+        </div>
+
+        <div class="span10 offset2">
+            <ul class="breadcrumb">
+                <li><a href="../"><i class="icon-remove-sign"></i></a><span class="divider">\</span></li>
+                <li>Compilation Errors</li>
+            </ul>
+
+            
+                            <div class="package-contents">
+                                            <a name="modules/feature-recent-changes.php" id="modules/feature-recent-changes.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/feature-recent-changes.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/page-login.php" id="modules/page-login.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/page-login.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/action-hash.php" id="modules/action-hash.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/action-hash.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/page-help.php" id="modules/page-help.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/page-help.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/feature-redirect.php" id="modules/feature-redirect.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/feature-redirect.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/feature-guiconfig.php" id="modules/feature-guiconfig.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/feature-guiconfig.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/action-random.php" id="modules/action-random.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/action-random.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/parser-default-old.php" id="modules/parser-default-old.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/parser-default-old.php
+                            <small style="float: right;padding-right: 10px;">5</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>145</td>
+                                        <td>Argument $regex is missing from the Docblock of add_rule</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>145</td>
+                                        <td>Argument $replacement is missing from the Docblock of add_rule</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>151</td>
+                                        <td>Argument $text is missing from the Docblock of render</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>91</td>
+                                        <td>No summary for property $rules</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/action-protect.php" id="modules/action-protect.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/action-protect.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="pack.php" id="pack.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            pack.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/page-edit.php" id="modules/page-edit.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/page-edit.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/page-debug-info.php" id="modules/page-debug-info.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/page-debug-info.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/page-logout.php" id="modules/page-logout.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/page-logout.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/page-user-list.php" id="modules/page-user-list.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/page-user-list.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/page-credits.php" id="modules/page-credits.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/page-credits.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/feature-stats.php" id="modules/feature-stats.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/feature-stats.php
+                            <small style="float: right;padding-right: 10px;">3</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>161</td>
+                                        <td>Argument $update_all is missing from the Docblock of update_statistics</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>161</td>
+                                        <td>No summary for function \update_statistics()</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/page-view.php" id="modules/page-view.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/page-view.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/feature-upload.php" id="modules/feature-upload.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/feature-upload.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="settings.fragment.php" id="settings.fragment.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            settings.fragment.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/extra-sidebar.php" id="modules/extra-sidebar.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/extra-sidebar.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/action-raw.php" id="modules/action-raw.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/action-raw.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/page-update.php" id="modules/page-update.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/page-update.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/feature-history.php" id="modules/feature-history.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/feature-history.php
+                            <small style="float: right;padding-right: 10px;">6</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>61</td>
+                                        <td>Argument $pageinfo is missing from the Docblock of history_add_revision</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>61</td>
+                                        <td>Argument $newsource is missing from the Docblock of history_add_revision</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>61</td>
+                                        <td>Argument $oldsource is missing from the Docblock of history_add_revision</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>61</td>
+                                        <td>Argument $save_pageindex is missing from the Docblock of history_add_revision</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>61</td>
+                                        <td>No summary for function \history_add_revision()</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/feature-comments.php" id="modules/feature-comments.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/feature-comments.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/page-delete.php" id="modules/page-delete.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/page-delete.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/page-export.php" id="modules/page-export.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/page-export.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/page-list.php" id="modules/page-list.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/page-list.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/parser-parsedown.php" id="modules/parser-parsedown.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/parser-parsedown.php
+                            <small style="float: right;padding-right: 10px;">3</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>147</td>
+                                        <td>No summary for class \PeppermintParsedown</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>154</td>
+                                        <td>No summary for method __construct()</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/feature-user-preferences.php" id="modules/feature-user-preferences.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/feature-user-preferences.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="download.php" id="download.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            download.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/api-status.php" id="modules/api-status.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/api-status.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/feature-search.php" id="modules/feature-search.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/feature-search.php
+                            <small style="float: right;padding-right: 10px;">39</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>409</td>
+                                        <td>No summary for class \search</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>457</td>
+                                        <td>Argument $source is missing from the Docblock of index</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>457</td>
+                                        <td>No summary for method index()</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>487</td>
+                                        <td>Argument $source is missing from the Docblock of tokenize</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>487</td>
+                                        <td>No summary for method tokenize()</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>494</td>
+                                        <td>Argument $source is missing from the Docblock of strip_markup</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>494</td>
+                                        <td>No summary for method strip_markup()</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>499</td>
+                                        <td>Argument $output is missing from the Docblock of rebuild_invindex</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>499</td>
+                                        <td>No summary for method rebuild_invindex()</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>552</td>
+                                        <td>Argument $index is missing from the Docblock of sort_index</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>552</td>
+                                        <td>No summary for method sort_index()</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>567</td>
+                                        <td>Argument $oldindex is missing from the Docblock of compare_indexes</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>567</td>
+                                        <td>Argument $newindex is missing from the Docblock of compare_indexes</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>567</td>
+                                        <td>Argument $changed is missing from the Docblock of compare_indexes</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>567</td>
+                                        <td>Argument $removed is missing from the Docblock of compare_indexes</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>567</td>
+                                        <td>No summary for method compare_indexes()</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>586</td>
+                                        <td>Argument $invindex_filename is missing from the Docblock of load_invindex</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>586</td>
+                                        <td>No summary for method load_invindex()</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>591</td>
+                                        <td>Argument $invindex_filename is missing from the Docblock of measure_invindex_load_time</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>591</td>
+                                        <td>No summary for method measure_invindex_load_time()</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>602</td>
+                                        <td>Argument $invindex is missing from the Docblock of merge_into_invindex</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>602</td>
+                                        <td>Argument $pageid is missing from the Docblock of merge_into_invindex</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>602</td>
+                                        <td>Argument $index is missing from the Docblock of merge_into_invindex</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>602</td>
+                                        <td>Argument $removals is missing from the Docblock of merge_into_invindex</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>602</td>
+                                        <td>No summary for method merge_into_invindex()</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>651</td>
+                                        <td>Argument $filename is missing from the Docblock of save_invindex</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>651</td>
+                                        <td>Argument $invindex is missing from the Docblock of save_invindex</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>651</td>
+                                        <td>No summary for method save_invindex()</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>656</td>
+                                        <td>Argument $query is missing from the Docblock of query_invindex</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>656</td>
+                                        <td>Argument $invindex is missing from the Docblock of query_invindex</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>656</td>
+                                        <td>No summary for method query_invindex()</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>783</td>
+                                        <td>Argument $query is missing from the Docblock of extract_context</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>783</td>
+                                        <td>Argument $source is missing from the Docblock of extract_context</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>783</td>
+                                        <td>No summary for method extract_context()</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>867</td>
+                                        <td>Argument $query is missing from the Docblock of highlight_context</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>867</td>
+                                        <td>Argument $context is missing from the Docblock of highlight_context</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>867</td>
+                                        <td>No summary for method highlight_context()</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>412</td>
+                                        <td>No summary for property $stop_words</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="modules/page-move.php" id="modules/page-move.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/page-move.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                    </div>
+    </section>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on September 16th, 2017 at 10:22.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

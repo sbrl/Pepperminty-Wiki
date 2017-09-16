@@ -1123,6 +1123,13 @@ class page_renderer
 
 	/**
 	 * Registers a function as a part post processor.
+	 * This function's use is more complicated to explain. Pepperminty Wiki
+	 * renders pages with a very simple templating system. For example, in the
+	 * template a page's content is denoted by `{content}`. A function
+	 * registered here will be passed all the components of a page _just_
+	 * before they are dropped into the template. Note that the function you
+	 * pass in here should take a *reference* to the components, as the return
+	 * value of the function passed is discarded.
 	 * @package core
 	 * @param  function $function The part preprocessor to register.
 	 */

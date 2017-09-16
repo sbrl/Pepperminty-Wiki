@@ -1,195 +1,28 @@
-Module API Documentation
-========================
-The core of Pepperminty Wik exposes several global objects and functions that you can use to write your own modules. This page documents these objects and functions so that you can create your own modules more easily.
+# Developer Documentation
+The core of Pepperminty Wiki exposes several global objects, classes, functions, and miscellaneous files that you can use to write your own modules. This page documents these them so that you can create your own modules more easily.
 
-Indexes
--------
-Pepperminty Wiki maintains several indexes containing various information about the current site that you can utilise. Some of them also have an 'API' of sorts that you can use to interact with them.
+## Table of Contents
+ - [Rest API](#rest-api)
+ - [Module API](#module-api)
+     - [Global Variables](#global-variables)
+ - [Files](#files)
+     - [`pageindex.json`](#pageindex.json)
+     - [`idindex.json`](#idindex.json)
+     - [`invindex.json`](#invindex.json)
+     - [`recent-changes.json`](#recent-changes.json)
+     - [`statsindex.json`](#statsindex.json)
 
-### `pageindex.json`
-This is by _far_ the most important index. It contains an entry for each page, under which a number of interesting pieces of information are stored. It's automatically loaded into the global variable `$pageindex` too, so you don't even have to read it in. Here's an example pageindex:
+## Rest API
+The REST api provided by Pepperminty Wiki itself is documented for bot owners and software developers alike over on GitHub pages [here](https://sbrl.github.io/Pepperminty-Wiki/docs/RestAPI).
 
-```json
-{
-    "Internal link": {
-        "filename": "Internal link.md",
-        "size": 120,
-        "lastmodified": 1446019377,
-        "lasteditor": "admin",
-        "tags": [
-            "testing",
-            "test tag with spaces",
-            "really really really really really really long tag"
-        ]
-    },
-    "Main Page": {
-        "filename": "Main Page.md",
-        "size": 151,
-        "lastmodified": 1446388276,
-        "lasteditor": "admin",
-        "tags": []
-    },
-    "Internal link\/Sub": {
-        "filename": "Internal link\/Sub.md",
-        "size": 35,
-        "lastmodified": 1446370194,
-        "lasteditor": "admin",
-        "tags": [
-            "test"
-        ]
-    },
-    "Files\/AJ Scr.png": {
-        "filename": "Files\/AJ Scr.png.md",
-        "size": 29,
-        "lastmodified": 1445501914,
-        "lasteditor": "admin",
-        "uploadedfile": true,
-        "uploadedfilepath": "Files\/AJ Scr.png",
-        "uploadedfilemime": "image\/png"
-    }
-}
-```
+## Module API
+The main PHP-based module API is documented with php documentor. The docs can be found [here](https://sbrl.github.io/Pepperminty-Wiki/docs/ModuleApi), hosted on GitHub Pages.
 
-Currently, Pepperminty Wiki is configured to pretty print the json in the pageindex when saving it to disk, so if you find yourself saving the pageindex please do the same.
+This documentation covers all the functions and classes available in both the Pepperminty Wiki core, and the modules stored in this repository - as well as mentioning which module they are a part of.
 
-Now that alternate data storage directories are supported, the `$entry->filename` will *not* contain the `$env->storage_prefix` prefix. You will need to add this manually if you use it.
+There are one or two additional things that haven't made their way into the module api docs, which are detailed below:
 
-### `idindex.json`
-The id index converts page ids into page names and vice versa. It's loaded into the global variable `$idindex`, but you normally wouldn't need to touch that, as there's a seamless API that you can use instead:
-
-#### `ids::getid($pagename)`
-Gets the id associated with the given pagename. If it doesn't exist it will be created.
-
-#### `ids::getpagename($id)`
-Gets the page name associated with the given id. If it doesn't exist `false` will be returned.
-
-Functions
----------
-
-### `register_module($module_info)`
-Register a new module with Pepperminty Wiki. This is the most important function. Here's an example:
-
-```php
-<?php
-register_module([
-	"name" => "Human readable module name",		// The name of your module, will be shown to users
-	"version" => "0.1",							// The version number
-	"author" => "Author Name",					// Your name
-	"description" => "Module Description",		// A description of your module. Shown in the module downloader.
-	"id" => "module-id",						// An id for your module name. Should be filename safe with no spaces or capital letters.
-	"code" => function() {
-		// Insert your module's code here
-	}
-]);
-
-?>
-
-```
-
-The function that you provide will be executed after the initial setup has been completed.
-
-### `module_exists($id)`
-Checks to see if a module with the given id is currently loaded. Very useful for providing optional integration with other modules. Note that this may return false if all the modules haven't been loaded yet. All the modules are guaranteed to be loaded by the time the code in the `"code"` function is executed.
-
-```php
-<?php
-module_exists("feature-search"); // Returns true if the feature-search module is loaded, false otherwise.
-```
-
-### `add_action($action_name, $code)`
-Since Pepperminty Wiki works through actions via the GET parameter `action`, there is a function that lets you register a new handler for any given action. Note that you should call this inside the function you passed to `register_handler()`. Here's an example:
-
-```php
-<?php
-register_module([
-	"name" => "Human readable module name",
-	"version" => "0.1",
-	"author" => "Author Name",
-	"description" => "Module Description",
-	"id" => "module-id",
-	"code" => function() {
-		add_action("action_name", function() {
-			exit("Hello, World!");
-		});
-	}
-]);
-
-?>
-
-```
-
-The above adds an action called `action_name`, which, when requested, outputs the text `Hello, World!`.
-
-### `register_save_preprocessor($function)`
-Registers a function to be called every time a page is edited. The function will be passed the following parameters:
-
-1. A reference to the pageindex entry that is about to be saved.
-2. The new text that is to replace the old text.
-3. The old text that the new text is going to replace.
-
-If you make the function that you pass here take the new text that is to be saved in as a reference, you may alter it before it is saved to disk.
-
-### `page_renderer`
-You probably want your module to output a nice user-friendly page instead of a simple text-based one. Luckily, Pepperminty Wiki has a system to let you do that.
-
-#### `page_renderer::render_main($title, $content)`
-This is the main page rendering function you'll want to use. It renders and returns a page much the same as the default `view` action does. Here's an example:
-
-```php
-<?php
-
-exit(page_renderer::render_main("Page title", "Page content"));
-
-?>
-
-```
-
-
-#### `page_renderer::render_minimal($title, $content)`
-Similar to the above, but renders a printable page instead. For an example, click the "Printable" button at the top of any page on Pepperminty Wiki.
-
-```php
-<?php
-
-exit(page_renderer::render_minimal("Page title", "Page content"));
-
-?>
-
-```
-
-#### `page_renderer::render_username($name)`
-Renders a username. Currently all this function does is prepend `$settings->admin_display_char` to the username if they are an admin. Example:
-
-```php
-<?php
-
-exit(page_renderer::render_username("admin")); // Output would be something like "&#9670;admin".
-
-?>
-```
-
-#### `page_renderer::AddJSLink(string $scriptUrl)`
-Add a remote JS script to rendered pages. Links added via this method translate to something like `<script src='{script url}' defer></script>`.
-```php
-<?php
-
-page_renderer::AddJSLink("http://bobsrockets.com/js/awesomescript.js");
-
-?>
-```
-
-#### `page_renderer::AddJSSnippet(string $snippet)`
-Adds a snippet of javascript to generated pages. The snippet in question will be guaranteed to run after the DOM content has loaded (but the `onload` event may not have fired yet). Snippets added via this method will be translated into something like `<script defer>{snippet}</script>`.
-
-```php
-<?php
-
-page_renderer::AddJSSnippet("alert('Hai!');");
-
-?>
-```
-
-#### `page_renderer::register_part_preprocessor($code)`
+### `page_renderer::register_part_preprocessor($code)`
 This function's use is more complicated to explain. Pepperminty Wiki renders pages with a very simple templating system. For example, in the template a page's content is denoted by `{content}`. A function registered here will be passed all the components of a page _just_ before they are dropped into the template. Note that the function you pass in here should take a *reference* to the components, as the return value of the function passed is discarded. Here's an example:
 
 ```php
@@ -251,9 +84,8 @@ register_module([
 
 ```
 
-Variables
----------
-There are a number of global variables floatign around that can give you a lot of information about the current request. ~~I will be tidying them up into a single `$env` object soon.~~ Most of the below have been tidied up into a single `$env` object now! Below is a table of all the variables Pepperminty Wiki has lying around:
+### Global Variables
+There are a number of global variables floating around that can give you a lot of information about the current request. ~~I will be tidying them up into a single `$env` object soon.~~ Most of the below have been tidied up into a single `$env` object now! Below is a table of all the variables Pepperminty Wiki has lying around:
 
 Variable				| Description
 ------------------------|------------------------------------------
@@ -265,3 +97,67 @@ Variable				| Description
 `$env->action`			| The current action.
 `$settings`				| The settings object from the top of the file.
 `$pageindex`			| Contains a list of all the pages that Pepperminty Wiki currently knows about, along with information about each page. Exists to improve performance.
+
+
+## Files
+Pepperminty Wiki maintains several files (most of which are indexes) containing various information about the current site that you can utilise. Some of them also have an 'API' of sorts that you can use to interact with them - which is documented in the [module api](#module-api) above.
+
+### `pageindex.json`
+This is by _far_ the most important index. It contains an entry for each page, under which a number of interesting pieces of information are stored. It's automatically loaded into the global variable `$pageindex` too, so you don't even have to read it in. Here's an example pageindex:
+
+```json
+{
+    "Internal link": {
+        "filename": "Internal link.md",
+        "size": 120,
+        "lastmodified": 1446019377,
+        "lasteditor": "admin",
+        "tags": [
+            "testing",
+            "test tag with spaces",
+            "really really really really really really long tag"
+        ]
+    },
+    "Main Page": {
+        "filename": "Main Page.md",
+        "size": 151,
+        "lastmodified": 1446388276,
+        "lasteditor": "admin",
+        "tags": []
+    },
+    "Internal link\/Sub": {
+        "filename": "Internal link\/Sub.md",
+        "size": 35,
+        "lastmodified": 1446370194,
+        "lasteditor": "admin",
+        "tags": [
+            "test"
+        ]
+    },
+    "Files\/AJ Scr.png": {
+        "filename": "Files\/AJ Scr.png.md",
+        "size": 29,
+        "lastmodified": 1445501914,
+        "lasteditor": "admin",
+        "uploadedfile": true,
+        "uploadedfilepath": "Files\/AJ Scr.png",
+        "uploadedfilemime": "image\/png"
+    }
+}
+```
+
+Currently, Pepperminty Wiki is configured to pretty print the json in the pageindex when saving it to disk, so if you find yourself saving the pageindex please do the same.
+
+Now that alternate data storage directories are supported, the `$entry->filename` will *not* contain the `$env->storage_prefix` prefix. You will need to add this manually if you use it.
+
+### `idindex.json`
+The id index converts page ids into page names and vice versa. It's loaded into the global variable `$idindex`, but you normally wouldn't need to touch that, as there's a seamless API that you can use instead, which can be found under the `ids` class.
+
+### `invindex.json`
+This is the main search index. Obviously, it's only present if the `feature-search` module is loaded and active. It can be interacted with though the `search` class that the `feature-search` module exposes.
+
+### `recent-changes.json`
+This is not loaded automatically, but it contains a list of recent changes that have occurred throughout the wiki. You don't have to fiddle with it directly though if you just want to add a new change, because the `feature-recent-changes` module has a fewe handy methods you can use for that purpose.
+
+### `statsindex.json`
+This file is brand new as of v0.15, and contains the most recently calculated statistics about the wiki. The `feature-stats` module oversees the regeneration of this file. Consult if you need access to such statistics that might be somewhat expensive to calculate.

@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := peppermint
 
-.PHONY: setupApiDoc peppermint docs gh-pages
+.PHONY: setupApiDoc peppermint docs rest_docs module_api_docs
 
 ApiDocPresent := $(shell sh -c apidoc --help 1\>/dev/null && rm -rf doc/)
 
@@ -8,10 +8,19 @@ peppermint:
 	@echo [peppermint/build] Rebuilding Pepperminty Wiki
 	php build.php
 
-docs: setupApiDoc
+docs: rest_docs module_api_docs
+
+rest_docs: setupApiDoc
 	@echo [peppermint/docs] Building docs
-	apidoc -o './RestApiDocs/' --config apidoc.json -f '.*\.php' -e index.php
+	apidoc -o './docs/RestApi/' --config apidoc.json -f '.*\.php' -e index.php
 	rm -rf doc/
+
+module_api_docs: phpdoc
+	@echo [peppermint/module api docs] Updating module api docs
+	php phpdoc run --directory . --target docs/ModuleApi --cache-folder docs/ModuleApiCache --ignore build/,php_error.php,Parsedown*,*.html --title "Pepperminty Wiki Module API" --visibility public
+
+phpdoc:
+	curl -L https://phpdoc.org/phpDocumentor.phar -o phpdoc
 
 setupApiDoc:
 	@echo [peppermint] Checking for apiDoc
@@ -21,16 +30,3 @@ ifndef ApiDocPresent
 	npm install apidoc --global
 endif
 	@echo [peppermint] Check complete
-
-gh-pages:
-	@echo [peppermint/gh-pages] Syncing master branch with gh-pages branch.
-	@echo [peppermint/gh-pages] Making sure the working directory is clean.
-	# From http://unix.stackexchange.com/a/155077/64687
-	git diff --exit-code
-	git diff --cached --exit-code
-	
-	git checkout gh-pages
-	git rebase master
-	git push origin gh-pages
-	git checkout master
-	@echo '[peppermint/gh-pages] Sync complete.'
