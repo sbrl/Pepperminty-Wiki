@@ -220,7 +220,7 @@ if($settingsUpgraded)
 
 // Insert the default CSS if requested
 $defaultCSS = <<<THEMECSS
-body { margin: 2rem 0; background: #eee8f2; line-height: 1.45em; color: #111111; font-family: sans-serif; }
+body { margin: 2rem 0 0 0; background: #eee8f2; line-height: 1.45em; color: #111111; font-family: sans-serif; }
 
 nav { display: flex; background-color: #8a62a7; color: #ffa74d;  }
 nav.top { position: absolute; top: 0; left: 0; right: 0; box-shadow: inset 0 -0.6rem 0.8rem -0.5rem rgba(50, 50, 50, 0.5); }
@@ -4521,7 +4521,7 @@ function update_statistics($update_all = false, $force = false)
 {
 	global $settings, $statistic_calculators;
 	
-	// Cleart he existing statistics if we are asked to recalculate them all
+	// Clear the existing statistics if we are asked to recalculate them all
 	if($force)
 		stats_save(new stdClass());
 	

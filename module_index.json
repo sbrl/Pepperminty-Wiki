@@ -113,7 +113,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
         "id": "feature-stats",
-        "lastupdate": 1505579268,
+        "lastupdate": 1505579288,
         "optional": false
     },
     {
@@ -194,7 +194,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1505577933,
+        "lastupdate": 1505579417,
         "optional": false
     },
     {
