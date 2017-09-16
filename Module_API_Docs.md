@@ -13,7 +13,7 @@ The core of Pepperminty Wiki exposes several global objects, classes, functions,
      - [`statsindex.json`](#statsindexjson)
 
 ## Rest API
-The REST api provided by Pepperminty Wiki itself is documented for bot owners and software developers alike over on GitHub pages [here](https://sbrl.github.io/Pepperminty-Wiki/docs/RestAPI).
+The REST api provided by Pepperminty Wiki itself is documented for bot owners and software developers alike over on GitHub pages [here](https://sbrl.github.io/Pepperminty-Wiki/docs/RestApi/).
 
 ## Module API
 The main PHP-based module API is documented with php documentor. The docs can be found [here](https://sbrl.github.io/Pepperminty-Wiki/docs/ModuleApi), hosted on GitHub Pages.
