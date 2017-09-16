@@ -46,20 +46,20 @@
     },
     {
         "name": "Sidebar",
-        "version": "0.3",
+        "version": "0.3.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a sidebar to the left hand side of every page. Add '$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
         "id": "extra-sidebar",
-        "lastupdate": 1496779827,
+        "lastupdate": 1505512998,
         "optional": false
     },
     {
         "name": "Page Comments",
-        "version": "0.2.2",
+        "version": "0.2.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds threaded comments to the bottom of every page.",
         "id": "feature-comments",
-        "lastupdate": 1505489462,
+        "lastupdate": 1505513014,
         "optional": false
     },
     {
@@ -82,11 +82,11 @@
     },
     {
         "name": "Recent Changes",
-        "version": "0.3.3",
+        "version": "0.3.4",
         "author": "Starbeamrainbowlabs",
         "description": "Adds recent changes. Access through the 'recent-changes' action.",
         "id": "feature-recent-changes",
-        "lastupdate": 1495291194,
+        "lastupdate": 1505512941,
         "optional": false
     },
     {
@@ -113,16 +113,16 @@
         "author": "Starbeamrainbowlabs",
         "description": "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
         "id": "feature-stats",
-        "lastupdate": 1504261794,
+        "lastupdate": 1505564746,
         "optional": false
     },
     {
         "name": "Uploader",
-        "version": "0.5.10",
+        "version": "0.5.11",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1503848840,
+        "lastupdate": 1505512979,
         "optional": false
     },
     {
@@ -190,20 +190,20 @@
     },
     {
         "name": "Page list",
-        "version": "0.10.2",
+        "version": "0.10.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1499102118,
+        "lastupdate": 1505513005,
         "optional": false
     },
     {
         "name": "Login",
-        "version": "0.8.4",
+        "version": "0.8.5",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastupdate": 1482008539,
+        "lastupdate": 1505512966,
         "optional": false
     },
     {
@@ -266,7 +266,7 @@
         "author": "Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
         "id": "parser-parsedown",
-        "lastupdate": 1500065639,
+        "lastupdate": 1505563677,
         "optional": false
     }
 ]

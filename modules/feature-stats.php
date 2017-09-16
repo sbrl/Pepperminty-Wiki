@@ -28,26 +28,36 @@ register_module([
 			
 			$stats = stats_load();
 			
-			$content = "<h1>Statistics</h1>";
-			$content .= "<p>This page contains a selection of statistics about $settings->sitename's content. They are updated automatically about every " . trim(str_replace(["ago", "1 "], [""], human_time($settings->stats_update_interval))) . ", although $settings->sitename's local friendly moderators may update it earlier (you can see their names at the bottom of every page).</p>\n";
-			$stat_scalar_values = [];
-			$stat_contents = [];
+			$stat_pages_list = "<a href='?action=stats'>Main</a> | ";
 			foreach($statistic_calculators as $stat_id => $stat_calculator) {
-				if(!empty($stat_calculator["render"]))
-					$stat_contents[$stat_calculator["name"]] = $stat_calculator["render"]($stats->$stat_id);
-				else
-					$stat_scalar_values[$stat_calculator["name"]] = $stats->$stat_id->value;
+				if($stat_calculator["type"] == "scalar")
+					continue;
+				$stat_pages_list .= "<a href='?action=stats&stat=" . rawurlencode($stat_id) . "'>{$stat_calculator["name"]}</a> | ";
 			}
+			$stat_pages_list = trim($stat_pages_list, " |");
 			
-			$content .= "<table class='stats-table'>\n";
-			$content .= "\t<tr><th>Statistic</th><th>Value</th></tr>\n\n";
-			foreach($stat_scalar_values as $scalar_name => $scalar_value) {
-				$content .= "\t<tr><td>$scalar_name</td><td>$scalar_value</td></tr>\n";
+			if(!empty($_GET["stat"]) && !empty($statistic_calculators[$_GET["stat"]])) {
+				$stat_calculator = $statistic_calculators[$_GET["stat"]];
+				$content = "<h1>{$stat_calculator["name"]} - Statistics</h1>\n";
+				$content .= "<p>$stat_pages_list</p>\n";
+				$content .= $stat_calculator["render"]($stats->{$_GET["stat"]});
 			}
-			$content .= "</table>\n";
-			
-			foreach($stat_contents as $stat_content_part)
-				$content .= "$stat_content_part\n";
+			else
+			{
+				$content = "<h1>Statistics</h1>\n";
+				$content .= "<p>This page contains a selection of statistics about $settings->sitename's content. They are updated automatically about every " . trim(str_replace(["ago", "1 "], [""], human_time($settings->stats_update_interval))) . ", although $settings->sitename's local friendly moderators may update it earlier (you can see their names at the bottom of every page).</p>\n";
+				$content .= "<p>$stat_pages_list</p>\n";
+				
+				$content .= "<table class='stats-table'>\n";
+				$content .= "\t<tr><th>Statistic</th><th>Value</th></tr>\n\n";
+				foreach($statistic_calculators as $stat_id => $stat_calculator) {
+					if($stat_calculator["type"] !== "scalar")
+						continue;
+					
+					$content .= "\t<tr><td>{$stat_calculator["name"]}</td><td>{$stats->$stat_id->value}</td></tr>\n";
+				}
+				$content .= "</table>\n";
+			}
 			
 			exit(page_renderer::render_main("Statistics - $settings->sitename", $content));
 		});
@@ -96,6 +106,7 @@ register_module([
 		statistic_add([
 			"id" => "longest-pages",
 			"name" => "Longest Pages",
+			"type" => "page",
 			"update" => function($old_stats) {
 				global $pageindex;
 				
@@ -126,6 +137,7 @@ register_module([
 		statistic_add([
 			"id" => "page_count",
 			"name" => "Page Count",
+			"type" => "scalar",
 			"update" => function($old_stats) {
 				global $pageindex;
 				
@@ -139,6 +151,7 @@ register_module([
 		statistic_add([
 			"id" => "file_count",
 			"name" => "File Count",
+			"type" => "scalar",
 			"update" => function($old_stats) {
 				global $pageindex;
 				

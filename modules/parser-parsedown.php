@@ -25,6 +25,7 @@ register_module([
 		statistic_add([
 			"id" => "wanted-pages",
 			"name" => "Wanted Pages",
+			"type" => "page",
 			"update" => function($old_stats) {
 				global $pageindex, $env;
 				

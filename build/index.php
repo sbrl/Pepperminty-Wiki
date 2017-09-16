@@ -1,4 +1,5 @@
 <?php
+/** The Pepperminty Wiki core */
 $start_time = microtime(true);
 mb_internal_encoding("UTF-8");
 
@@ -374,36 +375,61 @@ if($settings->css === "auto")
 /////////////////////////////////////////////////////////////////////////////
 ////// Do not edit below this line unless you know what you are doing! //////
 /////////////////////////////////////////////////////////////////////////////
+/** The version of Pepperminty Wiki currently running. */
 $version = "v0.15-dev";
 /// Environment ///
-$env = new stdClass(); // The environment object
-$env->action = $settings->defaultaction; // The action requested by the user
-$env->page = ""; // The page name
-$env->page_filename = ""; // The filename that the page is stored in
-$env->is_history_revision = false; // Whether we are looking at a history revision
-$env->history = new stdClass(); // History revision information
-$env->history->revision_number = -1; // The revision number of the current page
-$env->history->revision_data = false; // The revision data object from the page index
-$env->user = $settings->anonymous_user_name; // The user's name
-$env->is_logged_in = false;  // Whether the user is logged in
-$env->is_admin = false; // Whether the user is an admin (moderator)
-$env->user_data = new stdClass(); // A logged in user's data
-$env->storage_prefix = $settings->data_storage_dir . DIRECTORY_SEPARATOR; // The data storage directory
-$env->perfdata = new stdClass(); // Performance data
+/** Holds information about the current request environment. */
+$env = new stdClass();
+/** The action requested by the user. */
+$env->action = $settings->defaultaction;
+/** The page name requested by the remote client. */
+$env->page = "";
+/** The filename that the page is stored in. */
+$env->page_filename = "";
+/** Whether we are looking at a history revision. */
+$env->is_history_revision = false;
+/** An object holding history revision information for the current request */
+$env->history = new stdClass();
+/** The revision number requested of the current page */
+$env->history->revision_number = -1;
+/** The revision data object from the page index for the requested revision */
+$env->history->revision_data = false;
+/** The user's name if they are logged in. Defaults to `$settings->anonymous_user_name` if the user isn't currently logged in. @var string */
+$env->user = $settings->anonymous_user_name;
+/** Whether the user is logged in */
+$env->is_logged_in = false;
+/** Whether the user is an admin (moderator) @todo Refactor this to is_moderator, so that is_admin can be for the server owner. */
+$env->is_admin = false;
+/** The currently logged in user's data. Please see $settings->users->username if you need to edit this - this is here for convenience :-) */
+$env->user_data = new stdClass();
+/** The data storage directory. Page filenames should be prefixed with this if you want their content. */
+$env->storage_prefix = $settings->data_storage_dir . DIRECTORY_SEPARATOR;
+/** Contains performance data statistics for the current request. */
+$env->perfdata = new stdClass();
 /// Paths ///
+/**
+ * Contains a bunch of useful paths to various important files.
+ * None of these need to be prefixed with `$env->storage_prefix`.
+ */
 $paths = new stdClass();
-$paths->pageindex = "pageindex.json"; // The pageindex
-$paths->searchindex = "invindex.json"; // The inverted index used for searching
-$paths->idindex = "idindex.json"; // The index that converts ids to page names
-$paths->statsindex = "statsindex.json"; // The calculated statistics cache
+/** The pageindex. Contains extensive information about all pages currently in this wiki. Individual entries for pages may be extended with arbitrary properties. */
+$paths->pageindex = "pageindex.json";
+/** The inverted index used for searching. Use the `search` class to interact with this - otherwise your brain might explode :P */
+$paths->searchindex = "invindex.json";
+/** The index that maps ids to page names. Use the `ids` class to interact with it :-) */
+$paths->idindex = "idindex.json";
+/** The cache of the most recently calculated statistics. */
+$paths->statsindex = "statsindex.json";
 
 // Prepend the storage data directory to all the defined paths.
 foreach ($paths as &$path) {
 	$path = $env->storage_prefix . $path;
 }
 
-$paths->settings_file = $settingsFilename; // The master settings file
-$paths->upload_file_prefix = "Files/"; // The prefix to add to uploaded files
+/** The master settings file @var string */
+$paths->settings_file = $settingsFilename;
+/** The prefix to add to uploaded files */
+$paths->upload_file_prefix = "Files/";
 
 session_start();
 // Make sure that the login cookie lasts beyond the end of the user's session
@@ -493,6 +519,7 @@ if($env->is_logged_in)
 ///////////////////////////////////////////////////////////////////////////////
 /**
  * Get the actual absolute origin of the request sent by the user.
+ * @package core
  * @param  array	$s						The $_SERVER variable contents. Defaults to $_SERVER.
  * @param  bool		$use_forwarded_host		Whether to utilise the X-Forwarded-Host header when calculating the actual origin.
  * @return string							The actual origin of the user's request.
@@ -512,6 +539,7 @@ function url_origin( $s = false, $use_forwarded_host = false )
 
 /**
  * Get the full url, as requested by the client.
+ * @package core
  * @see		http://stackoverflow.com/a/8891890/1460422	This Stackoverflow answer.
  * @param	array	$s                  The $_SERVER variable. Defaults to $_SERVER.
  * @param	bool		$use_forwarded_host Whether to take the X-Forwarded-Host header into account.
@@ -524,8 +552,10 @@ function full_url( $s = false, $use_forwarded_host = false )
 
 /**
  * Converts a filesize into a human-readable string.
- * From http://php.net/manual/en/function.filesize.php#106569
- * Edited by Starbeamrainbowlabs.
+ * @package core
+ * @see	http://php.net/manual/en/function.filesize.php#106569	The original source
+ * @author	rommel
+ * @author	Edited by Starbeamrainbowlabs
  * @param	number	$bytes		The number of bytes to convert.
  * @param	number	$decimals	The number of decimal places to preserve.
  * @return 	string				A human-readable filesize.
@@ -541,7 +571,8 @@ function human_filesize($bytes, $decimals = 2)
 /**
  * Calculates the time since a particular timestamp and returns a
  * human-readable result.
- * From http://goo.gl/zpgLgq.
+ * @package core
+ * @see http://goo.gl/zpgLgq The original source. No longer exists, maybe the wayback machine caught it :-(
  * @param	integer	$time	The timestamp to convert.
  * @return	string			The time since the given timestamp as
  *                      	a human-readable string.
@@ -552,6 +583,7 @@ function human_time_since($time)
 }
 /**
  * Renders a given number of seconds as something that humans can understand more easily.
+ * @package core
  * @param 	int		$seconds	The number of seconds to render.
  * @return	string	The rendered time.
  */
@@ -575,7 +607,9 @@ function human_time($seconds)
 
 /**
  * A recursive glob() function.
- * From http://in.php.net/manual/en/function.glob.php#106595
+ * @package core
+ * @see http://in.php.net/manual/en/function.glob.php#106595	The original source
+ * @author	Mike
  * @param  string  $pattern The glob pattern to use to find filenames.
  * @param  integer $flags   The glob flags to use when finding filenames.
  * @return array			An array of the filepaths that match the given glob.
@@ -596,6 +630,7 @@ function glob_recursive($pattern, $flags = 0)
 /**
  * Gets the name of the parent page to the specified page.
  * @since 0.15
+ * @package core
  * @param  string		$pagename	The child page to get the parent
  * 									page name for.
  * @return string|bool
@@ -608,6 +643,7 @@ function get_page_parent($pagename) {
 
 /**
  * Gets a list of all the sub pages of the current page.
+ * @package core
  * @param	object	$pageindex	The pageindex to use to search.
  * @param	string	$pagename	The name of the page to list the sub pages of.
  * @return	object				An object containing all the subpages and their
@@ -642,6 +678,7 @@ function get_subpages($pageindex, $pagename)
 /**
  * Makes sure that a subpage's parents exist.
  * Note this doesn't check the pagename itself.
+ * @package core
  * @param $pagename	The pagename to check.
  */
 function check_subpage_parents($pagename)
@@ -676,6 +713,7 @@ function check_subpage_parents($pagename)
  * Makes a path safe.
  * Paths may only contain alphanumeric characters, spaces, underscores, and
  * dashes.
+ * @package core
  * @param	string	$string	The string to make safe.
  * @return	string			A safe version of the given string.
  */
@@ -694,6 +732,8 @@ function makepathsafe($string)
 
 /**
  * Hides an email address from bots by adding random html entities.
+ * @todo			Make this moree clevererer :D
+ * @package core
  * @param	string	$str	The original email address
  * @return	string			The mangled email address.
  */
@@ -717,6 +757,7 @@ function hide_email($str)
 }
 /**
  * Checks to see if $haystack starts with $needle.
+ * @package	core
  * @param	string	$haystack	The string to search.
  * @param	string	$needle		The string to search for at the beginning
  *                        		of $haystack.
@@ -732,11 +773,12 @@ function starts_with($haystack, $needle)
 /**
  * Case-insensitively finds all occurrences of $needle in $haystack. Handles
  * UTF-8 characters correctly.
- * From http://www.pontikis.net/tip/?id=16, and
- * based on http://www.php.net/manual/en/function.strpos.php#87061
+ * @package core
+ * @see	http://www.pontikis.net/tip/?id=16 the source
+ * @see	http://www.php.net/manual/en/function.strpos.php#87061	the source that the above was based on
  * @param	string			$haystack	The string to search.
  * @param	string			$needle		The string to find.
- * @return	array || false				An array of match indices, or false if
+ * @return	array|false					An array of match indices, or false if
  *                  					nothing was found.
  */
 function mb_stripos_all($haystack, $needle) {
@@ -756,6 +798,7 @@ function mb_stripos_all($haystack, $needle) {
 
 /**
  * Tests whether a string starts with a specified substring.
+ * @package core
  * @param 	string	$haystack	The string to check against.
  * @param 	string	$needle		The substring to look for.
  * @return	bool				Whether the string starts with the specified substring.
@@ -765,6 +808,7 @@ function startsWith($haystack, $needle) {
 }
 /**
  * Tests whether a string ends with a given substring.
+ * @package core
  * @param  string $whole The string to test against.
  * @param  string $end   The substring test for.
  * @return bool          Whether $whole ends in $end.
@@ -775,6 +819,7 @@ function endsWith($whole, $end)
 }
 /**
  * Replaces the first occurrence of $find with $replace.
+ * @package core
  * @param  string $find    The string to search for.
  * @param  string $replace The string to replace the search string with.
  * @param  string $subject The string ot perform the search and replace on.
@@ -791,8 +836,10 @@ function str_replace_once($find, $replace, $subject)
 /**
  * Returns the system's mime type mappings, considering the first extension
  * listed to be cacnonical.
- * From http://stackoverflow.com/a/1147952/1460422 by chaos.
- * Edited by Starbeamrainbowlabs.
+ * @package core
+ * @see http://stackoverflow.com/a/1147952/1460422 From this stackoverflow answer
+ * @author	chaos
+ * @author	Edited by Starbeamrainbowlabs
  * @return array	An array of mime type mappings.
  */
 function system_mime_type_extensions()
@@ -817,8 +864,10 @@ function system_mime_type_extensions()
 
 /**
  * Converts a given mime type to it's associated file extension.
- * From http://stackoverflow.com/a/1147952/1460422 by chaos.
- * Edited by Starbeamrainbowlabs.
+ * @package core
+ * @see http://stackoverflow.com/a/1147952/1460422 From this stackoverflow answer
+ * @author	chaos
+ * @author	Edited by Starbeamrainbowlabs
  * @param  string $type The mime type to convert.
  * @return string       The extension for the given mime type.
  */
@@ -832,8 +881,10 @@ function system_mime_type_extension($type)
 
 /**
  * Returns the system MIME type mapping of extensions to MIME types.
- * From http://stackoverflow.com/a/1147952/1460422 by chaos.
- * Edited by Starbeamrainbowlabs.
+ * @package core
+ * @see http://stackoverflow.com/a/1147952/1460422 From this stackoverflow answer
+ * @author	chaos
+ * @author	Edited by Starbeamrainbowlabs
  * @return array An array mapping file extensions to their associated mime types.
  */
 function system_extension_mime_types()
@@ -857,8 +908,10 @@ function system_extension_mime_types()
 }
 /**
  * Converts a given file extension to it's associated mime type.
- * From http://stackoverflow.com/a/1147952/1460422 by chaos.
- * Edited by Starbeamrainbowlabs.
+ * @package core
+ * @see http://stackoverflow.com/a/1147952/1460422 From this stackoverflow answer
+ * @author	chaos
+ * @author	Edited by Starbeamrainbowlabs
  * @param  string $ext The extension to convert.
  * @return string      The mime type associated with the given extension.
  */
@@ -872,6 +925,7 @@ function system_extension_mime_type($ext) {
 /**
  * Figures out whether a given http accepts header contains a
  * specified mime type.
+ * @package core
  * @param	string $accept_header	The accept header to search.
  * @param	string $mime_type		The mime type to search for.
  * @return	bool					Whether the specified mime type was found
@@ -889,6 +943,7 @@ function accept_contains_mime($accept_header, $mime_type)
 
 /**
  * Generates a stack trace.
+ * @package core
  * @param	bool	$log_trace	Whether to send the stack trace to the error log.
  * @param	bool	$full		Whether to output a full description of all the variables involved.
  * @return	string				A string prepresentation of a stack trace.
@@ -919,6 +974,7 @@ function stack_trace($log_trace = true, $full = false)
 }
 /**
  * Calls var_dump() and returns the output.
+ * @package core
  * @param	mixed	$var	The thing to pass to var_dump().
  * @return	string			The output captured from var_dump().
  */
@@ -931,6 +987,7 @@ function var_dump_ret($var)
 
 /**
  * Calls var_dump(), shortening the output for various types.
+ * @package core
  * @param	mixed 	$var	The thing to pass to var_dump().
  * @return	string			A shortened version of the var_dump() output.
  */
@@ -944,10 +1001,13 @@ function var_dump_short($var)
 	return $result;
 }
 
-/**
- * Polyfill getallheaders()
- */
 if (!function_exists('getallheaders'))  {
+	/**
+	 * Polyfill for PHP's native getallheaders() function on platforms that
+	 * don't have it.
+	 * @package core
+	 * @todo	Identify which platforms don't have it and whether we still need this
+	 */
     function getallheaders()
     {
         if (!is_array($_SERVER))
@@ -964,6 +1024,7 @@ if (!function_exists('getallheaders'))  {
 }
 /**
  * Renders a timestamp in HTML.
+ * @package core
  * @param  int $timestamp The timestamp to render.
  * @return string         HTML representing the given timestamp.
  */
@@ -973,6 +1034,7 @@ function render_timestamp($timestamp)
 }
 /**
  * Renders a page name in HTML.
+ * @package core
  * @param  object $rchange The recent change to render as a page name
  * @return string          HTML representing the name of the given page.
  */
@@ -987,6 +1049,7 @@ function render_pagename($rchange)
 }
 /**
  * Renders an editor's or a group of editors name(s) in HTML.
+ * @package core
  * @param  string $editorName The name of the editor to render.
  * @return string             HTML representing the given editor's name.
  */
@@ -997,6 +1060,7 @@ function render_editor($editorName)
 
 /**
  * Saves the currently logged in uesr's data back to peppermint.json.
+ * @package core
  * @return bool Whether the user's data was saved successfully. Returns false if the user isn't logged in.
  */
 function save_userdata()
@@ -1015,6 +1079,7 @@ function save_userdata()
 /**
  * Figures out the path to the user page for a given username.
  * Does not check to make sure the user acutally exists. 
+ * @package core
  * @param  string $username The username to get the path to their user page for.
  * @return string           The path to the given user's page.
  */
@@ -1024,6 +1089,7 @@ function get_user_pagename($username) {
 }
 /**
  * Extracts a username from a user page path.
+ * @package core
  * @param  string $userPagename The suer page path to extract from.
  * @return string               The name of the user that the user page belongs to.
  */
@@ -1037,6 +1103,7 @@ function extract_user_from_userpage($userPagename) {
 
 /**
  * Sends a plain text email to a user, replacing {username} with the specified username.
+ * @package core
  * @param  string $username The username to send the email to.
  * @param  string $subject  The subject of the email.
  * @param  string $body     The body of the email.
@@ -1067,6 +1134,7 @@ function email_user($username, $subject, $body)
 }
 /**
  * Sends a plain text email to a list of users, replacing {username} with each user's name.
+ * @package core
  * @param  string[]	$usernames	A list of usernames to email.
  * @param  string	$subject	The subject of the email.
  * @param  string	$body		The body of the email.
@@ -1189,11 +1257,16 @@ $idindex = json_decode(file_get_contents($paths->idindex));
 $env->perfdata->idindex_decode_time = round((microtime(true) - $idindex_decode_start)*1000, 3);
 /**
  * Provides an interface to interact with page ids.
+ * @package core
  */
 class ids
 {
-	/*
-	 * @summary Gets the page id associated with the given pagename.
+	/**
+	 * Gets the page id associated with the given page name.
+	 * If it doesn't exist in the id index, it will be added.
+	 * @package core
+	 * @param	string	$pagename	The name of the page to fetch the id for.
+	 * @return	integer	The id for the specified page name.
 	 */
 	public static function getid($pagename)
 	{
@@ -1209,8 +1282,13 @@ class ids
 		return self::assign($pagename);
 	}
 
-	/*
-	 * @summary Gets the page name associated with the given page id.
+	/**
+	 * Gets the page name associated with the given page id.
+	 * Be warned that if the id index is cleared (e.g. when the search index is
+	 * rebuilt from scratch), the id associated with a page name may change!
+	 * @package core
+	 * @param	int		$id		The id to fetch the page name for.
+	 * @return	string	The page name currently associated with the specified id.
 	 */
 	public static function getpagename($id)
 	{
@@ -1222,10 +1300,13 @@ class ids
 			return $idindex->$id;
 	}
 	
-	/*
-	 * @summary Moves a page in the id index from $oldpagename to $newpagename.
-	 *		  Note that this function doesn't perform any special checks to
-	 *		  make sure that the destination name doesn't already exist.
+	/**
+	 * Moves a page in the id index from $oldpagename to $newpagename.
+	 * Note that this function doesn't perform any special checks to make sure
+	 * that the destination name doesn't already exist.
+	 * @package core
+	 * @param	string	$oldpagename	The old page name to move.
+	 * @param	string	$newpagename	The new pagee name to move the old page name to.
 	 */
 	public static function movepagename($oldpagename, $newpagename)
 	{
@@ -1237,9 +1318,13 @@ class ids
 		file_put_contents($paths->idindex, json_encode($idindex));
 	}
 	
-	/*
-	 * @summary Removes the given page name from the id index. Note that this
-	 *		  function doesn't handle multiple entries with the same name.
+	/**
+	 * Removes the given page name from the id index.
+	 * Note that this function doesn't handle multiple entries with the same
+	 * name. Also note that it may get re-added during a search reindex if the
+	 * page still exists.
+	 * @package core
+	 * @param	string	$pagename	The page name to delete from the id index.
 	 */
 	public static function deletepagename($pagename)
 	{
@@ -1254,7 +1339,12 @@ class ids
 	}
 	
 	/**
-	 * Clears the id index completely. Will break the inverted search index!
+	 * Clears the id index completely.
+	 * Will break the inverted search index! Make sure you rebuild the search
+	 * index (if the search module is installed, of course) if you want search
+	 * to still work. Of course, note that will re-add all the pages to the id
+	 * index.
+	 * @package core
 	 */
 	public static function clear()
 	{
@@ -1267,9 +1357,12 @@ class ids
 		$idindex = new stdClass();
 	}
 
-	/*
-	 * @summary Assigns an id to a pagename. Doesn't check to make sure that
-	 * 			pagename doesn't exist in the pageindex.
+	/**
+	 * Assigns an id to a pagename. Doesn't check to make sure that
+	 * pagename doesn't already exist in the id index.
+	 * @package core
+	 * @param	string	$pagename	The page name to assign an id to.
+	 * @return	integer				The id assigned to the specified page name.
 	 */
 	protected static function assign($pagename)
 	{
@@ -1325,8 +1418,17 @@ if(makepathsafe($_GET["page"]) !== $_GET["page"])
 ////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////// HTML fragments ////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
+/**
+ * Renders the HTML page that is sent to the client.
+ * @package core
+ */
 class page_renderer
 {
+	/**
+	 * The root HTML template that all pages are built from.
+	 * @var string
+	 * @package core
+	 */
 	public static $html_template = "<!DOCTYPE html>
 <html>
 	<head>
@@ -1343,7 +1445,11 @@ class page_renderer
 	</body>
 </html>
 ";
-
+	/**
+	 * The main content template that is used to render normal wiki pages.
+	 * @var string
+	 * @package core
+	 */
 	public static $main_content_template = "{navigation-bar}
 		<h1 class='sitename'>{sitename}</h1>
 		<main>
@@ -1358,6 +1464,12 @@ class page_renderer
 		</footer>
 		{navigation-bar-bottom}
 		{all-pages-datalist}";
+	/**
+	 * A specially minified content template that doesn't include the navbar and
+	 * other elements not suiltable for printing.
+	 * @var string
+	 * @package core
+	 */
 	public static $minimal_content_template = "<main class='printable'>{content}</main>
 		<footer class='printable'>
 			<hr class='footerdivider' />
@@ -1367,12 +1479,27 @@ class page_renderer
 			<p><em>Powered by Pepperminty Wiki v0.15-dev.</em></p>
 		</footer>";
 
-	// An array of functions that have been registered to process the
-	// find / replace array before the page is rendered. Note that the function
-	// should take a *reference* to an array as its only argument.
+	/**
+	 * An array of functions that have been registered to process the
+	 * find / replace array before the page is rendered. Note that the function
+	 * should take a *reference* to an array as its only argument.
+	 * @var array
+	 * @package core
+	 */
 	protected static $part_processors = [];
 
-	// Registers a function as a part post processor.
+	/**
+	 * Registers a function as a part post processor.
+	 * This function's use is more complicated to explain. Pepperminty Wiki
+	 * renders pages with a very simple templating system. For example, in the
+	 * template a page's content is denoted by `{content}`. A function
+	 * registered here will be passed all the components of a page _just_
+	 * before they are dropped into the template. Note that the function you
+	 * pass in here should take a *reference* to the components, as the return
+	 * value of the function passed is discarded.
+	 * @package core
+	 * @param  function $function The part preprocessor to register.
+	 */
 	public static function register_part_preprocessor($function)
 	{
 		global $settings;
@@ -1390,7 +1517,15 @@ class page_renderer
 
 		return true;
 	}
-
+	
+	/**
+	 * Renders a HTML page with the content specified.
+	 * @package core
+	 * @param  string  $title         The title of the page.
+	 * @param  string  $content       The (HTML) content of the page.
+	 * @param  boolean $body_template The HTML content template to use.
+	 * @return string                 The rendered HTML, ready to send to the client :-)
+	 */
 	public static function render($title, $content, $body_template = false)
 	{
 		global $settings, $start_time, $version;
@@ -1457,15 +1592,34 @@ class page_renderer
 		$result = str_replace("{generation-time-taken}", round((microtime(true) - $start_time)*1000, 2), $result);
 		return $result;
 	}
+	/**
+	 * Renders a normal HTML page.
+	 * @package core
+	 * @param  string $title   The title of the page.
+	 * @param  string $content The content of the page.
+	 * @return string          The rendered page.
+	 */
 	public static function render_main($title, $content)
 	{
 		return self::render($title, $content, self::$main_content_template);
 	}
+	/**
+	 * Renders a minimal HTML page. Useful for printable pages.
+	 * @package core
+	 * @param  string $title   The title of the page.
+	 * @param  string $content The content of the page.
+	 * @return string          The rendered page.
+	 */
 	public static function render_minimal($title, $content)
 	{
 		return self::render($title, $content, self::$minimal_content_template);
 	}
 	
+	/**
+	 * Renders the header HTML.
+	 * @package core
+	 * @return string The rendered HTML that goes in the header.
+	 */
 	public static function get_header_html()
 	{
 		global $settings;
@@ -1492,6 +1646,11 @@ class page_renderer
 		
 		return $result;
 	}
+	/**
+	 * Renders all the CSS as HTML.
+	 * @package core
+	 * @return string The css as HTML, ready to be included in the HTML header.
+	 */
 	public static function get_css_as_html()
 	{
 		global $settings;
@@ -1528,18 +1687,43 @@ class page_renderer
 			return "<style>$css</style>\n";
 		}
 	}
-	
+	/**
+	 * The javascript snippets that will be included in the page.
+	 * @var string[]
+	 * @package core
+	 */
 	private static $jsSnippets = [];
+	/**
+	 * The urls of the external javascript files that should be referenced
+	 * by the page.
+	 * @var string[]
+	 * @package core
+	 */
 	private static $jsLinks = [];
+	/**
+	 * Adds the specified url to a javascript file as a reference to the page.
+	 * @package core
+	 * @param string $scriptUrl The url of the javascript file to reference.
+	 */
 	public function AddJSLink(string $scriptUrl)
 	{
 		static::$jsLinks[] = $scriptUrl;
 	}
+	/**
+	 * Adds a javascript snippet to the page.
+	 * @package core
+	 * @param string $script The snippet of javascript to add.
+	 */
 	public function AddJSSnippet(string $script)
 	{
 		static::$jsSnippets[] = $script;
 	}
-	
+	/**
+	 * Renders the included javascript header for inclusion in the final
+	 * rendered page.
+	 * @package core
+	 * @return	string	The rendered javascript ready for inclusion in the page.
+	 */
 	private static function getJS()
 	{
 		$result = "<!-- Javascript -->\n";
@@ -1551,15 +1735,23 @@ class page_renderer
 	}
 	
 	// ~
-
+	
+	/**
+	 * The navigation bar divider.
+	 * @package core
+	 * @var string
+	 */
 	public static $nav_divider = "<span class='nav-divider inflexible'> | </span>";
 
 	/**
 	 * Renders a navigation bar from an array of links. See
 	 * $settings->nav_links for format information.
+	 * @package core
 	 * @param array	$nav_links			The links to add to the navigation bar.
 	 * @param array	$nav_links_extra	The extra nav links to add to
 	 *                               	the "More..." menu.
+	 * @param string $class				The class(es) to assign to the rendered
+	 * 									navigation bar.
 	 */
 	public static function render_navigation_bar($nav_links, $nav_links_extra, $class = "")
 	{
@@ -1623,6 +1815,12 @@ class page_renderer
 		$result .= "</nav>";
 		return $result;
 	}
+	/**
+	 * Renders a username for inclusion in a page.
+	 * @package core
+	 * @param  string $name The username to render.
+	 * @return string       The username rendered in HTML.
+	 */
 	public static function render_username($name)
 	{
 		global $settings;
@@ -1639,7 +1837,12 @@ class page_renderer
 	}
 	
 	// ~
-
+	
+	/**
+	 * Renders the datalist for the search box as HTML.
+	 * @package core
+	 * @return string The search box datalist as HTML.
+	 */
 	public static function generate_all_pages_datalist()
 	{
 		global $settings, $pageindex;
@@ -1671,7 +1874,7 @@ if(!empty($settings->enable_math_rendering))
 {
 	page_renderer::AddJSLink("https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML");
 }
-// alt+enter suport in the search box
+// alt+enter support in the search box
 page_renderer::AddJSSnippet('// Alt + Enter support in the top search box
 window.addEventListener("load", function(event) {
 	document.querySelector("input[type=search]").addEventListener("keyup", function(event) {
@@ -1755,8 +1958,13 @@ if($settings->require_login_view === true && // If this site requires a login in
 // register themselves	//
 // or new pages.		//
 //////////////////////////
-$modules = []; // List that contains all the loaded modules
-// Function to register a module
+/** A list of all the currentlyloaded modules. Not guaranteed to be populated until an action is executed. */
+$modules = [];
+/**
+ * Registers a module.
+ * @package core
+ * @param  array	$moduledata	The module data to register.
+ */
 function register_module($moduledata)
 {
 	global $modules;
@@ -1766,6 +1974,7 @@ function register_module($moduledata)
 }
 /**
  * Checks to see whether a module with the given id exists.
+ * @package core
  * @param  string   $id	 The id to search for.
  * @return bool     Whether a module is currently loaded with the given id.
  */
@@ -1780,8 +1989,14 @@ function module_exists($id)
 	return false;
 }
 
-// Function to register an action handler
 $actions = new stdClass();
+/**
+ * Registers a new action handler.
+ * @package core
+ * @param	string		$action_name	The action to register.
+ * @param	function	$func			The function to call when the specified
+ * 										action is requested.
+ */
 function add_action($action_name, $func)
 {
 	global $actions;
@@ -1790,6 +2005,7 @@ function add_action($action_name, $func)
 /**
  * Figures out whether a given action is currently registered.
  * Only guaranteed to be accurate in inside an existing action function
+ * @package core
  * @param  string  $action_name The name of the action to search for
  * @return boolean              Whether an action with the specified name exists.
  */
@@ -1806,6 +2022,7 @@ $parsers = [
 ];
 /**
  * Registers a new parser.
+ * @package core
  * @param string	$name       	The name of the new parser to register.
  * @param function	$parser_code	The function to register as a new parser.
  */
@@ -1817,6 +2034,14 @@ function add_parser($name, $parser_code)
 
 	$parsers[$name] = $parser_code;
 }
+/**
+ * Parses the specified page source using the parser specified in the settings
+ * into HTML.
+ * The specified parser may (though it's unilkely) render it to other things.
+ * @package core
+ * @param	string	$source	The source to render.
+ * @return	string			The source rendered to HTML.
+ */
 function parse_page_source($source)
 {
 	global $settings, $parsers;
@@ -1835,6 +2060,7 @@ $save_preprocessors = [];
 /**
  * Register a new proprocessor that will be executed just before
  * an edit is saved.
+ * @package core
  * @param	function	$func	The function to register.
  */
 function register_save_preprocessor($func)
@@ -1846,6 +2072,7 @@ function register_save_preprocessor($func)
 $help_sections = [];
 /**
  * Adds a new help section to the help page.
+ * @package core
  * @param string $index   The string to index the new section under.
  * @param string $title   The title to display above the section.
  * @param string $content The content to display.
@@ -1864,9 +2091,11 @@ if(!empty($settings->enable_math_rendering))
 	add_help_section("22-mathematical-mxpressions", "Mathematical Expressions", "<p>$settings->sitename supports rendering of mathematical expressions. Mathematical expressions can be included practically anywhere in your page. Expressions should be written in LaTeX and enclosed in dollar signs like this: <code>&#36;x^2&#36;</code>.</p>
 	<p>Note that expression parsing is done on the viewer's computer with javascript (specifically MathJax) and not by $settings->sitename directly (also called client side rendering).</p>");
 
+/** An array of the currently registerd statistic calculators. Not guaranteed to be populated until the requested action function is called. */
 $statistic_calculators = [];
 /**
  * Registers a statistic calculator against the system.
+ * @package core
  * @param	array	$stat_data	The statistic object to register.
  */
 function statistic_add($stat_data) {
@@ -1875,6 +2104,7 @@ function statistic_add($stat_data) {
 }
 /**
  * Checks whether a specified statistic has been registered.
+ * @package core
  * @param  string  $stat_id The id of the statistic to check the existence of.
  * @return boolean          Whether the specified statistic has been registered.
  */
@@ -2123,7 +2353,7 @@ register_module([
 
 register_module([
 	"name" => "Sidebar",
-	"version" => "0.3",
+	"version" => "0.3.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a sidebar to the left hand side of every page. Add '\$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
 	"id" => "extra-sidebar",
@@ -2196,13 +2426,12 @@ register_module([
 	}
 ]);
 
-/* 
- * @summary Renders the sidebar for a given pageindex.
- * 
- * @param $pageindex {array} - The pageindex to render the sidebar for
- * @param $root_pagename {string} - The pagename that should be considered the root of the rendering. You don't usually need to use this, it is used by the algorithm itself since it is recursive.
- * 
- * @returns {string} A HTML rendering of the sidebar for the given pageindex
+/**
+ * Renders the sidebar for a given pageindex.
+ * @package	extra-sidebar
+ * @param	array		$pageindex		The pageindex to render the sidebar for
+ * @param	string		$root_pagename	The pagename that should be considered the root of the rendering. You don't usually need to use this, it is used by the algorithm itself since it is recursive.
+ * @return	string		A HTML rendering of the sidebar for the given pageindex.
  */
 function render_sidebar($pageindex, $root_pagename = "")
 {
@@ -2246,7 +2475,7 @@ function render_sidebar($pageindex, $root_pagename = "")
 
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.2.2",
+	"version" => "0.2.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
@@ -2452,6 +2681,7 @@ REPLYJS;
 /**
  * Given a page name, returns the absolute file path in which that page's
  * comments are stored.
+ * @package feature-comments
  * @param  string $pagename The name pf the page to fetch the comments filename for.
  * @return string           The path to the file that the 
  */
@@ -2464,6 +2694,7 @@ function get_comment_filename($pagename)
 
 /**
  * Generates a new random comment id.
+ * @package feature-comments
  * @return string A new random comment id.
  */
 function generate_comment_id()
@@ -2475,6 +2706,7 @@ function generate_comment_id()
 
 /**
  * Finds the comment with specified id by way of an almost-breadth-first search.
+ * @package feature-comments
  * @param  array $comment_data	The comment data to search.
  * @param  string $comment_id	The id of the comment to  find.
  * @return object				The comment data with the specified id, or
@@ -2507,6 +2739,7 @@ function find_comment($comment_data, $comment_id)
  * Fetches all the parent comments of the specified comment id, including the
  * comment itself at the end.
  * Useful for figuring out who needs notifying when a new comment is posted.
+ * @package feature-comments
  * @param	array		$comment_data	The comment data to search.
  * @param	string		$comment_id		The comment id to fetch the thread for.
  * @return	object[]	A list of the comments in the thread, with the deepest
@@ -2536,6 +2769,7 @@ function fetch_comment_thread($comment_data, $comment_id)
 
 /**
  * Renders a given comments tree to html.
+ * @package feature-comments
  * @param	object[]	$comments_data	The comments tree to render.
  * @param	integer		$depth			For internal use only. Specifies the depth
  * 										at which the comments are being rendered.
@@ -2880,7 +3114,7 @@ function history_add_revision(&$pageinfo, &$newsource, &$oldsource, $save_pagein
 
 register_module([
 	"name" => "Recent Changes",
-	"version" => "0.3.3",
+	"version" => "0.3.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds recent changes. Access through the 'recent-changes' action.",
 	"id" => "feature-recent-changes",
@@ -2962,7 +3196,8 @@ register_module([
 
 /**
  * Adds a new recent change to the recent changes file.
- * @param array $rchange The new change to add.
+ * @package	feature-recent-changes
+ * @param	array	$rchange	The new change to add.
  */
 function add_recent_change($rchange)
 {
@@ -2980,6 +3215,12 @@ function add_recent_change($rchange)
 	file_put_contents($paths->recentchanges, json_encode($recentchanges, JSON_PRETTY_PRINT));
 }
 
+/**
+ * Renders a list of recent changes to HTML.
+ * @package	feature-recent-changes
+ * @param	array	$recent_changes		The recent changes to render.
+ * @return	string	The given recent changes as HTML.
+ */
 function render_recent_changes($recent_changes)
 {
 	global $pageindex;
@@ -3071,6 +3312,12 @@ function render_recent_changes($recent_changes)
 	return $content;
 }
 
+/**
+ * Renders a single recent change
+ * @package	feature-recent-changes
+ * @param	object	$rchange	The recent change to render.
+ * @return	string				The recent change, rendered to HTML.
+ */
 function render_recent_change($rchange)
 {
 	global $pageindex;
@@ -4084,26 +4331,36 @@ register_module([
 			
 			$stats = stats_load();
 			
-			$content = "<h1>Statistics</h1>";
-			$content .= "<p>This page contains a selection of statistics about $settings->sitename's content. They are updated automatically about every " . trim(str_replace(["ago", "1 "], [""], human_time($settings->stats_update_interval))) . ", although $settings->sitename's local friendly moderators may update it earlier (you can see their names at the bottom of every page).</p>\n";
-			$stat_scalar_values = [];
-			$stat_contents = [];
+			$stat_pages_list = "<a href='?action=stats'>Main</a> | ";
 			foreach($statistic_calculators as $stat_id => $stat_calculator) {
-				if(!empty($stat_calculator["render"]))
-					$stat_contents[$stat_calculator["name"]] = $stat_calculator["render"]($stats->$stat_id);
-				else
-					$stat_scalar_values[$stat_calculator["name"]] = $stats->$stat_id->value;
+				if($stat_calculator["type"] == "scalar")
+					continue;
+				$stat_pages_list .= "<a href='?action=stats&stat=" . rawurlencode($stat_id) . "'>{$stat_calculator["name"]}</a> | ";
 			}
+			$stat_pages_list = trim($stat_pages_list, " |");
 			
-			$content .= "<table class='stats-table'>\n";
-			$content .= "\t<tr><th>Statistic</th><th>Value</th></tr>\n\n";
-			foreach($stat_scalar_values as $scalar_name => $scalar_value) {
-				$content .= "\t<tr><td>$scalar_name</td><td>$scalar_value</td></tr>\n";
+			if(!empty($_GET["stat"]) && !empty($statistic_calculators[$_GET["stat"]])) {
+				$stat_calculator = $statistic_calculators[$_GET["stat"]];
+				$content = "<h1>{$stat_calculator["name"]} - Statistics</h1>\n";
+				$content .= "<p>$stat_pages_list</p>\n";
+				$content .= $stat_calculator["render"]($stats->{$_GET["stat"]});
 			}
-			$content .= "</table>\n";
-			
-			foreach($stat_contents as $stat_content_part)
-				$content .= "$stat_content_part\n";
+			else
+			{
+				$content = "<h1>Statistics</h1>\n";
+				$content .= "<p>This page contains a selection of statistics about $settings->sitename's content. They are updated automatically about every " . trim(str_replace(["ago", "1 "], [""], human_time($settings->stats_update_interval))) . ", although $settings->sitename's local friendly moderators may update it earlier (you can see their names at the bottom of every page).</p>\n";
+				$content .= "<p>$stat_pages_list</p>\n";
+				
+				$content .= "<table class='stats-table'>\n";
+				$content .= "\t<tr><th>Statistic</th><th>Value</th></tr>\n\n";
+				foreach($statistic_calculators as $stat_id => $stat_calculator) {
+					if($stat_calculator["type"] !== "scalar")
+						continue;
+					
+					$content .= "\t<tr><td>{$stat_calculator["name"]}</td><td>{$stats->$stat_id->value}</td></tr>\n";
+				}
+				$content .= "</table>\n";
+			}
 			
 			exit(page_renderer::render_main("Statistics - $settings->sitename", $content));
 		});
@@ -4152,6 +4409,7 @@ register_module([
 		statistic_add([
 			"id" => "longest-pages",
 			"name" => "Longest Pages",
+			"type" => "page",
 			"update" => function($old_stats) {
 				global $pageindex;
 				
@@ -4182,6 +4440,7 @@ register_module([
 		statistic_add([
 			"id" => "page_count",
 			"name" => "Page Count",
+			"type" => "scalar",
 			"update" => function($old_stats) {
 				global $pageindex;
 				
@@ -4195,6 +4454,7 @@ register_module([
 		statistic_add([
 			"id" => "file_count",
 			"name" => "File Count",
+			"type" => "scalar",
 			"update" => function($old_stats) {
 				global $pageindex;
 				
@@ -4260,7 +4520,8 @@ function update_statistics($update_all = false)
 
 /**
  * Loads and returns the statistics cache file.
- * @return object The loaded & decoded statistics.
+ * @package	feature-stats
+ * @return	object		The loaded & decoded statistics.
  */
 function stats_load()
 {
@@ -4272,6 +4533,7 @@ function stats_load()
 }
 /**
  * Saves the statistics back to disk.
+ * @package	feature-stats
  * @param	object	The statistics cache to save.
  * @return	bool	Whether saving succeeded or not.
  */
@@ -4284,7 +4546,7 @@ function stats_save($stats)
 
 register_module([
 	"name" => "Uploader",
-	"version" => "0.5.10",
+	"version" => "0.5.11",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -4819,11 +5081,15 @@ register_module([
 	}
 ]);
 
-//// Pair of functions to calculate the actual maximum upload size supported by the server
-//// Lifted from Drupal by @meustrus from  Stackoverflow. Link to answer:
-//// http://stackoverflow.com/a/25370978/1460422
-// Returns a file size limit in bytes based on the PHP upload_max_filesize
-// and post_max_size
+/**
+ * Calculates the actual maximum upload size supported by the server
+ * Returns a file size limit in bytes based on the PHP upload_max_filesize and
+ * post_max_size
+ * @package feature-upload
+ * @author	Lifted from Drupal by @meustrus from Stackoverflow
+ * @see		http://stackoverflow.com/a/25370978/1460422 Source Stackoverflow answer
+ * @return	integer		The maximum upload size supported bythe server, in bytes.
+ */
 function get_max_upload_size()
 {
 	static $max_size = -1;
@@ -4839,7 +5105,15 @@ function get_max_upload_size()
 	}
 	return $max_size;
 }
-
+/**
+ * Parses a PHP size to an integer
+ * @package feature-upload
+ * @author	Lifted from Drupal by @meustrus from Stackoverflow
+ * @see		http://stackoverflow.com/a/25370978/1460422 Source Stackoverflow answer
+ * @param	string	$size	The size to parse.
+ * @return	integer			The number of bytees represented by the specified
+ * 							size string.
+ */
 function parse_size($size) {
 	$unit = preg_replace('/[^bkmgtpezy]/i', '', $size); // Remove the non-unit characters from the size.
 	$size = preg_replace('/[^0-9\.]/', '', $size); // Remove the non-numeric characters from the size.
@@ -4850,7 +5124,13 @@ function parse_size($size) {
 		return round($size);
 	}
 }
-
+/**
+ * Checks an uploaded SVG file to make sure it's (at least somewhat) safe.
+ * Sends an error to the client if a problem is found.
+ * @package feature-upload
+ * @param  string $temp_filename The filename of the SVG file to check.
+ * @return int[]                The size of the SVG image.
+ */
 function upload_check_svg($temp_filename)
 {
 	global $settings;
@@ -4866,6 +5146,13 @@ function upload_check_svg($temp_filename)
 	return getsvgsize($temp_filename);
 }
 
+/**
+ * Calculates the size of the specified SVG file.
+ * @package feature-upload
+ * @param	string	$svgFilename	The filename to calculate the size of.
+ * @return	int[]					The width and height respectively of the
+ * 									specified SVG file.
+ */
 function getsvgsize($svgFilename)
 {
 	$svg = simplexml_load_file($svgFilename); // Load it as XML
@@ -4884,6 +5171,15 @@ function getsvgsize($svgFilename)
 	return $imageSize;
 }
 
+/**
+ * Creates an images containing the specified text.
+ * Useful for sending errors back to the client.
+ * @package feature-upload
+ * @param	string	$text			The text to include in the image.
+ * @param	integer	$target_size	The target width to aim for when creating
+ * 									the image.
+ * @return	image					The handle to the generated GD image.
+ */
 function errorimage($text, $target_size = null)
 {
 	$width = 640;
@@ -6179,7 +6475,7 @@ register_module([
 
 register_module([
 	"name" => "Page list",
-	"version" => "0.10.2",
+	"version" => "0.10.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that lists all the pages in the index along with their metadata.",
 	"id" => "page-list",
@@ -6287,6 +6583,12 @@ register_module([
 	}
 ]);
 
+/**
+ * Renders a list of pages as HTML.
+ * @package	page-list
+ * @param	string[]	$pagelist	A list of page names to include in the list.
+ * @return	string					The specified list of pages as HTML.
+ */
 function generate_page_list($pagelist)
 {
 	global $pageindex;
@@ -6327,7 +6629,7 @@ function generate_page_list($pagelist)
 
 register_module([
 	"name" => "Login",
-	"version" => "0.8.4",
+	"version" => "0.8.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
@@ -6460,14 +6762,14 @@ register_module([
 	}
 ]);
 
-/*
- * @summary Hashes the given password according to the current settings defined
- * 			in $settings.
+/**
+ * Hashes the given password according to the current settings defined
+ * in $settings.
+ * @package	page-login
+ * @param	string	$pass	The password to hash.
  * 
- * @param $pass {string} The password to hash.
- * 
- * @returns {string} The hashed password. Uses sha3 if $settings->use_sha3 is
- * 					 enabled, or sha256 otherwise.
+ * @return	string	The hashed password. Uses sha3 if $settings->use_sha3 is
+ * 					enabled, or sha256 otherwise.
  */
 function hash_password($pass)
 {
@@ -7003,6 +7305,7 @@ register_module([
 		statistic_add([
 			"id" => "wanted-pages",
 			"name" => "Wanted Pages",
+			"type" => "page",
 			"update" => function($old_stats) {
 				global $pageindex, $env;
 				
