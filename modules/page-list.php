@@ -44,6 +44,7 @@ register_module([
 		 * @apiPermission	Anonymous
 		 * 
 		 * @apiParam	{string}	tag		Optional. If provided a list of all the pages with that tag is returned instead.
+		 * @apiParam	{string}	format	Optional. If specified sets the format of the returned result. Supported values: html, json. Default: html
 		 */
 		
 		/*
@@ -56,30 +57,42 @@ register_module([
 		add_action("list-tags", function() {
 			global $pageindex, $settings;
 			
+			$supported_formats = [ "html", "json", "text" ];
+			$format = $_GET["format"] ?? "html";
+			
+			if(!in_array($format, $supported_formats)) {
+				http_response_code(400);
+				exit(page_renderer::render_main("Format error - $settings->sitename", "<p>Error: The format '$format' is not currently supported by $settings->sitename. Supported formats: " . implode(", ", $supported_formats) . "."));
+			}
+			
 			if(!isset($_GET["tag"]))
 			{
 				// Render a list of all tags
-				$all_tags = [];
-				foreach($pageindex as $entry)
-				{
-					if(!isset($entry->tags)) continue;
-					foreach($entry->tags as $tag)
-					{
-						if(!in_array($tag, $all_tags)) $all_tags[] = $tag;
-					}
-				}
+				$all_tags = get_all_tags();
 				
 				sort($all_tags, SORT_NATURAL);
 				
-				$content = "<h1>All tags</h1>
-				<ul class='tag-list'>\n";
-				foreach($all_tags as $tag)
-				{
-					$content .= "			<li><a href='?action=list-tags&tag=" . rawurlencode($tag) . "' class='mini-tag'>$tag</a></li>\n";
+				switch($format) {
+					case "html":
+						$content = "<h1>All tags</h1>
+						<ul class='tag-list'>\n";
+						foreach($all_tags as $tag)
+						{
+							$content .= "			<li><a href='?action=list-tags&tag=" . rawurlencode($tag) . "' class='mini-tag'>$tag</a></li>\n";
+						}
+						$content .= "</ul>\n";
+						
+						exit(page_renderer::render("All tags - $settings->sitename", $content));
+						break;
+					
+					case "json":
+						header("content-type: application/json");
+						exit(json_encode($all_tags, JSON_PRETTY_PRINT));
+					
+					case "text":
+						header("content-type: text/plain");
+						exit(implode("\n", $all_tags));
 				}
-				$content .= "</ul>\n";
-				
-				exit(page_renderer::render("All tags - $settings->sitename", $content));
 			}
 			$tag = $_GET["tag"];
 			
@@ -95,12 +108,25 @@ register_module([
 					$pagelist[] = $pagename;
 			}
 			
-			$content = "<h1>Tag List: $tag</h1>\n";
-			$content .= generate_page_list($pagelist);
+			switch($format)
+			{
+				case "html":
+					$content = "<h1>Tag List: $tag</h1>\n";
+					$content .= generate_page_list($pagelist);
+					
+					$content .= "<p>(<a href='?action=list-tags'>All tags</a>)</p>\n";
+					
+					exit(page_renderer::render("$tag - Tag List - $settings->sitename", $content));
+				
+				case "json":
+					header("content-type: application/json");
+					exit(json_encode($pagelist, JSON_PRETTY_PRINT));
+				
+				case "text":
+					header("content-type: text/plain");
+					exit(implode("\n", $pagelist));
+			}
 			
-			$content .= "<p>(<a href='?action=list-tags'>All tags</a>)</p>\n";
-			
-			exit(page_renderer::render("$tag - Tag List - $settings->sitename", $content));
 		});
 		
 		statistic_add([
@@ -109,18 +135,9 @@ register_module([
 			"type" => "scalar",
 			"update" => function($old_data) {
 				global $pageindex;
-				$all_tags = [];
-				foreach($pageindex as $page_entry) {
-					if(empty($page_entry->tags))
-						continue;
-						
-					foreach($page_entry->tags as $tag) {
-						if(!in_array($tag, $all_tags)) $all_tags[] = $tag;
-					}
-				}
 				
 				$result = new stdClass(); // value, state, completed
-				$result->value = count($all_tags);
+				$result->value = count(get_all_tags());
 				$result->completed = true;
 				return $result;
 			}
@@ -190,6 +207,29 @@ register_module([
 		<p>Redirect pages are shown in italics. A page's last known editor is also shown next to each entry on a list of pages, along with the last known size (which should correct, unless it was changed outside of $settings->sitename) and the time since the last modification (hovering over this will show the exact time that the last modification was made in a tooltip).</p>");
 	}
 ]);
+
+/**
+ * Gets a list of all the tags currently used across the wiki.
+ * @package	page-list
+ * @since	v0.15
+ * @return	string[]	A list of all unique tags present on all pages across the wiki.
+ */
+function get_all_tags()
+{
+	global $pageindex;
+	
+	$all_tags = [];
+	foreach($pageindex as $page_entry) {
+		if(empty($page_entry->tags))
+			continue;
+			
+		foreach($page_entry->tags as $tag) {
+			if(!in_array($tag, $all_tags))
+				$all_tags[] = $tag;
+		}
+	}
+	return $all_tags;
+}
 
 /**
  * Renders a list of pages as HTML.

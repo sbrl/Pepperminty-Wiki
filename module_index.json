@@ -50,7 +50,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a sidebar to the left hand side of every page. Add '$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
         "id": "extra-sidebar",
-        "lastupdate": 1505512998,
+        "lastupdate": 1505768459,
         "optional": false
     },
     {
@@ -194,7 +194,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1505579417,
+        "lastupdate": 1505768745,
         "optional": false
     },
     {
