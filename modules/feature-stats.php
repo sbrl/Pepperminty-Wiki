@@ -33,7 +33,7 @@ register_module([
 			
 			if(!in_array($format, $allowed_formats)) {
 				http_response_code(400);
-				exit(page_renderer::render_main("Format error - $settings->sitename", "<p>Error: The format '$format' is not currently supported by $settings->sitename. Supported formats: " . implode(", ", $allowed_formats) . "."));
+				exit(page_renderer::render_main("Format error - $settings->sitename", "<p>Error: The format '$format' is not currently supported by this action on $settings->sitename. Supported formats: " . implode(", ", $allowed_formats) . "."));
 			}
 			
 			$stats = stats_load();

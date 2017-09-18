@@ -50,7 +50,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a sidebar to the left hand side of every page. Add '$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
         "id": "extra-sidebar",
-        "lastupdate": 1505768459,
+        "lastupdate": 1505768813,
         "optional": false
     },
     {
@@ -113,7 +113,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
         "id": "feature-stats",
-        "lastupdate": 1505579288,
+        "lastupdate": 1505768903,
         "optional": false
     },
     {
@@ -194,7 +194,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1505768745,
+        "lastupdate": 1505769039,
         "optional": false
     },
     {

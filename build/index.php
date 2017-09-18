@@ -2453,7 +2453,7 @@ function render_sidebar($pageindex, $root_pagename = "")
 			continue;
 
 		// If the page already appears on the sidebar, skip it
-		if(preg_match("/>" . preg_quote($pagename) . "<\a>/m", $result) === 1)
+		if(preg_match("/>$pagename<\a>/m", $result) === 1)
 			continue;		
 		
 		// If the part of the current pagename that comes after the root
@@ -4336,7 +4336,7 @@ register_module([
 			
 			if(!in_array($format, $allowed_formats)) {
 				http_response_code(400);
-				exit(page_renderer::render_main("Format error - $settings->sitename", "<p>Error: The format '$format' is not currently supported by $settings->sitename. Supported formats: " . implode(", ", $allowed_formats) . "."));
+				exit(page_renderer::render_main("Format error - $settings->sitename", "<p>Error: The format '$format' is not currently supported by this action on $settings->sitename. Supported formats: " . implode(", ", $allowed_formats) . "."));
 			}
 			
 			$stats = stats_load();
@@ -6547,14 +6547,34 @@ register_module([
 		add_action("list", function() {
 			global $pageindex, $settings;
 			
-			$title = "All Pages";
-			$content = "	<h1>$title on $settings->sitename</h1>";
+			$supported_formats = [ "html", "json", "text" ];
+			$format = $_GET["format"] ?? "html";
 			
 			$sorted_pageindex = get_object_vars($pageindex);
 			ksort($sorted_pageindex, SORT_NATURAL);
 			
-			$content .= generate_page_list(array_keys($sorted_pageindex));
-			exit(page_renderer::render_main("$title - $settings->sitename", $content));
+			switch($format) {
+				case "html":
+					$title = "All Pages";
+					$content = "	<h1>$title on $settings->sitename</h1>";
+					
+					$content .= generate_page_list(array_keys($sorted_pageindex));
+					exit(page_renderer::render_main("$title - $settings->sitename", $content));
+					break;
+					
+				case "json":
+					header("content-type: application/json");
+					exit(json_encode(array_keys($sorted_pageindex), JSON_PRETTY_PRINT));
+				
+				case "text":
+					header("content-type: text/plain");
+					exit(implode("\n", array_keys($sorted_pageindex)));
+				
+				default:
+					http_response_code(400);
+					exit(page_renderer::render_main("Format error - $settings->sitename", "<p>Error: The format '$format' is not currently supported by this action on $settings->sitename. Supported formats: " . implode(", ", $supported_formats) . "."));
+			}
+			
 		});
 		
 		/**
@@ -6583,7 +6603,7 @@ register_module([
 			
 			if(!in_array($format, $supported_formats)) {
 				http_response_code(400);
-				exit(page_renderer::render_main("Format error - $settings->sitename", "<p>Error: The format '$format' is not currently supported by $settings->sitename. Supported formats: " . implode(", ", $supported_formats) . "."));
+				exit(page_renderer::render_main("Format error - $settings->sitename", "<p>Error: The format '$format' is not currently supported by this action on $settings->sitename. Supported formats: " . implode(", ", $supported_formats) . "."));
 			}
 			
 			if(!isset($_GET["tag"]))
