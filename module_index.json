@@ -100,11 +100,11 @@
     },
     {
         "name": "Search",
-        "version": "0.5.1",
+        "version": "0.6",
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
         "id": "feature-search",
-        "lastupdate": 1503747477,
+        "lastupdate": 1505838750,
         "optional": false
     },
     {
@@ -190,11 +190,11 @@
     },
     {
         "name": "Page list",
-        "version": "0.10.4",
+        "version": "0.11",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1505769039,
+        "lastupdate": 1505769119,
         "optional": false
     },
     {

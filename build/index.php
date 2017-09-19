@@ -3420,7 +3420,7 @@ register_module([
 
 register_module([
 	"name" => "Search",
-	"version" => "0.5.1",
+	"version" => "0.6",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
@@ -3583,6 +3583,27 @@ register_module([
 				}
 			}
 			$content .= "</p>";
+			
+			if(module_exists("page-list")) {
+				$nterms = search::tokenize($query);
+				$nterms_regex = implode("|", array_map(function($nterm) {
+					return preg_quote(strtolower(trim($nterm)));
+				}, $nterms));
+				$all_tags = get_all_tags();
+				$matching_tags = [];
+				foreach($all_tags as $tag) {
+					if(preg_match("/$nterms_regex/i", trim($tag)) > 0)
+						$matching_tags[] = $tag;
+				}
+				
+				if(count($matching_tags) > 0) {
+					$content .= "<p>Matching tags: <span class='tags'>";
+					foreach($matching_tags as $tag) {
+						$content .= "\t<a href='?action=list-tags&tag=" . rawurlencode($tag)  ."' class='mini-tag'>" . htmlentities($tag) . "</a> \n";
+					}
+					$content .= "</span></p>";
+				}
+			}
 			
 			$i = 0; // todo use $_GET["offset"] and $_GET["result-count"] or something
 			foreach($results as $result)
@@ -6522,7 +6543,7 @@ register_module([
 
 register_module([
 	"name" => "Page list",
-	"version" => "0.10.4",
+	"version" => "0.11",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that lists all the pages in the index along with their metadata.",
 	"id" => "page-list",
