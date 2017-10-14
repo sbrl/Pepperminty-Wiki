@@ -19,6 +19,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Fixed weirdness on some pages rendered by the Pepperminty Wiki core
  - Fixed a few minor usability issues on the upload file page.
  - Removed some extra space at the bottom of some pages.
+ - The `raw` action now sends a 404 if the request page doesn't exist on the wiki.
 
 ### Changed
  - Make `invindex-rebuild` admin-only, but allow access if the POST param `secret` is set to your secret in `peppermint.json`
