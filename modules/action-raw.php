@@ -24,9 +24,15 @@ register_module([
 		 * ██   ██ ██   ██  ███ ███  
 		 */
 		add_action("raw", function() {
-			global $env;
+			global $pageindex, $env;
+			
+			if(empty($pageindex->{$env->page})) {
+				http_response_code(404);
+				exit("Error: The page with the name $env->page could not be found.\n");
+			}
 			
 			header("content-type: text/markdown");
+			header("content-length: " . filesize($env->page_filename));
 			exit(file_get_contents($env->page_filename));
 		});
 		

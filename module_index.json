@@ -32,7 +32,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a 'raw' action that shows you the raw source of a page.",
         "id": "action-raw",
-        "lastupdate": 1476906745,
+        "lastupdate": 1507993680,
         "optional": false
     },
     {
