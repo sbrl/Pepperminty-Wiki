@@ -283,6 +283,7 @@ a.redlink:visited { color: rgb(130, 15, 15); /*#8b1a1a*/ }
 .search-result::before { content: attr(data-result-number); position: relative; top: 3rem; color: rgba(33, 33, 33, 0.3); font-size: 2rem; }
 .search-result::after { content: "Rank: " attr(data-rank); position: absolute; top: 3.8rem; right: 0.7rem; color: rgba(50, 50, 50, 0.3); }
 .search-result > h2 { margin-left: 3rem; }
+.search-result-badges { font-size: 1rem; font-weight: normal; }
 .search-context { max-height: 20em; overflow: hidden; }
 .search-context::after { content: ""; position: absolute; bottom: 0; width: 100%; height: 3em; display: block; background: linear-gradient(to bottom, transparent, #faf8fb); pointer-events: none; }
 
@@ -3046,32 +3047,61 @@ register_module([
 		add_action("history", function() {
 			global $settings, $env, $pageindex;
 			
+			$supported_formats = [ "html", "json", "text" ];
+			$format = $_GET["format"] ?? "html";
 			
-			$content = "<h1>History for $env->page</h1>\n";
-			if(!empty($pageindex->{$env->page}->history))
-			{
-				$content .= "\t\t<ul class='page-list'>\n";
-				foreach(array_reverse($pageindex->{$env->page}->history) as $revisionData)
-				{
-					// Only display edits for now
-					if($revisionData->type != "edit")
-					continue;
+			switch($format) {
+				case "html":
+					$content = "<h1>History for $env->page</h1>\n";
+					if(!empty($pageindex->{$env->page}->history))
+					{
+						$content .= "\t\t<ul class='page-list'>\n";
+						foreach(array_reverse($pageindex->{$env->page}->history) as $revisionData)
+						{
+							// Only display edits for now
+							if($revisionData->type != "edit")
+							continue;
+							
+							// The number (and the sign) of the size difference to display
+							$size_display = ($revisionData->sizediff > 0 ? "+" : "") . $revisionData->sizediff;
+							$size_display_class = $revisionData->sizediff > 0 ? "larger" : ($revisionData->sizediff < 0 ? "smaller" : "nochange");
+							if($revisionData->sizediff > 500 or $revisionData->sizediff < -500)
+							$size_display_class .= " significant";
+							$size_title_display = human_filesize($revisionData->newsize - $revisionData->sizediff) . " -> " .  human_filesize($revisionData->newsize);
+							
+							$content .= "<li><a href='?page=" . rawurlencode($env->page) . "&revision=$revisionData->rid'>#$revisionData->rid</a> " . render_editor(page_renderer::render_username($revisionData->editor)) . " " . render_timestamp($revisionData->timestamp) . " <span class='cursor-query $size_display_class' title='$size_title_display'>($size_display)</span>";
+						}
+					}
+					else
+					{
+						$content .= "<p style='text-align: center;'><em>(None yet! Try editing this page and then coming back here.)</em></p>\n";
+					}
+					exit(page_renderer::render_main("$env->page - History - $settings->sitename", $content));
+				
+				case "json":
+					$page_history = $pageindex->{$env->page}->history ?? [];
 					
-					// The number (and the sign) of the size difference to display
-					$size_display = ($revisionData->sizediff > 0 ? "+" : "") . $revisionData->sizediff;
-					$size_display_class = $revisionData->sizediff > 0 ? "larger" : ($revisionData->sizediff < 0 ? "smaller" : "nochange");
-					if($revisionData->sizediff > 500 or $revisionData->sizediff < -500)
-					$size_display_class .= " significant";
-					$size_title_display = human_filesize($revisionData->newsize - $revisionData->sizediff) . " -> " .  human_filesize($revisionData->newsize);
+					foreach($page_history as &$history_entry) {
+						unset($history_entry->filename);
+					}
+					header("content-type: application/json");
+					exit(json_encode($page_history, JSON_PRETTY_PRINT));
+				
+				case "csv":
+					$page_history = $pageindex->{$env->page}->history ?? [];
 					
-					$content .= "<li><a href='?page=" . rawurlencode($env->page) . "&revision=$revisionData->rid'>#$revisionData->rid</a> " . render_editor(page_renderer::render_username($revisionData->editor)) . " " . render_timestamp($revisionData->timestamp) . " <span class='cursor-query $size_display_class' title='$size_title_display'>($size_display)</span>";
-				}
+					header("content-type: text/csv");
+					echo("revision_id,timestamp,type,editor,newsize,sizediff\n");
+					foreach($page_history as $hentry) {
+						echo("$hentry->rid,$hentry->timestamp,$hentry->type,$hentry->editor,$hentry->newsize,$hentry->sizediff\n");
+					}
+					exit();
+				
+				default:
+					http_response_code(400);
+					exit(page_renderer::render_main("Format Error - $env->page - History - $settings->sitename", "<p>The format <code>" . htmlentities($format) . "</code> isn't currently supported. Supported formats: html, json, csv"));
 			}
-			else
-			{
-				$content .= "<p style='text-align: center;'><em>(None yet! Try editing this page and then coming back here.)</em></p>\n";
-			}
-			exit(page_renderer::render_main("$env->page - History - $settings->sitename", $content));
+			
 		});
 		
 		
@@ -3630,6 +3660,10 @@ register_module([
 						$context .= "...";
 				}*/
 				
+				$tag_list = "<span class='tags'>";
+				foreach($pageindex->{$result["pagename"]}->tags ?? [] as $tag) $tag_list .= "<a href='?action=list-tags&tag=" . rawurlencode($tag) . "' class='mini-tag'>$tag</a>";
+				$tag_list .= "</span>\n";
+				
 				// Make redirect pages italics
 				if(!empty($pageindex->{$result["pagename"]}->redirect))
 					$result["pagename"] = "<em>{$result["pagename"]}</em>";
@@ -3637,7 +3671,7 @@ register_module([
 				// We add 1 to $i here to convert it from an index to a result
 				// number as people expect it to start from 1
 				$content .= "<div class='search-result' data-result-number='" . ($i + 1) . "' data-rank='" . $result["rank"] . "'>\n";
-				$content .= "	<h2><a href='$link'>" . $result["pagename"] . "</a></h2>\n";
+				$content .= "	<h2><a href='$link'>" . $result["pagename"] . "</a> <span class='search-result-badges'>$tag_list</span></h2>\n";
 				$content .= "	<p class='search-context'>$context</p>\n";
 				$content .= "</div>\n";
 				

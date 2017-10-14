@@ -25,32 +25,61 @@ register_module([
 		add_action("history", function() {
 			global $settings, $env, $pageindex;
 			
+			$supported_formats = [ "html", "json", "text" ];
+			$format = $_GET["format"] ?? "html";
 			
-			$content = "<h1>History for $env->page</h1>\n";
-			if(!empty($pageindex->{$env->page}->history))
-			{
-				$content .= "\t\t<ul class='page-list'>\n";
-				foreach(array_reverse($pageindex->{$env->page}->history) as $revisionData)
-				{
-					// Only display edits for now
-					if($revisionData->type != "edit")
-					continue;
+			switch($format) {
+				case "html":
+					$content = "<h1>History for $env->page</h1>\n";
+					if(!empty($pageindex->{$env->page}->history))
+					{
+						$content .= "\t\t<ul class='page-list'>\n";
+						foreach(array_reverse($pageindex->{$env->page}->history) as $revisionData)
+						{
+							// Only display edits for now
+							if($revisionData->type != "edit")
+							continue;
+							
+							// The number (and the sign) of the size difference to display
+							$size_display = ($revisionData->sizediff > 0 ? "+" : "") . $revisionData->sizediff;
+							$size_display_class = $revisionData->sizediff > 0 ? "larger" : ($revisionData->sizediff < 0 ? "smaller" : "nochange");
+							if($revisionData->sizediff > 500 or $revisionData->sizediff < -500)
+							$size_display_class .= " significant";
+							$size_title_display = human_filesize($revisionData->newsize - $revisionData->sizediff) . " -> " .  human_filesize($revisionData->newsize);
+							
+							$content .= "<li><a href='?page=" . rawurlencode($env->page) . "&revision=$revisionData->rid'>#$revisionData->rid</a> " . render_editor(page_renderer::render_username($revisionData->editor)) . " " . render_timestamp($revisionData->timestamp) . " <span class='cursor-query $size_display_class' title='$size_title_display'>($size_display)</span>";
+						}
+					}
+					else
+					{
+						$content .= "<p style='text-align: center;'><em>(None yet! Try editing this page and then coming back here.)</em></p>\n";
+					}
+					exit(page_renderer::render_main("$env->page - History - $settings->sitename", $content));
+				
+				case "json":
+					$page_history = $pageindex->{$env->page}->history ?? [];
 					
-					// The number (and the sign) of the size difference to display
-					$size_display = ($revisionData->sizediff > 0 ? "+" : "") . $revisionData->sizediff;
-					$size_display_class = $revisionData->sizediff > 0 ? "larger" : ($revisionData->sizediff < 0 ? "smaller" : "nochange");
-					if($revisionData->sizediff > 500 or $revisionData->sizediff < -500)
-					$size_display_class .= " significant";
-					$size_title_display = human_filesize($revisionData->newsize - $revisionData->sizediff) . " -> " .  human_filesize($revisionData->newsize);
+					foreach($page_history as &$history_entry) {
+						unset($history_entry->filename);
+					}
+					header("content-type: application/json");
+					exit(json_encode($page_history, JSON_PRETTY_PRINT));
+				
+				case "csv":
+					$page_history = $pageindex->{$env->page}->history ?? [];
 					
-					$content .= "<li><a href='?page=" . rawurlencode($env->page) . "&revision=$revisionData->rid'>#$revisionData->rid</a> " . render_editor(page_renderer::render_username($revisionData->editor)) . " " . render_timestamp($revisionData->timestamp) . " <span class='cursor-query $size_display_class' title='$size_title_display'>($size_display)</span>";
-				}
+					header("content-type: text/csv");
+					echo("revision_id,timestamp,type,editor,newsize,sizediff\n");
+					foreach($page_history as $hentry) {
+						echo("$hentry->rid,$hentry->timestamp,$hentry->type,$hentry->editor,$hentry->newsize,$hentry->sizediff\n");
+					}
+					exit();
+				
+				default:
+					http_response_code(400);
+					exit(page_renderer::render_main("Format Error - $env->page - History - $settings->sitename", "<p>The format <code>" . htmlentities($format) . "</code> isn't currently supported. Supported formats: html, json, csv"));
 			}
-			else
-			{
-				$content .= "<p style='text-align: center;'><em>(None yet! Try editing this page and then coming back here.)</em></p>\n";
-			}
-			exit(page_renderer::render_main("$env->page - History - $settings->sitename", $content));
+			
 		});
 		
 		

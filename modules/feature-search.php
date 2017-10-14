@@ -205,6 +205,10 @@ register_module([
 						$context .= "...";
 				}*/
 				
+				$tag_list = "<span class='tags'>";
+				foreach($pageindex->{$result["pagename"]}->tags ?? [] as $tag) $tag_list .= "<a href='?action=list-tags&tag=" . rawurlencode($tag) . "' class='mini-tag'>$tag</a>";
+				$tag_list .= "</span>\n";
+				
 				// Make redirect pages italics
 				if(!empty($pageindex->{$result["pagename"]}->redirect))
 					$result["pagename"] = "<em>{$result["pagename"]}</em>";
@@ -212,7 +216,7 @@ register_module([
 				// We add 1 to $i here to convert it from an index to a result
 				// number as people expect it to start from 1
 				$content .= "<div class='search-result' data-result-number='" . ($i + 1) . "' data-rank='" . $result["rank"] . "'>\n";
-				$content .= "	<h2><a href='$link'>" . $result["pagename"] . "</a></h2>\n";
+				$content .= "	<h2><a href='$link'>" . $result["pagename"] . "</a> <span class='search-result-badges'>$tag_list</span></h2>\n";
 				$content .= "	<p class='search-context'>$context</p>\n";
 				$content .= "</div>\n";
 				
