@@ -10,6 +10,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Statistics are automagically recalculated every day - this can be controlled with `stats_update_interval` and `stats_update_processingtime`
  - Added new "« Parent Page" to subpages so that you can easily visit their parent pages
  - Added new `get_page_parent($pagename)` API method.
+ - The `history` action no supports `format=json` and `format=csv`
  - Added tags next to the names of pages in the search results
 
 ### Fixed
