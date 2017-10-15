@@ -27,6 +27,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Make `invindex-rebuild` admin-only, but allow access if the POST param `secret` is set to your secret in `peppermint.json`
  - Improved the wording of the deletion confirmation and error pages
  - Search now searches matching tags as well as pages
+ - Updated the search ranking algorithm to put more weight against longer words than shorter ones.
 
 ## v0.14
 

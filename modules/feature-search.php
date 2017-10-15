@@ -727,7 +727,7 @@ class search
 					if(!isset($matching_pages[$pageid]["title-matches"]))
 						$matching_pages[$pageid]["title-matches"] = 0;
 					
-					$matching_pages[$pageid]["title-matches"] += count(mb_stripos_all($pagename, $qterm));
+					$matching_pages[$pageid]["title-matches"] += count(mb_stripos_all($pagename, $qterm)) * strlen($qterm);
 				}
 				
 				// Consider matches in the page's tags
@@ -740,7 +740,7 @@ class search
 					// Set up a counter for tag match if there isn't one already
 					if(!isset($matching_pages[$pageid]["tag-matches"]))
 						$matching_pages[$pageid]["tag-matches"] = 0;
-					$matching_pages[$pageid]["tag-matches"] += count(mb_stripos_all(implode(" ", $pagedata->tags), $qterm));
+					$matching_pages[$pageid]["tag-matches"] += count(mb_stripos_all(implode(" ", $pagedata->tags), $qterm)) * strlen($qterm);
 				}
 			}
 		}
@@ -757,7 +757,8 @@ class search
 			foreach($pagedata["nterms"] as $pterm => $entry)
 			{
 				// Add the number of occurrences of this search term to the ranking
-				$pagedata["rank"] += $entry["freq"];
+				// Multiply it by the length of the word
+				$pagedata["rank"] += $entry["freq"] * strlen($pterm);
 				
 				// Add the offsets to a listof all offsets on this page
 				foreach($entry["offsets"] as $offset)
