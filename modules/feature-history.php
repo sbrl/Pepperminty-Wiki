@@ -13,6 +13,7 @@ register_module([
 		 * @apiPermission Anonymous
 		 * 
 		 * @apiParam {string}	page	The page name to return a revision list for.
+		 * @apiParam {string}	format	The format to return the list of pages in. available values: html, json, text. Default: html
 		 */
 		
 		/*

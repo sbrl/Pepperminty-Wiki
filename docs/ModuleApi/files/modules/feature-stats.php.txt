@@ -1,19 +1,21 @@
 <?php
 register_module([
 	"name" => "Statistics",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
 	"id" => "feature-stats",
 	"code" => function() {
-		global $settings;
+		global $settings, $env;
+		
 		/**
-		 * @api {get|post} ?action=stats-update Recalculate the wiki's statistics
-		 * @apiName UpdateStats
+		 * @api {get} ?action=stats Show wiki statistics
+		 * @apiName Stats
 		 * @apiGroup Utility
-		 * @apiPermission Administrator
-		 *
-		 * @apiParam	{string}	secret	POST only, optional. If you're not logged in, you can specify the wiki's sekret (find it in peppermint.json) using this parameter.
+		 * @apiPermission Anonymous
+		 * @since v0.15
+		 * @apiParam	{string}	format	Specify the format the data should be returned in. Supported formats: html (default), json.
+		 * @apiParam	{string}	stat	HTML format only. If specified the page for the stat with this id is sent instead of the list of scalar stats.
 		 */
 		
 		/*
@@ -26,32 +28,76 @@ register_module([
 		add_action("stats", function() {
 			global $settings, $statistic_calculators;
 			
+			$allowed_formats = [ "html", "json" ];
+			$format = $_GET["format"] ?? "html";
+			
+			if(!in_array($format, $allowed_formats)) {
+				http_response_code(400);
+				exit(page_renderer::render_main("Format error - $settings->sitename", "<p>Error: The format '$format' is not currently supported by this action on $settings->sitename. Supported formats: " . implode(", ", $allowed_formats) . "."));
+			}
+			
 			$stats = stats_load();
 			
-			$content = "<h1>Statistics</h1>";
-			$content .= "<p>This page contains a selection of statistics about $settings->sitename's content. They are updated automatically about every " . trim(str_replace(["ago", "1 "], [""], human_time($settings->stats_update_interval))) . ", although $settings->sitename's local friendly moderators may update it earlier (you can see their names at the bottom of every page).</p>\n";
-			$stat_scalar_values = [];
-			$stat_contents = [];
+			if($format == "json") {
+				header("content-type: application/json");
+				exit(json_encode($stats, JSON_PRETTY_PRINT));
+			}
+			
+			$stat_pages_list = "<a href='?action=stats'>Main</a> | ";
 			foreach($statistic_calculators as $stat_id => $stat_calculator) {
-				if(!empty($stat_calculator["render"]))
-					$stat_contents[$stat_calculator["name"]] = $stat_calculator["render"]($stats->$stat_id);
-				else
-					$stat_scalar_values[$stat_calculator["name"]] = $stats->$stat_id->value;
+				if($stat_calculator["type"] == "scalar")
+					continue;
+				$stat_pages_list .= "<a href='?action=stats&stat=" . rawurlencode($stat_id) . "'>{$stat_calculator["name"]}</a> | ";
 			}
+			$stat_pages_list = trim($stat_pages_list, " |");
 			
-			$content .= "<table class='stats-table'>\n";
-			$content .= "\t<tr><th>Statistic</th><th>Value</th></tr>\n\n";
-			foreach($stat_scalar_values as $scalar_name => $scalar_value) {
-				$content .= "\t<tr><td>$scalar_name</td><td>$scalar_value</td></tr>\n";
+			if(!empty($_GET["stat"]) && !empty($statistic_calculators[$_GET["stat"]])) {
+				$stat_calculator = $statistic_calculators[$_GET["stat"]];
+				$content = "<h1>{$stat_calculator["name"]} - Statistics</h1>\n";
+				$content .= "<p>$stat_pages_list</p>\n";
+				switch($stat_calculator["type"]) {
+					case "page-list":
+						if(!module_exists("page-list")) {
+							$content .= "<p>$settings->sitename doesn't current have the page listing module installed, so HTML rendering of this statistic is currently unavailable. Try <a href='mailto:" . hide_email($settings->admindetails_email) . "'>contacting $settings->admindetails_name</a>, $settings->sitename's administrator and asking then to install the <code>page-list</code> module.</p>";
+							break;
+						}
+						$content .= generate_page_list($stats->{$_GET["stat"]}->value);
+						break;
+					
+					case "page":
+						$content .= $stat_calculator["render"]($stats->{$_GET["stat"]});
+						break;
+				}
 			}
-			$content .= "</table>\n";
-			
-			foreach($stat_contents as $stat_content_part)
-				$content .= "$stat_content_part\n";
+			else
+			{
+				$content = "<h1>Statistics</h1>\n";
+				$content .= "<p>This page contains a selection of statistics about $settings->sitename's content. They are updated automatically about every " . trim(str_replace(["ago", "1 "], [""], human_time($settings->stats_update_interval))) . ", although $settings->sitename's local friendly moderators may update them earlier (you can see their names at the bottom of every page).</p>\n";
+				$content .= "<p>$stat_pages_list</p>\n";
+				
+				$content .= "<table class='stats-table'>\n";
+				$content .= "\t<tr><th>Statistic</th><th>Value</th></tr>\n\n";
+				foreach($statistic_calculators as $stat_id => $stat_calculator) {
+					if($stat_calculator["type"] !== "scalar")
+						continue;
+					
+					$content .= "\t<tr><td>{$stat_calculator["name"]}</td><td>{$stats->$stat_id->value}</td></tr>\n";
+				}
+				$content .= "</table>\n";
+			}
 			
 			exit(page_renderer::render_main("Statistics - $settings->sitename", $content));
 		});
 		
+		/**
+		 * @api {get|post} ?action=stats-update Recalculate the wiki's statistics
+		 * @apiName UpdateStats
+		 * @apiGroup Utility
+		 * @apiPermission Administrator
+		 * @since v0.15
+		 * @apiParam	{string}	secret	POST only, optional. If you're not logged in, you can specify the wiki's sekret instead (find it in peppermint.json) using this parameter.
+		 * @apiParam	{bool}		force	Whether the statistics should be recalculated anyway - even if they have already recently been recalculated. Default: no. Supported values: yes, no.
+		 */
 		
 		/*
 		 * ███████ ████████  █████  ████████ ███████
@@ -81,7 +127,7 @@ register_module([
 			// Delete the old stats cache
 			unlink($paths->statsindex);
 			
-			update_statistics(true);
+			update_statistics(true, ($_GET["force"] ?? "no") == "yes");
 			header("content-type: application/json");
 			echo(file_get_contents($paths->statsindex) . "\n");
 		});
@@ -96,6 +142,7 @@ register_module([
 		statistic_add([
 			"id" => "longest-pages",
 			"name" => "Longest Pages",
+			"type" => "page",
 			"update" => function($old_stats) {
 				global $pageindex;
 				
@@ -126,6 +173,7 @@ register_module([
 		statistic_add([
 			"id" => "page_count",
 			"name" => "Page Count",
+			"type" => "scalar",
 			"update" => function($old_stats) {
 				global $pageindex;
 				
@@ -139,6 +187,7 @@ register_module([
 		statistic_add([
 			"id" => "file_count",
 			"name" => "File Count",
+			"type" => "scalar",
 			"update" => function($old_stats) {
 				global $pageindex;
 				
@@ -154,13 +203,24 @@ register_module([
 		]);
 		
 		// Perform an automatic recalculation of the statistics if needed
-		update_statistics(false);
+		if($env->action !== "stats-update")
+			update_statistics(false);
 	}
 ]);
 
-function update_statistics($update_all = false)
+/**
+ * Updates the wiki's statistics.
+ * @package feature-stats
+ * @param  boolean $update_all Whether all the statistics should be checked and recalculated, or just as many as we have time for according to the settings.
+ * @param  boolean $force      Whether we should recalculate statistics that don't currently require recalculating anyway.
+ */
+function update_statistics($update_all = false, $force = false)
 {
 	global $settings, $statistic_calculators;
+	
+	// Clear the existing statistics if we are asked to recalculate them all
+	if($force)
+		stats_save(new stdClass());
 	
 	$stats = stats_load();
 	

@@ -58,7 +58,7 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">84</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">82</span>
                                 </a>
                             </li>
                             <li>
@@ -88,10 +88,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-733145152"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-229828996"></a>
                                 <a href="namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-733145152" class="accordion-body collapse in">
+            <div id="namespace-229828996" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -966,6 +966,53 @@ false if it wasn't found.</p>
                         <td>
                                                                                             <p>page-list</p>
                                                                                             <p>page-list</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_all_tags" name="method_get_all_tags" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">get_all_tags()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_all_tags() : array&lt;mixed,string&gt;</pre>
+                <p><em>Gets a list of all the tags currently used across the wiki.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array&lt;mixed,string&gt;
+                                            &mdash; <p>A list of all unique tags present on all pages across the wiki.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper"></div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            package
+                        </th>
+                        <td>
+                                                                                            <p>page-list</p>
+                                                                                            <p>page-list</p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                                                            <p>v0.15</p>
                                                     </td>
                     </tr>
                             </table>
@@ -3092,16 +3139,21 @@ listed to be cacnonical.</em></p>
             <article class="method">
                 <h3 class=" ">update_statistics()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">update_statistics(  <span class="argument">$update_all = false</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">update_statistics(boolean  <span class="argument">$update_all = false</span>, boolean  <span class="argument">$force = false</span>) </pre>
+                <p><em>Updates the wiki&#039;s statistics.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>boolean</td>
                                 <td>$update_all </td>
-                                <td></td>
+                                <td><p>Whether all the statistics should be checked and recalculated, or just as many as we have time for according to the settings.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$force </td>
+                                <td><p>Whether we should recalculate statistics that don't currently require recalculating anyway.</p></td>
                             </tr>
                                             </table>
                 
@@ -3122,7 +3174,8 @@ listed to be cacnonical.</em></p>
                             package
                         </th>
                         <td>
-                                                                                            <p>Default</p>
+                                                                                            <p>feature-stats</p>
+                                                                                            <p>feature-stats</p>
                                                     </td>
                     </tr>
                             </table>
@@ -3362,7 +3415,7 @@ listed to be cacnonical.</em></p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on September 16th, 2017 at 10:22.
+                    on October 25th, 2017 at 21:45.
                 </section>
             </section>
         </section>
