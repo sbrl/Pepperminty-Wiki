@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Random Page",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action called 'random' that redirects you to a random page.",
 	"id" => "action-random",
@@ -18,6 +18,13 @@ register_module([
 			global $pageindex;
 			
 			$pageNames = array_keys(get_object_vars($pageindex));
+			
+			// Filter out pages we shouldn't send the user to
+			$pageNames = array_values(array_filter($pageNames, function($pagename) {
+				global $settings;
+				return preg_match($settings->random_page_exclude, $pagename) === 0 ? true : false;
+			}));
+			
 			$randomPageName = $pageNames[array_rand($pageNames)];
 			
 			http_response_code(307);

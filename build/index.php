@@ -31,6 +31,7 @@ $guiConfig = <<<'GUICONFIG'
 	"logo_position": {"type": "text", "description": "The side of the site name at which the logo should be placed.", "default": "left"},
 	"show_subpages": {"type": "text", "description": "Whether to show a list of subpages at the bottom of the page.", "default": true},
 	"subpages_display_depth": {"type": "text", "description": "The depth to which we should display when listing subpages at the bottom the page.", "default": 3},
+	"random_page_exclude": {"type": "text", "description": "The pages names matching this regular expression won't be chosen when a random page is being picked to send you to by the random action.", "default": "/^Files\\/.*$/i"},
 	"footer_message": {"type": "textarea", "description": "A message that will appear at the bottom of every page. May contain HTML.", "default": "All content is under <a href='?page=License' target='_blank'>this license</a>. Please make sure that you read and understand the license, especially if you are thinking about copying some (or all) of this site's content, as it may restrict you from doing so."},
 	"editing_message": {"type": "textarea", "description": "A message that will appear just before the submit button on the editing page. May contain HTML.", "default": "<a href='?action=help#20-parser-default' target='_blank'>Formatting help</a> (<a href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet' target='_blank'>Markdown Cheatsheet</a>)<br />\nBy submitting your edit or uploading your file, you are agreeing to release your changes under <a href='?action=view&page=License' target='_blank'>this license</a>. Also note that if you don't want your work to be edited by other users of this site, please don't submit it here!"},
 	"admindisplaychar": {"type": "text", "description": "The string that is prepended before an admin's name on the nav bar. Defaults to a diamond shape (&#9670;).", "default": "&#9670;"},
@@ -2233,7 +2234,7 @@ register_module([
 
 register_module([
 	"name" => "Random Page",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action called 'random' that redirects you to a random page.",
 	"id" => "action-random",
@@ -2250,6 +2251,13 @@ register_module([
 			global $pageindex;
 			
 			$pageNames = array_keys(get_object_vars($pageindex));
+			
+			// Filter out pages we shouldn't send the user to
+			$pageNames = array_values(array_filter($pageNames, function($pagename) {
+				global $settings;
+				return preg_match($settings->random_page_exclude, $pagename) === 0 ? true : false;
+			}));
+			
 			$randomPageName = $pageNames[array_rand($pageNames)];
 			
 			http_response_code(307);
@@ -3035,6 +3043,7 @@ register_module([
 		 * @apiPermission Anonymous
 		 * 
 		 * @apiParam {string}	page	The page name to return a revision list for.
+		 * @apiParam {string}	format	The format to return the list of pages in. available values: html, json, text. Default: html
 		 */
 		
 		/*

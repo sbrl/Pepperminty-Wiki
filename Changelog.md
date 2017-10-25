@@ -12,6 +12,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Added new `get_page_parent($pagename)` API method.
  - The `history` action no supports `format=json` and `format=csv`
  - Added tags next to the names of pages in the search results
+ - Added new `random_page_exclude` setting that allows you to exclude pages from the random action with a (PHP) regular expression
 
 ### Fixed
  - Fixed invalid opensearch description.

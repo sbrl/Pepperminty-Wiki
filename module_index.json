@@ -19,11 +19,11 @@
     },
     {
         "name": "Random Page",
-        "version": "0.1",
+        "version": "0.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action called 'random' that redirects you to a random page.",
         "id": "action-random",
-        "lastupdate": 1483390479,
+        "lastupdate": 1508968415,
         "optional": false
     },
     {
@@ -77,7 +77,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
         "id": "feature-history",
-        "lastupdate": 1507994538,
+        "lastupdate": 1508967873,
         "optional": false
     },
     {
