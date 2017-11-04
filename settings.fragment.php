@@ -21,6 +21,12 @@ GUICONFIG;
 
 $settingsFilename = "peppermint.json";
 
+if(file_exists("$settingsFilename.compromised")) {
+	http_response_code(500);
+	header("content-type: text/plain");
+	exit("Error: $settingsFilename.compromised exists on disk, so it's likely you need to block access to 'peppermint.json' from the internet. If you've done this already, please delete $settingsFilename.compromised and reload this page.");
+}
+
 $guiConfig = json_decode($guiConfig);
 $settings = new stdClass();
 if(!file_exists($settingsFilename))
