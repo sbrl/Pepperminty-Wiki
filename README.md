@@ -9,7 +9,7 @@ Developed by Starbeamrainbowlabs (though contributions from others are welcome!)
 **Latest Version:** v0.14 (stable) v0.15-dev (development) ([Changelog](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md))
 
 ## Table of Contents
- - [Screenshots](#screenshots)
+ - [Screenshots](#screenshots-and-demo)
  - [Features](#features)
  - [Demo](#demo)
  - [Getting Started](#getting-started)
@@ -26,10 +26,12 @@ Developed by Starbeamrainbowlabs (though contributions from others are welcome!)
  - [Todo](#todo)
  - [License](#license)
 
-## Screenshots
-![Main Page Example](https://i.imgur.com/8TokPXw.png)
+## Screenshots and Demo
+![Main Page Example](https://i.imgur.com/5dmbKlz.png)
 
 Above: The Main Page used for testing purposes.
+
+A live demo of the latest stable version can be found over at [my website](//starbeamrainbowlabs.com/labs/peppermint)
 
 ## Features
 - Configurable settings
@@ -64,9 +66,6 @@ Above: The Main Page used for testing purposes.
 - Threaded page comments
 - Customisable module based system
 	- Allows you to add or remove features at will
-
-## Demo
-A Live demo of the latest stable version can be found over at [my website](//starbeamrainbowlabs.com/labs/peppermint)
 
 ## Getting Started
 ### Requirements
