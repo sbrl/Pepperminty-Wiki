@@ -7,12 +7,13 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Statistics! (#97)
      - Added a new statistics engine, which you can add your own statistic calculators to with `statistic_add`
      - Added action `stats` to view the calculated statisics
-     - Statistics are automagically recalculated every day - this can be controlled with `stats_update_interval` and `stats_update_processingtime`
+     - Statistics are automagically recalculated every day - this can be controlled with the `stats_update_interval` and `stats_update_processingtime` settings
  - Added new "« Parent Page" to subpages so that you can easily visit their parent pages
- - Added new `get_page_parent($pagename)` API method.
- - The `history` action no supports `format=json` and `format=csv`
+ - The `history` action now supports `format=json` and `format=csv`
  - Added tags next to the names of pages in the search results
  - Added new `random_page_exclude` setting that allows you to exclude pages from the random action with a (PHP) regular expression
+ - [module api] Added new `get_page_parent($pagename)` method.
+ - [module api] Added new remote file system to download additional required files. Use it with `register_remote_file`
 
 ### Fixed
  - Fixed invalid opensearch description.

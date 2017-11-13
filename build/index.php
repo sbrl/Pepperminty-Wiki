@@ -26,7 +26,7 @@ $guiConfig = <<<'GUICONFIG'
 	"defaultpage": {"type": "text", "description": "The name of the page that will act as the home page for the wiki. This page will be served if you don't specify a page.", "default": "Main Page"},
 	"admindetails_name": {"type": "text", "description": "Your name as the wiki administrator.", "default": "Administrator"},
 	"admindetails_email": {"type": "email", "description": "Your email address as the wiki administrator. Will be displayed as a support contact address.", "default": "admin@localhost"},
-	"favicon": {"type": "url", "description": "A url that points to the favicon you want to use for your wiki. This image  By default this is set to a data: url of a Peppermint (Credit: by bluefrog23, source: https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23)", "default": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAB3VBMVEXhERHbKCjeVVXjb2/kR0fhKirdHBziDg6qAADaHh7qLy/pdXXUNzfMAADYPj7ZPDzUNzfbHx/fERHpamrqMTHgExPdHx/bLCzhLS3fVFTjT0/ibm7kRkbiLi7aKirdISHeFBTqNDTpeHjgERHYJCTVODjYQkLaPj6/AADVOTnpbW3cIyPdFRXcJCThMjLiTU3ibW3fVVXaKyvcERH4ODj+8fH/////fHz+Fxf4KSn0UFD/CAj/AAD/Xl7/wMD/EhL//v70xMT/+Pj/iYn/HBz/g4P/IyP/Kyv/7Oz0QUH/9PT/+vr/ior/Dg7/vr7/aGj/QED/bGz/AQH/ERH/Jib/R0f/goL/0dH/qan/YWH/7e3/Cwv4R0f/MTH/enr/vLz/u7v/cHD/oKD/n5//aWn+9/f/k5P/0tL/trb/QUH/cXH/dHT/wsL/DQ3/p6f/DAz/1dX/XV3/kpL/i4v/Vlb/2Nj/9/f/pKT+7Oz/V1f/iIj/jIz/r6//Zmb/lZX/j4//T0//Dw/4MzP/GBj/+fn/o6P/TEz/xMT/b2//Tk7/OTn/HR3/hIT/ODj/Y2P/CQn/ZGT/6Oj0UlL/Gxv//f3/Bwf/YmL/6+v0w8P/Cgr/tbX0QkL+9fX4Pz/qNzd0dFHLAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfeCxINNSdmw510AAAA5ElEQVQYGQXBzSuDAQCA8eexKXOwmSZepa1JiPJxsJOrCwcnuchBjg4O/gr7D9zk4uAgJzvuMgcTpYxaUZvSm5mUj7TX7ycAqvoLIJBwStVbP0Hom1Z/ejoxrbaR1Jz6nWinbKWttGRgMSSjanPktRY6mB9WtRNTn7Ilh7LxnNpKq2/x5LnBitfz+hx0qxUaxhZ6vwqq9bx6f2XXvuUl9SVQS38NR7cvln3v15tZ9bQpuWDtZN3Lgh5DWJex3Y+z1KrVhw21+CiM74WZo83DiXq0dVBDYNJkFEU7WrwDAZhRtQrwDzwKQbT6GboLAAAAAElFTkSuQmCC"},
+	"favicon": {"type": "url", "description": "A url that points to the favicon you want to use for your wiki. By default this is set to a data: url of a Peppermint (Credit: by bluefrog23, source: https://openclipart.org/detail/19571/peppermint-candy-by-bluefrog23)", "default": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAB3VBMVEXhERHbKCjeVVXjb2/kR0fhKirdHBziDg6qAADaHh7qLy/pdXXUNzfMAADYPj7ZPDzUNzfbHx/fERHpamrqMTHgExPdHx/bLCzhLS3fVFTjT0/ibm7kRkbiLi7aKirdISHeFBTqNDTpeHjgERHYJCTVODjYQkLaPj6/AADVOTnpbW3cIyPdFRXcJCThMjLiTU3ibW3fVVXaKyvcERH4ODj+8fH/////fHz+Fxf4KSn0UFD/CAj/AAD/Xl7/wMD/EhL//v70xMT/+Pj/iYn/HBz/g4P/IyP/Kyv/7Oz0QUH/9PT/+vr/ior/Dg7/vr7/aGj/QED/bGz/AQH/ERH/Jib/R0f/goL/0dH/qan/YWH/7e3/Cwv4R0f/MTH/enr/vLz/u7v/cHD/oKD/n5//aWn+9/f/k5P/0tL/trb/QUH/cXH/dHT/wsL/DQ3/p6f/DAz/1dX/XV3/kpL/i4v/Vlb/2Nj/9/f/pKT+7Oz/V1f/iIj/jIz/r6//Zmb/lZX/j4//T0//Dw/4MzP/GBj/+fn/o6P/TEz/xMT/b2//Tk7/OTn/HR3/hIT/ODj/Y2P/CQn/ZGT/6Oj0UlL/Gxv//f3/Bwf/YmL/6+v0w8P/Cgr/tbX0QkL+9fX4Pz/qNzd0dFHLAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfeCxINNSdmw510AAAA5ElEQVQYGQXBzSuDAQCA8eexKXOwmSZepa1JiPJxsJOrCwcnuchBjg4O/gr7D9zk4uAgJzvuMgcTpYxaUZvSm5mUj7TX7ycAqvoLIJBwStVbP0Hom1Z/ejoxrbaR1Jz6nWinbKWttGRgMSSjanPktRY6mB9WtRNTn7Ilh7LxnNpKq2/x5LnBitfz+hx0qxUaxhZ6vwqq9bx6f2XXvuUl9SVQS38NR7cvln3v15tZ9bQpuWDtZN3Lgh5DWJex3Y+z1KrVhw21+CiM74WZo83DiXq0dVBDYNJkFEU7WrwDAZhRtQrwDzwKQbT6GboLAAAAAElFTkSuQmCC"},
 	"logo_url": {"type": "url", "description": "A url that points to the site's logo. Leave blank to disable. When enabled the logo will be inserted next to the site name on every page.", "default": "//starbeamrainbowlabs.com/images/logos/peppermint.png"},
 	"logo_position": {"type": "text", "description": "The side of the site name at which the logo should be placed.", "default": "left"},
 	"show_subpages": {"type": "text", "description": "Whether to show a list of subpages at the bottom of the page.", "default": true},
@@ -185,6 +185,12 @@ $guiConfig = <<<'GUICONFIG'
 GUICONFIG;
 
 $settingsFilename = "peppermint.json";
+
+if(file_exists("$settingsFilename.compromised")) {
+	http_response_code(500);
+	header("content-type: text/plain");
+	exit("Error: $settingsFilename.compromised exists on disk, so it's likely you need to block access to 'peppermint.json' from the internet. If you've done this already, please delete $settingsFilename.compromised and reload this page.");
+}
 
 $guiConfig = json_decode($guiConfig);
 $settings = new stdClass();
@@ -1952,6 +1958,25 @@ if($settings->require_login_view === true && // If this site requires a login in
 //////////////////////////////////////
 //////////////////////////////////////
 
+$remote_files = [];
+/**
+ * Registers a request for a remote file to be downloaded before execution. Will block until all files are downloaded.
+ * Example definition:
+ *     [ "local_filename" => "file.ext", "remote_url": "https://example.com" ]
+ * @param	array		$remote_file_def	The remote file definition to register.
+ * @throws	Exception	Exception			Throws an exception if a definition for the requested local file already exists.
+ */
+function register_remote_file($remote_file_def) {
+	global $remote_files;
+	
+	foreach($remote_files as $ex_remote_file_def) {
+		if($ex_remote_file_def["local_filename"] == $remote_file_def["local_filename"])
+			throw new Exception("Error: A remote file with the local filename '{$remote_file_def["local_filename"]}' is already registered.");
+	}
+	
+	$remote_files[] = $remote_file_def;
+}
+
 //////////////////////////
 ///  Module functions  ///
 //////////////////////////
@@ -1960,7 +1985,7 @@ if($settings->require_login_view === true && // If this site requires a login in
 // register themselves	//
 // or new pages.		//
 //////////////////////////
-/** A list of all the currentlyloaded modules. Not guaranteed to be populated until an action is executed. */
+/** A list of all the currently loaded modules. Not guaranteed to be populated until an action is executed. */
 $modules = [];
 /**
  * Registers a module.
@@ -5910,6 +5935,12 @@ register_module([
 	
 	"code" => function() {
 		global $settings, $env;
+		
+		// Download diff.min.js - which we use when displaying edit conflicts
+		register_remote_file([
+			"local_filename" => "diff.min.js",
+			"remote_url" => "https://cdnjs.cloudflare.com/ajax/libs/jsdiff/2.2.2/diff.min.js"
+		]);
 
 		/**
 		 * @api {get} ?action=edit&page={pageName}[&newpage=yes]	Get an editing page
@@ -6260,8 +6291,8 @@ window.addEventListener("load", function(event) {
 	destination.innerHTML = output;
 });
 DIFFSCRIPT;
-
-					$content .= "\n<script src='https://cdnjs.cloudflare.com/ajax/libs/jsdiff/2.2.2/diff.min.js'></script>
+					// diff.min.js is downloaded above
+					$content .= "\n<script src='diff.min.js'></script>
 					<script>$diffScript</script>\n";
 					
 					exit(page_renderer::render_main("Edit Conflict - $env->page - $settings->sitename", $content));
@@ -7664,6 +7695,7 @@ $env->parsedown_paths->parsedown = "https://cdn.rawgit.com/erusev/parsedown/3ebb
 $env->parsedown_paths->parsedown_extra = "https://cdn.rawgit.com/erusev/parsedown-extra/11a44e076d02ffcc4021713398a60cd73f78b6f5/ParsedownExtra.php";
 
 // Download parsedown and parsedown extra if they don't already exist
+// These must still use this old method, as the parser may be asked to render some HTML before Pepperminty Wiki has had a chance to run the downloads
 if(!file_exists("./Parsedown.php") || filesize("./Parsedown.php") === 0)
 	file_put_contents("./Parsedown.php", fopen($env->parsedown_paths->parsedown, "r"));
 if(!file_exists("./ParsedownExtra.php") || filesize("./ParsedownExtra.php") === 0)
@@ -8221,6 +8253,16 @@ foreach($modules as $moduledata)
 if(!isset($actions->credits))
 {
 	exit(page_renderer::render_main("Error - $settings->$sitename", "<p>No credits page detected. The credits page is a required module!</p>"));
+}
+
+// Download all the requested remote files
+ini_set("user_agent", "$settings->sitename (Pepperminty-Wiki-Downloader; PHP/" . phpversion() . "; +https://github.com/sbrl/Pepperminty-Wiki/) Pepperminty-Wiki/$version");
+foreach($remote_files as $remote_file_def) {
+	if(file_exists($remote_file_def["local_filename"]) && filesize($remote_file_def["local_filename"]) > 0)
+		continue;
+	
+	error_log("[Pepperminty-Wiki/$settings->sitename] Downloading {$remote_file_def["local_filename"]} from {$remote_file_def["remote_url"]}");
+	file_put_contents($remote_file_def["local_filename"], fopen($remote_file_def["remote_url"], "rb"));
 }
 
 // Perform the appropriate action

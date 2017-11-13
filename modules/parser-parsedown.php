@@ -124,6 +124,7 @@ $env->parsedown_paths->parsedown = "https://cdn.rawgit.com/erusev/parsedown/3ebb
 $env->parsedown_paths->parsedown_extra = "https://cdn.rawgit.com/erusev/parsedown-extra/11a44e076d02ffcc4021713398a60cd73f78b6f5/ParsedownExtra.php";
 
 // Download parsedown and parsedown extra if they don't already exist
+// These must still use this old method, as the parser may be asked to render some HTML before Pepperminty Wiki has had a chance to run the downloads
 if(!file_exists("./Parsedown.php") || filesize("./Parsedown.php") === 0)
 	file_put_contents("./Parsedown.php", fopen($env->parsedown_paths->parsedown, "r"));
 if(!file_exists("./ParsedownExtra.php") || filesize("./ParsedownExtra.php") === 0)
