@@ -9,7 +9,7 @@ Developed by Starbeamrainbowlabs (though contributions from others are welcome!)
 **Latest Version:** v0.14 (stable) v0.15-dev (development) ([Changelog](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md))
 
 ## Table of Contents
- - [Screenshots](#screenshots-and-demo)
+ - [Screenshots and Demo](#screenshots-and-demo)
  - [Features](#features)
  - [Demo](#demo)
  - [Getting Started](#getting-started)
