@@ -2853,6 +2853,7 @@ function delete_comment(&$comment_data, $target_id)
 	
 	for($i = 0; $i < $comment_count; $i++) {
 		if($comment_data[$i]->id == $target_id) {
+			unset($comment_data[$i]->username);
 			$comment_data[$i]->message = "_[Deleted]_";
 			return true;
 		}
@@ -2923,7 +2924,7 @@ function render_comments($comments_data, $depth = 0)
 		$comment = $comments_data[$i];
 		
 		$result .= "\t<div class='comment' id='comment-$comment->id' data-comment-id='$comment->id'>\n";
-		$result .= "\t<p class='comment-header'><span class='name'>" . page_renderer::render_username($comment->username) . "</span> said:</p>";
+		$result .= "\t<p class='comment-header'><span class='name'>" . page_renderer::render_username($comment->username ?? "<em>Unknown</em>") . "</span> said:</p>";
 		$result .= "\t<div class='comment-body'>\n";
 		$result .= "\t\t" . parse_page_source($comment->message);
 		$result .= "\t</div>\n";
