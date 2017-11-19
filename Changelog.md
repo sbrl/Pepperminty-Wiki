@@ -9,6 +9,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Added action `stats` to view the calculated statisics
      - Statistics are automagically recalculated every day - this can be controlled with the `stats_update_interval` and `stats_update_processingtime` settings
  - Added new "« Parent Page" to subpages so that you can easily visit their parent pages
+ - Users can now delete their own comments, and users logged in as a moderator or better can delete anyone's comments.
+     - Added new `comment-delete` action
  - The `history` action now supports `format=json` and `format=csv`
  - Added tags next to the names of pages in the search results
  - Added new `random_page_exclude` setting that allows you to exclude pages from the random action with a (PHP) regular expression

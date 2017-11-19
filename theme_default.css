@@ -137,6 +137,7 @@ summary { cursor: pointer; }
 .comment-body { padding: 0 1em; }
 .comment-footer { padding-left: 1em; }
 .comment-footer-item { padding: 0 0.3em; }
+.comment-footer .delete-button { -moz-appearance: button; -webkit-appearance: button; text-decoration: none; color: #514C4C; }
 .permalink-button { text-decoration: none; }
 .comments-list .comments-list .comment { margin: 1em; }
 
