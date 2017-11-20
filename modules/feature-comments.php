@@ -424,7 +424,7 @@ function render_comments($comments_data, $depth = 0)
 		$result .= "\t<p class='comment-footer'>";
 		$result .= "\t\t<span class='comment-footer-item'><button class='reply-button'>Reply</button></span>\n";
 		if($env->user == $comment->username || $env->is_admin)
-			$result .= "<span class='comment-footer-item'><a href='?action=comment-delete&page=" . rawurlencode($env->page) . "&delete_id=" . rawurlencode($comment->id) . "' class='delete-button'>Delete</a></span>\n";
+			$result .= "<span class='comment-footer-item'><a href='?action=comment-delete&page=" . rawurlencode($env->page) . "&delete_id=" . rawurlencode($comment->id) . "' class='delete-button' title='Permanently delete this comment'>Delete</a></span>\n";
 		$result .= "\t\t<span class='comment-footer-item'><a class='permalink-button' href='#comment-$comment->id' title='Permalink to this comment'>&#x1f517;</a></span>\n";
 		$result .= "\t\t<span class='comment-footer-item'><time datetime='" . date("c", strtotime($comment->timestamp)) . "' title='The time this comment was posted'>$settings->comment_time_icon " . date("l jS \of F Y \a\\t h:ia T", strtotime($comment->timestamp)) . "</time></span>\n";
 		$result .= "\t</p>\n";

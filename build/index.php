@@ -2853,8 +2853,15 @@ function delete_comment(&$comment_data, $target_id)
 	
 	for($i = 0; $i < $comment_count; $i++) {
 		if($comment_data[$i]->id == $target_id) {
-			unset($comment_data[$i]->username);
-			$comment_data[$i]->message = "_[Deleted]_";
+			if(count($comment_data[$i]->replies) == 0) {
+				unset($comment_data[$i]);
+				// Reindex the comment list before returning
+				$comment_data = array_values($comment_data);
+			}
+			else {
+				unset($comment_data[$i]->username);
+				$comment_data[$i]->message = "_[Deleted]_";
+			}
 			return true;
 		}
 		if(count($comment_data[$i]->replies) > 0 &&
@@ -2932,7 +2939,7 @@ function render_comments($comments_data, $depth = 0)
 		$result .= "\t<p class='comment-footer'>";
 		$result .= "\t\t<span class='comment-footer-item'><button class='reply-button'>Reply</button></span>\n";
 		if($env->user == $comment->username || $env->is_admin)
-			$result .= "<span class='comment-footer-item'><a href='?action=comment-delete&page=" . rawurlencode($env->page) . "&delete_id=" . rawurlencode($comment->id) . "' class='delete-button'>Delete</a></span>\n";
+			$result .= "<span class='comment-footer-item'><a href='?action=comment-delete&page=" . rawurlencode($env->page) . "&delete_id=" . rawurlencode($comment->id) . "' class='delete-button' title='Permanently delete this comment'>Delete</a></span>\n";
 		$result .= "\t\t<span class='comment-footer-item'><a class='permalink-button' href='#comment-$comment->id' title='Permalink to this comment'>&#x1f517;</a></span>\n";
 		$result .= "\t\t<span class='comment-footer-item'><time datetime='" . date("c", strtotime($comment->timestamp)) . "' title='The time this comment was posted'>$settings->comment_time_icon " . date("l jS \of F Y \a\\t h:ia T", strtotime($comment->timestamp)) . "</time></span>\n";
 		$result .= "\t</p>\n";
