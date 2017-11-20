@@ -1,7 +1,7 @@
 # Changelog
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on Github too.
 
-## v0.15-dev
+## v0.15-beta1
 
 ### Added
  - Statistics! (#97)
