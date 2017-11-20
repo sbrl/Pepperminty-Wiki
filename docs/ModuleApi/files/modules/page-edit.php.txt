@@ -8,6 +8,12 @@ register_module([
 	
 	"code" => function() {
 		global $settings, $env;
+		
+		// Download diff.min.js - which we use when displaying edit conflicts
+		register_remote_file([
+			"local_filename" => "diff.min.js",
+			"remote_url" => "https://cdnjs.cloudflare.com/ajax/libs/jsdiff/2.2.2/diff.min.js"
+		]);
 
 		/**
 		 * @api {get} ?action=edit&page={pageName}[&newpage=yes]	Get an editing page
@@ -358,8 +364,8 @@ window.addEventListener("load", function(event) {
 	destination.innerHTML = output;
 });
 DIFFSCRIPT;
-
-					$content .= "\n<script src='https://cdnjs.cloudflare.com/ajax/libs/jsdiff/2.2.2/diff.min.js'></script>
+					// diff.min.js is downloaded above
+					$content .= "\n<script src='diff.min.js'></script>
 					<script>$diffScript</script>\n";
 					
 					exit(page_renderer::render_main("Edit Conflict - $env->page - $settings->sitename", $content));

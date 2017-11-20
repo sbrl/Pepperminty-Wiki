@@ -431,9 +431,14 @@ window.addEventListener("load", function(event) {
 	}
 ]);
 
+/**
+ * Holds a collection to methods to manipulate various types of search index.
+ */
 class search
 {
-	// Words that we should exclude from the inverted index
+	/**
+	 * Words that we should exclude from the inverted index
+	 */
 	public static $stop_words = [
 		"a", "about", "above", "above", "across", "after", "afterwards", "again",
 		"against", "all", "almost", "alone", "along", "already", "also",
@@ -479,6 +484,12 @@ class search
 		"your", "yours", "yourself", "yourselves"
 	];
 	
+	/**
+	 * Converts a source string into an index of search terms that can be
+	 * merged into an inverted index.
+	 * @param  string $source The source string to index.
+	 * @return array         An index represents the specified string.
+	 */
 	public static function index($source)
 	{
 		$source = html_entity_decode($source, ENT_QUOTES);
@@ -509,6 +520,11 @@ class search
 		return $index;
 	}
 	
+	/**
+	 * Converts a source string into a series of raw tokens.
+	 * @param	string	$source	The source string to process.
+	 * @return	array	An array of raw tokens extracted from the specified source string.
+	 */
 	public static function tokenize($source)
 	{
 		$source = strtolower($source);
@@ -516,11 +532,21 @@ class search
 		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, PREG_SPLIT_NO_EMPTY);
 	}
 	
+	/**
+	 * Removes (most) markdown markup from the specified string.
+	 * Stripped strings are not suitable for indexing!
+	 * @param	string	$source	The source string to process.
+	 * @return	string			The stripped string.
+	 */
 	public static function strip_markup($source)
 	{
 		return str_replace([ "[", "]", "\"", "*", "_", " - ", "`" ], "", $source);
 	}
 	
+	/**
+	 * Rebuilds the master inverted index and clears the page id index.
+	 * @param	boolean	$output	Whether to send progress information to the user's browser.
+	 */
 	public static function rebuild_invindex($output = true)
 	{
 		global $pageindex, $env, $paths, $settings;
@@ -569,25 +595,23 @@ class search
 		self::save_invindex($paths->searchindex, $invindex);
 	}
 	
-	/*
-	 * @summary Sorts an index alphabetically. Will also sort an inverted index.
-	 * 			This allows us to do a binary search instead of a regular
-	 * 			sequential search.
+	/**
+	 * Sorts an index alphabetically. Will also sort an inverted index.
+	 * This allows us to do a binary search instead of a regular
+	 * sequential search.
+	 * @param	array	$index	The index to sort.
 	 */
 	public static function sort_index(&$index)
 	{
 		ksort($index, SORT_NATURAL);
 	}
 	
-	/*
-	 * @summary Compares two *regular* indexes to find the differences between them.
-	 * 
-	 * @param {array} $indexa - The old index.
-	 * @param {array} $indexb - The new index.
-	 * @param {array} $changed - An array to be filled with the nterms of all
-	 * 							 the changed entries.
-	 * @param {array} $removed - An array to be filled with the nterms of all
-	 * 							 the removed entries.
+	/**
+	 * Compares two *regular* indexes to find the differences between them.
+	 * @param	array	$oldindex	The old index.
+	 * @param	array	$newindex	The new index.
+	 * @param	array	$changed	An array to be filled with the nterms of all the changed entries.
+	 * @param	array	$removed	An array to be filled with the nterms of all  the removed entries.
 	 */
 	public static function compare_indexes($oldindex, $newindex, &$changed, &$removed)
 	{
@@ -604,15 +628,19 @@ class search
 		}
 	}
 	
-	/*
-	 * @summary Reads in and parses an inverted index.
+	/**
+	 * Reads in and parses an inverted index.
+	 * @param	string	$invindex_filename	The path tp the inverted index to parse.
+	 * @todo	Remove this function and make everything streamable
 	 */
-	// Todo remove this function and make everything streamable
 	public static function load_invindex($invindex_filename) {
 		$invindex = json_decode(file_get_contents($invindex_filename), true);
 		return $invindex;
 	}
-	
+	/**
+	 * Reads in and parses an inverted index, measuring the time it takes to do so.
+	 * @param  string $invindex_filename The path to the file inverted index to parse.
+	 */
 	public static function measure_invindex_load_time($invindex_filename) {
 		global $env;
 		
@@ -621,8 +649,12 @@ class search
 		$env->perfdata->searchindex_decode_time = round((microtime(true) - $searchindex_decode_start)*1000, 3);
 	}
 	
-	/*
-	 * @summary Merge an index into an inverted index.
+	/**
+	 * Merge an index into an inverted index.
+	 * @param	array	$invindex	The inverted index to merge into.
+	 * @param	int		$pageid		The id of the page to assign to the index that's being merged.
+	 * @param	array	$index		The regular index to merge.
+	 * @param	array	$removals	An array of index entries to remove from the inverted index. Useful for applying changes to an inverted index instead of deleting and remerging an entire page's index.
 	 */
 	public static function merge_into_invindex(&$invindex, $pageid, &$index, &$removals = [])
 	{
@@ -673,11 +705,22 @@ class search
 		}
 	}
 	
+	/**
+	 * Saves the given inverted index back to disk.
+	 * @param	string	$filename	The path to the file to save the inverted index to.
+	 * @param	array	$invindex	The inverted index to save.
+	 */
 	public static function save_invindex($filename, &$invindex)
 	{
 		file_put_contents($filename, json_encode($invindex));
 	}
 	
+	/**
+	 * Searches the given inverted index for the specified search terms.
+	 * @param	string	$query		The search query.
+	 * @param	array	$invindex	The inverted index to search.
+	 * @return	array	An array of matching pages.
+	 */
 	public static function query_invindex($query, &$invindex)
 	{
 		global $settings, $pageindex;
@@ -779,7 +822,7 @@ class search
 			
 			// Sort the new list of clump distances
 			sort($clumpDistances);
-			// Calcualate a measureof how clumped the offsets are
+			// Calcualate a measure of how clumped the offsets are
 			$tightClumpLimit = floor((count($clumpDistances) - 1) / 0.25);
 			$tightClumpsMeasure = $clumpDistances[$tightClumpLimit] - $clumpDistances[0];
 			$clumpsRange = $clumpDistances[count($clumpDistances) - 1] - $clumpDistances[0];
@@ -806,6 +849,13 @@ class search
 		return $matching_pages;
 	}
 	
+	/**
+	 * Extracts a context string (in HTML) given a search query that could be displayed
+	 * in a list of search results.
+	 * @param	string	$query	The search queary to generate the context for.
+	 * @param	string	$source	The page source to extract the context from.
+	 * @return	string			The generated context string.
+	 */
 	public static function extract_context($query, $source)
 	{
 		global $settings;
@@ -890,6 +940,12 @@ class search
 		return implode(" ... ", $contexts);
 	}
 	
+	/**
+	 * Highlights the keywords of a context string.
+	 * @param	string	$query		The query  to use when highlighting.
+	 * @param	string	$context	The context string to highlight.
+	 * @return	string				The highlighted (HTML) string.
+	 */
 	public static function highlight_context($query, $context)
 	{
 		$qterms = self::tokenize($query);

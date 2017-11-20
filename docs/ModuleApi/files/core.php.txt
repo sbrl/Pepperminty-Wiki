@@ -1583,6 +1583,25 @@ if($settings->require_login_view === true && // If this site requires a login in
 //////////////////////////////////////
 //////////////////////////////////////
 
+$remote_files = [];
+/**
+ * Registers a request for a remote file to be downloaded before execution. Will block until all files are downloaded.
+ * Example definition:
+ *     [ "local_filename" => "file.ext", "remote_url": "https://example.com" ]
+ * @param	array		$remote_file_def	The remote file definition to register.
+ * @throws	Exception	Exception			Throws an exception if a definition for the requested local file already exists.
+ */
+function register_remote_file($remote_file_def) {
+	global $remote_files;
+	
+	foreach($remote_files as $ex_remote_file_def) {
+		if($ex_remote_file_def["local_filename"] == $remote_file_def["local_filename"])
+			throw new Exception("Error: A remote file with the local filename '{$remote_file_def["local_filename"]}' is already registered.");
+	}
+	
+	$remote_files[] = $remote_file_def;
+}
+
 //////////////////////////
 ///  Module functions  ///
 //////////////////////////
@@ -1591,7 +1610,7 @@ if($settings->require_login_view === true && // If this site requires a login in
 // register themselves	//
 // or new pages.		//
 //////////////////////////
-/** A list of all the currentlyloaded modules. Not guaranteed to be populated until an action is executed. */
+/** A list of all the currently loaded modules. Not guaranteed to be populated until an action is executed. */
 $modules = [];
 /**
  * Registers a module.
@@ -1761,6 +1780,16 @@ foreach($modules as $moduledata)
 if(!isset($actions->credits))
 {
 	exit(page_renderer::render_main("Error - $settings->$sitename", "<p>No credits page detected. The credits page is a required module!</p>"));
+}
+
+// Download all the requested remote files
+ini_set("user_agent", "$settings->sitename (Pepperminty-Wiki-Downloader; PHP/" . phpversion() . "; +https://github.com/sbrl/Pepperminty-Wiki/) Pepperminty-Wiki/$version");
+foreach($remote_files as $remote_file_def) {
+	if(file_exists($remote_file_def["local_filename"]) && filesize($remote_file_def["local_filename"]) > 0)
+		continue;
+	
+	error_log("[ Pepperminty-Wiki/$settings->sitename ] Downloading {$remote_file_def["local_filename"]} from {$remote_file_def["remote_url"]}");
+	file_put_contents($remote_file_def["local_filename"], fopen($remote_file_def["remote_url"], "rb"));
 }
 
 // Perform the appropriate action

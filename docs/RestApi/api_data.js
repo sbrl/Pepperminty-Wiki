@@ -323,18 +323,18 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "?action=delete",
-    "title": "Delete a page",
-    "description": "<p>Delete a page and all its associated data.</p>",
-    "name": "DeletePage",
-    "group": "Page",
+    "url": "?action=comment-delete&page={page_name}&delete_id={id_to_delete}",
+    "title": "Delete a comment",
+    "name": "CommentDelete",
+    "group": "Comment",
     "permission": [
       {
-        "name": "Moderator",
-        "title": "Only users loggged with a moderator account may use this call.",
+        "name": "User",
+        "title": "Only users loggged in may use this call.",
         "description": ""
       }
     ],
+    "description": "<p>Deletes a comment with the specified id. If you aren't the one who made the comment in the first place, then you must be a moderator or better to delete it.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -342,15 +342,15 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "page",
-            "description": "<p>The name of the page to delete.</p>"
+            "field": "delete_id",
+            "description": "<p>The id of the comment to delete.</p>"
           },
           {
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "delete",
-            "description": "<p>Set to 'yes' to actually delete the page.</p>"
+            "field": "page",
+            "description": "<p>The page to operate on.</p>"
           }
         ]
       }
@@ -361,21 +361,65 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "PageNonExistentError",
-            "description": "<p>The specified page doesn't exist</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "UserNotModeratorError",
-            "description": "<p>You weren't loggged in as a moderator before sending this request.</p>"
+            "field": "CommentNotFound",
+            "description": "<p>The comment to delete was not found.</p>"
           }
         ]
       }
     },
     "version": "0.0.0",
-    "filename": "./modules/page-delete.php",
-    "groupTitle": "Page"
+    "filename": "./docs/ModuleApi/files/modules/feature-comments.php.txt",
+    "groupTitle": "Comment"
+  },
+  {
+    "type": "post",
+    "url": "?action=comment-delete&page={page_name}&delete_id={id_to_delete}",
+    "title": "Delete a comment",
+    "name": "CommentDelete",
+    "group": "Comment",
+    "permission": [
+      {
+        "name": "User",
+        "title": "Only users loggged in may use this call.",
+        "description": ""
+      }
+    ],
+    "description": "<p>Deletes a comment with the specified id. If you aren't the one who made the comment in the first place, then you must be a moderator or better to delete it.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "delete_id",
+            "description": "<p>The id of the comment to delete.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "page",
+            "description": "<p>The page to operate on.</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "CommentNotFound",
+            "description": "<p>The comment to delete was not found.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./modules/feature-comments.php",
+    "groupTitle": "Comment"
   },
   {
     "type": "post",
@@ -435,9 +479,65 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "?action=save&page={pageName}",
-    "title": "Save an edit to a page.",
-    "description": "<p>Saves an edit to a page. If an edit conflict is encountered, then a conflict resolution page is returned instead.</p>",
+    "url": "?action=delete",
+    "title": "Delete a page",
+    "description": "<p>Delete a page and all its associated data.</p>",
+    "name": "DeletePage",
+    "group": "Page",
+    "permission": [
+      {
+        "name": "Moderator",
+        "title": "Only users loggged with a moderator account may use this call.",
+        "description": ""
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "page",
+            "description": "<p>The name of the page to delete.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "delete",
+            "description": "<p>Set to 'yes' to actually delete the page.</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "PageNonExistentError",
+            "description": "<p>The specified page doesn't exist</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "UserNotModeratorError",
+            "description": "<p>You weren't loggged in as a moderator before sending this request.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./modules/page-delete.php",
+    "groupTitle": "Page"
+  },
+  {
+    "type": "get",
+    "url": "?action=edit&page={pageName}[&newpage=yes]",
+    "title": "Get an editing page",
+    "description": "<p>Gets an editing page for a given page. If you don't have permission to edit the page in question, a view source pagee is returned instead.</p>",
     "name": "EditPage",
     "group": "Page",
     "permission": [
@@ -455,28 +555,7 @@ define({ "api": [
             "type": "string",
             "optional": false,
             "field": "newpage",
-            "description": "<p>GET only. Set to 'yes' to indicate that this is a new page that is being saved. Only affects the HTTP response code you recieve upon success.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "content",
-            "description": "<p>POST only. The new content to save to the given filename.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "tags",
-            "description": "<p>POST only. A comma-separated list of tags to assign to the current page. Will replace the existing list of tags, if any are present.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "prev-content-hash",
-            "description": "<p>POST only. The hash of the original content before editing. If this hash is found to be different to a hash computed of the currentl saved content, a conflict resolution page will be returned instead of saving the provided content.</p>"
+            "description": "<p>Set to 'yes' if a new page is being created. Only affects a few bits of text here and there, and the HTTP response code recieved on success from the <code>save</code> action.</p>"
           },
           {
             "group": "Parameter",
@@ -488,14 +567,40 @@ define({ "api": [
         ]
       }
     },
-    "error": {
+    "version": "0.0.0",
+    "filename": "./modules/page-edit.php",
+    "groupTitle": "Page"
+  },
+  {
+    "type": "get",
+    "url": "?action=edit&page={pageName}[&newpage=yes]",
+    "title": "Get an editing page",
+    "description": "<p>Gets an editing page for a given page. If you don't have permission to edit the page in question, a view source pagee is returned instead.</p>",
+    "name": "EditPage",
+    "group": "Page",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "parameter": {
       "fields": {
-        "Error 4xx": [
+        "Parameter": [
           {
-            "group": "Error 4xx",
+            "group": "Parameter",
+            "type": "string",
             "optional": false,
-            "field": "UnsufficientPermissionError",
-            "description": "<p>You don't currently have sufficient permissions to save an edit.</p>"
+            "field": "newpage",
+            "description": "<p>Set to 'yes' if a new page is being created. Only affects a few bits of text here and there, and the HTTP response code recieved on success from the <code>save</code> action.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "page",
+            "description": "<p>The page to operate on.</p>"
           }
         ]
       }
@@ -576,10 +681,10 @@ define({ "api": [
     "groupTitle": "Page"
   },
   {
-    "type": "get",
-    "url": "?action=edit&page={pageName}[&newpage=yes]",
-    "title": "Get an editing page",
-    "description": "<p>Gets an editing page for a given page. If you don't have permission to edit the page in question, a view source pagee is returned instead.</p>",
+    "type": "post",
+    "url": "?action=save&page={pageName}",
+    "title": "Save an edit to a page.",
+    "description": "<p>Saves an edit to a page. If an edit conflict is encountered, then a conflict resolution page is returned instead.</p>",
     "name": "EditPage",
     "group": "Page",
     "permission": [
@@ -597,7 +702,28 @@ define({ "api": [
             "type": "string",
             "optional": false,
             "field": "newpage",
-            "description": "<p>Set to 'yes' if a new page is being created. Only affects a few bits of text here and there, and the HTTP response code recieved on success from the <code>save</code> action.</p>"
+            "description": "<p>GET only. Set to 'yes' to indicate that this is a new page that is being saved. Only affects the HTTP response code you recieve upon success.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "content",
+            "description": "<p>POST only. The new content to save to the given filename.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "tags",
+            "description": "<p>POST only. A comma-separated list of tags to assign to the current page. Will replace the existing list of tags, if any are present.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "prev-content-hash",
+            "description": "<p>POST only. The hash of the original content before editing. If this hash is found to be different to a hash computed of the currentl saved content, a conflict resolution page will be returned instead of saving the provided content.</p>"
           },
           {
             "group": "Parameter",
@@ -605,6 +731,18 @@ define({ "api": [
             "optional": false,
             "field": "page",
             "description": "<p>The page to operate on.</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "UnsufficientPermissionError",
+            "description": "<p>You don't currently have sufficient permissions to save an edit.</p>"
           }
         ]
       }
@@ -615,10 +753,9 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "?action=edit&page={pageName}[&newpage=yes]",
-    "title": "Get an editing page",
-    "description": "<p>Gets an editing page for a given page. If you don't have permission to edit the page in question, a view source pagee is returned instead.</p>",
-    "name": "EditPage",
+    "url": "?action=history&page={pageName}",
+    "title": "Get a list of revisions for a page",
+    "name": "History",
     "group": "Page",
     "permission": [
       {
@@ -634,21 +771,21 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "newpage",
-            "description": "<p>Set to 'yes' if a new page is being created. Only affects a few bits of text here and there, and the HTTP response code recieved on success from the <code>save</code> action.</p>"
+            "field": "page",
+            "description": "<p>The page name to return a revision list for.</p>"
           },
           {
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "page",
-            "description": "<p>The page to operate on.</p>"
+            "field": "format",
+            "description": "<p>The format to return the list of pages in. available values: html, json, text. Default: html</p>"
           }
         ]
       }
     },
     "version": "0.0.0",
-    "filename": "./modules/page-edit.php",
+    "filename": "./docs/ModuleApi/files/modules/feature-history.php.txt",
     "groupTitle": "Page"
   },
   {
@@ -690,9 +827,10 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "?action=history&page={pageName}",
-    "title": "Get a list of revisions for a page",
-    "name": "History",
+    "url": "?action=list",
+    "title": "List all pages",
+    "description": "<p>Gets a list of all the pages currently stored on the wiki.</p>",
+    "name": "ListPages",
     "group": "Page",
     "permission": [
       {
@@ -701,21 +839,8 @@ define({ "api": [
         "description": ""
       }
     ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "page",
-            "description": "<p>The page name to return a revision list for.</p>"
-          }
-        ]
-      }
-    },
     "version": "0.0.0",
-    "filename": "./docs/ModuleApi/files/modules/feature-history.php.txt",
+    "filename": "./modules/page-list.php",
     "groupTitle": "Page"
   },
   {
@@ -734,24 +859,6 @@ define({ "api": [
     ],
     "version": "0.0.0",
     "filename": "./docs/ModuleApi/files/modules/page-list.php.txt",
-    "groupTitle": "Page"
-  },
-  {
-    "type": "get",
-    "url": "?action=list",
-    "title": "List all pages",
-    "description": "<p>Gets a list of all the pages currently stored on the wiki.</p>",
-    "name": "ListPages",
-    "group": "Page",
-    "permission": [
-      {
-        "name": "Anonymous",
-        "title": "Anybody may use this call.",
-        "description": ""
-      }
-    ],
-    "version": "0.0.0",
-    "filename": "./modules/page-list.php",
     "groupTitle": "Page"
   },
   {
@@ -913,7 +1020,7 @@ define({ "api": [
       }
     },
     "version": "0.0.0",
-    "filename": "./docs/ModuleApi/files/modules/action-protect.php.txt",
+    "filename": "./modules/action-protect.php",
     "groupTitle": "Page"
   },
   {
@@ -943,7 +1050,7 @@ define({ "api": [
       }
     },
     "version": "0.0.0",
-    "filename": "./modules/action-protect.php",
+    "filename": "./docs/ModuleApi/files/modules/action-protect.php.txt",
     "groupTitle": "Page"
   },
   {
@@ -960,7 +1067,7 @@ define({ "api": [
       }
     ],
     "version": "0.0.0",
-    "filename": "./modules/action-random.php",
+    "filename": "./docs/ModuleApi/files/modules/action-random.php.txt",
     "groupTitle": "Page"
   },
   {
@@ -990,24 +1097,7 @@ define({ "api": [
       }
     },
     "version": "0.0.0",
-    "filename": "./docs/ModuleApi/files/modules/api-status.php.txt",
-    "groupTitle": "Page"
-  },
-  {
-    "type": "get",
-    "url": "?action=random",
-    "title": "Redirects to a random page.",
-    "name": "RawSource",
-    "group": "Page",
-    "permission": [
-      {
-        "name": "Anonymous",
-        "title": "Anybody may use this call.",
-        "description": ""
-      }
-    ],
-    "version": "0.0.0",
-    "filename": "./docs/ModuleApi/files/modules/action-random.php.txt",
+    "filename": "./docs/ModuleApi/files/modules/action-raw.php.txt",
     "groupTitle": "Page"
   },
   {
@@ -1072,6 +1162,23 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "?action=random",
+    "title": "Redirects to a random page.",
+    "name": "RawSource",
+    "group": "Page",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "./modules/action-random.php",
+    "groupTitle": "Page"
+  },
+  {
+    "type": "get",
     "url": "?action=raw&page={pageName}",
     "title": "Get the raw source code of a page",
     "name": "RawSource",
@@ -1097,69 +1204,7 @@ define({ "api": [
       }
     },
     "version": "0.0.0",
-    "filename": "./docs/ModuleApi/files/modules/action-raw.php.txt",
-    "groupTitle": "Page"
-  },
-  {
-    "type": "get",
-    "url": "?action=view[&page={pageName}][&revision=rid][&printable=yes]",
-    "title": "View a page",
-    "name": "View",
-    "group": "Page",
-    "permission": [
-      {
-        "name": "Anonymous",
-        "title": "Anybody may use this call.",
-        "description": ""
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "number",
-            "optional": false,
-            "field": "revision",
-            "description": "<p>The revision number to display.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "mode",
-            "description": "<p>Optional. The display mode to use. Can hld the following values: 'normal' - The default. Sends a normal page. 'printable' - Sends a printable version of the page. 'contentonly' - Sends only the content of the page, not the extra stuff around it. 'parsedsourceonly' - Sends only the raw rendered source of the page, as it appears just after it has come out of the page parser. Useful for writing external tools (see also the <code>raw</code> action).</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "page",
-            "description": "<p>The page to operate on.</p>"
-          }
-        ]
-      }
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "NonExistentPageError",
-            "description": "<p>The page doesn't exist and editing is disabled in the wiki's settings. If editing isn't disabled, you will be redirected to the edit page instead.</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "NonExistentRevisionError",
-            "description": "<p>The specified revision was not found.</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "./docs/ModuleApi/files/modules/page-view.php.txt",
+    "filename": "./docs/ModuleApi/files/modules/api-status.php.txt",
     "groupTitle": "Page"
   },
   {
@@ -1226,6 +1271,85 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "?action=view[&page={pageName}][&revision=rid][&printable=yes]",
+    "title": "View a page",
+    "name": "View",
+    "group": "Page",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "revision",
+            "description": "<p>The revision number to display.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "mode",
+            "description": "<p>Optional. The display mode to use. Can hld the following values: 'normal' - The default. Sends a normal page. 'printable' - Sends a printable version of the page. 'contentonly' - Sends only the content of the page, not the extra stuff around it. 'parsedsourceonly' - Sends only the raw rendered source of the page, as it appears just after it has come out of the page parser. Useful for writing external tools (see also the <code>raw</code> action).</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "page",
+            "description": "<p>The page to operate on.</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "NonExistentPageError",
+            "description": "<p>The page doesn't exist and editing is disabled in the wiki's settings. If editing isn't disabled, you will be redirected to the edit page instead.</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "NonExistentRevisionError",
+            "description": "<p>The specified revision was not found.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./docs/ModuleApi/files/modules/page-view.php.txt",
+    "groupTitle": "Page"
+  },
+  {
+    "type": "get",
+    "url": "?action=opensearch-description",
+    "title": "Get the opensearch description file",
+    "name": "OpenSearchDescription",
+    "group": "Search",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "./modules/feature-search.php",
+    "groupTitle": "Search"
+  },
+  {
+    "type": "get",
     "url": "?action=opensearch-description",
     "title": "Get the opensearch description file",
     "name": "OpenSearchDescription",
@@ -1317,23 +1441,6 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "?action=opensearch-description",
-    "title": "Get the opensearch description file",
-    "name": "OpenSearchDescription",
-    "group": "Search",
-    "permission": [
-      {
-        "name": "Anonymous",
-        "title": "Anybody may use this call.",
-        "description": ""
-      }
-    ],
-    "version": "0.0.0",
-    "filename": "./modules/feature-search.php",
-    "groupTitle": "Search"
-  },
-  {
-    "type": "get",
     "url": "?action=search&query={text}",
     "title": "Search the wiki for a given query string",
     "name": "Search",
@@ -1389,7 +1496,7 @@ define({ "api": [
       }
     },
     "version": "0.0.0",
-    "filename": "./docs/ModuleApi/files/modules/feature-search.php.txt",
+    "filename": "./modules/feature-search.php",
     "groupTitle": "Search"
   },
   {
@@ -1449,37 +1556,7 @@ define({ "api": [
       }
     },
     "version": "0.0.0",
-    "filename": "./modules/feature-search.php",
-    "groupTitle": "Search"
-  },
-  {
-    "type": "get",
-    "url": "?action=index&page={pageName}",
-    "title": "Get an index of words for a given page",
-    "name": "SearchIndex",
-    "group": "Search",
-    "permission": [
-      {
-        "name": "Anonymous",
-        "title": "Anybody may use this call.",
-        "description": ""
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "page",
-            "description": "<p>The page to generate a word index page.</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "./modules/feature-search.php",
+    "filename": "./docs/ModuleApi/files/modules/feature-search.php.txt",
     "groupTitle": "Search"
   },
   {
@@ -1510,6 +1587,36 @@ define({ "api": [
     },
     "version": "0.0.0",
     "filename": "./docs/ModuleApi/files/modules/feature-search.php.txt",
+    "groupTitle": "Search"
+  },
+  {
+    "type": "get",
+    "url": "?action=index&page={pageName}",
+    "title": "Get an index of words for a given page",
+    "name": "SearchIndex",
+    "group": "Search",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "page",
+            "description": "<p>The page to generate a word index page.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./modules/feature-search.php",
     "groupTitle": "Search"
   },
   {
@@ -1659,7 +1766,7 @@ define({ "api": [
       }
     },
     "version": "0.0.0",
-    "filename": "./docs/ModuleApi/files/modules/feature-user-preferences.php.txt",
+    "filename": "./modules/feature-user-preferences.php",
     "groupTitle": "Settings"
   },
   {
@@ -1715,7 +1822,7 @@ define({ "api": [
       }
     },
     "version": "0.0.0",
-    "filename": "./modules/feature-user-preferences.php",
+    "filename": "./docs/ModuleApi/files/modules/feature-user-preferences.php.txt",
     "groupTitle": "Settings"
   },
   {
@@ -1766,7 +1873,7 @@ define({ "api": [
       }
     ],
     "version": "0.0.0",
-    "filename": "./modules/feature-user-preferences.php",
+    "filename": "./docs/ModuleApi/files/modules/feature-user-preferences.php.txt",
     "groupTitle": "Settings"
   },
   {
@@ -1783,25 +1890,8 @@ define({ "api": [
       }
     ],
     "version": "0.0.0",
-    "filename": "./docs/ModuleApi/files/modules/feature-user-preferences.php.txt",
+    "filename": "./modules/feature-user-preferences.php",
     "groupTitle": "Settings"
-  },
-  {
-    "type": "get",
-    "url": "?action=recentchanges",
-    "title": "Get a list of recent changes",
-    "name": "RecentChanges",
-    "group": "Stats",
-    "permission": [
-      {
-        "name": "Anonymous",
-        "title": "Anybody may use this call.",
-        "description": ""
-      }
-    ],
-    "version": "0.0.0",
-    "filename": "./docs/ModuleApi/files/modules/feature-recent-changes.php.txt",
-    "groupTitle": "Stats"
   },
   {
     "type": "get",
@@ -1822,10 +1912,10 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "?action=avatar&user={username}[&size={size}]",
-    "title": "Get a user's avatar",
-    "name": "Avatar",
-    "group": "Upload",
+    "url": "?action=recentchanges",
+    "title": "Get a list of recent changes",
+    "name": "RecentChanges",
+    "group": "Stats",
     "permission": [
       {
         "name": "Anonymous",
@@ -1833,29 +1923,9 @@ define({ "api": [
         "description": ""
       }
     ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "user",
-            "description": "<p>The username to fetch the avatar for</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "size",
-            "description": "<p>The preferred size of the avatar</p>"
-          }
-        ]
-      }
-    },
     "version": "0.0.0",
-    "filename": "./modules/feature-user-preferences.php",
-    "groupTitle": "Upload"
+    "filename": "./docs/ModuleApi/files/modules/feature-recent-changes.php.txt",
+    "groupTitle": "Stats"
   },
   {
     "type": "get",
@@ -1896,9 +1966,9 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "?action=preview&page={pageName}[&size={someSize}]",
-    "title": "Get a preview of a file",
-    "name": "PreviewFile",
+    "url": "?action=avatar&user={username}[&size={size}]",
+    "title": "Get a user's avatar",
+    "name": "Avatar",
     "group": "Upload",
     "permission": [
       {
@@ -1914,39 +1984,21 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "page",
-            "description": "<p>The name of the file to preview.</p>"
+            "field": "user",
+            "description": "<p>The username to fetch the avatar for</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "string",
             "optional": false,
             "field": "size",
-            "description": "<p>Optional. The size fo the resulting preview. Will be clamped to fit within the bounds specified in the wiki's settings. May also be set to the keyword 'original', which will cause the original file to be returned with it's appropriate mime type instead.</p>"
-          }
-        ]
-      }
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "PreviewNoFileError",
-            "description": "<p>No file was found associated with the specified page.</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "PreviewUnknownFileTypeError",
-            "description": "<p>Pepperminty Wiki was unable to generate a preview for the requested file's type.</p>"
+            "description": "<p>The preferred size of the avatar</p>"
           }
         ]
       }
     },
     "version": "0.0.0",
-    "filename": "./docs/ModuleApi/files/modules/feature-upload.php.txt",
+    "filename": "./modules/feature-user-preferences.php",
     "groupTitle": "Upload"
   },
   {
@@ -2002,6 +2054,61 @@ define({ "api": [
     },
     "version": "0.0.0",
     "filename": "./modules/feature-upload.php",
+    "groupTitle": "Upload"
+  },
+  {
+    "type": "get",
+    "url": "?action=preview&page={pageName}[&size={someSize}]",
+    "title": "Get a preview of a file",
+    "name": "PreviewFile",
+    "group": "Upload",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "page",
+            "description": "<p>The name of the file to preview.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "size",
+            "description": "<p>Optional. The size fo the resulting preview. Will be clamped to fit within the bounds specified in the wiki's settings. May also be set to the keyword 'original', which will cause the original file to be returned with it's appropriate mime type instead.</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "PreviewNoFileError",
+            "description": "<p>No file was found associated with the specified page.</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "PreviewUnknownFileTypeError",
+            "description": "<p>Pepperminty Wiki was unable to generate a preview for the requested file's type.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./docs/ModuleApi/files/modules/feature-upload.php.txt",
     "groupTitle": "Upload"
   },
   {
@@ -2263,23 +2370,6 @@ define({ "api": [
     "groupTitle": "Upload"
   },
   {
-    "type": "post",
-    "url": "?action=configure-save",
-    "title": "Save changes to the global wiki settings",
-    "name": "ConfigureSettings",
-    "group": "Utility",
-    "permission": [
-      {
-        "name": "Moderator",
-        "title": "Only users loggged with a moderator account may use this call.",
-        "description": ""
-      }
-    ],
-    "version": "0.0.0",
-    "filename": "./modules/feature-guiconfig.php",
-    "groupTitle": "Utility"
-  },
-  {
     "type": "get",
     "url": "?action=configure",
     "title": "Get a page to change the global wiki settings",
@@ -2331,20 +2421,20 @@ define({ "api": [
     "groupTitle": "Utility"
   },
   {
-    "type": "get",
-    "url": "?action=credits",
-    "title": "Get the credits page",
-    "name": "Credits",
+    "type": "post",
+    "url": "?action=configure-save",
+    "title": "Save changes to the global wiki settings",
+    "name": "ConfigureSettings",
     "group": "Utility",
     "permission": [
       {
-        "name": "Anonymous",
-        "title": "Anybody may use this call.",
+        "name": "Moderator",
+        "title": "Only users loggged with a moderator account may use this call.",
         "description": ""
       }
     ],
     "version": "0.0.0",
-    "filename": "./docs/ModuleApi/files/modules/page-credits.php.txt",
+    "filename": "./modules/feature-guiconfig.php",
     "groupTitle": "Utility"
   },
   {
@@ -2362,6 +2452,23 @@ define({ "api": [
     ],
     "version": "0.0.0",
     "filename": "./modules/page-credits.php",
+    "groupTitle": "Utility"
+  },
+  {
+    "type": "get",
+    "url": "?action=credits",
+    "title": "Get the credits page",
+    "name": "Credits",
+    "group": "Utility",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "./docs/ModuleApi/files/modules/page-credits.php.txt",
     "groupTitle": "Utility"
   },
   {
@@ -2701,7 +2808,7 @@ define({ "api": [
       }
     },
     "version": "0.0.0",
-    "filename": "./modules/page-list.php",
+    "filename": "./docs/ModuleApi/files/modules/page-list.php.txt",
     "groupTitle": "Utility"
   },
   {
@@ -2727,12 +2834,19 @@ define({ "api": [
             "optional": false,
             "field": "tag",
             "description": "<p>Optional. If provided a list of all the pages with that tag is returned instead.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "format",
+            "description": "<p>Optional. If specified sets the format of the returned result. Supported values: html, json. Default: html</p>"
           }
         ]
       }
     },
     "version": "0.0.0",
-    "filename": "./docs/ModuleApi/files/modules/page-list.php.txt",
+    "filename": "./modules/page-list.php",
     "groupTitle": "Utility"
   },
   {
@@ -2770,6 +2884,43 @@ define({ "api": [
     },
     "version": "0.0.0",
     "filename": "./modules/feature-stats.php",
+    "groupTitle": "Utility"
+  },
+  {
+    "type": "get",
+    "url": "?action=stats",
+    "title": "Show wiki statistics",
+    "name": "Stats",
+    "group": "Utility",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "format",
+            "description": "<p>Specify the format the data should be returned in. Supported formats: html (default), json.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "stat",
+            "description": "<p>HTML format only. If specified the page for the stat with this id is sent instead of the list of scalar stats.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./docs/ModuleApi/files/modules/feature-stats.php.txt",
     "groupTitle": "Utility"
   },
   {
@@ -2903,7 +3054,14 @@ define({ "api": [
             "type": "string",
             "optional": false,
             "field": "secret",
-            "description": "<p>POST only, optional. If you're not logged in, you can specify the wiki's sekret (find it in peppermint.json) using this parameter.</p>"
+            "description": "<p>POST only, optional. If you're not logged in, you can specify the wiki's sekret instead (find it in peppermint.json) using this parameter.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "bool",
+            "optional": false,
+            "field": "force",
+            "description": "<p>Whether the statistics should be recalculated anyway - even if they have already recently been recalculated. Default: no. Supported values: yes, no.</p>"
           }
         ]
       }

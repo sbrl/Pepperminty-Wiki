@@ -129,6 +129,70 @@ register_module([
 			exit(page_renderer::render_main("Comment posted successfully - $settings->sitename", "<p>Your comment on $env->page was posted successfully. If your browser doesn't redirect you automagically, please <a href='?action=view&page=" . rawurlencode($env->page) . "commentsuccess=yes#comment-$new_comment->id'>click here</a> to go to the comment you posted on the page you were viewing.</p>"));
 		});
 		
+		
+		/**
+		 * @api {post} ?action=comment-delete&page={page_name}&delete_id={id_to_delete}	Delete a comment
+		 * @apiName CommentDelete
+		 * @apiGroup Comment
+		 * @apiPermission User
+		 * @apiDescription	Deletes a comment with the specified id. If you aren't the one who made the comment in the first place, then you must be a moderator or better to delete it.
+		 * 
+		 * @apiUse		PageParameter
+		 * @apiParam	{string}	delete_id	The id of the comment to delete.
+		 * 
+		 * @apiError	CommentNotFound	The comment to delete was not found.
+		 */
+		
+		/*
+		 *  ██████  ██████  ███    ███ ███    ███ ███████ ███    ██ ████████
+		 * ██      ██    ██ ████  ████ ████  ████ ██      ████   ██    ██
+		 * ██      ██    ██ ██ ████ ██ ██ ████ ██ █████   ██ ██  ██    ██ █████
+		 * ██      ██    ██ ██  ██  ██ ██  ██  ██ ██      ██  ██ ██    ██
+		 *  ██████  ██████  ██      ██ ██      ██ ███████ ██   ████    ██
+		 * ██████  ███████ ██      ███████ ████████ ███████
+		 * ██   ██ ██      ██      ██         ██    ██
+		 * ██   ██ █████   ██      █████      ██    █████
+		 * ██   ██ ██      ██      ██         ██    ██
+		 * ██████  ███████ ███████ ███████    ██    ███████
+		 */
+		add_action("comment-delete", function () {
+			global $env, $settings;
+			
+			
+			if(!isset($_GET["delete_id"])) {
+				http_response_code(400);
+				exit(page_renderer::render_main("Error - Deleting Comment - $settings->sitename", "<p>You didn't specify the id of a comment to delete.</p>"));
+			}
+			
+			// Make sure that the user is logged in before deleting a comment
+			if(!$env->is_logged_in) {
+				http_response_code(307);
+				header("location: ?action=login&returnto=" . rawurlencode("?action=comment-delete&page=" . rawurlencode($env->page) . "&id=" . rawurlencode($_GET["delete_id"])));
+			}
+			
+			$comment_filename = get_comment_filename($env->page);
+			$comments = json_decode(file_get_contents($comment_filename));
+			$target_id = $_GET["delete_id"];
+			
+			$comment_to_delete = find_comment($comments, $target_id);
+			if($comment_to_delete->username !== $env->user && !$env->is_admin) {
+				http_response_code(401);
+				exit(page_renderer::render_main("Error - Deleting Comment - $settings->sitename", "<p>You can't delete the comment with the id <code>" . htmlentities($target_id) . "</code> on the page <em>$env->page</em> because you're logged in as " . page_renderer::render_username($env->user) . ", and " . page_renderer::render_username($comment_to_delete->username) . " made that comment. Try <a href='?action=logout'>Logging out</a> and then logging in again as " . page_renderer::render_username($comment_to_delete->username) . ", or as a moderator or better."));
+			}
+			
+			if(!delete_comment($comments, $_GET["delete_id"])) {
+				http_response_code(404);
+				exit(page_renderer::render_main("Comment not found - Deleting Comment - $settings->sitename", "<p>The comment with the id <code>" . htmlentities($_GET["delete_id"]) . "</code> on the page <em>$env->page</em> wasn't found. Perhaps it was already deleted?</p>"));
+			}
+			
+			if(!file_put_contents($comment_filename, json_encode($comments))) {
+				http_response_code(503);
+				exit(page_renderer::render_main("Server Error - Deleting Comment - $settings->sitename", "<p>While $settings->sitename was able to delete the comment with the id <code>" . htmlentities($target_id) . "</code> on the page <em>$env->page</em>, it couldn't save the changes back to disk. Please contact <a href='mailto:" . hide_email($settings->admindetails_email) . "'>$settings->admindetails_name</a>, $settings->sitename's local friendly administrator about this issue.</p>"));
+			}
+			
+			exit(page_renderer::render_main("Comment Deleted - $settings->sitename", "<p>The comment with the id <code>" . htmlentities($target_id) . "</code> on the page <em>$env->page</em> has been deleted successfully. <a href='?page=" . rawurlencode($env->page) . "&redirect=no'>Go back</a> to " . htmlentities($env->page) . ".</p>"));
+		});
+		
 		if($env->action == "view") {
 			page_renderer::register_part_preprocessor(function(&$parts) {
 				global $env;
@@ -262,6 +326,39 @@ function find_comment($comment_data, $comment_id)
 }
 
 /**
+ * Deletes the first comment found with the specified id.
+ * @param	array	$comment_data	An array of threaded comments to delete the comment from.
+ * @param	string	$target_id		The id of the comment to delete.
+ * @return	bool					Whether the comment was found and deleted or not.
+ */
+function delete_comment(&$comment_data, $target_id)
+{
+	$comment_count = count($comment_data);
+	if($comment_count === 0) return false;
+	
+	for($i = 0; $i < $comment_count; $i++) {
+		if($comment_data[$i]->id == $target_id) {
+			if(count($comment_data[$i]->replies) == 0) {
+				unset($comment_data[$i]);
+				// Reindex the comment list before returning
+				$comment_data = array_values($comment_data);
+			}
+			else {
+				unset($comment_data[$i]->username);
+				$comment_data[$i]->message = "_[Deleted]_";
+			}
+			return true;
+		}
+		if(count($comment_data[$i]->replies) > 0 &&
+			delete_comment($comment_data[$i]->replies, $target_id))
+			return true;
+	}
+	
+	
+	return false;
+}
+
+/**
  * Fetches all the parent comments of the specified comment id, including the
  * comment itself at the end.
  * Useful for figuring out who needs notifying when a new comment is posted.
@@ -303,7 +400,7 @@ function fetch_comment_thread($comment_data, $comment_id)
  */
 function render_comments($comments_data, $depth = 0)
 {
-	global $settings;
+	global $settings, $env;
 	
 	if(count($comments_data) == 0) {
 		if($depth == 0)
@@ -319,13 +416,15 @@ function render_comments($comments_data, $depth = 0)
 		$comment = $comments_data[$i];
 		
 		$result .= "\t<div class='comment' id='comment-$comment->id' data-comment-id='$comment->id'>\n";
-		$result .= "\t<p class='comment-header'><span class='name'>" . page_renderer::render_username($comment->username) . "</span> said:</p>";
+		$result .= "\t<p class='comment-header'><span class='name'>" . page_renderer::render_username($comment->username ?? "<em>Unknown</em>") . "</span> said:</p>";
 		$result .= "\t<div class='comment-body'>\n";
 		$result .= "\t\t" . parse_page_source($comment->message);
 		$result .= "\t</div>\n";
 		$result .= "\t<div class='reply-box-container'></div>\n";
 		$result .= "\t<p class='comment-footer'>";
 		$result .= "\t\t<span class='comment-footer-item'><button class='reply-button'>Reply</button></span>\n";
+		if($env->user == $comment->username || $env->is_admin)
+			$result .= "<span class='comment-footer-item'><a href='?action=comment-delete&page=" . rawurlencode($env->page) . "&delete_id=" . rawurlencode($comment->id) . "' class='delete-button' title='Permanently delete this comment'>Delete</a></span>\n";
 		$result .= "\t\t<span class='comment-footer-item'><a class='permalink-button' href='#comment-$comment->id' title='Permalink to this comment'>&#x1f517;</a></span>\n";
 		$result .= "\t\t<span class='comment-footer-item'><time datetime='" . date("c", strtotime($comment->timestamp)) . "' title='The time this comment was posted'>$settings->comment_time_icon " . date("l jS \of F Y \a\\t h:ia T", strtotime($comment->timestamp)) . "</time></span>\n";
 		$result .= "\t</p>\n";

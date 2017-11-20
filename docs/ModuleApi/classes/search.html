@@ -106,12 +106,12 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">82</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">44</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="../reports/markers.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">6</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">7</span>
                                 </a>
                             </li>
                             <li>
@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1930599762"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1506521234"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1930599762" class="accordion-body collapse in">
+            <div id="namespace-1506521234" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -167,7 +167,7 @@
                     <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
 
                     <h1><small>\</small>search</h1>
-                    <p><em></em></p>
+                    <p><em>Holds a collection to methods to manipulate various types of search index.</em></p>
                     
                     
                                         
@@ -272,7 +272,7 @@
             <article class="property">
                 <h3 class="public ">$stop_words</h3>
                 <pre class="signature">$stop_words : </pre>
-                <p><em></em></p>
+                <p><em>Words that we should exclude from the inverted index</em></p>
                 
 
                                 <h4>Type</h4>
@@ -303,21 +303,25 @@
             <article class="method">
                 <h3 class="public ">index()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">index(  <span class="argument">$source</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">index(string  <span class="argument">$source</span>) : array</pre>
+                <p><em>Converts a source string into an index of search terms that can be
+merged into an inverted index.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$source </td>
-                                <td></td>
+                                <td><p>The source string to index.</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>An index represents the specified string.</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -338,21 +342,24 @@
             <article class="method">
                 <h3 class="public ">tokenize()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">tokenize(  <span class="argument">$source</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">tokenize(string  <span class="argument">$source</span>) : array</pre>
+                <p><em>Converts a source string into a series of raw tokens.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$source </td>
-                                <td></td>
+                                <td><p>The source string to process.</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>An array of raw tokens extracted from the specified source string.</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -373,21 +380,24 @@
             <article class="method">
                 <h3 class="public ">strip_markup()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">strip_markup(  <span class="argument">$source</span>) </pre>
-                <p><em></em></p>
-                
+                <pre class="signature" style="margin-right: 54px;">strip_markup(string  <span class="argument">$source</span>) : string</pre>
+                <p><em>Removes (most) markdown markup from the specified string.</em></p>
+                <p>Stripped strings are not suitable for indexing!</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$source </td>
-                                <td></td>
+                                <td><p>The source string to process.</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The stripped string.</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -408,16 +418,16 @@
             <article class="method">
                 <h3 class="public ">rebuild_invindex()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">rebuild_invindex(  <span class="argument">$output = true</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">rebuild_invindex(boolean  <span class="argument">$output = true</span>) </pre>
+                <p><em>Rebuilds the master inverted index and clears the page id index.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>boolean</td>
                                 <td>$output </td>
-                                <td></td>
+                                <td><p>Whether to send progress information to the user's browser.</p></td>
                             </tr>
                                             </table>
                 
@@ -443,16 +453,17 @@
             <article class="method">
                 <h3 class="public ">sort_index()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">sort_index(  <span class="argument">$index</span>) </pre>
-                <p><em></em></p>
-                
+                <pre class="signature" style="margin-right: 54px;">sort_index(array  <span class="argument">$index</span>) </pre>
+                <p><em>Sorts an index alphabetically. Will also sort an inverted index.</em></p>
+                <p>This allows us to do a binary search instead of a regular
+sequential search.</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$index </td>
-                                <td></td>
+                                <td><p>The index to sort.</p></td>
                             </tr>
                                             </table>
                 
@@ -478,31 +489,31 @@
             <article class="method">
                 <h3 class="public ">compare_indexes()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">compare_indexes(  <span class="argument">$oldindex</span>,   <span class="argument">$newindex</span>,   <span class="argument">$changed</span>,   <span class="argument">$removed</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">compare_indexes(array  <span class="argument">$oldindex</span>, array  <span class="argument">$newindex</span>, array  <span class="argument">$changed</span>, array  <span class="argument">$removed</span>) </pre>
+                <p><em>Compares two *regular* indexes to find the differences between them.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$oldindex </td>
-                                <td></td>
+                                <td><p>The old index.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$newindex </td>
-                                <td></td>
+                                <td><p>The new index.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$changed </td>
-                                <td></td>
+                                <td><p>An array to be filled with the nterms of all the changed entries.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$removed </td>
-                                <td></td>
+                                <td><p>An array to be filled with the nterms of all  the removed entries.</p></td>
                             </tr>
                                             </table>
                 
@@ -528,16 +539,16 @@
             <article class="method">
                 <h3 class="public ">load_invindex()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">load_invindex(  <span class="argument">$invindex_filename</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">load_invindex(string  <span class="argument">$invindex_filename</span>) </pre>
+                <p><em>Reads in and parses an inverted index.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$invindex_filename </td>
-                                <td></td>
+                                <td><p>The path tp the inverted index to parse.</p></td>
                             </tr>
                                             </table>
                 
@@ -552,7 +563,14 @@
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                                                            <p>Remove this function and make everything streamable</p>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -563,16 +581,16 @@
             <article class="method">
                 <h3 class="public ">measure_invindex_load_time()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">measure_invindex_load_time(  <span class="argument">$invindex_filename</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">measure_invindex_load_time(string  <span class="argument">$invindex_filename</span>) </pre>
+                <p><em>Reads in and parses an inverted index, measuring the time it takes to do so.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$invindex_filename </td>
-                                <td></td>
+                                <td><p>The path to the file inverted index to parse.</p></td>
                             </tr>
                                             </table>
                 
@@ -598,31 +616,31 @@
             <article class="method">
                 <h3 class="public ">merge_into_invindex()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">merge_into_invindex(  <span class="argument">$invindex</span>,   <span class="argument">$pageid</span>,   <span class="argument">$index</span>,   <span class="argument">$removals = array()</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">merge_into_invindex(array  <span class="argument">$invindex</span>, integer  <span class="argument">$pageid</span>, array  <span class="argument">$index</span>, array  <span class="argument">$removals = array()</span>) </pre>
+                <p><em>Merge an index into an inverted index.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$invindex </td>
-                                <td></td>
+                                <td><p>The inverted index to merge into.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>integer</td>
                                 <td>$pageid </td>
-                                <td></td>
+                                <td><p>The id of the page to assign to the index that's being merged.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$index </td>
-                                <td></td>
+                                <td><p>The regular index to merge.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$removals </td>
-                                <td></td>
+                                <td><p>An array of index entries to remove from the inverted index. Useful for applying changes to an inverted index instead of deleting and remerging an entire page's index.</p></td>
                             </tr>
                                             </table>
                 
@@ -688,21 +706,21 @@
             <article class="method">
                 <h3 class="public ">save_invindex()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">save_invindex(  <span class="argument">$filename</span>,   <span class="argument">$invindex</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">save_invindex(string  <span class="argument">$filename</span>, array  <span class="argument">$invindex</span>) </pre>
+                <p><em>Saves the given inverted index back to disk.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$filename </td>
-                                <td></td>
+                                <td><p>The path to the file to save the inverted index to.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$invindex </td>
-                                <td></td>
+                                <td><p>The inverted index to save.</p></td>
                             </tr>
                                             </table>
                 
@@ -728,26 +746,29 @@
             <article class="method">
                 <h3 class="public ">query_invindex()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">query_invindex(  <span class="argument">$query</span>,   <span class="argument">$invindex</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">query_invindex(string  <span class="argument">$query</span>, array  <span class="argument">$invindex</span>) : array</pre>
+                <p><em>Searches the given inverted index for the specified search terms.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$query </td>
-                                <td></td>
+                                <td><p>The search query.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$invindex </td>
-                                <td></td>
+                                <td><p>The inverted index to search.</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>An array of matching pages.</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -768,26 +789,30 @@
             <article class="method">
                 <h3 class="public ">extract_context()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">extract_context(  <span class="argument">$query</span>,   <span class="argument">$source</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">extract_context(string  <span class="argument">$query</span>, string  <span class="argument">$source</span>) : string</pre>
+                <p><em>Extracts a context string (in HTML) given a search query that could be displayed
+in a list of search results.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$query </td>
-                                <td></td>
+                                <td><p>The search queary to generate the context for.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$source </td>
-                                <td></td>
+                                <td><p>The page source to extract the context from.</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The generated context string.</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -808,26 +833,29 @@
             <article class="method">
                 <h3 class="public ">highlight_context()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">highlight_context(  <span class="argument">$query</span>,   <span class="argument">$context</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">highlight_context(string  <span class="argument">$query</span>, string  <span class="argument">$context</span>) : string</pre>
+                <p><em>Highlights the keywords of a context string.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$query </td>
-                                <td></td>
+                                <td><p>The query  to use when highlighting.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$context </td>
-                                <td></td>
+                                <td><p>The context string to highlight.</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The highlighted (HTML) string.</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -891,7 +919,7 @@
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on October 25th, 2017 at 21:45.
+                    on November 20th, 2017 at 20:40.
                 </section>
             </section>
         </section>
