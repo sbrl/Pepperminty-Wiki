@@ -181,7 +181,6 @@ window.addEventListener("load", function(event) {
 			// ~
 			
 			/// ~~~ Smart saving ~~~ ///
-			// TODO: Add a button to press that restores the content that you were working on before.
 			page_renderer::AddJSSnippet('window.addEventListener("load", function(event) {
 	"use strict";
 	// Smart saving

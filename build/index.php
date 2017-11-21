@@ -6221,7 +6221,7 @@ register_module([
 
 			$content .= "<form method='post' name='edit-form' action='index.php?action=preview-edit&page=" . rawurlencode($env->page) . "' class='editform'>
 					<input type='hidden' name='prev-content-hash' value='" . ((isset($old_pagetext)) ? sha1($old_pagetext) : sha1($pagetext)) . "' />
-					<button class='smartsave-restore'>Restore Locally Saved Content</button>
+					<button class='smartsave-restore' title=\"Only works if you haven't changed the editor's content already!\">Restore Locally Saved Content</button>
 					<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
 					<pre class='fit-text-mirror'></pre>
 					<input type='text' name='tags' value='" . htmlentities($page_tags, ENT_HTML5 | ENT_QUOTES) . "' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
