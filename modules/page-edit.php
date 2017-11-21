@@ -138,6 +138,7 @@ register_module([
 
 			$content .= "<form method='post' name='edit-form' action='index.php?action=preview-edit&page=" . rawurlencode($env->page) . "' class='editform'>
 					<input type='hidden' name='prev-content-hash' value='" . ((isset($old_pagetext)) ? sha1($old_pagetext) : sha1($pagetext)) . "' />
+					<button class='smartsave-restore'>Restore Locally Saved Content</button>
 					<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
 					<pre class='fit-text-mirror'></pre>
 					<input type='text' name='tags' value='" . htmlentities($page_tags, ENT_HTML5 | ENT_QUOTES) . "' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
@@ -181,16 +182,25 @@ window.addEventListener("load", function(event) {
 			
 			/// ~~~ Smart saving ~~~ ///
 			// TODO: Add a button to press that restores the content that you were working on before.
-			page_renderer::AddJSSnippet('document.addEventListener("load", function(event) {
+			page_renderer::AddJSSnippet('window.addEventListener("load", function(event) {
+	"use strict";
 	// Smart saving
-	function getSmartSaveKey() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").replace("Editing ", "").trim(); }
+	let getSmartSaveKey = function() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").replace("Editing ", "").trim(); }
 	// Saving
 	document.querySelector("textarea[name=content]").addEventListener("keyup", function(event) { window.localStorage.setItem(getSmartSaveKey(), event.target.value) });
 	// Loading
-	window.addEventListener("load", function(event) {
-		var editor = document.querySelector("textarea[name=content]");
-		if(editor.value.length > 0) return; // Don\'t restore if there\'s data in the editor already
+	var editor = document.querySelector("textarea[name=content]");
+	let smartsave_restore = function() {
 		editor.value = localStorage.getItem(getSmartSaveKey());
+	}
+	
+	if(editor.value.length === 0) // Don\'t restore if there\'s data in the editor already
+		smartsave_restore();
+	
+	document.querySelector(".smartsave-restore").addEventListener("click", function(event) {
+		event.stopPropagation();
+		event.preventDefault();
+		smartsave_restore();
 	});
 });');
 			

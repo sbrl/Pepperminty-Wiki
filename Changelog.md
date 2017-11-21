@@ -15,6 +15,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - The `history` action now supports `format=json` and `format=csv`
  - Added tags next to the names of pages in the search results
  - Added new `random_page_exclude` setting that allows you to exclude pages from the random action with a (PHP) regular expression
+ - Added "restore locally saved content" button to page editor
  - [module api] Added new `get_page_parent($pagename)` method.
  - [module api] Added new remote file system to download additional required files. Use it with `register_remote_file`
 
