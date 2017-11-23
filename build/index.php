@@ -2516,7 +2516,7 @@ function render_sidebar($pageindex, $root_pagename = "")
 
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.2.3",
+	"version" => "0.3.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
@@ -2729,7 +2729,7 @@ register_module([
 				else {
 					$comments_html .= "<form class='comment-reply-form disabled no-login'>\n" . 
 					"\t<textarea disabled name='message' placeholder='Type your comment here. You can use the same syntax you use when writing pages.'></textarea>\n" . 
-					"\t<p class='not-logged-in'><a href='?action=login&returnto=" . rawurlencode("?action=view&page=" . rawurlencode($env->page)) . "'>Login</a> to post a comment.</p>\n" . 
+					"\t<p class='not-logged-in'><a href='?action=login&returnto=" . rawurlencode("?action=view&page=" . rawurlencode($env->page) . "#comments") . "'>Login</a> to post a comment.</p>\n" . 
 					"\t<input type='hidden' name='replyto' />\n" . 
 					"\t<input disabled type='submit' value='Post Comment' title='Login to post a comment.' />\n" . 
 					"</form>\n";
@@ -6084,7 +6084,7 @@ register_module([
 
 register_module([
 	"name" => "Page editor",
-	"version" => "0.16",
+	"version" => "0.17",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -6264,7 +6264,6 @@ window.addEventListener("load", function(event) {
 			// ~
 			
 			/// ~~~ Smart saving ~~~ ///
-			// TODO: Add a button to press that restores the content that you were working on before.
 			page_renderer::AddJSSnippet('window.addEventListener("load", function(event) {
 	"use strict";
 	// Smart saving
@@ -7287,7 +7286,7 @@ register_module([
 
 register_module([
 	"name" => "Page mover",
-	"version" => "0.9.2",
+	"version" => "0.9.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to move pages.",
 	"id" => "page-move",
@@ -7405,12 +7404,20 @@ register_module([
 			// Move the page in the id index
 			ids::movepagename($page, $new_name);
 			
+			// Move the comments file as well, if it exists
+			if(file_exists("$env->storage_prefix$env->page.comments.json")) {
+				rename(
+					"$env->storage_prefix$env->page.comments.json",
+					"$env->storage_prefix$new_name.comments.json"
+				);
+			}
+			
 			// Exit with a nice message
-			exit(page_renderer::render_main("Moving $env->page", "<p><a href='index.php?page=$env->page'>$env->page</a> has been moved to <a href='index.php?page=$new_name'>$new_name</a> successfully.</p>"));
+			exit(page_renderer::render_main("Moving " . htmlentities($env->page), "<p><a href='index.php?page=" . rawurlencode($env->page) . "'>" . htmlentities($env->page) . "</a> has been moved to <a href='index.php?page=" . rawurlencode($new_name) . "'>" . htmlentities($new_name) . "</a> successfully.</p>"));
 		});
 		
 		// Register a help section
-		add_help_section("60-move", "Moving Pages", "<p>If you are logged in as an administrator, then you have the power to move pages. To do this, click &quot;Delete&quot; in the &quot;More...&quot; menu when browsing the pge you wish to move. Type in the new name of the page, and then click &quot;Move Page&quot;.</p>");
+		add_help_section("60-move", "Moving Pages", "<p>If you are logged in as an administrator, then you have the power to move pages. To do this, click &quot;Move&quot; in the &quot;More...&quot; menu when browsing the pge you wish to move. Type in the new name of the page, and then click &quot;Move Page&quot;.</p>");
 	}
 ]);
 

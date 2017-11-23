@@ -55,11 +55,11 @@
     },
     {
         "name": "Page Comments",
-        "version": "0.2.3",
+        "version": "0.3.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds threaded comments to the bottom of every page.",
         "id": "feature-comments",
-        "lastupdate": 1511096059,
+        "lastupdate": 1511450038,
         "optional": false
     },
     {
@@ -163,11 +163,11 @@
     },
     {
         "name": "Page editor",
-        "version": "0.16",
+        "version": "0.17",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1511294953,
+        "lastupdate": 1511449791,
         "optional": false
     },
     {
@@ -217,11 +217,11 @@
     },
     {
         "name": "Page mover",
-        "version": "0.9.2",
+        "version": "0.9.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
         "id": "page-move",
-        "lastupdate": 1482008539,
+        "lastupdate": 1511449784,
         "optional": false
     },
     {

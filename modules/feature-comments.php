@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.2.3",
+	"version" => "0.3.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
@@ -214,7 +214,7 @@ register_module([
 				else {
 					$comments_html .= "<form class='comment-reply-form disabled no-login'>\n" . 
 					"\t<textarea disabled name='message' placeholder='Type your comment here. You can use the same syntax you use when writing pages.'></textarea>\n" . 
-					"\t<p class='not-logged-in'><a href='?action=login&returnto=" . rawurlencode("?action=view&page=" . rawurlencode($env->page)) . "'>Login</a> to post a comment.</p>\n" . 
+					"\t<p class='not-logged-in'><a href='?action=login&returnto=" . rawurlencode("?action=view&page=" . rawurlencode($env->page) . "#comments") . "'>Login</a> to post a comment.</p>\n" . 
 					"\t<input type='hidden' name='replyto' />\n" . 
 					"\t<input disabled type='submit' value='Post Comment' title='Login to post a comment.' />\n" . 
 					"</form>\n";

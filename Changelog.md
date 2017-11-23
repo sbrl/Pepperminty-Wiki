@@ -1,6 +1,18 @@
 # Changelog
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on Github too.
 
+## v0.15-beta2
+
+### Added
+- Added "restore locally saved content" button to page editor
+- [module api] Documented the remainder of the members of the `search` class
+
+### Fixed
+ - Moving a page will now move all the comments associated with it
+ - The page names on the page move success page are now encoded correctly to avoid html and url issues
+ - Clicking _Login to post a comment_ will now take you back to the comments section of the page you were on upon completing the login process instead of the top of the page
+
+
 ## v0.15-beta1
 
 ### Added
@@ -15,7 +27,6 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - The `history` action now supports `format=json` and `format=csv`
  - Added tags next to the names of pages in the search results
  - Added new `random_page_exclude` setting that allows you to exclude pages from the random action with a (PHP) regular expression
- - Added "restore locally saved content" button to page editor
  - [module api] Added new `get_page_parent($pagename)` method.
  - [module api] Added new remote file system to download additional required files. Use it with `register_remote_file`
 
@@ -34,6 +45,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Improved the wording of the deletion confirmation and error pages
  - Search now searches matching tags as well as pages
  - Updated the search ranking algorithm to put more weight against longer words than shorter ones.
+
 
 ## v0.14
 
