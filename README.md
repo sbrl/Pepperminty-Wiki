@@ -6,7 +6,7 @@ Pepperminty Wiki is a complete wiki contained in a single file, inspired by @am2
 
 Developed by Starbeamrainbowlabs (though contributions from others are welcome!), Pepperminty Wiki has a variety of useful (and cool!) features - such as file upload, a dynamic help page, page revision history, page tags, and more! Other amazing features are in the works too (like a theme gallery, autoupdate, and user watchlists), so check the release notes to see what's been added recently.
 
-**Latest Version:** v0.14 (stable) v0.15-dev (development) ([Changelog](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md))
+**Latest Version:** v0.15 (stable) v0.16-dev (development) ([Changelog](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md))
 
 ## Table of Contents
  - [Screenshots and Demo](#screenshots-and-demo)
