@@ -6121,8 +6121,7 @@ register_module([
 			global $pageindex, $settings, $env;
 			
 			$filename = "$env->storage_prefix$env->page.md";
-			$page = $env->page;
-			$creatingpage = !isset($pageindex->$page);
+			$creatingpage = !isset($pageindex->{$env->page});
 			if((isset($_GET["newpage"]) and $_GET["newpage"] == "true") or $creatingpage)
 			{
 				$title = "Creating $env->page";
@@ -6137,7 +6136,7 @@ register_module([
 			}
 			
 			$pagetext = "";
-			if(isset($pageindex->$page))
+			if(isset($pageindex->{$env->page}))
 			{
 				$pagetext = file_get_contents($filename);
 			}
@@ -6156,9 +6155,9 @@ register_module([
 			if((!$env->is_logged_in and !$settings->anonedits) or // if we aren't logged in and anonymous edits are disabled
 				!$settings->editing or // or editing is disabled
 				(
-					isset($pageindex->$page) and // or if the page exists
-					isset($pageindex->$page->protect) and // the protect property exists
-					$pageindex->$page->protect and // the protect property is true
+					isset($pageindex->{$env->page}) and // or if the page exists
+					isset($pageindex->{$env->page}->protect) and // the protect property exists
+					$pageindex->{$env->page}->protect and // the protect property is true
 					!$env->is_admin // the user isn't an admin
 				) or
 				$isOtherUsersPage // this page actually belongs to another user
@@ -6195,7 +6194,7 @@ register_module([
 				}
 			}
 			
-			$content = "<h1>$title</h1>";
+			$content = "<h1>$title</h1>\n";
 			$page_tags = implode(", ", (!empty($pageindex->{$env->page}->tags)) ? $pageindex->{$env->page}->tags : []);
 			if(!$env->is_logged_in and $settings->anonedits)
 			{
@@ -6359,30 +6358,29 @@ window.addEventListener("load", function(event) {
 			
 			if(!$settings->editing)
 			{
-				header("location: index.php?page=$env->page");
+				header("location: index.php?page=" . rawurlencode($env->page));
 				exit(page_renderer::render_main("Error saving edit", "<p>Editing is currently disabled on this wiki.</p>"));
 			}
 			if(!$env->is_logged_in and !$settings->anonedits)
 			{
 				http_response_code(403);
-				header("refresh: 5; url=index.php?page=$env->page");
+				header("refresh: 5; url=index.php?page=" . rawurlencode($env->page));
 				exit("You are not logged in, so you are not allowed to save pages on $settings->sitename. Redirecting in 5 seconds....");
 			}
-			$page = $env->page;
 			if((
-				isset($pageindex->$page) and
-				isset($pageindex->page->protect) and
-				$pageindex->$page->protect
+				isset($pageindex->{$env->page}) and
+				isset($pageindex->{$env->page}->protect) and
+				$pageindex->{$env->page}->protect
 			) and !$env->is_admin)
 			{
 				http_response_code(403);
-				header("refresh: 5; url=index.php?page=$env->page");
-				exit("$env->page is protected, and you aren't logged in as an administrator or moderator. Your edit was not saved. Redirecting in 5 seconds...");
+				header("refresh: 5; url=index.php?page=" . rawurlencode($env->page));
+				exit(htmlentities($env->page) . " is protected, and you aren't logged in as an administrator or moderator. Your edit was not saved. Redirecting in 5 seconds...");
 			}
 			if(!isset($_POST["content"]))
 			{
 				http_response_code(400);
-				header("refresh: 5; url=index.php?page=$env->page");
+				header("refresh: 5; url=index.php?page=" . rawurlencode($env->page));
 				exit("Bad request: No content specified.");
 			}
 			
@@ -6424,9 +6422,9 @@ window.addEventListener("load", function(event) {
 					{
 						$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
 					}
-					$content .= "<p>An edit conflict has arisen because someone else has saved an edit to $env->page since you started editing it. Both texts are shown below, along the differences between the 2 conflicting revisions. To continue, please merge your changes with the existing content. Note that only the text in the existing content box will be kept when you press the \"Resolve Conflict\" button at the bottom of the page.</p>
+					$content .= "<p>An edit conflict has arisen because someone else has saved an edit to " . htmlentities($env->page) . " since you started editing it. Both texts are shown below, along the differences between the 2 conflicting revisions. To continue, please merge your changes with the existing content. Note that only the text in the existing content box will be kept when you press the \"Resolve Conflict\" button at the bottom of the page.</p>
 					
-					<form method='post' action='index.php?action=save&page=" . rawurlencode($page) . "&action=save' class='editform'>
+					<form method='post' action='index.php?action=save&page=" . rawurlencode($env->page) . "&action=save' class='editform'>
 					<h2>Existing content</h2>
 					<textarea id='original-content' name='content' autofocus tabindex='1'>$existingPageData</textarea>
 					
@@ -6493,23 +6491,22 @@ DIFFSCRIPT;
 			
 			if(file_put_contents("$env->storage_prefix$env->page.md", $pagedata) !== false)
 			{
-				$page = $env->page;
 				// Make sure that this page's parents exist
-				check_subpage_parents($page);
+				check_subpage_parents($env->page);
 				
 				// Update the page index
-				if(!isset($pageindex->$page))
+				if(!isset($pageindex->{$env->page}))
 				{
-					$pageindex->$page = new stdClass();
-					$pageindex->$page->filename = "$env->page.md";
+					$pageindex->{$env->page} = new stdClass();
+					$pageindex->{$env->page}->filename = "$env->page.md";
 				}
-				$pageindex->$page->size = strlen($_POST["content"]);
-				$pageindex->$page->lastmodified = time();
+				$pageindex->{$env->page}->size = strlen($_POST["content"]);
+				$pageindex->{$env->page}->lastmodified = time();
 				if($env->is_logged_in)
-					$pageindex->$page->lasteditor = utf8_encode($env->user);
+					$pageindex->{$env->page}->lasteditor = utf8_encode($env->user);
 				else // TODO: Add an option to record the user's IP here instead
-					$pageindex->$page->lasteditor = utf8_encode("anonymous");
-				$pageindex->$page->tags = $page_tags;
+					$pageindex->{$env->page}->lasteditor = utf8_encode("anonymous");
+				$pageindex->{$env->page}->tags = $page_tags;
 				
 				// A hack to resave the pagedata if the preprocessors have
 				// changed it. We need this because the preprocessors *must*
@@ -6519,7 +6516,7 @@ DIFFSCRIPT;
 				// Execute all the preprocessors
 				foreach($save_preprocessors as $func)
 				{
-					$func($pageindex->$page, $pagedata, $oldpagedata);
+					$func($pageindex->{$env->page}, $pagedata, $oldpagedata);
 				}
 				
 				if($pagedata !== $pagedata_orig)
@@ -6534,7 +6531,7 @@ DIFFSCRIPT;
 					http_response_code(200);
 				
 //				header("content-type: text/plain");
-				header("location: index.php?page=$env->page&edit_status=success&redirect=no");
+				header("location: index.php?page=" . rawurlencode($env->page) . "&edit_status=success&redirect=no");
 				exit();
 			}
 			else
