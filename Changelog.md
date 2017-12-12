@@ -1,5 +1,5 @@
 # Changelog
-This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on Github too.
+This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
 ## v0.16-dev
 
@@ -29,13 +29,13 @@ _(No changes since v0.15-beta2)_
 ### Added
  - Statistics! (#97)
      - Added a new statistics engine, which you can add your own statistic calculators to with `statistic_add`
-     - Added action `stats` to view the calculated statisics
+     - Added action `stats` to view the calculated statistics
      - Statistics are automagically recalculated every day - this can be controlled with the `stats_update_interval` and `stats_update_processingtime` settings
  - Added new "« Parent Page" to subpages so that you can easily visit their parent pages
  - Users can now delete their own comments, and users logged in as a moderator or better can delete anyone's comments.
      - Added new `comment-delete` action
      - Comments are deleted entirely if they have no replies - otherwise the username & message are wiped
- - The `history` action now supports `format=json` and `format=csv`
+ - The `history` action now supports `format=json` and `format=CSV`
  - Added tags next to the names of pages in the search results
  - Added new `random_page_exclude` setting that allows you to exclude pages from the random action with a (PHP) regular expression
  - [module api] Added new `get_page_parent($pagename)` method.
@@ -113,7 +113,7 @@ _(No changes since v0.15-beta2)_
  - Added header to upload file page.
  - Added history support to the `raw` action.
  - Added 'smart save' to the page creator / editor. Nobody need ever loose edits ever again!
- - Added dynamic server-calculated page suggestions. Very helpful for larger wikis. Currently works best in firefox. Part of the `feature-search` module.
+ - Added dynamic server-calculated page suggestions. Very helpful for larger wikis. Currently works best in Firefox. Part of the `feature-search` module.
  - Added Alt + Enter support to the page search box. Works just like your browser's address bar - opens results in a new tab instead of the current one.
  - Initial UI for configuring settings! Some things still have to be done by editing the file, but it's certainly a start :D
  - User preferences!
@@ -149,7 +149,7 @@ _(No changes since v0.15-beta2)_
  - Improved the search engine indexing algorithm. It now shouldn't choke on certain special characters (`[]{}|`) and will treat them as word boundaries.
  - Fixed tag links at the bottom of pages for tags with a single quote (`'`) in them.
  - Correct error message when attempting to move a page
- - Improved security of PHP session cookie by setting HttpOnly flag.
+ - Improved security of PHP session cookie by setting `HttpOnly` flag.
  - Linked pages with single quotes (`'`) in their names correctly in page lists.
  - Fixed blank descriptions in search results by defaulting to a snippet from the beginning of the page.
 
