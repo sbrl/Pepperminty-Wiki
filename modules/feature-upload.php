@@ -504,7 +504,7 @@ register_module([
 				}
 				
 				$fileInfo = [];
-				$fileInfo["Name"] = str_replace("File/", "", $filepath);
+				$fileInfo["Name"] = str_replace("Files/", "", $filepath);
 				$fileInfo["Type"] = $mime_type;
 				$fileInfo["Size"] = human_filesize(filesize($env->storage_prefix . $filepath));
 				switch($fileTypeDisplay)
@@ -515,6 +515,7 @@ register_module([
 						break;
 				}
 				$fileInfo["Uploaded by"] = $pageindex->{$env->page}->lasteditor;
+				$fileInfo["Short markdown embed code"] = "<input type='text' class='short-embed-markdown-code' value='![{$fileInfo["Name"]}]($filepath | right | 350x350)' readonly /> <button class='short-embed-markdown-button'>Copy</button>";
 				
 				$preview_html .= "\t\t\t<h2>File Information</h2>
 			<table>";
@@ -527,6 +528,16 @@ register_module([
 				$parts["{content}"] = str_replace("</h1>", "</h1>\n$preview_html", $parts["{content}"]);
 			}
 		});
+		
+		// Add the snippet that copies the embed markdown code to the clipboard
+		page_renderer::AddJSSnippet('window.addEventListener("load", function(event) {
+	let button = document.querySelector(".short-embed-markdown-button");
+	button.addEventListener("click", function(inner_event) {
+		let input = document.querySelector(".short-embed-markdown-code");
+		input.select();
+		button.innerHTML = document.execCommand("copy") ? "Copied!" : "Failed to copy :-(";
+	});
+});');
 		
 		// Register a section on the help page on uploading files
 		add_help_section("28-uploading-files", "Uploading Files", "<p>$settings->sitename supports the uploading of files, though it is up to " . $settings->admindetails_name . ", $settings->sitename's administrator as to whether it is enabled or not (uploads are currently " . (($settings->upload_enabled) ? "enabled" : "disabled") . ").</p>

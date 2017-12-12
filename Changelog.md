@@ -3,6 +3,9 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## v0.16-dev
 
+### Added
+ - Added an input box with auto-generated short markdown embed code with copy button
+
 ### Fixed
  - Fix saving edits to pages with an ampersand in their name (#99)
 
