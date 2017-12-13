@@ -532,6 +532,7 @@ register_module([
 		// Add the snippet that copies the embed markdown code to the clipboard
 		page_renderer::AddJSSnippet('window.addEventListener("load", function(event) {
 	let button = document.querySelector(".short-embed-markdown-button");
+	if(button == null) return;
 	button.addEventListener("click", function(inner_event) {
 		let input = document.querySelector(".short-embed-markdown-code");
 		input.select();
