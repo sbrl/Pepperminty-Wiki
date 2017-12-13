@@ -385,7 +385,7 @@ if($settings->css === "auto")
 ////// Do not edit below this line unless you know what you are doing! //////
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
-$version = "v0.16-dev";
+$version = "v0.15.1";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -1467,7 +1467,7 @@ class page_renderer
 		{extra}
 		<footer>
 			<p>{footer-message}</p>
-			<p>Powered by Pepperminty Wiki v0.16-dev, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
+			<p>Powered by Pepperminty Wiki v0.15.1, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
 			<p>Your local friendly moderators are {admins-name-list}.</p>
 			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
 		</footer>
@@ -1485,7 +1485,7 @@ class page_renderer
 			<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
 			<p>{footer-message}</p>
 			<p><em>Timed at {generation-date}</em></p>
-			<p><em>Powered by Pepperminty Wiki v0.16-dev.</em></p>
+			<p><em>Powered by Pepperminty Wiki v0.15.1.</em></p>
 		</footer>";
 
 	/**
@@ -1563,7 +1563,7 @@ class page_renderer
 			"{body}" => $body_template,
 
 			"{sitename}" => $logo_html,
-			"v0.16-dev" => $version,
+			"v0.15.1" => $version,
 			"{favicon-url}" => $settings->favicon,
 			"{header-html}" => self::get_header_html(),
 
@@ -5320,7 +5320,7 @@ register_module([
 						if($mime_type == "application/pdf")
 							$fileTypeDisplay = "file";
 						
-						$preview_sizes = [ 256, 512, 768, 1024, 1440 ];
+						$preview_sizes = [ 256, 512, 768, 1024, 1440, 1920 ];
 						$preview_html .= "\t\t\t<figure class='preview'>
 				<img src='$previewUrl' />
 				<nav class='image-controls'>
