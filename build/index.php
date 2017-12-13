@@ -5466,6 +5466,7 @@ function upload_check_svg($temp_filename)
  */
 function getsvgsize($svgFilename)
 {
+	libxml_disable_entity_loader(true); // Ref: XXE Billion Laughs Attack, issue #152
 	$svg = simplexml_load_file($svgFilename); // Load it as XML
 	if($svg === false)
 	{

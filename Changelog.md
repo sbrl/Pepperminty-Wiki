@@ -6,8 +6,12 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ### Added
  - Added an input box with auto-generated short markdown embed code with copy button to file pages
 
+### Changed
+ - Added 1920 as a preset image size on file pages
+
 ### Fixed
  - Fix saving edits to pages with an ampersand in their name (#99)
+ - [Security] Fixed an authenticated denial-of-service attack when uploading a malicious SVG (ref XXE billion laughs attack, #152)
 
 ## v0.15
 _(No changes since v0.15-beta2)_

@@ -476,7 +476,7 @@ register_module([
 						if($mime_type == "application/pdf")
 							$fileTypeDisplay = "file";
 						
-						$preview_sizes = [ 256, 512, 768, 1024, 1440 ];
+						$preview_sizes = [ 256, 512, 768, 1024, 1440, 1920 ];
 						$preview_html .= "\t\t\t<figure class='preview'>
 				<img src='$previewUrl' />
 				<nav class='image-controls'>
@@ -622,6 +622,7 @@ function upload_check_svg($temp_filename)
  */
 function getsvgsize($svgFilename)
 {
+	libxml_disable_entity_loader(true); // Ref: XXE Billion Laughs Attack, issue #152
 	$svg = simplexml_load_file($svgFilename); // Load it as XML
 	if($svg === false)
 	{
