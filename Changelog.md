@@ -1,6 +1,11 @@
 # Changelog
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
+## v0.16-dev
+
+### Fixed
+ - Properly escaped content of short code box on file pages
+
 ## v0.15.1
 
 ### Added
