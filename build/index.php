@@ -5359,7 +5359,7 @@ register_module([
 						break;
 				}
 				$fileInfo["Uploaded by"] = $pageindex->{$env->page}->lasteditor;
-				$fileInfo["Short markdown embed code"] = "<input type='text' class='short-embed-markdown-code' value='![{$fileInfo["Name"]}]($filepath | right | 350x350)' readonly /> <button class='short-embed-markdown-button'>Copy</button>";
+				$fileInfo["Short markdown embed code"] = "<input type='text' class='short-embed-markdown-code' value='![" . htmlentities($fileInfo["Name"]) . "](" . htmlentities($filepath) . " | right | 350x350)' readonly /> <button class='short-embed-markdown-button'>Copy</button>";
 				
 				$preview_html .= "\t\t\t<h2>File Information</h2>
 			<table>";
