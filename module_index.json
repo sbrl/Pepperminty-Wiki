@@ -118,11 +118,11 @@
     },
     {
         "name": "Uploader",
-        "version": "0.5.11",
+        "version": "0.5.12",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1514641395,
+        "lastupdate": 1514762001,
         "optional": false
     },
     {
@@ -163,11 +163,11 @@
     },
     {
         "name": "Page editor",
-        "version": "0.17.1",
+        "version": "0.17.2",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1512919152,
+        "lastupdate": 1514762051,
         "optional": false
     },
     {
