@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Uploader",
-	"version" => "0.5.13",
+	"version" => "0.5.14",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -519,7 +519,7 @@ register_module([
 						break;
 				}
 				$fileInfo["Uploaded by"] = $pageindex->{$env->page}->lasteditor;
-				$fileInfo["Short markdown embed code"] = "<input type='text' class='short-embed-markdown-code' value='![" . htmlentities($fileInfo["Name"]) . "](" . htmlentities($filepath) . " | right | 350x350)' readonly /> <button class='short-embed-markdown-button'>Copy</button>";
+				$fileInfo["Short markdown embed code"] = "<input type='text' class='short-embed-markdown-code' value='![" . htmlentities($fileInfo["Name"], ENT_QUOTES | ENT_HTML5) . "](" . htmlentities($filepath, ENT_QUOTES | ENT_HTML5) . " | right | 350x350)' readonly /> <button class='short-embed-markdown-button'>Copy</button>";
 				
 				$preview_html .= "\t\t\t<h2>File Information</h2>
 			<table>";
