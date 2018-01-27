@@ -6,6 +6,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ### Fixed
  - Properly escaped content of short code box on file pages
  - Display a more meaningful message to a logged in user if editing is disabled
+ - Fixed fetching the size of SVGs in some cases
 
 ### Changed
  - Disallow uploads if editing is disabled. Previously files could still be uploaded even if editing was disabled - unless `upload_enabled` was set to `false`.

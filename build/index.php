@@ -4845,7 +4845,7 @@ function stats_save($stats)
 
 register_module([
 	"name" => "Uploader",
-	"version" => "0.5.12",
+	"version" => "0.5.13",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -5470,8 +5470,11 @@ function upload_check_svg($temp_filename)
  */
 function getsvgsize($svgFilename)
 {
+	global $settings;
 	libxml_disable_entity_loader(true); // Ref: XXE Billion Laughs Attack, issue #152
-	$svg = simplexml_load_file($svgFilename); // Load it as XML
+	$rawSvg = file_get_contents($svgFilename);
+	$svg = simplexml_load_string($rawSvg); // Load it as XML
+	unset($rawSvg);
 	if($svg === false)
 	{
 		http_response_code(415);
