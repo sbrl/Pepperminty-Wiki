@@ -8368,7 +8368,7 @@ class PeppermintParsedown extends ParsedownExtra
 			
 			if($imageCaption)
 			{
-				$rawStyle = $result["element"]["attributes"]["style"];
+				$rawStyle = $result["element"]["attributes"]["style"] ?? "";
 				$containerStyle = preg_replace('/^.*float/', "float", $rawStyle);
 				$mediaStyle = preg_replace('/\s*float.*;/', "", $rawStyle);
 				$result["element"] = [
