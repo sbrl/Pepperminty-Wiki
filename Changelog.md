@@ -8,6 +8,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Display a more meaningful message to a logged in user if editing is disabled
  - Fixed fetching the size of SVGs in some cases
  - Fixed image captions in some cases (let me know if you still get warnings)
+ - Squashed warnings when you do a search with a forward slash (`/`) in your query
 
 ### Changed
  - Disallow uploads if editing is disabled. Previously files could still be uploaded even if editing was disabled - unless `upload_enabled` was set to `false`.

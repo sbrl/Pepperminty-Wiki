@@ -528,7 +528,7 @@ class search
 	public static function tokenize($source)
 	{
 		$source = strtolower($source);
-		$source = str_replace([ '[', ']', '|', '{', '}' ], " ", $source);
+		$source = str_replace([ '[', ']', '|', '{', '}', '/' ], " ", $source);
 		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, PREG_SPLIT_NO_EMPTY);
 	}
 	
