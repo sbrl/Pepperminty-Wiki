@@ -12,7 +12,7 @@ docs: rest_docs module_api_docs
 
 rest_docs: setupApiDoc
 	@echo [peppermint/docs] Building docs
-	apidoc -o './docs/RestApi/' --config apidoc.json -f '.*\.php' -e index.php
+	apidoc -o './docs/RestApi/' --config apidoc.json -f '.*\.php' -e 'index.php|ModuleApi'
 	rm -rf doc/
 
 module_api_docs: phpdoc
