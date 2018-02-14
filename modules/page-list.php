@@ -9,11 +9,13 @@ register_module([
 		global $settings;
 		
 		/**
-		 * @api		{get}	?action=list	List all pages 
+		 * @api		{get}	?action=list[&format={format}]	List all pages 
 		 * @apiDescription	Gets a list of all the pages currently stored on the wiki.
 		 * @apiName		ListPages
 		 * @apiGroup	Page
 		 * @apiPermission	Anonymous
+		 *
+		 * @apiParam	{string}	format	The format to return the page list in. Default: html. Other foramts available: json, text
 		 */
 		
 		/*

@@ -212,6 +212,7 @@ window.addEventListener("load", function(event) {
 		 * @api {post} ?action=preview-edit&page={pageName}[&newpage=yes]	Get a preview of the page
 		 * @apiDescription	Gets a preview of the current edit state of a given page
 		 * @apiName 		PreviewPage
+		 * @apiGroup		Editing
 		 * @apiPermission	Anonymous
 		 * 
 		 * @apiUse	PageParameter

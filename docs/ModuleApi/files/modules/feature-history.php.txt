@@ -1,13 +1,13 @@
 <?php
 register_module([
 	"name" => "Page History",
-	"version" => "0.3",
+	"version" => "0.3.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
 	"id" => "feature-history",
 	"code" => function() {
 		/**
-		 * @api {get} ?action=history&page={pageName} Get a list of revisions for a page
+		 * @api {get} ?action=history&page={pageName}[&format={format}] Get a list of revisions for a page
 		 * @apiName History
 		 * @apiGroup Page
 		 * @apiPermission Anonymous

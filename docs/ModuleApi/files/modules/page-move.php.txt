@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page mover",
-	"version" => "0.9.2",
+	"version" => "0.9.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to move pages.",
 	"id" => "page-move",
@@ -119,12 +119,20 @@ register_module([
 			// Move the page in the id index
 			ids::movepagename($page, $new_name);
 			
+			// Move the comments file as well, if it exists
+			if(file_exists("$env->storage_prefix$env->page.comments.json")) {
+				rename(
+					"$env->storage_prefix$env->page.comments.json",
+					"$env->storage_prefix$new_name.comments.json"
+				);
+			}
+			
 			// Exit with a nice message
-			exit(page_renderer::render_main("Moving $env->page", "<p><a href='index.php?page=$env->page'>$env->page</a> has been moved to <a href='index.php?page=$new_name'>$new_name</a> successfully.</p>"));
+			exit(page_renderer::render_main("Moving " . htmlentities($env->page), "<p><a href='index.php?page=" . rawurlencode($env->page) . "'>" . htmlentities($env->page) . "</a> has been moved to <a href='index.php?page=" . rawurlencode($new_name) . "'>" . htmlentities($new_name) . "</a> successfully.</p>"));
 		});
 		
 		// Register a help section
-		add_help_section("60-move", "Moving Pages", "<p>If you are logged in as an administrator, then you have the power to move pages. To do this, click &quot;Delete&quot; in the &quot;More...&quot; menu when browsing the pge you wish to move. Type in the new name of the page, and then click &quot;Move Page&quot;.</p>");
+		add_help_section("60-move", "Moving Pages", "<p>If you are logged in as an administrator, then you have the power to move pages. To do this, click &quot;Move&quot; in the &quot;More...&quot; menu when browsing the pge you wish to move. Type in the new name of the page, and then click &quot;Move Page&quot;.</p>");
 	}
 ]);
 

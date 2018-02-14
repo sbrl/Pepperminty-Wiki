@@ -86,6 +86,12 @@ register_module([
 					"author_url" => "https://github.com/ikisler",
 					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/pull/140",
 					"icon" => "https://avatars3.githubusercontent.com/u/12506147?v=3&s=24"
+				],
+				"Issue #153: Authenticated DOS attack (XXD billion laughs attack)" => [
+					"author" => "ProDigySML",
+					"author_url" => "https://github.com/ProDigySML",
+					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/issues/152",
+					"icon" => "https://starbeamrainbowlabs.com/images/placeholder/?width=24&height=24"
 				]
 			];
 			

@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Uploader",
-	"version" => "0.5.11",
+	"version" => "0.5.14",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -100,6 +100,10 @@ register_module([
 				
 				case "POST":
 					// Recieve file
+					
+					if(!$settings->editing) {
+						exit(page_renderer::render_main("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because editing is currently disabled on $settings->sitename. Please contact $settings->admindetails_name, $settings->sitename's administrator for more information - their contact details can be found at the bottom of this page. <a href='index.php'>Go back to the main page</a>."));
+					}
 					
 					// Make sure uploads are enabled
 					if(!$settings->upload_enabled)
@@ -311,7 +315,7 @@ register_module([
 			header("content-disposition: inline; filename=\"$shortFilename\"");
 			header("last-modified: " . gmdate('D, d M Y H:i:s T', $pageindex->{$env->page}->lastmodified));
 			
-			// If the size is set or original, then send (or redirect to) the original image
+			// If the size is set to original, then send (or redirect to) the original image
 			// Also do the same for SVGs if svg rendering is disabled.
 			if(isset($_GET["size"]) and $_GET["size"] == "original" or
 				(empty($settings->render_svg_previews) && $mime_type == "image/svg+xml"))
@@ -476,7 +480,7 @@ register_module([
 						if($mime_type == "application/pdf")
 							$fileTypeDisplay = "file";
 						
-						$preview_sizes = [ 256, 512, 768, 1024, 1440 ];
+						$preview_sizes = [ 256, 512, 768, 1024, 1440, 1920 ];
 						$preview_html .= "\t\t\t<figure class='preview'>
 				<img src='$previewUrl' />
 				<nav class='image-controls'>
@@ -504,7 +508,7 @@ register_module([
 				}
 				
 				$fileInfo = [];
-				$fileInfo["Name"] = str_replace("File/", "", $filepath);
+				$fileInfo["Name"] = str_replace("Files/", "", $filepath);
 				$fileInfo["Type"] = $mime_type;
 				$fileInfo["Size"] = human_filesize(filesize($env->storage_prefix . $filepath));
 				switch($fileTypeDisplay)
@@ -515,6 +519,7 @@ register_module([
 						break;
 				}
 				$fileInfo["Uploaded by"] = $pageindex->{$env->page}->lasteditor;
+				$fileInfo["Short markdown embed code"] = "<input type='text' class='short-embed-markdown-code' value='![" . htmlentities($fileInfo["Name"], ENT_QUOTES | ENT_HTML5) . "](" . htmlentities($filepath, ENT_QUOTES | ENT_HTML5) . " | right | 350x350)' readonly /> <button class='short-embed-markdown-button'>Copy</button>";
 				
 				$preview_html .= "\t\t\t<h2>File Information</h2>
 			<table>";
@@ -527,6 +532,17 @@ register_module([
 				$parts["{content}"] = str_replace("</h1>", "</h1>\n$preview_html", $parts["{content}"]);
 			}
 		});
+		
+		// Add the snippet that copies the embed markdown code to the clipboard
+		page_renderer::AddJSSnippet('window.addEventListener("load", function(event) {
+	let button = document.querySelector(".short-embed-markdown-button");
+	if(button == null) return;
+	button.addEventListener("click", function(inner_event) {
+		let input = document.querySelector(".short-embed-markdown-code");
+		input.select();
+		button.innerHTML = document.execCommand("copy") ? "Copied!" : "Failed to copy :-(";
+	});
+});');
 		
 		// Register a section on the help page on uploading files
 		add_help_section("28-uploading-files", "Uploading Files", "<p>$settings->sitename supports the uploading of files, though it is up to " . $settings->admindetails_name . ", $settings->sitename's administrator as to whether it is enabled or not (uploads are currently " . (($settings->upload_enabled) ? "enabled" : "disabled") . ").</p>
@@ -610,7 +626,11 @@ function upload_check_svg($temp_filename)
  */
 function getsvgsize($svgFilename)
 {
-	$svg = simplexml_load_file($svgFilename); // Load it as XML
+	global $settings;
+	libxml_disable_entity_loader(true); // Ref: XXE Billion Laughs Attack, issue #152
+	$rawSvg = file_get_contents($svgFilename);
+	$svg = simplexml_load_string($rawSvg); // Load it as XML
+	unset($rawSvg);
 	if($svg === false)
 	{
 		http_response_code(415);

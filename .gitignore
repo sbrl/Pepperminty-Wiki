@@ -42,9 +42,25 @@ build/diff.min.js
 # The testing zone for the $paths
 data_test
 
+# phpdoc - Can't believe I committed this by accident :P
+phpdoc
+
 # Created by https://www.gitignore.io/api/git
 
 ### Git ###
 *.orig
 
 # End of https://www.gitignore.io/api/git
+
+# Created by https://www.gitignore.io/api/composer
+
+### Composer ###
+composer.phar
+/vendor/
+
+# Commit your application's lock file http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file
+# You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
+# composer.lock
+
+
+# End of https://www.gitignore.io/api/composer
