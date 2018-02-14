@@ -3,6 +3,10 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## v0.16-dev
 
+### Added
+ - [Rest API] Added support for the `mode` parameter to the `random` action.
+ - Fixed various issues with both the module api & the rest api docs.
+
 ### Fixed
  - Properly escaped content of short code box on file pages
  - Display a more meaningful message to a logged in user if editing is disabled

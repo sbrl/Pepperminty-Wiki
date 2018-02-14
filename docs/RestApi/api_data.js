@@ -616,7 +616,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "?action=random",
+    "url": "?action=random[&mode={mode}]",
     "title": "Redirects to a random page.",
     "name": "RawSource",
     "group": "Page",
@@ -627,6 +627,19 @@ define({ "api": [
         "description": ""
       }
     ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "mode",
+            "description": "<p>The view mode to redirect to. This parameter is basically just passed through to the direct - it works in the same way as the mode parameter on the <em>view</em> action does.</p>"
+          }
+        ]
+      }
+    },
     "version": "0.0.0",
     "filename": "./modules/action-random.php",
     "groupTitle": "Page"
@@ -663,7 +676,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "?action=view[&page={pageName}][&revision=rid][&printable=yes]",
+    "url": "?action=view[&page={pageName}][&revision=rid][&printable=yes][&mode={mode}]",
     "title": "View a page",
     "name": "View",
     "group": "Page",
@@ -689,7 +702,7 @@ define({ "api": [
             "type": "string",
             "optional": false,
             "field": "mode",
-            "description": "<p>Optional. The display mode to use. Can hld the following values: 'normal' - The default. Sends a normal page. 'printable' - Sends a printable version of the page. 'contentonly' - Sends only the content of the page, not the extra stuff around it. 'parsedsourceonly' - Sends only the raw rendered source of the page, as it appears just after it has come out of the page parser. Useful for writing external tools (see also the <code>raw</code> action).</p>"
+            "description": "<p>Optional. The display mode to use. Can hold the following values: 'normal' - The default. Sends a normal page. 'printable' - Sends a printable version of the page. 'contentonly' - Sends only the content of the page, not the extra stuff around it. 'parsedsourceonly' - Sends only the raw rendered source of the page, as it appears just after it has come out of the page parser. Useful for writing external tools (see also the <code>raw</code> action).</p>"
           },
           {
             "group": "Parameter",

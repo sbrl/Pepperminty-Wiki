@@ -7,14 +7,14 @@ register_module([
 	"id" => "page-view",
 	"code" => function() {
 		/**
-		 * @api	{get}	?action=view[&page={pageName}][&revision=rid][&printable=yes]	View a page
+		 * @api	{get}	?action=view[&page={pageName}][&revision=rid][&printable=yes][&mode={mode}]	View a page
 		 * @apiName			View
 		 * @apiGroup		Page
 		 * @apiPermission	Anonymous
 		 * 
 		 * @apiUse PageParameter
 		 * @apiParam	{number}	revision	The revision number to display.
-		 * @apiParam	{string}	mode		Optional. The display mode to use. Can hld the following values: 'normal' - The default. Sends a normal page. 'printable' - Sends a printable version of the page. 'contentonly' - Sends only the content of the page, not the extra stuff around it. 'parsedsourceonly' - Sends only the raw rendered source of the page, as it appears just after it has come out of the page parser. Useful for writing external tools (see also the `raw` action).
+		 * @apiParam	{string}	mode		Optional. The display mode to use. Can hold the following values: 'normal' - The default. Sends a normal page. 'printable' - Sends a printable version of the page. 'contentonly' - Sends only the content of the page, not the extra stuff around it. 'parsedsourceonly' - Sends only the raw rendered source of the page, as it appears just after it has come out of the page parser. Useful for writing external tools (see also the `raw` action).
 		 *
 		 * @apiError	NonExistentPageError	The page doesn't exist and editing is disabled in the wiki's settings. If editing isn't disabled, you will be redirected to the edit page instead.
 		 * @apiError	NonExistentRevisionError	The specified revision was not found.

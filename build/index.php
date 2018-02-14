@@ -2271,10 +2271,14 @@ register_module([
 		 * @apiName RawSource
 		 * @apiGroup Page
 		 * @apiPermission Anonymous
+		 *
+		 * @apiParam	{string}	mode	The view mode to redirect to. This parameter is basically just passed through to the direct - it works in the same way as the mode parameter on the _view_ action does.
 		 */
 		
 		add_action("random", function() {
 			global $pageindex;
+			
+			$mode = preg_replace("/[^a-z-_]/i", "", $_GET["mode"] ?? "");
 			
 			$pageNames = array_keys(get_object_vars($pageindex));
 			
@@ -2287,7 +2291,9 @@ register_module([
 			$randomPageName = $pageNames[array_rand($pageNames)];
 			
 			http_response_code(307);
-			header("location: ?page=" . rawurlencode($randomPageName));
+			$redirect_url = "?page=" . rawurlencode($randomPageName);
+			if(!empty($mode)) $redirect_url .= "&mode=$mode";
+			header("location: $redirect_url");
 		});
 		
 		add_help_section("26-random-redirect", "Jumping to a random page", "<p>$settings->sitename has a function that can send you to a random page. To use it, click <a href='?action=random'>here</a>. $settings->admindetails_name ($settings->sitename's adminstrator) may have added it to one of the menus.</p>");
@@ -3156,13 +3162,13 @@ SCRIPT;
 
 register_module([
 	"name" => "Page History",
-	"version" => "0.3",
+	"version" => "0.3.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
 	"id" => "feature-history",
 	"code" => function() {
 		/**
-		 * @api {get} ?action=history&page={pageName} Get a list of revisions for a page
+		 * @api {get} ?action=history&page={pageName}[&format={format}] Get a list of revisions for a page
 		 * @apiName History
 		 * @apiGroup Page
 		 * @apiPermission Anonymous
@@ -3590,7 +3596,7 @@ register_module([
 
 register_module([
 	"name" => "Search",
-	"version" => "0.6",
+	"version" => "0.6.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
@@ -5159,7 +5165,7 @@ register_module([
 			header("content-disposition: inline; filename=\"$shortFilename\"");
 			header("last-modified: " . gmdate('D, d M Y H:i:s T', $pageindex->{$env->page}->lastmodified));
 			
-			// If the size is set or original, then send (or redirect to) the original image
+			// If the size is set to original, then send (or redirect to) the original image
 			// Also do the same for SVGs if svg rendering is disabled.
 			if(isset($_GET["size"]) and $_GET["size"] == "original" or
 				(empty($settings->render_svg_previews) && $mime_type == "image/svg+xml"))
@@ -6321,6 +6327,7 @@ window.addEventListener("load", function(event) {
 		 * @api {post} ?action=preview-edit&page={pageName}[&newpage=yes]	Get a preview of the page
 		 * @apiDescription	Gets a preview of the current edit state of a given page
 		 * @apiName 		PreviewPage
+		 * @apiGroup		Editing
 		 * @apiPermission	Anonymous
 		 * 
 		 * @apiUse	PageParameter
@@ -6823,11 +6830,13 @@ register_module([
 		global $settings;
 		
 		/**
-		 * @api		{get}	?action=list	List all pages 
+		 * @api		{get}	?action=list[&format={format}]	List all pages 
 		 * @apiDescription	Gets a list of all the pages currently stored on the wiki.
 		 * @apiName		ListPages
 		 * @apiGroup	Page
 		 * @apiPermission	Anonymous
+		 *
+		 * @apiParam	{string}	format	The format to return the page list in. Default: html. Other foramts available: json, text
 		 */
 		
 		/*
@@ -7596,14 +7605,14 @@ register_module([
 	"id" => "page-view",
 	"code" => function() {
 		/**
-		 * @api	{get}	?action=view[&page={pageName}][&revision=rid][&printable=yes]	View a page
+		 * @api	{get}	?action=view[&page={pageName}][&revision=rid][&printable=yes][&mode={mode}]	View a page
 		 * @apiName			View
 		 * @apiGroup		Page
 		 * @apiPermission	Anonymous
 		 * 
 		 * @apiUse PageParameter
 		 * @apiParam	{number}	revision	The revision number to display.
-		 * @apiParam	{string}	mode		Optional. The display mode to use. Can hld the following values: 'normal' - The default. Sends a normal page. 'printable' - Sends a printable version of the page. 'contentonly' - Sends only the content of the page, not the extra stuff around it. 'parsedsourceonly' - Sends only the raw rendered source of the page, as it appears just after it has come out of the page parser. Useful for writing external tools (see also the `raw` action).
+		 * @apiParam	{string}	mode		Optional. The display mode to use. Can hold the following values: 'normal' - The default. Sends a normal page. 'printable' - Sends a printable version of the page. 'contentonly' - Sends only the content of the page, not the extra stuff around it. 'parsedsourceonly' - Sends only the raw rendered source of the page, as it appears just after it has come out of the page parser. Useful for writing external tools (see also the `raw` action).
 		 *
 		 * @apiError	NonExistentPageError	The page doesn't exist and editing is disabled in the wiki's settings. If editing isn't disabled, you will be redirected to the edit page instead.
 		 * @apiError	NonExistentRevisionError	The specified revision was not found.
