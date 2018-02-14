@@ -586,6 +586,36 @@
   },
   {
     "type": "get",
+    "url": "?action=random[&mode={modeName}]",
+    "title": "Redirects to a random page",
+    "name": "Random",
+    "group": "Page",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "mode",
+            "description": "<p>The view mode to redirect to. This parameter is basically just passed through to the direct. It works in the same way as the mode parameter on the view action does.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./modules/action-random.php",
+    "groupTitle": "Page"
+  },
+  {
+    "type": "get",
     "url": "?action=raw&page={pageName}",
     "title": "Get the raw source code of a page",
     "name": "RawSource",
@@ -612,36 +642,6 @@
     },
     "version": "0.0.0",
     "filename": "./modules/action-raw.php",
-    "groupTitle": "Page"
-  },
-  {
-    "type": "get",
-    "url": "?action=random[&mode={mode}]",
-    "title": "Redirects to a random page.",
-    "name": "RawSource",
-    "group": "Page",
-    "permission": [
-      {
-        "name": "Anonymous",
-        "title": "Anybody may use this call.",
-        "description": ""
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "mode",
-            "description": "<p>The view mode to redirect to. This parameter is basically just passed through to the direct - it works in the same way as the mode parameter on the <em>view</em> action does.</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "./modules/action-random.php",
     "groupTitle": "Page"
   },
   {
@@ -739,7 +739,7 @@
   {
     "type": "get",
     "url": "?action=suggest-pages[&type={type}]",
-    "title": "Get search suggestions for a query",
+    "title": "Get page name suggestions for a query",
     "name": "OpenSearchDescription",
     "group": "Search",
     "permission": [
@@ -792,7 +792,7 @@
   },
   {
     "type": "get",
-    "url": "?action=search&query={text}",
+    "url": "?action=search&query={text}[&format={format}]",
     "title": "Search the wiki for a given query string",
     "name": "Search",
     "group": "Search",
@@ -812,6 +812,13 @@
             "optional": false,
             "field": "query",
             "description": "<p>The query string to search for.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "format",
+            "description": "<p>Optional. Valid values: html, json. In json mode an object is returned with page names as keys, values as search result information - sorted in ranking order.</p>"
           }
         ]
       }
@@ -863,6 +870,7 @@
         "description": ""
       }
     ],
+    "description": "<p>For debugging purposes. Be warned - the format could change at any time!</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -889,7 +897,9 @@
     "group": "Search",
     "permission": [
       {
-        "name": "Admin"
+        "name": "Admin",
+        "title": "Only the wiki administrator may use this call.",
+        "description": ""
       }
     ],
     "parameter": {

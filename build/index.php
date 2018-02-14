@@ -501,8 +501,11 @@ if($env->is_logged_in)
 // APIDoc strings //
 ////////////////////
 /**
- * @apiDefine Moderator	Only users loggged with a moderator account may use this call.
+ * @apiDefine Admin	Only the wiki administrator may use this call.
  */
+ /**
+  * @apiDefine Moderator	Only users loggged with a moderator account may use this call.
+  */
 /**
 * @apiDefine User		Only users loggged in may use this call.
 */
@@ -2267,12 +2270,12 @@ register_module([
 	"code" => function() {
 		global $settings;
 		/**
-		 * @api {get} ?action=random Redirects to a random page.
-		 * @apiName RawSource
+		 * @api {get} ?action=random[&mode={modeName}] Redirects to a random page
+		 * @apiName Random
 		 * @apiGroup Page
 		 * @apiPermission Anonymous
 		 *
-		 * @apiParam	{string}	mode	The view mode to redirect to. This parameter is basically just passed through to the direct - it works in the same way as the mode parameter on the _view_ action does.
+		 * @apiParam	{string}	mode	The view mode to redirect to. This parameter is basically just passed through to the direct. It works in the same way as the mode parameter on the view action does.
 		 */
 		
 		add_action("random", function() {
@@ -3596,7 +3599,7 @@ register_module([
 
 register_module([
 	"name" => "Search",
-	"version" => "0.6.1",
+	"version" => "0.6.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
@@ -3608,6 +3611,7 @@ register_module([
 		 * @apiName SearchIndex
 		 * @apiGroup Search
 		 * @apiPermission Anonymous
+		 * @apiDescription For debugging purposes. Be warned - the format could change at any time!
 		 * 
 		 * @apiParam {string}	page	The page to generate a word index page.
 		 */
@@ -3690,12 +3694,13 @@ register_module([
 		});
 		
 		/**
-		 * @api {get} ?action=search&query={text}	Search the wiki for a given query string
+		 * @api {get} ?action=search&query={text}[&format={format}]	Search the wiki for a given query string
 		 * @apiName Search
 		 * @apiGroup Search
 		 * @apiPermission Anonymous
 		 * 
 		 * @apiParam {string}	query	The query string to search for.
+		 * @apiParam {string}	format	Optional. Valid values: html, json. In json mode an object is returned with page names as keys, values as search result information - sorted in ranking order.
 		 */
 		
 		/*
@@ -3721,6 +3726,20 @@ register_module([
 			$invindex = search::load_invindex($paths->searchindex);
 			$results = search::query_invindex($_GET["query"], $invindex);
 			$resultCount = count($results);
+			
+			foreach($results as &$result) {
+				$result["context"] = search::extract_context(
+					$_GET["query"],
+					file_get_contents($env->storage_prefix . $result["pagename"] . ".md")
+				);
+			}
+			
+			if(!empty($_GET["format"]) && $_GET["format"] == "json") {
+				header("content-type: application/json");
+				$json_results = new stdClass();
+				foreach($results as $result) $json_results->{$result["pagename"]} = $result;
+				exit(json_encode($json_results));
+			}
 
 			$env->perfdata->search_time = round((microtime(true) - $search_start)*1000, 3);
 
@@ -3788,7 +3807,7 @@ register_module([
 				$pagesource = file_get_contents($env->storage_prefix . $result["pagename"] . ".md");
 				
 				//echo("Extracting context for result " . $result["pagename"] . ".\n");
-				$context = search::extract_context($_GET["query"], $pagesource);
+				$context = $result["context"];
 				if(strlen($context) === 0)
 					$context = substr($pagesource, 0, $settings->search_characters_context * 2);
 				//echo("'Generated search context for " . $result["pagename"] . ": $context'\n");
@@ -3914,7 +3933,7 @@ register_module([
 		
 		
 		/**
-		 * @api {get} ?action=suggest-pages[&type={type}]	Get search suggestions for a query
+		 * @api {get} ?action=suggest-pages[&type={type}]	Get page name suggestions for a query
 		 * @apiName OpenSearchDescription
 		 * @apiGroup Search
 		 * @apiPermission Anonymous

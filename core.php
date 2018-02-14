@@ -125,8 +125,11 @@ if($env->is_logged_in)
 // APIDoc strings //
 ////////////////////
 /**
- * @apiDefine Moderator	Only users loggged with a moderator account may use this call.
+ * @apiDefine Admin	Only the wiki administrator may use this call.
  */
+ /**
+  * @apiDefine Moderator	Only users loggged with a moderator account may use this call.
+  */
 /**
 * @apiDefine User		Only users loggged in may use this call.
 */
