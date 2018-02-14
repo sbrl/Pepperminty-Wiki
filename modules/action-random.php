@@ -8,12 +8,12 @@ register_module([
 	"code" => function() {
 		global $settings;
 		/**
-		 * @api {get} ?action=random[&mode={mode}] Redirects to a random page.
-		 * @apiName RawSource
+		 * @api {get} ?action=random[&mode={modeName}] Redirects to a random page
+		 * @apiName Random
 		 * @apiGroup Page
 		 * @apiPermission Anonymous
 		 *
-		 * @apiParam	{string}	mode	The view mode to redirect to. This parameter is basically just passed through to the direct - it works in the same way as the mode parameter on the _view_ action does.
+		 * @apiParam	{string}	mode	The view mode to redirect to. This parameter is basically just passed through to the direct. It works in the same way as the mode parameter on the view action does.
 		 */
 		
 		add_action("random", function() {
