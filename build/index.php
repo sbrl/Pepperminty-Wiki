@@ -3810,10 +3810,13 @@ register_module([
 				
 				//echo("Extracting context for result " . $result["pagename"] . ".\n");
 				$context = $result["context"];
-				if(strlen($context) === 0)
-					$context = substr($pagesource, 0, $settings->search_characters_context * 2);
+				if(mb_strlen($context) === 0)
+					$context = mb_substr($pagesource, 0, $settings->search_characters_context * 2);
 				//echo("'Generated search context for " . $result["pagename"] . ": $context'\n");
-				$context = search::highlight_context($_GET["query"], htmlentities($context));
+				$context = search::highlight_context(
+					$_GET["query"],
+					preg_replace('/</u', '&lt;', $context)
+				);
 				/*if(strlen($context) == 0)
 				{
 					$context = search::strip_markup(file_get_contents("$env->page.md", null, null, null, $settings->search_characters_context * 2));
@@ -4143,7 +4146,7 @@ class search
 	 */
 	public static function tokenize($source)
 	{
-		$source = strtolower($source);
+		$source = Normalizer::normalize(strtolower($source), Normalizer::FORM_C);
 		$source = preg_replace('/[\[\]\|\{\}\/]/u', " ", $source);
 		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, PREG_SPLIT_NO_EMPTY);
 	}
@@ -4571,7 +4574,8 @@ class search
 			if(in_array($qterm, static::$stop_words))
 				continue;
 			// From http://stackoverflow.com/a/2483859/1460422
-			$context = preg_replace("/" . str_replace("/", "\/", preg_quote($qterm)) . "/iu", "<strong class='search-term-highlight'>$0</strong>", $context);
+			
+			$context = preg_replace("/" . preg_replace('/\\//u', "\/", preg_quote($qterm)) . "/iu", "<strong class='search-term-highlight'>$0</strong>", $context);
 		}
 		
 		return $context;
