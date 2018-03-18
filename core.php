@@ -910,7 +910,7 @@ class ids
 
 		foreach ($idindex as $id => $entry)
 		{
-			if($entry == $pagename)
+			if(Normalizer::normalize($entry, Normalizer::FORM_C) == Normalizer::normalize($pagename, Normalizer::FORM_C))
 				return $id;
 		}
 		
@@ -942,14 +942,14 @@ class ids
 	 * that the destination name doesn't already exist.
 	 * @package core
 	 * @param	string	$oldpagename	The old page name to move.
-	 * @param	string	$newpagename	The new pagee name to move the old page name to.
+	 * @param	string	$newpagename	The new page name to move the old page name to.
 	 */
 	public static function movepagename($oldpagename, $newpagename)
 	{
 		global $idindex, $paths;
 		
-		$pageid = self::getid($oldpagename);
-		$idindex->$pageid = $newpagename;
+		$pageid = self::getid(Normalizer::normalize($oldpagename, Normalizer::FORM_C));
+		$idindex->$pageid = Normalizer::normalize($newpagename, Normalizer::FORM_C);
 		
 		file_put_contents($paths->idindex, json_encode($idindex));
 	}
@@ -1003,6 +1003,8 @@ class ids
 	protected static function assign($pagename)
 	{
 		global $idindex, $paths;
+		
+		$pagename = Normalizer::normalize($pagename, Normalizer::FORM_C);
 
 		$nextid = count(array_keys(get_object_vars($idindex)));
 		// Increment the generated id until it's unique

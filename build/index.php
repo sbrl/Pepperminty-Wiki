@@ -1286,7 +1286,7 @@ class ids
 
 		foreach ($idindex as $id => $entry)
 		{
-			if($entry == $pagename)
+			if(Normalizer::normalize($entry, Normalizer::FORM_C) == Normalizer::normalize($pagename, Normalizer::FORM_C))
 				return $id;
 		}
 		
@@ -1318,14 +1318,14 @@ class ids
 	 * that the destination name doesn't already exist.
 	 * @package core
 	 * @param	string	$oldpagename	The old page name to move.
-	 * @param	string	$newpagename	The new pagee name to move the old page name to.
+	 * @param	string	$newpagename	The new page name to move the old page name to.
 	 */
 	public static function movepagename($oldpagename, $newpagename)
 	{
 		global $idindex, $paths;
 		
-		$pageid = self::getid($oldpagename);
-		$idindex->$pageid = $newpagename;
+		$pageid = self::getid(Normalizer::normalize($oldpagename, Normalizer::FORM_C));
+		$idindex->$pageid = Normalizer::normalize($newpagename, Normalizer::FORM_C);
 		
 		file_put_contents($paths->idindex, json_encode($idindex));
 	}
@@ -1379,6 +1379,8 @@ class ids
 	protected static function assign($pagename)
 	{
 		global $idindex, $paths;
+		
+		$pagename = Normalizer::normalize($pagename, Normalizer::FORM_C);
 
 		$nextid = count(array_keys(get_object_vars($idindex)));
 		// Increment the generated id until it's unique
@@ -3682,7 +3684,7 @@ register_module([
 		
 		/**
 		 * @api {get} ?action=idindex-show Show the id index
-		 * @apiDescription	Outputs the id index. Useful if you need to verify that it's working as expected.
+		 * @apiDescription	Outputs the id index. Useful if you need to verify that it's working as expected. Output is a json object.
 		 * @apiName			SearchShowIdIndex
 		 * @apiGroup		Search
 		 * @apiPermission	Anonymous
@@ -4142,7 +4144,7 @@ class search
 	public static function tokenize($source)
 	{
 		$source = strtolower($source);
-		$source = str_replace([ '[', ']', '|', '{', '}', '/' ], " ", $source);
+		$source = preg_replace('/[\[\]\|\{\}\/]/u', " ", $source);
 		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, PREG_SPLIT_NO_EMPTY);
 	}
 	
@@ -4154,7 +4156,7 @@ class search
 	 */
 	public static function strip_markup($source)
 	{
-		return str_replace([ "[", "]", "\"", "*", "_", " - ", "`" ], "", $source);
+		return preg_replace('/([\"*_\[\]]| - |`)/u', "", $source);
 	}
 	
 	/**
@@ -4181,7 +4183,7 @@ class search
 		{
 			$page_filename = $env->storage_prefix . $pagedetails->filename;
 			if(!file_exists($page_filename)) {
-				echo("data: [" . ($i + 1) . " / $max] Error: Can't find $page_filename");
+				echo("data: [" . ($i + 1) . " / $max] Error: Can't find $page_filename\n");
 				flush();
 				$missing_files++;
 				continue;
@@ -4497,7 +4499,7 @@ class search
 			return ($a[1] > $b[1]) ? +1 : -1;
 		});
 		
-		$sourceLength = strlen($source);
+		$sourceLength = mb_strlen($source);
 		
 		$contexts = [];
 		$basepos = 0;
@@ -4569,7 +4571,7 @@ class search
 			if(in_array($qterm, static::$stop_words))
 				continue;
 			// From http://stackoverflow.com/a/2483859/1460422
-			$context = preg_replace("/" . str_replace("/", "\/", preg_quote($qterm)) . "/i", "<strong class='search-term-highlight'>$0</strong>", $context);
+			$context = preg_replace("/" . str_replace("/", "\/", preg_quote($qterm)) . "/iu", "<strong class='search-term-highlight'>$0</strong>", $context);
 		}
 		
 		return $context;

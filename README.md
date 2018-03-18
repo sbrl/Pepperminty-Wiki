@@ -71,8 +71,13 @@ A live demo of the latest stable version can be found over at [my website](//sta
 ### Requirements
 - PHP-enabled webserver (must be PHP 7+)
 - PHP session support (for logging in, see [here](https://php.net/manual/en/session.installation.php) for more information)
-- The following PHP extensions: mbstring, imagick (for preview generation), fileinfo (for proper mime type checking of uploaded files), and zip (for compress exports)
-- Write access to own folder (only for editing)
+- The following PHP extensions:
+    - `mbstring`
+    - `imagick` (for preview generation)
+    - `fileinfo` (for proper mime type checking of uploaded files)
+    - `zip` (for compressing exports)
+    - `intl` (for Unicode text normalization when searching and in the id index)
+- Write access to Pepperminty Wiki's own folder (only for editing)
 
 ### Getting your own copy
 Setting up your own copy of Pepperminty Wiki is easy. Since Pepperminty Wiki works on a module based system, all you need to do is choose the modules you want installed, and then configure your new installation so that it fits your needs. There are several ways to do this:

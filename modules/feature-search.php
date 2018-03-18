@@ -544,7 +544,7 @@ class search
 	public static function tokenize($source)
 	{
 		$source = strtolower($source);
-		$source = str_replace([ '[', ']', '|', '{', '}', '/' ], " ", $source);
+		$source = preg_replace('/[\[\]\|\{\}\/]/u', " ", $source);
 		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, PREG_SPLIT_NO_EMPTY);
 	}
 	
@@ -556,7 +556,7 @@ class search
 	 */
 	public static function strip_markup($source)
 	{
-		return str_replace([ "[", "]", "\"", "*", "_", " - ", "`" ], "", $source);
+		return preg_replace('/([\"*_\[\]]| - |`)/u', "", $source);
 	}
 	
 	/**
@@ -583,7 +583,7 @@ class search
 		{
 			$page_filename = $env->storage_prefix . $pagedetails->filename;
 			if(!file_exists($page_filename)) {
-				echo("data: [" . ($i + 1) . " / $max] Error: Can't find $page_filename");
+				echo("data: [" . ($i + 1) . " / $max] Error: Can't find $page_filename\n");
 				flush();
 				$missing_files++;
 				continue;
@@ -899,7 +899,7 @@ class search
 			return ($a[1] > $b[1]) ? +1 : -1;
 		});
 		
-		$sourceLength = strlen($source);
+		$sourceLength = mb_strlen($source);
 		
 		$contexts = [];
 		$basepos = 0;
@@ -971,7 +971,7 @@ class search
 			if(in_array($qterm, static::$stop_words))
 				continue;
 			// From http://stackoverflow.com/a/2483859/1460422
-			$context = preg_replace("/" . str_replace("/", "\/", preg_quote($qterm)) . "/i", "<strong class='search-term-highlight'>$0</strong>", $context);
+			$context = preg_replace("/" . str_replace("/", "\/", preg_quote($qterm)) . "/iu", "<strong class='search-term-highlight'>$0</strong>", $context);
 		}
 		
 		return $context;
