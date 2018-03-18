@@ -14,6 +14,9 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Fixed fetching the size of SVGs in some cases
  - Fixed image captions in some cases (let me know if you still get warnings)
  - Squashed warnings when you do a search with a forward slash (`/`) in your query
+ - Fixed that age-old warning in the search results if you have pages with special characters! I learnt a _lot_ about utf8 whilst fixing this one.... (#114)
+     - You'll need to rebuild your search index for this fix to fully take effect (call the `invindex-rebuild` action as a mod or better)
+ - Normalise utf8 text to avoid duplicate ids and missing search results.
 
 ### Changed
  - Disallow uploads if editing is disabled. Previously files could still be uploaded even if editing was disabled - unless `upload_enabled` was set to `false`.
