@@ -52,7 +52,7 @@ A live demo of the latest stable version can be found over at [my website](//sta
 - Printable page view
 - Customisable theme
 - ~~Basic 'search' bar~~ A full text search engine!
-	- _Dynamic server-side suggestions (coming in v0.13!)_
+	- _Dynamic server-side suggestions (since v0.13!)_
 - (Optional) Sidebar with a tree of all the current pages
 - Tags
 - List of all pages and details
@@ -63,7 +63,8 @@ A live demo of the latest stable version can be found over at [my website](//sta
 	- Simple syntax for including media in a page (explanation on help page)
 - Page protection
 - Simple user settings page (set email address, change password)
-- Threaded page comments
+- Threaded page comments (since v0.14)
+- Statistics system - can be extended with modules (since v0.15)
 - Customisable module based system
 	- Allows you to add or remove features at will
 
