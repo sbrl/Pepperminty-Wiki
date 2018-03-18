@@ -7,6 +7,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - [Rest API] Added support for the `mode` parameter to the `random` action.
  - Fixed various issues with both the module api & the rest api docs.
  - Add json support to the search action :D
+ - Added page moves to the recent changes page (#151).
 
 ### Fixed
  - Properly escaped content of short code box on file pages

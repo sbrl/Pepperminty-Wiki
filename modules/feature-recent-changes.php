@@ -244,10 +244,15 @@ function render_recent_change($rchange)
 			
 			$result .= "<a href='?page=" . rawurlencode($rchange->page) . ($revisionId !== false ? "&revision=$revisionId" : "") . "'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$size_title_display'>($size_display)</span>";
 			break;
-		
+			
 		case "deletion":
 			$resultClasses[] = "deletion";
 			$result .= "$pageDisplayHtml $editorDisplayHtml $timeDisplayHtml";
+			break;
+		
+		case "move":
+			$resultClasses[] = "move";
+			$result .= "$rchange->oldpage &#11106; <a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml";
 			break;
 		
 		case "upload":

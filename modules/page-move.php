@@ -127,6 +127,19 @@ register_module([
 				);
 			}
 			
+			// Add a recent change announcing the move if the recent changes
+			// module is installed
+			if(module_exists("feature-recent-changes"))
+			{
+				add_recent_change([
+					"type" => "move",
+					"timestamp" => time(),
+					"oldpage" => $page,
+					"page" => $new_name,
+					"user" => $env->user
+				]);
+			}
+			
 			// Exit with a nice message
 			exit(page_renderer::render_main("Moving " . htmlentities($env->page), "<p><a href='index.php?page=" . rawurlencode($env->page) . "'>" . htmlentities($env->page) . "</a> has been moved to <a href='index.php?page=" . rawurlencode($new_name) . "'>" . htmlentities($new_name) . "</a> successfully.</p>"));
 		});

@@ -86,7 +86,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds recent changes. Access through the 'recent-changes' action.",
         "id": "feature-recent-changes",
-        "lastupdate": 1505512941,
+        "lastupdate": 1521408644,
         "optional": false
     },
     {
@@ -221,7 +221,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
         "id": "page-move",
-        "lastupdate": 1511449784,
+        "lastupdate": 1521408303,
         "optional": false
     },
     {

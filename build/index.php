@@ -352,6 +352,7 @@ summary { cursor: pointer; }
 .diff-removed { background-color: rgba(255, 96, 96, 0.6); color: rgba(191, 38, 38, 1); }
 
 .newpage::before { content: "N"; margin: 0 0.3em 0 -1em; font-weight: bolder; text-decoration: underline dotted; }
+.move::before { content: "\\1f69a"; font-size: 1.25em; margin: 0 0.1em 0 -1.1em; }
 .upload::before { content: "\\1f845"; margin: 0 0.1em 0 -1.1em; }
 .new-comment::before { content: "\\1f4ac"; margin: 0 0.1em 0 -1.1em; }
 
@@ -3538,10 +3539,15 @@ function render_recent_change($rchange)
 			
 			$result .= "<a href='?page=" . rawurlencode($rchange->page) . ($revisionId !== false ? "&revision=$revisionId" : "") . "'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$size_title_display'>($size_display)</span>";
 			break;
-		
+			
 		case "deletion":
 			$resultClasses[] = "deletion";
 			$result .= "$pageDisplayHtml $editorDisplayHtml $timeDisplayHtml";
+			break;
+		
+		case "move":
+			$resultClasses[] = "move";
+			$result .= "$rchange->oldpage &#11106; <a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml";
 			break;
 		
 		case "upload":
@@ -7470,6 +7476,19 @@ register_module([
 					"$env->storage_prefix$env->page.comments.json",
 					"$env->storage_prefix$new_name.comments.json"
 				);
+			}
+			
+			// Add a recent change announcing the move if the recent changes
+			// module is installed
+			if(module_exists("feature-recent-changes"))
+			{
+				add_recent_change([
+					"type" => "move",
+					"timestamp" => time(),
+					"oldpage" => $page,
+					"page" => $new_name,
+					"user" => $env->user
+				]);
 			}
 			
 			// Exit with a nice message
