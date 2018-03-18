@@ -509,7 +509,7 @@ class search
 	public static function index($source)
 	{
 		$source = html_entity_decode($source, ENT_QUOTES);
-		$source_length = strlen($source);
+		$source_length = mb_strlen($source);
 		
 		$index = [];
 		
@@ -588,7 +588,7 @@ class search
 				$missing_files++;
 				continue;
 			}
-			$pagesource = utf8_encode(file_get_contents($page_filename));
+			$pagesource = Normalizer::normalize(file_get_contents($page_filename), Normalizer::FORM_C);
 			$index = self::index($pagesource);
 			
 			$pageid = ids::getid($pagename);

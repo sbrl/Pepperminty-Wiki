@@ -813,19 +813,19 @@ if(!file_exists($paths->pageindex))
 		
 		// Create a new entry
 		$newentry = new stdClass();
-		$newentry->filename = utf8_encode(substr( // Store the filename, whilst trimming the storage prefix
+		$newentry->filename = substr( // Store the filename, whilst trimming the storage prefix
 			$pagefilename,
-			strlen(preg_replace("/^\.\//i", "", $env->storage_prefix)) // glob_recursive trim the ./ from returned filenames , so we need to as well
-		));
+			mb_strlen(preg_replace("/^\.\//iu", "", $env->storage_prefix)) // glob_recursive trim the ./ from returned filenames , so we need to as well
+		);
 		// Remove the `./` from the beginning if it's still hanging around
 		if(substr($newentry->filename, 0, 2) == "./")
 			$newentry->filename = substr($newentry->filename, 2);
 		$newentry->size = filesize($pagefilename); // Store the page size
 		$newentry->lastmodified = filemtime($pagefilename); // Store the date last modified
 		// Todo find a way to keep the last editor independent of the page index
-		$newentry->lasteditor = utf8_encode("unknown"); // Set the editor to "unknown"
+		$newentry->lasteditor = "unknown"; // Set the editor to "unknown"
 		// Extract the name of the (sub)page without the ".md"
-		$pagekey = utf8_encode(substr($newentry->filename, 0, -3));
+		$pagekey = mb_substr($newentry->filename, 0, -3);
 		
 		if(file_exists($env->storage_prefix . $pagekey) && // If it exists...
 			!is_dir($env->storage_prefix . $pagekey)) // ...and isn't a directory
@@ -1012,7 +1012,7 @@ class ids
 			$nextid++;
 		
 		// Update the id index
-		$idindex->$nextid = utf8_encode($pagename);
+		$idindex->$nextid = $pagename;
 
 		// Save the id index
 		file_put_contents($paths->idindex, json_encode($idindex));

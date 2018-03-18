@@ -424,9 +424,9 @@ DIFFSCRIPT;
 				$pageindex->{$env->page}->size = strlen($_POST["content"]);
 				$pageindex->{$env->page}->lastmodified = time();
 				if($env->is_logged_in)
-					$pageindex->{$env->page}->lasteditor = utf8_encode($env->user);
+					$pageindex->{$env->page}->lasteditor = $env->user;
 				else // TODO: Add an option to record the user's IP here instead
-					$pageindex->{$env->page}->lasteditor = utf8_encode("anonymous");
+					$pageindex->{$env->page}->lasteditor = "anonymous";
 				$pageindex->{$env->page}->tags = $page_tags;
 				
 				// A hack to resave the pagedata if the preprocessors have
