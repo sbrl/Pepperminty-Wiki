@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Search",
-	"version" => "0.6.1",
+	"version" => "0.6.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
@@ -13,6 +13,7 @@ register_module([
 		 * @apiName SearchIndex
 		 * @apiGroup Search
 		 * @apiPermission Anonymous
+		 * @apiDescription For debugging purposes. Be warned - the format could change at any time!
 		 * 
 		 * @apiParam {string}	page	The page to generate a word index page.
 		 */
@@ -83,7 +84,7 @@ register_module([
 		
 		/**
 		 * @api {get} ?action=idindex-show Show the id index
-		 * @apiDescription	Outputs the id index. Useful if you need to verify that it's working as expected.
+		 * @apiDescription	Outputs the id index. Useful if you need to verify that it's working as expected. Output is a json object.
 		 * @apiName			SearchShowIdIndex
 		 * @apiGroup		Search
 		 * @apiPermission	Anonymous
@@ -95,12 +96,13 @@ register_module([
 		});
 		
 		/**
-		 * @api {get} ?action=search&query={text}	Search the wiki for a given query string
+		 * @api {get} ?action=search&query={text}[&format={format}]	Search the wiki for a given query string
 		 * @apiName Search
 		 * @apiGroup Search
 		 * @apiPermission Anonymous
 		 * 
 		 * @apiParam {string}	query	The query string to search for.
+		 * @apiParam {string}	format	Optional. Valid values: html, json. In json mode an object is returned with page names as keys, values as search result information - sorted in ranking order.
 		 */
 		
 		/*
@@ -126,6 +128,20 @@ register_module([
 			$invindex = search::load_invindex($paths->searchindex);
 			$results = search::query_invindex($_GET["query"], $invindex);
 			$resultCount = count($results);
+			
+			foreach($results as &$result) {
+				$result["context"] = search::extract_context(
+					$_GET["query"],
+					file_get_contents($env->storage_prefix . $result["pagename"] . ".md")
+				);
+			}
+			
+			if(!empty($_GET["format"]) && $_GET["format"] == "json") {
+				header("content-type: application/json");
+				$json_results = new stdClass();
+				foreach($results as $result) $json_results->{$result["pagename"]} = $result;
+				exit(json_encode($json_results));
+			}
 
 			$env->perfdata->search_time = round((microtime(true) - $search_start)*1000, 3);
 
@@ -193,11 +209,14 @@ register_module([
 				$pagesource = file_get_contents($env->storage_prefix . $result["pagename"] . ".md");
 				
 				//echo("Extracting context for result " . $result["pagename"] . ".\n");
-				$context = search::extract_context($_GET["query"], $pagesource);
-				if(strlen($context) === 0)
-					$context = substr($pagesource, 0, $settings->search_characters_context * 2);
+				$context = $result["context"];
+				if(mb_strlen($context) === 0)
+					$context = mb_substr($pagesource, 0, $settings->search_characters_context * 2);
 				//echo("'Generated search context for " . $result["pagename"] . ": $context'\n");
-				$context = search::highlight_context($_GET["query"], htmlentities($context));
+				$context = search::highlight_context(
+					$_GET["query"],
+					preg_replace('/</u', '&lt;', $context)
+				);
 				/*if(strlen($context) == 0)
 				{
 					$context = search::strip_markup(file_get_contents("$env->page.md", null, null, null, $settings->search_characters_context * 2));
@@ -319,7 +338,7 @@ register_module([
 		
 		
 		/**
-		 * @api {get} ?action=suggest-pages[&type={type}]	Get search suggestions for a query
+		 * @api {get} ?action=suggest-pages[&type={type}]	Get page name suggestions for a query
 		 * @apiName OpenSearchDescription
 		 * @apiGroup Search
 		 * @apiPermission Anonymous
@@ -493,7 +512,7 @@ class search
 	public static function index($source)
 	{
 		$source = html_entity_decode($source, ENT_QUOTES);
-		$source_length = strlen($source);
+		$source_length = mb_strlen($source);
 		
 		$index = [];
 		
@@ -527,8 +546,8 @@ class search
 	 */
 	public static function tokenize($source)
 	{
-		$source = strtolower($source);
-		$source = str_replace([ '[', ']', '|', '{', '}', '/' ], " ", $source);
+		$source = Normalizer::normalize(strtolower($source), Normalizer::FORM_C);
+		$source = preg_replace('/[\[\]\|\{\}\/]/u', " ", $source);
 		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, PREG_SPLIT_NO_EMPTY);
 	}
 	
@@ -540,7 +559,7 @@ class search
 	 */
 	public static function strip_markup($source)
 	{
-		return str_replace([ "[", "]", "\"", "*", "_", " - ", "`" ], "", $source);
+		return preg_replace('/([\"*_\[\]]| - |`)/u', "", $source);
 	}
 	
 	/**
@@ -567,12 +586,12 @@ class search
 		{
 			$page_filename = $env->storage_prefix . $pagedetails->filename;
 			if(!file_exists($page_filename)) {
-				echo("data: [" . ($i + 1) . " / $max] Error: Can't find $page_filename");
+				echo("data: [" . ($i + 1) . " / $max] Error: Can't find $page_filename\n");
 				flush();
 				$missing_files++;
 				continue;
 			}
-			$pagesource = utf8_encode(file_get_contents($page_filename));
+			$pagesource = Normalizer::normalize(file_get_contents($page_filename), Normalizer::FORM_C);
 			$index = self::index($pagesource);
 			
 			$pageid = ids::getid($pagename);
@@ -883,7 +902,7 @@ class search
 			return ($a[1] > $b[1]) ? +1 : -1;
 		});
 		
-		$sourceLength = strlen($source);
+		$sourceLength = mb_strlen($source);
 		
 		$contexts = [];
 		$basepos = 0;
@@ -955,7 +974,8 @@ class search
 			if(in_array($qterm, static::$stop_words))
 				continue;
 			// From http://stackoverflow.com/a/2483859/1460422
-			$context = preg_replace("/" . str_replace("/", "\/", preg_quote($qterm)) . "/i", "<strong class='search-term-highlight'>$0</strong>", $context);
+			
+			$context = preg_replace("/" . preg_replace('/\\//u', "\/", preg_quote($qterm)) . "/iu", "<strong class='search-term-highlight'>$0</strong>", $context);
 		}
 		
 		return $context;

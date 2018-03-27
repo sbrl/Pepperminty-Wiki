@@ -946,9 +946,14 @@ function system_extension_mime_type($ext) {
  */
 function accept_contains_mime($accept_header, $mime_type)
 {
+	$target_mime = explode("/", $mime_type);
+	
 	$accepted_mimes = explode(",", $accept_header);
 	foreach($accepted_mimes as $accepted_mime) {
-		if(explode(";", $accepted_mime)[0] == $mime_type)
+		$next_mime = explode("/", explode(";", $accepted_mime)[0]);
+		if($next_mime == $mime_type || ($next_mime[0] == "*" && $next_mime[1] == "*"))
+			return true;
+		if($next_mime[1] == "*" && $next_mime[0] == $mime_type[0])
 			return true;
 	}
 	return false;
@@ -2363,12 +2368,11 @@ register_module([
 	"code" => function() {
 		global $settings;
 		/**
-		 * @api {get} ?action=raw&page={pageName} Get the raw source code of a page
-		 * @apiName RawSource
-		 * @apiGroup Page
+		 * @api {get} ?action=status	Get the json-formatted status of this wiki
+		 * @apiName Status
+		 * @apiGroup Stats
 		 * @apiPermission Anonymous
 		 * 
-		 * @apiParam {string}	page	The page to return the source of.
 		 */
 		
 		

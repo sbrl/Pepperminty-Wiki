@@ -646,36 +646,6 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "?action=raw&page={pageName}",
-    "title": "Get the raw source code of a page",
-    "name": "RawSource",
-    "group": "Page",
-    "permission": [
-      {
-        "name": "Anonymous",
-        "title": "Anybody may use this call.",
-        "description": ""
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "page",
-            "description": "<p>The page to return the source of.</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "./modules/api-status.php",
-    "groupTitle": "Page"
-  },
-  {
-    "type": "get",
     "url": "?action=view[&page={pageName}][&revision=rid][&printable=yes][&mode={mode}]",
     "title": "View a page",
     "name": "View",
@@ -923,7 +893,7 @@ define({ "api": [
     "type": "get",
     "url": "?action=idindex-show",
     "title": "Show the id index",
-    "description": "<p>Outputs the id index. Useful if you need to verify that it's working as expected.</p>",
+    "description": "<p>Outputs the id index. Useful if you need to verify that it's working as expected. Output is a json object.</p>",
     "name": "SearchShowIdIndex",
     "group": "Search",
     "permission": [
@@ -1042,6 +1012,23 @@ define({ "api": [
     ],
     "version": "0.0.0",
     "filename": "./modules/feature-recent-changes.php",
+    "groupTitle": "Stats"
+  },
+  {
+    "type": "get",
+    "url": "?action=status",
+    "title": "Get the json-formatted status of this wiki",
+    "name": "Status",
+    "group": "Stats",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "./modules/api-status.php",
     "groupTitle": "Stats"
   },
   {

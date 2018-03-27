@@ -8,12 +8,11 @@ register_module([
 	"code" => function() {
 		global $settings;
 		/**
-		 * @api {get} ?action=raw&page={pageName} Get the raw source code of a page
-		 * @apiName RawSource
-		 * @apiGroup Page
+		 * @api {get} ?action=status	Get the json-formatted status of this wiki
+		 * @apiName Status
+		 * @apiGroup Stats
 		 * @apiPermission Anonymous
 		 * 
-		 * @apiParam {string}	page	The page to return the source of.
 		 */
 		
 		
