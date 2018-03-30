@@ -64,7 +64,7 @@ register_module([
 		 * @apiPermission	Anonymous
 		 * 
 		 * @apiParam	{string}	user		The user name to login with.
-		 * @apiParam	{string}	password	The password to login with.
+		 * @apiParam	{string}	pass		The password to login with.
 		 * @apiParam	{string}	returnto	The URL to redirect to upon a successful login.
 		 *
 		 * @apiError	InvalidCredentialsError	The supplied credentials were invalid. Note that this error is actually a redirect to ?action=login&failed=yes (with the returnto parameter appended if you supplied one)
