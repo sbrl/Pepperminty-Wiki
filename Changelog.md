@@ -20,6 +20,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Normalise utf8 text to avoid duplicate ids and missing search results.
  - Improved handling of mime types in some places in the API.
  - Added `minified` option to `status` action to reduce data usage slightly
+ - [Rest API] Fix `checklogin` action documentation
 
 ### Changed
  - Disallow uploads if editing is disabled. Previously files could still be uploaded even if editing was disabled - unless `upload_enabled` was set to `false`.
