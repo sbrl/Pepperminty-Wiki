@@ -1585,6 +1585,7 @@ if($settings->require_login_view === true && // If this site requires a login in
 {
 	// Redirect the user to the login page
 	http_response_code(307);
+	header("x-login-required: yes");
 	$url = "?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "&required=true";
 	header("location: $url");
 	exit(page_renderer::render("Login required - $settings->sitename", "<p>$settings->sitename requires that you login before you are able to access it.</p>

@@ -23,6 +23,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ### Changed
  - Disallow uploads if editing is disabled. Previously files could still be uploaded even if editing was disabled - unless `upload_enabled` was set to `false`.
+ - Added `x-login-required: yes` header to responses that redirect to the login page for easy detection by machines
 
 ## v0.15.1
 
