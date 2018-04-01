@@ -44,7 +44,7 @@ register_module([
 			exit($minified ? json_encode($result) : json_encode($result, JSON_PRETTY_PRINT) . "\n");
 		});
 		
-		add_help_section("960-api-status", "Wiki Status API", "<p></p>");
+		add_help_section("960-api-status", "Wiki Status API", "<p>$settings->sitename has a <a href='?action=status'>status page</a> that returns some basic information about the current state of the wiki in <a href='http://www.secretgeek.net/json_3mins'>JSON</a>. It can be used as a connection tester - as the Pepperminty Wiki Android app does.</p>");
 	}
 ]);
 
