@@ -64,7 +64,7 @@ register_module([
 		 * @apiPermission	Anonymous
 		 * 
 		 * @apiParam	{string}	user		The user name to login with.
-		 * @apiParam	{string}	password	The password to login with.
+		 * @apiParam	{string}	pass		The password to login with.
 		 * @apiParam	{string}	returnto	The URL to redirect to upon a successful login.
 		 *
 		 * @apiError	InvalidCredentialsError	The supplied credentials were invalid. Note that this error is actually a redirect to ?action=login&failed=yes (with the returnto parameter appended if you supplied one)
@@ -86,21 +86,23 @@ register_module([
 		add_action("checklogin", function() {
 			global $settings, $env;
 			
-			//actually do the login
+			// Actually do the login
 			if(isset($_POST["user"]) and isset($_POST["pass"]))
 			{
-				//the user wants to log in
+				// The user wants to log in
 				$user = $_POST["user"];
 				$pass = $_POST["pass"];
 				if($settings->users->$user->password == hash_password($pass))
 				{
+					// Success! :D
 					$env->is_logged_in = true;
-					$expiretime = time() + 60*60*24*30; //30 days from now
+					$expiretime = time() + 60*60*24*30; // 30 days from now
 					$_SESSION["$settings->sessionprefix-user"] = $user;
 					$_SESSION["$settings->sessionprefix-pass"] = hash_password($pass);
 					$_SESSION["$settings->sessionprefix-expiretime"] = $expiretime;
-					//redirect to wherever the user was going
+					// Redirect to wherever the user was going
 					http_response_code(302);
+					header("x-login-success: yes");
 					if(isset($_GET["returnto"]))
 						header("location: " . $_GET["returnto"]);
 					else
@@ -109,7 +111,9 @@ register_module([
 				}
 				else
 				{
+					// Login failed :-(
 					http_response_code(302);
+					header("x-login-success: no");
 					$nextUrl = "index.php?action=login&failed=yes";
 					if(!empty($_GET["returnto"]))
 						$nextUrl .= "&returnto=" . rawurlencode($_GET["returnto"]);

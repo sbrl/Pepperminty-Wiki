@@ -1962,6 +1962,7 @@ if($settings->require_login_view === true && // If this site requires a login in
 {
 	// Redirect the user to the login page
 	http_response_code(307);
+	header("x-login-required: yes");
 	$url = "?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "&required=true";
 	header("location: $url");
 	exit(page_renderer::render("Login required - $settings->sitename", "<p>$settings->sitename requires that you login before you are able to access it.</p>
@@ -7243,21 +7244,23 @@ register_module([
 		add_action("checklogin", function() {
 			global $settings, $env;
 			
-			//actually do the login
+			// Actually do the login
 			if(isset($_POST["user"]) and isset($_POST["pass"]))
 			{
-				//the user wants to log in
+				// The user wants to log in
 				$user = $_POST["user"];
 				$pass = $_POST["pass"];
 				if($settings->users->$user->password == hash_password($pass))
 				{
+					// Success! :D
 					$env->is_logged_in = true;
-					$expiretime = time() + 60*60*24*30; //30 days from now
+					$expiretime = time() + 60*60*24*30; // 30 days from now
 					$_SESSION["$settings->sessionprefix-user"] = $user;
 					$_SESSION["$settings->sessionprefix-pass"] = hash_password($pass);
 					$_SESSION["$settings->sessionprefix-expiretime"] = $expiretime;
-					//redirect to wherever the user was going
+					// Redirect to wherever the user was going
 					http_response_code(302);
+					header("x-login-success: yes");
 					if(isset($_GET["returnto"]))
 						header("location: " . $_GET["returnto"]);
 					else
@@ -7266,7 +7269,9 @@ register_module([
 				}
 				else
 				{
+					// Login failed :-(
 					http_response_code(302);
+					header("x-login-success: no");
 					$nextUrl = "index.php?action=login&failed=yes";
 					if(!empty($_GET["returnto"]))
 						$nextUrl .= "&returnto=" . rawurlencode($_GET["returnto"]);
