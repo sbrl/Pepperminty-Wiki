@@ -26,7 +26,7 @@ register_module([
 			$credits = [
 				"Code" => [
 					"author" => "Starbeamrainbowlabs",
-					"author_url" => "https://starbeamrmainbowlabs.com/",
+					"author_url" => "https://starbeamrainbowlabs.com/",
 					"thing_url" => "https://github.com/sbrl/Pepprminty-Wiki",
 					"icon" => "https://avatars0.githubusercontent.com/u/9929737?v=3&s=24"
 				],

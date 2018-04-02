@@ -282,7 +282,7 @@ main:not(.printable) { position: relative; z-index: 1000; padding: 2rem 2rem 0.5
 
 blockquote { padding-left: 1em; border-left: 0.2em solid #442772; border-radius: 0.2rem; }
 
-a { cursor: pointer;; }
+a { cursor: pointer; }
 a.redlink:link { color: rgb(230, 7, 7); }
 a.redlink:visited { color: rgb(130, 15, 15); /*#8b1a1a*/ }
 
@@ -2405,7 +2405,7 @@ register_module([
 			exit($minified ? json_encode($result) : json_encode($result, JSON_PRETTY_PRINT) . "\n");
 		});
 		
-		add_help_section("960-api-status", "Wiki Status API", "<p></p>");
+		add_help_section("960-api-status", "Wiki Status API", "<p>$settings->sitename has a <a href='?action=status'>status page</a> that returns some basic information about the current state of the wiki in <a href='http://www.secretgeek.net/json_3mins'>JSON</a>. It can be used as a connection tester - as the Pepperminty Wiki Android app does.</p>");
 	}
 ]);
 
@@ -5831,7 +5831,7 @@ register_module([
 			$credits = [
 				"Code" => [
 					"author" => "Starbeamrainbowlabs",
-					"author_url" => "https://starbeamrmainbowlabs.com/",
+					"author_url" => "https://starbeamrainbowlabs.com/",
 					"thing_url" => "https://github.com/sbrl/Pepprminty-Wiki",
 					"icon" => "https://avatars0.githubusercontent.com/u/9929737?v=3&s=24"
 				],
@@ -7222,7 +7222,7 @@ register_module([
 		 * @apiPermission	Anonymous
 		 * 
 		 * @apiParam	{string}	user		The user name to login with.
-		 * @apiParam	{string}	password	The password to login with.
+		 * @apiParam	{string}	pass		The password to login with.
 		 * @apiParam	{string}	returnto	The URL to redirect to upon a successful login.
 		 *
 		 * @apiError	InvalidCredentialsError	The supplied credentials were invalid. Note that this error is actually a redirect to ?action=login&failed=yes (with the returnto parameter appended if you supplied one)
