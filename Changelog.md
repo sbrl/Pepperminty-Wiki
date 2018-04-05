@@ -20,6 +20,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Normalise utf8 text to avoid duplicate ids and missing search results.
  - Improved handling of mime types in some places in the API.
  - Added `minified` option to `status` action to reduce data usage slightly
+ - Fixed floating images that have captions
  - [Rest API] Fix `checklogin` action documentation
  - Fix link on credits page
 
