@@ -194,7 +194,7 @@ Here's a list of things that I want to add at some point (please feel free to [s
  - A module registry of some sort (ideas welcome!)
  - Image maps (#103)
  - User management for moderators ( + moderator management for the wiki owner) (#127)
- - An app for Android (Sorry, iOS is not practical at the current time. Feel free to make one yourself! I'm happy to help out if you need help with Pepperminty Wiki itself (e.g. making it more machine-readable (#138)) - message on gitter (see above), or open an issue on this repository.)
+ - An app for Android (Sorry, iOS is not practical at the current time. Feel free to make one yourself! I'm happy to help out if you need help with Pepperminty Wiki itself (e.g. making it more machine-readable (#138)) - message on Gitter (see above), or open an issue on this repository.)
  - User watchlists
  - Theme gallery (#5)
  - (See more on the [issue tracker](https://github.com/sbrl/Pepperminty-Wiki/issues)!)
