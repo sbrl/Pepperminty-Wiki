@@ -29,6 +29,9 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Added `x-login-required: yes` header to responses that redirect to the login page for easy detection by machines
  - Added `x-login-success: (yes|no)` header to login responses for easier machine parsing
 
+### Removed
+ - Removed `accept_contains_mime`, as it's both unstable and currently unnecessary. Contributions for a better version are welcome!
+
 ## v0.15.1
 
 ### Added
