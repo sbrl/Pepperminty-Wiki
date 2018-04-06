@@ -41,7 +41,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Provides a basic JSON status action that provices a few useful bits of information for API consumption.",
         "id": "api-status",
-        "lastupdate": 1522689976,
+        "lastupdate": 1523055259,
         "optional": false
     },
     {

@@ -935,29 +935,6 @@ function system_extension_mime_type($ext) {
     $ext = strtolower($ext);
     return isset($types[$ext]) ? $types[$ext] : null;
 }
-/**
- * Figures out whether a given http accepts header contains a
- * specified mime type.
- * @package core
- * @param	string $accept_header	The accept header to search.
- * @param	string $mime_type		The mime type to search for.
- * @return	bool					Whether the specified mime type was found
- * 									in the specified accepts header.
- */
-function accept_contains_mime($accept_header, $mime_type)
-{
-	$target_mime = explode("/", $mime_type);
-	
-	$accepted_mimes = explode(",", $accept_header);
-	foreach($accepted_mimes as $accepted_mime) {
-		$next_mime = explode("/", explode(";", $accepted_mime)[0]);
-		if($next_mime == $mime_type || ($next_mime[0] == "*" && $next_mime[1] == "*"))
-			return true;
-		if($next_mime[1] == "*" && $next_mime[0] == $mime_type[0])
-			return true;
-	}
-	return false;
-}
 
 /**
  * Generates a stack trace.
@@ -2380,14 +2357,6 @@ register_module([
 		
 		add_action("status", function() {
 			global $version, $env, $settings, $actions;
-			
-			// Make sure the client can accept JSON
-			if(!accept_contains_mime($_SERVER["HTTP_ACCEPT"] ?? "application/json", "application/json")) {
-				http_response_code(406);
-				header("content-type: text/plain");
-				
-				exit("Unfortunately, this API is currently only available in application/json at the moment, which you haven't indicated you accept in your http accept header. You said this in your accept header:\n" . $_SERVER["HTTP_ACCEPT"]);
-			}
 			
 			$minified = ($_GET["minified"] ?? "false") == "true";
 			
