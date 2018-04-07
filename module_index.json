@@ -68,7 +68,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
         "id": "feature-guiconfig",
-        "lastupdate": 1499800843,
+        "lastupdate": 1523105202,
         "optional": false
     },
     {
@@ -104,7 +104,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
         "id": "feature-search",
-        "lastupdate": 1521391886,
+        "lastupdate": 1523105081,
         "optional": false
     },
     {
@@ -122,7 +122,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
         "id": "feature-upload",
-        "lastupdate": 1523104505,
+        "lastupdate": 1523104941,
         "optional": false
     },
     {

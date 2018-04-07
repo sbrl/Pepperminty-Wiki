@@ -5,12 +5,12 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ### Added
  - [Rest API] Added support for the `mode` parameter to the `random` action.
- - Fixed various issues with both the module api & the rest api docs.
  - Add json support to the search action :D
  - Added page moves to the recent changes page (#151)
  - Hyperlinked image preview on file pages to the original image (#153)
 
 ### Fixed
+ - Fixed various issues with both the module api & the rest api docs.
  - Properly escaped content of short code box on file pages
  - Display a more meaningful message to a logged in user if editing is disabled
  - Fixed fetching the size of SVGs in some cases
@@ -24,6 +24,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Fixed floating images that have captions
  - [Rest API] Fix `checklogin` action documentation
  - Fix link on credits page
+ - Made rebuild search index progress bar fill completely up when done & neatened up UI placement
 
 ### Changed
  - Disallow uploads if editing is disabled. Previously files could still be uploaded even if editing was disabled - unless `upload_enabled` was set to `false`.

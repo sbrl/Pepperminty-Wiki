@@ -38,9 +38,9 @@ register_module([
 			$content .= "<p>This page lets you configure $settings->sitename's master settings. Please be careful - you can break things easily on this page if you're not careful!</p>\n";
 			$content .= "<h2>Actions</h2>";
 			
-			$content .= "<button class='action-invindex-rebuild'>Rebuild Search Index</button><br />\n";
-			$content .= "<output class='action-invindex-rebuild-latestmessage'></output><br />\n";
+			$content .= "<button class='action-invindex-rebuild'>Rebuild Search Index</button>\n";
 			$content .= "<progress class='action-invindex-rebuild-progress' min='0' max='100' value='0' style='display: none;'></progress><br />\n";
+			$content .= "<output class='action-invindex-rebuild-latestmessage'></output><br />\n";
 			
 			$invindex_rebuild_script = <<<SCRIPT
 window.addEventListener("load", function(event) {
