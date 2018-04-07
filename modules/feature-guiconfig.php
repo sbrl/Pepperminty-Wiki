@@ -38,7 +38,7 @@ register_module([
 			$content .= "<p>This page lets you configure $settings->sitename's master settings. Please be careful - you can break things easily on this page if you're not careful!</p>\n";
 			$content .= "<h2>Actions</h2>";
 			
-			$content .= "<button class='action-invindex-rebuild'>Rebuild Search Index</button>\n";
+			$content .= "<button class='action-invindex-rebuild' title='Rebuilds the index that is consulted when searching the wiki. Hit this button if some pages are not showing up.'>Rebuild Search Index</button>\n";
 			$content .= "<progress class='action-invindex-rebuild-progress' min='0' max='100' value='0' style='display: none;'></progress><br />\n";
 			$content .= "<output class='action-invindex-rebuild-latestmessage'></output><br />\n";
 			

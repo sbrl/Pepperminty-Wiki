@@ -68,7 +68,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
         "id": "feature-guiconfig",
-        "lastupdate": 1523105202,
+        "lastupdate": 1523105460,
         "optional": false
     },
     {
