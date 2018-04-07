@@ -8,6 +8,9 @@
 		<h1><img src="https://starbeamrainbowlabs.com/images/logos/peppermint.png" class="logo" /> <code>peppermint.json</code> Configuration Guide</h1>
 		<p>This page contains a comprehensive guide to all the settings present in <code>peppermint.json</code>. If anything's missing or unclear, please <a href="https://github.com/sbrl/Pepperminty-Wiki/issues/new">open an issue</a>!</p>
 		
+		<p><strong>Current Pepperminty Wiki Version: <?php echo(trim(file_get_contents("version"))); ?></strong></p>
+		<p><small><em>Note that settings added after the last stable release may not be shown on <a href='https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php'>the version on starbeamrainbowlabs.com</a> until the next release.</em></small></p>
+		
 		<h2>Type Legend</h2>
 		<table>
 			<tr>
@@ -96,6 +99,9 @@
 		<link rel="stylesheet" href="//starbeamrainbowlabs.com/theme/basic.css" />
 		<style>
 			body			{ padding: 1rem; color: #442772; background-colour: #eee8f2; } /* syntaxtic gets confused sometimes */
+			
+			h1				{ text-align: center;	}
+			h2				{ margin-top: 2em;	}
 			
 			hr				{ margin: 3em 0;	}
 			table.main		{ width: 100%; table-layout: fixed; border-collapse: collapse;	}
