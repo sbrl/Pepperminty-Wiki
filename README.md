@@ -23,7 +23,7 @@ Developed by Starbeamrainbowlabs (though contributions from others are welcome!)
  - [Configuring](#configuring)
  - [API Reference](#api-reference)
  - [Real World Usage](#real-world-usage)
- - [Todo](#todo)
+ - [Todo and Contributing](#todo)
  - [License](#license)
 
 ## Screenshots and Demo
@@ -131,6 +131,10 @@ I have documented the current API and other things that make Pepperminty Wiki ti
 
 I've also documented Pepperminty Wiki's entire REST API using [apiDoc](http://apidocjs.com/). You can view the docs [here](https://sbrl.github.io/Pepperminty-Wiki/docs/RestApi/).
 
+tldr Quick Links:
+ - [HTTP REST API](https://sbrl.github.io/Pepperminty-Wiki/docs/RestApi/)
+ - [PHP Module API](https://sbrl.github.io/Pepperminty-Wiki/docs/ModuleApi/)
+
 If you do create a module, I'd love to hear about it. Even better, [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls/new)!
 
 ## Real World Usage
@@ -139,18 +143,18 @@ None yet! Contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issue
 ## Todo
 Here's a list of things that I want to add at some point (please feel free to [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls) and help out!).
 
- - Better page history (revert to revision, compare revisions, etc.)
+ - Better page history (revert to revision, compare revisions, etc.) (#78, #79)
  - Intelligent auto-updating system that doesn't wipe your settings / module choices
  - A module registry of some sort (ideas welcome!)
  - Image maps (#103)
  - User management for moderators ( + moderator management for the wiki owner) (#127)
- - An app for Android (Sorry, iOS is not practical at the current time. Feel free to make one yourself! I'm happy to help out if you need help with Pepperminty Wiki itself (e.g. making it more machine-readable (#138)) - message on Gitter (see above), or open an issue on this repository.)
+ - An app for Android (Sorry, iOS is not practical at the current time. Feel free to make one yourself! I'm happy to help out if you need help with Pepperminty Wiki itself (e.g. making it more machine-readable (#138)) - message on Gitter (see above), or open an issue on this repository.) - in progress over [here](https://github.com/sbrl/Pepperminty-Wiki-Client-Android/)!
  - User watchlists
  - Theme gallery (#5)
  - (See more on the [issue tracker](https://github.com/sbrl/Pepperminty-Wiki/issues)!)
  - ...?
 
-Is the feature you want to see not on this list or not implemented yet? [Open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) or [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls)!
+Is the feature you want to see not on this list or not implemented yet? [Open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) or [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls) - contributions welcome!
 
 # License
 Pepperminty Wiki is released under the Mozilla Public License 2.0. The full license text is included in the `LICENSE` file in this repository.
