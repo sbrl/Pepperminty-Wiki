@@ -131,11 +131,11 @@ I have documented the current API and other things that make Pepperminty Wiki ti
 
 I've also documented Pepperminty Wiki's entire REST API using [apiDoc](http://apidocjs.com/). You can view the docs [here](https://sbrl.github.io/Pepperminty-Wiki/docs/RestApi/).
 
-tldr Quick Links:
+If you do create a module, I'd love to hear about it. Even better, [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls/new)!
+
+### Tldr Quick Links:
  - [HTTP REST API](https://sbrl.github.io/Pepperminty-Wiki/docs/RestApi/)
  - [PHP Module API](https://sbrl.github.io/Pepperminty-Wiki/docs/ModuleApi/)
-
-If you do create a module, I'd love to hear about it. Even better, [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls/new)!
 
 ## Real World Usage
 None yet! Contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) and tell me about where you are using Pepperminty Wiki and I'll add you to this section :smiley_cat:
