@@ -15,7 +15,7 @@ register_module([
 			file_put_contents($paths->recentchanges, "[]");
 		
 		/**
-		 * @api {get} ?action=recentchanges[&format={code}] Get a list of recent changes
+		 * @api {get} ?action=recent-changes[&format={code}] Get a list of recent changes
 		 * @apiName RecentChanges
 		 * @apiGroup Stats
 		 * @apiPermission Anonymous
@@ -56,7 +56,7 @@ register_module([
 				case "json":
 					$result = json_encode($recent_changes);
 					header("content-type: application/json");
-					header("content-length: $result");
+					header("content-length: " . strlen($result));
 					exit($result);
 					break;
 			}
