@@ -7,12 +7,6 @@ register_module([
 	"id" => "feature-recent-changes",
 	"code" => function() {
 		global $settings, $env, $paths;
-		/**
-		 * @api {get} ?action=recentchanges Get a list of recent changes
-		 * @apiName RecentChanges
-		 * @apiGroup Stats
-		 * @apiPermission Anonymous
-		 */
 		
 		// Add the recent changes json file to $paths for convenience.
 		$paths->recentchanges = $env->storage_prefix . "recent-changes.json";
@@ -20,6 +14,14 @@ register_module([
 		if(!file_exists($paths->recentchanges))
 			file_put_contents($paths->recentchanges, "[]");
 		
+		/**
+		 * @api {get} ?action=recentchanges[&format={code}] Get a list of recent changes
+		 * @apiName RecentChanges
+		 * @apiGroup Stats
+		 * @apiPermission Anonymous
+		 *
+		 * @apiParam	{string}	format	The format to return the recent changes in. Values: html, json. Default: html.
+		 */
 		/*
 		 * ██████  ███████  ██████ ███████ ███    ██ ████████         
 		 * ██   ██ ██      ██      ██      ████   ██    ██            
@@ -36,21 +38,30 @@ register_module([
 		add_action("recent-changes", function() {
 			global $settings, $paths, $pageindex;
 			
-			$content = "\t\t<h1>Recent Changes</h1>\n";
+			$format = $_GET["format"] ?? "html";
 			
 			$recent_changes = json_decode(file_get_contents($paths->recentchanges));
 			
-			if(count($recent_changes) > 0)
-			{
-				$content .= render_recent_changes($recent_changes);
-			}
-			else
-			{
-				// No changes yet :(
-				$content .= "<p><em>None yet! Try making a few changes and then check back here.</em></p>\n";
+			switch($format) {
+				case "html":
+					$content = "\t\t<h1>Recent Changes</h1>\n";
+					
+					if(count($recent_changes) > 0)
+						$content .= render_recent_changes($recent_changes);
+					else // No changes yet :(
+						$content .= "<p><em>None yet! Try making a few changes and then check back here.</em></p>\n";
+						
+					exit(page_renderer::render("Recent Changes - $settings->sitename", $content));
+					break;
+				case "json":
+					$result = json_encode($recent_changes);
+					header("content-type: application/json");
+					header("content-length: $result");
+					exit($result);
+					break;
 			}
 			
-			exit(page_renderer::render("Recent Changes - $settings->sitename", $content));
+			
 		});
 		
 		register_save_preprocessor(function(&$pageinfo, &$newsource, &$oldsource) {

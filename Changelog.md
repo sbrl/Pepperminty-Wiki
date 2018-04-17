@@ -4,10 +4,11 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ## v0.16-dev
 
 ### Added
- - [Rest API] Added support for the `mode` parameter to the `random` action.
  - Add json support to the search action :D
  - Added page moves to the recent changes page (#151)
  - Hyperlinked image preview on file pages to the original image (#153)
+ - [Rest API] Added support for the `mode` parameter to the `random` action
+ - [Rest API] Added `format` parameter to `recentchanges` action
 
 ### Fixed
  - Fixed various issues with both the module api & the rest api docs.
