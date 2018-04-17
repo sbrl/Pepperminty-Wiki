@@ -2696,6 +2696,48 @@ register_module([
 			
 			exit(page_renderer::render_main("Comment Deleted - $settings->sitename", "<p>The comment with the id <code>" . htmlentities($target_id) . "</code> on the page <em>$env->page</em> has been deleted successfully. <a href='?page=" . rawurlencode($env->page) . "&redirect=no'>Go back</a> to " . htmlentities($env->page) . ".</p>"));
 		});
+		/**
+		 * @api {post} ?action=comments-fetch&page={page_name}	Fetch the comments for a page
+		 * @apiName CommentsFetch
+		 * @apiGroup Comment
+		 * @apiPermission Anonymous
+		 * @apiDescription	Fetches the comments for the specified page. Returns them in a nested JSON structure.
+		 * 
+		 * @apiUse		PageParameter
+		 * @apiError	PageNoteFound	The page to fetch the comments for was not found.
+		 */
+		
+		/*
+ 		 *  ██████  ██████  ███    ███ ███    ███ ███████ ███    ██ ████████
+ 		 * ██      ██    ██ ████  ████ ████  ████ ██      ████   ██    ██
+ 		 * ██      ██    ██ ██ ████ ██ ██ ████ ██ █████   ██ ██  ██    ██ █████
+ 		 * ██      ██    ██ ██  ██  ██ ██  ██  ██ ██      ██  ██ ██    ██
+ 		 *  ██████  ██████  ██      ██ ██      ██ ███████ ██   ████    ██
+ 		 *  
+ 		 * ███████ ███████ ████████  ██████ ██   ██
+ 		 * ██      ██         ██    ██      ██   ██
+ 		 * █████   █████      ██    ██      ███████
+ 		 * ██      ██         ██    ██      ██   ██
+ 		 * ██      ███████    ██     ██████ ██   ██
+		 */
+		add_action("comments-fetch", function() {
+			global $env;
+			
+			$comments_filename = get_comment_filename($env->page);
+			if(!file_exists($comments_filename)) {
+				http_response_code(404);
+				header("content-type: text/plain");
+				exit("Error: No comments file was found for the page '$env->page'.");
+			}
+			
+			$comments_data = json_decode(file_get_contents($comments_filename));
+			
+			$result = json_encode($comments_data);
+			header("content-type: application/json");
+			header("content-length: " . strlen($result));
+			exit($result);
+		});
+		
 		
 		if($env->action == "view") {
 			page_renderer::register_part_preprocessor(function(&$parts) {

@@ -9,6 +9,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Hyperlinked image preview on file pages to the original image (#153)
  - [Rest API] Added support for the `mode` parameter to the `random` action
  - [Rest API] Added `format` parameter to `recentchanges` action
+ - [Rest API] Added `comments-fetch` action to return a page's comments as JSON
 
 ### Fixed
  - Fixed various issues with both the module api & the rest api docs.
