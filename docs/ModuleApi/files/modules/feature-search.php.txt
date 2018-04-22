@@ -588,7 +588,7 @@ class search
 			if(!file_exists($page_filename)) {
 				echo("data: [" . ($i + 1) . " / $max] Error: Can't find $page_filename\n");
 				flush();
-				$missing_files++;
+				$i++; $missing_files++;
 				continue;
 			}
 			$pagesource = Normalizer::normalize(file_get_contents($page_filename), Normalizer::FORM_C);

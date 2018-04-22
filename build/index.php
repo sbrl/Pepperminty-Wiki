@@ -6191,12 +6191,12 @@ register_module([
 			"local_filename" => "diff.min.js",
 			"remote_url" => "https://cdnjs.cloudflare.com/ajax/libs/jsdiff/2.2.2/diff.min.js"
 		]);
-
+		
 		/**
 		 * @api {get} ?action=edit&page={pageName}[&newpage=yes]	Get an editing page
 		 * @apiDescription	Gets an editing page for a given page. If you don't have permission to edit the page in question, a view source pagee is returned instead.
 		 * @apiName			EditPage
-		 * @apiGroup		Page
+		 * @apiGroup		Editing
 		 * @apiPermission	Anonymous
 		 * 
 		 * @apiUse PageParameter
@@ -6316,7 +6316,7 @@ register_module([
 			}
 
 			$content .= "<form method='post' name='edit-form' action='index.php?action=preview-edit&page=" . rawurlencode($env->page) . "' class='editform'>
-					<input type='hidden' name='prev-content-hash' value='" . ((isset($old_pagetext)) ? sha1($old_pagetext) : sha1($pagetext)) . "' />
+					<input type='hidden' name='prev-content-hash' value='" . generate_page_hash(isset($old_pagetext) ? $old_pagetext : $pagetext) . "' />
 					<button class='smartsave-restore' title=\"Only works if you haven't changed the editor's content already!\">Restore Locally Saved Content</button>
 					<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
 					<pre class='fit-text-mirror'></pre>
@@ -6428,10 +6428,70 @@ window.addEventListener("load", function(event) {
 		});
 		
 		/**
+		 * @api {post} ?action=acquire-edit-key&page={pageName}		Acquire an edit key for a page
+		 * @apiDescription	Returns an edit key that can be used to programmatically save an edit to a page. It does _not_ necessarily mean that such an edit will be saved. For example, editing might be disabled, or you might not have permission to save an edit on a particular page.
+		 * @apiName 		AcquireEditKey
+		 * @apiGroup		Editing
+		 * @apiPermission	Anonymous
+		 * 
+		 * @apiUse	PageParameter
+		 * @apiPara	{string}	format	The format ot return the edit key in. Possible values: text, json. Default: text.
+		 */
+		
+		/*
+ 		 *  █████   ██████  ██████  ██    ██ ██ ██████  ███████
+ 		 * ██   ██ ██      ██    ██ ██    ██ ██ ██   ██ ██
+ 		 * ███████ ██      ██    ██ ██    ██ ██ ██████  █████ █████
+ 		 * ██   ██ ██      ██ ▄▄ ██ ██    ██ ██ ██   ██ ██
+ 		 * ██   ██  ██████  ██████   ██████  ██ ██   ██ ███████
+ 		 *                     ▀▀
+ 		 * 
+ 		 * ███████ ██████  ██ ████████
+ 		 * ██      ██   ██ ██    ██
+ 		 * █████   ██   ██ ██    ██ █████
+ 		 * ██      ██   ██ ██    ██
+ 		 * ███████ ██████  ██    ██
+ 		 * 
+ 		 * ██   ██ ███████ ██    ██
+ 		 * ██  ██  ██       ██  ██
+ 		 * █████   █████     ████
+ 		 * ██  ██  ██         ██
+ 		 * ██   ██ ███████    ██
+		 */
+		add_action("acquire-edit-key", function() {
+			global $env;
+			
+			if(!file_exists($env->page_filename)) {
+				http_response_code(404);
+				header("content-type: text/plain");
+				exit("Error: The page '$env->page' couldn't be found.");
+			}
+			
+			$format = $_GET["format"] ?? "text";
+			$page_hash = generate_page_hash(file_get_contents($env->page_filename));
+			
+			switch($format) {
+				case "text":
+					header("content-type: text/plain");
+					exit("$env->page\t$page_hash");
+				case "json":
+					$result = new stdClass();
+					$result->page = $env->page;
+					$result->key = $page_hash;
+					header("content-type: application/json");
+					exit(json_encode($result));
+				default:
+					http_response_code(406);
+					header("content-type: text/plain");
+					exit("Error: The format $format is not currently known. Supported formats: text, json. Default: text.\nThink this is a bug? Open an issue at https://github.com/sbrl/Pepperminty-Wiki/issues/new");
+			}
+		});
+		
+		/**
 		 * @api {post} ?action=save&page={pageName}	Save an edit to a page.
 		 * @apiDescription	Saves an edit to a page. If an edit conflict is encountered, then a conflict resolution page is returned instead.
 		 * @apiName			EditPage
-		 * @apiGroup		Page
+		 * @apiGroup		Editing
 		 * @apiPermission	Anonymous
 		 * 
 		 * @apiUse	PageParameter
@@ -6647,6 +6707,10 @@ DIFFSCRIPT;
 		add_help_section("17-user-pages", "User Pages", "<p>If you are logged in, $settings->sitename allocates you your own user page that only you can edit. On $settings->sitename, user pages are sub-pages of the <a href='?page=" . rawurlencode($settings->user_page_prefix) . "'>" . htmlentities($settings->user_page_prefix) . "</a> page, and each user page can have a nested structure of pages underneath it, just like a normal page. Your user page is located at <a href='?page=" . rawurlencode(get_user_pagename($env->user)) . "'>" . htmlentities(get_user_pagename($env->user)) . "</a>.</p>");
 	}
 ]);
+
+function generate_page_hash($page_data) {
+	return sha1($page_data);
+}
 
 
 

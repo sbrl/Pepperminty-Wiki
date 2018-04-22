@@ -558,29 +558,6 @@ function system_extension_mime_type($ext) {
     $ext = strtolower($ext);
     return isset($types[$ext]) ? $types[$ext] : null;
 }
-/**
- * Figures out whether a given http accepts header contains a
- * specified mime type.
- * @package core
- * @param	string $accept_header	The accept header to search.
- * @param	string $mime_type		The mime type to search for.
- * @return	bool					Whether the specified mime type was found
- * 									in the specified accepts header.
- */
-function accept_contains_mime($accept_header, $mime_type)
-{
-	$target_mime = explode("/", $mime_type);
-	
-	$accepted_mimes = explode(",", $accept_header);
-	foreach($accepted_mimes as $accepted_mime) {
-		$next_mime = explode("/", explode(";", $accepted_mime)[0]);
-		if($next_mime == $mime_type || ($next_mime[0] == "*" && $next_mime[1] == "*"))
-			return true;
-		if($next_mime[1] == "*" && $next_mime[0] == $mime_type[0])
-			return true;
-	}
-	return false;
-}
 
 /**
  * Generates a stack trace.
@@ -1585,6 +1562,7 @@ if($settings->require_login_view === true && // If this site requires a login in
 {
 	// Redirect the user to the login page
 	http_response_code(307);
+	header("x-login-required: yes");
 	$url = "?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "&required=true";
 	header("location: $url");
 	exit(page_renderer::render("Login required - $settings->sitename", "<p>$settings->sitename requires that you login before you are able to access it.</p>

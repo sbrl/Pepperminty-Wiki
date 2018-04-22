@@ -26,7 +26,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "password",
+            "field": "pass",
             "description": "<p>The password to login with.</p>"
           },
           {
@@ -212,6 +212,189 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "?action=comments-fetch&page={page_name}",
+    "title": "Fetch the comments for a page",
+    "name": "CommentsFetch",
+    "group": "Comment",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "description": "<p>Fetches the comments for the specified page. Returns them in a nested JSON structure.</p>",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "PageNoteFound",
+            "description": "<p>The page to fetch the comments for was not found.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./modules/feature-comments.php",
+    "groupTitle": "Comment",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "page",
+            "description": "<p>The page to operate on.</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "post",
+    "url": "?action=acquire-edit-key&page={pageName}",
+    "title": "Acquire an edit key for a page",
+    "description": "<p>Returns an edit key that can be used to programmatically save an edit to a page. It does <em>not</em> necessarily mean that such an edit will be saved. For example, editing might be disabled, or you might not have permission to save an edit on a particular page.</p>",
+    "name": "AcquireEditKey",
+    "group": "Editing",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "./modules/page-edit.php",
+    "groupTitle": "Editing",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "page",
+            "description": "<p>The page to operate on.</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "get",
+    "url": "?action=edit&page={pageName}[&newpage=yes]",
+    "title": "Get an editing page",
+    "description": "<p>Gets an editing page for a given page. If you don't have permission to edit the page in question, a view source pagee is returned instead.</p>",
+    "name": "EditPage",
+    "group": "Editing",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "newpage",
+            "description": "<p>Set to 'yes' if a new page is being created. Only affects a few bits of text here and there, and the HTTP response code recieved on success from the <code>save</code> action.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "page",
+            "description": "<p>The page to operate on.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./modules/page-edit.php",
+    "groupTitle": "Editing"
+  },
+  {
+    "type": "post",
+    "url": "?action=save&page={pageName}",
+    "title": "Save an edit to a page.",
+    "description": "<p>Saves an edit to a page. If an edit conflict is encountered, then a conflict resolution page is returned instead.</p>",
+    "name": "EditPage",
+    "group": "Editing",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "newpage",
+            "description": "<p>GET only. Set to 'yes' to indicate that this is a new page that is being saved. Only affects the HTTP response code you recieve upon success.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "content",
+            "description": "<p>POST only. The new content to save to the given filename.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "tags",
+            "description": "<p>POST only. A comma-separated list of tags to assign to the current page. Will replace the existing list of tags, if any are present.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "prev-content-hash",
+            "description": "<p>POST only. The hash of the original content before editing. If this hash is found to be different to a hash computed of the currentl saved content, a conflict resolution page will be returned instead of saving the provided content.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "page",
+            "description": "<p>The page to operate on.</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "UnsufficientPermissionError",
+            "description": "<p>You don't currently have sufficient permissions to save an edit.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./modules/page-edit.php",
+    "groupTitle": "Editing"
+  },
+  {
+    "type": "post",
     "url": "?action=preview-edit&page={pageName}[&newpage=yes]",
     "title": "Get a preview of the page",
     "description": "<p>Gets a preview of the current edit state of a given page</p>",
@@ -309,115 +492,6 @@ define({ "api": [
     },
     "version": "0.0.0",
     "filename": "./modules/page-delete.php",
-    "groupTitle": "Page"
-  },
-  {
-    "type": "post",
-    "url": "?action=save&page={pageName}",
-    "title": "Save an edit to a page.",
-    "description": "<p>Saves an edit to a page. If an edit conflict is encountered, then a conflict resolution page is returned instead.</p>",
-    "name": "EditPage",
-    "group": "Page",
-    "permission": [
-      {
-        "name": "Anonymous",
-        "title": "Anybody may use this call.",
-        "description": ""
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "newpage",
-            "description": "<p>GET only. Set to 'yes' to indicate that this is a new page that is being saved. Only affects the HTTP response code you recieve upon success.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "content",
-            "description": "<p>POST only. The new content to save to the given filename.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "tags",
-            "description": "<p>POST only. A comma-separated list of tags to assign to the current page. Will replace the existing list of tags, if any are present.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "prev-content-hash",
-            "description": "<p>POST only. The hash of the original content before editing. If this hash is found to be different to a hash computed of the currentl saved content, a conflict resolution page will be returned instead of saving the provided content.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "page",
-            "description": "<p>The page to operate on.</p>"
-          }
-        ]
-      }
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "UnsufficientPermissionError",
-            "description": "<p>You don't currently have sufficient permissions to save an edit.</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "./modules/page-edit.php",
-    "groupTitle": "Page"
-  },
-  {
-    "type": "get",
-    "url": "?action=edit&page={pageName}[&newpage=yes]",
-    "title": "Get an editing page",
-    "description": "<p>Gets an editing page for a given page. If you don't have permission to edit the page in question, a view source pagee is returned instead.</p>",
-    "name": "EditPage",
-    "group": "Page",
-    "permission": [
-      {
-        "name": "Anonymous",
-        "title": "Anybody may use this call.",
-        "description": ""
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "newpage",
-            "description": "<p>Set to 'yes' if a new page is being created. Only affects a few bits of text here and there, and the HTTP response code recieved on success from the <code>save</code> action.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "page",
-            "description": "<p>The page to operate on.</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "./modules/page-edit.php",
     "groupTitle": "Page"
   },
   {
@@ -999,7 +1073,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "?action=recentchanges",
+    "url": "?action=recent-changes[&format={code}]",
     "title": "Get a list of recent changes",
     "name": "RecentChanges",
     "group": "Stats",
@@ -1010,13 +1084,26 @@ define({ "api": [
         "description": ""
       }
     ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "format",
+            "description": "<p>The format to return the recent changes in. Values: html, json. Default: html.</p>"
+          }
+        ]
+      }
+    },
     "version": "0.0.0",
     "filename": "./modules/feature-recent-changes.php",
     "groupTitle": "Stats"
   },
   {
     "type": "get",
-    "url": "?action=status",
+    "url": "?action=status[&minified=type]",
     "title": "Get the json-formatted status of this wiki",
     "name": "Status",
     "group": "Stats",
@@ -1027,6 +1114,19 @@ define({ "api": [
         "description": ""
       }
     ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "boolean",
+            "optional": false,
+            "field": "Whether",
+            "description": "<p>or not the result should be minified JSON. Default: false</p>"
+          }
+        ]
+      }
+    },
     "version": "0.0.0",
     "filename": "./modules/api-status.php",
     "groupTitle": "Stats"
