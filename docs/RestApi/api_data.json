@@ -324,10 +324,55 @@
   },
   {
     "type": "post",
+    "url": "?action=preview-edit&page={pageName}[&newpage=yes]",
+    "title": "Get a preview of the page",
+    "description": "<p>Gets a preview of the current edit state of a given page</p>",
+    "name": "PreviewPage",
+    "group": "Editing",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "newpage",
+            "description": "<p>Set to 'yes' if a new page is being created.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "preview-edit",
+            "description": "<p>Set to a value to preview an edit of a page.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "page",
+            "description": "<p>The page to operate on.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./modules/page-edit.php",
+    "groupTitle": "Editing"
+  },
+  {
+    "type": "post",
     "url": "?action=save&page={pageName}",
-    "title": "Save an edit to a page.",
+    "title": "Save an edit to a page",
     "description": "<p>Saves an edit to a page. If an edit conflict is encountered, then a conflict resolution page is returned instead.</p>",
-    "name": "EditPage",
+    "name": "SavePage",
     "group": "Editing",
     "permission": [
       {
@@ -385,51 +430,6 @@
             "optional": false,
             "field": "UnsufficientPermissionError",
             "description": "<p>You don't currently have sufficient permissions to save an edit.</p>"
-          }
-        ]
-      }
-    },
-    "version": "0.0.0",
-    "filename": "./modules/page-edit.php",
-    "groupTitle": "Editing"
-  },
-  {
-    "type": "post",
-    "url": "?action=preview-edit&page={pageName}[&newpage=yes]",
-    "title": "Get a preview of the page",
-    "description": "<p>Gets a preview of the current edit state of a given page</p>",
-    "name": "PreviewPage",
-    "group": "Editing",
-    "permission": [
-      {
-        "name": "Anonymous",
-        "title": "Anybody may use this call.",
-        "description": ""
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "newpage",
-            "description": "<p>Set to 'yes' if a new page is being created.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "preview-edit",
-            "description": "<p>Set to a value to preview an edit of a page.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "page",
-            "description": "<p>The page to operate on.</p>"
           }
         ]
       }

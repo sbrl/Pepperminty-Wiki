@@ -311,9 +311,9 @@ window.addEventListener("load", function(event) {
 		});
 		
 		/**
-		 * @api {post} ?action=save&page={pageName}	Save an edit to a page.
+		 * @api {post} ?action=save&page={pageName}	Save an edit to a page
 		 * @apiDescription	Saves an edit to a page. If an edit conflict is encountered, then a conflict resolution page is returned instead.
-		 * @apiName			EditPage
+		 * @apiName			SavePage
 		 * @apiGroup		Editing
 		 * @apiPermission	Anonymous
 		 * 
