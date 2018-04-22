@@ -387,7 +387,7 @@ if($settings->css === "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.16-dev";
-$commit = "121183a7fd298d52fa4d81a30a5f3e084ed66a33";
+$commit = "407d383a12f9db677bbce71cfaaaf49f1a809ee5";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -6518,6 +6518,7 @@ window.addEventListener("load", function(event) {
 			
 			if(!$settings->editing)
 			{
+				header("x-failure-reason: editing-disabled");
 				header("location: index.php?page=" . rawurlencode($env->page));
 				exit(page_renderer::render_main("Error saving edit", "<p>Editing is currently disabled on this wiki.</p>"));
 			}
@@ -6525,6 +6526,7 @@ window.addEventListener("load", function(event) {
 			{
 				http_response_code(403);
 				header("refresh: 5; url=index.php?page=" . rawurlencode($env->page));
+				header("x-login-required: yes");
 				exit("You are not logged in, so you are not allowed to save pages on $settings->sitename. Redirecting in 5 seconds....");
 			}
 			if((
@@ -6618,6 +6620,7 @@ DIFFSCRIPT;
 					$content .= "\n<script src='diff.min.js'></script>
 					<script>$diffScript</script>\n";
 					
+					header("x-failure-reason: edit-conflict");
 					exit(page_renderer::render_main("Edit Conflict - $env->page - $settings->sitename", $content));
 				}
 			}
@@ -6696,6 +6699,7 @@ DIFFSCRIPT;
 			}
 			else
 			{
+				header("x-failure-reason: server-error");
 				http_response_code(507);
 				exit(page_renderer::render_main("Error saving page - $settings->sitename", "<p>$settings->sitename failed to write your changes to the server's disk. Your changes have not been saved, but you might be able to recover your edit by pressing the back button in your browser.</p>
 				<p>Please tell the administrator of this wiki (" . $settings->admindetails_name . ") about this problem.</p>"));

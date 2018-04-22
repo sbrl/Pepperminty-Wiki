@@ -12,6 +12,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - [Rest API] Added `format` parameter to `recentchanges` action
  - [Rest API] Added `comments-fetch` action to return a page's comments as JSON
  - [Rest API] Added `acquire-edit-key` action to allow scripts and other automated services (e.g. bots and [mobile apps](https://github.com/sbrl/Pepperminty-Wiki-Client-Android)) to fetch an edit key for a specified page name.
+ - [Rest API] Added extra headers to `save` action on failure to aid identification by automated services
 
 ### Fixed
  - Fixed various issues with both the module api & the rest api docs.
