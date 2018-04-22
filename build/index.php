@@ -387,6 +387,7 @@ if($settings->css === "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.16-dev";
+$commit = "121183a7fd298d52fa4d81a30a5f3e084ed66a33";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -1771,7 +1772,7 @@ class page_renderer
 							if(module_exists("feature-user-preferences")) {
 								$result .= "<a href='?action=user-preferences'>$settings->user_preferences_button_text</a>";
 							}
-							$result .= " <a href='?page=" . rawurlencode("$settings->user_page_prefix/$env->user") . "'>" . self::render_username($env->user) . "</a>";
+							$result .= self::render_username($env->user);
 							$result .= " <small>(<a href='index.php?action=logout'>Logout</a>)</small>";
 							$result .= "</span>";
 							//$result .= page_renderer::$nav_divider;
@@ -3008,7 +3009,7 @@ register_module([
 		 *  ██████  ██████  ██   ████ ██      ██  ██████   ██████  ██   ██ ███████
  	 	 */
 		add_action("configure", function() {
-			global $settings, $env, $guiConfig;
+			global $settings, $env, $guiConfig, $version, $commit;
 			
 			if(!$env->is_admin)
 			{
@@ -3022,6 +3023,7 @@ register_module([
 			
 			$content = "<h1>Master Control Panel</h1>\n";
 			$content .= "<p>This page lets you configure $settings->sitename's master settings. Please be careful - you can break things easily on this page if you're not careful!</p>\n";
+			$content .= "<p>You're currently running Pepperminty WIki $version+" . substr($commit, 0, 7) . ".</p>\n";
 			$content .= "<h2>Actions</h2>";
 			
 			$content .= "<button class='action-invindex-rebuild' title='Rebuilds the index that is consulted when searching the wiki. Hit this button if some pages are not showing up.'>Rebuild Search Index</button>\n";
@@ -6004,7 +6006,7 @@ register_module([
 		 * ██████  ███████ ██████   ██████   ██████
 		*/
 		add_action("debug", function() {
-			global $settings, $env, $paths, $version;
+			global $settings, $env, $paths, $version, $commit;
 			header("content-type: text/plain");
 			
 			if(!$env->is_admin)
@@ -6015,7 +6017,7 @@ register_module([
 			$title = "$settings->sitename debug report";
 			echo("$title\n");
 			echo(str_repeat("=", strlen($title)) . "\n");
-			echo("Powered by Pepperminty Wiki version $version.\n");
+			echo("Powered by Pepperminty Wiki version $version+" . substr($commit, 0, 7) . ".\n");
 			echo("This report may contain personal information.\n\n");
 			echo("Environment: ");
 			echo(var_export($env, true));
@@ -6488,9 +6490,9 @@ window.addEventListener("load", function(event) {
 		});
 		
 		/**
-		 * @api {post} ?action=save&page={pageName}	Save an edit to a page.
+		 * @api {post} ?action=save&page={pageName}	Save an edit to a page
 		 * @apiDescription	Saves an edit to a page. If an edit conflict is encountered, then a conflict resolution page is returned instead.
-		 * @apiName			EditPage
+		 * @apiName			SavePage
 		 * @apiGroup		Editing
 		 * @apiPermission	Anonymous
 		 * 

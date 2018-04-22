@@ -7,6 +7,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Add json support to the search action :D
  - Added page moves to the recent changes page (#151)
  - Hyperlinked image preview on file pages to the original image (#153)
+ - Added the commit hash Pepperminty Wiki was built against to the master settings configuration page, and the debug action
  - [Rest API] Added support for the `mode` parameter to the `random` action
  - [Rest API] Added `format` parameter to `recentchanges` action
  - [Rest API] Added `comments-fetch` action to return a page's comments as JSON

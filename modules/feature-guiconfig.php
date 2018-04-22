@@ -22,7 +22,7 @@ register_module([
 		 *  ██████  ██████  ██   ████ ██      ██  ██████   ██████  ██   ██ ███████
  	 	 */
 		add_action("configure", function() {
-			global $settings, $env, $guiConfig;
+			global $settings, $env, $guiConfig, $version, $commit;
 			
 			if(!$env->is_admin)
 			{
@@ -36,6 +36,7 @@ register_module([
 			
 			$content = "<h1>Master Control Panel</h1>\n";
 			$content .= "<p>This page lets you configure $settings->sitename's master settings. Please be careful - you can break things easily on this page if you're not careful!</p>\n";
+			$content .= "<p>You're currently running Pepperminty WIki $version+" . substr($commit, 0, 7) . ".</p>\n";
 			$content .= "<h2>Actions</h2>";
 			
 			$content .= "<button class='action-invindex-rebuild' title='Rebuilds the index that is consulted when searching the wiki. Hit this button if some pages are not showing up.'>Rebuild Search Index</button>\n";
