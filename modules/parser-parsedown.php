@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.9.10",
+	"version" => "0.9.11",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",
@@ -36,24 +36,10 @@ register_module([
 						continue;
 					}
 					$page_content = file_get_contents($env->storage_prefix . $pagedata->filename);
-					preg_match_all("/\[\[([^\]]+)\]\]/", $page_content, $linked_pages);
-					if(count($linked_pages[1]) === 0)
-						continue; // No linked pages here
-					foreach($linked_pages[1] as $linked_page) {
-						// Strip everything after the | and the #
-						if(strpos($linked_page, "|") !== false)
-							$linked_page = substr($linked_page, 0, strpos($linked_page, "|"));
-						if(strpos($linked_page, "#") !== false)
-							$linked_page = substr($linked_page, 0, strpos($linked_page, "#"));
-						if(strlen($linked_page) === 0)
-							continue;
-						// Make sure we try really hard to find this page in the
-						// pageindex
-						if(!empty($pageindex->{ucfirst($linked_page)}))
-							$linked_page = ucfirst($linked_page);
-						else if(!empty($pageindex->{ucwords($linked_page)}))
-							$linked_page = ucwords($linked_page);
-						
+					
+					$page_links = PeppermintParsedown::extract_page_names($page_content);
+					
+					foreach($page_links as $linked_page) {
 						// We're only interested in pages that don't exist
 						if(!empty($pageindex->$linked_page)) continue;
 						
@@ -619,6 +605,41 @@ class PeppermintParsedown extends ParsedownExtra
 			}
 			return $result;
 		}
+	}
+	
+	# ~
+	# Static Methods
+	# ~
+	
+	public static function extract_page_names($page_text) {
+		global $pageindex;
+		preg_match_all("/\[\[([^\]]+)\]\]/", $page_text, $linked_pages);
+		if(count($linked_pages[1]) === 0)
+			return []; // No linked pages here
+		
+		$result = [];
+		foreach($linked_pages[1] as $linked_page) {
+			// Strip everything after the | and the #
+			if(strpos($linked_page, "|") !== false)
+				$linked_page = substr($linked_page, 0, strpos($linked_page, "|"));
+			if(strpos($linked_page, "#") !== false)
+				$linked_page = substr($linked_page, 0, strpos($linked_page, "#"));
+			if(strlen($linked_page) === 0)
+				continue;
+			// Make sure we try really hard to find this page in the
+			// pageindex
+			$altered_linked_page = $linked_page;
+			if(!empty($pageindex->{ucfirst($linked_page)}))
+				$altered_linked_page = ucfirst($linked_page);
+			else if(!empty($pageindex->{ucwords($linked_page)}))
+				$altered_linked_page = ucwords($linked_page);
+			else // Our efforts were in vain, so reset to the original
+				$altered_linked_page = $linked_page;
+			
+			$result[] = $altered_linked_page;
+		}
+		
+		return $result;
 	}
 	
 	# ~
