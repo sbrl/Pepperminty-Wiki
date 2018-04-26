@@ -66,6 +66,54 @@ register_module([
 				return $result;
 			}
 		]);
+		// Wanted pages
+		statistic_add([
+			"id" => "orphan-pages",
+			"name" => "Orphan Pages",
+			"type" => "page",
+			"update" => function($old_stats) {
+				global $pageindex, $env;
+				
+				$result = new stdClass(); // completed, value, state
+				$pages = [];
+				foreach($pageindex as $pagename => $pagedata) {
+					if(!file_exists($env->storage_prefix . $pagedata->filename)) {
+						continue;
+					}
+					$page_content = file_get_contents($env->storage_prefix . $pagedata->filename);
+					
+					$page_links = PeppermintParsedown::extract_page_names($page_content);
+					
+					foreach($page_links as $linked_page) {
+						// We're only interested in pages that exist
+						if(empty($pageindex->$linked_page)) continue;
+						
+						$pages[$linked_page] = true;
+					}
+				}
+				
+				$orphaned_pages = [];
+				foreach($pageindex as $pagename => $page_data) {
+					if(empty($pages[$pagename]))
+						$orphaned_pages[] = $pagename;
+				}
+				
+				rsort($orphaned_pages);
+				
+				$result->value = $orphaned_pages;
+				$result->completed = true;
+				return $result;
+			},
+			"render" => function($stats_data) {
+				$result = "<h2>$stats_data->name</h2>\n";
+				$result .= "<ul class='orphan-pages'>\n";
+				foreach($stats_data->value as $pagename) {
+					$result .= "\t<li>$pagename</li>\n";
+				}
+				$result .= "</ul>\n";
+				return $result;
+			}
+		]);
 		
 		add_help_section("20-parser-default", "Editor Syntax",
 		"<p>$settings->sitename's editor uses an extended version of <a href='http://parsedown.org/'>Parsedown</a> to render pages, which is a fantastic open source Github flavoured markdown parser. You can find a quick reference guide on Github flavoured markdown <a href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'>here</a> by <a href='https://github.com/adam-p/'>adam-p</a>, or if you prefer a book <a href='https://www.gitbook.com/book/roachhd/master-markdown/details'>Mastering Markdown</a> by KB is a good read, and free too!</p>

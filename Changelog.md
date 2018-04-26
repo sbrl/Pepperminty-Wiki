@@ -10,6 +10,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Added the commit hash Pepperminty Wiki was built against to the master settings configuration page, and the debug action
  - Added user count statistic
  - Added redirect page count statistic
+ - Add orphan pages statistic
  - [Rest API] Added support for the `mode` parameter to the `random` action
  - [Rest API] Added `format` parameter to `recentchanges` action
  - [Rest API] Added `comments-fetch` action to return a page's comments as JSON
