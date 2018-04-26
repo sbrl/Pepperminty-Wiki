@@ -387,7 +387,7 @@ if($settings->css === "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.16-dev";
-$commit = "0c00cf36316ba33f9acf4013e9ddee02ed4191d4";
+$commit = "c6a3ce16df9886c0135bd8ed36efa3df7cc376a1";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -7992,9 +7992,8 @@ register_module([
 				$result = new stdClass(); // completed, value, state
 				$pages = [];
 				foreach($pageindex as $pagename => $pagedata) {
-					if(!file_exists($env->storage_prefix . $pagedata->filename)) {
+					if(!file_exists($env->storage_prefix . $pagedata->filename))
 						continue;
-					}
 					$page_content = file_get_contents($env->storage_prefix . $pagedata->filename);
 					
 					$page_links = PeppermintParsedown::extract_page_names($page_content);
@@ -8037,9 +8036,8 @@ register_module([
 				$result = new stdClass(); // completed, value, state
 				$pages = [];
 				foreach($pageindex as $pagename => $pagedata) {
-					if(!file_exists($env->storage_prefix . $pagedata->filename)) {
+					if(!file_exists($env->storage_prefix . $pagedata->filename))
 						continue;
-					}
 					$page_content = file_get_contents($env->storage_prefix . $pagedata->filename);
 					
 					$page_links = PeppermintParsedown::extract_page_names($page_content);
@@ -8065,10 +8063,13 @@ register_module([
 				return $result;
 			},
 			"render" => function($stats_data) {
+				global $pageindex;
 				$result = "<h2>$stats_data->name</h2>\n";
+				$result .= "<p><strong>Count:</strong> " . count($stats_data->value) . "</p>\n";
 				$result .= "<ul class='orphan-pages'>\n";
 				foreach($stats_data->value as $pagename) {
-					$result .= "\t<li>$pagename</li>\n";
+					$pagename_display = !empty($pageindex->$pagename->redirect) && $pageindex->$pagename->redirect ? "<em>$pagename</em>" : $pagename;
+					$result .= "\t<li><a href='?page=" . rawurlencode($pagename) . "'>$pagename_display</a></li>\n";
 				}
 				$result .= "</ul>\n";
 				return $result;
