@@ -387,7 +387,7 @@ if($settings->css === "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.16-dev";
-$commit = "3c21f371f680b6db44dc2b145809c49a6c56458e";
+$commit = "6fc44b7404f98907a9f351b92654a0da7305a92e";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -4761,8 +4761,22 @@ register_module([
 		//////////////////////////
 		/// Built-in Statisics ///
 		//////////////////////////
+		
 
-		// The longest pages
+		statistic_add([
+			"id" => "user_count",
+			"name" => "Users",
+			"type" => "scalar",
+			"update" => function($old_stats) {
+				global $settings;
+				
+				$result = new stdClass(); // completed, value, state
+				$result->completed = true;
+				$result->value = count(get_object_vars($settings->users));
+				return $result;
+			}
+		]);
+		
 		statistic_add([
 			"id" => "longest-pages",
 			"name" => "Longest Pages",
@@ -4820,6 +4834,24 @@ register_module([
 				$result->value = 0;
 				foreach($pageindex as $pagename => $pagedata) {
 					if(!empty($pagedata->uploadedfile) && $pagedata->uploadedfile)
+						$result->value++;
+				}
+				return $result;
+			}
+		]);
+
+		statistic_add([
+			"id" => "redirect_count",
+			"name" => "Redirect Pages",
+			"type" => "scalar",
+			"update" => function($old_stats) {
+				global $pageindex;
+				
+				$result = new stdClass(); // completed, value, state
+				$result->completed = true;
+				$result->value = 0;
+				foreach($pageindex as $pagename => $pagedata) {
+					if(!empty($pagedata->redirect) && $pagedata->redirect)
 						$result->value++;
 				}
 				return $result;
@@ -7929,7 +7961,7 @@ register_module([
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.9.10",
+	"version" => "0.9.11",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",

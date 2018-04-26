@@ -137,8 +137,22 @@ register_module([
 		//////////////////////////
 		/// Built-in Statisics ///
 		//////////////////////////
+		
 
-		// The longest pages
+		statistic_add([
+			"id" => "user_count",
+			"name" => "Users",
+			"type" => "scalar",
+			"update" => function($old_stats) {
+				global $settings;
+				
+				$result = new stdClass(); // completed, value, state
+				$result->completed = true;
+				$result->value = count(get_object_vars($settings->users));
+				return $result;
+			}
+		]);
+		
 		statistic_add([
 			"id" => "longest-pages",
 			"name" => "Longest Pages",
@@ -196,6 +210,24 @@ register_module([
 				$result->value = 0;
 				foreach($pageindex as $pagename => $pagedata) {
 					if(!empty($pagedata->uploadedfile) && $pagedata->uploadedfile)
+						$result->value++;
+				}
+				return $result;
+			}
+		]);
+
+		statistic_add([
+			"id" => "redirect_count",
+			"name" => "Redirect Pages",
+			"type" => "scalar",
+			"update" => function($old_stats) {
+				global $pageindex;
+				
+				$result = new stdClass(); // completed, value, state
+				$result->completed = true;
+				$result->value = 0;
+				foreach($pageindex as $pagename => $pagedata) {
+					if(!empty($pagedata->redirect) && $pagedata->redirect)
 						$result->value++;
 				}
 				return $result;
