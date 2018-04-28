@@ -387,7 +387,7 @@ if($settings->css === "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.16-dev";
-$commit = "75d6fbaa5657495c892ba6c489149013fb57a9ed";
+$commit = "de61612b18b88b9a2e91d1bc7b85438221d88762";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -8061,7 +8061,7 @@ register_module([
 						$orphaned_pages[] = $pagename;
 				}
 				
-				rsort($orphaned_pages);
+				sort($orphaned_pages);
 				
 				$result->value = $orphaned_pages;
 				$result->completed = true;

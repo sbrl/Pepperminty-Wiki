@@ -101,7 +101,7 @@ register_module([
 						$orphaned_pages[] = $pagename;
 				}
 				
-				rsort($orphaned_pages);
+				sort($orphaned_pages);
 				
 				$result->value = $orphaned_pages;
 				$result->completed = true;
