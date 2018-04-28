@@ -74,7 +74,7 @@ register_module([
 		statistic_add([
 			"id" => "orphan-pages",
 			"name" => "Orphan Pages",
-			"type" => "page",
+			"type" => "page-list",
 			"update" => function($old_stats) {
 				global $pageindex, $env;
 				
@@ -105,18 +105,6 @@ register_module([
 				
 				$result->value = $orphaned_pages;
 				$result->completed = true;
-				return $result;
-			},
-			"render" => function($stats_data) {
-				global $pageindex;
-				$result = "<h2>$stats_data->name</h2>\n";
-				$result .= "<p><strong>Count:</strong> " . count($stats_data->value) . "</p>\n";
-				$result .= "<ul class='orphan-pages'>\n";
-				foreach($stats_data->value as $pagename) {
-					$pagename_display = !empty($pageindex->$pagename->redirect) && $pageindex->$pagename->redirect ? "<em>$pagename</em>" : $pagename;
-					$result .= "\t<li><a href='?page=" . rawurlencode($pagename) . "'>$pagename_display</a></li>\n";
-				}
-				$result .= "</ul>\n";
 				return $result;
 			}
 		]);

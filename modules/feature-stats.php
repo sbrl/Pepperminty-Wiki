@@ -61,6 +61,7 @@ register_module([
 							$content .= "<p>$settings->sitename doesn't current have the page listing module installed, so HTML rendering of this statistic is currently unavailable. Try <a href='mailto:" . hide_email($settings->admindetails_email) . "'>contacting $settings->admindetails_name</a>, $settings->sitename's administrator and asking then to install the <code>page-list</code> module.</p>";
 							break;
 						}
+						$content .= "<p><strong>Count:</strong> " . count($stats->{$_GET["stat"]}->value) . "</p>\n";
 						$content .= generate_page_list($stats->{$_GET["stat"]}->value);
 						break;
 					
