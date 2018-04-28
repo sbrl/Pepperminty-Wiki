@@ -387,7 +387,7 @@ if($settings->css === "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.16-dev";
-$commit = "72825f87552618c6a7bd99507d3b588652eea1f6";
+$commit = "1f190da2df88cf16caad5fe7f82ea9437c78ff9f";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -4781,7 +4781,7 @@ register_module([
 		statistic_add([
 			"id" => "longest-pages",
 			"name" => "Longest Pages",
-			"type" => "page",
+			"type" => "page-list",
 			"update" => function($old_stats) {
 				global $pageindex;
 				
@@ -4792,7 +4792,7 @@ register_module([
 				}
 				arsort($pages);
 				
-				$result->value = $pages;
+				$result->value = array_keys($pages);
 				$result->completed = true;
 				return $result;
 			},

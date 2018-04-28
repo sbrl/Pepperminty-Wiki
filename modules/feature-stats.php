@@ -157,7 +157,7 @@ register_module([
 		statistic_add([
 			"id" => "longest-pages",
 			"name" => "Longest Pages",
-			"type" => "page",
+			"type" => "page-list",
 			"update" => function($old_stats) {
 				global $pageindex;
 				
@@ -168,19 +168,8 @@ register_module([
 				}
 				arsort($pages);
 				
-				$result->value = $pages;
+				$result->value = array_keys($pages);
 				$result->completed = true;
-				return $result;
-			},
-			"render" => function($stats_data) {
-				$result = "<h2>$stats_data->name</h2>\n";
-				$result .= "<ol class='stats-list longest-pages-list'>\n";
-				$i = 0;
-				foreach($stats_data->value as $pagename => $page_length) {
-					$result .= "\t<li class='stats-item long-page'>$pagename <em>(" . human_filesize($page_length) . ")</em></li>\n";
-					$i++;
-				}
-				$result .= "</ol>\n";
 				return $result;
 			}
 		]);
