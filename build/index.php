@@ -387,7 +387,7 @@ if($settings->css === "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.16-dev";
-$commit = "c6a3ce16df9886c0135bd8ed36efa3df7cc376a1";
+$commit = "75d6fbaa5657495c892ba6c489149013fb57a9ed";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -7981,7 +7981,13 @@ register_module([
 			return $result;
 		});
 		
-		// Wanted pages
+		/*
+ 		 * ███████ ████████  █████  ████████ ██ ███████ ████████ ██  ██████ ███████
+ 		 * ██         ██    ██   ██    ██    ██ ██         ██    ██ ██      ██
+ 		 * ███████    ██    ███████    ██    ██ ███████    ██    ██ ██      ███████
+ 		 *      ██    ██    ██   ██    ██    ██      ██    ██    ██ ██           ██
+ 		 * ███████    ██    ██   ██    ██    ██ ███████    ██    ██  ██████ ███████
+ 		 */
 		statistic_add([
 			"id" => "wanted-pages",
 			"name" => "Wanted Pages",
@@ -8025,7 +8031,6 @@ register_module([
 				return $result;
 			}
 		]);
-		// Wanted pages
 		statistic_add([
 			"id" => "orphan-pages",
 			"name" => "Orphan Pages",
@@ -8072,6 +8077,51 @@ register_module([
 					$result .= "\t<li><a href='?page=" . rawurlencode($pagename) . "'>$pagename_display</a></li>\n";
 				}
 				$result .= "</ul>\n";
+				return $result;
+			}
+		]);
+		statistic_add([
+			"id" => "most-linked-to-pages",
+			"name" => "Most Linked-To Pages",
+			"type" => "page",
+			"update" => function($old_stats) {
+				global $pageindex, $env;
+				
+				$result = new stdClass(); // completed, value, state
+				$pages = [];
+				foreach($pageindex as $pagename => $pagedata) {
+					if(!file_exists($env->storage_prefix . $pagedata->filename))
+						continue;
+					$page_content = file_get_contents($env->storage_prefix . $pagedata->filename);
+					
+					$page_links = PeppermintParsedown::extract_page_names($page_content);
+					
+					foreach($page_links as $linked_page) {
+						// We're only interested in pages that exist
+						if(empty($pageindex->$linked_page)) continue;
+						
+						if(empty($pages[$linked_page]))
+							$pages[$linked_page] = 0;
+						$pages[$linked_page]++;
+					}
+				}
+				
+				arsort($pages);
+				
+				$result->value = $pages;
+				$result->completed = true;
+				return $result;
+			},
+			"render" => function($stats_data) {
+				global $pageindex;
+				$result = "<h2>$stats_data->name</h2>\n";
+				$result .= "<table class='most-linked-to-pages'>\n";
+				$result .= "\t<tr><th>Page Name</th><th>Linking Pages</th></tr>\n";
+				foreach($stats_data->value as $pagename => $link_count) {
+					$pagename_display = !empty($pageindex->$pagename->redirect) && $pageindex->$pagename->redirect ? "<em>$pagename</em>" : $pagename;
+					$result .= "\t<tr><td><a href='?page=" . rawurlencode($pagename) . "'>$pagename_display</a></td><td>$link_count</td></tr>\n";
+				}
+				$result .= "</table>\n";
 				return $result;
 			}
 		]);
