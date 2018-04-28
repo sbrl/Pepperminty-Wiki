@@ -386,8 +386,8 @@ if($settings->css === "auto")
 ////// Do not edit below this line unless you know what you are doing! //////
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
-$version = "v0.16-dev";
-$commit = "1f190da2df88cf16caad5fe7f82ea9437c78ff9f";
+$version = "v0.16-beta1";
+$commit = "d8ee42f5dd5bcd16da77ff991db674e52495439b";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -1456,7 +1456,7 @@ class page_renderer
 		{extra}
 		<footer>
 			<p>{footer-message}</p>
-			<p>Powered by Pepperminty Wiki v0.16-dev, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
+			<p>Powered by Pepperminty Wiki v0.16-beta1, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
 			<p>Your local friendly moderators are {admins-name-list}.</p>
 			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
 		</footer>
@@ -1474,7 +1474,7 @@ class page_renderer
 			<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
 			<p>{footer-message}</p>
 			<p><em>Timed at {generation-date}</em></p>
-			<p><em>Powered by Pepperminty Wiki v0.16-dev.</em></p>
+			<p><em>Powered by Pepperminty Wiki v0.16-beta1.</em></p>
 		</footer>";
 
 	/**
@@ -1552,7 +1552,7 @@ class page_renderer
 			"{body}" => $body_template,
 
 			"{sitename}" => $logo_html,
-			"v0.16-dev" => $version,
+			"v0.16-beta1" => $version,
 			"{favicon-url}" => $settings->favicon,
 			"{header-html}" => self::get_header_html(),
 
@@ -4794,17 +4794,6 @@ register_module([
 				
 				$result->value = array_keys($pages);
 				$result->completed = true;
-				return $result;
-			},
-			"render" => function($stats_data) {
-				$result = "<h2>$stats_data->name</h2>\n";
-				$result .= "<ol class='stats-list longest-pages-list'>\n";
-				$i = 0;
-				foreach($stats_data->value as $pagename => $page_length) {
-					$result .= "\t<li class='stats-item long-page'>$pagename <em>(" . human_filesize($page_length) . ")</em></li>\n";
-					$i++;
-				}
-				$result .= "</ol>\n";
 				return $result;
 			}
 		]);
