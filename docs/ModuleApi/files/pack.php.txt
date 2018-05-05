@@ -40,11 +40,13 @@ $settings = str_replace([ "<?php", "?>" ], "", $settings);
 $core = str_replace([
 	"//{settings}",
 	"{version}",
+	"{commit}",
 	"{guiconfig}",
 	"{default-css}"
 ], [
 	$settings,
 	trim(file_get_contents("version")),
+	exec("git rev-parse HEAD"),
 	trim(file_get_contents("peppermint.guiconfig.json")),
 	trim(file_get_contents("theme_default.css"))
 ], $core);

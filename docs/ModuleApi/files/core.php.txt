@@ -10,6 +10,7 @@ mb_internal_encoding("UTF-8");
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "{version}";
+$commit = "{commit}";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -1394,7 +1395,7 @@ class page_renderer
 							if(module_exists("feature-user-preferences")) {
 								$result .= "<a href='?action=user-preferences'>$settings->user_preferences_button_text</a>";
 							}
-							$result .= " <a href='?page=" . rawurlencode("$settings->user_page_prefix/$env->user") . "'>" . self::render_username($env->user) . "</a>";
+							$result .= self::render_username($env->user);
 							$result .= " <small>(<a href='index.php?action=logout'>Logout</a>)</small>";
 							$result .= "</span>";
 							//$result .= page_renderer::$nav_divider;

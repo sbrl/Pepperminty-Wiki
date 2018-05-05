@@ -61,6 +61,7 @@ register_module([
 							$content .= "<p>$settings->sitename doesn't current have the page listing module installed, so HTML rendering of this statistic is currently unavailable. Try <a href='mailto:" . hide_email($settings->admindetails_email) . "'>contacting $settings->admindetails_name</a>, $settings->sitename's administrator and asking then to install the <code>page-list</code> module.</p>";
 							break;
 						}
+						$content .= "<p><strong>Count:</strong> " . count($stats->{$_GET["stat"]}->value) . "</p>\n";
 						$content .= generate_page_list($stats->{$_GET["stat"]}->value);
 						break;
 					
@@ -137,12 +138,26 @@ register_module([
 		//////////////////////////
 		/// Built-in Statisics ///
 		//////////////////////////
+		
 
-		// The longest pages
+		statistic_add([
+			"id" => "user_count",
+			"name" => "Users",
+			"type" => "scalar",
+			"update" => function($old_stats) {
+				global $settings;
+				
+				$result = new stdClass(); // completed, value, state
+				$result->completed = true;
+				$result->value = count(get_object_vars($settings->users));
+				return $result;
+			}
+		]);
+		
 		statistic_add([
 			"id" => "longest-pages",
 			"name" => "Longest Pages",
-			"type" => "page",
+			"type" => "page-list",
 			"update" => function($old_stats) {
 				global $pageindex;
 				
@@ -153,19 +168,8 @@ register_module([
 				}
 				arsort($pages);
 				
-				$result->value = $pages;
+				$result->value = array_keys($pages);
 				$result->completed = true;
-				return $result;
-			},
-			"render" => function($stats_data) {
-				$result = "<h2>$stats_data->name</h2>\n";
-				$result .= "<ol class='stats-list longest-pages-list'>\n";
-				$i = 0;
-				foreach($stats_data->value as $pagename => $page_length) {
-					$result .= "\t<li class='stats-item long-page'>$pagename <em>(" . human_filesize($page_length) . ")</em></li>\n";
-					$i++;
-				}
-				$result .= "</ol>\n";
 				return $result;
 			}
 		]);
@@ -196,6 +200,24 @@ register_module([
 				$result->value = 0;
 				foreach($pageindex as $pagename => $pagedata) {
 					if(!empty($pagedata->uploadedfile) && $pagedata->uploadedfile)
+						$result->value++;
+				}
+				return $result;
+			}
+		]);
+
+		statistic_add([
+			"id" => "redirect_count",
+			"name" => "Redirect Pages",
+			"type" => "scalar",
+			"update" => function($old_stats) {
+				global $pageindex;
+				
+				$result = new stdClass(); // completed, value, state
+				$result->completed = true;
+				$result->value = 0;
+				foreach($pageindex as $pagename => $pagedata) {
+					if(!empty($pagedata->redirect) && $pagedata->redirect)
 						$result->value++;
 				}
 				return $result;

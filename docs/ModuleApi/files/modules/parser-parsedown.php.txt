@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.9.10",
+	"version" => "0.9.11",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",
@@ -21,7 +21,13 @@ register_module([
 			return $result;
 		});
 		
-		// Wanted pages
+		/*
+ 		 * ███████ ████████  █████  ████████ ██ ███████ ████████ ██  ██████ ███████
+ 		 * ██         ██    ██   ██    ██    ██ ██         ██    ██ ██      ██
+ 		 * ███████    ██    ███████    ██    ██ ███████    ██    ██ ██      ███████
+ 		 *      ██    ██    ██   ██    ██    ██      ██    ██    ██ ██           ██
+ 		 * ███████    ██    ██   ██    ██    ██ ███████    ██    ██  ██████ ███████
+ 		 */
 		statistic_add([
 			"id" => "wanted-pages",
 			"name" => "Wanted Pages",
@@ -32,28 +38,13 @@ register_module([
 				$result = new stdClass(); // completed, value, state
 				$pages = [];
 				foreach($pageindex as $pagename => $pagedata) {
-					if(!file_exists($env->storage_prefix . $pagedata->filename)) {
+					if(!file_exists($env->storage_prefix . $pagedata->filename))
 						continue;
-					}
 					$page_content = file_get_contents($env->storage_prefix . $pagedata->filename);
-					preg_match_all("/\[\[([^\]]+)\]\]/", $page_content, $linked_pages);
-					if(count($linked_pages[1]) === 0)
-						continue; // No linked pages here
-					foreach($linked_pages[1] as $linked_page) {
-						// Strip everything after the | and the #
-						if(strpos($linked_page, "|") !== false)
-							$linked_page = substr($linked_page, 0, strpos($linked_page, "|"));
-						if(strpos($linked_page, "#") !== false)
-							$linked_page = substr($linked_page, 0, strpos($linked_page, "#"));
-						if(strlen($linked_page) === 0)
-							continue;
-						// Make sure we try really hard to find this page in the
-						// pageindex
-						if(!empty($pageindex->{ucfirst($linked_page)}))
-							$linked_page = ucfirst($linked_page);
-						else if(!empty($pageindex->{ucwords($linked_page)}))
-							$linked_page = ucwords($linked_page);
-						
+					
+					$page_links = PeppermintParsedown::extract_page_names($page_content);
+					
+					foreach($page_links as $linked_page) {
 						// We're only interested in pages that don't exist
 						if(!empty($pageindex->$linked_page)) continue;
 						
@@ -75,6 +66,88 @@ register_module([
 				$result .= "\t<tr><th>Page Name</th><th>Linking Pages</th></tr>\n";
 				foreach($stats_data->value as $pagename => $linking_pages) {
 					$result .= "\t<tr><td>$pagename</td><td>$linking_pages</td></tr>\n";
+				}
+				$result .= "</table>\n";
+				return $result;
+			}
+		]);
+		statistic_add([
+			"id" => "orphan-pages",
+			"name" => "Orphan Pages",
+			"type" => "page-list",
+			"update" => function($old_stats) {
+				global $pageindex, $env;
+				
+				$result = new stdClass(); // completed, value, state
+				$pages = [];
+				foreach($pageindex as $pagename => $pagedata) {
+					if(!file_exists($env->storage_prefix . $pagedata->filename))
+						continue;
+					$page_content = file_get_contents($env->storage_prefix . $pagedata->filename);
+					
+					$page_links = PeppermintParsedown::extract_page_names($page_content);
+					
+					foreach($page_links as $linked_page) {
+						// We're only interested in pages that exist
+						if(empty($pageindex->$linked_page)) continue;
+						
+						$pages[$linked_page] = true;
+					}
+				}
+				
+				$orphaned_pages = [];
+				foreach($pageindex as $pagename => $page_data) {
+					if(empty($pages[$pagename]))
+						$orphaned_pages[] = $pagename;
+				}
+				
+				sort($orphaned_pages);
+				
+				$result->value = $orphaned_pages;
+				$result->completed = true;
+				return $result;
+			}
+		]);
+		statistic_add([
+			"id" => "most-linked-to-pages",
+			"name" => "Most Linked-To Pages",
+			"type" => "page",
+			"update" => function($old_stats) {
+				global $pageindex, $env;
+				
+				$result = new stdClass(); // completed, value, state
+				$pages = [];
+				foreach($pageindex as $pagename => $pagedata) {
+					if(!file_exists($env->storage_prefix . $pagedata->filename))
+						continue;
+					$page_content = file_get_contents($env->storage_prefix . $pagedata->filename);
+					
+					$page_links = PeppermintParsedown::extract_page_names($page_content);
+					
+					foreach($page_links as $linked_page) {
+						// We're only interested in pages that exist
+						if(empty($pageindex->$linked_page)) continue;
+						
+						if(empty($pages[$linked_page]))
+							$pages[$linked_page] = 0;
+						$pages[$linked_page]++;
+					}
+				}
+				
+				arsort($pages);
+				
+				$result->value = $pages;
+				$result->completed = true;
+				return $result;
+			},
+			"render" => function($stats_data) {
+				global $pageindex;
+				$result = "<h2>$stats_data->name</h2>\n";
+				$result .= "<table class='most-linked-to-pages'>\n";
+				$result .= "\t<tr><th>Page Name</th><th>Linking Pages</th></tr>\n";
+				foreach($stats_data->value as $pagename => $link_count) {
+					$pagename_display = !empty($pageindex->$pagename->redirect) && $pageindex->$pagename->redirect ? "<em>$pagename</em>" : $pagename;
+					$result .= "\t<tr><td><a href='?page=" . rawurlencode($pagename) . "'>$pagename_display</a></td><td>$link_count</td></tr>\n";
 				}
 				$result .= "</table>\n";
 				return $result;
@@ -619,6 +692,41 @@ class PeppermintParsedown extends ParsedownExtra
 			}
 			return $result;
 		}
+	}
+	
+	# ~
+	# Static Methods
+	# ~
+	
+	public static function extract_page_names($page_text) {
+		global $pageindex;
+		preg_match_all("/\[\[([^\]]+)\]\]/", $page_text, $linked_pages);
+		if(count($linked_pages[1]) === 0)
+			return []; // No linked pages here
+		
+		$result = [];
+		foreach($linked_pages[1] as $linked_page) {
+			// Strip everything after the | and the #
+			if(strpos($linked_page, "|") !== false)
+				$linked_page = substr($linked_page, 0, strpos($linked_page, "|"));
+			if(strpos($linked_page, "#") !== false)
+				$linked_page = substr($linked_page, 0, strpos($linked_page, "#"));
+			if(strlen($linked_page) === 0)
+				continue;
+			// Make sure we try really hard to find this page in the
+			// pageindex
+			$altered_linked_page = $linked_page;
+			if(!empty($pageindex->{ucfirst($linked_page)}))
+				$altered_linked_page = ucfirst($linked_page);
+			else if(!empty($pageindex->{ucwords($linked_page)}))
+				$altered_linked_page = ucwords($linked_page);
+			else // Our efforts were in vain, so reset to the original
+				$altered_linked_page = $linked_page;
+			
+			$result[] = $altered_linked_page;
+		}
+		
+		return $result;
 	}
 	
 	# ~

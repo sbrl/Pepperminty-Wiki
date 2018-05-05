@@ -24,7 +24,7 @@ register_module([
 		 * ██████  ███████ ██████   ██████   ██████
 		*/
 		add_action("debug", function() {
-			global $settings, $env, $paths, $version;
+			global $settings, $env, $paths, $version, $commit;
 			header("content-type: text/plain");
 			
 			if(!$env->is_admin)
@@ -35,7 +35,7 @@ register_module([
 			$title = "$settings->sitename debug report";
 			echo("$title\n");
 			echo(str_repeat("=", strlen($title)) . "\n");
-			echo("Powered by Pepperminty Wiki version $version.\n");
+			echo("Powered by Pepperminty Wiki version $version+" . substr($commit, 0, 7) . ".\n");
 			echo("This report may contain personal information.\n\n");
 			echo("Environment: ");
 			echo(var_export($env, true));
