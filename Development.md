@@ -10,4 +10,5 @@ The following things need to be done to prepare for a release:
  - Make sure that Pepperminty Wiki actually works
  - Bump the version
  - (Stable releases only) Pull down changes to update online downloader at starbeamrainbowlabs.com/labs/peppermint/download.php
+ - Update wikimatrix
  - Write & publish the release
