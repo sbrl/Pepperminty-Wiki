@@ -64,7 +64,4 @@ if($settingsUpgraded)
 $defaultCSS = <<<THEMECSS
 {default-css}
 THEMECSS;
-if($settings->css === "auto")
-	$settings->css = $defaultCSS;
-
 ?>

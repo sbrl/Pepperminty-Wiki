@@ -1,6 +1,12 @@
 # Changelog
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
+## v0.17-dev
+
+## Changed
+ - Password hashing has been overhauled! A totally new-and-different system is being used now, so you'll need to rehash all your passwords.
+ - The `css` setting will now keep a value of auto, even when `peppermint.json` is automatically updated by _Pepperminty Wiki_.
+
 ## v0.16
 _(No changes since v0.16-beta1)_
 

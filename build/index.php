@@ -379,9 +379,6 @@ summary { cursor: pointer; }
 footer { padding: 2rem; }
 /* #ffdb6d #36962c hsl(36, 78%, 80%) hsl(262, 92%, 68%, 0.42) */
 THEMECSS;
-if($settings->css === "auto")
-	$settings->css = $defaultCSS;
-
 
 
 
@@ -390,7 +387,7 @@ if($settings->css === "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "8010770fd444bb81ba8eb78bd10d8067a715c3c3";
+$commit = "41ea63281c23c29c5730cbad90e7f085c59717e8";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -1654,13 +1651,13 @@ class page_renderer
 	 */
 	public static function get_css_as_html()
 	{
-		global $settings;
+		global $settings, $defaultCSS;
 
 		if(preg_match("/^[^\/]*\/\/|^\//", $settings->css))
 			return "<link rel='stylesheet' href='$settings->css' />\n";
 		else
 		{
-			$css = $settings->css;
+			$css = $settings->css == "auto" ? $defaultCSS : $settings->css;
 			if(!empty($settings->optimize_pages))
 			{
 				// CSS Minification ideas by Jean from catswhocode.com
@@ -7429,7 +7426,10 @@ function do_password_hash_code_update() {
 	// There's no point if we're using Argon2i, as it doesn't take a cost
 	if(hash_password_properties()["algorithm"] == PASSWORD_ARGON2I)
 		return;
-	
+		
+	// Skip rechecking if the automatic check has been disabled
+	if($settings->password_cost_time_interval == -1)
+		return;
 	// Skip the recheck if we've done one recently
 	if(isset($settings->password_cost_time_lastcheck) &&
 		time() - $settings->password_cost_time_lastcheck < $settings->password_cost_time_interval)

@@ -1274,13 +1274,13 @@ class page_renderer
 	 */
 	public static function get_css_as_html()
 	{
-		global $settings;
+		global $settings, $defaultCSS;
 
 		if(preg_match("/^[^\/]*\/\/|^\//", $settings->css))
 			return "<link rel='stylesheet' href='$settings->css' />\n";
 		else
 		{
-			$css = $settings->css;
+			$css = $settings->css == "auto" ? $defaultCSS : $settings->css;
 			if(!empty($settings->optimize_pages))
 			{
 				// CSS Minification ideas by Jean from catswhocode.com
