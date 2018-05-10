@@ -6,6 +6,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ## Changed
  - Password hashing has been overhauled! A totally new-and-different system is being used now, so you'll need to rehash all your passwords.
      - The `hash` action supports the new password hashing scheme.
+     - Added `password_cost`, `password_cost_time`, and `password_cost_time_interval` settings
+     - `password_cost` is recalculated automatically every week by default (it keeps track of this via the `password_cost_time_lastcheck` 'setting')
  - The `css` setting will now keep a value of auto, even when `peppermint.json` is automatically updated by _Pepperminty Wiki_.
 
 ## v0.16
