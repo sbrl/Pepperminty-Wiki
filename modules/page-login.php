@@ -95,17 +95,28 @@ register_module([
 				if(password_verify($pass, $settings->users->$user->password))
 				{
 					// Success! :D
+					
+					// Update the environment
+					$env->is_logged_in = true;
+					$env->user = $user;
+					$env->user_data = $settings->users->{$env->user};
+					
 					$new_password_hash = hash_password_update($pass, $settings->users->$user->password);
 					// Update the password hash
 					if($new_password_hash !== null) {
 						$env->user_data->password = $new_password_hash;
-						save_userdata();
+						if(!save_userdata()) {
+							http_response_code(503);
+							exit(page_renderer::render_main("Login Error - $settings->sitename", "<p>Your credentials were correct, but $settings->sitename was unable to log you in as an updated hash of your password couldn't be saved. Updating your password hash to the latest and strongest hashing algorithm is an important part of keeping your account secure.</p>
+							<p>Please contact $settings->admindetails_name, $settings->sitename's adminstrator, for assistance (their email address can be found at the bottom of every page, including this one).</p>"));
+						}
 						error_log("[Pepperminty Wiki] Updated password hash for $user.");
 					}
-					$env->is_logged_in = true;
+					
 					$_SESSION["$settings->sessionprefix-user"] = $user;
-					$_SESSION["$settings->sessionprefix-pass"] = $hashed_pass;
+					$_SESSION["$settings->sessionprefix-pass"] = $new_password_hash ?? hash_password($pass);
 					$_SESSION["$settings->sessionprefix-expiretime"] = time() + 60*60*24*30; // 30 days from now
+					error_log(var_export($_SESSION, true));
 					// Redirect to wherever the user was going
 					http_response_code(302);
 					header("x-login-success: yes");

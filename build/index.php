@@ -60,6 +60,7 @@ $guiConfig = <<<'GUICONFIG'
 	"password_cost": {"type": "number", "description": "The cost to use when hashing passwords.", "default": 12},
 	"password_cost_time": {"type": "number", "description": "The desired number of milliseconds to delay by when hashing passwords. Pepperminty Wiki will automatically update the value of password_cost to take the length of time specified here. If you're using PASSWORD_ARGON2I, then the auto-update will be disabled.", "default": 100},
 	"password_cost_time_interval": {"type": "number", "description": "The interval, in seconds, at which the password cost should be recalculated. Set to -1 to disable. Default: 1 week", "default": 604800},
+	"password_cost_time_lastcheck": {"type": "number", "description": "Pseudo-setting used to keep track of the last recalculation of password_cost. Is updated with the current unix timestamp every time password_cost is recalculated.", "default": 0},
 	"require_login_view": {"type": "checkbox", "description": "Whether to require that users login before they do anything else. Best used with the data_storage_dir option.", "default": false},
 	"data_storage_dir": {"type": "text", "description": "The directory in which to store all files, except the main index.php.", "default": "."},
 	"delayed_indexing_time": {"type": "number", "description": "The amount of time, in seconds, that pages should be blocked from being indexed by search engines after their last edit. Aka delayed indexing.", "default": 0},
@@ -387,7 +388,7 @@ THEMECSS;
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "2a24066d7b21a1e678f2882fc21b9130b9bc9d1a";
+$commit = "98c02f0226e78d648388b96e9138e269215ad1be";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -463,7 +464,7 @@ if(isset($_SESSION[$settings->sessionprefix . "-user"]) and
 	// by the login action
 	$env->user = $_SESSION[$settings->sessionprefix . "-user"];
 	$env->pass = $_SESSION[$settings->sessionprefix . "-pass"];
-	
+	error_log($settings->users->{$env->user}->password . " / $env->pass");
 	if($settings->users->{$env->user}->password == $env->pass)
 	{
 		// The user is logged in
@@ -7368,17 +7369,28 @@ register_module([
 				if(password_verify($pass, $settings->users->$user->password))
 				{
 					// Success! :D
+					
+					// Update the environment
+					$env->is_logged_in = true;
+					$env->user = $user;
+					$env->user_data = $settings->users->{$env->user};
+					
 					$new_password_hash = hash_password_update($pass, $settings->users->$user->password);
 					// Update the password hash
 					if($new_password_hash !== null) {
 						$env->user_data->password = $new_password_hash;
-						save_userdata();
+						if(!save_userdata()) {
+							http_response_code(503);
+							exit(page_renderer::render_main("Login Error - $settings->sitename", "<p>Your credentials were correct, but $settings->sitename was unable to log you in as an updated hash of your password couldn't be saved. Updating your password hash to the latest and strongest hashing algorithm is an important part of keeping your account secure.</p>
+							<p>Please contact $settings->admindetails_name, $settings->sitename's adminstrator, for assistance (their email address can be found at the bottom of every page, including this one).</p>"));
+						}
 						error_log("[Pepperminty Wiki] Updated password hash for $user.");
 					}
-					$env->is_logged_in = true;
+					
 					$_SESSION["$settings->sessionprefix-user"] = $user;
-					$_SESSION["$settings->sessionprefix-pass"] = $hashed_pass;
+					$_SESSION["$settings->sessionprefix-pass"] = $new_password_hash ?? hash_password($pass);
 					$_SESSION["$settings->sessionprefix-expiretime"] = time() + 60*60*24*30; // 30 days from now
+					error_log(var_export($_SESSION, true));
 					// Redirect to wherever the user was going
 					http_response_code(302);
 					header("x-login-success: yes");

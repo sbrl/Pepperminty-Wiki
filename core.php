@@ -86,7 +86,6 @@ if(isset($_SESSION[$settings->sessionprefix . "-user"]) and
 	// by the login action
 	$env->user = $_SESSION[$settings->sessionprefix . "-user"];
 	$env->pass = $_SESSION[$settings->sessionprefix . "-pass"];
-	
 	if($settings->users->{$env->user}->password == $env->pass)
 	{
 		// The user is logged in
