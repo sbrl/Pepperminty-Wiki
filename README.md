@@ -21,6 +21,7 @@ Developed by Starbeamrainbowlabs (though contributions from others are welcome!)
 		 - [Method 3.5: Using the downloader offline](#method-35-using-the-downloader-offline)
 		 - [Method 4: Building your own from source](#method-4-building-your-own-from-source)
  - [Configuring](#configuring)
+     - [User Accounts](#user-accounts)
  - [API Reference](#api-reference)
  - [Real World Usage](#real-world-usage)
  - [Todo and Contributing](#todo)
@@ -119,12 +120,25 @@ These commands are also in `build.sh`. You can run that if you want. Here's an e
 ## Configuring
 To configure your new install, make sure that you've loaded the wiki in your browser at least once. Then open `peppermint.json` in your favourite text editor. If you need any help, just contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new).
 
-Please note that configuration of Pepperminty Wiki will be done through a GUI soon.
+~~Please note that configuration of Pepperminty Wiki will be done through a GUI soon.~~ _Most_ properties are now configurable in a graphical interface! It can be accessed through the _Edit Master Settings_ option in the more menu, or the `configure` action (e.g. `https://wiki.example.com/?action=configure`) if it doesn't appear for you.
 
 The [configuration guide](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php) are all the configuration directives that Pepperminty Wiki (and all the modules included in the repository) understand. It is generated automatically from `peppermint.guiconfig.json`.
 
  - [Configuration Guide](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php)
  - [`peppermint.guiconfig.json`](https://github.com/sbrl/Pepperminty-Wiki/blob/master/peppermint.guiconfig.json))
+
+### User Accounts
+User account details are currently stored as an object in `peppermint.json`, under the `users` special setting. Each user has their own object, in which lies their user data.
+
+While users can change their own passwords and email addresses, you'll inevitably want to add your own users. Here's how:
+
+1. Open `peppermint.json` in your favourite text editor.
+2. Create a new property on the `users` object, whose value is an object and key is the new user's username. Use the existing users for reference.
+3. Hash the new user's password with SHA256, and set it as the `password` parameter on the new user. This can be done in the terminal, online, or with the `hash` action - but make sure you don't leave any traces of your passwords lying around for others to find!
+4. Save `peppermint.json` back to disk.
+
+In the future, user accounts will be manageable through a graphical interface. Follow #127 for updates!
+
 
 ## API Reference
 I have documented the current API and other things that make Pepperminty Wiki tick that you can use to create your own modules. You can find this documentation in the [Module_API_Docs.md](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Module_API_Docs.md) file in this repository.
