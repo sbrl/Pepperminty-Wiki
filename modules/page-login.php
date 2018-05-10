@@ -153,7 +153,10 @@ function do_password_hash_code_update() {
 	// There's no point if we're using Argon2i, as it doesn't take a cost
 	if(hash_password_properties()["algorithm"] == PASSWORD_ARGON2I)
 		return;
-	
+		
+	// Skip rechecking if the automatic check has been disabled
+	if($settings->password_cost_time_interval == -1)
+		return;
 	// Skip the recheck if we've done one recently
 	if(isset($settings->password_cost_time_lastcheck) &&
 		time() - $settings->password_cost_time_lastcheck < $settings->password_cost_time_interval)
