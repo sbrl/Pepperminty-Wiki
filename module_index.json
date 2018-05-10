@@ -1,11 +1,11 @@
 [
     {
         "name": "Password hashing action",
-        "version": "0.6",
+        "version": "0.7",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a utility action (that anyone can use) called hash that hashes a given string. Useful when changing a user's password.",
         "id": "action-hash",
-        "lastupdate": 1465757909,
+        "lastupdate": 1525991817,
         "optional": false
     },
     {

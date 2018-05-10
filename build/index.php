@@ -387,7 +387,7 @@ THEMECSS;
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "41ea63281c23c29c5730cbad90e7f085c59717e8";
+$commit = "2a24066d7b21a1e678f2882fc21b9130b9bc9d1a";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -2136,7 +2136,7 @@ function has_statistic($stat_id) {
 
 register_module([
 	"name" => "Password hashing action",
-	"version" => "0.6",
+	"version" => "0.7",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a utility action (that anyone can use) called hash that hashes a given string. Useful when changing a user's password.",
 	"id" => "action-hash",
@@ -2176,7 +2176,7 @@ register_module([
 			}
 			else
 			{
-				exit(page_renderer::render_main("Hashed string", "<p>Algorithm: " . ($settings->use_sha3 ? "sha3" : "sha256") . "</p>\n<p><code>" . $_GET["string"] . "</code> → <code>" . hash_password($_GET["string"]) . "</code></p>"));
+				exit(page_renderer::render_main("Hashed string", "<p>Algorithm: <code>$settings->password_algorithm</code></p>\n<p><code>" . $_GET["string"] . "</code> → <code>" . hash_password($_GET["string"]) . "</code></p>"));
 			}
 		});
 	}

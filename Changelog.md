@@ -5,6 +5,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## Changed
  - Password hashing has been overhauled! A totally new-and-different system is being used now, so you'll need to rehash all your passwords.
+     - The `hash` action supports the new password hashing scheme.
  - The `css` setting will now keep a value of auto, even when `peppermint.json` is automatically updated by _Pepperminty Wiki_.
 
 ## v0.16
