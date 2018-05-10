@@ -19,21 +19,24 @@
 	"parser": {"type": "text", "description": "The parser to use when rendering pages. Defaults to an extended version of parsedown (http://parsedown.org/)", "default": "parsedown"},
 	"clean_raw_html": {"type": "checkbox", "description": "Whether page sources should be cleaned of HTML before rendering. It is STRONGLY recommended that you keep this option turned on.", "default": true},
 	"enable_math_rendering": {"type": "checkbox", "description": "Whether to enable client side rendering of mathematical expressions with MathJax (https://www.mathjax.org/). Math expressions should be enclosed inside of dollar signs ($). Turn off if you don't use it.", "default": true},
-	"users": {"type": "usertable", "description": "An array of usernames and passwords - passwords should be hashed with sha256 (or sha3 if you have that option turned on)", "default": {
+	"users": {"type": "usertable", "description": "An array of usernames and passwords - passwords should be hashed with password_hash() (the hash action can help here)", "default": {
 		"admin": {
 			"email": "admin@somewhere.com",
-			"password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
+			"password": "$2y$11$HBk1sh9MGVSM.vM.hZTnBOxk8sJi6PhyN/DRZUy8z845F1wQ4tudS"
 		},
 		"user": {
 			"email": "example@example.net",
-			"password": "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34"
+			"password": "$2y$11$DrRmOVRfW0yyYD26JQkiluicOfluGoEgHgKJ7imPDicWABhowP9Fi"
 		}
 	}},
 	"admins": {"type": "array", "description": "An array of usernames that are administrators. Administrators can delete and move pages.", "default": [ "admin" ]},
 	"anonymous_user_name": { "type": "text", "description": "The default name for anonymous users.", "default": "Anonymous" },
 	"user_page_prefix": { "type": "text", "description": "The prefix for user pages. All user pages will be considered to be under this page. User pages have special editing restrictions that prevent anyone other thant he user they belong to from editing them. Should not include the trailing forward slash.", "default": "Users" },
 	"user_preferences_button_text": { "type": "text", "description": "The text to display on the button that lets logged in users change their settings. Defaults to a cog (aka a 'gear' in unicode-land).", "default": "&#x2699; " },
-	"use_sha3": {"type": "checkbox", "description": "Whether to use the new sha3 hashing algorithm for passwords etc.", "default": false },
+	"password_algorithm": {"type": "text", "description": "The algorithm to utilise when hashing passwords. Takes any value PHP's password_hash() does.", "default": "PASSWORD_DEFAULT"},
+	"password_cost": {"type": "number", "description": "The cost to use when hashing passwords.", "default": 12},
+	"password_cost_time": {"type": "number", "description": "The desired number of milliseconds to delay by when hashing passwords. Pepperminty Wiki will automatically update the value of password_cost to take the length of time specified here. If you're using PASSWORD_ARGON2I, then the auto-update will be disabled.", "default": 100},
+	"password_cost_time_interval": {"type": "number", "description": "The interval, in seconds, at which the password cost should be recalculated. Set to -1 to disable. Default: 1 week", "default": 604800},
 	"require_login_view": {"type": "checkbox", "description": "Whether to require that users login before they do anything else. Best used with the data_storage_dir option.", "default": false},
 	"data_storage_dir": {"type": "text", "description": "The directory in which to store all files, except the main index.php.", "default": "."},
 	"delayed_indexing_time": {"type": "number", "description": "The amount of time, in seconds, that pages should be blocked from being indexed by search engines after their last edit. Aka delayed indexing.", "default": 0},

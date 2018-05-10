@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Login",
-	"version" => "0.8.5",
+	"version" => "0.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
@@ -92,14 +92,20 @@ register_module([
 				// The user wants to log in
 				$user = $_POST["user"];
 				$pass = $_POST["pass"];
-				if($settings->users->$user->password == hash_password($pass))
+				if(password_verify($pass, $settings->users->$user->password))
 				{
 					// Success! :D
+					$new_password_hash = hash_password_update($pass, $settings->users->$user->password);
+					// Update the password hash
+					if($new_password_hash !== null) {
+						$env->user_data->password = $new_password_hash;
+						save_userdata();
+						error_log("[Pepperminty Wiki] Updated password hash for $user.");
+					}
 					$env->is_logged_in = true;
-					$expiretime = time() + 60*60*24*30; // 30 days from now
 					$_SESSION["$settings->sessionprefix-user"] = $user;
-					$_SESSION["$settings->sessionprefix-pass"] = hash_password($pass);
-					$_SESSION["$settings->sessionprefix-expiretime"] = $expiretime;
+					$_SESSION["$settings->sessionprefix-pass"] = $hashed_pass;
+					$_SESSION["$settings->sessionprefix-expiretime"] = time() + 60*60*24*30; // 30 days from now
 					// Redirect to wherever the user was going
 					http_response_code(302);
 					header("x-login-success: yes");
@@ -138,6 +144,42 @@ register_module([
 	}
 ]);
 
+function do_password_hash_code_update() {
+	// There's no point if we're using Argon2i, as it doesn't take a cost
+	if(hash_password_properties()["algorithm"] == PASSWORD_ARGON2I)
+		return;
+	
+	// Skip the recheck if we've done one recently
+	if(isset($settings->password_cost_time_lastcheck) &&
+		time() - $settings->password_cost_time_lastcheck < $settings->password_cost_time_interval)
+		return;
+	
+	$new_cost = hash_password_compute_cost();
+	
+	// Save the new cost, but only if it's higher than the old one
+	if($new_cost > $settings->password_hash_cost)
+		$settings->password_hash_cost = $new_cost;
+	// Save the current time in the settings
+	$settings->password_cost_time_lastcheck = time();
+	file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT));
+}
+
+/**
+ * Figures out the appropriate algorithm & options for hashing passwords based 
+ * on the current settings.
+ * @return array The appropriate password hashing algorithm and options.
+ */
+function hash_password_properties() {
+	global $settings;
+	
+	$result = [
+		"algorithm" => constant($settings->password_algorithm),
+		"options" => [ "cost" => $settings->password_hash_cost ]
+	];
+	if(isset(PASSWORD_ARGON2I) && $result["algorithm"] == PASSWORD_ARGON2I)
+		$result["options"] = [];
+	return $result;
+}
 /**
  * Hashes the given password according to the current settings defined
  * in $settings.
@@ -149,15 +191,53 @@ register_module([
  */
 function hash_password($pass)
 {
-	global $settings;
-	if($settings->use_sha3)
-	{
-		return sha3($pass, 256);
-	}
-	else
-	{
-		return hash("sha256", $pass);
-	}
+	$props = hash_password_properties();
+	return password_hash(
+		base64_encode(hash("sha384", $pass)),
+		$props["algorithm"],
+		$props["options"]
+	);
 }
-
-?>
+/**
+ * Determines if the provided password needs re-hashing or not.
+ * @param  string $pass The password to check.
+ * @param  string $hash The hash of the provided password to check.
+ * @return string|null  Returns null if an updaste is not required - otherwise returns the new updated hash.
+ */
+function hash_password_update($pass, $hash) {
+	$props = hash_password_properties();
+	if(password_needs_rehash($hash, $props["algorithm"], $props["options"])) {
+		return hash_password($pass);
+	}
+	return null;
+}
+/**
+ * Computes the appropriate cost value for password_hash based on the settings
+ * automatically.
+ * Starts at 10 and works upwards in increments of 1. Goes on until a value is 
+ * found that's greater than the target - or 10x the target time elapses.
+ * @return integer The automatically calculated password hashing cost.
+ */
+function hash_password_compute_cost() {
+	global $settings;
+	$props = hash_password_properties();
+	if($props["algorithm"] == PASSWORD_ARGON2I)
+		return null;
+	if(!is_int($props["options"]["cost"]))
+		$props["options"]["cost"] = 10;
+	
+	$start = microtime(true);
+	do {
+		$props["options"]["cost"]++;
+		$start_i = microtime(true);
+		password_hash("testing", $props["algorithm"], $props["options"]);
+		$end_i =  microtime(true);
+		// Iterate until we find a cost high enough
+		// ....but don't keep going forever - try for at most 10x the target
+		// time in total (in case the specified algorithm doesn't take a
+		// cost parameter)
+	} while($end_i - $start_i < $settings->password_cost_time &&
+		$end_i - $start < $settings->password_cost_time * 10);
+	
+	return $props["options"]["cost"];
+}

@@ -678,7 +678,7 @@ function render_editor($editorName)
 }
 
 /**
- * Saves the currently logged in uesr's data back to peppermint.json.
+ * Saves the currently logged in user's data back to peppermint.json.
  * @package core
  * @return bool Whether the user's data was saved successfully. Returns false if the user isn't logged in.
  */
