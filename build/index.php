@@ -381,6 +381,13 @@ footer { padding: 2rem; }
 /* #ffdb6d #36962c hsl(36, 78%, 80%) hsl(262, 92%, 68%, 0.42) */
 THEMECSS;
 
+// This will automatically save to peppermint.json if an automatic takes place 
+// for another reason (such as password rehashing or user data updates), but it 
+// doesn't really matter because the site name isn't going to change all that 
+// often, and even if it does it shouldn't matter :P
+if($settings->sessionprefix == "auto")
+	$settings->sessionprefix = "pepperminty-wiki-" . preg_replace('/[^a-z0-9\-_]/', "-", strtolower($settings->sitename));
+
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -388,7 +395,7 @@ THEMECSS;
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "98c02f0226e78d648388b96e9138e269215ad1be";
+$commit = "ae8412ddaf957cdfa6b55b0385093a925ff6a799";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -464,7 +471,6 @@ if(isset($_SESSION[$settings->sessionprefix . "-user"]) and
 	// by the login action
 	$env->user = $_SESSION[$settings->sessionprefix . "-user"];
 	$env->pass = $_SESSION[$settings->sessionprefix . "-pass"];
-	error_log($settings->users->{$env->user}->password . " / $env->pass");
 	if($settings->users->{$env->user}->password == $env->pass)
 	{
 		// The user is logged in
@@ -7376,6 +7382,7 @@ register_module([
 					$env->user_data = $settings->users->{$env->user};
 					
 					$new_password_hash = hash_password_update($pass, $settings->users->$user->password);
+					error_log("$pass / $new_password_hash");
 					// Update the password hash
 					if($new_password_hash !== null) {
 						$env->user_data->password = $new_password_hash;
@@ -7484,6 +7491,7 @@ function hash_password_properties() {
  */
 function hash_password($pass)
 {
+	error_log("hashing '$pass'");
 	$props = hash_password_properties();
 	return password_hash(
 		base64_encode(hash("sha384", $pass)),

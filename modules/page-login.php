@@ -102,6 +102,10 @@ register_module([
 					$env->user_data = $settings->users->{$env->user};
 					
 					$new_password_hash = hash_password_update($pass, $settings->users->$user->password);
+					error_log("$pass / $new_password_hash");
+					// TODO: When rehashing a password automatically, it no longer checks out against password_verify during login
+					// Looks like a bug in hash_password, as it's not letting us in if we calculate it via the has action either
+					
 					// Update the password hash
 					if($new_password_hash !== null) {
 						$env->user_data->password = $new_password_hash;

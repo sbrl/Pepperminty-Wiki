@@ -64,4 +64,11 @@ if($settingsUpgraded)
 $defaultCSS = <<<THEMECSS
 {default-css}
 THEMECSS;
+
+// This will automatically save to peppermint.json if an automatic takes place 
+// for another reason (such as password rehashing or user data updates), but it 
+// doesn't really matter because the site name isn't going to change all that 
+// often, and even if it does it shouldn't matter :P
+if($settings->sessionprefix == "auto")
+	$settings->sessionprefix = "pepperminty-wiki-" . preg_replace('/[^a-z0-9\-_]/', "-", strtolower($settings->sitename));
 ?>
