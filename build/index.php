@@ -42,21 +42,24 @@ $guiConfig = <<<'GUICONFIG'
 	"parser": {"type": "text", "description": "The parser to use when rendering pages. Defaults to an extended version of parsedown (http://parsedown.org/)", "default": "parsedown"},
 	"clean_raw_html": {"type": "checkbox", "description": "Whether page sources should be cleaned of HTML before rendering. It is STRONGLY recommended that you keep this option turned on.", "default": true},
 	"enable_math_rendering": {"type": "checkbox", "description": "Whether to enable client side rendering of mathematical expressions with MathJax (https://www.mathjax.org/). Math expressions should be enclosed inside of dollar signs ($). Turn off if you don't use it.", "default": true},
-	"users": {"type": "usertable", "description": "An array of usernames and passwords - passwords should be hashed with sha256 (or sha3 if you have that option turned on)", "default": {
+	"users": {"type": "usertable", "description": "An array of usernames and passwords - passwords should be hashed with password_hash() (the hash action can help here)", "default": {
 		"admin": {
 			"email": "admin@somewhere.com",
-			"password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
+			"password": "$2y$11$HBk1sh9MGVSM.vM.hZTnBOxk8sJi6PhyN/DRZUy8z845F1wQ4tudS"
 		},
 		"user": {
 			"email": "example@example.net",
-			"password": "873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34"
+			"password": "$2y$11$DrRmOVRfW0yyYD26JQkiluicOfluGoEgHgKJ7imPDicWABhowP9Fi"
 		}
 	}},
 	"admins": {"type": "array", "description": "An array of usernames that are administrators. Administrators can delete and move pages.", "default": [ "admin" ]},
 	"anonymous_user_name": { "type": "text", "description": "The default name for anonymous users.", "default": "Anonymous" },
 	"user_page_prefix": { "type": "text", "description": "The prefix for user pages. All user pages will be considered to be under this page. User pages have special editing restrictions that prevent anyone other thant he user they belong to from editing them. Should not include the trailing forward slash.", "default": "Users" },
 	"user_preferences_button_text": { "type": "text", "description": "The text to display on the button that lets logged in users change their settings. Defaults to a cog (aka a 'gear' in unicode-land).", "default": "&#x2699; " },
-	"use_sha3": {"type": "checkbox", "description": "Whether to use the new sha3 hashing algorithm for passwords etc.", "default": false },
+	"password_algorithm": {"type": "text", "description": "The algorithm to utilise when hashing passwords. Takes any value PHP's password_hash() does.", "default": "PASSWORD_DEFAULT"},
+	"password_cost": {"type": "number", "description": "The cost to use when hashing passwords.", "default": 12},
+	"password_cost_time": {"type": "number", "description": "The desired number of milliseconds to delay by when hashing passwords. Pepperminty Wiki will automatically update the value of password_cost to take the length of time specified here. If you're using PASSWORD_ARGON2I, then the auto-update will be disabled.", "default": 100},
+	"password_cost_time_interval": {"type": "number", "description": "The interval, in seconds, at which the password cost should be recalculated. Set to -1 to disable. Default: 1 week", "default": 604800},
 	"require_login_view": {"type": "checkbox", "description": "Whether to require that users login before they do anything else. Best used with the data_storage_dir option.", "default": false},
 	"data_storage_dir": {"type": "text", "description": "The directory in which to store all files, except the main index.php.", "default": "."},
 	"delayed_indexing_time": {"type": "number", "description": "The amount of time, in seconds, that pages should be blocked from being indexed by search engines after their last edit. Aka delayed indexing.", "default": 0},
@@ -386,8 +389,8 @@ if($settings->css === "auto")
 ////// Do not edit below this line unless you know what you are doing! //////
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
-$version = "v0.16";
-$commit = "cf3a18643fafbe07b1f4978ab9762c197476cf38";
+$version = "v0.17-dev";
+$commit = "8010770fd444bb81ba8eb78bd10d8067a715c3c3";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -1055,7 +1058,7 @@ function render_editor($editorName)
 }
 
 /**
- * Saves the currently logged in uesr's data back to peppermint.json.
+ * Saves the currently logged in user's data back to peppermint.json.
  * @package core
  * @return bool Whether the user's data was saved successfully. Returns false if the user isn't logged in.
  */
@@ -1456,7 +1459,7 @@ class page_renderer
 		{extra}
 		<footer>
 			<p>{footer-message}</p>
-			<p>Powered by Pepperminty Wiki v0.16, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
+			<p>Powered by Pepperminty Wiki v0.17-dev, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
 			<p>Your local friendly moderators are {admins-name-list}.</p>
 			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
 		</footer>
@@ -1474,7 +1477,7 @@ class page_renderer
 			<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
 			<p>{footer-message}</p>
 			<p><em>Timed at {generation-date}</em></p>
-			<p><em>Powered by Pepperminty Wiki v0.16.</em></p>
+			<p><em>Powered by Pepperminty Wiki v0.17-dev.</em></p>
 		</footer>";
 
 	/**
@@ -1552,7 +1555,7 @@ class page_renderer
 			"{body}" => $body_template,
 
 			"{sitename}" => $logo_html,
-			"v0.16" => $version,
+			"v0.17-dev" => $version,
 			"{favicon-url}" => $settings->favicon,
 			"{header-html}" => self::get_header_html(),
 
@@ -7274,7 +7277,7 @@ function generate_page_list($pagelist)
 
 register_module([
 	"name" => "Login",
-	"version" => "0.8.5",
+	"version" => "0.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
@@ -7365,14 +7368,20 @@ register_module([
 				// The user wants to log in
 				$user = $_POST["user"];
 				$pass = $_POST["pass"];
-				if($settings->users->$user->password == hash_password($pass))
+				if(password_verify($pass, $settings->users->$user->password))
 				{
 					// Success! :D
+					$new_password_hash = hash_password_update($pass, $settings->users->$user->password);
+					// Update the password hash
+					if($new_password_hash !== null) {
+						$env->user_data->password = $new_password_hash;
+						save_userdata();
+						error_log("[Pepperminty Wiki] Updated password hash for $user.");
+					}
 					$env->is_logged_in = true;
-					$expiretime = time() + 60*60*24*30; // 30 days from now
 					$_SESSION["$settings->sessionprefix-user"] = $user;
-					$_SESSION["$settings->sessionprefix-pass"] = hash_password($pass);
-					$_SESSION["$settings->sessionprefix-expiretime"] = $expiretime;
+					$_SESSION["$settings->sessionprefix-pass"] = $hashed_pass;
+					$_SESSION["$settings->sessionprefix-expiretime"] = time() + 60*60*24*30; // 30 days from now
 					// Redirect to wherever the user was going
 					http_response_code(302);
 					header("x-login-success: yes");
@@ -7408,9 +7417,50 @@ register_module([
 		// Register a section on logging in on the help page.
 		add_help_section("30-login", "Logging in", "<p>In order to edit $settings->sitename and have your edit attributed to you, you need to be logged in. Depending on the settings, logging in may be a required step if you want to edit at all. Thankfully, loggging in is not hard. Simply click the &quot;Login&quot; link in the top left, type your username and password, and then click login.</p>
 		<p>If you do not have an account yet and would like one, try contacting <a href='mailto:" . hide_email($settings->admindetails_email) . "'>$settings->admindetails_name</a>, $settings->sitename's administrator and ask them nicely to see if they can create you an account.</p>");
+		
+		// Re-check the password hashing cost, if necessary
+		do_password_hash_code_update();
 	}
 ]);
 
+function do_password_hash_code_update() {
+	global $settings, $paths;
+	
+	// There's no point if we're using Argon2i, as it doesn't take a cost
+	if(hash_password_properties()["algorithm"] == PASSWORD_ARGON2I)
+		return;
+	
+	// Skip the recheck if we've done one recently
+	if(isset($settings->password_cost_time_lastcheck) &&
+		time() - $settings->password_cost_time_lastcheck < $settings->password_cost_time_interval)
+		return;
+	
+	$new_cost = hash_password_compute_cost();
+	
+	// Save the new cost, but only if it's higher than the old one
+	if($new_cost > $settings->password_cost)
+		$settings->password_cost = $new_cost;
+	// Save the current time in the settings
+	$settings->password_cost_time_lastcheck = time();
+	file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT));
+}
+
+/**
+ * Figures out the appropriate algorithm & options for hashing passwords based 
+ * on the current settings.
+ * @return array The appropriate password hashing algorithm and options.
+ */
+function hash_password_properties() {
+	global $settings;
+	
+	$result = [
+		"algorithm" => constant($settings->password_algorithm),
+		"options" => [ "cost" => $settings->password_cost ]
+	];
+	if(defined("PASSWORD_ARGON2I") && $result["algorithm"] == PASSWORD_ARGON2I)
+		$result["options"] = [];
+	return $result;
+}
 /**
  * Hashes the given password according to the current settings defined
  * in $settings.
@@ -7422,18 +7472,58 @@ register_module([
  */
 function hash_password($pass)
 {
-	global $settings;
-	if($settings->use_sha3)
-	{
-		return sha3($pass, 256);
-	}
-	else
-	{
-		return hash("sha256", $pass);
-	}
+	$props = hash_password_properties();
+	return password_hash(
+		base64_encode(hash("sha384", $pass)),
+		$props["algorithm"],
+		$props["options"]
+	);
 }
-
-
+/**
+ * Determines if the provided password needs re-hashing or not.
+ * @param  string $pass The password to check.
+ * @param  string $hash The hash of the provided password to check.
+ * @return string|null  Returns null if an updaste is not required - otherwise returns the new updated hash.
+ */
+function hash_password_update($pass, $hash) {
+	$props = hash_password_properties();
+	if(password_needs_rehash($hash, $props["algorithm"], $props["options"])) {
+		return hash_password($pass);
+	}
+	return null;
+}
+/**
+ * Computes the appropriate cost value for password_hash based on the settings
+ * automatically.
+ * Starts at 10 and works upwards in increments of 1. Goes on until a value is 
+ * found that's greater than the target - or 10x the target time elapses.
+ * @return integer The automatically calculated password hashing cost.
+ */
+function hash_password_compute_cost() {
+	global $settings;
+	$props = hash_password_properties();
+	if($props["algorithm"] == PASSWORD_ARGON2I)
+		return null;
+	if(!is_int($props["options"]["cost"]))
+		$props["options"]["cost"] = 10;
+	
+	$target_cost_time = $settings->password_cost_time / 1000; // The setting is in ms
+	
+	$start = microtime(true);
+	do {
+		$props["options"]["cost"]++;
+		$start_i = microtime(true);
+		password_hash("testing", $props["algorithm"], $props["options"]);
+		$end_i =  microtime(true);
+		// Iterate until we find a cost high enough
+		// ....but don't keep going forever - try for at most 10x the target
+		// time in total (in case the specified algorithm doesn't take a
+		// cost parameter)
+	} while($end_i - $start_i < $target_cost_time &&
+		$end_i - $start < $target_cost_time * 10);
+	
+	return $props["options"]["cost"];
+}
 
 
 register_module([

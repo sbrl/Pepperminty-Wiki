@@ -141,10 +141,15 @@ register_module([
 		// Register a section on logging in on the help page.
 		add_help_section("30-login", "Logging in", "<p>In order to edit $settings->sitename and have your edit attributed to you, you need to be logged in. Depending on the settings, logging in may be a required step if you want to edit at all. Thankfully, loggging in is not hard. Simply click the &quot;Login&quot; link in the top left, type your username and password, and then click login.</p>
 		<p>If you do not have an account yet and would like one, try contacting <a href='mailto:" . hide_email($settings->admindetails_email) . "'>$settings->admindetails_name</a>, $settings->sitename's administrator and ask them nicely to see if they can create you an account.</p>");
+		
+		// Re-check the password hashing cost, if necessary
+		do_password_hash_code_update();
 	}
 ]);
 
 function do_password_hash_code_update() {
+	global $settings, $paths;
+	
 	// There's no point if we're using Argon2i, as it doesn't take a cost
 	if(hash_password_properties()["algorithm"] == PASSWORD_ARGON2I)
 		return;
@@ -157,8 +162,8 @@ function do_password_hash_code_update() {
 	$new_cost = hash_password_compute_cost();
 	
 	// Save the new cost, but only if it's higher than the old one
-	if($new_cost > $settings->password_hash_cost)
-		$settings->password_hash_cost = $new_cost;
+	if($new_cost > $settings->password_cost)
+		$settings->password_cost = $new_cost;
 	// Save the current time in the settings
 	$settings->password_cost_time_lastcheck = time();
 	file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT));
@@ -174,9 +179,9 @@ function hash_password_properties() {
 	
 	$result = [
 		"algorithm" => constant($settings->password_algorithm),
-		"options" => [ "cost" => $settings->password_hash_cost ]
+		"options" => [ "cost" => $settings->password_cost ]
 	];
-	if(isset(PASSWORD_ARGON2I) && $result["algorithm"] == PASSWORD_ARGON2I)
+	if(defined("PASSWORD_ARGON2I") && $result["algorithm"] == PASSWORD_ARGON2I)
 		$result["options"] = [];
 	return $result;
 }
@@ -226,6 +231,8 @@ function hash_password_compute_cost() {
 	if(!is_int($props["options"]["cost"]))
 		$props["options"]["cost"] = 10;
 	
+	$target_cost_time = $settings->password_cost_time / 1000; // The setting is in ms
+	
 	$start = microtime(true);
 	do {
 		$props["options"]["cost"]++;
@@ -236,8 +243,8 @@ function hash_password_compute_cost() {
 		// ....but don't keep going forever - try for at most 10x the target
 		// time in total (in case the specified algorithm doesn't take a
 		// cost parameter)
-	} while($end_i - $start_i < $settings->password_cost_time &&
-		$end_i - $start < $settings->password_cost_time * 10);
+	} while($end_i - $start_i < $target_cost_time &&
+		$end_i - $start < $target_cost_time * 10);
 	
 	return $props["options"]["cost"];
 }

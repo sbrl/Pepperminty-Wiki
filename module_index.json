@@ -113,7 +113,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
         "id": "feature-stats",
-        "lastupdate": 1524910425,
+        "lastupdate": 1525975761,
         "optional": false
     },
     {
@@ -199,11 +199,11 @@
     },
     {
         "name": "Login",
-        "version": "0.8.5",
+        "version": "0.9",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastupdate": 1522596856,
+        "lastupdate": 1525991211,
         "optional": false
     },
     {
