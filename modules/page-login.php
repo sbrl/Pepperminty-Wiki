@@ -217,7 +217,12 @@ function hash_password($pass) {
 		$props["options"]
 	);
 }
-
+/**
+ * Verifies a user's password against a pre-generated hash.
+ * @param	string	$pass	The user's password.
+ * @param	string	$hash	The hash to compare against.
+ * @return	bool	Whether the password matches the has or not.
+ */
 function verify_password($pass, $hash) {
 	$pass_transformed = base64_encode(hash("sha384", $pass));
 	return password_verify($pass_transformed, $hash);
