@@ -1,9 +1,9 @@
 <?php
 register_module([
 	"name" => "User Preferences",
-	"version" => "0.3.2",
+	"version" => "0.3.3",
 	"author" => "Starbeamrainbowlabs",
-	"description" => "Adds a user preferences page, letting pople do things like change their email address and password.",
+	"description" => "Adds a user preferences page, letting people do things like change their email address and password.",
 	"id" => "feature-user-preferences",
 	"code" => function() {
 		global $env, $settings;
@@ -147,14 +147,17 @@ register_module([
 				exit(page_renderer::render_main("Password mismatch - $settings->sitename", "<p>The new password you typed twice didn't match! <a href='javascript:history.back();'>Go back</a>.</p>"));
 			}
 			// Check the current password
-			if(hash_password($_POST["current-pass"]) !== $env->user_data->password) {
+			if(!verify_password($_POST["current-pass"], $env->user_data->password)) {
 				exit(page_renderer::render_main("Password mismatch - $settings->sitename", "<p>Error: You typed your current password incorrectly! <a href='javascript:history.back();'>Go back</a>.</p>"));
 			}
 			
 			// All's good! Go ahead and change the password.
 			$env->user_data->password = hash_password($_POST["new-pass"]);
 			// Save the userdata back to disk
-			save_userdata();
+			if(!save_userdata()) {
+				http_response_code(503);
+				exit(page_renderer::render_main("Error Saving Password - $settings->sitename", "<p>While you entered your old password correctly, $settings->sitename encountered an error whilst saving your password to disk! Your password has not been changed. Please contact $settings->admindetails_name for assistance (you can find their email address at the bottom of this page)."));
+			}
 			
 			http_response_code(307);
 			header("location: ?action=user-preferences&success=yes&operation=change-password");

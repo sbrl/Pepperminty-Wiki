@@ -127,11 +127,11 @@
     },
     {
         "name": "User Preferences",
-        "version": "0.3.2",
+        "version": "0.3.3",
         "author": "Starbeamrainbowlabs",
-        "description": "Adds a user preferences page, letting pople do things like change their email address and password.",
+        "description": "Adds a user preferences page, letting people do things like change their email address and password.",
         "id": "feature-user-preferences",
-        "lastupdate": 1497799247,
+        "lastupdate": 1526035213,
         "optional": false
     },
     {
@@ -203,7 +203,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastupdate": 1526034825,
+        "lastupdate": 1526034977,
         "optional": false
     },
     {
