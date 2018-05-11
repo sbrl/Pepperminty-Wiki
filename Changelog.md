@@ -3,6 +3,10 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## v0.17-dev
 
+## Fixed
+ - [Security] Made the site secret generator cryptographically secure. If you created your wiki before this change, you might want to change your site secret in `peppermint.json` to something more secure with a site like [random.org](https://www.random.org/).
+     - The PHP function `openssl_pseudo_random_bytes()` was being used before, but [apparently that's not cryptographically secure](https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php).
+
 ## Changed
  - Password hashing has been overhauled! A totally new-and-different system is being used now, so you'll need to rehash all your passwords.
      - The `hash` action supports the new password hashing scheme.
