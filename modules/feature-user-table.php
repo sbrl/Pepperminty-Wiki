@@ -76,7 +76,7 @@ register_module([
 			
 			if(!$env->is_admin) {
 				http_response_code(401);
-				exit(page_renderer::render_main("Error - Unauthorised - $settings->sitename", "<p>Only moderators (or better) may create users. You could try <a href='?action=logout'>logging out</a> and then <a href='?action=login&returnto%2Findex.php%3Faction%3Duser-table'>logging in</a> again as a moderator, or alternatively visit the <a href='?action=user-list'>user list</a> instead, if that's what you're after.</p>"));
+				exit(page_renderer::render_main("Error: Unauthorised - Add User - $settings->sitename", "<p>Only moderators (or better) may create users. You could try <a href='?action=logout'>logging out</a> and then <a href='?action=login&returnto%2Findex.php%3Faction%3Duser-table'>logging in</a> again as a moderator, or alternatively visit the <a href='?action=user-list'>user list</a> instead, if that's what you're after.</p>"));
 			}
 			
 			if(!isset($_POST["user"])) {
@@ -88,7 +88,14 @@ register_module([
 			$new_username = $_POST["user"];
 			$new_email = $_POST["email"] ?? null;
 			
-			// TODO: Validate & sanitize username / email
+			if(preg_match('/[^0-9a-zA-Z\-_]/', $new_username) !== 0) {
+				http_response_code(400);
+				exit(page_renderer::render_main("Error: Invalid Username - Add User - $settings->sitename", "<p>The username <code>" . htmlentities($new_username) . "</code> contains some invalid characters. Only <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, and <code>_</code> are allowed in usernames. <a href='javascript:window.history.back();'>Go back</a>.</p>"));
+			}
+			if(!empty($new_email) && !filter_var($new_email, FILTER_VALIDATE_EMAIL)) {
+				http_response_code(400);
+				exit(page_renderer::render_main("Error: Invalid Email Address - Add User - $settings->sitename", "<p>The email address <code>" . htmlentities($new_email) . "</code> appears to be invalid. <a href='javascript:window.history.back();'>Go back</a>.</p>"));
+			}
 			
 			$new_password = generate_password($settings->new_password_length);
 			
