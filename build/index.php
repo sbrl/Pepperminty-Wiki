@@ -395,7 +395,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "ae8412ddaf957cdfa6b55b0385093a925ff6a799";
+$commit = "d5b37e3ec04759342e4e5f121fc9912c13af0cd7";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -470,25 +470,11 @@ if(isset($_SESSION[$settings->sessionprefix . "-user"]) and
 	// Note that the 'pass' field here is actually a hash of the password set
 	// by the login action
 	$env->user = $_SESSION[$settings->sessionprefix . "-user"];
-	$env->pass = $_SESSION[$settings->sessionprefix . "-pass"];
-	if($settings->users->{$env->user}->password == $env->pass)
-	{
-		// The user is logged in
-		$env->is_logged_in = true;
-		$env->user_data = $settings->users->{$env->user};
-	}
-	else
-	{
-		// The user's login details are invalid (what is going on here?)
-		// Unset the session variables, treat them as an anonymous user,
-		// and get out of here
-		$env->is_logged_in = false;
-		$env->user = $settings->anonymous_user_name;
-		$env->pass = "";
-		// Clear the session data
-		$_SESSION = []; // Delete all the variables
-		session_destroy(); // Destroy the session
-	}
+	
+	// The user is logged in
+	$env->is_logged_in = true;
+	$env->user_data = $settings->users->{$env->user};
+	
 }
 
 // Check to see if the currently logged in user is an admin
@@ -7281,7 +7267,7 @@ function generate_page_list($pagelist)
 
 register_module([
 	"name" => "Login",
-	"version" => "0.9",
+	"version" => "0.9.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
@@ -7372,7 +7358,7 @@ register_module([
 				// The user wants to log in
 				$user = $_POST["user"];
 				$pass = $_POST["pass"];
-				if(password_verify($pass, $settings->users->$user->password))
+				if(verify_password($pass, $settings->users->$user->password))
 				{
 					// Success! :D
 					
@@ -7382,7 +7368,7 @@ register_module([
 					$env->user_data = $settings->users->{$env->user};
 					
 					$new_password_hash = hash_password_update($pass, $settings->users->$user->password);
-					error_log("$pass / $new_password_hash");
+					
 					// Update the password hash
 					if($new_password_hash !== null) {
 						$env->user_data->password = $new_password_hash;
@@ -7397,7 +7383,7 @@ register_module([
 					$_SESSION["$settings->sessionprefix-user"] = $user;
 					$_SESSION["$settings->sessionprefix-pass"] = $new_password_hash ?? hash_password($pass);
 					$_SESSION["$settings->sessionprefix-expiretime"] = time() + 60*60*24*30; // 30 days from now
-					error_log(var_export($_SESSION, true));
+					
 					// Redirect to wherever the user was going
 					http_response_code(302);
 					header("x-login-success: yes");
@@ -7489,15 +7475,18 @@ function hash_password_properties() {
  * @return	string	The hashed password. Uses sha3 if $settings->use_sha3 is
  * 					enabled, or sha256 otherwise.
  */
-function hash_password($pass)
-{
-	error_log("hashing '$pass'");
+function hash_password($pass) {
 	$props = hash_password_properties();
 	return password_hash(
 		base64_encode(hash("sha384", $pass)),
 		$props["algorithm"],
 		$props["options"]
 	);
+}
+
+function verify_password($pass, $hash) {
+	$pass_transformed = base64_encode(hash("sha384", $pass));
+	return password_verify($pass_transformed, $hash);
 }
 /**
  * Determines if the provided password needs re-hashing or not.
@@ -7548,7 +7537,7 @@ function hash_password_compute_cost() {
 
 register_module([
 	"name" => "Logout",
-	"version" => "0.6",
+	"version" => "0.6.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to let users user out. For security reasons it is wise to add this module since logging in automatically opens a session that is valid for 30 days.",
 	"id" => "page-logout",
@@ -7573,7 +7562,7 @@ register_module([
 			global $env;
 			$env->is_logged_in = false;
 			unset($env->user);
-			unset($env->pass);
+			unset($env->user_data);
 			//clear the session variables
 			$_SESSION = [];
 			session_destroy();

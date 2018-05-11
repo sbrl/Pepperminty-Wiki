@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Login",
-	"version" => "0.9",
+	"version" => "0.9.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
@@ -92,7 +92,7 @@ register_module([
 				// The user wants to log in
 				$user = $_POST["user"];
 				$pass = $_POST["pass"];
-				if(password_verify($pass, $settings->users->$user->password))
+				if(verify_password($pass, $settings->users->$user->password))
 				{
 					// Success! :D
 					
@@ -102,9 +102,6 @@ register_module([
 					$env->user_data = $settings->users->{$env->user};
 					
 					$new_password_hash = hash_password_update($pass, $settings->users->$user->password);
-					error_log("$pass / $new_password_hash");
-					// TODO: When rehashing a password automatically, it no longer checks out against password_verify during login
-					// Looks like a bug in hash_password, as it's not letting us in if we calculate it via the has action either
 					
 					// Update the password hash
 					if($new_password_hash !== null) {
@@ -120,7 +117,7 @@ register_module([
 					$_SESSION["$settings->sessionprefix-user"] = $user;
 					$_SESSION["$settings->sessionprefix-pass"] = $new_password_hash ?? hash_password($pass);
 					$_SESSION["$settings->sessionprefix-expiretime"] = time() + 60*60*24*30; // 30 days from now
-					error_log(var_export($_SESSION, true));
+					
 					// Redirect to wherever the user was going
 					http_response_code(302);
 					header("x-login-success: yes");
@@ -212,14 +209,18 @@ function hash_password_properties() {
  * @return	string	The hashed password. Uses sha3 if $settings->use_sha3 is
  * 					enabled, or sha256 otherwise.
  */
-function hash_password($pass)
-{
+function hash_password($pass) {
 	$props = hash_password_properties();
 	return password_hash(
 		base64_encode(hash("sha384", $pass)),
 		$props["algorithm"],
 		$props["options"]
 	);
+}
+
+function verify_password($pass, $hash) {
+	$pass_transformed = base64_encode(hash("sha384", $pass));
+	return password_verify($pass_transformed, $hash);
 }
 /**
  * Determines if the provided password needs re-hashing or not.

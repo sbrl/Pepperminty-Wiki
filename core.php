@@ -85,25 +85,11 @@ if(isset($_SESSION[$settings->sessionprefix . "-user"]) and
 	// Note that the 'pass' field here is actually a hash of the password set
 	// by the login action
 	$env->user = $_SESSION[$settings->sessionprefix . "-user"];
-	$env->pass = $_SESSION[$settings->sessionprefix . "-pass"];
-	if($settings->users->{$env->user}->password == $env->pass)
-	{
-		// The user is logged in
-		$env->is_logged_in = true;
-		$env->user_data = $settings->users->{$env->user};
-	}
-	else
-	{
-		// The user's login details are invalid (what is going on here?)
-		// Unset the session variables, treat them as an anonymous user,
-		// and get out of here
-		$env->is_logged_in = false;
-		$env->user = $settings->anonymous_user_name;
-		$env->pass = "";
-		// Clear the session data
-		$_SESSION = []; // Delete all the variables
-		session_destroy(); // Destroy the session
-	}
+	
+	// The user is logged in
+	$env->is_logged_in = true;
+	$env->user_data = $settings->users->{$env->user};
+	
 }
 
 // Check to see if the currently logged in user is an admin

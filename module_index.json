@@ -199,20 +199,20 @@
     },
     {
         "name": "Login",
-        "version": "0.9",
+        "version": "0.9.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastupdate": 1525993883,
+        "lastupdate": 1526034825,
         "optional": false
     },
     {
         "name": "Logout",
-        "version": "0.6",
+        "version": "0.6.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to let users user out. For security reasons it is wise to add this module since logging in automatically opens a session that is valid for 30 days.",
         "id": "page-logout",
-        "lastupdate": 1466011660,
+        "lastupdate": 1526034779,
         "optional": false
     },
     {
