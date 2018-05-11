@@ -35,7 +35,6 @@ if(!file_exists($settingsFilename))
 	foreach ($guiConfig as $key => $value)
 		$settings->$key = $value->default;
 	// Generate a random secret
-	// Updated to use random_bytes - ref https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php
 	$settings->secret = bin2hex(random_bytes(16));
 	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
 }

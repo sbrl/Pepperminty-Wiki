@@ -61,6 +61,7 @@ $guiConfig = <<<'GUICONFIG'
 	"password_cost_time": {"type": "number", "description": "The desired number of milliseconds to delay by when hashing passwords. Pepperminty Wiki will automatically update the value of password_cost to take the length of time specified here. If you're using PASSWORD_ARGON2I, then the auto-update will be disabled.", "default": 100},
 	"password_cost_time_interval": {"type": "number", "description": "The interval, in seconds, at which the password cost should be recalculated. Set to -1 to disable. Default: 1 week", "default": 604800},
 	"password_cost_time_lastcheck": {"type": "number", "description": "Pseudo-setting used to keep track of the last recalculation of password_cost. Is updated with the current unix timestamp every time password_cost is recalculated.", "default": 0},
+	"new_password_length": {"type": "number", "description": "The length of newly-generated passwords. This is currently used in the user table when creating new accounts.", "default": 32},
 	"require_login_view": {"type": "checkbox", "description": "Whether to require that users login before they do anything else. Best used with the data_storage_dir option.", "default": false},
 	"data_storage_dir": {"type": "text", "description": "The directory in which to store all files, except the main index.php.", "default": "."},
 	"delayed_indexing_time": {"type": "number", "description": "The amount of time, in seconds, that pages should be blocked from being indexed by search engines after their last edit. Aka delayed indexing.", "default": 0},
@@ -204,7 +205,7 @@ if(!file_exists($settingsFilename))
 	foreach ($guiConfig as $key => $value)
 		$settings->$key = $value->default;
 	// Generate a random secret
-	$settings->secret = bin2hex(openssl_random_pseudo_bytes(16));
+	$settings->secret = bin2hex(random_bytes(16));
 	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
 }
 else
@@ -395,7 +396,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "62dff18b4d1785b1ff8544b0e554af0f8ce6ab92";
+$commit = "e11766bbe1276b1515b608827fd8a49ae700ce09";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -5848,6 +5849,133 @@ register_module([
 
 
 register_module([
+	"name" => "User Organiser",
+	"version" => "0.1",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds a organiser page that lets moderators (or better) control the reegistered user accounts, and perform adminstrative actions such as password resets, and adding / removing accounts.",
+	"id" => "feature-user-table",
+	"code" => function() {
+		global $settings, $env;
+		
+		/**
+		 * @api {get} ?action=user-table	Get the user table
+		 * @apiName UserTable
+		 * @apiGroup Settings
+		 * @apiPermission Moderator
+		 */
+		
+		/*
+ 	 	 * ██    ██ ███████ ███████ ██████
+ 		 * ██    ██ ██      ██      ██   ██
+ 		 * ██    ██ ███████ █████   ██████  █████
+ 		 * ██    ██      ██ ██      ██   ██
+ 		 *  ██████  ███████ ███████ ██   ██
+ 		 *
+ 		 * ████████  █████  ██████  ██      ███████
+		 *    ██    ██   ██ ██   ██ ██      ██
+ 		 *    ██    ███████ ██████  ██      █████
+ 		 *    ██    ██   ██ ██   ██ ██      ██
+ 		 *    ██    ██   ██ ██████  ███████ ███████
+		 */
+		add_action("user-table", function() {
+			global $settings, $env;
+			
+			if(!$env->is_logged_in || !$env->is_admin) {
+				http_response_code(401);
+				exit(page_renderer::render_main("Unauthorised - User Table - $settings->sitename", "<p>Only moderators (or better) may access the user table. You could try <a href='?action=logout'>logging out</a> and then <a href='?action=login&returnto%2Findex.php%3Faction%3Duser-table'>logging in</a> again as a moderator, or alternatively visit the <a href='?action=user-list'>user list</a> instead, if that's what you're after.</p>"));
+			}
+			
+			$content = "<h2>User Table</h2>
+			<p>(Warning! Deleting a user will wipe <em>all</em> their user data! It won't delete any pages they've created, their user page, or their avatar though, as those are part of the wiki itself.)</p>
+			<table class='user-table'>
+				<tr><th>Username</th><th>Email Address</th><th></th></tr>\n";
+			
+			foreach($settings->users as $username => $user_data) {
+				$content .= "<tr>";
+				$content .= "<td>" . page_renderer::render_username($username) . "</td>";
+				if(!empty($user_data->email))
+					$content .= "<td><a href='mailto:" . htmlentities($user_data->email, ENT_HTML5 | ENT_QUOTES) . "'>" . htmlentities($user_data->email) . "</a></td>\n";
+				else
+					$content .= "<td><em>(None provided)</em></td>\n";
+				$content .= "<td>";
+				if(module_exists("feature-user-preferences"))
+					$content .= "<form method='post' action='?action=change-password' class='inline-form'>
+						<input type='hidden' name='user' value='$username' />
+						<input type='password' name='new-pass' placeholder='New password' />
+						<input type='submit' value='Reset Password' />
+					</form> | ";
+				$content .= "<a href='?action=user-delete&user=" . rawurlencode($username) . "'>Delete User</a>";
+				$content .= "</td></tr>";
+			}
+			
+			$content .= "</table>\n";
+			
+			$content .= "<h3>Add User</h3>
+			<form method='post' action='?action=user-add'>
+				<input type='text' id='new-username' name='user' placeholder='Username' required />
+				<input type='email' id='new-email' name='email' placeholder='Email address - optional' />
+				<input type='submit' value='Add user' />
+			</form>";
+			
+			exit(page_renderer::render_main("User Table - $settings->sitename", $content));
+		});
+		
+		add_action("user-add", function() {
+			global $settings, $env;
+			
+			if(!$env->is_admin) {
+				http_response_code(401);
+				exit(page_renderer::render_main("Error - Unauthorised - $settings->sitename", "<p>Only moderators (or better) may create users. You could try <a href='?action=logout'>logging out</a> and then <a href='?action=login&returnto%2Findex.php%3Faction%3Duser-table'>logging in</a> again as a moderator, or alternatively visit the <a href='?action=user-list'>user list</a> instead, if that's what you're after.</p>"));
+			}
+			
+			if(!isset($_POST["user"])) {
+				http_response_code(400);
+				header("content-type: text/plain");
+				exit("Error: No username specified in the 'user' post parameter.");
+			}
+			
+			$new_username = $_POST["user"];
+			$new_email = $_POST["email"] ?? null;
+			
+			// TODO: Validate & sanitize username / email
+			
+			$new_password = generate_password($settings->new_password_length);
+			
+			$user_data = new stdClass();
+			$user_data->password = hash_password($new_password);
+			if(!empty($new_email))
+				$user_data->email = $new_email;
+			
+			$settings->users->$new_username = $user_data;
+			
+			// TODO: Save new user's data, display the password to the admin, and send email if we're able to
+			
+		});
+		
+		if($env->is_admin) add_help_section("949-user-table", "Managing User Accounts", "<p>As a moderator on $settings->sitename, you can use the <a href='?action=user-table'>User Table</a> to adminstrate the user accounts on $settings->sitename. It allows you to perform actions such as adding and removing accounts, and resetting passwords.</p>");
+	}
+]);
+/**
+ * Generates a new (cryptographically secure) random password that's also readable (i.e. consonant-vowel-consonant).
+ * This implementation may be changed in the future to use random dictionary words instead - ref https://xkcd.com/936/
+ * @param	string	$length	The length of password to generate.
+ * @return	string	The generated random password.
+ */
+function generate_password($length) {
+	$vowels = "aeiou";
+	$consonants = "bcdfghjklmnpqrstvwxyz";
+	$result = "";
+	for($i = 0; $i < $length; $i++) {
+		if($i % 2 == 0)
+			$result .= $consonants[random_int(0, strlen($consonants) - 1)];
+		else
+			$result .= $vowels[random_int(0, strlen($vowels) - 1)];
+	}
+	return $result;
+}
+
+
+register_module([
 	"name" => "Credits",
 	"version" => "0.7.7",
 	"author" => "Starbeamrainbowlabs",
@@ -6198,7 +6326,7 @@ register_module([
 
 register_module([
 	"name" => "Page editor",
-	"version" => "0.17.2",
+	"version" => "0.17.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -6728,7 +6856,9 @@ DIFFSCRIPT;
 		<p>Editing is simple. The edit page has a sizeable box that contains a page's current contents. Once you are done altering it, add or change the comma separated list of tags in the field below the editor and then click save page.</p>
 		<p>A reference to the syntax that $settings->sitename supports can be found below.</p>");
 		
-		add_help_section("17-user-pages", "User Pages", "<p>If you are logged in, $settings->sitename allocates you your own user page that only you can edit. On $settings->sitename, user pages are sub-pages of the <a href='?page=" . rawurlencode($settings->user_page_prefix) . "'>" . htmlentities($settings->user_page_prefix) . "</a> page, and each user page can have a nested structure of pages underneath it, just like a normal page. Your user page is located at <a href='?page=" . rawurlencode(get_user_pagename($env->user)) . "'>" . htmlentities(get_user_pagename($env->user)) . "</a>.</p>");
+		add_help_section("17-user-pages", "User Pages", "<p>If you are logged in, $settings->sitename allocates you your own user page that only you can edit. On $settings->sitename, user pages are sub-pages of the <a href='?page=" . rawurlencode($settings->user_page_prefix) . "'>" . htmlentities($settings->user_page_prefix) . "</a> page, and each user page can have a nested structure of pages underneath it, just like a normal page. Your user page is located at <a href='?page=" . rawurlencode(get_user_pagename($env->user)) . "'>" . htmlentities(get_user_pagename($env->user)) . "</a>. " .
+			(module_exists("page-user-list") ? "You can see a list of all the users on $settings->sitename and visit their user pages on the <a href='?action=user-list'>user list</a>." : "")
+		 . "</p>");
 	}
 ]);
 

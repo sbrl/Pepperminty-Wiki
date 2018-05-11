@@ -38,6 +38,7 @@
 	"password_cost_time": {"type": "number", "description": "The desired number of milliseconds to delay by when hashing passwords. Pepperminty Wiki will automatically update the value of password_cost to take the length of time specified here. If you're using PASSWORD_ARGON2I, then the auto-update will be disabled.", "default": 100},
 	"password_cost_time_interval": {"type": "number", "description": "The interval, in seconds, at which the password cost should be recalculated. Set to -1 to disable. Default: 1 week", "default": 604800},
 	"password_cost_time_lastcheck": {"type": "number", "description": "Pseudo-setting used to keep track of the last recalculation of password_cost. Is updated with the current unix timestamp every time password_cost is recalculated.", "default": 0},
+	"new_password_length": {"type": "number", "description": "The length of newly-generated passwords. This is currently used in the user table when creating new accounts.", "default": 32},
 	"require_login_view": {"type": "checkbox", "description": "Whether to require that users login before they do anything else. Best used with the data_storage_dir option.", "default": false},
 	"data_storage_dir": {"type": "text", "description": "The directory in which to store all files, except the main index.php.", "default": "."},
 	"delayed_indexing_time": {"type": "number", "description": "The amount of time, in seconds, that pages should be blocked from being indexed by search engines after their last edit. Aka delayed indexing.", "default": 0},

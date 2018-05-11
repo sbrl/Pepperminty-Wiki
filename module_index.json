@@ -135,6 +135,15 @@
         "optional": false
     },
     {
+        "name": "User Organiser",
+        "version": "0.1",
+        "author": "Starbeamrainbowlabs",
+        "description": "Adds a organiser page that lets moderators (or better) control the reegistered user accounts, and perform adminstrative actions such as password resets, and adding \/ removing accounts.",
+        "id": "feature-user-table",
+        "lastupdate": 1526077752,
+        "optional": false
+    },
+    {
         "name": "Credits",
         "version": "0.7.7",
         "author": "Starbeamrainbowlabs",
@@ -163,11 +172,11 @@
     },
     {
         "name": "Page editor",
-        "version": "0.17.2",
+        "version": "0.17.3",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
-        "lastupdate": 1524416238,
+        "lastupdate": 1526037910,
         "optional": false
     },
     {
@@ -203,7 +212,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastupdate": 1526034977,
+        "lastupdate": 1526038530,
         "optional": false
     },
     {
