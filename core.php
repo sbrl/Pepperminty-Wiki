@@ -669,7 +669,7 @@ function render_editor($editorName)
  */
 function save_settings() {
 	global $paths, $settings;
-	file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT)) !== false;
+	return file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT)) !== false;
 }
 
 /**
