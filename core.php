@@ -169,6 +169,7 @@ function url_origin( $s = false, $use_forwarded_host = false )
  */
 function full_url( $s = false, $use_forwarded_host = false )
 {
+	if($s == false) $s = $_SERVER;
     return url_origin( $s, $use_forwarded_host ) . $s['REQUEST_URI'];
 }
 
@@ -663,6 +664,15 @@ function render_editor($editorName)
 }
 
 /**
+ * Saves the settings file back to peppermint.json.
+ * @return bool Whether the settings were saved successfully.
+ */
+function save_settings() {
+	global $paths, $settings;
+	file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT)) !== false;
+}
+
+/**
  * Saves the currently logged in user's data back to peppermint.json.
  * @package core
  * @return bool Whether the user's data was saved successfully. Returns false if the user isn't logged in.
@@ -675,9 +685,8 @@ function save_userdata()
 		return false;
 	
 	$settings->users->{$env->user} = $env->user_data;
-	file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT));
 	
-	return true;
+	return save_settings();
 }
 
 /**
@@ -733,8 +742,7 @@ function email_user($username, $subject, $body)
 	foreach($headers as $header => $value)
 		$compiled_headers .= "$header: $value\r\n";
 	
-	mail($settings->users->{$username}->emailAddress, $subject, $body, $compiled_headers, "-t");
-	return true;
+	return mail($settings->users->{$username}->emailAddress, $subject, $body, $compiled_headers, "-t");
 }
 /**
  * Sends a plain text email to a list of users, replacing {username} with each user's name.
