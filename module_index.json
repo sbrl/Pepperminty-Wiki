@@ -140,7 +140,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a organiser page that lets moderators (or better) control the reegistered user accounts, and perform adminstrative actions such as password resets, and adding \/ removing accounts.",
         "id": "feature-user-table",
-        "lastupdate": 1526142201,
+        "lastupdate": 1526161887,
         "optional": false
     },
     {

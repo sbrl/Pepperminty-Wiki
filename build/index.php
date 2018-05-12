@@ -396,7 +396,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "ef530baaed8e424fb8eab554e6af25b4d58ce559";
+$commit = "aac9d15eb946b8c53b31112d5b21d9476fa862c2";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -1055,7 +1055,7 @@ function render_editor($editorName)
  */
 function save_settings() {
 	global $paths, $settings;
-	file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT)) !== false;
+	return file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT)) !== false;
 }
 
 /**
