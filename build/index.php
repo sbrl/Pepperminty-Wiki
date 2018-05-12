@@ -396,7 +396,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "e11766bbe1276b1515b608827fd8a49ae700ce09";
+$commit = "ef530baaed8e424fb8eab554e6af25b4d58ce559";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -555,6 +555,7 @@ function url_origin( $s = false, $use_forwarded_host = false )
  */
 function full_url( $s = false, $use_forwarded_host = false )
 {
+	if($s == false) $s = $_SERVER;
     return url_origin( $s, $use_forwarded_host ) . $s['REQUEST_URI'];
 }
 
@@ -1049,6 +1050,15 @@ function render_editor($editorName)
 }
 
 /**
+ * Saves the settings file back to peppermint.json.
+ * @return bool Whether the settings were saved successfully.
+ */
+function save_settings() {
+	global $paths, $settings;
+	file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT)) !== false;
+}
+
+/**
  * Saves the currently logged in user's data back to peppermint.json.
  * @package core
  * @return bool Whether the user's data was saved successfully. Returns false if the user isn't logged in.
@@ -1061,9 +1071,8 @@ function save_userdata()
 		return false;
 	
 	$settings->users->{$env->user} = $env->user_data;
-	file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT));
 	
-	return true;
+	return save_settings();
 }
 
 /**
@@ -1119,8 +1128,7 @@ function email_user($username, $subject, $body)
 	foreach($headers as $header => $value)
 		$compiled_headers .= "$header: $value\r\n";
 	
-	mail($settings->users->{$username}->emailAddress, $subject, $body, $compiled_headers, "-t");
-	return true;
+	return mail($settings->users->{$username}->emailAddress, $subject, $body, $compiled_headers, "-t");
 }
 /**
  * Sends a plain text email to a list of users, replacing {username} with each user's name.
@@ -5925,7 +5933,7 @@ register_module([
 			
 			if(!$env->is_admin) {
 				http_response_code(401);
-				exit(page_renderer::render_main("Error - Unauthorised - $settings->sitename", "<p>Only moderators (or better) may create users. You could try <a href='?action=logout'>logging out</a> and then <a href='?action=login&returnto%2Findex.php%3Faction%3Duser-table'>logging in</a> again as a moderator, or alternatively visit the <a href='?action=user-list'>user list</a> instead, if that's what you're after.</p>"));
+				exit(page_renderer::render_main("Error: Unauthorised - Add User - $settings->sitename", "<p>Only moderators (or better) may create users. You could try <a href='?action=logout'>logging out</a> and then <a href='?action=login&returnto%2Findex.php%3Faction%3Duser-table'>logging in</a> again as a moderator, or alternatively visit the <a href='?action=user-list'>user list</a> instead, if that's what you're after.</p>"));
 			}
 			
 			if(!isset($_POST["user"])) {
@@ -5937,7 +5945,14 @@ register_module([
 			$new_username = $_POST["user"];
 			$new_email = $_POST["email"] ?? null;
 			
-			// TODO: Validate & sanitize username / email
+			if(preg_match('/[^0-9a-zA-Z\-_]/', $new_username) !== 0) {
+				http_response_code(400);
+				exit(page_renderer::render_main("Error: Invalid Username - Add User - $settings->sitename", "<p>The username <code>" . htmlentities($new_username) . "</code> contains some invalid characters. Only <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, and <code>_</code> are allowed in usernames. <a href='javascript:window.history.back();'>Go back</a>.</p>"));
+			}
+			if(!empty($new_email) && !filter_var($new_email, FILTER_VALIDATE_EMAIL)) {
+				http_response_code(400);
+				exit(page_renderer::render_main("Error: Invalid Email Address - Add User - $settings->sitename", "<p>The email address <code>" . htmlentities($new_email) . "</code> appears to be invalid. <a href='javascript:window.history.back();'>Go back</a>.</p>"));
+			}
 			
 			$new_password = generate_password($settings->new_password_length);
 			
@@ -5948,8 +5963,43 @@ register_module([
 			
 			$settings->users->$new_username = $user_data;
 			
-			// TODO: Save new user's data, display the password to the admin, and send email if we're able to
+			if(!save_settings()) {
+				http_response_code(503);
+				exit(page_renderer::render_main("Error: Failed to save settings - Add User - $settings->sitename", "<p>$settings->sitename failed to save the new user's data to disk. Please contact $settings->admindetails_name for assistance (their email address can be found at the bottom of this page).</p>"));
+			}
 			
+			
+			$welcome_email_result = email_user($new_username, "Welcome!", "Welcome to $settings->sitename, {username}! $env->user has created you an account. Here are your details:
+
+Url: " . substr(full_url(), 0, strrpos(full_url(), "?")) . "
+Username: {username}
+Password: $new_password
+
+It is advised that you change your password as soon as you login. You can do this by clicking the cog next to your name once you've logged in, and scrolling to the 'change password' heading.
+
+If you need any assistance, then the help page you can access at the bottom of every page on $settings->sitename has information on most aspects of $settings->sitename.
+
+
+--$settings->sitename, powered by Pepperminty Wiki
+https://github.com/sbrl/Pepperminty-Wiki/
+");
+			
+			$content = "<h2>Add User</h2>
+			<p>The new user was added to $settings->sitename sucessfully! Their details are as follows:</p>
+			<ul>
+				<li>Username: <code>$new_username</code></li>";
+			if(!empty($new_email))
+				$content .= "	<li>Email Address: <code>$new_email</code></li>\n";
+			if(!$welcome_email_result)
+				$content .= "	<li>Password: <code>$new_password</code></li>\n";
+			$content .= "</ul>\n";
+			if($welcome_email_result)
+				$content .= "<p>An email has been sent to the email address given above containing their login details.</p>\n";
+			
+			$content .= "<p><a href='?action=user-table'>Go back</a> to the user table.</p>\n";
+			
+			http_response_code(201);
+			exit(page_renderer::render_main("Add User - $settings->sitename", $content));
 		});
 		
 		if($env->is_admin) add_help_section("949-user-table", "Managing User Accounts", "<p>As a moderator on $settings->sitename, you can use the <a href='?action=user-table'>User Table</a> to adminstrate the user accounts on $settings->sitename. It allows you to perform actions such as adding and removing accounts, and resetting passwords.</p>");

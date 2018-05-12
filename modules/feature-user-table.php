@@ -106,8 +106,43 @@ register_module([
 			
 			$settings->users->$new_username = $user_data;
 			
-			// TODO: Save new user's data, display the password to the admin, and send email if we're able to
+			if(!save_settings()) {
+				http_response_code(503);
+				exit(page_renderer::render_main("Error: Failed to save settings - Add User - $settings->sitename", "<p>$settings->sitename failed to save the new user's data to disk. Please contact $settings->admindetails_name for assistance (their email address can be found at the bottom of this page).</p>"));
+			}
 			
+			
+			$welcome_email_result = email_user($new_username, "Welcome!", "Welcome to $settings->sitename, {username}! $env->user has created you an account. Here are your details:
+
+Url: " . substr(full_url(), 0, strrpos(full_url(), "?")) . "
+Username: {username}
+Password: $new_password
+
+It is advised that you change your password as soon as you login. You can do this by clicking the cog next to your name once you've logged in, and scrolling to the 'change password' heading.
+
+If you need any assistance, then the help page you can access at the bottom of every page on $settings->sitename has information on most aspects of $settings->sitename.
+
+
+--$settings->sitename, powered by Pepperminty Wiki
+https://github.com/sbrl/Pepperminty-Wiki/
+");
+			
+			$content = "<h2>Add User</h2>
+			<p>The new user was added to $settings->sitename sucessfully! Their details are as follows:</p>
+			<ul>
+				<li>Username: <code>$new_username</code></li>";
+			if(!empty($new_email))
+				$content .= "	<li>Email Address: <code>$new_email</code></li>\n";
+			if(!$welcome_email_result)
+				$content .= "	<li>Password: <code>$new_password</code></li>\n";
+			$content .= "</ul>\n";
+			if($welcome_email_result)
+				$content .= "<p>An email has been sent to the email address given above containing their login details.</p>\n";
+			
+			$content .= "<p><a href='?action=user-table'>Go back</a> to the user table.</p>\n";
+			
+			http_response_code(201);
+			exit(page_renderer::render_main("Add User - $settings->sitename", $content));
 		});
 		
 		if($env->is_admin) add_help_section("949-user-table", "Managing User Accounts", "<p>As a moderator on $settings->sitename, you can use the <a href='?action=user-table'>User Table</a> to adminstrate the user accounts on $settings->sitename. It allows you to perform actions such as adding and removing accounts, and resetting passwords.</p>");
