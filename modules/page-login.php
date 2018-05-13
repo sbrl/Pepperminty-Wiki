@@ -92,7 +92,7 @@ register_module([
 				// The user wants to log in
 				$user = $_POST["user"];
 				$pass = $_POST["pass"];
-				if(verify_password($pass, $settings->users->$user->password))
+				if(!empty($settings->users->$user) && verify_password($pass, $settings->users->$user->password))
 				{
 					// Success! :D
 					
