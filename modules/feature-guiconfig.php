@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Settings GUI",
-	"version" => "0.1.1",
+	"version" => "0.1.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
 	"id" => "feature-guiconfig",
@@ -98,6 +98,13 @@ SCRIPT;
 					case "checkbox":
 						$reverse = true;
 						$inputControl = "<input type='checkbox' id='$configKey' name='$configKey' " . ($settings->$configKey ? " checked" : "") . " />";
+						break;
+					case "usertable":
+						$label = "";
+						if(module_exists("feature-user-table"))
+							$inputControl = "<p>The users can be managed in the <a href='?action=user-table'>User Table</a>.</p>";
+						else
+							$inputControl = "<p><em>The users can be managed in the user table, but the required module <code>feature-user-table</code> is not installed.</em></p>";
 						break;
 					default:
 						$label = "";

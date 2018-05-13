@@ -396,7 +396,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "aac9d15eb946b8c53b31112d5b21d9476fa862c2";
+$commit = "5961d11e765945453569c0a85b62d05d5f459f39";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -2990,7 +2990,7 @@ function render_comments($comments_data, $depth = 0)
 
 register_module([
 	"name" => "Settings GUI",
-	"version" => "0.1.1",
+	"version" => "0.1.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
 	"id" => "feature-guiconfig",
@@ -3087,6 +3087,13 @@ SCRIPT;
 					case "checkbox":
 						$reverse = true;
 						$inputControl = "<input type='checkbox' id='$configKey' name='$configKey' " . ($settings->$configKey ? " checked" : "") . " />";
+						break;
+					case "usertable":
+						$label = "";
+						if(module_exists("feature-user-table"))
+							$inputControl = "<p>The users can be managed in the <a href='?action=user-table'>User Table</a>.</p>";
+						else
+							$inputControl = "<p><em>The users can be managed in the user table, but the required module <code>feature-user-table</code> is not installed.</em></p>";
 						break;
 					default:
 						$label = "";
@@ -5890,7 +5897,7 @@ register_module([
 			
 			if(!$env->is_logged_in || !$env->is_admin) {
 				http_response_code(401);
-				exit(page_renderer::render_main("Unauthorised - User Table - $settings->sitename", "<p>Only moderators (or better) may access the user table. You could try <a href='?action=logout'>logging out</a> and then <a href='?action=login&returnto%2Findex.php%3Faction%3Duser-table'>logging in</a> again as a moderator, or alternatively visit the <a href='?action=user-list'>user list</a> instead, if that's what you're after.</p>"));
+				exit(page_renderer::render_main("Unauthorised - User Table - $settings->sitename", "<p>Only moderators (or better) may access the user table. You could try <a href='?action=logout'>logging out</a> and then <a href='?action=login&returnto%2Findex.hp%3Faction%3Duser-table'>logging in</a> again as a moderator, or alternatively visit the <a href='?action=user-list'>user list</a> instead, if that's what you're after.</p>"));
 			}
 			
 			$content = "<h2>User Table</h2>
@@ -7541,7 +7548,7 @@ register_module([
 				// The user wants to log in
 				$user = $_POST["user"];
 				$pass = $_POST["pass"];
-				if(verify_password($pass, $settings->users->$user->password))
+				if(!empty($settings->users->$user) && verify_password($pass, $settings->users->$user->password))
 				{
 					// Success! :D
 					

@@ -64,11 +64,11 @@
     },
     {
         "name": "Settings GUI",
-        "version": "0.1.1",
+        "version": "0.1.2",
         "author": "Starbeamrainbowlabs",
         "description": "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
         "id": "feature-guiconfig",
-        "lastupdate": 1524415857,
+        "lastupdate": 1526250969,
         "optional": false
     },
     {
@@ -140,7 +140,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a organiser page that lets moderators (or better) control the reegistered user accounts, and perform adminstrative actions such as password resets, and adding \/ removing accounts.",
         "id": "feature-user-table",
-        "lastupdate": 1526161887,
+        "lastupdate": 1526250680,
         "optional": false
     },
     {
@@ -212,7 +212,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
-        "lastupdate": 1526038530,
+        "lastupdate": 1526227977,
         "optional": false
     },
     {
