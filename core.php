@@ -82,8 +82,6 @@ if(isset($_SESSION[$settings->sessionprefix . "-user"]) and
   isset($_SESSION[$settings->sessionprefix . "-pass"]))
 {
 	// Grab the session variables
-	// Note that the 'pass' field here is actually a hash of the password set
-	// by the login action
 	$env->user = $_SESSION[$settings->sessionprefix . "-user"];
 	
 	// The user is logged in
