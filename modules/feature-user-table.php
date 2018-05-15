@@ -71,6 +71,15 @@ register_module([
 			exit(page_renderer::render_main("User Table - $settings->sitename", $content));
 		});
 		
+		/**
+		 * @api {post} ?action=user-add	Add a user
+		 * @apiName UserAdd
+		 * @apiGroup Settings
+		 * @apiPermission Moderator
+		 *
+		 * @apiParam	{string}	user	The username for the new user.
+		 * @apiParam	{string}	email	Optional. Specifies the email address for the new user account.
+		 */
 		
 		/*
  		 * ██    ██ ███████ ███████ ██████         █████  ██████  ██████
@@ -153,6 +162,16 @@ https://github.com/sbrl/Pepperminty-Wiki/
 			exit(page_renderer::render_main("Add User - $settings->sitename", $content));
 		});
 		
+		
+		/**
+		 * @api {post} ?action=user-add	Set a user's password
+		 * @apiName UserAdd
+		 * @apiGroup Settings
+		 * @apiPermission Moderator
+		 *
+		 * @apiParam	{string}	user		The username of the accunt to set the password for.
+		 * @apiParam	{string}	new-pass	The new password for the specified username.
+		 */
 		add_action("set-password", function() {
 			global $env, $settings;
 			
