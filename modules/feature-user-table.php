@@ -172,6 +172,20 @@ https://github.com/sbrl/Pepperminty-Wiki/
 		 * @apiParam	{string}	user		The username of the accunt to set the password for.
 		 * @apiParam	{string}	new-pass	The new password for the specified username.
 		 */
+		
+		/*
+ 		 * ███████ ███████ ████████
+ 		 * ██      ██         ██
+ 		 * ███████ █████      ██ █████
+ 		 *      ██ ██         ██
+ 		 * ███████ ███████    ██
+ 		 * 
+ 		 * ██████   █████  ███████ ███████ ██     ██  ██████  ██████  ██████
+ 		 * ██   ██ ██   ██ ██      ██      ██     ██ ██    ██ ██   ██ ██   ██
+ 		 * ██████  ███████ ███████ ███████ ██  █  ██ ██    ██ ██████  ██   ██
+ 		 * ██      ██   ██      ██      ██ ██ ███ ██ ██    ██ ██   ██ ██   ██
+ 		 * ██      ██   ██ ███████ ███████  ███ ███   ██████  ██   ██ ██████
+		 */
 		add_action("set-password", function() {
 			global $env, $settings;
 			
