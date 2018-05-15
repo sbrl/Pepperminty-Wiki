@@ -72,7 +72,7 @@ register_module([
 		});
 		
 		/**
-		 * @api {post} ?action=user-add	Add a user
+		 * @api {post} ?action=user-add	Create a user account
 		 * @apiName UserAdd
 		 * @apiGroup Settings
 		 * @apiPermission Moderator
@@ -164,12 +164,12 @@ https://github.com/sbrl/Pepperminty-Wiki/
 		
 		
 		/**
-		 * @api {post} ?action=user-add	Set a user's password
+		 * @api {post} ?action=set-password	Set a user's password
 		 * @apiName UserAdd
 		 * @apiGroup Settings
 		 * @apiPermission Moderator
 		 *
-		 * @apiParam	{string}	user		The username of the accunt to set the password for.
+		 * @apiParam	{string}	user		The username of the account to set the password for.
 		 * @apiParam	{string}	new-pass	The new password for the specified username.
 		 */
 		
@@ -210,10 +210,71 @@ https://github.com/sbrl/Pepperminty-Wiki/
 			$settings->users->{$_POST["user"]}->password = hash_password($_POST["new-pass"]);
 			if(!save_settings()) {
 				http_response_code(503);
-				exit(page_renderer::render_main("Server Error - Set Password - $settings->sitename", "<p>Error: $settings->sitename couldn't save the settings back to disk! Please context $settings->admindetails_name, whose email address can be found at the bottom of this page.</p>"));
+				exit(page_renderer::render_main("Server Error - Set Password - $settings->sitename", "<p>Error: $settings->sitename couldn't save the settings back to disk! Nothing has been changed. Please context $settings->admindetails_name, whose email address can be found at the bottom of this page.</p>"));
 			}
 			
 			exit(page_renderer::render_main("Set Password - $settings->sitename", "<p>" . htmlentities($_POST["user"]) . "'s password has been set successfully. <a href='?action=user-table'>Go back</a> to the user table.</p>"));
+		});
+		
+		
+		/**
+		 * @api {post} ?action=user-delete	Delete a user account
+		 * @apiName UserDelete
+		 * @apiGroup Settings
+		 * @apiPermission Moderator
+		 *
+		 * @apiParam	{string}	user		The username of the account to delete. username.
+		 */
+		
+		/*
+ 		 * ██    ██ ███████ ███████ ██████
+ 		 * ██    ██ ██      ██      ██   ██
+ 		 * ██    ██ ███████ █████   ██████  █████
+ 		 * ██    ██      ██ ██      ██   ██
+ 		 *  ██████  ███████ ███████ ██   ██
+ 		 * 
+ 		 * ██████  ███████ ██      ███████ ████████ ███████
+ 		 * ██   ██ ██      ██      ██         ██    ██
+ 		 * ██   ██ █████   ██      █████      ██    █████
+ 		 * ██   ██ ██      ██      ██         ██    ██
+ 		 * ██████  ███████ ███████ ███████    ██    ███████
+		 */
+		add_action("user-delete", function() {
+			global $env, $settings;
+			
+			if(!$env->is_admin || !$env->is_logged_in) {
+				http_response_code(403);
+				exit(page_renderer::render_main("Error - Delete User - $settings->sitename", "<p>Error: You aren't logged in as a moderator, so you don't have permission to delete a user's account.</p>"));
+			}
+			if(empty($_GET["user"])) {
+				http_response_code(400);
+				exit(page_renderer::render_main("Error - Delete User - $settings->sitename", "<p>Error: No username was provided in the <code>user</code> POST variable.</p>"));
+			}
+			if(empty($settings->users->{$_GET["user"]})) {
+				http_response_code(404);
+				exit(page_renderer::render_main("User not found - Delete User - $settings->sitename", "<p>Error: No user called {$_GET["user"]} was found, so their account can't be delete. Perhaps you spelt their account name incorrectly?</p>"));
+			}
+			
+			email_user($_GET["user"], "Account Deletion", "Hello, {$_GET["user"]}!
+
+This is a notification email from $settings->sitename, to let you know that $env->user has deleted your user account, so you won't be able to log in to your account anymore.
+
+If this was done in error, then please contact a moderator, or $settings->admindetails_name ($settings->sitename's Administrator) - whose email address can be found at the bottom of every page on $settings->sitename.
+
+--$settings->sitename
+Powered by Pepperminty Wiki
+
+(Received this email in error? Please contact $settings->sitename's administrator as detailed above, as replying to this email may or may not reach a human at the other end)");
+			
+			// Actually delete the account
+			unset($settings->users->{$_GET["user"]});
+			
+			if(!save_settings()) {
+				http_response_code(503);
+				exit(page_renderer::render_main("Server Error - Delete User - $settings->sitename", "<p>Error: $settings->sitename couldn't save the settings back to disk! Nothing has been changed. Please context $settings->admindetails_name, whose email address can be found at the bottom of this page.</p>"));
+			}
+			
+			exit(page_renderer::render_main("Delete User - $settings->sitename", "<p>" . htmlentities($_GET["user"]) . "'s account has been deleted successfully. <a href='?action=user-table'>Go back</a> to the user table.</p>"));
 		});
 		
 		
