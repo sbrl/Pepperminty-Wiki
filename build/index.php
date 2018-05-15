@@ -396,7 +396,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "5961d11e765945453569c0a85b62d05d5f459f39";
+$commit = "116b643c6a9d3c6198151880f444507750e5c4cb";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -468,8 +468,6 @@ if(isset($_SESSION[$settings->sessionprefix . "-user"]) and
   isset($_SESSION[$settings->sessionprefix . "-pass"]))
 {
 	// Grab the session variables
-	// Note that the 'pass' field here is actually a hash of the password set
-	// by the login action
 	$env->user = $_SESSION[$settings->sessionprefix . "-user"];
 	
 	// The user is logged in
@@ -2990,7 +2988,7 @@ function render_comments($comments_data, $depth = 0)
 
 register_module([
 	"name" => "Settings GUI",
-	"version" => "0.1.2",
+	"version" => "0.1.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
 	"id" => "feature-guiconfig",
@@ -3025,7 +3023,7 @@ register_module([
 			
 			$content = "<h1>Master Control Panel</h1>\n";
 			$content .= "<p>This page lets you configure $settings->sitename's master settings. Please be careful - you can break things easily on this page if you're not careful!</p>\n";
-			$content .= "<p>You're currently running Pepperminty WIki $version+" . substr($commit, 0, 7) . ".</p>\n";
+			$content .= "<p>You're currently running Pepperminty Wiki $version+" . substr($commit, 0, 7) . ".</p>\n";
 			$content .= "<h2>Actions</h2>";
 			
 			$content .= "<button class='action-invindex-rebuild' title='Rebuilds the index that is consulted when searching the wiki. Hit this button if some pages are not showing up.'>Rebuild Search Index</button>\n";
@@ -3131,8 +3129,6 @@ SCRIPT;
 		 *      ██ ██   ██  ██  ██  ██
 		 * ███████ ██   ██   ████   ███████
 		 */
- 		
-		
 		add_action("configure-save", function () {
 			global $env, $settings, $paths, $defaultCSS;
 			
@@ -5897,7 +5893,7 @@ register_module([
 			
 			if(!$env->is_logged_in || !$env->is_admin) {
 				http_response_code(401);
-				exit(page_renderer::render_main("Unauthorised - User Table - $settings->sitename", "<p>Only moderators (or better) may access the user table. You could try <a href='?action=logout'>logging out</a> and then <a href='?action=login&returnto%2Findex.hp%3Faction%3Duser-table'>logging in</a> again as a moderator, or alternatively visit the <a href='?action=user-list'>user list</a> instead, if that's what you're after.</p>"));
+				exit(page_renderer::render_main("Unauthorised - User Table - $settings->sitename", "<p>Only moderators (or better) may access the user table. You could try <a href='?action=logout'>logging out</a> and then <a href='?action=login&returnto=index.php%3Faction%3Duser-table'>logging in</a> again as a moderator, or alternatively visit the <a href='?action=user-list'>user list</a> instead, if that's what you're after.</p>"));
 			}
 			
 			$content = "<h2>User Table</h2>
@@ -5914,7 +5910,7 @@ register_module([
 					$content .= "<td><em>(None provided)</em></td>\n";
 				$content .= "<td>";
 				if(module_exists("feature-user-preferences"))
-					$content .= "<form method='post' action='?action=change-password' class='inline-form'>
+					$content .= "<form method='post' action='?action=set-password' class='inline-form'>
 						<input type='hidden' name='user' value='$username' />
 						<input type='password' name='new-pass' placeholder='New password' />
 						<input type='submit' value='Reset Password' />
@@ -5935,6 +5931,23 @@ register_module([
 			exit(page_renderer::render_main("User Table - $settings->sitename", $content));
 		});
 		
+		/**
+		 * @api {post} ?action=user-add	Add a user
+		 * @apiName UserAdd
+		 * @apiGroup Settings
+		 * @apiPermission Moderator
+		 *
+		 * @apiParam	{string}	user	The username for the new user.
+		 * @apiParam	{string}	email	Optional. Specifies the email address for the new user account.
+		 */
+		
+		/*
+ 		 * ██    ██ ███████ ███████ ██████         █████  ██████  ██████
+ 		 * ██    ██ ██      ██      ██   ██       ██   ██ ██   ██ ██   ██
+ 		 * ██    ██ ███████ █████   ██████  █████ ███████ ██   ██ ██   ██
+ 		 * ██    ██      ██ ██      ██   ██       ██   ██ ██   ██ ██   ██
+ 		 *  ██████  ███████ ███████ ██   ██       ██   ██ ██████  ██████
+		 */
 		add_action("user-add", function() {
 			global $settings, $env;
 			
@@ -6008,6 +6021,47 @@ https://github.com/sbrl/Pepperminty-Wiki/
 			http_response_code(201);
 			exit(page_renderer::render_main("Add User - $settings->sitename", $content));
 		});
+		
+		
+		/**
+		 * @api {post} ?action=user-add	Set a user's password
+		 * @apiName UserAdd
+		 * @apiGroup Settings
+		 * @apiPermission Moderator
+		 *
+		 * @apiParam	{string}	user		The username of the accunt to set the password for.
+		 * @apiParam	{string}	new-pass	The new password for the specified username.
+		 */
+		add_action("set-password", function() {
+			global $env, $settings;
+			
+			if(!$env->is_admin) {
+				http_response_400(401);
+				exit(page_renderer::render_main("Error - Set Password - $settings->sitename", "<p>Error: You aren't logged in as a moderator, so you don't have permission to set a user's password.</p>"));
+			}
+			if(empty($_POST["user"])) {
+				http_response_code(400);
+				exit(page_renderer::render_main("Error - Set Password - $settings->sitename", "<p>Error: No username was provided via the 'user' POST parameter.</p>"));
+			}
+			if(empty($_POST["new-pass"])) {
+				http_response_code(400);
+				exit(page_renderer::render_main("Error - Set Password - $settings->sitename", "<p>Error: No password was provided via the 'new-pass' POST parameter.</p>"));
+			}
+			
+			if(empty($settings->users->{$_POST["user"]})) {
+				http_response_code(404);
+				exit(page_renderer::render_main("User not found - Set Password - $settings->sitename", "<p>Error: No user called {$_POST["user"]} was found, so their password can't be set. Perhaps you forgot to create the user first?</p>"));
+			}
+			
+			$settings->users->{$_POST["user"]}->password = hash_password($_POST["new-pass"]);
+			if(!save_settings()) {
+				http_response_code(503);
+				exit(page_renderer::render_main("Server Error - Set Password - $settings->sitename", "<p>Error: $settings->sitename couldn't save the settings back to disk! Please context $settings->admindetails_name, whose email address can be found at the bottom of this page.</p>"));
+			}
+			
+			exit(page_renderer::render_main("Set Password - $settings->sitename", "<p>" . htmlentities($_POST["user"]) . "'s password has been set successfully. <a href='?action=user-table'>Go back</a> to the user table.</p>"));
+		});
+		
 		
 		if($env->is_admin) add_help_section("949-user-table", "Managing User Accounts", "<p>As a moderator on $settings->sitename, you can use the <a href='?action=user-table'>User Table</a> to adminstrate the user accounts on $settings->sitename. It allows you to perform actions such as adding and removing accounts, and resetting passwords.</p>");
 	}

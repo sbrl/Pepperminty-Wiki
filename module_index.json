@@ -59,16 +59,16 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds threaded comments to the bottom of every page.",
         "id": "feature-comments",
-        "lastupdate": 1523989232,
+        "lastupdate": 1526409370,
         "optional": false
     },
     {
         "name": "Settings GUI",
-        "version": "0.1.2",
+        "version": "0.1.3",
         "author": "Starbeamrainbowlabs",
         "description": "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
         "id": "feature-guiconfig",
-        "lastupdate": 1526250969,
+        "lastupdate": 1526403579,
         "optional": false
     },
     {
@@ -140,7 +140,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a organiser page that lets moderators (or better) control the reegistered user accounts, and perform adminstrative actions such as password resets, and adding \/ removing accounts.",
         "id": "feature-user-table",
-        "lastupdate": 1526250680,
+        "lastupdate": 1526409428,
         "optional": false
     },
     {
