@@ -536,7 +536,12 @@ DIFFSCRIPT;
 		 . "</p>");
 	}
 ]);
-
+/**
+ * Generates a unique hash of a page's content for edit conflict detection
+ * purposes.
+ * @param	string	$page_data	The page text to hash.
+ * @return	string				A hash of the given page text.
+ */
 function generate_page_hash($page_data) {
 	return sha1($page_data);
 }

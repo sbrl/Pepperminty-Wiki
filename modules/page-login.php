@@ -159,6 +159,9 @@ register_module([
 	}
 ]);
 
+/**
+ * Recalculates and updates the password hashing cost.
+ */
 function do_password_hash_code_update() {
 	global $settings, $paths;
 	
