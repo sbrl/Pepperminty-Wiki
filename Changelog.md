@@ -21,6 +21,9 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Added `password_cost`, `password_cost_time`, and `password_cost_time_interval` settings
      - `password_cost` is recalculated automatically every week by default (it keeps track of this via the `password_cost_time_lastcheck` 'setting')
  - The `css` setting will now keep a value of auto, even when `peppermint.json` is automatically updated by _Pepperminty Wiki_.
+ - Optimised the search context extractor.
+     - Tuned the default value for `search_characters_context` down to 75 (this won't be the case for existing wikis, so you'll need to adjust it manually)
+     - Added new `search_characters_context_total` setting to control the maximum characters in a search context
 
 ## v0.16
 _(No changes since v0.16-beta1)_

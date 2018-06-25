@@ -790,6 +790,7 @@ class search
 			if(isset($invindex[$qterm]))
 			{
 				// Loop over each page in the inverted index entry
+				reset($invindex); // Reset array/object pointer
 				foreach($invindex[$qterm] as $pageid => $page_entry)
 				{
 					// Create an entry in the matching pages array if it doesn't exist
@@ -801,6 +802,7 @@ class search
 			
 			
 			// Loop over the pageindex and search the titles / tags
+			reset($pageindex); // Reset array/object pointer
 			foreach ($pageindex as $pagename => $pagedata)
 			{
 				// Get the current page's id
@@ -922,9 +924,7 @@ class search
 			if($all_offsets === false)
 				continue;
 			foreach($all_offsets as $offset)
-			{
 				$matches[] = [ $nterm, $offset ];
-			}
 		}
 		
 		// Sort the matches by offset
@@ -936,58 +936,47 @@ class search
 		$sourceLength = mb_strlen($source);
 		
 		$contexts = [];
-		$basepos = 0;
+		
 		$matches_count = count($matches);
-		while($basepos < $matches_count)
-		{
-			// Store the next match along - all others will be relative to that one
-			$group = [$matches[$basepos]];
+		$total_context_length = 0;
+		for($i = 0; $i < $matches_count; $i++) {
+			$next_context = [
+				"from" => max(0, $matches[$i][1] - $settings->search_characters_context),
+				"to" => min($sourceLength, $matches[$i][1] + count($matches[0]) + $settings->search_characters_context)
+			];
 			
-			// Start scanning at the next one along - we always store the first match
-			$scanpos = $basepos + 1;
-			$distance = 0;
-			
-			while(true)
-			{
-				// Break out if we reach the end
-				if($scanpos >= $matches_count) break;
+			if(end($contexts) !== false && end($contexts)["to"] > $next_context["from"]) {
+				// This next context overlaps with the previous one
+				// Extend the last one instead of adding a new one
 				
-				// Find the distance between the current one and the last one
-				$distance = $matches[$scanpos][1] - $matches[$scanpos - 1][1];
+				// The array pointer is pointing at the last element now because we called end() above
 				
-				// Store it if the distance is below the threshold
-				if($distance < $settings->search_characters_context)
-					$group[] = $matches[$scanpos];
-				else
-					break;
-				
-				$scanpos++;
+				// Update the total context length counter appropriately
+				$total_context_length += $next_context["to"] - $contexts[key($contexts)]["to"];
+				$contexts[key($contexts)]["to"] = $next_context["to"];
+			}
+			else { // No overlap here! Business as usual.
+				$contexts[] = $next_context;
+				// Update the total context length counter as normal
+				$total_context_length += $next_context["to"] - $next_context["from"];
 			}
 			
-			$context_start = $group[0][1] - $settings->search_characters_context;
-			$context_end = $group[count($group) - 1][1] + $settings->search_characters_context;
 			
-			if($context_start < 0) $context_start = 0;
-			if($context_end > $sourceLength) $context_end = $sourceLength;
-			
-			//echo("Got context. Start: $context_start, End: $context_end\n");
-			//echo("Group:"); var_dump($group);
-			
-			$context = substr($source, $context_start, $context_end - $context_start);
-			
-			// Strip the markdown from the context - it's most likely going to
-			// be broken anyway.
-			//$context = self::strip_markup($context);
-			
-			// Escape special characters to protect against attacks
-			$context = htmlentities($context);
-			
-			$contexts[] = $context;
-			
-			$basepos = $scanpos + 1;
+			end($contexts);
+			$last_context = &$contexts[key($contexts)];
+			if($total_context_length > $settings->search_characters_context_total) {
+				// We've reached the limit on the number of characters this context should contain. Trim off the context to fit and break out
+				$last_context["to"] -= $total_context_length - $settings->search_characters_context_total;
+				break;
+			}
 		}
 		
-		return implode(" ... ", $contexts);
+		$contexts_text = [];
+		foreach($contexts as $context) {
+			$contexts_text[] = substr($source, $context["from"], $context["to"] - $context["from"]);
+		}
+		
+		return implode(" ... ", $contexts_text);
 	}
 	
 	/**
