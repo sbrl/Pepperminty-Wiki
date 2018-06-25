@@ -125,9 +125,18 @@ register_module([
 			
 			$search_start = microtime(true);
 			
+			
+			$time_start = microtime(true);
 			$invindex = search::load_invindex($paths->searchindex);
+			$env->perfdata->invindex_decode_time = round((microtime(true) - $time_start)*1000, 3);
+			
+			$start = microtime(true);
 			$results = search::query_invindex($_GET["query"], $invindex);
 			$resultCount = count($results);
+			$env->perfdata->invindex_query_time = round((microtime(true) - $time_start)*1000, 3);
+			
+			header("x-invindex-decode-time: {$env->perfdata->invindex_decode_time}ms");
+			header("x-invindex-query-time: {$env->perfdata->invindex_query_time}ms");
 			
 			foreach($results as &$result) {
 				$result["context"] = search::extract_context(
@@ -511,6 +520,7 @@ class search
 	 */
 	public static function index($source)
 	{
+		// We don't need to normalise or transliterate here because self::tokenize() does this for us
 		$source = html_entity_decode($source, ENT_QUOTES);
 		$source_length = mb_strlen($source);
 		
@@ -546,7 +556,13 @@ class search
 	 */
 	public static function tokenize($source)
 	{
-		$source = Normalizer::normalize(strtolower($source), Normalizer::FORM_C);
+		/** Normalises input characters for searching & indexing */
+		static $literator; $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
+		
+		// We don't need to normalise here because the transliterator handles 
+		// this for us. Also, we can't move the literator to a static variable 
+		// because PHP doesn't like it very much
+		$source = $literator->transliterate($source);
 		$source = preg_replace('/[\[\]\|\{\}\/]/u', " ", $source);
 		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, PREG_SPLIT_NO_EMPTY);
 	}
@@ -570,6 +586,9 @@ class search
 	{
 		global $pageindex, $env, $paths, $settings;
 		
+		/** Normalises input characters for searching & indexing */
+		static $literator; $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
+		
 		if($output) {
 			header("content-type: text/event-stream");
 			ob_end_flush();
@@ -591,8 +610,8 @@ class search
 				$i++; $missing_files++;
 				continue;
 			}
-			$pagesource = Normalizer::normalize(file_get_contents($page_filename), Normalizer::FORM_C);
-			$index = self::index($pagesource);
+			// We do not transliterate or normalise here because the indexer will take care of this for us
+			$index = self::index(file_get_contents($page_filename));
 			
 			$pageid = ids::getid($pagename);
 			self::merge_into_invindex($invindex, $pageid, $index);
@@ -744,6 +763,9 @@ class search
 	{
 		global $settings, $pageindex;
 		
+		/** Normalises input characters for searching & indexing */
+		static $literator; $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
+		
 		$query_terms = self::tokenize($query);
 		$matching_pages = [];
 		
@@ -779,7 +801,9 @@ class search
 				// Get the current page's id
 				$pageid = ids::getid($pagename);
 				// Consider matches in the page title
-				if(stripos($pagename, $qterm) !== false)
+				$title_matches = mb_stripos_all($literator->transliterate($pagename), $qterm);
+				$title_matches_count = $title_matches !== false ? count($title_matches) : 0;
+				if($title_matches_count > 0)
 				{
 					// We found the qterm in the title
 					if(!isset($matching_pages[$pageid]))
@@ -789,12 +813,14 @@ class search
 					if(!isset($matching_pages[$pageid]["title-matches"]))
 						$matching_pages[$pageid]["title-matches"] = 0;
 					
-					$matching_pages[$pageid]["title-matches"] += count(mb_stripos_all($pagename, $qterm)) * strlen($qterm);
+					$matching_pages[$pageid]["title-matches"] += $title_matches_count * strlen($qterm);
 				}
 				
 				// Consider matches in the page's tags
-				if(isset($pagedata->tags) and // If this page has tags
-				   stripos(implode(" ", $pagedata->tags), $qterm) !== false) // And we found the qterm in the tags
+				$tag_matches = isset($pagedata->tags) ? mb_stripos_all($literator->transliterate(implode(" ", $pagedata->tags)), $qterm) : false;
+				$tag_matches_count = $tag_matches !== false ? count($tag_matches) : 0;
+				
+				if($tag_matches_count > 0) // And we found the qterm in the tags
 				{
 					if(!isset($matching_pages[$pageid]))
 						$matching_pages[$pageid] = [ "nterms" => [] ];
@@ -802,7 +828,7 @@ class search
 					// Set up a counter for tag match if there isn't one already
 					if(!isset($matching_pages[$pageid]["tag-matches"]))
 						$matching_pages[$pageid]["tag-matches"] = 0;
-					$matching_pages[$pageid]["tag-matches"] += count(mb_stripos_all(implode(" ", $pagedata->tags), $qterm)) * strlen($qterm);
+					$matching_pages[$pageid]["tag-matches"] += $tag_matches_count * strlen($qterm);
 				}
 			}
 		}

@@ -7,6 +7,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - [Module API] Added `save_settings()` convenience method
 
 ### Fixed
+ - Updated the search system to transliterate characters to better support searching pages that are written in other languages.
+     - You'll want to rebuild your search index via the button in the configuration panel, or the `invindex-rebuild` action.
  - [Security] Made the site secret generator cryptographically secure. If you created your wiki before this change, you might want to change your site secret in `peppermint.json` to something more secure with a site like [random.org](https://www.random.org/).
      - The PHP function `openssl_pseudo_random_bytes()` was being used before, but [apparently that's not cryptographically secure](https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php).
  - [Module API] Fix `full_url()` logic
