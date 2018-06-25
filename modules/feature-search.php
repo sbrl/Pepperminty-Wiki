@@ -378,13 +378,18 @@ register_module([
 				exit("Error: The type '$type' is not one of the supported output types. Available values: json, opensearch. Default: json");
 			}
 			
+			$literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
+			
+			$query = $literator->transliterate($_GET["query"]);
+			
+			
 			// Rank each page name
 			$results = [];
 			foreach($pageindex as $pageName => $entry) {
 				$results[] = [
 					"pagename" => $pageName,
 					// Costs: Insert: 1, Replace: 8, Delete: 6
-					"distance" => levenshtein(mb_strtolower($_GET["query"]), mb_strtolower($pageName), 1, 8, 6)
+					"distance" => levenshtein($query, $literator->transliterate($pageName), 1, 8, 6)
 				];
 			}
 			

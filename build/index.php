@@ -396,7 +396,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "bdf47a2540bdbb36bd69869fd2a1b90d033d9966";
+$commit = "49b91aa6f999409dbcf6d165f379ebb95fec7dcb";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -4021,13 +4021,18 @@ register_module([
 				exit("Error: The type '$type' is not one of the supported output types. Available values: json, opensearch. Default: json");
 			}
 			
+			$literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
+			
+			$query = $literator->transliterate($_GET["query"]);
+			
+			
 			// Rank each page name
 			$results = [];
 			foreach($pageindex as $pageName => $entry) {
 				$results[] = [
 					"pagename" => $pageName,
 					// Costs: Insert: 1, Replace: 8, Delete: 6
-					"distance" => levenshtein(mb_strtolower($_GET["query"]), mb_strtolower($pageName), 1, 8, 6)
+					"distance" => levenshtein($query, $literator->transliterate($pageName), 1, 8, 6)
 				];
 			}
 			
