@@ -397,7 +397,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "93494b672938d2fb456138e03db5be3803bc51b7";
+$commit = "75b6b6c55fa9710d82b6623971581db7c6c5309b";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -3789,14 +3789,16 @@ register_module([
 				);
 			}
 			
+			$env->perfdata->search_time = round((microtime(true) - $search_start)*1000, 3);
+			
+			header("x-search-time: {$env->perfdata->search_time}ms");
+			
 			if(!empty($_GET["format"]) && $_GET["format"] == "json") {
 				header("content-type: application/json");
 				$json_results = new stdClass();
 				foreach($results as $result) $json_results->{$result["pagename"]} = $result;
 				exit(json_encode($json_results));
 			}
-
-			$env->perfdata->search_time = round((microtime(true) - $search_start)*1000, 3);
 
 			$title = $_GET["query"] . " - Search results - $settings->sitename";
 			

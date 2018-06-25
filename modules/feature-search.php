@@ -145,14 +145,16 @@ register_module([
 				);
 			}
 			
+			$env->perfdata->search_time = round((microtime(true) - $search_start)*1000, 3);
+			
+			header("x-search-time: {$env->perfdata->search_time}ms");
+			
 			if(!empty($_GET["format"]) && $_GET["format"] == "json") {
 				header("content-type: application/json");
 				$json_results = new stdClass();
 				foreach($results as $result) $json_results->{$result["pagename"]} = $result;
 				exit(json_encode($json_results));
 			}
-
-			$env->perfdata->search_time = round((microtime(true) - $search_start)*1000, 3);
 
 			$title = $_GET["query"] . " - Search results - $settings->sitename";
 			
