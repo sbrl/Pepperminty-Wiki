@@ -141,7 +141,7 @@ register_module([
 			$start = microtime(true);
 			foreach($results as &$result) {
 				$result["context"] = search::extract_context(
-					$invindex, ids::getid($result["pagename"]),
+					$invindex, $result["pagename"],
 					$_GET["query"],
 					file_get_contents($env->storage_prefix . $result["pagename"] . ".md")
 				);
@@ -808,13 +808,15 @@ class search
 			reset($pageindex); // Reset array/object pointer
 			foreach ($pageindex as $pagename => $pagedata)
 			{
-				// Get the current page's id
-				$pageid = ids::getid($pagename);
+				// Seteup a variable to hold the current page's id
+				$pageid = false; // Only fill this out if we find a match
 				// Consider matches in the page title
+				// FUTURE: We may be able to optimise this further by using preg_match_all + preg_quote instead of mb_stripos_all. Experimentation / benchmarking is required to figure out which one is faster
 				$title_matches = mb_stripos_all($literator->transliterate($pagename), $qterm);
 				$title_matches_count = $title_matches !== false ? count($title_matches) : 0;
 				if($title_matches_count > 0)
 				{
+					$pageid = ids::getid($pagename); // Fill out the page id
 					// We found the qterm in the title
 					if(!isset($matching_pages[$pageid]))
 						$matching_pages[$pageid] = [ "nterms" => [] ];
@@ -832,6 +834,9 @@ class search
 				
 				if($tag_matches_count > 0) // And we found the qterm in the tags
 				{
+					if($pageid == false) // Fill out the page id if it hasn't been already
+						$pageid = ids::getid($pagename);
+					
 					if(!isset($matching_pages[$pageid]))
 						$matching_pages[$pageid] = [ "nterms" => [] ];
 					
@@ -908,14 +913,17 @@ class search
 	/**
 	 * Extracts a context string (in HTML) given a search query that could be displayed
 	 * in a list of search results.
-	 * @param	string	$query	The search queary to generate the context for.
-	 * @param	string	$source	The page source to extract the context from.
-	 * @return	string			The generated context string.
+	 * @param	string	$invindex	The inverted index to consult.
+	 * @param	string	$pagename	The name of the paget that this source belongs to. Used when consulting the inverted index.
+	 * @param	string	$query		The search queary to generate the context for.
+	 * @param	string	$source		The page source to extract the context from.
+	 * @return	string				The generated context string.
 	 */
-	public static function extract_context($invindex, $pageid, $query, $source)
+	public static function extract_context($invindex, $pagename, $query, $source)
 	{
 		global $settings;
 		
+		$pageid = ids::getid($pagename);
 		$nterms = self::tokenize($query);
 		$matches = [];
 		
