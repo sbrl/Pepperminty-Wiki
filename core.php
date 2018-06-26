@@ -405,7 +405,7 @@ function starts_with($haystack, $needle)
 function mb_stripos_all($haystack, $needle) {
 	$s = 0; $i = 0;
 	while(is_integer($i)) {
-		$i = function_exists("mb_stripos") ? mb_stripos($haystack, $needle, $s) : stripos($haystack, $needle, $s);
+		$i = mb_stripos($haystack, $needle, $s);
 		if(is_integer($i)) {
 			$aStrPos[] = $i;
 			$s = $i + (function_exists("mb_strlen") ? mb_strlen($needle) : strlen($needle));
@@ -881,10 +881,12 @@ class ids
 	public static function getid($pagename)
 	{
 		global $idindex;
-
+		
+		$pagename_norm = Normalizer::normalize($pagename, Normalizer::FORM_C);
 		foreach ($idindex as $id => $entry)
 		{
-			if(Normalizer::normalize($entry, Normalizer::FORM_C) == Normalizer::normalize($pagename, Normalizer::FORM_C))
+			// We don't need to normalise here because we normralise when assigning ids
+			if($entry == $pagename_norm)
 				return $id;
 		}
 		

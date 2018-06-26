@@ -138,12 +138,16 @@ register_module([
 			header("x-invindex-decode-time: {$env->perfdata->invindex_decode_time}ms");
 			header("x-invindex-query-time: {$env->perfdata->invindex_query_time}ms");
 			
+			$start = microtime(true);
 			foreach($results as &$result) {
 				$result["context"] = search::extract_context(
+					$invindex, ids::getid($result["pagename"]),
 					$_GET["query"],
 					file_get_contents($env->storage_prefix . $result["pagename"] . ".md")
 				);
 			}
+			$env->perfdata->context_generation_time = round((microtime(true) - $start)*1000, 3);
+			header("x-context-generation-time: {$env->perfdata->context_generation_time}ms");
 			
 			$env->perfdata->search_time = round((microtime(true) - $search_start)*1000, 3);
 			
@@ -564,7 +568,7 @@ class search
 	public static function tokenize($source)
 	{
 		/** Normalises input characters for searching & indexing */
-		static $literator; $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
+		static $literator; if($literator == null) $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
 		
 		// We don't need to normalise here because the transliterator handles 
 		// this for us. Also, we can't move the literator to a static variable 
@@ -592,9 +596,6 @@ class search
 	public static function rebuild_invindex($output = true)
 	{
 		global $pageindex, $env, $paths, $settings;
-		
-		/** Normalises input characters for searching & indexing */
-		static $literator; $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
 		
 		if($output) {
 			header("content-type: text/event-stream");
@@ -771,7 +772,7 @@ class search
 		global $settings, $pageindex;
 		
 		/** Normalises input characters for searching & indexing */
-		static $literator; $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
+		static $literator; if($literator == null) $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
 		
 		$query_terms = self::tokenize($query);
 		$matching_pages = [];
@@ -792,7 +793,7 @@ class search
 			if(isset($invindex[$qterm]))
 			{
 				// Loop over each page in the inverted index entry
-				reset($invindex); // Reset array/object pointer
+				reset($invindex[$qterm]); // Reset array/object pointer
 				foreach($invindex[$qterm] as $pageid => $page_entry)
 				{
 					// Create an entry in the matching pages array if it doesn't exist
@@ -842,7 +843,7 @@ class search
 			}
 		}
 		
-		
+		reset($matching_pages);
 		foreach($matching_pages as $pageid => &$pagedata)
 		{
 			$pagedata["pagename"] = ids::getpagename($pageid);
@@ -851,6 +852,7 @@ class search
 			$pageOffsets = [];
 			
 			// Loop over each search term found on this page
+			reset($pagedata["nterms"]);
 			foreach($pagedata["nterms"] as $pterm => $entry)
 			{
 				// Add the number of occurrences of this search term to the ranking
@@ -910,23 +912,23 @@ class search
 	 * @param	string	$source	The page source to extract the context from.
 	 * @return	string			The generated context string.
 	 */
-	public static function extract_context($query, $source)
+	public static function extract_context($invindex, $pageid, $query, $source)
 	{
 		global $settings;
 		
 		$nterms = self::tokenize($query);
 		$matches = [];
-		// Loop over each nterm and find it in the source
-		foreach($nterms as $nterm)
-		{
-			if(in_array($nterm, static::$stop_words))
+		
+		foreach($nterms as $nterm) {
+			// Skip over words that don't appear in the inverted index (e.g. stop words)
+			if(!isset($invindex[$nterm]))
 				continue;
-			$all_offsets = mb_stripos_all($source, $nterm);
-			// Skip over adding matches if there aren't any
-			if($all_offsets === false)
+			// Skip if the page isn't found in the inverted index for this word
+			if(!isset($invindex[$nterm][$pageid]))
 				continue;
-			foreach($all_offsets as $offset)
-				$matches[] = [ $nterm, $offset ];
+			
+			foreach($invindex[$nterm][$pageid]["offsets"] as $next_offset)
+				$matches[] = [ $nterm, $next_offset ];
 		}
 		
 		// Sort the matches by offset
