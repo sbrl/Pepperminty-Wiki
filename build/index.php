@@ -397,7 +397,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "3d3b6c491a0848922e0dc3d8c1c89a5f87673c0e";
+$commit = "80f2cc77a8fa474394492f08ea7f4c998d076acc";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -3682,10 +3682,15 @@ register_module([
 			
 			$index = search::index($source);
 			
-			var_dump($env->page);
-			var_dump($source);
-			
-			var_dump($index);
+			echo("Page name: $env->page\n");
+			echo("--------------- Source ---------------\n");
+			echo($source); echo("\n");
+			echo("--------------------------------------\n\n");
+			echo("---------------- Index ---------------\n");
+			foreach($index as $term => $entry) {
+				echo("$term: {$entry["freq"]} matches | " . implode(", ", $entry["offsets"]) . "\n");
+			}
+			echo("--------------------------------------\n");
 		});
 		
 		/**
@@ -4454,9 +4459,10 @@ class search
 			reset($pageindex); // Reset array/object pointer
 			foreach ($pageindex as $pagename => $pagedata)
 			{
-				// Seteup a variable to hold the current page's id
+				// Setup a variable to hold the current page's id
 				$pageid = false; // Only fill this out if we find a match
 				// Consider matches in the page title
+				// FUTURE: We may be able to optimise this further by using preg_match_all + preg_quote instead of mb_stripos_all. Experimentation / benchmarking is required to figure out which one is faster
 				$title_matches = mb_stripos_all($literator->transliterate($pagename), $qterm);
 				$title_matches_count = $title_matches !== false ? count($title_matches) : 0;
 				if($title_matches_count > 0)

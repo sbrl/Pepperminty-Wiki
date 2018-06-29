@@ -36,10 +36,15 @@ register_module([
 			
 			$index = search::index($source);
 			
-			var_dump($env->page);
-			var_dump($source);
-			
-			var_dump($index);
+			echo("Page name: $env->page\n");
+			echo("--------------- Source ---------------\n");
+			echo($source); echo("\n");
+			echo("--------------------------------------\n\n");
+			echo("---------------- Index ---------------\n");
+			foreach($index as $term => $entry) {
+				echo("$term: {$entry["freq"]} matches | " . implode(", ", $entry["offsets"]) . "\n");
+			}
+			echo("--------------------------------------\n");
 		});
 		
 		/**
@@ -808,7 +813,7 @@ class search
 			reset($pageindex); // Reset array/object pointer
 			foreach ($pageindex as $pagename => $pagedata)
 			{
-				// Seteup a variable to hold the current page's id
+				// Setup a variable to hold the current page's id
 				$pageid = false; // Only fill this out if we find a match
 				// Consider matches in the page title
 				// FUTURE: We may be able to optimise this further by using preg_match_all + preg_quote instead of mb_stripos_all. Experimentation / benchmarking is required to figure out which one is faster
