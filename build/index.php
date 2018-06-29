@@ -397,7 +397,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "80f2cc77a8fa474394492f08ea7f4c998d076acc";
+$commit = "8403ffd5c3de9725756bcfc5929ce9239be1379b";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -4194,14 +4194,16 @@ class search
 		{
 			$nterm = $term;
 			
+			
 			// Skip over stop words (see https://en.wikipedia.org/wiki/Stop_words)
-			if(in_array($nterm, self::$stop_words)) continue;
+			if(in_array($nterm, self::$stop_words)) { $i++; continue; }
 			
 			if(!isset($index[$nterm]))
 			{
 				$index[$nterm] = [ "freq" => 0, "offsets" => [] ];
 			}
 			
+			// FIXME: Here we use the index of the token in the array, when we want the number of characters into the page!
 			$index[$nterm]["freq"]++;
 			$index[$nterm]["offsets"][] = $i;
 			
@@ -4213,20 +4215,25 @@ class search
 	
 	/**
 	 * Converts a source string into a series of raw tokens.
-	 * @param	string	$source	The source string to process.
+	 * @param	string	$source				The source string to process.
+	 * @param	boolean	$capture_offsets	Whether to capture & return the character offsets of the tokens detected. If true, then each token returned will be an array in the form [ token, char_offset ].
 	 * @return	array	An array of raw tokens extracted from the specified source string.
 	 */
-	public static function tokenize($source)
+	public static function tokenize($source, $capture_offsets = false)
 	{
 		/** Normalises input characters for searching & indexing */
 		static $literator; if($literator == null) $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
+		
+		$flags = PREG_SPLIT_NO_EMPTY; // Don't return empty items
+		if($capture_offsets)
+			$flags |= PREG_SPLIT_OFFSET_CAPTURE;
 		
 		// We don't need to normalise here because the transliterator handles 
 		// this for us. Also, we can't move the literator to a static variable 
 		// because PHP doesn't like it very much
 		$source = $literator->transliterate($source);
 		$source = preg_replace('/[\[\]\|\{\}\/]/u', " ", $source);
-		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, PREG_SPLIT_NO_EMPTY);
+		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, $flags);
 	}
 	
 	/**

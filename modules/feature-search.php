@@ -569,20 +569,25 @@ class search
 	
 	/**
 	 * Converts a source string into a series of raw tokens.
-	 * @param	string	$source	The source string to process.
+	 * @param	string	$source				The source string to process.
+	 * @param	boolean	$capture_offsets	Whether to capture & return the character offsets of the tokens detected. If true, then each token returned will be an array in the form [ token, char_offset ].
 	 * @return	array	An array of raw tokens extracted from the specified source string.
 	 */
-	public static function tokenize($source)
+	public static function tokenize($source, $capture_offsets = false)
 	{
 		/** Normalises input characters for searching & indexing */
 		static $literator; if($literator == null) $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
+		
+		$flags = PREG_SPLIT_NO_EMPTY; // Don't return empty items
+		if($capture_offsets)
+			$flags |= PREG_SPLIT_OFFSET_CAPTURE;
 		
 		// We don't need to normalise here because the transliterator handles 
 		// this for us. Also, we can't move the literator to a static variable 
 		// because PHP doesn't like it very much
 		$source = $literator->transliterate($source);
 		$source = preg_replace('/[\[\]\|\{\}\/]/u', " ", $source);
-		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, PREG_SPLIT_NO_EMPTY);
+		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, $flags);
 	}
 	
 	/**
