@@ -548,14 +548,16 @@ class search
 		{
 			$nterm = $term;
 			
+			
 			// Skip over stop words (see https://en.wikipedia.org/wiki/Stop_words)
-			if(in_array($nterm, self::$stop_words)) continue;
+			if(in_array($nterm, self::$stop_words)) { $i++; continue; }
 			
 			if(!isset($index[$nterm]))
 			{
 				$index[$nterm] = [ "freq" => 0, "offsets" => [] ];
 			}
 			
+			// FIXME: Here we use the index of the token in the array, when we want the number of characters into the page!
 			$index[$nterm]["freq"]++;
 			$index[$nterm]["offsets"][] = $i;
 			
