@@ -24,6 +24,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Optimised the search system a lot (#157 - ~2800ms searches now take ~450ms O.o)
      - Tuned the default value for `search_characters_context` down to 75 (this won't be the case for existing wikis, so you'll need to adjust it manually)
      - Added new `search_characters_context_total` setting to control the maximum characters in a search context
+ - The `index` action's output should now be formatted nicely.
 
 ## v0.16
 _(No changes since v0.16-beta1)_
