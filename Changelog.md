@@ -5,6 +5,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ### Added
  - [Module API] Added `save_settings()` convenience method
+ - [Rest API] Add `user-add` and `set-password` moderator actions
 
 ### Fixed
  - Updated the search system to transliterate characters to better support searching pages that are written in other languages.
@@ -13,7 +14,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - The PHP function `openssl_pseudo_random_bytes()` was being used before, but [apparently that's not cryptographically secure](https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php).
  - [Module API] Fix `full_url()` logic
  - [Module API] Make  `email_user()` correctly return email sending failures
- - [Rest API] Add `user-add` and `set-password` moderator actions
+ - Squashed a warning in the search redirector
 
 ## Changed
  - Password hashing has been overhauled! A totally new-and-different system is being used now, so you'll need to rehash all your passwords.

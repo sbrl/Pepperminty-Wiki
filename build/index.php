@@ -297,7 +297,7 @@ a.redlink:visited { color: rgb(130, 15, 15); /*#8b1a1a*/ }
 .search-result::after { content: "Rank: " attr(data-rank); position: absolute; top: 3.8rem; right: 0.7rem; color: rgba(50, 50, 50, 0.3); }
 .search-result > h2 { margin-left: 3rem; }
 .search-result-badges { font-size: 1rem; font-weight: normal; }
-.search-context { max-height: 20em; overflow: hidden; }
+.search-context { min-height: 3em; max-height: 20em; overflow: hidden; }
 .search-context::after { content: ""; position: absolute; bottom: 0; width: 100%; height: 3em; display: block; background: linear-gradient(to bottom, transparent, #faf8fb); pointer-events: none; }
 
 textarea[name=content] { resize: none; }
@@ -397,7 +397,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "8403ffd5c3de9725756bcfc5929ce9239be1379b";
+$commit = "cdee30c2861c0ae91573214105caa659da38ac7d";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -1923,15 +1923,8 @@ $env->action = strtolower($_GET["action"]);
 //////////////////////////////////////
 ///// Extra consistency measures /////
 //////////////////////////////////////
-// Redirect to the search page if there isn't a page with the requested name
-if(!isset($pageindex->{$env->page}) and isset($_GET["search-redirect"]))
-{
-	http_response_code(307);
-	$url = "?action=search&query=" . rawurlencode($env->page);
-	header("location: $url");
-	exit(page_renderer::render("Non existent page - $settings->sitename", "<p>There isn't a page on $settings->sitename with that name. However, you could <a href='$url'>search for this page name</a> in other pages.</p>
-		<p>Alternatively, you could <a href='?action=edit&page=" . rawurlencode($env->page) . "&create=true'>create this page</a>.</p>"));
-}
+
+// CHANGED: The search redirector has now been moved to below the module registration system, as it was causing a warning here
 
 // Redirect the user to the login page if:
 //  - A login is required to view this wiki
@@ -4188,26 +4181,17 @@ class search
 		
 		$index = [];
 		
-		$terms = self::tokenize($source);
-		$i = 0;
+		$terms = self::tokenize($source, true);
 		foreach($terms as $term)
 		{
-			$nterm = $term;
-			
-			
 			// Skip over stop words (see https://en.wikipedia.org/wiki/Stop_words)
-			if(in_array($nterm, self::$stop_words)) { $i++; continue; }
+			if(in_array($term[0], self::$stop_words)) continue;
 			
-			if(!isset($index[$nterm]))
-			{
-				$index[$nterm] = [ "freq" => 0, "offsets" => [] ];
-			}
+			if(!isset($index[$term[0]]))
+				$index[$term[0]] = [ "freq" => 0, "offsets" => [] ];
 			
-			// FIXME: Here we use the index of the token in the array, when we want the number of characters into the page!
-			$index[$nterm]["freq"]++;
-			$index[$nterm]["offsets"][] = $i;
-			
-			$i++;
+			$index[$term[0]]["freq"]++;
+			$index[$term[0]]["offsets"][] = $term[1];
 		}
 		
 		return $index;
@@ -9229,6 +9213,23 @@ foreach($remote_files as $remote_file_def) {
 	error_log("[ Pepperminty-Wiki/$settings->sitename ] Downloading {$remote_file_def["local_filename"]} from {$remote_file_def["remote_url"]}");
 	file_put_contents($remote_file_def["local_filename"], fopen($remote_file_def["remote_url"], "rb"));
 }
+
+//////////////////////////////////
+/// Final Consistency Measures ///
+//////////////////////////////////
+
+// Redirect to the search page if there isn't a page with the requested name
+if(!isset($pageindex->{$env->page}) and isset($_GET["search-redirect"]))
+{
+	http_response_code(307);
+	$url = "?action=search&query=" . rawurlencode($env->page);
+	header("location: $url");
+	exit(page_renderer::render_minimal("Non existent page - $settings->sitename", "<p>There isn't a page on $settings->sitename with that name. However, you could <a href='$url'>search for this page name</a> in other pages.</p>
+		<p>Alternatively, you could <a href='?action=edit&page=" . rawurlencode($env->page) . "&create=true'>create this page</a>.</p>"));
+}
+
+//////////////////////////////////
+
 
 // Perform the appropriate action
 $action_name = $env->action;
