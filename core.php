@@ -1536,15 +1536,8 @@ $env->action = strtolower($_GET["action"]);
 //////////////////////////////////////
 ///// Extra consistency measures /////
 //////////////////////////////////////
-// Redirect to the search page if there isn't a page with the requested name
-if(!isset($pageindex->{$env->page}) and isset($_GET["search-redirect"]))
-{
-	http_response_code(307);
-	$url = "?action=search&query=" . rawurlencode($env->page);
-	header("location: $url");
-	exit(page_renderer::render("Non existent page - $settings->sitename", "<p>There isn't a page on $settings->sitename with that name. However, you could <a href='$url'>search for this page name</a> in other pages.</p>
-		<p>Alternatively, you could <a href='?action=edit&page=" . rawurlencode($env->page) . "&create=true'>create this page</a>.</p>"));
-}
+
+// CHANGED: The search redirector has now been moved to below the module registration system, as it was causing a warning here
 
 // Redirect the user to the login page if:
 //  - A login is required to view this wiki
@@ -1773,6 +1766,23 @@ foreach($remote_files as $remote_file_def) {
 	error_log("[ Pepperminty-Wiki/$settings->sitename ] Downloading {$remote_file_def["local_filename"]} from {$remote_file_def["remote_url"]}");
 	file_put_contents($remote_file_def["local_filename"], fopen($remote_file_def["remote_url"], "rb"));
 }
+
+//////////////////////////////////
+/// Final Consistency Measures ///
+//////////////////////////////////
+
+// Redirect to the search page if there isn't a page with the requested name
+if(!isset($pageindex->{$env->page}) and isset($_GET["search-redirect"]))
+{
+	http_response_code(307);
+	$url = "?action=search&query=" . rawurlencode($env->page);
+	header("location: $url");
+	exit(page_renderer::render_minimal("Non existent page - $settings->sitename", "<p>There isn't a page on $settings->sitename with that name. However, you could <a href='$url'>search for this page name</a> in other pages.</p>
+		<p>Alternatively, you could <a href='?action=edit&page=" . rawurlencode($env->page) . "&create=true'>create this page</a>.</p>"));
+}
+
+//////////////////////////////////
+
 
 // Perform the appropriate action
 $action_name = $env->action;
