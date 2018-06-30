@@ -542,26 +542,17 @@ class search
 		
 		$index = [];
 		
-		$terms = self::tokenize($source);
-		$i = 0;
+		$terms = self::tokenize($source, true);
 		foreach($terms as $term)
 		{
-			$nterm = $term;
-			
-			
 			// Skip over stop words (see https://en.wikipedia.org/wiki/Stop_words)
-			if(in_array($nterm, self::$stop_words)) { $i++; continue; }
+			if(in_array($term[0], self::$stop_words)) continue;
 			
-			if(!isset($index[$nterm]))
-			{
-				$index[$nterm] = [ "freq" => 0, "offsets" => [] ];
-			}
+			if(!isset($index[$term[0]]))
+				$index[$term[0]] = [ "freq" => 0, "offsets" => [] ];
 			
-			// FIXME: Here we use the index of the token in the array, when we want the number of characters into the page!
-			$index[$nterm]["freq"]++;
-			$index[$nterm]["offsets"][] = $i;
-			
-			$i++;
+			$index[$term[0]]["freq"]++;
+			$index[$term[0]]["offsets"][] = $term[1];
 		}
 		
 		return $index;
