@@ -214,7 +214,7 @@ register_module([
 				}
 				
 				if(count($matching_tags) > 0) {
-					$content .= "<p>Matching tags: <span class='tags'>";
+					$content .= "<p class='matching-tags-display'><label>Matching tags</label><span class='tags'>";
 					foreach($matching_tags as $tag) {
 						$content .= "\t<a href='?action=list-tags&tag=" . rawurlencode($tag)  ."' class='mini-tag'>" . htmlentities($tag) . "</a> \n";
 					}
@@ -991,7 +991,10 @@ class search
 			$contexts_text[] = substr($source, $context["from"], $context["to"] - $context["from"]);
 		}
 		
-		return implode(" ... ", $contexts_text);
+		$result = implode(" … ", $contexts_text);
+		end($contexts); // If there's at least one item in the list and were not at the very end of the page, add an extra ellipsis
+		if(isset($contexts[0]) && $contexts[key($contexts)]["to"] < $sourceLength) $result .= "… ";
+		return $result;
 	}
 	
 	/**

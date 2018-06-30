@@ -284,13 +284,17 @@ h1 { text-align: center; }
 .sitename { margin-top: 5rem; margin-bottom: 3rem; font-size: 2.5rem; }
 .logo { max-width: 4rem; max-height: 4rem; vertical-align: middle; }
 .logo.small { max-width: 2rem; max-height: 2rem; }
-main:not(.printable) { position: relative; z-index: 1000; padding: 2rem 2rem 0.5rem 2rem; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
+main:not(.printable) { position: relative; z-index: 1000; padding: 2em 2em 0.5em 2em; background: #faf8fb; box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 
 blockquote { padding-left: 1em; border-left: 0.2em solid #442772; border-radius: 0.2rem; }
 
 a { cursor: pointer; }
 a.redlink:link { color: rgb(230, 7, 7); }
 a.redlink:visited { color: rgb(130, 15, 15); /*#8b1a1a*/ }
+
+.matching-tags-display { display: flex; margin: 0 -2em; padding: 1em 2em; background: hsla(30, 84%, 72%, 0.75); }
+.matching-tags-display > label { flex: 0; font-weight: bold; color: #442772; }
+.matching-tags-display > .tags { flex: 2; }
 
 .search-result { position: relative; }
 .search-result::before { content: attr(data-result-number); position: relative; top: 3rem; color: rgba(33, 33, 33, 0.3); font-size: 2rem; }
@@ -397,7 +401,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "cdee30c2861c0ae91573214105caa659da38ac7d";
+$commit = "20e3596f4e264475a7a70ec2d48540ee4128f54d";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -3853,7 +3857,7 @@ register_module([
 				}
 				
 				if(count($matching_tags) > 0) {
-					$content .= "<p>Matching tags: <span class='tags'>";
+					$content .= "<p class='matching-tags-display'><label>Matching tags</label><span class='tags'>";
 					foreach($matching_tags as $tag) {
 						$content .= "\t<a href='?action=list-tags&tag=" . rawurlencode($tag)  ."' class='mini-tag'>" . htmlentities($tag) . "</a> \n";
 					}
@@ -4630,7 +4634,10 @@ class search
 			$contexts_text[] = substr($source, $context["from"], $context["to"] - $context["from"]);
 		}
 		
-		return implode(" ... ", $contexts_text);
+		$result = implode(" … ", $contexts_text);
+		end($contexts); // If there's at least one item in the list and were not at the very end of the page, add an extra ellipsis
+		if(isset($contexts[0]) && $contexts[key($contexts)]["to"] < $sourceLength) $result .= "… ";
+		return $result;
 	}
 	
 	/**

@@ -26,6 +26,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Tuned the default value for `search_characters_context` down to 75 (this won't be the case for existing wikis, so you'll need to adjust it manually)
      - Added new `search_characters_context_total` setting to control the maximum characters in a search context
  - The `index` action's output should now be formatted nicely.
+ - Restyled "matching tags" in the search results in the default stylesheet.
 
 ## v0.16
 _(No changes since v0.16-beta1)_
