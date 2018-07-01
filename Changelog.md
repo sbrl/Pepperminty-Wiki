@@ -17,6 +17,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - [Module API] Make  `email_user()` correctly return email sending failures
  - Squashed a warning in the search redirector
  - The search redirector will now check both the specified page name and the page name in Title Case
+ - Improve help text description of image captions displayed alongside images
 
 ## Changed
  - Password hashing has been overhauled! A totally new-and-different system is being used now, so you'll need to rehash all your passwords.
