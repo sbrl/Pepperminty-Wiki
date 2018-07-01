@@ -6,6 +6,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ### Added
  - [Module API] Added `save_settings()` convenience method
  - [Rest API] Add `user-add` and `set-password` moderator actions
+ - Added `random_page_exclude_redirects` setting that prevents the `random` action from returning redirect pages.
 
 ### Fixed
  - Updated the search system to transliterate characters to better support searching pages that are written in other languages.
