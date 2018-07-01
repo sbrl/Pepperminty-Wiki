@@ -1771,6 +1771,13 @@ foreach($remote_files as $remote_file_def) {
 /// Final Consistency Measures ///
 //////////////////////////////////
 
+if(!isset($pageindex->{$env->page}) && isset($pageindex->{ucwords($env->page)})) {
+	http_response_code(307);
+	header("location: ?page=" . ucwords($env->page));
+	header("content-type: text/plain");
+	exit("$env->page doesn't exist on $settings->sitename, but " . ucwords($env->page) . " does. You should be redirected there automatically.");
+}
+
 // Redirect to the search page if there isn't a page with the requested name
 if(!isset($pageindex->{$env->page}) and isset($_GET["search-redirect"]))
 {
