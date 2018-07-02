@@ -402,7 +402,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "0e3104415acdf339000212466bc7e978d48e3d50";
+$commit = "10b374871faaaebe84139ac36c7708c2598313ca";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -6206,7 +6206,7 @@ function generate_password($length) {
 
 register_module([
 	"name" => "Credits",
-	"version" => "0.7.7",
+	"version" => "0.7.8",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
@@ -6296,7 +6296,7 @@ register_module([
 					"author" => "ProDigySML",
 					"author_url" => "https://github.com/ProDigySML",
 					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/issues/152",
-					"icon" => "https://starbeamrainbowlabs.com/images/placeholder/?width=24&height=24"
+					"icon" => "https://avatars3.githubusercontent.com/u/16996819?s=24&v=4"
 				]
 			];
 			
@@ -6307,7 +6307,7 @@ register_module([
 				$credits_html .= "	<li>";
 				$credits_html .= "<a href='" . $author_details["thing_url"] . "'>$thing</a> by ";
 				if(isset($author_details["icon"]))
-				$credits_html .= "<img style='vertical-align: middle;' src='" . $author_details["icon"] . "' /> ";
+				$credits_html .= "<img class='logo small' style='vertical-align: middle;' src='" . $author_details["icon"] . "' /> ";
 				$credits_html .= "<a href='" . $author_details["author_url"] . "'>" . $author_details["author"] . "</a>";
 				$credits_html .= "</li>\n";
 			}
@@ -6341,7 +6341,7 @@ register_module([
 	$credits_html
 	<h2>Site status</h2>
 	<table>
-		<tr><th>Site name:</th><td>$settings->sitename (<a href='?action=update'>{$settings->admindisplaychar}Update</a>, <a href='?action=configure'>{$settings->admindisplaychar}Edit master settings</a>, <a href='?action=export'>Export as zip - Check for permission first</a>)</td></tr>
+		<tr><th>Site name:</th><td>$settings->sitename (<a href='?action=update'>{$settings->admindisplaychar}Update</a>, <a href='?action=configure'>{$settings->admindisplaychar}Edit master settings</a>, <a href='?action=user-table'>{$settings->admindisplaychar} Edit user table</a>, <a href='?action=export'>Export as zip - Check for permission first</a>)</td></tr>
 		<tr><th>Pepperminty Wiki version:</th><td>$version</td></tr>
 		<tr><th>Number of pages:</th><td>" . count(get_object_vars($pageindex)) . "</td></tr>
 		<tr><th>Number of modules:</th><td>" . count($modules) . "</td></tr>
@@ -8425,7 +8425,7 @@ register_module([
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.9.11",
+	"version" => "0.9.12",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",
@@ -8592,7 +8592,7 @@ register_module([
 			<tr><td><code>[[Internal link]]</code></td><td><a href='?page=Internal%20link'>Internal Link</a></td><td>An internal link.</td></tr>
 			<tr><td><code>[[Display Text|Internal link]]</code></td><td><a href='?page=Internal%20link'>Display Text</a></td><td>An internal link with some display text.</td></tr>
 			<tr><td><code>![Alt text](http://example.com/path/to/image.png | 256x256 | right)</code></td><td><img src='http://example.com/path/to/image.png' alt='Alt text' style='float: right; max-width: 256px; max-height: 256px;' /></td><td>An image floating to the right of the page that fits inside a 256px x 256px box, preserving aspect ratio.</td></tr>
-			<tr><td><code>![Alt text](http://example.com/path/to/image.png | 256x256 | caption)</code></td><td><figure><img src='http://example.com/path/to/image.png' alt='Alt text' style='max-width: 256px; max-height: 256px;' /><figcaption>Alt text</figcaption></figure></td><td>An image with a caption that fits inside a 256px x 256px box, preserving aspect ratio. The caption is taken from the alt text.</td></tr>
+			<tr><td><code>![Alt text](http://example.com/path/to/image.png | 256x256 | caption)</code></td><td><figure><img src='http://example.com/path/to/image.png' alt='Alt text' style='max-width: 256px; max-height: 256px;' /><figcaption>Alt text</figcaption></figure></td><td>An image with a caption that fits inside a 256px x 256px box, preserving aspect ratio. The presence of the word <code>caption</code> in the regular braces causes the alt text to be taken and displayed below the image itself.</td></tr>
 			<tr><td><code>![Alt text](Files/Cheese.png)</code></td><td><img src='index.php?action=preview&page=Files/Cheese.png' alt='Alt text' style='' /></td><td>An example of the short url syntax for images. Simply enter the page name of an image (or video / audio file), and Pepperminty Wiki will sort out the url for you.</td></tr>
 		</table>
 		<p>Note that the all image image syntax above can be mixed and matched to your liking. The <code>caption</code> option in particular must come last or next to last.</p>

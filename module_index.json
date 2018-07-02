@@ -145,11 +145,11 @@
     },
     {
         "name": "Credits",
-        "version": "0.7.7",
+        "version": "0.7.8",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
-        "lastupdate": 1522695072,
+        "lastupdate": 1530530402,
         "optional": false
     },
     {
@@ -271,11 +271,11 @@
     },
     {
         "name": "Parsedown",
-        "version": "0.9.11",
+        "version": "0.9.12",
         "author": "Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
         "id": "parser-parsedown",
-        "lastupdate": 1524909840,
+        "lastupdate": 1530474936,
         "optional": false
     }
 ]

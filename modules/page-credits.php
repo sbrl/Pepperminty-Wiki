@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Credits",
-	"version" => "0.7.7",
+	"version" => "0.7.8",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
@@ -91,7 +91,7 @@ register_module([
 					"author" => "ProDigySML",
 					"author_url" => "https://github.com/ProDigySML",
 					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/issues/152",
-					"icon" => "https://starbeamrainbowlabs.com/images/placeholder/?width=24&height=24"
+					"icon" => "https://avatars3.githubusercontent.com/u/16996819?s=24&v=4"
 				]
 			];
 			
@@ -102,7 +102,7 @@ register_module([
 				$credits_html .= "	<li>";
 				$credits_html .= "<a href='" . $author_details["thing_url"] . "'>$thing</a> by ";
 				if(isset($author_details["icon"]))
-				$credits_html .= "<img style='vertical-align: middle;' src='" . $author_details["icon"] . "' /> ";
+				$credits_html .= "<img class='logo small' style='vertical-align: middle;' src='" . $author_details["icon"] . "' /> ";
 				$credits_html .= "<a href='" . $author_details["author_url"] . "'>" . $author_details["author"] . "</a>";
 				$credits_html .= "</li>\n";
 			}
@@ -136,7 +136,7 @@ register_module([
 	$credits_html
 	<h2>Site status</h2>
 	<table>
-		<tr><th>Site name:</th><td>$settings->sitename (<a href='?action=update'>{$settings->admindisplaychar}Update</a>, <a href='?action=configure'>{$settings->admindisplaychar}Edit master settings</a>, <a href='?action=export'>Export as zip - Check for permission first</a>)</td></tr>
+		<tr><th>Site name:</th><td>$settings->sitename (<a href='?action=update'>{$settings->admindisplaychar}Update</a>, <a href='?action=configure'>{$settings->admindisplaychar}Edit master settings</a>, <a href='?action=user-table'>{$settings->admindisplaychar} Edit user table</a>, <a href='?action=export'>Export as zip - Check for permission first</a>)</td></tr>
 		<tr><th>Pepperminty Wiki version:</th><td>$version</td></tr>
 		<tr><th>Number of pages:</th><td>" . count(get_object_vars($pageindex)) . "</td></tr>
 		<tr><th>Number of modules:</th><td>" . count($modules) . "</td></tr>
