@@ -111,15 +111,15 @@ if($env->is_logged_in)
 /**
  * @apiDefine Admin	Only the wiki administrator may use this call.
  */
- /**
-  * @apiDefine Moderator	Only users loggged with a moderator account may use this call.
-  */
 /**
-* @apiDefine User		Only users loggged in may use this call.
-*/
+ * @apiDefine Moderator	Only users loggged with a moderator account may use this call.
+ */
 /**
-* @apiDefine Anonymous	Anybody may use this call.
-*/
+ * @apiDefine User		Only users loggged in may use this call.
+ */
+/**
+ * @apiDefine Anonymous	Anybody may use this call.
+ */
 /**
  * @apiDefine	UserNotLoggedInError
  * @apiError	UserNotLoggedInError	You didn't log in before sending this request.

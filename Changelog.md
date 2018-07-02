@@ -8,6 +8,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - [Rest API] Add `user-add` and `set-password` moderator actions
  - Added `random_page_exclude_redirects` setting that prevents the `random` action from returning redirect pages.
  - Added link to user table on the credits page
+ - Added history reversion via the `history-revert` action
 
 ### Fixed
  - Updated the search system to transliterate characters to better support searching pages that are written in other languages.

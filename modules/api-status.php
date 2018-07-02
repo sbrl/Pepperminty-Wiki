@@ -16,7 +16,13 @@ register_module([
 		 * @apiParam	{boolean}	Whether or not the result should be minified JSON. Default: false
 		 */
 		
-		
+	 	/*
+	 	 * ███████ ████████  █████  ████████ ██    ██ ███████
+	 	 * ██         ██    ██   ██    ██    ██    ██ ██
+	 	 * ███████    ██    ███████    ██    ██    ██ ███████
+	 	 *      ██    ██    ██   ██    ██    ██    ██      ██
+	 	 * ███████    ██    ██   ██    ██     ██████  ███████
+	 	 */
 		add_action("status", function() {
 			global $version, $env, $settings, $actions;
 			

@@ -39,9 +39,9 @@
         "name": "API status",
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
-        "description": "Provides a basic JSON status action that provices a few useful bits of information for API consumption.",
+        "description": "Provides a basic JSON status action that provides a few useful bits of information for API consumption.",
         "id": "api-status",
-        "lastupdate": 1523055259,
+        "lastupdate": 1530565418,
         "optional": false
     },
     {
@@ -77,7 +77,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
         "id": "feature-history",
-        "lastupdate": 1518645062,
+        "lastupdate": 1530571420,
         "optional": false
     },
     {
@@ -95,7 +95,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
         "id": "feature-redirect",
-        "lastupdate": 1498646092,
+        "lastupdate": 1530570852,
         "optional": false
     },
     {
