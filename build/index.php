@@ -404,7 +404,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "6e7698b4a9210cd3198ee1bd2a117e7bcf162819";
+$commit = "819489a7fb17f8e57fe6af7e01c34e9260d4e9ea";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -3426,7 +3426,7 @@ register_module([
  * @param string  $change_type    The type of change to record this as in the history revision log
  */
 function history_add_revision(&$pageinfo, &$newsource, &$oldsource, $save_pageindex = true, $change_type = "edit") {
-	global $pageindex, $paths, $env;
+	global $env, $paths, $settings, $pageindex;
 	
 	if(!isset($pageinfo->history))
 		$pageinfo->history = [];
@@ -3439,7 +3439,8 @@ function history_add_revision(&$pageinfo, &$newsource, &$oldsource, $save_pagein
 	// this point
 	
 	// TODO Store tag changes here
-	$nextRid = count($pageinfo->history); // The next revision id
+	end($pageinfo->history); // Calculate the next revision id - we can't jsut count the reivisions here because we might have a revision limit
+	$nextRid = $pageinfo->history[key($pageinfo->history)]->rid + 1;
 	$ridFilename = "$pageinfo->filename.r$nextRid";
 	// Insert a new entry into the history
 	$pageinfo->history[] = [
@@ -3455,9 +3456,19 @@ function history_add_revision(&$pageinfo, &$newsource, &$oldsource, $save_pagein
 	// Save the new source as a revision
 	$result = file_put_contents("$env->storage_prefix$ridFilename", $newsource);
 	
+	if($result !== false &&
+		$settings->history_max_revisions > -1) {
+		while(count($pageinfo->history) > $settings->history_max_revisions) {
+			// We've got too many revisions - trim one off & delete it
+			$oldest_revision = array_shift($pageinfo->history);
+			unlink("$env->storage_prefix/$oldest_revision->filename");
+		}
+	}
+	
 	// Save the edited pageindex
 	if($result !== false && $save_pageindex)
 		$result = file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
+	
 	
 	return $result;
 }
