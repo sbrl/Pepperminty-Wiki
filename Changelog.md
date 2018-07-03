@@ -20,6 +20,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Squashed a warning in the search redirector
  - The search redirector will now check both the specified page name and the page name in Title Case
  - Improve help text description of image captions displayed alongside images
+ - Fixed the page history page - it should now display all page revisions in valid HTML
 
 ## Changed
  - Password hashing has been overhauled! A totally new-and-different system is being used now, so you'll need to rehash all your passwords.

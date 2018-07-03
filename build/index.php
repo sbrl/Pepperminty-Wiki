@@ -150,6 +150,8 @@ $guiConfig = <<<'GUICONFIG'
 	"comment_max_length": { "type": "number", "description": "The maximum allowed length, in characters, for comments", "default": 5000 },
 	"comment_min_length": { "type": "number", "description": "The minimum allowed length, in characters, for comments", "default": 10 },
 	"comment_time_icon": { "type": "text", "description": "The icon to show next to the time that a comment was posted.", "default": "&#x1f557;" },
+	"history_max_revisions": { "type": "number", "description": "The maximum revisions that should be stored. If this limit is reached, them the oldest revision will be deleted. Defaults to -1, which is no limit.", "default": -1 },
+	"history_revert_require_moderator": { "type": "checkbox", "description": "Whether a user must be a moderator in order use the page reversion functionality.", "default": true },
 	"upload_enabled": { "type": "checkbox", "description": "Whether to allow uploads to the server.", "default": true},
 	"upload_allowed_file_types": { "type": "array", "description": "An array of mime types that are allowed to be uploaded.", "default": [
 		"image/jpeg",
@@ -402,7 +404,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "2853cf4da595832f9d7e3519c3fb96cfb714d745";
+$commit = "06c2b3886826e915f709df06714c79b3a7a6dd18";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -3205,7 +3207,7 @@ SCRIPT;
 
 register_module([
 	"name" => "Page History",
-	"version" => "0.3.1",
+	"version" => "0.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
 	"id" => "feature-history",
@@ -3242,8 +3244,8 @@ register_module([
 						foreach(array_reverse($pageindex->{$env->page}->history) as $revisionData)
 						{
 							// Only display edits & reverts for now
-							if($revisionData->type != "edit" || $revisionData->type != "revert")
-							continue;
+							if(!in_array($revisionData->type, [ "edit", "revert" ]))
+								continue;
 							
 							// The number (and the sign) of the size difference to display
 							$size_display = ($revisionData->sizediff > 0 ? "+" : "") . $revisionData->sizediff;
@@ -3252,12 +3254,13 @@ register_module([
 							$size_display_class .= " significant";
 							$size_title_display = human_filesize($revisionData->newsize - $revisionData->sizediff) . " -> " .  human_filesize($revisionData->newsize);
 							
-							$content .= "<li>";
+							$content .= "\t\t\t<li>";
 							$content .= "<a href='?page=" . rawurlencode($env->page) . "&revision=$revisionData->rid'>#$revisionData->rid</a> " . render_editor(page_renderer::render_username($revisionData->editor)) . " " . render_timestamp($revisionData->timestamp) . " <span class='cursor-query $size_display_class' title='$size_title_display'>($size_display)</span>";
 							if($env->is_logged_in || ($settings->history_revert_require_moderator && $env->is_admin && $env->is_logged_in))
 								$content .= " <small>(<a class='revert-button' href='?action=history-revert&page=" . rawurlencode($env->page) . "&revision=$revisionData->rid'>restore this revision</a>)</small>";
-							$content .= "</li>";
+							$content .= "</li>\n";
 						}
+						$content .= "\t\t</ul>";
 					}
 					else
 					{
@@ -3374,6 +3377,39 @@ register_module([
 		});
 		
 		register_save_preprocessor("history_add_revision");
+		
+		if(module_exists("feature-stats")) {
+			statistic_add([
+				"id" => "history_most_revisions",
+				"name" => "Most revised page",
+				"type" => "scalar",
+				"update" => function($old_stats) {
+					global $pageindex;
+					
+					$target_pagename = "";
+					$target_revisions = -1;
+					foreach($pageindex as $pagename => $pagedata) {
+						if(!isset($pagedata->history))
+							continue;
+						
+						$revisions_count = count($pagedata->history);
+						if($revisions_count > $target_revisions) {
+							$target_revisions = $revisions_count;
+							$target_pagename = $pagename;
+						}
+					}
+					
+					$result = new stdClass(); // completed, value, state
+					$result->completed = true;
+					$result->value = "(no revisions saved yet)";
+					if($target_revisions > -1) {
+						$result->value = "$target_revisions (<a href='?page=" . rawurlencode($target_pagename) . "'>" . htmlentities($target_pagename) . "</a>)";
+					}
+					
+					return $result;
+				}
+			]);
+		}
 	}
 ]);
 

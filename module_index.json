@@ -73,11 +73,11 @@
     },
     {
         "name": "Page History",
-        "version": "0.3.1",
+        "version": "0.4",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
         "id": "feature-history",
-        "lastupdate": 1530571420,
+        "lastupdate": 1530615218,
         "optional": false
     },
     {
@@ -113,7 +113,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
         "id": "feature-stats",
-        "lastupdate": 1525975761,
+        "lastupdate": 1530614499,
         "optional": false
     },
     {

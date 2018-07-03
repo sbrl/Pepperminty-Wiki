@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page History",
-	"version" => "0.3.1",
+	"version" => "0.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
 	"id" => "feature-history",
@@ -38,8 +38,8 @@ register_module([
 						foreach(array_reverse($pageindex->{$env->page}->history) as $revisionData)
 						{
 							// Only display edits & reverts for now
-							if($revisionData->type != "edit" || $revisionData->type != "revert")
-							continue;
+							if(!in_array($revisionData->type, [ "edit", "revert" ]))
+								continue;
 							
 							// The number (and the sign) of the size difference to display
 							$size_display = ($revisionData->sizediff > 0 ? "+" : "") . $revisionData->sizediff;
@@ -48,12 +48,13 @@ register_module([
 							$size_display_class .= " significant";
 							$size_title_display = human_filesize($revisionData->newsize - $revisionData->sizediff) . " -> " .  human_filesize($revisionData->newsize);
 							
-							$content .= "<li>";
+							$content .= "\t\t\t<li>";
 							$content .= "<a href='?page=" . rawurlencode($env->page) . "&revision=$revisionData->rid'>#$revisionData->rid</a> " . render_editor(page_renderer::render_username($revisionData->editor)) . " " . render_timestamp($revisionData->timestamp) . " <span class='cursor-query $size_display_class' title='$size_title_display'>($size_display)</span>";
 							if($env->is_logged_in || ($settings->history_revert_require_moderator && $env->is_admin && $env->is_logged_in))
 								$content .= " <small>(<a class='revert-button' href='?action=history-revert&page=" . rawurlencode($env->page) . "&revision=$revisionData->rid'>restore this revision</a>)</small>";
-							$content .= "</li>";
+							$content .= "</li>\n";
 						}
+						$content .= "\t\t</ul>";
 					}
 					else
 					{
@@ -170,6 +171,39 @@ register_module([
 		});
 		
 		register_save_preprocessor("history_add_revision");
+		
+		if(module_exists("feature-stats")) {
+			statistic_add([
+				"id" => "history_most_revisions",
+				"name" => "Most revised page",
+				"type" => "scalar",
+				"update" => function($old_stats) {
+					global $pageindex;
+					
+					$target_pagename = "";
+					$target_revisions = -1;
+					foreach($pageindex as $pagename => $pagedata) {
+						if(!isset($pagedata->history))
+							continue;
+						
+						$revisions_count = count($pagedata->history);
+						if($revisions_count > $target_revisions) {
+							$target_revisions = $revisions_count;
+							$target_pagename = $pagename;
+						}
+					}
+					
+					$result = new stdClass(); // completed, value, state
+					$result->completed = true;
+					$result->value = "(no revisions saved yet)";
+					if($target_revisions > -1) {
+						$result->value = "$target_revisions (<a href='?page=" . rawurlencode($target_pagename) . "'>" . htmlentities($target_pagename) . "</a>)";
+					}
+					
+					return $result;
+				}
+			]);
+		}
 	}
 ]);
 
