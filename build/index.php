@@ -404,7 +404,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "06c2b3886826e915f709df06714c79b3a7a6dd18";
+$commit = "6e7698b4a9210cd3198ee1bd2a117e7bcf162819";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -3322,9 +3322,9 @@ register_module([
 			global $env, $settings, $pageindex;
 			
 			if((!$env->is_admin && $settings->history_revert_require_moderator) ||
-				$env->is_logged_in) {
+				!$env->is_logged_in) {
 				http_response_code(401);
-				exit(page_renderer::render_main("Unauthorised - $settings->sitename", "<p>You can't revert pages to a previous revision because " . ($settings->history_revert_require_moderator && $env->is_logged_in ? "you aren't logged in as a moderator. You can try <a href='?action=logout'>logging out</a> and then" : "you aren't logged in. You can try") . " <a href='?action=login&returnto=" . rawurlencode("?action=history-revert&revision={$env->history->revision_number}&page=" . rawurlencode($env->page)) . "logging in</a>."));
+				exit(page_renderer::render_main("Unauthorised - $settings->sitename", "<p>You can't revert pages to a previous revision because " . ($settings->history_revert_require_moderator && $env->is_logged_in ? "you aren't logged in as a moderator. You can try <a href='?action=logout'>logging out</a> and then" : "you aren't logged in. You can try") . " <a href='?action=login&returnto=" . rawurlencode("?action=history-revert&revision={$env->history->revision_number}&page=" . rawurlencode($env->page)) . "'>logging in</a>.</p>"));
 			}
 			
 			$current_revision_filepath = "$env->storage_prefix/{$pageindex->{$env->page}->filename}";
