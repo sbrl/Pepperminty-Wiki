@@ -9,6 +9,11 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Added `random_page_exclude_redirects` setting that prevents the `random` action from returning redirect pages.
  - Added link to user table on the credits page
  - Added history reversion via the `history-revert` action
+ - Added `history_max_revisions` setting to allow control of the maximum number of revisions stored for a page
+     - Takes effect every time a page revision is added
+ - Added page restore system
+     - A previous page revision can be restored with a single click from the page history page
+     - Added a new `history_revert_require_moderator` setting to control whether moderator privileges are required to use the functionality (regardless of setting a user must be logged in)
 
 ### Fixed
  - Updated the search system to transliterate characters to better support searching pages that are written in other languages.
