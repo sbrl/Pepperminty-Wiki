@@ -137,8 +137,15 @@ While users can change their own passwords and email addresses, you'll inevitabl
 3. Hash the new user's password with SHA256, and set it as the `password` parameter on the new user. This can be done in the terminal, online, or with the `hash` action - but make sure you don't leave any traces of your passwords lying around for others to find!
 4. Save `peppermint.json` back to disk.
 
-In the future, user accounts will be manageable through a graphical interface. Follow #127 for updates!
+~~In the future, user accounts will be manageable through a graphical interface. Follow #127 for updates!~~ User accounts are now manageable through a graphical interface! Access it through the `Edit user table` option on the credits page.
 
+#### Default Credentials
+The default user account details are as follows:
+
+ - `admin` with password `password`
+ - `user` with password `cheese`
+
+**Please remember to change your account password! Only you are responsible for the security of your account.**
 
 ## API Reference
 I have documented the current API and other things that make Pepperminty Wiki tick that you can use to create your own modules. You can find this documentation in the [Module_API_Docs.md](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Module_API_Docs.md) file in this repository.
