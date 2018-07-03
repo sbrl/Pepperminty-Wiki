@@ -130,7 +130,7 @@ summary { cursor: pointer; }
 .move::before { content: "\\1f69a"; font-size: 1.25em; margin: 0 0.1em 0 -1.1em; }
 .upload::before { content: "\\1f845"; margin: 0 0.1em 0 -1.1em; }
 .new-comment::before { content: "\\1f4ac"; margin: 0 0.1em 0 -1.1em; }
-.reversion::before { content: "\\23f2"; margin: 0 0.1em 0 -1.1em; }
+.reversion::before { content: "\\231b"; margin: 0 0.1em 0 -1.1em; }
 
 .comments { padding: 1em 2em; background: hsl(31, 64%, 85%); box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 .comments textarea { background: hsl(270, 60%, 86%); }

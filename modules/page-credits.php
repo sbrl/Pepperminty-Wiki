@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Credits",
-	"version" => "0.7.8",
+	"version" => "0.7.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
@@ -136,7 +136,7 @@ register_module([
 	$credits_html
 	<h2>Site status</h2>
 	<table>
-		<tr><th>Site name:</th><td>$settings->sitename (<a href='?action=update'>{$settings->admindisplaychar}Update</a>, <a href='?action=configure'>{$settings->admindisplaychar}Edit master settings</a>, <a href='?action=user-table'>{$settings->admindisplaychar} Edit user table</a>, <a href='?action=export'>Export as zip - Check for permission first</a>)</td></tr>
+		<tr><th>Site name:</th><td>$settings->sitename (<a href='?action=update'>{$settings->admindisplaychar}Update</a>, <a href='?action=configure'>{$settings->admindisplaychar} &#x1f527; Edit master settings</a>, <a href='?action=user-table'>{$settings->admindisplaychar} &#x1f465; Edit user table</a>, <a href='?action=export'>&#x1f3db; Export as zip - Check for permission first</a>)</td></tr>
 		<tr><th>Pepperminty Wiki version:</th><td>$version</td></tr>
 		<tr><th>Number of pages:</th><td>" . count(get_object_vars($pageindex)) . "</td></tr>
 		<tr><th>Number of modules:</th><td>" . count($modules) . "</td></tr>

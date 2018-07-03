@@ -82,11 +82,11 @@
     },
     {
         "name": "Recent Changes",
-        "version": "0.3.4",
+        "version": "0.3.5",
         "author": "Starbeamrainbowlabs",
         "description": "Adds recent changes. Access through the 'recent-changes' action.",
         "id": "feature-recent-changes",
-        "lastupdate": 1530617138,
+        "lastupdate": 1530617266,
         "optional": false
     },
     {
@@ -145,11 +145,11 @@
     },
     {
         "name": "Credits",
-        "version": "0.7.8",
+        "version": "0.7.9",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
-        "lastupdate": 1530530402,
+        "lastupdate": 1530618422,
         "optional": false
     },
     {

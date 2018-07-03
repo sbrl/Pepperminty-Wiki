@@ -89,7 +89,7 @@ $guiConfig = <<<'GUICONFIG'
 	]},
 	"nav_links_extra": { "type": "nav", "description": "An array of additional links in the above format that will be shown under \"More\" subsection.", "default": [
 		[
-			"&#x1f553; Page History",
+			"&#x231b; Page History",
 			"?action=history&page={page}"
 		],
 		[
@@ -101,41 +101,41 @@ $guiConfig = <<<'GUICONFIG'
 			"index.php?action=user-list"
 		],
 		[
-			"&zigrarr; Random Page",
+			"&#x1f38a; Random Page",
 			"?action=random"
 		],
 		[
-			"Recent changes",
+			"&#x1f5d3; Recent changes",
 			"?action=recent-changes"
 		],
 		[
-			"Statistics",
+			"&#x1f4ca; Statistics",
 			"?action=stats"
 		],
 		[
-			"&#x1f845; Upload",
+			"&#x1f325; Upload",
 			"index.php?action=upload"
 		],
 		[
-			"&#x2327; &#9670;Delete",
+			"&#9670; &#x1f6ab; Delete",
 			"index.php?action=delete&page={page}"
 		],
 		[
-			"&#x2398; &#9670;Move",
+			"&#9670; &#x1f6a0; Move",
 			"index.php?action=move&page={page}"
 		],
 		[
-			"&#x1f510; &#9670;Toggle Protection",
+			"&#9670; &#x1f510; Toggle Protection",
 			"index.php?action=protect&page={page}"
 		],
 		[
-			"&#x2699; &#9670;Edit master settings",
+			"&#9670; &#x1f527; Edit master settings",
 			"index.php?action=configure"
 		]
 	]},
 	"nav_links_bottom": { "type": "nav", "description": "An array of links in the above format that will be shown at the bottom of the page.", "default": [
 		[
-			"&#x1f5b6; Printable version",
+			"&#x1f5a8; Printable version",
 			"index.php?action=view&mode=printable&page={page}"
 		],
 		[
@@ -143,7 +143,7 @@ $guiConfig = <<<'GUICONFIG'
 			"index.php?action=credits"
 		],
 		[
-			"Help",
+			"&#x1f6aa; Help",
 			"index.php?action=help"
 		]
 	]},
@@ -368,7 +368,7 @@ summary { cursor: pointer; }
 .move::before { content: "\\1f69a"; font-size: 1.25em; margin: 0 0.1em 0 -1.1em; }
 .upload::before { content: "\\1f845"; margin: 0 0.1em 0 -1.1em; }
 .new-comment::before { content: "\\1f4ac"; margin: 0 0.1em 0 -1.1em; }
-.reversion::before { content: "\\23f2"; margin: 0 0.1em 0 -1.1em; }
+.reversion::before { content: "\\231b"; margin: 0 0.1em 0 -1.1em; }
 
 .comments { padding: 1em 2em; background: hsl(31, 64%, 85%); box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 .comments textarea { background: hsl(270, 60%, 86%); }
@@ -405,7 +405,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "1cb72f3a4968fa7311c496c608b217730ed44ce1";
+$commit = "3581cc1437ab2b9033b10b84e896d829f0234985";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -3479,7 +3479,7 @@ function history_add_revision(&$pageinfo, &$newsource, &$oldsource, $save_pagein
 
 register_module([
 	"name" => "Recent Changes",
-	"version" => "0.3.4",
+	"version" => "0.3.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds recent changes. Access through the 'recent-changes' action.",
 	"id" => "feature-recent-changes",
@@ -6370,7 +6370,7 @@ function generate_password($length) {
 
 register_module([
 	"name" => "Credits",
-	"version" => "0.7.8",
+	"version" => "0.7.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
@@ -6505,7 +6505,7 @@ register_module([
 	$credits_html
 	<h2>Site status</h2>
 	<table>
-		<tr><th>Site name:</th><td>$settings->sitename (<a href='?action=update'>{$settings->admindisplaychar}Update</a>, <a href='?action=configure'>{$settings->admindisplaychar}Edit master settings</a>, <a href='?action=user-table'>{$settings->admindisplaychar} Edit user table</a>, <a href='?action=export'>Export as zip - Check for permission first</a>)</td></tr>
+		<tr><th>Site name:</th><td>$settings->sitename (<a href='?action=update'>{$settings->admindisplaychar}Update</a>, <a href='?action=configure'>{$settings->admindisplaychar} &#x1f527; Edit master settings</a>, <a href='?action=user-table'>{$settings->admindisplaychar} &#x1f465; Edit user table</a>, <a href='?action=export'>&#x1f3db; Export as zip - Check for permission first</a>)</td></tr>
 		<tr><th>Pepperminty Wiki version:</th><td>$version</td></tr>
 		<tr><th>Number of pages:</th><td>" . count(get_object_vars($pageindex)) . "</td></tr>
 		<tr><th>Number of modules:</th><td>" . count($modules) . "</td></tr>
