@@ -147,6 +147,7 @@ The default user account details are as follows:
 
 **Please remember to change your account password! Only you are responsible for the security of your account.**
 
+
 ## API Reference
 I have documented the current API and other things that make Pepperminty Wiki tick that you can use to create your own modules. You can find this documentation in the [Module_API_Docs.md](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Module_API_Docs.md) file in this repository.
 
