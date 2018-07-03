@@ -368,6 +368,7 @@ summary { cursor: pointer; }
 .move::before { content: "\\1f69a"; font-size: 1.25em; margin: 0 0.1em 0 -1.1em; }
 .upload::before { content: "\\1f845"; margin: 0 0.1em 0 -1.1em; }
 .new-comment::before { content: "\\1f4ac"; margin: 0 0.1em 0 -1.1em; }
+.reversion::before { content: "\\23f2"; margin: 0 0.1em 0 -1.1em; }
 
 .comments { padding: 1em 2em; background: hsl(31, 64%, 85%); box-shadow: 0 0.1rem 1rem 0.3rem rgba(50, 50, 50, 0.5); }
 .comments textarea { background: hsl(270, 60%, 86%); }
@@ -404,7 +405,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "819489a7fb17f8e57fe6af7e01c34e9260d4e9ea";
+$commit = "1cb72f3a4968fa7311c496c608b217730ed44ce1";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -3715,8 +3716,10 @@ function render_recent_change($rchange)
 	
 	$result = "";
 	$resultClasses = [];
-	switch(isset($rchange->type) ? $rchange->type : "edit")
+	$rchange_type = isset($rchange->type) ? $rchange->type : "edit";
+	switch($rchange_type)
 	{
+		case "revert":
 		case "edit":
 			// The number (and the sign) of the size difference to display
 			$size_display = ($rchange->sizediff > 0 ? "+" : "") . $rchange->sizediff;
@@ -3729,6 +3732,8 @@ function render_recent_change($rchange)
 			
 			if(!empty($rchange->newpage))
 				$resultClasses[] = "newpage";
+			if($rchange_type === "revert")
+				$resultClasses[] = "reversion";
 			
 			$result .= "<a href='?page=" . rawurlencode($rchange->page) . ($revisionId !== false ? "&revision=$revisionId" : "") . "'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$size_title_display'>($size_display)</span>";
 			break;

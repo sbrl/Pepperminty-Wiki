@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Recent Changes",
-	"version" => "0.3.4",
+	"version" => "0.3.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds recent changes. Access through the 'recent-changes' action.",
 	"id" => "feature-recent-changes",
@@ -238,8 +238,10 @@ function render_recent_change($rchange)
 	
 	$result = "";
 	$resultClasses = [];
-	switch(isset($rchange->type) ? $rchange->type : "edit")
+	$rchange_type = isset($rchange->type) ? $rchange->type : "edit";
+	switch($rchange_type)
 	{
+		case "revert":
 		case "edit":
 			// The number (and the sign) of the size difference to display
 			$size_display = ($rchange->sizediff > 0 ? "+" : "") . $rchange->sizediff;
@@ -252,6 +254,8 @@ function render_recent_change($rchange)
 			
 			if(!empty($rchange->newpage))
 				$resultClasses[] = "newpage";
+			if($rchange_type === "revert")
+				$resultClasses[] = "reversion";
 			
 			$result .= "<a href='?page=" . rawurlencode($rchange->page) . ($revisionId !== false ? "&revision=$revisionId" : "") . "'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$size_title_display'>($size_display)</span>";
 			break;
