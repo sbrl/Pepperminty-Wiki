@@ -1092,7 +1092,15 @@ class page_renderer
 			<p><em>Timed at {generation-date}</em></p>
 			<p><em>Powered by Pepperminty Wiki {version}.</em></p>
 		</footer>";
-
+	
+	/**
+	 * An array of items indicating the resources to ask the web server to push
+	 * down to the client with HTTP/2.0 server push.
+	 * Format: [ [type, path], [type, path], .... ]
+	 * @var array[]
+	 */
+	protected static $http2_push_items = [];
+	
 	/**
 	 * An array of functions that have been registered to process the
 	 * find / replace array before the page is rendered. Note that the function
@@ -1163,6 +1171,9 @@ class page_renderer
 					throw new Exception("Invalid logo_position '$settings->logo_position'. Valid values are either \"left\" or \"right\" and are case sensitive.");
 			}
 		}
+		
+		// Push the logo via HTTP/2.0 if possible
+		if($settings->favicon[0] === "/") self::$http2_push_items[] = ["image", $settings->favicon];
 
 		$parts = [
 			"{body}" => $body_template,
@@ -1194,8 +1205,7 @@ class page_renderer
 		];
 
 		// Pass the parts through the part processors
-		foreach(self::$part_processors as $function)
-		{
+		foreach(self::$part_processors as $function) {
 			$function($parts);
 		}
 
@@ -1204,6 +1214,8 @@ class page_renderer
 		$result = str_replace(array_keys($parts), array_values($parts), $result);
 
 		$result = str_replace("{generation-time-taken}", round((microtime(true) - $start_time)*1000, 2), $result);
+		// Send the HTTP/2.0 server push indicators if possible
+		if(!headers_sent()) self::send_server_push_indicators();
 		return $result;
 	}
 	/**
@@ -1227,6 +1239,26 @@ class page_renderer
 	public static function render_minimal($title, $content)
 	{
 		return self::render($title, $content, self::$minimal_content_template);
+	}
+	
+	/**
+	 * Sends the currently registered HTTP2 server push items to the client.
+	 * @return integer|FALSE	The number of resource hints included in the link: header, or false if server pushing is disabled.
+	 */
+	public static function send_server_push_indicators() {
+		global $settings;
+		if(!$settings->http2_server_push)
+			return false;
+		
+		// Render the preload directives
+		$link_header_parts = [];
+		foreach(self::$http2_push_items as $push_item)
+			$link_header_parts[] = "<{$push_item[1]}>; rel=preload; as={$push_item[0]}";
+		
+		// Send them in a link: header
+		header("link: " . implode(", ", $link_header_parts));
+		
+		return count(self::$http2_push_items);
 	}
 	
 	/**
@@ -1261,6 +1293,15 @@ class page_renderer
 		return $result;
 	}
 	/**
+	 * Figures out whether $settings->css is a url, or a string of css.
+	 * A url is something starting with "protocol://" or simply a "/".
+	 * @return	boolean	True if it's a url - false if we assume it's a string of css.
+	 */
+	public static function is_css_url() {
+		global $settings;
+		return preg_match("/^[^\/]*\/\/|^\//", $settings->css);
+	}
+	/**
 	 * Renders all the CSS as HTML.
 	 * @package core
 	 * @return string The css as HTML, ready to be included in the HTML header.
@@ -1269,10 +1310,11 @@ class page_renderer
 	{
 		global $settings, $defaultCSS;
 
-		if(preg_match("/^[^\/]*\/\/|^\//", $settings->css))
+		if(self::is_css_url) {
+			if($settings->css[0] === "/") // Push it if it's a relative resource
+				self::$http2_push_items[] = ["style", $settings->css];
 			return "<link rel='stylesheet' href='$settings->css' />\n";
-		else
-		{
+		} else {
 			$css = $settings->css == "auto" ? $defaultCSS : $settings->css;
 			if(!empty($settings->optimize_pages))
 			{
@@ -1343,8 +1385,11 @@ class page_renderer
 		$result = "<!-- Javascript -->\n";
 		foreach(static::$jsSnippets as $snippet)
 			$result .= "<script defer>\n$snippet\n</script>\n";
-		foreach(static::$jsLinks as $link)
+		foreach(static::$jsLinks as $link) {
+			// Push it via HTTP/2.0 if it's relative
+			if($link[0] === "/") self::$http2_push_items[] = ["script", $link];
 			$result .= "<script src='" . $link . "' defer></script>\n";
+		}
 		return $result;
 	}
 	
