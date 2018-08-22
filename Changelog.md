@@ -14,6 +14,10 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Added page restore system
      - A previous page revision can be restored with a single click from the page history page
      - Added a new `history_revert_require_moderator` setting to control whether moderator privileges are required to use the functionality (regardless of setting a user must be logged in)
+ - [HTTP/2.0 Server Push](https://www.smashingmagazine.com/2017/04/guide-http2-server-push/) support!
+     - You'll need to make sure your web server has support turned on
+     - The CSS file specified in the `css` setting (url path must begin with a forward-slash) and the favicon (must not be a `data:` url) are automatically pushed when rendering pages
+     - 2 new settings have been added: `http2_server_push` for turning it on and off (defaults to on), and `http2_server_push_items` for specifying custom resources to push (in case you design your own theme and want to push down the associated resources)
 
 ### Fixed
  - Updated the search system to transliterate characters to better support searching pages that are written in other languages.

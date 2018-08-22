@@ -1214,8 +1214,8 @@ class page_renderer
 		$result = str_replace(array_keys($parts), array_values($parts), $result);
 
 		$result = str_replace("{generation-time-taken}", round((microtime(true) - $start_time)*1000, 2), $result);
-		// Send the HTTP/2.0 server push indicators if possible
-		if(!headers_sent()) self::send_server_push_indicators();
+		// Send the HTTP/2.0 server push indicators if possible - but not if we're sending a redirect page
+		if(!headers_sent() && http_response_code() < 300 && http_response_code() >= 400) self::send_server_push_indicators();
 		return $result;
 	}
 	/**
@@ -1396,6 +1396,18 @@ class page_renderer
 	// ~
 	
 	/**
+	 * Adds a resource to the list of items to indicate that the web server should send via HTTP/2.0 Server Push.
+	 * Note: Only specify static files here, as you might end up with strange (and possibly dangerous) results!
+	 * @param string $type The resource type. See https://fetch.spec.whatwg.org/#concept-request-destination for more information.
+	 * @param string $path The *relative url path* to the resource.
+	 */
+	public static function AddServerPushIndicator($type, $path) {
+		self::$http2_push_items[] = [ $type, $path ];
+	}
+	
+	// ~
+	
+	/**
 	 * The navigation bar divider.
 	 * @package core
 	 * @var string
@@ -1526,6 +1538,11 @@ class page_renderer
 
 		return $result;
 	}
+}
+
+// HTTP/2.0 Server Push static items
+foreach($settings->http2_server_push_items as $push_item) {
+	page_renderer::AddServerPushIndicator($push_item[0], $push_item[1]);
 }
 
 // Math rendering support
