@@ -1500,6 +1500,7 @@ window.addEventListener("load", function(event) {
 			event.target.form.setAttribute("target", "_blank");
 			event.target.form.submit();
 			event.target.form.removeAttribute("target");
+			return false; // Required by some browsers
 		}
 	});
 });

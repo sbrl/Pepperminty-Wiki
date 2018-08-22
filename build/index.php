@@ -405,7 +405,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "3581cc1437ab2b9033b10b84e896d829f0234985";
+$commit = "b613d2b2dcaadbe0795fd610ec536406e2993510";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -1895,6 +1895,7 @@ window.addEventListener("load", function(event) {
 			event.target.form.setAttribute("target", "_blank");
 			event.target.form.submit();
 			event.target.form.removeAttribute("target");
+			return false; // Required by some browsers
 		}
 	});
 });
