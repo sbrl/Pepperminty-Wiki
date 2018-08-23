@@ -353,7 +353,7 @@ function makepathsafe($string)
 
 /**
  * Hides an email address from bots by adding random html entities.
- * @todo			Make this moree clevererer :D
+ * @todo			Make this more clevererer :D
  * @package core
  * @param	string	$str	The original email address
  * @return	string			The mangled email address.
