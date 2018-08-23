@@ -1215,7 +1215,7 @@ class page_renderer
 
 		$result = str_replace("{generation-time-taken}", round((microtime(true) - $start_time)*1000, 2), $result);
 		// Send the HTTP/2.0 server push indicators if possible - but not if we're sending a redirect page
-		if(!headers_sent() && http_response_code() < 300 && http_response_code() >= 400) self::send_server_push_indicators();
+		if(!headers_sent() && (http_response_code() < 300 || http_response_code() >= 400)) self::send_server_push_indicators();
 		return $result;
 	}
 	/**
@@ -1256,7 +1256,8 @@ class page_renderer
 			$link_header_parts[] = "<{$push_item[1]}>; rel=preload; as={$push_item[0]}";
 		
 		// Send them in a link: header
-		header("link: " . implode(", ", $link_header_parts));
+		if(!empty($link_header_parts))
+			header("link: " . implode(", ", $link_header_parts));
 		
 		return count(self::$http2_push_items);
 	}
@@ -1310,9 +1311,9 @@ class page_renderer
 	{
 		global $settings, $defaultCSS;
 
-		if(self::is_css_url) {
+		if(self::is_css_url()) {
 			if($settings->css[0] === "/") // Push it if it's a relative resource
-				self::$http2_push_items[] = ["style", $settings->css];
+				self::AddServerPushIndicator("style", $settings->css);
 			return "<link rel='stylesheet' href='$settings->css' />\n";
 		} else {
 			$css = $settings->css == "auto" ? $defaultCSS : $settings->css;
@@ -1387,7 +1388,7 @@ class page_renderer
 			$result .= "<script defer>\n$snippet\n</script>\n";
 		foreach(static::$jsLinks as $link) {
 			// Push it via HTTP/2.0 if it's relative
-			if($link[0] === "/") self::$http2_push_items[] = ["script", $link];
+			if($link[0] === "/") self::AddServerPushIndicator("script", $link);
 			$result .= "<script src='" . $link . "' defer></script>\n";
 		}
 		return $result;

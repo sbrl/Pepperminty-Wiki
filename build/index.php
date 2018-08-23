@@ -183,6 +183,8 @@ $guiConfig = <<<'GUICONFIG'
 	"defaultaction": { "type": "text", "description": "The default action. This action will be performed if no other action is specified. It is recommended you set this to \"view\" - that way the user automatically views the default page (see above).", "default": "view" },
 	"updateurl": { "type": "url", "description": "The url from which to fetch updates. Defaults to the master (development) branch. MAKE SURE THAT THIS POINTS TO A *HTTPS* URL, OTHERWISE SOMEONE COULD INJECT A VIRUS INTO YOUR WIKI!", "default": "https://raw.githubusercontent.com/sbrl/pepperminty-wiki/master/index.php" },
 	"optimize_pages": { "type": "checkbox", "description": "Whether to optimise all webpages generated.", "default": true},
+	"http2_server_push": { "type": "checkbox", "description": "Whether HTTP/2.0 server should should be enabled. If true, then 'link' HTTP headers will be attached to rendered pages specifying files to push down. Note that web server support <em>also</em> has to be abled for this to work, as PHP can't push resources to the client on its own.", "default": true },
+	"http2_server_push_items": { "type": "server-push", "description": "An array of items to push to clients when rendering pages. Should be in the format <code>[ [type, path], [type, path], ....]</code>, where <code>type</code> is a <a href='https://fetch.spec.whatwg.org/#concept-request-destination'>resource type</a>, and <code>path</code> is a relative url path to a static file to send via <em>HTTP/2.0 Server Push</em>.<br />Note: These resources will only be pushed if your web server also has support for the link: HTTP/2.0 header, and it's a page that being rendered. If it's some other thing that being sent (e.g. an image, error message, event stream, redirect, etc.), then no server push is indicated by <em>Pepperminty Wiki</em>. Test your estup with your browser's developer tools, or <a href='https://http2-push.io/'>This testing site</a>.", "default": [] },
 	"max_recent_changes": { "type": "number", "description": "The maximum number of recent changes to display on the recent changes page.", "default": 512},
 	"export_allow_only_admins": { "type": "checkbox", "description": "Whether to only allow adminstrators to export the your wiki as a zip using the page-export module.", "default": false},
 	"stats_update_interval": { "type": "number", "description": "The number of seconds which should elapse before a statistics update should be scheduled. Defaults to once a day.", "default": 86400},
@@ -405,7 +407,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "b613d2b2dcaadbe0795fd610ec536406e2993510";
+$commit = "516b55ac9643e707a1317212ff3ecc9ec49d2032";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -1487,7 +1489,15 @@ class page_renderer
 			<p><em>Timed at {generation-date}</em></p>
 			<p><em>Powered by Pepperminty Wiki v0.17-dev.</em></p>
 		</footer>";
-
+	
+	/**
+	 * An array of items indicating the resources to ask the web server to push
+	 * down to the client with HTTP/2.0 server push.
+	 * Format: [ [type, path], [type, path], .... ]
+	 * @var array[]
+	 */
+	protected static $http2_push_items = [];
+	
 	/**
 	 * An array of functions that have been registered to process the
 	 * find / replace array before the page is rendered. Note that the function
@@ -1558,6 +1568,9 @@ class page_renderer
 					throw new Exception("Invalid logo_position '$settings->logo_position'. Valid values are either \"left\" or \"right\" and are case sensitive.");
 			}
 		}
+		
+		// Push the logo via HTTP/2.0 if possible
+		if($settings->favicon[0] === "/") self::$http2_push_items[] = ["image", $settings->favicon];
 
 		$parts = [
 			"{body}" => $body_template,
@@ -1589,8 +1602,7 @@ class page_renderer
 		];
 
 		// Pass the parts through the part processors
-		foreach(self::$part_processors as $function)
-		{
+		foreach(self::$part_processors as $function) {
 			$function($parts);
 		}
 
@@ -1599,6 +1611,8 @@ class page_renderer
 		$result = str_replace(array_keys($parts), array_values($parts), $result);
 
 		$result = str_replace("{generation-time-taken}", round((microtime(true) - $start_time)*1000, 2), $result);
+		// Send the HTTP/2.0 server push indicators if possible - but not if we're sending a redirect page
+		if(!headers_sent() && (http_response_code() < 300 || http_response_code() >= 400)) self::send_server_push_indicators();
 		return $result;
 	}
 	/**
@@ -1622,6 +1636,27 @@ class page_renderer
 	public static function render_minimal($title, $content)
 	{
 		return self::render($title, $content, self::$minimal_content_template);
+	}
+	
+	/**
+	 * Sends the currently registered HTTP2 server push items to the client.
+	 * @return integer|FALSE	The number of resource hints included in the link: header, or false if server pushing is disabled.
+	 */
+	public static function send_server_push_indicators() {
+		global $settings;
+		if(!$settings->http2_server_push)
+			return false;
+		
+		// Render the preload directives
+		$link_header_parts = [];
+		foreach(self::$http2_push_items as $push_item)
+			$link_header_parts[] = "<{$push_item[1]}>; rel=preload; as={$push_item[0]}";
+		
+		// Send them in a link: header
+		if(!empty($link_header_parts))
+			header("link: " . implode(", ", $link_header_parts));
+		
+		return count(self::$http2_push_items);
 	}
 	
 	/**
@@ -1656,6 +1691,15 @@ class page_renderer
 		return $result;
 	}
 	/**
+	 * Figures out whether $settings->css is a url, or a string of css.
+	 * A url is something starting with "protocol://" or simply a "/".
+	 * @return	boolean	True if it's a url - false if we assume it's a string of css.
+	 */
+	public static function is_css_url() {
+		global $settings;
+		return preg_match("/^[^\/]*\/\/|^\//", $settings->css);
+	}
+	/**
 	 * Renders all the CSS as HTML.
 	 * @package core
 	 * @return string The css as HTML, ready to be included in the HTML header.
@@ -1664,10 +1708,11 @@ class page_renderer
 	{
 		global $settings, $defaultCSS;
 
-		if(preg_match("/^[^\/]*\/\/|^\//", $settings->css))
+		if(self::is_css_url()) {
+			if($settings->css[0] === "/") // Push it if it's a relative resource
+				self::AddServerPushIndicator("style", $settings->css);
 			return "<link rel='stylesheet' href='$settings->css' />\n";
-		else
-		{
+		} else {
 			$css = $settings->css == "auto" ? $defaultCSS : $settings->css;
 			if(!empty($settings->optimize_pages))
 			{
@@ -1738,9 +1783,24 @@ class page_renderer
 		$result = "<!-- Javascript -->\n";
 		foreach(static::$jsSnippets as $snippet)
 			$result .= "<script defer>\n$snippet\n</script>\n";
-		foreach(static::$jsLinks as $link)
+		foreach(static::$jsLinks as $link) {
+			// Push it via HTTP/2.0 if it's relative
+			if($link[0] === "/") self::AddServerPushIndicator("script", $link);
 			$result .= "<script src='" . $link . "' defer></script>\n";
+		}
 		return $result;
+	}
+	
+	// ~
+	
+	/**
+	 * Adds a resource to the list of items to indicate that the web server should send via HTTP/2.0 Server Push.
+	 * Note: Only specify static files here, as you might end up with strange (and possibly dangerous) results!
+	 * @param string $type The resource type. See https://fetch.spec.whatwg.org/#concept-request-destination for more information.
+	 * @param string $path The *relative url path* to the resource.
+	 */
+	public static function AddServerPushIndicator($type, $path) {
+		self::$http2_push_items[] = [ $type, $path ];
 	}
 	
 	// ~
@@ -1876,6 +1936,11 @@ class page_renderer
 
 		return $result;
 	}
+}
+
+// HTTP/2.0 Server Push static items
+foreach($settings->http2_server_push_items as $push_item) {
+	page_renderer::AddServerPushIndicator($push_item[0], $push_item[1]);
 }
 
 // Math rendering support
