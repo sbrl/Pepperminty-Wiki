@@ -407,7 +407,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "516b55ac9643e707a1317212ff3ecc9ec49d2032";
+$commit = "39c8f48019599cc00e919d5c699e0c01c7278ef4";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -750,7 +750,7 @@ function makepathsafe($string)
 
 /**
  * Hides an email address from bots by adding random html entities.
- * @todo			Make this moree clevererer :D
+ * @todo			Make this more clevererer :D
  * @package core
  * @param	string	$str	The original email address
  * @return	string			The mangled email address.
@@ -1446,6 +1446,7 @@ class page_renderer
 		<meta charset='utf-8' />
 		<title>{title}</title>
 		<meta name='viewport' content='width=device-width, initial-scale=1' />
+		<meta name='generator' content='Pepperminty Wiki v0.17-dev' />
 		<link rel='shortcut-icon' href='{favicon-url}' />
 		<link rel='icon' href='{favicon-url}' />
 		{header-html}

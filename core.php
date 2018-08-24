@@ -1049,7 +1049,7 @@ class page_renderer
 		<meta charset='utf-8' />
 		<title>{title}</title>
 		<meta name='viewport' content='width=device-width, initial-scale=1' />
-		<meta name='generator' content='Pepperminty Wiki $version' />
+		<meta name='generator' content='Pepperminty Wiki {version}' />
 		<link rel='shortcut-icon' href='{favicon-url}' />
 		<link rel='icon' href='{favicon-url}' />
 		{header-html}
