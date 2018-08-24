@@ -19,6 +19,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - The CSS file specified in the `css` setting (url path must begin with a forward-slash) and the favicon (must not be a `data:` url) are automatically pushed when rendering pages
      - 2 new settings have been added: `http2_server_push` for turning it on and off (defaults to on), and `http2_server_push_items` for specifying custom resources to push (in case you design your own theme and want to push down the associated resources)
      - More information about `http2_server_push_items` in particular is available on the [configuration info page](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php) (when this release is out, of course. Until then, check out the description in `peppermint.guiconfig.json`)
+ - Added `<meta name='generator' />` tag to all pages
 
 ### Fixed
  - Updated the search system to transliterate characters to better support searching pages that are written in other languages.
