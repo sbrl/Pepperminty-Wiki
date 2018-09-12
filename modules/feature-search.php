@@ -671,7 +671,7 @@ class search
 		}
 		foreach($newindex as $nterm => $entry)
 		{
-			if(!isset($oldindex[$nterm]) or // If this world is new
+			if(!isset($oldindex[$nterm]) or // If this word is new
 			   $newindex[$nterm] !== $oldindex[$nterm]) // If this word has changed
 				$changed[$nterm] = $newindex[$nterm];
 		}

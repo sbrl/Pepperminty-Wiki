@@ -1081,7 +1081,7 @@ class page_renderer
 		{all-pages-datalist}";
 	/**
 	 * A specially minified content template that doesn't include the navbar and
-	 * other elements not suiltable for printing.
+	 * other elements not suitable for printing.
 	 * @var string
 	 * @package core
 	 */
