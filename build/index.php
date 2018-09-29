@@ -407,7 +407,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "284b4049460887b0b40b2f73e7db9158e5bc1ef0";
+$commit = "24775724d14520b8007cf7f4cc0c1d8901980494";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -4872,6 +4872,9 @@ class search
 		$result = implode(" … ", $contexts_text);
 		end($contexts); // If there's at least one item in the list and were not at the very end of the page, add an extra ellipsis
 		if(isset($contexts[0]) && $contexts[key($contexts)]["to"] < $sourceLength) $result .= "… ";
+		// Prepend an ellipsis if the context doesn't start at the beginning of a page
+		if(isset($contexts[0]) && $contexts[0]["from"] > 0) $result = " …$result";
+		
 		return $result;
 	}
 	

@@ -993,6 +993,9 @@ class search
 		$result = implode(" … ", $contexts_text);
 		end($contexts); // If there's at least one item in the list and were not at the very end of the page, add an extra ellipsis
 		if(isset($contexts[0]) && $contexts[key($contexts)]["to"] < $sourceLength) $result .= "… ";
+		// Prepend an ellipsis if the context doesn't start at the beginning of a page
+		if(isset($contexts[0]) && $contexts[0]["from"] > 0) $result = " …$result";
+		
 		return $result;
 	}
 	
