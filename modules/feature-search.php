@@ -904,7 +904,6 @@ class search
 			// todo remove items if the rank is below a threshold
 		}
 		
-		// todo sort by rank here
 		uasort($matching_pages, function($a, $b) {
 			if($a["rank"] == $b["rank"]) return 0;
 			return ($a["rank"] < $b["rank"]) ? +1 : -1;
@@ -957,7 +956,7 @@ class search
 		for($i = 0; $i < $matches_count; $i++) {
 			$next_context = [
 				"from" => max(0, $matches[$i][1] - $settings->search_characters_context),
-				"to" => min($sourceLength, $matches[$i][1] + count($matches[0]) + $settings->search_characters_context)
+				"to" => min($sourceLength, $matches[$i][1] + mb_strlen($matches[$i][0]) + $settings->search_characters_context)
 			];
 			
 			if(end($contexts) !== false && end($contexts)["to"] > $next_context["from"]) {

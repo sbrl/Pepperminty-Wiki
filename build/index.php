@@ -407,7 +407,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "39c8f48019599cc00e919d5c699e0c01c7278ef4";
+$commit = "284b4049460887b0b40b2f73e7db9158e5bc1ef0";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -1478,7 +1478,7 @@ class page_renderer
 		{all-pages-datalist}";
 	/**
 	 * A specially minified content template that doesn't include the navbar and
-	 * other elements not suiltable for printing.
+	 * other elements not suitable for printing.
 	 * @var string
 	 * @package core
 	 */
@@ -4550,7 +4550,7 @@ class search
 		}
 		foreach($newindex as $nterm => $entry)
 		{
-			if(!isset($oldindex[$nterm]) or // If this world is new
+			if(!isset($oldindex[$nterm]) or // If this word is new
 			   $newindex[$nterm] !== $oldindex[$nterm]) // If this word has changed
 				$changed[$nterm] = $newindex[$nterm];
 		}
@@ -4783,7 +4783,6 @@ class search
 			// todo remove items if the rank is below a threshold
 		}
 		
-		// todo sort by rank here
 		uasort($matching_pages, function($a, $b) {
 			if($a["rank"] == $b["rank"]) return 0;
 			return ($a["rank"] < $b["rank"]) ? +1 : -1;
@@ -4836,7 +4835,7 @@ class search
 		for($i = 0; $i < $matches_count; $i++) {
 			$next_context = [
 				"from" => max(0, $matches[$i][1] - $settings->search_characters_context),
-				"to" => min($sourceLength, $matches[$i][1] + count($matches[0]) + $settings->search_characters_context)
+				"to" => min($sourceLength, $matches[$i][1] + mb_strlen($matches[$i][0]) + $settings->search_characters_context)
 			];
 			
 			if(end($contexts) !== false && end($contexts)["to"] > $next_context["from"]) {
