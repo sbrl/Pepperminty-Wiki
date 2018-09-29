@@ -407,7 +407,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-dev";
-$commit = "24775724d14520b8007cf7f4cc0c1d8901980494";
+$commit = "39098ac0fb92b0c206f6b3dcdf635c6cf15f110a";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -4892,8 +4892,8 @@ class search
 		{
 			if(in_array($qterm, static::$stop_words))
 				continue;
-			// From http://stackoverflow.com/a/2483859/1460422
 			
+			// From http://stackoverflow.com/a/2483859/1460422
 			$context = preg_replace("/" . preg_replace('/\\//u', "\/", preg_quote($qterm)) . "/iu", "<strong class='search-term-highlight'>$0</strong>", $context);
 		}
 		
@@ -9106,7 +9106,7 @@ class PeppermintParsedown extends ParsedownExtra
 	{
 		global $pageindex, $env;
 		
-		if(preg_match('/^\[\[([^\]]*)\]\]([^\s!?",.()\[\]{}*=+\/]*)/u', $fragment["text"], $matches))
+		if(preg_match('/^\[\[([^\]]*)\]\]([^\s!?",;.()\[\]{}*=+\/]*)/u', $fragment["text"], $matches))
 		{
 			$linkPage = trim($matches[1]);
 			$display = $linkPage . trim($matches[2]);

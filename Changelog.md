@@ -34,6 +34,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Fixed the page history page - it should now display all page revisions in valid HTML
  - Fixed another bug in the search context generator
  - Display an ellipsis at the beginning of a search context if it doesn't start at the beginning of a page
+ - Semicolons are no longer automatically included in greedy internal links.
 
 ## Changed
  - Password hashing has been overhauled! A totally new-and-different system is being used now, so you'll need to rehash all your passwords.

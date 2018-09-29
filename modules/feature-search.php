@@ -1013,8 +1013,8 @@ class search
 		{
 			if(in_array($qterm, static::$stop_words))
 				continue;
-			// From http://stackoverflow.com/a/2483859/1460422
 			
+			// From http://stackoverflow.com/a/2483859/1460422
 			$context = preg_replace("/" . preg_replace('/\\//u', "\/", preg_quote($qterm)) . "/iu", "<strong class='search-term-highlight'>$0</strong>", $context);
 		}
 		

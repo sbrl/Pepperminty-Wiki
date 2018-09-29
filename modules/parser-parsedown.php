@@ -449,7 +449,7 @@ class PeppermintParsedown extends ParsedownExtra
 	{
 		global $pageindex, $env;
 		
-		if(preg_match('/^\[\[([^\]]*)\]\]([^\s!?",.()\[\]{}*=+\/]*)/u', $fragment["text"], $matches))
+		if(preg_match('/^\[\[([^\]]*)\]\]([^\s!?",;.()\[\]{}*=+\/]*)/u', $fragment["text"], $matches))
 		{
 			$linkPage = trim($matches[1]);
 			$display = $linkPage . trim($matches[2]);
