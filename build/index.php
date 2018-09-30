@@ -59,7 +59,7 @@ $guiConfig = <<<'GUICONFIG'
 	"user_preferences_button_text": { "type": "text", "description": "The text to display on the button that lets logged in users change their settings. Defaults to a cog (aka a 'gear' in unicode-land).", "default": "&#x2699; " },
 	"password_algorithm": { "type": "text", "description": "The algorithm to utilise when hashing passwords. Takes any value PHP's password_hash() does.", "default": "PASSWORD_DEFAULT" },
 	"password_cost": { "type": "number", "description": "The cost to use when hashing passwords.", "default": 12},
-	"password_cost_time": { "type": "number", "description": "The desired number of milliseconds to delay by when hashing passwords. Pepperminty Wiki will automatically update the value of password_cost to take the length of time specified here. If you're using PASSWORD_ARGON2I, then the auto-update will be disabled.", "default": 100},
+	"password_cost_time": { "type": "number", "description": "The desired number of milliseconds to delay by when hashing passwords. Pepperminty Wiki will automatically update the value of password_cost to take the length of time specified here. If you're using PASSWORD_ARGON2I, then the auto-update will be disabled.", "default": 350},
 	"password_cost_time_interval": { "type": "number", "description": "The interval, in seconds, at which the password cost should be recalculated. Set to -1 to disable. Default: 1 week", "default": 604800},
 	"password_cost_time_lastcheck": { "type": "number", "description": "Pseudo-setting used to keep track of the last recalculation of password_cost. Is updated with the current unix timestamp every time password_cost is recalculated.", "default": 0},
 	"new_password_length": { "type": "number", "description": "The length of newly-generated passwords. This is currently used in the user table when creating new accounts.", "default": 32},
@@ -407,7 +407,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-beta1";
-$commit = "a45a3aa087752b4f26af0a02785efc8b08436ce2";
+$commit = "1a11c84e1dd0104e1cc9dc44eaaa737982165f4c";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -8016,6 +8016,22 @@ register_module([
 			}
 		});
 		
+		add_action("hash-cost-test", function() {
+			header("content-type: text/plain");
+			
+			$time_compute = microtime(true);
+			$cost = hash_password_compute_cost();
+			$time_compute = (microtime(true) - $time_compute)*1000;
+			
+			$time_cost = microtime(true);
+			password_hash("testing", PASSWORD_DEFAULT, [ "cost" => $cost ]);
+			$time_cost = (microtime(true) - $time_cost)*1000;
+			
+			echo("Calculated cost: $cost ({$time_cost}ms)\n");
+			echo("Time taken: {$time_compute}ms\n");
+			exit(date("r"));
+		});
+		
 		// Register a section on logging in on the help page.
 		add_help_section("30-login", "Logging in", "<p>In order to edit $settings->sitename and have your edit attributed to you, you need to be logged in. Depending on the settings, logging in may be a required step if you want to edit at all. Thankfully, loggging in is not hard. Simply click the &quot;Login&quot; link in the top left, type your username and password, and then click login.</p>
 		<p>If you do not have an account yet and would like one, try contacting <a href='mailto:" . hide_email($settings->admindetails_email) . "'>$settings->admindetails_name</a>, $settings->sitename's administrator and ask them nicely to see if they can create you an account.</p>");
@@ -8121,23 +8137,21 @@ function hash_password_compute_cost() {
 	$props = hash_password_properties();
 	if($props["algorithm"] == PASSWORD_ARGON2I)
 		return null;
-	if(!is_int($props["options"]["cost"]))
-		$props["options"]["cost"] = 10;
+	$props["options"]["cost"] = 10;
 	
 	$target_cost_time = $settings->password_cost_time / 1000; // The setting is in ms
 	
-	$start = microtime(true);
 	do {
 		$props["options"]["cost"]++;
 		$start_i = microtime(true);
 		password_hash("testing", $props["algorithm"], $props["options"]);
 		$end_i =  microtime(true);
+		echo("Attempt | cost = {$props["options"]["cost"]}, time = " . ($end_i - $start_i)*1000 . "ms\n");
 		// Iterate until we find a cost high enough
 		// ....but don't keep going forever - try for at most 10x the target
 		// time in total (in case the specified algorithm doesn't take a
 		// cost parameter)
-	} while($end_i - $start_i < $target_cost_time &&
-		$end_i - $start < $target_cost_time * 10);
+	} while($end_i - $start_i < $target_cost_time);
 	
 	return $props["options"]["cost"];
 }

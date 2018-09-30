@@ -150,6 +150,22 @@ register_module([
 			}
 		});
 		
+		add_action("hash-cost-test", function() {
+			header("content-type: text/plain");
+			
+			$time_compute = microtime(true);
+			$cost = hash_password_compute_cost();
+			$time_compute = (microtime(true) - $time_compute)*1000;
+			
+			$time_cost = microtime(true);
+			password_hash("testing", PASSWORD_DEFAULT, [ "cost" => $cost ]);
+			$time_cost = (microtime(true) - $time_cost)*1000;
+			
+			echo("Calculated cost: $cost ({$time_cost}ms)\n");
+			echo("Time taken: {$time_compute}ms\n");
+			exit(date("r"));
+		});
+		
 		// Register a section on logging in on the help page.
 		add_help_section("30-login", "Logging in", "<p>In order to edit $settings->sitename and have your edit attributed to you, you need to be logged in. Depending on the settings, logging in may be a required step if you want to edit at all. Thankfully, loggging in is not hard. Simply click the &quot;Login&quot; link in the top left, type your username and password, and then click login.</p>
 		<p>If you do not have an account yet and would like one, try contacting <a href='mailto:" . hide_email($settings->admindetails_email) . "'>$settings->admindetails_name</a>, $settings->sitename's administrator and ask them nicely to see if they can create you an account.</p>");
@@ -255,23 +271,21 @@ function hash_password_compute_cost() {
 	$props = hash_password_properties();
 	if($props["algorithm"] == PASSWORD_ARGON2I)
 		return null;
-	if(!is_int($props["options"]["cost"]))
-		$props["options"]["cost"] = 10;
+	$props["options"]["cost"] = 10;
 	
 	$target_cost_time = $settings->password_cost_time / 1000; // The setting is in ms
 	
-	$start = microtime(true);
 	do {
 		$props["options"]["cost"]++;
 		$start_i = microtime(true);
 		password_hash("testing", $props["algorithm"], $props["options"]);
 		$end_i =  microtime(true);
+		echo("Attempt | cost = {$props["options"]["cost"]}, time = " . ($end_i - $start_i)*1000 . "ms\n");
 		// Iterate until we find a cost high enough
 		// ....but don't keep going forever - try for at most 10x the target
 		// time in total (in case the specified algorithm doesn't take a
 		// cost parameter)
-	} while($end_i - $start_i < $target_cost_time &&
-		$end_i - $start < $target_cost_time * 10);
+	} while($end_i - $start_i < $target_cost_time);
 	
 	return $props["options"]["cost"];
 }
