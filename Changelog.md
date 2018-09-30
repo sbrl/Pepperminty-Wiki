@@ -1,7 +1,7 @@
 # Changelog
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
-## v0.17-dev
+## v0.17-beta1
 
 ### Added
  - [Module API] Added `save_settings()` convenience method
@@ -37,7 +37,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Semicolons are no longer automatically included in greedy internal links.
  - Pressing enter in the tag box now correctly previews instead of performing a smart restore
 
-## Changed
+### Changed
  - Password hashing has been overhauled! A totally new-and-different system is being used now, so you'll need to rehash all your passwords.
      - The `hash` action supports the new password hashing scheme.
      - Added `password_cost`, `password_cost_time`, and `password_cost_time_interval` settings
