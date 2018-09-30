@@ -35,6 +35,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Fixed another bug in the search context generator
  - Display an ellipsis at the beginning of a search context if it doesn't start at the beginning of a page
  - Semicolons are no longer automatically included in greedy internal links.
+ - Pressing enter in the tag box now correctly previews instead of performing a smart restore
 
 ## Changed
  - Password hashing has been overhauled! A totally new-and-different system is being used now, so you'll need to rehash all your passwords.
