@@ -407,7 +407,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17-beta1";
-$commit = "1a11c84e1dd0104e1cc9dc44eaaa737982165f4c";
+$commit = "57ec8b82b52fb5bc70c8268649676de1fbb5e625";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -8017,7 +8017,14 @@ register_module([
 		});
 		
 		add_action("hash-cost-test", function() {
+			global $env;
+			
 			header("content-type: text/plain");
+			
+			if(!$env->is_logged_in || !$env->is_admin) {
+				http_response_code(401);
+				exit("Error: Only moderators are allowed to use this action.");
+			}
 			
 			$time_compute = microtime(true);
 			$cost = hash_password_compute_cost();

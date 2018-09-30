@@ -151,7 +151,14 @@ register_module([
 		});
 		
 		add_action("hash-cost-test", function() {
+			global $env;
+			
 			header("content-type: text/plain");
+			
+			if(!$env->is_logged_in || !$env->is_admin) {
+				http_response_code(401);
+				exit("Error: Only moderators are allowed to use this action.");
+			}
 			
 			$time_compute = microtime(true);
 			$cost = hash_password_compute_cost();
