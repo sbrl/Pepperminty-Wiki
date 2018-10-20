@@ -161,7 +161,7 @@ register_module([
 			}
 			
 			$time_compute = microtime(true);
-			$cost = hash_password_compute_cost();
+			$cost = hash_password_compute_cost(true);
 			$time_compute = (microtime(true) - $time_compute)*1000;
 			
 			$time_cost = microtime(true);
@@ -273,7 +273,7 @@ function hash_password_update($pass, $hash) {
  * found that's greater than the target - or 10x the target time elapses.
  * @return integer The automatically calculated password hashing cost.
  */
-function hash_password_compute_cost() {
+function hash_password_compute_cost($verbose = false) {
 	global $settings;
 	$props = hash_password_properties();
 	if($props["algorithm"] == PASSWORD_ARGON2I)
@@ -287,7 +287,7 @@ function hash_password_compute_cost() {
 		$start_i = microtime(true);
 		password_hash("testing", $props["algorithm"], $props["options"]);
 		$end_i =  microtime(true);
-		echo("Attempt | cost = {$props["options"]["cost"]}, time = " . ($end_i - $start_i)*1000 . "ms\n");
+		if($verbose) echo("Attempt | cost = {$props["options"]["cost"]}, time = " . ($end_i - $start_i)*1000 . "ms\n");
 		// Iterate until we find a cost high enough
 		// ....but don't keep going forever - try for at most 10x the target
 		// time in total (in case the specified algorithm doesn't take a
