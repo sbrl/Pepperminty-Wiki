@@ -406,7 +406,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.17";
-$commit = "1cec17a4419d4ba1f56f7734cc99f75bcb8e4722";
+$commit = "f62bebda76fdc0fc2f076a5b9c6afd284b64016f";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();

@@ -32,7 +32,9 @@ Developed by Starbeamrainbowlabs (though contributions from others are welcome!)
 
 Above: The Main Page used for testing purposes.
 
-A live demo of the latest stable version can be found over at [my website](//starbeamrainbowlabs.com/labs/peppermint)
+A live demo of the latest stable version can be found over at [my website](//starbeamrainbowlabs.com/labs/peppermint).
+
+More screenshots can be found in [this Imgur Album](https://imgur.com/a/lsBc3cM).
 
 ## Features
 - Configurable settings
