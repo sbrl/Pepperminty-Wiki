@@ -28,7 +28,7 @@ Developed by Starbeamrainbowlabs (though contributions from others are welcome!)
  - [License](#license)
 
 ## Screenshots and Demo
-![Main Page Example](https://i.imgur.com/5dmbKlz.png)
+[![Main Page Example](https://i.imgur.com/5dmbKlz.png)](https://imgur.com/a/lsBc3cM)
 
 Above: The Main Page used for testing purposes.
 
