@@ -82,6 +82,7 @@ More screenshots can be found in [this Imgur Album](https://imgur.com/a/lsBc3cM)
     - `zip` (for compressing exports)
     - `intl` (for Unicode text normalization when searching and in the id index)
 - Write access to Pepperminty Wiki's own folder (only for editing)
+- Recommended: Block access to `peppermint.json`, where it stores it's settings
 
 ### Getting your own copy
 Setting up your own copy of Pepperminty Wiki is easy. Since Pepperminty Wiki works on a module based system, all you need to do is choose the modules you want installed, and then configure your new installation so that it fits your needs. There are several ways to do this:
