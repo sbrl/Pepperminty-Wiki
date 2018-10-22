@@ -133,11 +133,13 @@ The [configuration guide](https://starbeamrainbowlabs.com/labs/peppermint/pepper
 ### User Accounts
 User account details are currently stored as an object in `peppermint.json`, under the `users` special setting. Each user has their own object, in which lies their user data.
 
-While users can change their own passwords and email addresses, you'll inevitably want to add your own users. Here's how:
+While users can change their own passwords and email addresses, you'll inevitably want to add your own users. You can do this through the brand-new user management page if you're logged in as a modereator or better (the `user-table` action - example url: `https://example.com/path/to/index.php?action=user-table`), or manually. Here's how to do it manually:
 
 1. Open `peppermint.json` in your favourite text editor.
 2. Create a new property on the `users` object, whose value is an object and key is the new user's username. Use the existing users for reference.
-3. Hash the new user's password with SHA256, and set it as the `password` parameter on the new user. This can be done in the terminal, online, or with the `hash` action - but make sure you don't leave any traces of your passwords lying around for others to find!
+3. Hash the new user's password. This can be done in the terminal or with the `hash` action - but make sure you don't leave any traces of your passwords lying around for others to find!
+    a. To use the `hash` action, navigate to `https://example.com/path/to/index.php?action=hash&string=my_temporary_password`. Don't forget to change your password afterwards, or clear both your browser history & server logs! You could even use [the demo instance](https://starbeamrainbowlabs.com/labs/peppermint/build/?action=hash&string=password) I have running on my server, but I don't have a filter on my server logs :-)
+    b. To do it through the terminal, the following one-liner should do the trick: `echo -n "some_password" | php -r 'echo(password_hash(base64_encode(hash("sha384", trim(fgets(STDIN)))), PASSWORD_DEFAULT) . "\n");'`
 4. Save `peppermint.json` back to disk.
 
 ~~In the future, user accounts will be manageable through a graphical interface. Follow #127 for updates!~~ User accounts are now manageable through a graphical interface! Access it through the `Edit user table` option on the credits page.
