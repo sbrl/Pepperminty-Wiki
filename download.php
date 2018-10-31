@@ -81,8 +81,8 @@
 			{
 				var url = "pack.php?web=true&modules=",
 					checkboxes = document.querySelectorAll("input[type=checkbox]");
-				for(var i = 0; i < checkboxes.length; i++)
-				{
+				for(var i = 0; i < checkboxes.length; i++) {
+					if(!checkboxes[i].checked) continue;
 					url += encodeURIComponent(checkboxes[i].id) + ",";
 				}
 				location.href = url;
