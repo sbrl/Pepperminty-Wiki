@@ -23,11 +23,11 @@
 	"users": { "type": "usertable", "description": "An array of usernames and passwords - passwords should be hashed with password_hash() (the hash action can help here)", "default": {
 		"admin": {
 			"email": "admin@somewhere.com",
-			"password": "$2y$11$HBk1sh9MGVSM.vM.hZTnBOxk8sJi6PhyN/DRZUy8z845F1wQ4tudS"
+			"password": "$2y$10$kX6QgET6SfL47GsJjxwp/.JE6SSJo4Nx8/wG13eNvLDGIduYTlCXO"
 		},
 		"user": {
 			"email": "example@example.net",
-			"password": "$2y$11$DrRmOVRfW0yyYD26JQkiluicOfluGoEgHgKJ7imPDicWABhowP9Fi"
+			"password": "$2y$10$tWYjgh5WvaJrwiszZ1e2Keo3ras6mqa4ptqruwUn3de4UB6eV9cnW"
 		}
 	}},
 	"admins": { "type": "array", "description": "An array of usernames that are administrators. Administrators can delete and move pages.", "default": [ "admin" ]},
