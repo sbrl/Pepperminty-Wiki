@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page History",
-	"version" => "0.4",
+	"version" => "0.4.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
 	"id" => "feature-history",

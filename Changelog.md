@@ -1,10 +1,15 @@
 # Changelog
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
+## v0.18-dev
+
+### Fixed
+ - Squashed a warning in the history revision systme when creating new pages (thanks @tspivey for spotting this!)
+
 ## v0.17.1
 
 ### Fixed
- - Corrected default passwords. If you were having issues, try updating to this release, deleting `peppermint.json` and trying again.
+ - Corrected default passwords. If you were having issues, try updating to this release, deleting `peppermint.json` and trying again (thanks for spotting this, @tspivey!)
 
 ## v0.17
 

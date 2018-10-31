@@ -405,8 +405,8 @@ if($settings->sessionprefix == "auto")
 ////// Do not edit below this line unless you know what you are doing! //////
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
-$version = "v0.17.1";
-$commit = "bb58384f9e75d55f158b8ba53f6b5bd6578e2669";
+$version = "v0.18-dev";
+$commit = "3a2d74227d0df78f17bb8f4da7f390a8ed6e45d2";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -1445,7 +1445,7 @@ class page_renderer
 		<meta charset='utf-8' />
 		<title>{title}</title>
 		<meta name='viewport' content='width=device-width, initial-scale=1' />
-		<meta name='generator' content='Pepperminty Wiki v0.17.1' />
+		<meta name='generator' content='Pepperminty Wiki v0.18-dev' />
 		<link rel='shortcut-icon' href='{favicon-url}' />
 		<link rel='icon' href='{favicon-url}' />
 		{header-html}
@@ -1469,7 +1469,7 @@ class page_renderer
 		{extra}
 		<footer>
 			<p>{footer-message}</p>
-			<p>Powered by Pepperminty Wiki v0.17.1, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
+			<p>Powered by Pepperminty Wiki v0.18-dev, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
 			<p>Your local friendly moderators are {admins-name-list}.</p>
 			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
 		</footer>
@@ -1487,7 +1487,7 @@ class page_renderer
 			<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
 			<p>{footer-message}</p>
 			<p><em>Timed at {generation-date}</em></p>
-			<p><em>Powered by Pepperminty Wiki v0.17.1.</em></p>
+			<p><em>Powered by Pepperminty Wiki v0.18-dev.</em></p>
 		</footer>";
 	
 	/**
@@ -1576,7 +1576,7 @@ class page_renderer
 			"{body}" => $body_template,
 
 			"{sitename}" => $logo_html,
-			"v0.17.1" => $version,
+			"v0.18-dev" => $version,
 			"{favicon-url}" => $settings->favicon,
 			"{header-html}" => self::get_header_html(),
 
@@ -3274,7 +3274,7 @@ SCRIPT;
 
 register_module([
 	"name" => "Page History",
-	"version" => "0.4",
+	"version" => "0.4.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
 	"id" => "feature-history",
@@ -3506,8 +3506,8 @@ function history_add_revision(&$pageinfo, &$newsource, &$oldsource, $save_pagein
 	// this point
 	
 	// TODO Store tag changes here
-	end($pageinfo->history); // Calculate the next revision id - we can't jsut count the reivisions here because we might have a revision limit
-	$nextRid = $pageinfo->history[key($pageinfo->history)]->rid + 1;
+	end($pageinfo->history); // Calculate the next revision id - we can't just count the reivisions here because we might have a revision limit
+	$nextRid = !empty($pageindex->history) ? $pageinfo->history[key($pageinfo->history)]->rid + 1 : 0;
 	$ridFilename = "$pageinfo->filename.r$nextRid";
 	// Insert a new entry into the history
 	$pageinfo->history[] = [
@@ -6505,6 +6505,12 @@ register_module([
 					"author_url" => "https://github.com/nibreh/",
 					"thing_url" => "",
 					"icon" => "https://avatars2.githubusercontent.com/u/7314006?v=3&s=24"
+				],
+				"More Bug Reports (default credentials + downloader; via Gitter)" => [
+					"author" => "Tyler Spivey",
+					"author_url" => "https://github.com/tspivey/",
+					"thing_url" => "",
+					"icon" => "https://avatars2.githubusercontent.com/u/709407?v=4&s=24"
 				],
 				"PR #135: Fix repeated page names on sidebar" => [
 					"author" => "ikisler",

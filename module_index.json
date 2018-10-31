@@ -73,11 +73,11 @@
     },
     {
         "name": "Page History",
-        "version": "0.4",
+        "version": "0.4.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
         "id": "feature-history",
-        "lastupdate": 1530616470,
+        "lastupdate": 1541003921,
         "optional": false
     },
     {
@@ -149,7 +149,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
-        "lastupdate": 1530618422,
+        "lastupdate": 1540998605,
         "optional": false
     },
     {
