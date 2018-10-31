@@ -4,7 +4,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ## v0.18-dev
 
 ### Fixed
- - Squashed a warning in the history revision systme when creating new pages (thanks @tspivey for spotting this!)
+ - Squashed a warning in the history revision system when creating new pages (thanks @tspivey for spotting this!)
+ - Standardise line endings to `\n` (linux)
 
 ## v0.17.1
 
