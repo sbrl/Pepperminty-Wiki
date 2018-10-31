@@ -69,6 +69,12 @@ register_module([
 					"thing_url" => "",
 					"icon" => "https://avatars2.githubusercontent.com/u/7314006?v=3&s=24"
 				],
+				"More Bug Reports (default credentials + downloader; via Gitter)" => [
+					"author" => "Tyler Spivey",
+					"author_url" => "https://github.com/tspivey/",
+					"thing_url" => "",
+					"icon" => "https://avatars2.githubusercontent.com/u/709407?v=4&s=24"
+				],
 				"PR #135: Fix repeated page names on sidebar" => [
 					"author" => "ikisler",
 					"author_url" => "https://github.com/ikisler",
