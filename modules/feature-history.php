@@ -233,8 +233,8 @@ function history_add_revision(&$pageinfo, &$newsource, &$oldsource, $save_pagein
 	// this point
 	
 	// TODO Store tag changes here
-	end($pageinfo->history); // Calculate the next revision id - we can't jsut count the reivisions here because we might have a revision limit
-	$nextRid = $pageinfo->history[key($pageinfo->history)]->rid + 1;
+	end($pageinfo->history); // Calculate the next revision id - we can't just count the reivisions here because we might have a revision limit
+	$nextRid = !empty($pageindex->history) ? $pageinfo->history[key($pageinfo->history)]->rid + 1 : 0;
 	$ridFilename = "$pageinfo->filename.r$nextRid";
 	// Insert a new entry into the history
 	$pageinfo->history[] = [
