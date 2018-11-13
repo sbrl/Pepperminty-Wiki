@@ -84,6 +84,8 @@ More screenshots can be found in [this Imgur Album](https://imgur.com/a/lsBc3cM)
 - Write access to Pepperminty Wiki's own folder (only for editing)
 - Recommended: Block access to `peppermint.json`, where it stores it's settings
 
+### 
+
 ### Getting your own copy
 Setting up your own copy of Pepperminty Wiki is easy. Since Pepperminty Wiki works on a module based system, all you need to do is choose the modules you want installed, and then configure your new installation so that it fits your needs. There are several ways to do this:
 
@@ -100,7 +102,7 @@ Pepperminty Wiki has a downloader that you can use to select the modules you wan
 You can also you the downloader offline. Simply clone this repository to your web server and then point your web browser at `your.server/path/to/pepperminty/wiki/download.php`.
 
 #### Method 4: Building your own from source
-Pepperminty Wiki can also be built from source (and I do this all the time when testing). Start by cloning the repository. Then go into the `modules` folder and append `.disabled` to the names of any modules you don't want to be included (e.g. `modules/page-edit.php` would become `modules/page-edit.php.disabled`). Then follow the instructions for your platform:
+Pepperminty Wiki can also be built from source (and I do this all the time when testing). Start by cloning the repository. Then go into the `modules` folder and append `.disabled` to the names of any modules you don't want to be included (e.g. `modules/page-edit.php` would become `modules/page-edit.php.disabled`). Then follow the instructions for your platform below. The resulting file will be located at `build/index.php`.
 
 ##### Windows
 Simply run the `build.bat` script in the root of the repository. It will handle everything for you.
