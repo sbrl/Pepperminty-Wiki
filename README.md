@@ -84,7 +84,12 @@ More screenshots can be found in [this Imgur Album](https://imgur.com/a/lsBc3cM)
 - Write access to Pepperminty Wiki's own folder (only for editing)
 - Recommended: Block access to `peppermint.json`, where it stores it's settings
 
-### 
+### Setup Instructions
+1. Once you've ensured your web server meets the requirements, obtain a copy of Pepperminty Wiki (see [_Getting your own copy_](#getting-your-own-copy) below).
+2. Put the `index.php` file on your web server.
+3. Navigate to Pepperminty Wiki in your web browser. If you uploaded the `index.php` to `wiki/` on your web server `bobsrockets.com`, then you should navigate to `bobsrockets.com/wiki/`.
+4. See the [Configuring](#configuring) section for information on how to customise your installation, including the default login credentials.
+5. Ensure you configure your web server to block access to `peppermint.json`, as this contains all your account details (including your hashed password!)
 
 ### Getting your own copy
 Setting up your own copy of Pepperminty Wiki is easy. Since Pepperminty Wiki works on a module based system, all you need to do is choose the modules you want installed, and then configure your new installation so that it fits your needs. There are several ways to do this:
