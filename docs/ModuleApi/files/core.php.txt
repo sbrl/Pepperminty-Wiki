@@ -82,29 +82,12 @@ if(isset($_SESSION[$settings->sessionprefix . "-user"]) and
   isset($_SESSION[$settings->sessionprefix . "-pass"]))
 {
 	// Grab the session variables
-	// Note that the 'pass' field here is actually a hash of the password set
-	// by the login action
 	$env->user = $_SESSION[$settings->sessionprefix . "-user"];
-	$env->pass = $_SESSION[$settings->sessionprefix . "-pass"];
 	
-	if($settings->users->{$env->user}->password == $env->pass)
-	{
-		// The user is logged in
-		$env->is_logged_in = true;
-		$env->user_data = $settings->users->{$env->user};
-	}
-	else
-	{
-		// The user's login details are invalid (what is going on here?)
-		// Unset the session variables, treat them as an anonymous user,
-		// and get out of here
-		$env->is_logged_in = false;
-		$env->user = $settings->anonymous_user_name;
-		$env->pass = "";
-		// Clear the session data
-		$_SESSION = []; // Delete all the variables
-		session_destroy(); // Destroy the session
-	}
+	// The user is logged in
+	$env->is_logged_in = true;
+	$env->user_data = $settings->users->{$env->user};
+	
 }
 
 // Check to see if the currently logged in user is an admin
@@ -128,15 +111,15 @@ if($env->is_logged_in)
 /**
  * @apiDefine Admin	Only the wiki administrator may use this call.
  */
- /**
-  * @apiDefine Moderator	Only users loggged with a moderator account may use this call.
-  */
 /**
-* @apiDefine User		Only users loggged in may use this call.
-*/
+ * @apiDefine Moderator	Only users loggged with a moderator account may use this call.
+ */
 /**
-* @apiDefine Anonymous	Anybody may use this call.
-*/
+ * @apiDefine User		Only users loggged in may use this call.
+ */
+/**
+ * @apiDefine Anonymous	Anybody may use this call.
+ */
 /**
  * @apiDefine	UserNotLoggedInError
  * @apiError	UserNotLoggedInError	You didn't log in before sending this request.
@@ -184,6 +167,7 @@ function url_origin( $s = false, $use_forwarded_host = false )
  */
 function full_url( $s = false, $use_forwarded_host = false )
 {
+	if($s == false) $s = $_SERVER;
     return url_origin( $s, $use_forwarded_host ) . $s['REQUEST_URI'];
 }
 
@@ -369,7 +353,7 @@ function makepathsafe($string)
 
 /**
  * Hides an email address from bots by adding random html entities.
- * @todo			Make this moree clevererer :D
+ * @todo			Make this more clevererer :D
  * @package core
  * @param	string	$str	The original email address
  * @return	string			The mangled email address.
@@ -421,7 +405,7 @@ function starts_with($haystack, $needle)
 function mb_stripos_all($haystack, $needle) {
 	$s = 0; $i = 0;
 	while(is_integer($i)) {
-		$i = function_exists("mb_stripos") ? mb_stripos($haystack, $needle, $s) : stripos($haystack, $needle, $s);
+		$i = mb_stripos($haystack, $needle, $s);
 		if(is_integer($i)) {
 			$aStrPos[] = $i;
 			$s = $i + (function_exists("mb_strlen") ? mb_strlen($needle) : strlen($needle));
@@ -678,7 +662,16 @@ function render_editor($editorName)
 }
 
 /**
- * Saves the currently logged in uesr's data back to peppermint.json.
+ * Saves the settings file back to peppermint.json.
+ * @return bool Whether the settings were saved successfully.
+ */
+function save_settings() {
+	global $paths, $settings;
+	return file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT)) !== false;
+}
+
+/**
+ * Saves the currently logged in user's data back to peppermint.json.
  * @package core
  * @return bool Whether the user's data was saved successfully. Returns false if the user isn't logged in.
  */
@@ -690,9 +683,8 @@ function save_userdata()
 		return false;
 	
 	$settings->users->{$env->user} = $env->user_data;
-	file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT));
 	
-	return true;
+	return save_settings();
 }
 
 /**
@@ -748,8 +740,7 @@ function email_user($username, $subject, $body)
 	foreach($headers as $header => $value)
 		$compiled_headers .= "$header: $value\r\n";
 	
-	mail($settings->users->{$username}->emailAddress, $subject, $body, $compiled_headers, "-t");
-	return true;
+	return mail($settings->users->{$username}->emailAddress, $subject, $body, $compiled_headers, "-t");
 }
 /**
  * Sends a plain text email to a list of users, replacing {username} with each user's name.
@@ -890,10 +881,12 @@ class ids
 	public static function getid($pagename)
 	{
 		global $idindex;
-
+		
+		$pagename_norm = Normalizer::normalize($pagename, Normalizer::FORM_C);
 		foreach ($idindex as $id => $entry)
 		{
-			if(Normalizer::normalize($entry, Normalizer::FORM_C) == Normalizer::normalize($pagename, Normalizer::FORM_C))
+			// We don't need to normalise here because we normralise when assigning ids
+			if($entry == $pagename_norm)
 				return $id;
 		}
 		
@@ -1056,6 +1049,7 @@ class page_renderer
 		<meta charset='utf-8' />
 		<title>{title}</title>
 		<meta name='viewport' content='width=device-width, initial-scale=1' />
+		<meta name='generator' content='Pepperminty Wiki {version}' />
 		<link rel='shortcut-icon' href='{favicon-url}' />
 		<link rel='icon' href='{favicon-url}' />
 		{header-html}
@@ -1087,7 +1081,7 @@ class page_renderer
 		{all-pages-datalist}";
 	/**
 	 * A specially minified content template that doesn't include the navbar and
-	 * other elements not suiltable for printing.
+	 * other elements not suitable for printing.
 	 * @var string
 	 * @package core
 	 */
@@ -1099,7 +1093,15 @@ class page_renderer
 			<p><em>Timed at {generation-date}</em></p>
 			<p><em>Powered by Pepperminty Wiki {version}.</em></p>
 		</footer>";
-
+	
+	/**
+	 * An array of items indicating the resources to ask the web server to push
+	 * down to the client with HTTP/2.0 server push.
+	 * Format: [ [type, path], [type, path], .... ]
+	 * @var array[]
+	 */
+	protected static $http2_push_items = [];
+	
 	/**
 	 * An array of functions that have been registered to process the
 	 * find / replace array before the page is rendered. Note that the function
@@ -1170,6 +1172,9 @@ class page_renderer
 					throw new Exception("Invalid logo_position '$settings->logo_position'. Valid values are either \"left\" or \"right\" and are case sensitive.");
 			}
 		}
+		
+		// Push the logo via HTTP/2.0 if possible
+		if($settings->favicon[0] === "/") self::$http2_push_items[] = ["image", $settings->favicon];
 
 		$parts = [
 			"{body}" => $body_template,
@@ -1201,8 +1206,7 @@ class page_renderer
 		];
 
 		// Pass the parts through the part processors
-		foreach(self::$part_processors as $function)
-		{
+		foreach(self::$part_processors as $function) {
 			$function($parts);
 		}
 
@@ -1211,6 +1215,8 @@ class page_renderer
 		$result = str_replace(array_keys($parts), array_values($parts), $result);
 
 		$result = str_replace("{generation-time-taken}", round((microtime(true) - $start_time)*1000, 2), $result);
+		// Send the HTTP/2.0 server push indicators if possible - but not if we're sending a redirect page
+		if(!headers_sent() && (http_response_code() < 300 || http_response_code() >= 400)) self::send_server_push_indicators();
 		return $result;
 	}
 	/**
@@ -1234,6 +1240,27 @@ class page_renderer
 	public static function render_minimal($title, $content)
 	{
 		return self::render($title, $content, self::$minimal_content_template);
+	}
+	
+	/**
+	 * Sends the currently registered HTTP2 server push items to the client.
+	 * @return integer|FALSE	The number of resource hints included in the link: header, or false if server pushing is disabled.
+	 */
+	public static function send_server_push_indicators() {
+		global $settings;
+		if(!$settings->http2_server_push)
+			return false;
+		
+		// Render the preload directives
+		$link_header_parts = [];
+		foreach(self::$http2_push_items as $push_item)
+			$link_header_parts[] = "<{$push_item[1]}>; rel=preload; as={$push_item[0]}";
+		
+		// Send them in a link: header
+		if(!empty($link_header_parts))
+			header("link: " . implode(", ", $link_header_parts));
+		
+		return count(self::$http2_push_items);
 	}
 	
 	/**
@@ -1268,19 +1295,29 @@ class page_renderer
 		return $result;
 	}
 	/**
+	 * Figures out whether $settings->css is a url, or a string of css.
+	 * A url is something starting with "protocol://" or simply a "/".
+	 * @return	boolean	True if it's a url - false if we assume it's a string of css.
+	 */
+	public static function is_css_url() {
+		global $settings;
+		return preg_match("/^[^\/]*\/\/|^\//", $settings->css);
+	}
+	/**
 	 * Renders all the CSS as HTML.
 	 * @package core
 	 * @return string The css as HTML, ready to be included in the HTML header.
 	 */
 	public static function get_css_as_html()
 	{
-		global $settings;
+		global $settings, $defaultCSS;
 
-		if(preg_match("/^[^\/]*\/\/|^\//", $settings->css))
+		if(self::is_css_url()) {
+			if($settings->css[0] === "/") // Push it if it's a relative resource
+				self::AddServerPushIndicator("style", $settings->css);
 			return "<link rel='stylesheet' href='$settings->css' />\n";
-		else
-		{
-			$css = $settings->css;
+		} else {
+			$css = $settings->css == "auto" ? $defaultCSS : $settings->css;
 			if(!empty($settings->optimize_pages))
 			{
 				// CSS Minification ideas by Jean from catswhocode.com
@@ -1350,9 +1387,24 @@ class page_renderer
 		$result = "<!-- Javascript -->\n";
 		foreach(static::$jsSnippets as $snippet)
 			$result .= "<script defer>\n$snippet\n</script>\n";
-		foreach(static::$jsLinks as $link)
+		foreach(static::$jsLinks as $link) {
+			// Push it via HTTP/2.0 if it's relative
+			if($link[0] === "/") self::AddServerPushIndicator("script", $link);
 			$result .= "<script src='" . $link . "' defer></script>\n";
+		}
 		return $result;
+	}
+	
+	// ~
+	
+	/**
+	 * Adds a resource to the list of items to indicate that the web server should send via HTTP/2.0 Server Push.
+	 * Note: Only specify static files here, as you might end up with strange (and possibly dangerous) results!
+	 * @param string $type The resource type. See https://fetch.spec.whatwg.org/#concept-request-destination for more information.
+	 * @param string $path The *relative url path* to the resource.
+	 */
+	public static function AddServerPushIndicator($type, $path) {
+		self::$http2_push_items[] = [ $type, $path ];
 	}
 	
 	// ~
@@ -1490,6 +1542,11 @@ class page_renderer
 	}
 }
 
+// HTTP/2.0 Server Push static items
+foreach($settings->http2_server_push_items as $push_item) {
+	page_renderer::AddServerPushIndicator($push_item[0], $push_item[1]);
+}
+
 // Math rendering support
 if(!empty($settings->enable_math_rendering))
 {
@@ -1507,6 +1564,7 @@ window.addEventListener("load", function(event) {
 			event.target.form.setAttribute("target", "_blank");
 			event.target.form.submit();
 			event.target.form.removeAttribute("target");
+			return false; // Required by some browsers
 		}
 	});
 });
@@ -1543,15 +1601,8 @@ $env->action = strtolower($_GET["action"]);
 //////////////////////////////////////
 ///// Extra consistency measures /////
 //////////////////////////////////////
-// Redirect to the search page if there isn't a page with the requested name
-if(!isset($pageindex->{$env->page}) and isset($_GET["search-redirect"]))
-{
-	http_response_code(307);
-	$url = "?action=search&query=" . rawurlencode($env->page);
-	header("location: $url");
-	exit(page_renderer::render("Non existent page - $settings->sitename", "<p>There isn't a page on $settings->sitename with that name. However, you could <a href='$url'>search for this page name</a> in other pages.</p>
-		<p>Alternatively, you could <a href='?action=edit&page=" . rawurlencode($env->page) . "&create=true'>create this page</a>.</p>"));
-}
+
+// CHANGED: The search redirector has now been moved to below the module registration system, as it was causing a warning here
 
 // Redirect the user to the login page if:
 //  - A login is required to view this wiki
@@ -1780,6 +1831,30 @@ foreach($remote_files as $remote_file_def) {
 	error_log("[ Pepperminty-Wiki/$settings->sitename ] Downloading {$remote_file_def["local_filename"]} from {$remote_file_def["remote_url"]}");
 	file_put_contents($remote_file_def["local_filename"], fopen($remote_file_def["remote_url"], "rb"));
 }
+
+//////////////////////////////////
+/// Final Consistency Measures ///
+//////////////////////////////////
+
+if(!isset($pageindex->{$env->page}) && isset($pageindex->{ucwords($env->page)})) {
+	http_response_code(307);
+	header("location: ?page=" . ucwords($env->page));
+	header("content-type: text/plain");
+	exit("$env->page doesn't exist on $settings->sitename, but " . ucwords($env->page) . " does. You should be redirected there automatically.");
+}
+
+// Redirect to the search page if there isn't a page with the requested name
+if(!isset($pageindex->{$env->page}) and isset($_GET["search-redirect"]))
+{
+	http_response_code(307);
+	$url = "?action=search&query=" . rawurlencode($env->page);
+	header("location: $url");
+	exit(page_renderer::render_minimal("Non existent page - $settings->sitename", "<p>There isn't a page on $settings->sitename with that name. However, you could <a href='$url'>search for this page name</a> in other pages.</p>
+		<p>Alternatively, you could <a href='?action=edit&page=" . rawurlencode($env->page) . "&create=true'>create this page</a>.</p>"));
+}
+
+//////////////////////////////////
+
 
 // Perform the appropriate action
 $action_name = $env->action;

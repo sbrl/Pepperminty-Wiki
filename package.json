@@ -20,16 +20,16 @@
 	},
 	"homepage": "https://github.com/sbrl/Pepperminty-Wiki#readme",
 	"devDependencies": {
+		"apidoc": "^0.17.7",
 		"docpress": "^0.7.4"
 	},
-    
-    "docpress": {
-        "github": "sbrl/Pepperminty-Wiki",
-        "markdown": {
-            "xhtmlOut": true
-        },
-        "css": [
-            "docs/theme.css"
-        ]
-    }
+	"docpress": {
+		"github": "sbrl/Pepperminty-Wiki",
+		"markdown": {
+			"xhtmlOut": true
+		},
+		"css": [
+			"docs/theme.css"
+		]
+	}
 }

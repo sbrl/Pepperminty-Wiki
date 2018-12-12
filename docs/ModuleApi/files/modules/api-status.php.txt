@@ -3,7 +3,7 @@ register_module([
 	"name" => "API status",
 	"version" => "0.1",
 	"author" => "Starbeamrainbowlabs",
-	"description" => "Provides a basic JSON status action that provices a few useful bits of information for API consumption.",
+	"description" => "Provides a basic JSON status action that provides a few useful bits of information for API consumption.",
 	"id" => "api-status",
 	"code" => function() {
 		global $settings;
@@ -16,7 +16,13 @@ register_module([
 		 * @apiParam	{boolean}	Whether or not the result should be minified JSON. Default: false
 		 */
 		
-		
+	 	/*
+	 	 * ███████ ████████  █████  ████████ ██    ██ ███████
+	 	 * ██         ██    ██   ██    ██    ██    ██ ██
+	 	 * ███████    ██    ███████    ██    ██    ██ ███████
+	 	 *      ██    ██    ██   ██    ██    ██    ██      ██
+	 	 * ███████    ██    ██   ██    ██     ██████  ███████
+	 	 */
 		add_action("status", function() {
 			global $version, $env, $settings, $actions;
 			

@@ -1,0 +1,3 @@
+[submodule "lantern-build-engine"]
+	path = lantern-build-engine
+	url = https://gitlab.com/sbrl/lantern-build-engine.git

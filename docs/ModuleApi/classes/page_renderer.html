@@ -106,12 +106,12 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">47</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">44</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="../reports/markers.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">6</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">6</span>
                                 </a>
                             </li>
                             <li>
@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-855065177"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-369263126"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-855065177" class="accordion-body collapse in">
+            <div id="namespace-369263126" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -190,10 +190,13 @@
                                                                     <a href="../classes/page_renderer.html#method_render" class="">render()</a><br />
                                                                     <a href="../classes/page_renderer.html#method_render_main" class="">render_main()</a><br />
                                                                     <a href="../classes/page_renderer.html#method_render_minimal" class="">render_minimal()</a><br />
+                                                                    <a href="../classes/page_renderer.html#method_send_server_push_indicators" class="">send_server_push_indicators()</a><br />
                                                                     <a href="../classes/page_renderer.html#method_get_header_html" class="">get_header_html()</a><br />
+                                                                    <a href="../classes/page_renderer.html#method_is_css_url" class="">is_css_url()</a><br />
                                                                     <a href="../classes/page_renderer.html#method_get_css_as_html" class="">get_css_as_html()</a><br />
                                                                     <a href="../classes/page_renderer.html#method_AddJSLink" class="">AddJSLink()</a><br />
                                                                     <a href="../classes/page_renderer.html#method_AddJSSnippet" class="">AddJSSnippet()</a><br />
+                                                                    <a href="../classes/page_renderer.html#method_AddServerPushIndicator" class="">AddServerPushIndicator()</a><br />
                                                                     <a href="../classes/page_renderer.html#method_render_navigation_bar" class="">render_navigation_bar()</a><br />
                                                                     <a href="../classes/page_renderer.html#method_render_username" class="">render_username()</a><br />
                                                                     <a href="../classes/page_renderer.html#method_generate_all_pages_datalist" class="">generate_all_pages_datalist()</a><br />
@@ -335,7 +338,7 @@
                 <h3 class="public ">$minimal_content_template</h3>
                 <pre class="signature">$minimal_content_template : string</pre>
                 <p><em>A specially minified content template that doesn&#039;t include the navbar and
-other elements not suiltable for printing.</em></p>
+other elements not suitable for printing.</em></p>
                 
 
                                 <h4>Type</h4>
@@ -603,6 +606,36 @@ value of the function passed is discarded.</p>
 
                                     <div class="row-fluid">
         <div class="span8 content class">
+            <a id="method_send_server_push_indicators" name="method_send_server_push_indicators" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">send_server_push_indicators()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">send_server_push_indicators() : integer|FALSE</pre>
+                <p><em>Sends the currently registered HTTP2 server push items to the client.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer|FALSE
+                                            &mdash; <p>The number of resource hints included in the link: header, or false if server pushing is disabled.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
             <a id="method_get_header_html" name="method_get_header_html" class="anchor"></a>
             <article class="method">
                 <h3 class="public ">get_header_html()</h3>
@@ -634,6 +667,36 @@ value of the function passed is discarded.</p>
                                                                                             <p>core</p>
                                                     </td>
                     </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_is_css_url" name="method_is_css_url" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">is_css_url()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">is_css_url() : boolean</pre>
+                <p><em>Figures out whether $settings-&gt;css is a url, or a string of css.</em></p>
+                <p>A url is something starting with &quot;protocol://&quot; or simply a &quot;/&quot;.</p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>True if it's a url - false if we assume it's a string of css.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
                             </table>
         </aside>
     </div>
@@ -753,6 +816,46 @@ value of the function passed is discarded.</p>
                                                                                             <p>core</p>
                                                     </td>
                     </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_AddServerPushIndicator" name="method_AddServerPushIndicator" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">AddServerPushIndicator()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">AddServerPushIndicator(string  <span class="argument">$type</span>, string  <span class="argument">$path</span>) </pre>
+                <p><em>Adds a resource to the list of items to indicate that the web server should send via HTTP/2.0 Server Push.</em></p>
+                <p>Note: Only specify static files here, as you might end up with strange (and possibly dangerous) results!</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$type </td>
+                                <td><p>The resource type. See <a href="https://fetch.spec.whatwg.org/#concept-request-destination">https://fetch.spec.whatwg.org/#concept-request-destination</a> for more information.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$path </td>
+                                <td><p>The <em>relative url path</em> to the resource.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
                             </table>
         </aside>
     </div>
@@ -943,7 +1046,7 @@ navigation bar.</p></td>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on May 5th, 2018 at 20:53.
+                    on December 12th, 2018 at 23:20.
                 </section>
             </section>
         </section>

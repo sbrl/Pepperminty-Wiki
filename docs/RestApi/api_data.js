@@ -323,6 +323,61 @@ define({ "api": [
     "groupTitle": "Editing"
   },
   {
+    "type": "get",
+    "url": "?action=history-revert&page={pageName}&revision={rid}",
+    "title": "Revert a page to a previous version",
+    "name": "HistoryRevert",
+    "group": "Editing",
+    "permission": [
+      {
+        "name": "User",
+        "title": "Only users loggged in may use this call.",
+        "description": ""
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "revision",
+            "description": "<p>The page revision number to revert to.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "page",
+            "description": "<p>The page to operate on.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./modules/feature-history.php",
+    "groupTitle": "Editing",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "UserNotLoggedInError",
+            "description": "<p>You didn't log in before sending this request.</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "UserNotModeratorError",
+            "description": "<p>You weren't loggged in as a moderator before sending this request.</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "post",
     "url": "?action=preview-edit&page={pageName}[&newpage=yes]",
     "title": "Get a preview of the page",
@@ -514,15 +569,15 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "page",
-            "description": "<p>The page name to return a revision list for.</p>"
+            "field": "format",
+            "description": "<p>The format to return the list of pages in. available values: html, json, text. Default: html</p>"
           },
           {
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "format",
-            "description": "<p>The format to return the list of pages in. available values: html, json, text. Default: html</p>"
+            "field": "page",
+            "description": "<p>The page to operate on.</p>"
           }
         ]
       }
@@ -782,6 +837,23 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "?action=opensearch-description",
+    "title": "Get the opensearch description file",
+    "name": "OpenSearchDescription",
+    "group": "Search",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "./modules/feature-search.php",
+    "groupTitle": "Search"
+  },
+  {
+    "type": "get",
     "url": "?action=suggest-pages[&type={type}]",
     "title": "Get page name suggestions for a query",
     "name": "OpenSearchDescription",
@@ -813,23 +885,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
-    "filename": "./modules/feature-search.php",
-    "groupTitle": "Search"
-  },
-  {
-    "type": "get",
-    "url": "?action=opensearch-description",
-    "title": "Get the opensearch description file",
-    "name": "OpenSearchDescription",
-    "group": "Search",
-    "permission": [
-      {
-        "name": "Anonymous",
-        "title": "Anybody may use this call.",
-        "description": ""
-      }
-    ],
     "version": "0.0.0",
     "filename": "./modules/feature-search.php",
     "groupTitle": "Search"
@@ -1038,6 +1093,110 @@ define({ "api": [
     "groupTitle": "Settings"
   },
   {
+    "type": "post",
+    "url": "?action=user-add",
+    "title": "Create a user account",
+    "name": "UserAdd",
+    "group": "Settings",
+    "permission": [
+      {
+        "name": "Moderator",
+        "title": "Only users loggged with a moderator account may use this call.",
+        "description": ""
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "user",
+            "description": "<p>The username for the new user.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "email",
+            "description": "<p>Optional. Specifies the email address for the new user account.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./modules/feature-user-table.php",
+    "groupTitle": "Settings"
+  },
+  {
+    "type": "post",
+    "url": "?action=set-password",
+    "title": "Set a user's password",
+    "name": "UserAdd",
+    "group": "Settings",
+    "permission": [
+      {
+        "name": "Moderator",
+        "title": "Only users loggged with a moderator account may use this call.",
+        "description": ""
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "user",
+            "description": "<p>The username of the account to set the password for.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "new-pass",
+            "description": "<p>The new password for the specified username.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./modules/feature-user-table.php",
+    "groupTitle": "Settings"
+  },
+  {
+    "type": "post",
+    "url": "?action=user-delete",
+    "title": "Delete a user account",
+    "name": "UserDelete",
+    "group": "Settings",
+    "permission": [
+      {
+        "name": "Moderator",
+        "title": "Only users loggged with a moderator account may use this call.",
+        "description": ""
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "user",
+            "description": "<p>The username of the account to delete. username.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./modules/feature-user-table.php",
+    "groupTitle": "Settings"
+  },
+  {
     "type": "get",
     "url": "?action=user-preferences",
     "title": "Get a user preferences configuration page",
@@ -1069,6 +1228,23 @@ define({ "api": [
     ],
     "version": "0.0.0",
     "filename": "./modules/feature-user-preferences.php",
+    "groupTitle": "Settings"
+  },
+  {
+    "type": "get",
+    "url": "?action=user-table",
+    "title": "Get the user table",
+    "name": "UserTable",
+    "group": "Settings",
+    "permission": [
+      {
+        "name": "Moderator",
+        "title": "Only users loggged with a moderator account may use this call.",
+        "description": ""
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "./modules/feature-user-table.php",
     "groupTitle": "Settings"
   },
   {

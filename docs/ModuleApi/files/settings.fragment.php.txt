@@ -35,7 +35,7 @@ if(!file_exists($settingsFilename))
 	foreach ($guiConfig as $key => $value)
 		$settings->$key = $value->default;
 	// Generate a random secret
-	$settings->secret = bin2hex(openssl_random_pseudo_bytes(16));
+	$settings->secret = bin2hex(random_bytes(16));
 	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
 }
 else
@@ -64,8 +64,12 @@ if($settingsUpgraded)
 $defaultCSS = <<<THEMECSS
 {default-css}
 THEMECSS;
-if($settings->css === "auto")
-	$settings->css = $defaultCSS;
 
+// This will automatically save to peppermint.json if an automatic takes place 
+// for another reason (such as password rehashing or user data updates), but it 
+// doesn't really matter because the site name isn't going to change all that 
+// often, and even if it does it shouldn't matter :P
+if($settings->sessionprefix == "auto")
+	$settings->sessionprefix = "pepperminty-wiki-" . preg_replace('/[^a-z0-9\-_]/', "-", strtolower($settings->sitename));
 ?>
 

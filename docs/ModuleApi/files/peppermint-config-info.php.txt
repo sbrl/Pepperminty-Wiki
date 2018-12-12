@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset='utf-8' />
-		<title>peppermint.json configuration guide</title>
+		<title>peppermint.json configuration guide - Pepperminty Wiki</title>
 	</head>
 	<body>
 		<h1><img src="https://starbeamrainbowlabs.com/images/logos/peppermint.png" class="logo" /> <code>peppermint.json</code> Configuration Guide</h1>

@@ -106,12 +106,12 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">47</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">44</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="../reports/markers.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">6</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">6</span>
                                 </a>
                             </li>
                             <li>
@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1501573311"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-856192580"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1501573311" class="accordion-body collapse in">
+            <div id="namespace-856192580" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -202,31 +202,39 @@
             <article class="method">
                 <h3 class=" ">history_add_revision()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">history_add_revision(  <span class="argument">$pageinfo</span>,   <span class="argument">$newsource</span>,   <span class="argument">$oldsource</span>,   <span class="argument">$save_pageindex = true</span>) </pre>
-                <p><em></em></p>
-                
+                <pre class="signature" style="margin-right: 54px;">history_add_revision(object  <span class="argument">$pageinfo</span>, string  <span class="argument">$newsource</span>, string  <span class="argument">$oldsource</span>, boolean  <span class="argument">$save_pageindex = true</span>, string  <span class="argument">$change_type = &quot;edit&quot;</span>) </pre>
+                <p><em>Adds a history revision against a page.</em></p>
+                <p>Note: Does not updaate the current page content! This function <em>only</em>
+records a new revision against a page name. Thus it is possible to have a
+disparaty between the history revisions and the actual content displayed in
+the current revision if you're not careful!</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>object</td>
                                 <td>$pageinfo </td>
-                                <td></td>
+                                <td><p>The pageindex object of the page to operate on.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$newsource </td>
-                                <td></td>
+                                <td><p>The page content to save as the new revision.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$oldsource </td>
-                                <td></td>
+                                <td><p>The old page content that is the current revision (before the update).</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>boolean</td>
                                 <td>$save_pageindex </td>
-                                <td></td>
+                                <td><p>Whether the page index should be saved to disk.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$change_type </td>
+                                <td><p>The type of change to record this as in the history revision log</p></td>
                             </tr>
                                             </table>
                 
@@ -304,7 +312,7 @@
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on May 5th, 2018 at 20:53.
+                    on December 12th, 2018 at 23:20.
                 </section>
             </section>
         </section>

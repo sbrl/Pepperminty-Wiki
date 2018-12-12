@@ -20,22 +20,24 @@ Pepperminty Wiki has a downloader that you can use to select the modules you wan
 You can also you the downloader offline. Simply clone this repository to your web server and then point your web browser at `your.server.com/path/to/pepperminty/wiki/download.php`.
 
 ## Method 4: Building from source
-Pepperminty Wiki can also be built from source (and I do this all the time when testing). Start by cloning the repository. Then go into the `modules` folder and append `.disabled` to the names of any modules you don't want to be included (e.g. `modules/page-edit.php` would become `modules/page-edit.php.disabled`). Then follow the instructions for your platform below. The resulting file will be located at `build/index.php`.
+Pepperminty Wiki can also be built from source (and I do this all the time when testing). Start by cloning the repository. Then go into the `modules` folder and append `.disabled` to the names of any modules you don't want to be included (e.g. `modules/page-edit.php` would become `modules/page-edit.php.disabled`). Then follow the instructions below. The resulting file will be located at `build/index.php`.
 
-### Windows
-Simply run the `build.bat` script in the root of the repository. It will handle everything for you.
-
-### Linux and Everyone Else
-Run the following commands from the root of the repository in order, adjusting them for your specific platform (these are for a standard Ubuntu Server install):
+Run the following commands from the root of the repository in order, adjusting them for your specific platform if required:
 
 ```bash
 rm build/index.php
-php rebuild_module_index.php
 php build.php
 ```
 
-These commands are also in `build.sh`. You can run that if you want. Here's an explanation of what each command does:
+These commands are also in `build.sh`. If you have bash installed (i.e. Linux and macOS users), you can run that instead like this:
+
+```bash
+./build.sh build
+```
+
+The extra `build` is because the build script can do other things. Omit the `build` for a full list of tricks it has up its sleeve :D
+
+Here's an explanation of what each command does:
 
 1. Deletes the old `index.php` in the build folder that comes with the repository
-2. Rebuilds the module index that the build scripts uses to determine what modules it should include when building
-3. Actually builds Pepperminty Wiki. Outputs to `index.php`.
+2. Rebuilds the module index that the build scripts uses to determine what modules it should include when building, and then actually builds Pepperminty Wiki. Outputs to `index.php`.

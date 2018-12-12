@@ -30,6 +30,7 @@ if(isset($_GET["modules"]))
 if(php_sapi_name() != "cli")
 {
 	header("content-type: text/php");
+	header("content-disposition: attachment; filename=\"index.php\"");
 }
 
 if(php_sapi_name() == "cli") echo("Reading in core files...");

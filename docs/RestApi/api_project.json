@@ -1,6 +1,6 @@
 {
   "name": "Pepperminty Wiki",
-  "version": "0.13.0",
+  "version": "0.17.1",
   "description": "A wiki in a box. This is the API documentation.",
   "title": "Pepperminty Wiki (0.13-dev)",
   "sampleUrl": false,
@@ -8,8 +8,8 @@
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2018-05-05T20:53:47.285Z",
+    "time": "2018-12-12T23:23:12.972Z",
     "url": "http://apidocjs.com",
-    "version": "0.17.6"
+    "version": "0.17.7"
   }
 }
