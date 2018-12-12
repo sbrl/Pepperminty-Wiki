@@ -1,0 +1,12 @@
+/* Title */
+.menu {
+	background: url(https://sbrl.github.io/Pepperminty-Wiki/logo.svg) no-repeat top center/10em;
+	margin-top: 0.5em;
+	padding-top: 10em;
+}
+.menu > .menu-item:first-child > .submenu > .menu-item:first-child {
+	
+	font-weight: bolder;
+	font-size: 1.25em;
+	text-align: center;
+}

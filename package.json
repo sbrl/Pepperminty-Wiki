@@ -27,6 +27,9 @@
         "github": "sbrl/Pepperminty-Wiki",
         "markdown": {
             "xhtmlOut": true
-        }
+        },
+        "css": [
+            "docs/theme.css"
+        ]
     }
 }
