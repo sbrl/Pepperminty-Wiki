@@ -33,7 +33,7 @@ Developed by Starbeamrainbowlabs (though contributions from others are welcome!)
 
 Above: The Main Page used for testing purposes.
 
-A live demo of the latest stable version can be found over at [my website](//starbeamrainbowlabs.com/labs/peppermint).
+A live demo of the latest stable version can be found over at [my website](https://starbeamrainbowlabs.com/labs/peppermint).
 
 More screenshots can be found in [this Imgur Album](https://imgur.com/a/lsBc3cM).
 
@@ -102,7 +102,7 @@ If you want a pre-built stable version, then you can [use the latest release](ht
 If you're feeling lazy, you  can grab the bleeding-edge version from this repository, which comes with all the latest modules. You can get it [here](https://raw.githubusercontent.com/sbrl/Pepperminty-Wiki/master/build/index.php).
 
 #### Method 3: Using the online downloader
-Pepperminty Wiki has a downloader that you can use to select the modules you want to include in your install. The online downloader will give you the latest stable release. You can find it [here](//starbeamrainbowlabs.com/labs/peppermint/download.php).
+Pepperminty Wiki has a downloader that you can use to select the modules you want to include in your install. The online downloader will give you the latest stable release. You can find it [here](https://starbeamrainbowlabs.com/labs/peppermint/download.php).
 
 #### Method 3.5: Using the downloader offline
 You can also you the downloader offline. Simply clone this repository to your web server and then point your web browser at `your.server/path/to/pepperminty/wiki/download.php`.
@@ -129,7 +129,7 @@ These commands are also in `build.sh`. You can run that if you want. Here's an e
 3. Actually builds Pepperminty Wiki. Outputs to `index.php`.
 
 ## Configuring
-To configure your new install, make sure that you've loaded the wiki in your browser at least once. Then open `peppermint.json` in your favourite text editor. If you need any help, just contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new).
+To configure your new install, make sure that you've loaded the wiki in your browser at least once. Then open `peppermint.json` in your favourite text editor. If you need any help, just contact me or [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new).
 
 ~~Please note that configuration of Pepperminty Wiki will be done through a GUI soon.~~ _Most_ properties are now configurable in a graphical interface! It can be accessed through the _Edit Master Settings_ option in the more menu, or the `configure` action (e.g. `https://wiki.example.com/?action=configure`) if it doesn't appear for you.
 
@@ -173,10 +173,10 @@ If you do create a module, I'd love to hear about it. Even better, [send a pull 
  - [PHP Module API](https://sbrl.github.io/Pepperminty-Wiki/docs/ModuleApi/)
 
 ## Real World Usage
-None yet! Contact me or [open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) and tell me about where you are using Pepperminty Wiki and I'll add you to this section :smiley_cat:
+None yet! Contact me or [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) and tell me about where you are using Pepperminty Wiki and I'll add you to this section :smiley_cat:
 
 ## Todo
-Here's a list of things that I want to add at some point (please feel free to [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls) and help out!).
+Here's a list of things that I want to add at some point (please feel free to [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls) and help out!).
 
  - Better page history (revert to revision, compare revisions, etc.) (#78, #79)
  - Intelligent auto-updating system that doesn't wipe your settings / module choices
@@ -188,7 +188,7 @@ Here's a list of things that I want to add at some point (please feel free to [s
  - (See more on the [issue tracker](https://github.com/sbrl/Pepperminty-Wiki/issues)!)
  - ...?
 
-Is the feature you want to see not on this list or not implemented yet? [Open an issue](//github.com/sbrl/Pepperminty-Wiki/issues/new) or [send a pull request](//github.com/sbrl/Pepperminty-Wiki/pulls) - contributions welcome!
+Is the feature you want to see not on this list or not implemented yet? [Open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) or [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls) - contributions welcome!
 
 # License
 Pepperminty Wiki is released under the Mozilla Public License 2.0. The full license text is included in the `LICENSE` file in this repository.
