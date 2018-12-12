@@ -5,7 +5,7 @@
  * [Screenshots](03-Screenshots.md)
  * [Demo](https://starbeamrainbowlabs.com/labs/peppermint/build/)
  * [Getting Started](04-Getting-Started.md)
- * [Installation](05-Installation.md)
+ * [Getting a Copy](05-Getting-A-Copy.md)
  * [Configuration](06-Configuration.md)
  * References
 	 * [Configuration Settings](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php)
