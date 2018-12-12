@@ -102,7 +102,7 @@ function task_docs {
 		--directory . \
 		--target docs/ModuleApi\
 		--cache-folder build/_tmp/ModuleApiCache \
-		--ignore build/,php_error.php,Parsedown*,*.html \
+		--ignore build/,Parsedown*,*.html \
 		--title "Pepperminty Wiki Module API" \
 		--visibility public;
 	task_end $?;
