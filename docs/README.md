@@ -10,6 +10,6 @@
  * [Writing Modules](07-Writing-Modules.md)
  * References
 	 * [Configuration Settings](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php)
-	 * [HTTP API](https://sbrl.github.io/Pepperminty-Wiki/docs/RestApi/)
-	 * [PHP Module API](https://sbrl.github.io/Pepperminty-Wiki/docs/ModuleApi/)
+	 * [HTTP API](https://starbeamrainbowlabs.com/labs/peppermint/docs/RestApi/)
+	 * [PHP Module API](https://starbeamrainbowlabs.com/labs/peppermint/docs/ModuleApi/)
  * [Making a Release](08-Making-A-Release.md)
