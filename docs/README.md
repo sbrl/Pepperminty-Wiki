@@ -3,6 +3,7 @@
  * [Pepperminty Wiki](01-Welcome.md)
  * [Features](02-Features.md)
  * [Screenshots](03-Screenshots.md)
+ * [Demo](https://starbeamrainbowlabs.com/labs/peppermint/build/)
  * [Getting Started](04-Getting-Started.md)
  * [Installation](05-Installation.md)
  * [Configuration](06-Configuration.md)

@@ -1,0 +1,46 @@
+# Features
+Peppeminty Wiki has actually acquired a rather extensive feature set.
+
+ - Configurable settings
+	 - Via `peppermint.json`
+	 - GUI available for moderators
+ - User login system
+	 - Graphical user management table for moderators
+ - Page creation
+	 - Subpages fully supported
+ - Markdown-powered syntax
+	 - Powered by [Parsedown Extra](https://github.com/erusev/parsedown-extra/), with additional extras
+	 - Short syntax for:
+		 - Referencing uploaded files
+		 - Internal Links - links to non-existent pages show up in red
+	 - Templating support
+	 - Additional syntax for resizing and floating images (see inbuilt help page)
+	 - File galleries
+	 - Client-side mathematical expression parsing, courtesy of [MathJax](https://www.mathjax.org/) [optional]
+ - Full page revision history (comparison / manipulation coming soon)
+ - Optional time-delayed search indexing
+ - Simple edit conflict detection
+ - Edit previewing (since v0.14, thanks to @ikisler)
+ - Printable page view
+ - Customisable theme
+ - ~~Basic 'search' bar~~ A full-text search engine!
+	 - Dynamic server-side suggestions (since v0.13!)
+ - Sidebar with a tree of all the current pages [optional]
+ - Page tags
+ - Page lists
+	 - List of all pages
+	 - List of all tags
+	 - List of pages with a given tag
+	 - List of recent changes
+ - Inbuilt help page
+	 - Dynamic - modules can add their own sections to it
+ - File upload and preview
+	 - Simple syntax for including media in a page (explanation on help page)
+ - Page protection
+ - Simple user settings page
+	 - Set email address
+	 - Change password
+ - Threaded page comments (since v0.14)
+ - Statistics system - can be extended by modules (since v0.15)
+ - Customisable module based system
+	 - Allows you to add or remove features at will

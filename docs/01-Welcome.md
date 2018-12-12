@@ -6,6 +6,4 @@ Pepperminty Wiki is a complete wiki contained in a single file, inspired by @am2
 
 Developed by Starbeamrainbowlabs (though contributions from others are welcome!), Pepperminty Wiki has a variety of useful (and cool!) features - such as file upload, a dynamic help page, page revision history, page tags, and more! Other amazing features are in the works too (like a theme gallery, auto update, and user watchlists), so check the release notes to see what's been added recently.
 
-Explore the sections on the left-hand-side to learn more.
-
 ![Main Page Example](https://i.imgur.com/5dmbKlz.png)
