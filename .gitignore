@@ -1,8 +1,6 @@
 _docpress/
-# All wiki pages
-*.md
-# All the previous revisions
-*.md.r*
+build/*
+!build/index.php
 
 # Include the README
 !README.md
