@@ -1,3 +1,8 @@
+:root {
+	--primary-colour: #ff1b1b;
+	--primary-colour-soft: hsla(0, 93%, 68%, 0.58);
+}
+
 .body {
 	--background-colour-a: hsla(3, 100%, 70%, 0.3);
 	--background-colour-b: hsla(3, 100%, 80%, 0.3);
@@ -21,15 +26,40 @@
 	text-align: center;
 }
 
-.-menu-visible .menu-toggle {
+/* Blockquote */
+.markdown-body blockquote {
+	border-left: 0.25em solid var(--primary-colour-soft);
+}
+
+/* Bottom menu thingy */
+.-menu-visible .menu-toggle, .menu-toggle {
 	background: linear-gradient(to bottom, transparent, white);
 }
 
 .toc-menu .link.-active, .toc-menu .hlink.-active {
-	border-radius: 0.12em;
-	box-shadow: inset -0.25em 0 #ff1b1b;
+	box-shadow: inset -0.25em 0 var(--primary-colour);
 }
 
+/* Headings */
+.markdown-body h1 {
+	padding-bottom: 0.25em;
+	border-bottom: 0.1em solid var(--primary-colour);
+}
+.markdown-body h2 {
+	padding-bottom: 0.1em;
+	border-bottom: 0.08em solid var(--primary-colour);
+}
+
+/* Code Blocks */
+.markdown-body pre {
+	border: 0.1em dashed var(--primary-colour-soft);
+	background: hsla(0, 100%, 100%, 0.5);
+}
+.markdown-body > :not(pre) code {
+	background: hsla(0, 100%, 100%, 0.7);
+}
+
+/* Page Footer */
 .footer-nav {
 	border: 0;
 	background: linear-gradient(to bottom, transparent, white);
@@ -37,4 +67,8 @@
 .footer-nav.-expanded {
 	border: 0;
 	background: none;
+}
+.footer-nav.-expanded::before {
+	transition: all 0.25s;
+	background: var(--primary-colour-soft);
 }
