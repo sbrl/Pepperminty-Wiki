@@ -24,3 +24,17 @@
 .-menu-visible .menu-toggle {
 	background: linear-gradient(to bottom, transparent, white);
 }
+
+.toc-menu .link.-active, .toc-menu .hlink.-active {
+	border-radius: 0.12em;
+	box-shadow: inset -0.25em 0 #ff1b1b;
+}
+
+.footer-nav {
+	border: 0;
+	background: linear-gradient(to bottom, transparent, white);
+}
+.footer-nav.-expanded {
+	border: 0;
+	background: none;
+}
