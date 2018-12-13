@@ -1,12 +1,26 @@
-/* Title */
-.menu {
-	background: url(https://sbrl.github.io/Pepperminty-Wiki/logo.svg) no-repeat top center/10em;
-	margin-top: 0.5em;
-	padding-top: 10em;
-}
-.menu > .menu-item:first-child > .submenu > .menu-item:first-child {
+.body {
+	--background-colour-a: hsla(3, 100%, 70%, 0.3);
+	--background-colour-b: hsla(3, 100%, 80%, 0.3);
+	--background-size: 5em;
 	
+	background: repeating-linear-gradient(-55deg,
+		var(--background-colour-a), var(--background-colour-a) var(--background-size),
+		var(--background-colour-b) var(--background-size), var(--background-colour-b) calc(var(--background-size) * 2));
+}
+
+.menu {
+	background-color: hsla(0, 100%, 100%, 0.5);
+}
+/* Title */
+.toc-menu .-level-1:first-child {
+	background: url(https://sbrl.github.io/Pepperminty-Wiki/logo.svg) no-repeat top center/10em;
+	margin-top: 0;
+	padding-top: 10em;
 	font-weight: bolder;
 	font-size: 1.25em;
 	text-align: center;
+}
+
+.-menu-visible .menu-toggle {
+	background: linear-gradient(to bottom, transparent, white);
 }
