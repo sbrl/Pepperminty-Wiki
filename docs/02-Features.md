@@ -1,5 +1,5 @@
 # Features
-Peppeminty Wiki has actually acquired a rather extensive feature set.
+Pepperminty Wiki has actually acquired a rather extensive feature set.
 
  - Configurable settings
 	 - Via `peppermint.json`
