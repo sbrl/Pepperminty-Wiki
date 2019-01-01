@@ -54,6 +54,8 @@ $paths->searchindex = "invindex.json";
 $paths->idindex = "idindex.json";
 /** The cache of the most recently calculated statistics. */
 $paths->statsindex = "statsindex.json";
+/** The interwiki index cache */
+$paths->interwiki_index = "interwiki_index.json";
 
 // Prepend the storage data directory to all the defined paths.
 foreach ($paths as &$path) {
