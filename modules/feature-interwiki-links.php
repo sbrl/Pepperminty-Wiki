@@ -49,7 +49,7 @@ function interwiki_pagename_resolve($interwiki_pagename) {
 	$prefix = $parts[0];
 	$pagename = $parts[1];
 	
-	
+	throw new Exception("Not implemented yet :-\\")
 }
 
 ?>
