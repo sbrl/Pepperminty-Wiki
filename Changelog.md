@@ -3,7 +3,13 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## v0.18-dev
 
-## Changed
+### Added
+ - Added new `feature-interwiki` module that presents an interwiki API (it's not actually used just yet - coming soon! I'll update this changelog again once it's done).
+     - Added `interwiki_index_location` setting to control the location of the interwiki index (which is a CSV file that has yet to be documented)
+     - New module api functions: `interwiki_pagename_parse`, `interwiki_pagename_resolve`, and `interwiki_get_pagename_url`
+ - 
+
+### Changed
  - Completely reworked the README to refactor out the documentation to its [own static site](https://starbeamrainbowlabs.com/labs/peppermint/_docpress/)
 
 ### Fixed
