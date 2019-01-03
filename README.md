@@ -34,5 +34,9 @@ Here's a list of things that I want to add at some point (please feel free to [s
 
 Is the feature you want to see not on this list or not implemented yet? [Open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) or [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls) - contributions welcome!
 
+## Docker
+
+Run in a docker container with: `docker run -d sqlatenwiki/peppermintywiki:stable`
+
 # License
 Pepperminty Wiki is released under the Mozilla Public License 2.0. The full license text is included in the `LICENSE` file in this repository.
