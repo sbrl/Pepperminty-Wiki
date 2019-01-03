@@ -14,7 +14,7 @@ Developed by Starbeamrainbowlabs (though contributions from others are welcome!)
 ## Documentation
 For everything you need to know, you probably want the documentation. It can be found here:
 
-**[Documentation](#link-coming-soon)**
+**[Documentation](https://starbeamrainbowlabs.com/labs/peppermint/_docpress/)**
 
 ## Real World Usage
 None yet! Contact me or [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) and tell me about where you are using Pepperminty Wiki and I'll add you to this section :smiley_cat:

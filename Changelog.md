@@ -3,6 +3,9 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## v0.18-dev
 
+## Changed
+ - Completely reworked the README to refactor out the documentation to its [own static site](https://starbeamrainbowlabs.com/labs/peppermint/_docpress/)
+
 ### Fixed
  - Squashed a warning in the history revision system when creating new pages (thanks @tspivey for spotting this!)
  - Standardise line endings to `\n` (linux)
