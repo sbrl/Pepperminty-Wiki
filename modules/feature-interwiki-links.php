@@ -40,16 +40,53 @@ function interwiki_index_update() {
 	file_put_contents($paths->interwiki_index, json_encode($env->interwiki_index, JSON_PRETTY_PRINT));
 }
 
+/**
+ * Parses an interwiki pagename into it's component parts.
+ * @param  string	$interwiki_pagename	The interwiki pagename to parse.
+ * @return string[]	An array containing the parsed components of the interwiki pagename, in the form ["prefix", "page_name"].
+ */
+function interwiki_pagename_parse($interwiki_pagename) {
+	if(strpos($interwiki_pagename, ":") === false)
+		return null;
+	$result = explode(":", $interwiki_pagename, 2);
+	return array_map("trim", $result);
+}
+
+/**
+ * Resolves an interwiki pagename to the associated
+ * interwiki definition object.
+ * @param	string		$interwiki_pagename	An interwiki pagename. Should be in the form "prefix:page name".
+ * @return	stdClass	The interwiki definition object.
+ */
 function interwiki_pagename_resolve($interwiki_pagename) {
+	global $env;
 	// If it's not an interwiki link, then don't bother confusing ourselves
 	if(strpos($interwiki_pagename, ":") === false)
 		return null;
 	
-	$parts = explode(":", $interwiki_pagename, 2);
-	$prefix = $parts[0];
-	$pagename = $parts[1];
+	[$prefix, $pagename] = interwiki_pagename_parse($interwiki_pagename); // Shorthand destructuring - introduced in PHP 7.1
 	
-	throw new Exception("Not implemented yet :-\\");
+	if(empty($env->interwiki_index->$prefix))
+		return null;
+	
+	return $env->interwiki_index->$prefix;
+}
+/**
+ * Converts an interwiki pagename into a url.
+ * @param	string	$interwiki_pagename		The interwiki pagename (in the form "prefix:page name")
+ * @return	string	A url that points to the specified interwiki page.
+ */
+function interwiki_get_pagename_url($interwiki_pagename) {
+	$interwiki_def = interwiki_pagename_resolve($interwiki_pagename);
+	if($interwiki_def == null)
+		return null;
+	
+	[$prefix, $pagename] = interwiki_pagename_parse($interwiki_pagename);
+	
+	return str_replace(
+		"{{page_name}}", rawurlencode($pagename),
+		$interwiki_def->root_url
+	);
 }
 
 ?>
