@@ -3,7 +3,7 @@ register_module([
 	"name" => "Interwiki links",
 	"version" => "0.1",
 	"author" => "Starbeamrainbowlabs",
-	"description" => "Adds interwiki link support. Point the se",
+	"description" => "Adds interwiki link support. Set the interwiki_index_location setting at an index file to activate support.",
 	"id" => "feature-interwiki-links",
 	"code" => function() {
 		global $settings;
@@ -15,13 +15,21 @@ register_module([
 			else
 				$env->interwiki_index = json_decode(file_get_contents($paths->interwiki_index));
 		}
+		
+		// TODO: Fill this in
+		add_help_section("22-interwiki-links", "Interwiki Links", "");
 	}
 ]);
 
 /**
  * Updates the interwiki index cache file.
+ * If the interwiki_index_location isn't defined, then this function will do
+ * nothing.
  */
 function interwiki_index_update() {
+	if(empty($settings->interwiki_index_location))
+		return;
+	
 	$env->interwiki_index = new stdClass();
 	$interwiki_csv_handle = fopen($settings->interwiki_index_location, "r");
 	if($interwiki_csv_handle === false)
@@ -60,6 +68,10 @@ function interwiki_pagename_parse($interwiki_pagename) {
  */
 function interwiki_pagename_resolve($interwiki_pagename) {
 	global $env;
+	
+	if(empty($env->interwiki_index))
+		return null;
+	
 	// If it's not an interwiki link, then don't bother confusing ourselves
 	if(strpos($interwiki_pagename, ":") === false)
 		return null;
