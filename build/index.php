@@ -297,6 +297,8 @@ blockquote { padding-left: 1em; border-left: 0.2em solid #442772; border-radius:
 a { cursor: pointer; }
 a.redlink:link { color: rgb(230, 7, 7); }
 a.redlink:visited { color: rgb(130, 15, 15); /*#8b1a1a*/ }
+a.interwiki_link::before { content: "\\1f30d"; display: inline-block; margin-right: 0.25em; }
+a.interwiki_link { color: #127757; /* sekret! This is the decimal value of the above emoticon */ }
 
 .matching-tags-display { display: flex; margin: 0 -2em; padding: 1em 2em; background: hsla(30, 84%, 72%, 0.75); }
 .matching-tags-display > label { flex: 0; font-weight: bold; color: #442772; }
@@ -407,7 +409,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "79ee2455e96a830718a8b384df3b5b0685e5e9f7";
+$commit = "0b4290321c50abef10a099958a1c2b2ec1e859bf";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
