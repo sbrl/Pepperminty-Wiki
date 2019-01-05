@@ -6,7 +6,9 @@
  * [Demo](https://starbeamrainbowlabs.com/labs/peppermint/build/)
  * [Getting Started](04-Getting-Started.md)
  * [Getting a Copy](05-Getting-A-Copy.md)
- * [Configuration](06-Configuration.md)
+ * Configuration
+     * [Configuring your instance](06-Configuration.md)
+     * [Inter-wiki links](06.5-Interwiki-Links.md)
  * [Writing Modules](07-Writing-Modules.md)
  * References
 	 * [Configuration Settings](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php)
