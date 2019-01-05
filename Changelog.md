@@ -6,7 +6,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ### Added
  - Added new `feature-interwiki` module that presents an interwiki API (it's not actually used just yet - coming soon! I'll update this changelog again once it's done).
      - Added `interwiki_index_location` setting to control the location of the interwiki index (which is a CSV file that has yet to be documented)
-     - New module api functions: `interwiki_pagename_parse`, `interwiki_pagename_resolve`, and `interwiki_get_pagename_url`
+     - New module api functions: `interwiki_pagename_parse`, `interwiki_pagename_resolve`, `interwiki_get_pagename_url`, and `is_interwiki_link`
  - 
 
 ### Changed
