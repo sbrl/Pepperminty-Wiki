@@ -86,7 +86,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds interwiki link support. Set the interwiki_index_location setting at an index file to activate support.",
         "id": "feature-interwiki-links",
-        "lastupdate": 1546726222,
+        "lastupdate": 1546726332,
         "optional": false
     },
     {

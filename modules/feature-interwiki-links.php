@@ -18,7 +18,7 @@ register_module([
 		
 		// TODO: Fill this in
 		$doc_help = <<<HELP_BLOCK
-<p>$settings->sitename supports inter-wiki links. Such a link sends the user elsewhere on the internet. By prefixing a page name with a prefix, the convenience of the internal link syntax described above can be exploited to send users elsewhere without having to type out full urls! Here are few examples:</p>
+<p>$settings->sitename supports inter-wiki links. Such a link sends the user elsewhere on the internet. By prefixing a page name with a prefix, the convenience of the internal link syntax described above can be exploited to send users elsewhere without having to type out full urls! Here are few examples (note that these prefixes are only examples, and probably aren't available on $settings->sitename - check the list below for supported prefixes):</p>
 
 <pre><code>[[another_wiki:Apples]]
 [[trees:Apple Trees]]

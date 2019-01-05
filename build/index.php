@@ -407,7 +407,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "08a0cf2c2e1791470a3e387dc7dc7616898fae26";
+$commit = "79ee2455e96a830718a8b384df3b5b0685e5e9f7";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -3568,7 +3568,7 @@ register_module([
 		
 		// TODO: Fill this in
 		$doc_help = <<<HELP_BLOCK
-<p>$settings->sitename supports inter-wiki links. Such a link sends the user elsewhere on the internet. By prefixing a page name with a prefix, the convenience of the internal link syntax described above can be exploited to send users elsewhere without having to type out full urls! Here are few examples:</p>
+<p>$settings->sitename supports inter-wiki links. Such a link sends the user elsewhere on the internet. By prefixing a page name with a prefix, the convenience of the internal link syntax described above can be exploited to send users elsewhere without having to type out full urls! Here are few examples (note that these prefixes are only examples, and probably aren't available on $settings->sitename - check the list below for supported prefixes):</p>
 
 <pre><code>[[another_wiki:Apples]]
 [[trees:Apple Trees]]
