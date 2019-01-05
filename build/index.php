@@ -41,7 +41,7 @@ $guiConfig = <<<'GUICONFIG'
 	"anonedits": { "type": "checkbox", "description": "Whether users who aren't logged in are allowed to edit your wiki.", "default": false },
 	"maxpagesize": { "type": "number", "description": "The maximum page size in characters.", "default": 135000 },
 	"parser": { "type": "text", "description": "The parser to use when rendering pages. Defaults to an extended version of parsedown (http://parsedown.org/)", "default": "parsedown" },
-	"interwiki_index_location": { "type": "url", "description": "The location to find the interwiki wiki definition file, which contains a list of wikis along with their names, prefixes, and root urls. May be a URL, or simply a file path - as it's passed to file_get_contents(). If left blank, interwiki link parsing is disabled.", "default": null },
+	"interwiki_index_location": { "type": "text", "description": "The location to find the interwiki wiki definition file, which contains a list of wikis along with their names, prefixes, and root urls. May be a URL, or simply a file path - as it's passed to file_get_contents(). If left blank, interwiki link parsing is disabled.", "default": null },
 	"clean_raw_html": { "type": "checkbox", "description": "Whether page sources should be cleaned of HTML before rendering. It is STRONGLY recommended that you keep this option turned on.", "default": true},
 	"enable_math_rendering": { "type": "checkbox", "description": "Whether to enable client side rendering of mathematical expressions with MathJax (https://www.mathjax.org/). Math expressions should be enclosed inside of dollar signs ($). Turn off if you don't use it.", "default": true},
 	"users": { "type": "usertable", "description": "An array of usernames and passwords - passwords should be hashed with password_hash() (the hash action can help here)", "default": {
@@ -407,7 +407,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "3cb1f49798633c4fadb7a0564edc7669d454c703";
+$commit = "fafd5f6f0341ca9b0d57d0dcee20f9247d339891";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -3556,7 +3556,7 @@ register_module([
 	"description" => "Adds interwiki link support. Set the interwiki_index_location setting at an index file to activate support.",
 	"id" => "feature-interwiki-links",
 	"code" => function() {
-		global $settings;
+		global $env, $settings, $paths;
 		if(!empty($settings->interwiki_index_location)) {
 			// Generate the interwiki index cache file if it doesn't exist already
 			// NOTE: If you want to update the cache file, just delete it & it'll get regenerated automagically :-)
@@ -3577,6 +3577,8 @@ register_module([
  * nothing.
  */
 function interwiki_index_update() {
+	global $env, $settings, $paths;
+	
 	if(empty($settings->interwiki_index_location))
 		return;
 	
@@ -3592,7 +3594,7 @@ function interwiki_index_update() {
 		$interwiki_def->prefix = $interwiki_data[1];
 		$interwiki_def->root_url = $interwiki_data[2];
 		
-		$env->interwiki_index->$prefix = $interwiki_def;
+		$env->interwiki_index->{$interwiki_def->prefix} = $interwiki_def;
 	}
 	
 	file_put_contents($paths->interwiki_index, json_encode($env->interwiki_index, JSON_PRETTY_PRINT));

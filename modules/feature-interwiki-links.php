@@ -6,7 +6,7 @@ register_module([
 	"description" => "Adds interwiki link support. Set the interwiki_index_location setting at an index file to activate support.",
 	"id" => "feature-interwiki-links",
 	"code" => function() {
-		global $settings;
+		global $env, $settings, $paths;
 		if(!empty($settings->interwiki_index_location)) {
 			// Generate the interwiki index cache file if it doesn't exist already
 			// NOTE: If you want to update the cache file, just delete it & it'll get regenerated automagically :-)
@@ -27,6 +27,8 @@ register_module([
  * nothing.
  */
 function interwiki_index_update() {
+	global $env, $settings, $paths;
+	
 	if(empty($settings->interwiki_index_location))
 		return;
 	
@@ -42,7 +44,7 @@ function interwiki_index_update() {
 		$interwiki_def->prefix = $interwiki_data[1];
 		$interwiki_def->root_url = $interwiki_data[2];
 		
-		$env->interwiki_index->$prefix = $interwiki_def;
+		$env->interwiki_index->{$interwiki_def->prefix} = $interwiki_def;
 	}
 	
 	file_put_contents($paths->interwiki_index, json_encode($env->interwiki_index, JSON_PRETTY_PRINT));

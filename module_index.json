@@ -86,7 +86,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds interwiki link support. Set the interwiki_index_location setting at an index file to activate support.",
         "id": "feature-interwiki-links",
-        "lastupdate": 1546710490,
+        "lastupdate": 1546721931,
         "optional": false
     },
     {
@@ -284,7 +284,7 @@
         "author": "Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
         "id": "parser-parsedown",
-        "lastupdate": 1546710932,
+        "lastupdate": 1546710994,
         "optional": false
     }
 ]
