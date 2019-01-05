@@ -12,6 +12,8 @@ The following things need to be done to prepare for a release:
 	 - In the changelog
 	 - In `apidoc.json` (TODO: Automate this?)
 	 - In the README.md (TODO: Automate this?)
- - (Stable releases only) Pull down changes to update online downloader at starbeamrainbowlabs.com/labs/peppermint/download.php
+ - (Stable releases only:
+     - Pull down changes to update [online downloader](https://starbeamrainbowlabs.com/labs/peppermint/download.php)
+     - Ensure docs are up-to-date
  - Update wikimatrix
  - Write & publish the release
