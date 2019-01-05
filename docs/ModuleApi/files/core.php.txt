@@ -54,6 +54,8 @@ $paths->searchindex = "invindex.json";
 $paths->idindex = "idindex.json";
 /** The cache of the most recently calculated statistics. */
 $paths->statsindex = "statsindex.json";
+/** The interwiki index cache */
+$paths->interwiki_index = "interwiki_index.json";
 
 // Prepend the storage data directory to all the defined paths.
 foreach ($paths as &$path) {
@@ -331,9 +333,12 @@ function check_subpage_parents($pagename)
 }
 
 /**
- * Makes a path safe.
- * Paths may only contain alphanumeric characters, spaces, underscores, and
- * dashes.
+ * Makes a path (or page name) safe.
+ * A safe path / page name may not contain:
+	* Forward-slashes at the beginning
+	* Multiple dots in a row
+	* Odd characters (e.g. ?%*:|"<>() etc.)
+ * A safe path may, however, contain unicode characters such as éôà etc.
  * @package core
  * @param	string	$string	The string to make safe.
  * @return	string			A safe version of the given string.
