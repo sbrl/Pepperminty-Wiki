@@ -446,67 +446,95 @@ class PeppermintParsedown extends ParsedownExtra
 	{
 		global $pageindex, $env;
 		
-		if(preg_match('/^\[\[([^\]]*)\]\]([^\s!?",;.()\[\]{}*=+\/]*)/u', $fragment["text"], $matches))
-		{
-			$linkPage = trim($matches[1]);
-			$display = $linkPage . trim($matches[2]);
+		if(preg_match('/^\[\[([^\]]*)\]\]([^\s!?",;.()\[\]{}*=+\/]*)/u', $fragment["text"], $matches)) {
+			// 1: Parse parameters out
+			// -------------------------------
+			$link_page = trim($matches[1]);
+			$display = $link_page . trim($matches[2]);
 			if(strpos($matches[1], "|") !== false || strpos($matches[1], "¦") !== false)
 			{
 				// We have a bar character
 				$parts = preg_split("/\\||¦/", $matches[1], 2);
-				$linkPage = trim($parts[0]); // The page to link to
+				$link_page = trim($parts[0]); // The page to link to
 				$display = trim($parts[1]); // The text to display
 			}
 			
-			$hashCode = "";
-			if(strpos($linkPage, "#") !== false)
+			
+			// 2: Parse the hash out
+			// -------------------------------
+			$hash_code = "";
+			if(strpos($link_page, "#") !== false)
 			{
 				// We want to link to a subsection of a page
-				$hashCode = substr($linkPage, strpos($linkPage, "#") + 1);
-				$linkPage = substr($linkPage, 0, strpos($linkPage, "#"));
+				$hash_code = substr($link_page, strpos($link_page, "#") + 1);
+				$link_page = substr($link_page, 0, strpos($link_page, "#"));
 				
-				// If $linkPage is empty then we want to link to the current page
-				if(strlen($linkPage) === 0)
-					$linkPage = $env->page;
-			}
-			
-			// If the page doesn't exist, check varying different
-			// capitalisations to see if it exists under some variant.
-			if(empty($pageindex->$linkPage))
-			{
-				if(!empty($pageindex->{ucfirst($linkPage)}))
-					$linkPage = ucfirst($linkPage);
-				else if(!empty($pageindex->{ucwords($linkPage)}))
-					$linkPage = ucwords($linkPage);
+				// If $link_page is empty then we want to link to the current page
+				if(strlen($link_page) === 0)
+					$link_page = $env->page;
 			}
 			
 			
-			// Construct the full url
-			$linkUrl = str_replace(
-				"%s", rawurlencode($linkPage),
-				$this->internalLinkBase
-			);
 			
-			if(strlen($hashCode) > 0)
-				$linkUrl .= "#$hashCode";
+			// 3: Page name auto-correction
+			// -------------------------------
+			$is_interwiki_link = module_exists("feature-interwiki-links") && is_interwiki_link($link_page);
+			if(!is_interwiki_link && empty($pageindex->$link_page)) {
+				// If the page doesn't exist, check varying different
+				// capitalisations to see if it exists under some variant.
+				if(!empty($pageindex->{ucfirst($link_page)}))
+					$link_page = ucfirst($link_page);
+				else if(!empty($pageindex->{ucwords($link_page)}))
+					$link_page = ucwords($link_page);
+			}
 			
+			
+			// 4: Construct the full url
+			// -------------------------------
+			$link_url = null;
+			// If it's an interwiki link, then handle it as such
+			if($is_interwiki_link)
+				$link_url = interwiki_get_pagename_url($link_page);
+			
+			// If it isn't (or it failed), then try it as a normal link instead
+			if(empty($link_url)) {
+				$link_url = str_replace(
+					"%s", rawurlencode($link_page),
+					$this->internalLinkBase
+				);
+				// We failed to handle it as an interwiki link, so we should 
+				// tell everyone that
+				$is_interwiki_link = false;
+			}
+			
+			if(strlen($hash_code) > 0)
+				$link_url .= "#$hash_code";
+			
+			// 6: Result encoding
+			// -------------------------------
 			$result = [
 				"extent" => strlen($matches[0]),
 				"element" => [
 					"name" => "a",
 					"text" => $display,
 					"attributes" => [
-						"href" => $linkUrl
+						"href" => $link_url
 					]
 				]
 			];
 			
-			if(empty($pageindex->{makepathsafe($linkPage)}))
-				$result["element"]["attributes"]["class"] = "redlink";
+			// Attach some useful classes based on how we handled it
+			$class_list = [];
+			// Interwiki links can never be redlinks
+			if(!$is_interwiki_link && empty($pageindex->{makepathsafe($link_page)}))
+				$class_list[] = "redlink";
+			if($is_interwiki_link)
+				$class_list[] = "interwiki_link";
+			
+			$result["element"]["attributes"]["class"] = implode(" ", $class_list);
 			
 			return $result;
 		}
-		return;
 	}
 	
 	/*

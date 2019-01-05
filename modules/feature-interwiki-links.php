@@ -96,7 +96,7 @@ function interwiki_get_pagename_url($interwiki_pagename) {
 	[$prefix, $pagename] = interwiki_pagename_parse($interwiki_pagename);
 	
 	return str_replace(
-		"{{page_name}}", rawurlencode($pagename),
+		"%s", rawurlencode($pagename),
 		$interwiki_def->root_url
 	);
 }
