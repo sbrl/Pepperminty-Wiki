@@ -481,7 +481,7 @@ class PeppermintParsedown extends ParsedownExtra
 			// 3: Page name auto-correction
 			// -------------------------------
 			$is_interwiki_link = module_exists("feature-interwiki-links") && is_interwiki_link($link_page);
-			if(!is_interwiki_link && empty($pageindex->$link_page)) {
+			if(!$is_interwiki_link && empty($pageindex->$link_page)) {
 				// If the page doesn't exist, check varying different
 				// capitalisations to see if it exists under some variant.
 				if(!empty($pageindex->{ucfirst($link_page)}))

@@ -41,7 +41,7 @@ $guiConfig = <<<'GUICONFIG'
 	"anonedits": { "type": "checkbox", "description": "Whether users who aren't logged in are allowed to edit your wiki.", "default": false },
 	"maxpagesize": { "type": "number", "description": "The maximum page size in characters.", "default": 135000 },
 	"parser": { "type": "text", "description": "The parser to use when rendering pages. Defaults to an extended version of parsedown (http://parsedown.org/)", "default": "parsedown" },
-	"interwiki_index_location": { "type": "url", "description": "The location to find the interwiki wiki definition file, which contains a list of wikis along with their names, prefixes, and root urls. May be a URL, or simply a file path - as it's passed to file_get_contents().", "default": null },
+	"interwiki_index_location": { "type": "url", "description": "The location to find the interwiki wiki definition file, which contains a list of wikis along with their names, prefixes, and root urls. May be a URL, or simply a file path - as it's passed to file_get_contents(). If left blank, interwiki link parsing is disabled.", "default": null },
 	"clean_raw_html": { "type": "checkbox", "description": "Whether page sources should be cleaned of HTML before rendering. It is STRONGLY recommended that you keep this option turned on.", "default": true},
 	"enable_math_rendering": { "type": "checkbox", "description": "Whether to enable client side rendering of mathematical expressions with MathJax (https://www.mathjax.org/). Math expressions should be enclosed inside of dollar signs ($). Turn off if you don't use it.", "default": true},
 	"users": { "type": "usertable", "description": "An array of usernames and passwords - passwords should be hashed with password_hash() (the hash action can help here)", "default": {
@@ -407,7 +407,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "ba324ed814ec4875fb504209233f50b5cd20a260";
+$commit = "3cb1f49798633c4fadb7a0564edc7669d454c703";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -9285,7 +9285,7 @@ class PeppermintParsedown extends ParsedownExtra
 			// 3: Page name auto-correction
 			// -------------------------------
 			$is_interwiki_link = module_exists("feature-interwiki-links") && is_interwiki_link($link_page);
-			if(!is_interwiki_link && empty($pageindex->$link_page)) {
+			if(!$is_interwiki_link && empty($pageindex->$link_page)) {
 				// If the page doesn't exist, check varying different
 				// capitalisations to see if it exists under some variant.
 				if(!empty($pageindex->{ucfirst($link_page)}))
