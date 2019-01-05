@@ -12,10 +12,7 @@ register_module([
 		$parser->setInternalLinkBase("?page=%s");
 		add_parser("parsedown", function($source) use ($parser) {
 			global $settings;
-			if($settings->clean_raw_html)
-				$parser->setMarkupEscaped(true);
-			else
-				$parser->setMarkupEscaped(false);
+			$parser->setMarkupEscaped($settings->clean_raw_html);
 			$result = $parser->text($source);
 			
 			return $result;
