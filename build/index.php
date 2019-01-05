@@ -407,7 +407,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "fafd5f6f0341ca9b0d57d0dcee20f9247d339891";
+$commit = "08a0cf2c2e1791470a3e387dc7dc7616898fae26";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -3567,7 +3567,24 @@ register_module([
 		}
 		
 		// TODO: Fill this in
-		add_help_section("22-interwiki-links", "Interwiki Links", "");
+		$doc_help = <<<HELP_BLOCK
+<p>$settings->sitename supports inter-wiki links. Such a link sends the user elsewhere on the internet. By prefixing a page name with a prefix, the convenience of the internal link syntax described above can be exploited to send users elsewhere without having to type out full urls! Here are few examples:</p>
+
+<pre><code>[[another_wiki:Apples]]
+[[trees:Apple Trees]]
+[[history:The Great Rainforest|rainforest]]
+[[any prefix here:page name|Display text]]
+</code></pre>
+
+<p>Note that unlike normal internal links, the page name is case-sensitive and can't be case-corrected automatically. The wikis supported by $settings->sitename are as follows:</p>
+HELP_BLOCK;
+		
+		$doc_help .= "<table><tr><th>Name</th><th>Prefix</th>\n";
+		foreach($env->interwiki_index as $interwiki_def)
+			$doc_help .= "<tr><td>$interwiki_def->name</td><td><code>$interwiki_def->prefix</code></td></tr>\n";
+		$doc_help .= "</table>";
+		
+		add_help_section("22-interwiki-links", "Interwiki Links", $doc_help);
 	}
 ]);
 
@@ -9283,7 +9300,6 @@ class PeppermintParsedown extends ParsedownExtra
 			}
 			
 			
-			
 			// 3: Page name auto-correction
 			// -------------------------------
 			$is_interwiki_link = module_exists("feature-interwiki-links") && is_interwiki_link($link_page);
@@ -9317,6 +9333,7 @@ class PeppermintParsedown extends ParsedownExtra
 			
 			if(strlen($hash_code) > 0)
 				$link_url .= "#$hash_code";
+			
 			
 			// 6: Result encoding
 			// -------------------------------

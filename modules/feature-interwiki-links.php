@@ -17,7 +17,24 @@ register_module([
 		}
 		
 		// TODO: Fill this in
-		add_help_section("22-interwiki-links", "Interwiki Links", "");
+		$doc_help = <<<HELP_BLOCK
+<p>$settings->sitename supports inter-wiki links. Such a link sends the user elsewhere on the internet. By prefixing a page name with a prefix, the convenience of the internal link syntax described above can be exploited to send users elsewhere without having to type out full urls! Here are few examples:</p>
+
+<pre><code>[[another_wiki:Apples]]
+[[trees:Apple Trees]]
+[[history:The Great Rainforest|rainforest]]
+[[any prefix here:page name|Display text]]
+</code></pre>
+
+<p>Note that unlike normal internal links, the page name is case-sensitive and can't be case-corrected automatically. The wikis supported by $settings->sitename are as follows:</p>
+HELP_BLOCK;
+		
+		$doc_help .= "<table><tr><th>Name</th><th>Prefix</th>\n";
+		foreach($env->interwiki_index as $interwiki_def)
+			$doc_help .= "<tr><td>$interwiki_def->name</td><td><code>$interwiki_def->prefix</code></td></tr>\n";
+		$doc_help .= "</table>";
+		
+		add_help_section("22-interwiki-links", "Interwiki Links", $doc_help);
 	}
 ]);
 
