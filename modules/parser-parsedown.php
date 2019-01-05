@@ -263,8 +263,7 @@ class PeppermintParsedown extends ParsedownExtra
 			switch ($variableKey)
 			{
 				case "@": // Lists all variables and their values
-					if(!empty($params))
-					{
+					if(!empty($params)) {
 						$variableValue = "<table>
 	<tr><th>Key</th><th>Value</th></tr>\n";
 						foreach($params as $key => $value)
@@ -272,6 +271,9 @@ class PeppermintParsedown extends ParsedownExtra
 							$variableValue .= "\t<tr><td>" . $this->escapeText($key) . "</td><td>" . $this->escapeText($value) . "</td></tr>\n";
 						}
 						$variableValue .= "</table>";
+					}
+					else {
+						$variableValue = "<em>(no parameters have been specified)</em>";
 					}
 					break;
 				case "#": // Shows a stack trace

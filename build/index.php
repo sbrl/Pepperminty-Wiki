@@ -38,9 +38,10 @@ $guiConfig = <<<'GUICONFIG'
 	"admindisplaychar": { "type": "text", "description": "The string that is prepended before an admin's name on the nav bar. Defaults to a diamond shape (&#9670;).", "default": "&#9670;" },
 	"protectedpagechar": { "type": "text", "description": "The string that is prepended a page's name in the page title if it is protected. Defaults to a lock symbol. (&#128274;)", "default": "&#128274;" },
 	"editing": { "type": "checkbox", "description": "Whether editing is enabled.", "default": true},
-	"anonedits": { "type": "checkbox", "description": "Whether users who aren't logged in are allowed to edit your wiki.", "default": false},
-	"maxpagesize": { "type": "number", "description": "The maximum page size in characters.", "default": 135000},
+	"anonedits": { "type": "checkbox", "description": "Whether users who aren't logged in are allowed to edit your wiki.", "default": false },
+	"maxpagesize": { "type": "number", "description": "The maximum page size in characters.", "default": 135000 },
 	"parser": { "type": "text", "description": "The parser to use when rendering pages. Defaults to an extended version of parsedown (http://parsedown.org/)", "default": "parsedown" },
+	"interwiki_index_location": { "type": "url", "description": "The location to find the interwiki wiki definition file, which contains a list of wikis along with their names, prefixes, and root urls. May be a URL, or simply a file path - as it's passed to file_get_contents().", "default": null },
 	"clean_raw_html": { "type": "checkbox", "description": "Whether page sources should be cleaned of HTML before rendering. It is STRONGLY recommended that you keep this option turned on.", "default": true},
 	"enable_math_rendering": { "type": "checkbox", "description": "Whether to enable client side rendering of mathematical expressions with MathJax (https://www.mathjax.org/). Math expressions should be enclosed inside of dollar signs ($). Turn off if you don't use it.", "default": true},
 	"users": { "type": "usertable", "description": "An array of usernames and passwords - passwords should be hashed with password_hash() (the hash action can help here)", "default": {
@@ -406,7 +407,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "905e970dc09d1f8b195389d60a958538ba22c37b";
+$commit = "ba324ed814ec4875fb504209233f50b5cd20a260";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -450,6 +451,8 @@ $paths->searchindex = "invindex.json";
 $paths->idindex = "idindex.json";
 /** The cache of the most recently calculated statistics. */
 $paths->statsindex = "statsindex.json";
+/** The interwiki index cache */
+$paths->interwiki_index = "interwiki_index.json";
 
 // Prepend the storage data directory to all the defined paths.
 foreach ($paths as &$path) {
@@ -727,9 +730,12 @@ function check_subpage_parents($pagename)
 }
 
 /**
- * Makes a path safe.
- * Paths may only contain alphanumeric characters, spaces, underscores, and
- * dashes.
+ * Makes a path (or page name) safe.
+ * A safe path / page name may not contain:
+	* Forward-slashes at the beginning
+	* Multiple dots in a row
+	* Odd characters (e.g. ?%*:|"<>() etc.)
+ * A safe path may, however, contain unicode characters such as éôà etc.
  * @package core
  * @param	string	$string	The string to make safe.
  * @return	string			A safe version of the given string.
@@ -3538,6 +3544,121 @@ function history_add_revision(&$pageinfo, &$newsource, &$oldsource, $save_pagein
 	
 	
 	return $result;
+}
+
+
+
+
+register_module([
+	"name" => "Interwiki links",
+	"version" => "0.1",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Adds interwiki link support. Set the interwiki_index_location setting at an index file to activate support.",
+	"id" => "feature-interwiki-links",
+	"code" => function() {
+		global $settings;
+		if(!empty($settings->interwiki_index_location)) {
+			// Generate the interwiki index cache file if it doesn't exist already
+			// NOTE: If you want to update the cache file, just delete it & it'll get regenerated automagically :-)
+			if(!file_exists($paths->interwiki_index))
+				interwiki_index_update();
+			else
+				$env->interwiki_index = json_decode(file_get_contents($paths->interwiki_index));
+		}
+		
+		// TODO: Fill this in
+		add_help_section("22-interwiki-links", "Interwiki Links", "");
+	}
+]);
+
+/**
+ * Updates the interwiki index cache file.
+ * If the interwiki_index_location isn't defined, then this function will do
+ * nothing.
+ */
+function interwiki_index_update() {
+	if(empty($settings->interwiki_index_location))
+		return;
+	
+	$env->interwiki_index = new stdClass();
+	$interwiki_csv_handle = fopen($settings->interwiki_index_location, "r");
+	if($interwiki_csv_handle === false)
+		throw new Exception("Error: Failed to read interwiki index from '{$settings->interwiki_index_location}'.");
+	
+	fgetcsv($interwiki_csv_handle); // Discard the header line
+	while(($interwiki_data = fgetcsv($interwiki_csv_handle))) {
+		$interwiki_def = new stdClass();
+		$interwiki_def->name = $interwiki_data[0];
+		$interwiki_def->prefix = $interwiki_data[1];
+		$interwiki_def->root_url = $interwiki_data[2];
+		
+		$env->interwiki_index->$prefix = $interwiki_def;
+	}
+	
+	file_put_contents($paths->interwiki_index, json_encode($env->interwiki_index, JSON_PRETTY_PRINT));
+}
+
+/**
+ * Parses an interwiki pagename into it's component parts.
+ * @param  string	$interwiki_pagename	The interwiki pagename to parse.
+ * @return string[]	An array containing the parsed components of the interwiki pagename, in the form ["prefix", "page_name"].
+ */
+function interwiki_pagename_parse($interwiki_pagename) {
+	if(strpos($interwiki_pagename, ":") === false)
+		return null;
+	$result = explode(":", $interwiki_pagename, 2);
+	return array_map("trim", $result);
+}
+
+/**
+ * Resolves an interwiki pagename to the associated
+ * interwiki definition object.
+ * @param	string		$interwiki_pagename	An interwiki pagename. Should be in the form "prefix:page name".
+ * @return	stdClass	The interwiki definition object.
+ */
+function interwiki_pagename_resolve($interwiki_pagename) {
+	global $env;
+	
+	if(empty($env->interwiki_index))
+		return null;
+	
+	// If it's not an interwiki link, then don't bother confusing ourselves
+	if(strpos($interwiki_pagename, ":") === false)
+		return null;
+	
+	[$prefix, $pagename] = interwiki_pagename_parse($interwiki_pagename); // Shorthand destructuring - introduced in PHP 7.1
+	
+	if(empty($env->interwiki_index->$prefix))
+		return null;
+	
+	return $env->interwiki_index->$prefix;
+}
+/**
+ * Converts an interwiki pagename into a url.
+ * @param	string	$interwiki_pagename		The interwiki pagename (in the form "prefix:page name")
+ * @return	string	A url that points to the specified interwiki page.
+ */
+function interwiki_get_pagename_url($interwiki_pagename) {
+	$interwiki_def = interwiki_pagename_resolve($interwiki_pagename);
+	if($interwiki_def == null)
+		return null;
+	
+	[$prefix, $pagename] = interwiki_pagename_parse($interwiki_pagename);
+	
+	return str_replace(
+		"%s", rawurlencode($pagename),
+		$interwiki_def->root_url
+	);
+}
+
+/**
+ * Returns whether a given pagename is an interwiki link or not.
+ * Note that this doesn't guarantee that it's a _valid_ interwiki link - only that it looks like one :P
+ * @param	string	$pagename	The page name to check.
+ * @return	boolean	Whether the given page name is an interwiki link or not.
+ */
+function is_interwiki_link($pagename) {
+	return strpos($pagename, ":") !== false;
 }
 
 
@@ -8695,10 +8816,7 @@ register_module([
 		$parser->setInternalLinkBase("?page=%s");
 		add_parser("parsedown", function($source) use ($parser) {
 			global $settings;
-			if($settings->clean_raw_html)
-				$parser->setMarkupEscaped(true);
-			else
-				$parser->setMarkupEscaped(false);
+			$parser->setMarkupEscaped($settings->clean_raw_html);
 			$result = $parser->text($source);
 			
 			return $result;
@@ -8949,8 +9067,7 @@ class PeppermintParsedown extends ParsedownExtra
 			switch ($variableKey)
 			{
 				case "@": // Lists all variables and their values
-					if(!empty($params))
-					{
+					if(!empty($params)) {
 						$variableValue = "<table>
 	<tr><th>Key</th><th>Value</th></tr>\n";
 						foreach($params as $key => $value)
@@ -8958,6 +9075,9 @@ class PeppermintParsedown extends ParsedownExtra
 							$variableValue .= "\t<tr><td>" . $this->escapeText($key) . "</td><td>" . $this->escapeText($value) . "</td></tr>\n";
 						}
 						$variableValue .= "</table>";
+					}
+					else {
+						$variableValue = "<em>(no parameters have been specified)</em>";
 					}
 					break;
 				case "#": // Shows a stack trace
@@ -9132,67 +9252,95 @@ class PeppermintParsedown extends ParsedownExtra
 	{
 		global $pageindex, $env;
 		
-		if(preg_match('/^\[\[([^\]]*)\]\]([^\s!?",;.()\[\]{}*=+\/]*)/u', $fragment["text"], $matches))
-		{
-			$linkPage = trim($matches[1]);
-			$display = $linkPage . trim($matches[2]);
+		if(preg_match('/^\[\[([^\]]*)\]\]([^\s!?",;.()\[\]{}*=+\/]*)/u', $fragment["text"], $matches)) {
+			// 1: Parse parameters out
+			// -------------------------------
+			$link_page = trim($matches[1]);
+			$display = $link_page . trim($matches[2]);
 			if(strpos($matches[1], "|") !== false || strpos($matches[1], "¦") !== false)
 			{
 				// We have a bar character
 				$parts = preg_split("/\\||¦/", $matches[1], 2);
-				$linkPage = trim($parts[0]); // The page to link to
+				$link_page = trim($parts[0]); // The page to link to
 				$display = trim($parts[1]); // The text to display
 			}
 			
-			$hashCode = "";
-			if(strpos($linkPage, "#") !== false)
+			
+			// 2: Parse the hash out
+			// -------------------------------
+			$hash_code = "";
+			if(strpos($link_page, "#") !== false)
 			{
 				// We want to link to a subsection of a page
-				$hashCode = substr($linkPage, strpos($linkPage, "#") + 1);
-				$linkPage = substr($linkPage, 0, strpos($linkPage, "#"));
+				$hash_code = substr($link_page, strpos($link_page, "#") + 1);
+				$link_page = substr($link_page, 0, strpos($link_page, "#"));
 				
-				// If $linkPage is empty then we want to link to the current page
-				if(strlen($linkPage) === 0)
-					$linkPage = $env->page;
-			}
-			
-			// If the page doesn't exist, check varying different
-			// capitalisations to see if it exists under some variant.
-			if(empty($pageindex->$linkPage))
-			{
-				if(!empty($pageindex->{ucfirst($linkPage)}))
-					$linkPage = ucfirst($linkPage);
-				else if(!empty($pageindex->{ucwords($linkPage)}))
-					$linkPage = ucwords($linkPage);
+				// If $link_page is empty then we want to link to the current page
+				if(strlen($link_page) === 0)
+					$link_page = $env->page;
 			}
 			
 			
-			// Construct the full url
-			$linkUrl = str_replace(
-				"%s", rawurlencode($linkPage),
-				$this->internalLinkBase
-			);
 			
-			if(strlen($hashCode) > 0)
-				$linkUrl .= "#$hashCode";
+			// 3: Page name auto-correction
+			// -------------------------------
+			$is_interwiki_link = module_exists("feature-interwiki-links") && is_interwiki_link($link_page);
+			if(!is_interwiki_link && empty($pageindex->$link_page)) {
+				// If the page doesn't exist, check varying different
+				// capitalisations to see if it exists under some variant.
+				if(!empty($pageindex->{ucfirst($link_page)}))
+					$link_page = ucfirst($link_page);
+				else if(!empty($pageindex->{ucwords($link_page)}))
+					$link_page = ucwords($link_page);
+			}
 			
+			
+			// 4: Construct the full url
+			// -------------------------------
+			$link_url = null;
+			// If it's an interwiki link, then handle it as such
+			if($is_interwiki_link)
+				$link_url = interwiki_get_pagename_url($link_page);
+			
+			// If it isn't (or it failed), then try it as a normal link instead
+			if(empty($link_url)) {
+				$link_url = str_replace(
+					"%s", rawurlencode($link_page),
+					$this->internalLinkBase
+				);
+				// We failed to handle it as an interwiki link, so we should 
+				// tell everyone that
+				$is_interwiki_link = false;
+			}
+			
+			if(strlen($hash_code) > 0)
+				$link_url .= "#$hash_code";
+			
+			// 6: Result encoding
+			// -------------------------------
 			$result = [
 				"extent" => strlen($matches[0]),
 				"element" => [
 					"name" => "a",
 					"text" => $display,
 					"attributes" => [
-						"href" => $linkUrl
+						"href" => $link_url
 					]
 				]
 			];
 			
-			if(empty($pageindex->{makepathsafe($linkPage)}))
-				$result["element"]["attributes"]["class"] = "redlink";
+			// Attach some useful classes based on how we handled it
+			$class_list = [];
+			// Interwiki links can never be redlinks
+			if(!$is_interwiki_link && empty($pageindex->{makepathsafe($link_page)}))
+				$class_list[] = "redlink";
+			if($is_interwiki_link)
+				$class_list[] = "interwiki_link";
+			
+			$result["element"]["attributes"]["class"] = implode(" ", $class_list);
 			
 			return $result;
 		}
-		return;
 	}
 	
 	/*
