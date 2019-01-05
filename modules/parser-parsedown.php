@@ -511,6 +511,7 @@ class PeppermintParsedown extends ParsedownExtra
 			if(strlen($hash_code) > 0)
 				$link_url .= "#$hash_code";
 			
+			
 			// 6: Result encoding
 			// -------------------------------
 			$result = [
