@@ -333,9 +333,12 @@ function check_subpage_parents($pagename)
 }
 
 /**
- * Makes a path safe.
- * Paths may only contain alphanumeric characters, spaces, underscores, and
- * dashes.
+ * Makes a path (or page name) safe.
+ * A safe path / page name may not contain:
+	* Forward-slashes at the beginning
+	* Multiple dots in a row
+	* Odd characters (e.g. ?%*:|"<>() etc.)
+ * A safe path may, however, contain unicode characters such as éôà etc.
  * @package core
  * @param	string	$string	The string to make safe.
  * @return	string			A safe version of the given string.
