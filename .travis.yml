@@ -6,7 +6,7 @@ php:
    - nightly
 
 before_script:
-   - php build.php
+   - ./build.sh build
    - ls modules/*.php | xargs -n 1 php -l
 
 script: php -l build/index.php
