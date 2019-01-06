@@ -12,7 +12,7 @@ Developed by Starbeamrainbowlabs (though contributions from others are welcome!)
 [![Main Page Example](https://i.imgur.com/5dmbKlz.png)](https://imgur.com/a/lsBc3cM)
 
 ## Documentation
-For everything you need to know, you probably want the documentation. It can be found here:
+For everything you need to know (including how to get your own copy!), you probably want the documentation. It can be found here:
 
 **[Documentation](https://starbeamrainbowlabs.com/labs/peppermint/_docpress/)**
 
@@ -35,8 +35,11 @@ Here's a list of things that I want to add at some point (please feel free to [s
 Is the feature you want to see not on this list or not implemented yet? [Open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) or [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls) - contributions welcome!
 
 ## Docker
+The recommended way of running Pepperminty Wiki is with a plain PHP-enabled web server. However, a docker container is generaourly provided by @SQL-enwiki. You can run it like so:
 
-Run in a docker container with: `docker run -d sqlatenwiki/peppermintywiki:stable`
+```bash
+docker run -d sqlatenwiki/peppermintywiki:stable
+```
 
-# License
+## License
 Pepperminty Wiki is released under the Mozilla Public License 2.0. The full license text is included in the `LICENSE` file in this repository.
