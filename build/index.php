@@ -409,7 +409,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "bed21da43690f586e36b1e754431ac3be3682fc2";
+$commit = "524efcc43d6e7612a326855b10c7dfe8a2c745e1";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -3745,7 +3745,11 @@ register_module([
 					else // No changes yet :(
 						$content .= "<p><em>None yet! Try making a few changes and then check back here.</em></p>\n";
 						
-					exit(page_renderer::render("Recent Changes - $settings->sitename", $content));
+					$header_extra = "\t<link rel=\"alternate\" type=\"application/atom+xml\" href=\"?action=recent-changes&amp;format=atom\" />
+		<link rel=\"alternate\" type=\"text/csv\" href=\"?action=recent-changes&amp;format=csv\" />
+		<link rel=\"alternate\" type=\"application/json\" href=\"?action=recent-changes&amp;format=json\" />";
+					
+					exit(str_replace("</head>", "$header_extra\n\t</head>", page_renderer::render("Recent Changes - $settings->sitename", $content)));
 					break;
 				case "json":
 					$result = json_encode($recent_changes);
@@ -4023,6 +4027,7 @@ function render_recent_change($rchange)
  */
 function render_recent_change_atom($recent_changes) {
 	global $version, $settings;
+	// See http://www.atomenabled.org/developers/syndication/#sampleFeed for easy-to-read Atom 1.0 docs
 	
 	$full_url_stem = full_url();
 	$full_url_stem = substr($full_url_stem, 0, strpos($full_url_stem, "?"));

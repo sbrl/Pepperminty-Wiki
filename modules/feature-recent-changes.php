@@ -59,7 +59,11 @@ register_module([
 					else // No changes yet :(
 						$content .= "<p><em>None yet! Try making a few changes and then check back here.</em></p>\n";
 						
-					exit(page_renderer::render("Recent Changes - $settings->sitename", $content));
+					$header_extra = "\t<link rel=\"alternate\" type=\"application/atom+xml\" href=\"?action=recent-changes&amp;format=atom\" />
+		<link rel=\"alternate\" type=\"text/csv\" href=\"?action=recent-changes&amp;format=csv\" />
+		<link rel=\"alternate\" type=\"application/json\" href=\"?action=recent-changes&amp;format=json\" />";
+					
+					exit(str_replace("</head>", "$header_extra\n\t</head>", page_renderer::render("Recent Changes - $settings->sitename", $content)));
 					break;
 				case "json":
 					$result = json_encode($recent_changes);
