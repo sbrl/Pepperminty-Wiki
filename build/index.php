@@ -409,7 +409,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "96b632ff561fd14baa263f0156a455340796dc41";
+$commit = "bed21da43690f586e36b1e754431ac3be3682fc2";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -3937,7 +3937,9 @@ function render_recent_changes($recent_changes)
  * @param	int		$timestamap	The timestamp at which the revision was saved.
  * @return	int		The revision number of the given page at the given time.
  */
-function find_revisionid_timestamp($pagename, $timestamap) {
+function find_revisionid_timestamp($pagename, $timestamp) {
+	global $pageindex;
+	
 	if(!isset($pageindex->$pagename) || !isset($pageindex->$pagename->history))
 		return null;
 	

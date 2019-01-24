@@ -251,7 +251,9 @@ function render_recent_changes($recent_changes)
  * @param	int		$timestamap	The timestamp at which the revision was saved.
  * @return	int		The revision number of the given page at the given time.
  */
-function find_revisionid_timestamp($pagename, $timestamap) {
+function find_revisionid_timestamp($pagename, $timestamp) {
+	global $pageindex;
+	
 	if(!isset($pageindex->$pagename) || !isset($pageindex->$pagename->history))
 		return null;
 	
