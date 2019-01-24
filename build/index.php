@@ -409,7 +409,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "242f197ccf8969c87e18f13d1a525dd01219b03c";
+$commit = "96b632ff561fd14baa263f0156a455340796dc41";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -4027,7 +4027,7 @@ function render_recent_change_atom($recent_changes) {
 	
 	$xml = new XMLWriter();
 	$xml->openMemory();
-	$xml->setIndentString("\t");
+	$xml->setIndent(true); $xml->setIndentString("\t");
 	$xml->startDocument("1.0", "utf-8");
 	
 	$xml->startElement("feed");
@@ -4067,14 +4067,24 @@ function render_recent_change_atom($recent_changes) {
 	$xml->writeElement("id", full_url());
 	$xml->writeElement("icon", $settings->favicon);
 	$xml->writeElement("title", "$settings->sitename - Recent Changes");
-	$xml->writeElements("subtitle", "Recent Changes on $settings->sitename");
+	$xml->writeElement("subtitle", "Recent Changes on $settings->sitename");
 	
 	foreach($recent_changes as $recent_change) {
+		if(empty($recent_change->type))
+			$recent_change->type = "edit";
+		
 		$xml->startElement("entry");
 		
 		// Change types: revert, edit, deletion, move, upload, comment
 		$type = $recent_change->type;
 		$url = "$full_url_stem?page=".rawurlencode($recent_change->page);
+		
+		$content = "<ul>
+	<li><strong>Change type:</strong> $recent_change->type</li>
+	<li><strong>User:</strong>  $recent_change->user</li>
+	<li><strong>Page name:</strong> $recent_change->page</li>
+	<li><strong>Timestamp:</strong> ".date(DateTime::RFC1123, $recent_change->timestamp)."</li>";
+		
 		switch($type) {
 			case "revert":
 			case "edit":
@@ -4085,22 +4095,29 @@ function render_recent_change_atom($recent_changes) {
 				break;
 			case "deletion": $type = "Deletion of"; break;
 			case "move": $type = "Movement of"; break;
-			case "upload": $type = "Upload of"; break;
+			case "upload":
+				$type = "Upload of";
+				$content .= "\t<li><strong>File size:</strong> ".human_filesize($recent_change->filesize)."</li>\n";
+				break;
 			case "comment":
 				$type = "Comment on";
-				$url .= "#comment-$comment_id";
+				$url .= "#comment-$recent_change->comment_id";
 				break;
 		}
-		$xml->writeElement("title", "$type $recent_change->page by $recent_change->user");
+		$content .= "</ul>";
+		
+		
+		$xml->startElement("title");
+		$xml->writeAttribute("type", "text");
+		$xml->text("$type $recent_change->page by $recent_change->user");
+		$xml->endElement();
+		
 		$xml->writeElement("id", $url);
 		$xml->writeElement("updated", date(DateTime::ATOM, $recent_change->timestamp));
+		
 		$xml->startElement("content");
-		$xml->writeCdata("<ul>
-	<li><strong>Page name:</strong> $recent_change->page</li>
-	<li><strong>Timestamp:</strong> ".date(DateTime::RFC1123, $recent_change->timestamp)."</li>
-	<li><strong>Change type:</strong> $recent_change->type</li>
-	<li><strong>User:</strong>  $recent_change->user</li>
-</ul>");
+		$xml->writeAttribute("type", "html");
+		$xml->text($content);
 		$xml->endElement();
 		
 		$xml->startElement("link");
@@ -4118,6 +4135,8 @@ function render_recent_change_atom($recent_changes) {
 	}
 	
 	$xml->endElement();
+	
+	return $xml->flush();
 }
 
 
