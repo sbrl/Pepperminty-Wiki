@@ -337,6 +337,7 @@ function render_recent_change($rchange)
  */
 function render_recent_change_atom($recent_changes) {
 	global $version, $settings;
+	// See http://www.atomenabled.org/developers/syndication/#sampleFeed for easy-to-read Atom 1.0 docs
 	
 	$full_url_stem = full_url();
 	$full_url_stem = substr($full_url_stem, 0, strpos($full_url_stem, "?"));
