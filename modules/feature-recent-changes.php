@@ -15,11 +15,13 @@ register_module([
 			file_put_contents($paths->recentchanges, "[]");
 		
 		/**
-		 * @api {get} ?action=recent-changes[&format={code}] Get a list of recent changes
+		 * @api {get} ?action=recent-changes[&offset={number}][&count={number}][&format={code}] Get a list of recent changes
 		 * @apiName RecentChanges
 		 * @apiGroup Stats
 		 * @apiPermission Anonymous
 		 *
+		 * @apiParam	{number}	offset	If specified, start returning changes from this many changes in. 0 is the beginning.
+		 * @apiParam	{number}	count	If specified, return at most this many changes. A value of 0 means no limit (the default) - apart from the limit on the number of changes stored by the server (configurable in pepppermint.json).
 		 * @apiParam	{string}	format	The format to return the recent changes in. Valid values: html, json, csv. Default: html.
 		 */
 		/*
@@ -39,8 +41,14 @@ register_module([
 			global $settings, $paths, $pageindex;
 			
 			$format = $_GET["format"] ?? "html";
+			$offset = intval($_GET["offset"] ?? 0);
+			$count = intval($_GET["count"] ?? 0);
 			
 			$recent_changes = json_decode(file_get_contents($paths->recentchanges));
+			
+			// Limit the number of changes displayed if requested
+			if($count > 0)
+				$recent_changes = array_slice($recent_changes, $offset, $count);
 			
 			switch($format) {
 				case "html":
