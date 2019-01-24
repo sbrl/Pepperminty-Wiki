@@ -409,7 +409,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "e350d1cc8efeab734f9347ec9fc6f1d1e20bed45";
+$commit = "6aa55c74bfe5a6dfffc96d3c7d8c041d4a707abd";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -3706,7 +3706,7 @@ register_module([
 		 * @apiGroup Stats
 		 * @apiPermission Anonymous
 		 *
-		 * @apiParam	{string}	format	The format to return the recent changes in. Values: html, json. Default: html.
+		 * @apiParam	{string}	format	The format to return the recent changes in. Valid values: html, json, csv. Default: html.
 		 */
 		/*
 		 * ██████  ███████  ██████ ███████ ███    ██ ████████         
@@ -3745,6 +3745,22 @@ register_module([
 					header("content-length: " . strlen($result));
 					exit($result);
 					break;
+				case "csv":
+					if(empty($recent_changes)) {
+						http_response_code(404);
+						header("content-type: text/plain");
+						exit("No changes made been recorded yet. Make some changes and then come back later!");
+					}
+					
+					$result = fopen('php://temp/maxmemory:'. (5*1024*1024), 'r+');
+					fputcsv($result, array_keys(get_object_vars($recent_changes[0])));
+					foreach($recent_changes as $recent_change)
+						fputcsv($result, array_values(get_object_vars($recent_change)));
+					rewind($result);
+					
+					header("content-type: text/csv");
+					header("content-length: " . fstat($result)["size"]);
+					echo(stream_get_contents($result));
 			}
 			
 			
