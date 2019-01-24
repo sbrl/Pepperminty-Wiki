@@ -409,7 +409,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "c40d1a1016eb1c981a1d549fa40a15686ac807f9";
+$commit = "91a9c44b8f714deb320805f127ff2953af24106d";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -4092,7 +4092,7 @@ function render_recent_change_atom($recent_changes) {
 	<li><strong>Change type:</strong> $recent_change->type</li>
 	<li><strong>User:</strong>  $recent_change->user</li>
 	<li><strong>Page name:</strong> $recent_change->page</li>
-	<li><strong>Timestamp:</strong> ".date(DateTime::RFC1123, $recent_change->timestamp)."</li>";
+	<li><strong>Timestamp:</strong> ".date(DateTime::RFC1123, $recent_change->timestamp)."</li>\n";
 		
 		switch($type) {
 			case "revert":
@@ -4101,6 +4101,8 @@ function render_recent_change_atom($recent_changes) {
 				$revision_id = find_revisionid_timestamp($recent_change->page, $recent_change->timestamp);
 				if(!empty($revision_id))
 					$url .= "&revision=$revision_id";
+				$content .= "<li><strong>New page size:</strong> ".human_filesize($recent_change->newsize)."</li>
+			<li><strong>Page size difference:</strong> ".($recent_change->sizediff > 0 ? "+" : "")."$recent_change->sizediff</li>\n";
 				break;
 			case "deletion": $type = "Deletion of"; break;
 			case "move": $type = "Movement of"; break;
