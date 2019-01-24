@@ -7,7 +7,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Added inter-wiki link support via the new `feature-interwiki-links` module
      - Added `interwiki_index_location` setting to control the location of the interwiki index (which is a CSV file that is documented in the main _Pepperminty Wiki_ documentation), which has to be specified in order for it to activate
      - Provides new module api functions: `interwiki_pagename_parse`, `interwiki_pagename_resolve`, `interwiki_get_pagename_url`, and `is_interwiki_link`
- - Added CSV support to the `recent-changes` action.
+ - Added CSV support to the `recent-changes` action (append `&format=csv` to the url)
+ - Added Atom 1.0 feed support to the `recent-changes` action (append `&format=atom` to the url)
  - Added `count` and `offset` GET parameters to `recent-changes` action.
  - Added new `find_revisionid_timestamp()` function to `feature-recent-changes` module.
 
