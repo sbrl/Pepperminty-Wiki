@@ -86,7 +86,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds interwiki link support. Set the interwiki_index_location setting at an index file to activate support.",
         "id": "feature-interwiki-links",
-        "lastupdate": 1546726332,
+        "lastupdate": 1548373606,
         "optional": false
     },
     {
@@ -95,7 +95,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds recent changes. Access through the 'recent-changes' action.",
         "id": "feature-recent-changes",
-        "lastupdate": 1548364500,
+        "lastupdate": 1548364510,
         "optional": false
     },
     {
@@ -212,7 +212,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
-        "lastupdate": 1518645476,
+        "lastupdate": 1548364613,
         "optional": false
     },
     {
