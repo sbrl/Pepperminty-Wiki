@@ -409,7 +409,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "e715c2049f0782f46919fd2b220eac9292183075";
+$commit = "242f197ccf8969c87e18f13d1a525dd01219b03c";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -3708,7 +3708,7 @@ register_module([
 		 *
 		 * @apiParam	{number}	offset	If specified, start returning changes from this many changes in. 0 is the beginning.
 		 * @apiParam	{number}	count	If specified, return at most this many changes. A value of 0 means no limit (the default) - apart from the limit on the number of changes stored by the server (configurable in pepppermint.json).
-		 * @apiParam	{string}	format	The format to return the recent changes in. Valid values: html, json, csv. Default: html.
+		 * @apiParam	{string}	format	The format to return the recent changes in. Valid values: html, json, csv, atom. Default: html.
 		 */
 		/*
 		 * ██████  ███████  ██████ ███████ ███    ██ ████████         
@@ -3768,7 +3768,18 @@ register_module([
 					
 					header("content-type: text/csv");
 					header("content-length: " . fstat($result)["size"]);
-					echo(stream_get_contents($result));
+					exit(stream_get_contents($result));
+					break;
+				case "atom":
+					$result = render_recent_change_atom($recent_changes);
+					header("content-type: application/atom+xml");
+					header("content-length: " . strlen($result));
+					exit($result);
+				default:
+					http_response_code(406);
+					header("content-type: text/plain");
+					header("content-length: 42");
+					exit("Error: That format code wasnot recognised.");
 			}
 			
 			
@@ -3921,6 +3932,24 @@ function render_recent_changes($recent_changes)
 }
 
 /**
+ * Given a page name and timestamp, returns the associated page revision number.
+ * @param	string	$pagename	The page name to obtain the revision number for.
+ * @param	int		$timestamap	The timestamp at which the revision was saved.
+ * @return	int		The revision number of the given page at the given time.
+ */
+function find_revisionid_timestamp($pagename, $timestamap) {
+	if(!isset($pageindex->$pagename) || !isset($pageindex->$pagename->history))
+		return null;
+	
+	foreach($pageindex->$pagename->history as $historyEntry){
+		if($historyEntry->timestamp == $timestamp) {
+			return $historyEntry->rid;
+			break;
+		}
+	}
+}
+
+/**
  * Renders a single recent change
  * @package	feature-recent-changes
  * @param	object	$rchange	The recent change to render.
@@ -3933,18 +3962,7 @@ function render_recent_change($rchange)
 	$editorDisplayHtml = render_editor(page_renderer::render_username($rchange->user));
 	$timeDisplayHtml = render_timestamp($rchange->timestamp);
 	
-	$revisionId = false;
-	if(isset($pageindex->{$rchange->page}) && isset($pageindex->{$rchange->page}->history))
-	{
-		foreach($pageindex->{$rchange->page}->history as $historyEntry)
-		{
-			if($historyEntry->timestamp == $rchange->timestamp)
-			{
-				$revisionId = $historyEntry->rid;
-				break;
-			}
-		}
-	}
+	$revisionId = find_revisionid_timestamp($rchange->page, $rchange->timestamp);
 	
 	$result = "";
 	$resultClasses = [];
@@ -3967,7 +3985,7 @@ function render_recent_change($rchange)
 			if($rchange_type === "revert")
 				$resultClasses[] = "reversion";
 			
-			$result .= "<a href='?page=" . rawurlencode($rchange->page) . ($revisionId !== false ? "&revision=$revisionId" : "") . "'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$size_title_display'>($size_display)</span>";
+			$result .= "<a href='?page=" . rawurlencode($rchange->page) . (!empty($revisionId) ? "&revision=$revisionId" : "") . "'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$size_title_display'>($size_display)</span>";
 			break;
 			
 		case "deletion":
@@ -3995,7 +4013,112 @@ function render_recent_change($rchange)
 	return $result;
 }
 
-
+/**
+ * Renders a list of recent changes as an Atom 1.0 feed.
+ * Requires the XMLWriter PHP class.
+ * @param	array	$recent_changes		The array of recent changes to render.
+ * @return	string	The recent changes as an Atom 1.0 feed.
+ */
+function render_recent_change_atom($recent_changes) {
+	global $version, $settings;
+	
+	$full_url_stem = full_url();
+	$full_url_stem = substr($full_url_stem, 0, strpos($full_url_stem, "?"));
+	
+	$xml = new XMLWriter();
+	$xml->openMemory();
+	$xml->setIndentString("\t");
+	$xml->startDocument("1.0", "utf-8");
+	
+	$xml->startElement("feed");
+	$xml->writeAttribute("xmlns", "http://www.w3.org/2005/Atom");
+	
+	$xml->startElement("generator");
+	$xml->writeAttribute("uri", "https://github.com/sbrl/Pepperminty-Wiki/");
+	$xml->writeAttribute("version", $version);
+	$xml->text("Pepperminty Wiki");
+	$xml->endElement();
+	
+	$xml->startElement("link");
+	$xml->writeAttribute("rel", "self");
+	$xml->writeAttribute("type", "application/atom+xml");
+	$xml->writeAttribute("href", full_url());
+	$xml->endElement();
+	
+	$xml->startElement("link");
+	$xml->writeAttribute("rel", "alternate");
+	$xml->writeAttribute("type", "text/html");
+	$xml->writeAttribute("href", "$full_url_stem?action=recent-changes&format=html");
+	$xml->endElement();
+	
+	$xml->startElement("link");
+	$xml->writeAttribute("rel", "alternate");
+	$xml->writeAttribute("type", "application/json");
+	$xml->writeAttribute("href", "$full_url_stem?action=recent-changes&format=json");
+	$xml->endElement();
+	
+	$xml->startElement("link");
+	$xml->writeAttribute("rel", "alternate");
+	$xml->writeAttribute("type", "text/csv");
+	$xml->writeAttribute("href", "$full_url_stem?action=recent-changes&format=csv");
+	$xml->endElement();
+	
+	$xml->writeElement("updated", date(DateTime::ATOM));
+	$xml->writeElement("id", full_url());
+	$xml->writeElement("icon", $settings->favicon);
+	$xml->writeElement("title", "$settings->sitename - Recent Changes");
+	$xml->writeElements("subtitle", "Recent Changes on $settings->sitename");
+	
+	foreach($recent_changes as $recent_change) {
+		$xml->startElement("entry");
+		
+		// Change types: revert, edit, deletion, move, upload, comment
+		$type = $recent_change->type;
+		$url = "$full_url_stem?page=".rawurlencode($recent_change->page);
+		switch($type) {
+			case "revert":
+			case "edit":
+				$type = ($type == "revert" ? "Reversion of" : "Edit to");
+				$revision_id = find_revisionid_timestamp($recent_change->page, $recent_change->timestamp);
+				if(!empty($revision_id))
+					$url .= "&revision=$revision_id";
+				break;
+			case "deletion": $type = "Deletion of"; break;
+			case "move": $type = "Movement of"; break;
+			case "upload": $type = "Upload of"; break;
+			case "comment":
+				$type = "Comment on";
+				$url .= "#comment-$comment_id";
+				break;
+		}
+		$xml->writeElement("title", "$type $recent_change->page by $recent_change->user");
+		$xml->writeElement("id", $url);
+		$xml->writeElement("updated", date(DateTime::ATOM, $recent_change->timestamp));
+		$xml->startElement("content");
+		$xml->writeCdata("<ul>
+	<li><strong>Page name:</strong> $recent_change->page</li>
+	<li><strong>Timestamp:</strong> ".date(DateTime::RFC1123, $recent_change->timestamp)."</li>
+	<li><strong>Change type:</strong> $recent_change->type</li>
+	<li><strong>User:</strong>  $recent_change->user</li>
+</ul>");
+		$xml->endElement();
+		
+		$xml->startElement("link");
+		$xml->writeAttribute("rel", "alternate");
+		$xml->writeAttribute("type", "text/html");
+		$xml->writeAttribute("href", $url);
+		$xml->endElement();
+		
+		$xml->startElement("author");
+		$xml->writeElement("name", $recent_change->user);
+		$xml->writeElement("uri", "$full_url_stem?page=".rawurlencode("$settings->user_page_prefix/$recent_change->page"));
+		$xml->endElement();
+		
+		$xml->endElement();
+	}
+	
+	$xml->endElement();
+}
 
 
 register_module([

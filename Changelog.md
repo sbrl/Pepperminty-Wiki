@@ -9,6 +9,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Provides new module api functions: `interwiki_pagename_parse`, `interwiki_pagename_resolve`, `interwiki_get_pagename_url`, and `is_interwiki_link`
  - Added CSV support to the `recent-changes` action.
  - Added `count` and `offset` GET parameters to `recent-changes` action.
+ - Added new `find_revisionid_timestamp()` function to `feature-recent-changes` module.
 
 ### Changed
  - Completely reworked the README to refactor out the documentation to its [own static site](https://starbeamrainbowlabs.com/labs/peppermint/_docpress/)
