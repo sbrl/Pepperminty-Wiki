@@ -67,7 +67,7 @@ window.addEventListener("load", function(event) {
 });
 SCRIPT;
 
-			page_renderer::AddJSSnippet($invindex_rebuild_script);
+			page_renderer::add_js_snippet($invindex_rebuild_script);
 			
 			$content .= "<h2>Settings</h2>";
 			$content .= "<p>Mouse over the name of each setting to see a description of what it does.</p>\n";

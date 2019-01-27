@@ -409,7 +409,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "91a9c44b8f714deb320805f127ff2953af24106d";
+$commit = "1765f410e6b899d17f7885217235dd3653ba80f6";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -1506,6 +1506,35 @@ class page_renderer
 	 */
 	protected static $http2_push_items = [];
 	
+	
+	/**
+	 * A string of extrar HTML that should be included at the bottom of the page <head>.
+	 * @var string
+	 */
+	private static $extraHeaderHTML = "";
+	
+	/**
+	 * The javascript snippets that will be included in the page.
+	 * @var string[]
+	 * @package core
+	 */
+	private static $jsSnippets = [];
+	/**
+	 * The urls of the external javascript files that should be referenced
+	 * by the page.
+	 * @var string[]
+	 * @package core
+	 */
+	private static $jsLinks = [];
+	
+	/**
+	 * The navigation bar divider.
+	 * @package core
+	 * @var string
+	 */
+	public static $nav_divider = "<span class='nav-divider inflexible'> | </span>";
+	
+	
 	/**
 	 * An array of functions that have been registered to process the
 	 * find / replace array before the page is rendered. Note that the function
@@ -1675,8 +1704,9 @@ class page_renderer
 	public static function get_header_html()
 	{
 		global $settings;
-		$result = self::get_css_as_html();
-		$result .= self::getJS();
+		$result = self::$extraHeaderHTML;
+		$result .= self::get_css_as_html();
+		$result .= self::_get_js();
 		
 		// We can't use module_exists here because sometimes global $modules
 		// hasn't populated yet when we get called O.o
@@ -1718,7 +1748,7 @@ class page_renderer
 
 		if(self::is_css_url()) {
 			if($settings->css[0] === "/") // Push it if it's a relative resource
-				self::AddServerPushIndicator("style", $settings->css);
+				self::add_server_push_indicator("style", $settings->css);
 			return "<link rel='stylesheet' href='$settings->css' />\n";
 		} else {
 			$css = $settings->css == "auto" ? $defaultCSS : $settings->css;
@@ -1749,25 +1779,14 @@ class page_renderer
 			return "<style>$css</style>\n";
 		}
 	}
-	/**
-	 * The javascript snippets that will be included in the page.
-	 * @var string[]
-	 * @package core
-	 */
-	private static $jsSnippets = [];
-	/**
-	 * The urls of the external javascript files that should be referenced
-	 * by the page.
-	 * @var string[]
-	 * @package core
-	 */
-	private static $jsLinks = [];
+	
+	
 	/**
 	 * Adds the specified url to a javascript file as a reference to the page.
 	 * @package core
 	 * @param string $scriptUrl The url of the javascript file to reference.
 	 */
-	public function AddJSLink(string $scriptUrl)
+	public function add_js_link(string $scriptUrl)
 	{
 		static::$jsLinks[] = $scriptUrl;
 	}
@@ -1776,7 +1795,7 @@ class page_renderer
 	 * @package core
 	 * @param string $script The snippet of javascript to add.
 	 */
-	public function AddJSSnippet(string $script)
+	public function add_js_snippet(string $script)
 	{
 		static::$jsSnippets[] = $script;
 	}
@@ -1786,20 +1805,30 @@ class page_renderer
 	 * @package core
 	 * @return	string	The rendered javascript ready for inclusion in the page.
 	 */
-	private static function getJS()
+	private static function _get_js()
 	{
 		$result = "<!-- Javascript -->\n";
 		foreach(static::$jsSnippets as $snippet)
 			$result .= "<script defer>\n$snippet\n</script>\n";
 		foreach(static::$jsLinks as $link) {
 			// Push it via HTTP/2.0 if it's relative
-			if($link[0] === "/") self::AddServerPushIndicator("script", $link);
+			if($link[0] === "/") self::add_server_push_indicator("script", $link);
 			$result .= "<script src='" . $link . "' defer></script>\n";
 		}
 		return $result;
 	}
 	
-	// ~
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	/**
+	 * Adds a string of HTML to the header of the rendered page.
+	 * @param string $html The string of HTML to add.
+	 */
+	public function add_header_html($html) {
+		$this->extraHeaderHTML .= $html;
+	}
+	
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	/**
 	 * Adds a resource to the list of items to indicate that the web server should send via HTTP/2.0 Server Push.
@@ -1807,19 +1836,13 @@ class page_renderer
 	 * @param string $type The resource type. See https://fetch.spec.whatwg.org/#concept-request-destination for more information.
 	 * @param string $path The *relative url path* to the resource.
 	 */
-	public static function AddServerPushIndicator($type, $path) {
+	public static function add_server_push_indicator($type, $path) {
 		self::$http2_push_items[] = [ $type, $path ];
 	}
 	
-	// ~
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
-	/**
-	 * The navigation bar divider.
-	 * @package core
-	 * @var string
-	 */
-	public static $nav_divider = "<span class='nav-divider inflexible'> | </span>";
-
+	
 	/**
 	 * Renders a navigation bar from an array of links. See
 	 * $settings->nav_links for format information.
@@ -1913,7 +1936,7 @@ class page_renderer
 		return $result;
 	}
 	
-	// ~
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	/**
 	 * Renders the datalist for the search box as HTML.
@@ -1948,16 +1971,16 @@ class page_renderer
 
 // HTTP/2.0 Server Push static items
 foreach($settings->http2_server_push_items as $push_item) {
-	page_renderer::AddServerPushIndicator($push_item[0], $push_item[1]);
+	page_renderer::add_server_push_indicator($push_item[0], $push_item[1]);
 }
 
 // Math rendering support
 if(!empty($settings->enable_math_rendering))
 {
-	page_renderer::AddJSLink("https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML");
+	page_renderer::add_js_link("https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML");
 }
 // alt+enter support in the search box
-page_renderer::AddJSSnippet('// Alt + Enter support in the top search box
+page_renderer::add_js_snippet('// Alt + Enter support in the top search box
 window.addEventListener("load", function(event) {
 	document.querySelector("input[type=search]").addEventListener("keyup", function(event) {
 		// Listen for Alt + Enter
@@ -2895,7 +2918,7 @@ function display_reply_form(event)
 }
 
 REPLYJS;
-			page_renderer::AddJSSnippet($reply_js_snippet);
+			page_renderer::add_js_snippet($reply_js_snippet);
 			
 		}
 		
@@ -3142,7 +3165,7 @@ window.addEventListener("load", function(event) {
 });
 SCRIPT;
 
-			page_renderer::AddJSSnippet($invindex_rebuild_script);
+			page_renderer::add_js_snippet($invindex_rebuild_script);
 			
 			$content .= "<h2>Settings</h2>";
 			$content .= "<p>Mouse over the name of each setting to see a description of what it does.</p>\n";
@@ -4627,7 +4650,7 @@ register_module([
 		
 		if($settings->dynamic_page_suggestion_count > 0)
 		{
-			page_renderer::AddJSSnippet('/// Dynamic page suggestion system
+			page_renderer::add_js_snippet('/// Dynamic page suggestion system
 // Micro snippet 8 - Promisified GET (fetched 20th Nov 2016)
 function get(u){return new Promise(function(r,t,a){a=new XMLHttpRequest();a.onload=function(b,c){b=a.status;c=a.response;if(b>199&&b<300){r(c)}else{t(c)}};a.open("GET",u,true);a.send(null)})}
 
@@ -6069,7 +6092,7 @@ register_module([
 		});
 		
 		// Add the snippet that copies the embed markdown code to the clipboard
-		page_renderer::AddJSSnippet('window.addEventListener("load", function(event) {
+		page_renderer::add_js_snippet('window.addEventListener("load", function(event) {
 	let button = document.querySelector(".short-embed-markdown-button");
 	if(button == null) return;
 	button.addEventListener("click", function(inner_event) {
@@ -7260,7 +7283,7 @@ register_module([
 					<input name='submit-edit' class='edit-page-button' type='submit' value='Save Page' tabindex='3' />
 					</form>";
 			// Allow tab characters in the page editor
-			page_renderer::AddJSSnippet("window.addEventListener('load', function(event) {
+			page_renderer::add_js_snippet("window.addEventListener('load', function(event) {
 	// Adapted from https://jsfiddle.net/2wAzx/13/
 	document.querySelector(\"[name=content]\").addEventListener(\"keydown\", (event) => {
 		if(event.keyCode !== 9) return true;
@@ -7273,7 +7296,7 @@ register_module([
 });");
 			
 			// Utilise the mirror to automatically resize the textarea to fit it's content
-			page_renderer::AddJSSnippet('function updateTextSize(textarea, mirror, event) {
+			page_renderer::add_js_snippet('function updateTextSize(textarea, mirror, event) {
 	let textareaFontSize = parseFloat(getComputedStyle(textarea).fontSize);
 	
 	let textareaWidth = textarea.getBoundingClientRect().width;// - parseInt(textarea.style.padding);
@@ -7294,7 +7317,7 @@ window.addEventListener("load", function(event) {
 			// ~
 			
 			/// ~~~ Smart saving ~~~ ///
-			page_renderer::AddJSSnippet('window.addEventListener("load", function(event) {
+			page_renderer::add_js_snippet('window.addEventListener("load", function(event) {
 	"use strict";
 	// Smart saving
 	let getSmartSaveKey = function() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").replace("Editing ", "").trim(); }

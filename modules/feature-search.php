@@ -430,7 +430,7 @@ register_module([
 		
 		if($settings->dynamic_page_suggestion_count > 0)
 		{
-			page_renderer::AddJSSnippet('/// Dynamic page suggestion system
+			page_renderer::add_js_snippet('/// Dynamic page suggestion system
 // Micro snippet 8 - Promisified GET (fetched 20th Nov 2016)
 function get(u){return new Promise(function(r,t,a){a=new XMLHttpRequest();a.onload=function(b,c){b=a.status;c=a.response;if(b>199&&b<300){r(c)}else{t(c)}};a.open("GET",u,true);a.send(null)})}
 

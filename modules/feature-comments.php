@@ -302,7 +302,7 @@ function display_reply_form(event)
 }
 
 REPLYJS;
-			page_renderer::AddJSSnippet($reply_js_snippet);
+			page_renderer::add_js_snippet($reply_js_snippet);
 			
 		}
 		

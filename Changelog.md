@@ -17,6 +17,9 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ### Changed
  - Completely reworked the README to refactor out the documentation to its [own static site](https://starbeamrainbowlabs.com/labs/peppermint/_docpress/)
  - Updated the `{{{@}}}` templating variable to output a message if no parameters were specified instead of not parsing it at all
+ - [Module API] Refactored the main `page_renderer` class
+     - All static methods now have a consistent naming scheme
+     - Added `page_renderer::add_header_html()`
 
 ### Fixed
  - Squashed a warning in the history revision system when creating new pages (thanks @tspivey for spotting this!)
