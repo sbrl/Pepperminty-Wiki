@@ -95,7 +95,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds recent changes. Access through the 'recent-changes' action.",
         "id": "feature-recent-changes",
-        "lastupdate": 1548373950,
+        "lastupdate": 1548630687,
         "optional": false
     },
     {

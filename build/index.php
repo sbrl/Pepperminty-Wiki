@@ -409,7 +409,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "5b670f59812ff1341195ad1be8eadcd3014b795f";
+$commit = "0ac2f24b5f84bf482ef420051a8c0b4e1a1c4d30";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -1556,8 +1556,7 @@ class page_renderer
 	 * @package core
 	 * @param  function $function The part preprocessor to register.
 	 */
-	public static function register_part_preprocessor($function)
-	{
+	public static function register_part_preprocessor($function) {
 		global $settings;
 
 		// Make sure that the function we are about to register is valid
@@ -1589,12 +1588,10 @@ class page_renderer
 		if($body_template === false)
 			$body_template = self::$main_content_template;
 
-		if(strlen($settings->logo_url) > 0)
-		{
+		if(strlen($settings->logo_url) > 0) {
 			// A logo url has been specified
 			$logo_html = "<img class='logo" . (isset($_GET["printable"]) ? " small" : "") . "' src='$settings->logo_url' />";
-			switch($settings->logo_position)
-			{
+			switch($settings->logo_position) {
 				case "left":
 					$logo_html = "$logo_html $settings->sitename";
 					break;
@@ -1659,8 +1656,7 @@ class page_renderer
 	 * @param  string $content The content of the page.
 	 * @return string          The rendered page.
 	 */
-	public static function render_main($title, $content)
-	{
+	public static function render_main($title, $content) {
 		return self::render($title, $content, self::$main_content_template);
 	}
 	/**
@@ -1670,8 +1666,7 @@ class page_renderer
 	 * @param  string $content The content of the page.
 	 * @return string          The rendered page.
 	 */
-	public static function render_minimal($title, $content)
-	{
+	public static function render_minimal($title, $content) {
 		return self::render($title, $content, self::$minimal_content_template);
 	}
 	
@@ -1713,15 +1708,14 @@ class page_renderer
 		if(class_exists("search"))
 			$result .= "\t\t<link rel='search' type='application/opensearchdescription+xml' href='?action=opensearch-description' title='$settings->sitename Search' />\n";
 		
-		if(!empty($settings->enable_math_rendering))
-		{
+		if(!empty($settings->enable_math_rendering)) {
 			$result .= "<script type='text/x-mathjax-config'>
 		MathJax.Hub.Config({
-		tex2jax: {
-		inlineMath: [ ['$','$'], ['\\\\(','\\\\)'] ],
-		processEscapes: true,
-		skipTags: ['script','noscript','style','textarea','pre','code']
-		}
+			tex2jax: {
+				inlineMath: [ ['$','$'], ['\\\\(','\\\\)'] ],
+				processEscapes: true,
+				skipTags: ['script','noscript','style','textarea','pre','code']
+			}
 		});
 	</script>";
 		}
@@ -1752,8 +1746,7 @@ class page_renderer
 			return "<link rel='stylesheet' href='$settings->css' />\n";
 		} else {
 			$css = $settings->css == "auto" ? $defaultCSS : $settings->css;
-			if(!empty($settings->optimize_pages))
-			{
+			if(!empty($settings->optimize_pages)) {
 				// CSS Minification ideas by Jean from catswhocode.com
 				// Link: http://www.catswhocode.com/blog/3-ways-to-compress-css-files-using-php
 				// Remove comments
@@ -1786,8 +1779,7 @@ class page_renderer
 	 * @package core
 	 * @param string $scriptUrl The url of the javascript file to reference.
 	 */
-	public function add_js_link(string $scriptUrl)
-	{
+	public function add_js_link(string $scriptUrl) {
 		static::$jsLinks[] = $scriptUrl;
 	}
 	/**
@@ -1795,8 +1787,7 @@ class page_renderer
 	 * @package core
 	 * @param string $script The snippet of javascript to add.
 	 */
-	public function add_js_snippet(string $script)
-	{
+	public function add_js_snippet(string $script) {
 		static::$jsSnippets[] = $script;
 	}
 	/**
@@ -1805,8 +1796,7 @@ class page_renderer
 	 * @package core
 	 * @return	string	The rendered javascript ready for inclusion in the page.
 	 */
-	private static function _get_js()
-	{
+	private static function _get_js() {
 		$result = "<!-- Javascript -->\n";
 		foreach(static::$jsSnippets as $snippet)
 			$result .= "<script defer>\n$snippet\n</script>\n";
@@ -1824,8 +1814,8 @@ class page_renderer
 	 * Adds a string of HTML to the header of the rendered page.
 	 * @param string $html The string of HTML to add.
 	 */
-	public function add_header_html($html) {
-		$this->extraHeaderHTML .= $html;
+	public static function add_header_html($html) {
+		self::$extraHeaderHTML .= $html;
 	}
 	
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1853,8 +1843,7 @@ class page_renderer
 	 * @param string $class				The class(es) to assign to the rendered
 	 * 									navigation bar.
 	 */
-	public static function render_navigation_bar($nav_links, $nav_links_extra, $class = "")
-	{
+	public static function render_navigation_bar($nav_links, $nav_links_extra, $class = "") {
 		global $settings, $env;
 		$result = "<nav class='$class'>\n";
 
@@ -1867,12 +1856,10 @@ class page_renderer
 			}
 			
 			// The item is a string
-			switch($item)
-			{
+			switch($item) {
 				//keywords
 				case "user-status": // Renders the user status box
-					if($env->is_logged_in)
-					{
+					if($env->is_logged_in) {
 						$result .= "<span class='inflexible logged-in" . ($env->is_logged_in ? " moderator" : " normal-user") . "'>";
 						if(module_exists("feature-user-preferences")) {
 							$result .= "<a href='?action=user-preferences'>$settings->user_preferences_button_text</a>";
@@ -1949,8 +1936,7 @@ class page_renderer
 		if($settings->dynamic_page_suggestion_count > 0) {
 			$result .= "<option value='Loading suggestions...' />";
 		} else {
-			foreach($arrayPageIndex as $pagename => $pagedetails)
-			{
+			foreach($arrayPageIndex as $pagename => $pagedetails) {
 				$escapedPageName = str_replace('"', '&quot;', $pagename);
 				$result .= "\t\t\t<option value=\"$escapedPageName\" />\n";
 			}
@@ -3762,11 +3748,11 @@ register_module([
 					else // No changes yet :(
 						$content .= "<p><em>None yet! Try making a few changes and then check back here.</em></p>\n";
 						
-					$header_extra = "\t<link rel=\"alternate\" type=\"application/atom+xml\" href=\"?action=recent-changes&amp;format=atom\" />
+					page_renderer::add_header_html("\t<link rel=\"alternate\" type=\"application/atom+xml\" href=\"?action=recent-changes&amp;format=atom\" />
 		<link rel=\"alternate\" type=\"text/csv\" href=\"?action=recent-changes&amp;format=csv\" />
-		<link rel=\"alternate\" type=\"application/json\" href=\"?action=recent-changes&amp;format=json\" />";
+		<link rel=\"alternate\" type=\"application/json\" href=\"?action=recent-changes&amp;format=json\" />");
 					
-					exit(str_replace("</head>", "$header_extra\n\t</head>", page_renderer::render("Recent Changes - $settings->sitename", $content)));
+					exit(page_renderer::render("Recent Changes - $settings->sitename", $content));
 					break;
 				case "json":
 					$result = json_encode($recent_changes);
