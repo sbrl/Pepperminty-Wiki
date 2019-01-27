@@ -1460,56 +1460,53 @@ class page_renderer
 		$result = "<nav class='$class'>\n";
 
 		// Loop over all the navigation links
-		foreach($nav_links as $item)
-		{
-			if(is_string($item))
-			{
-				// The item is a string
-				switch($item)
-				{
-					//keywords
-					case "user-status": // Renders the user status box
-						if($env->is_logged_in)
-						{
-							$result .= "<span class='inflexible logged-in" . ($env->is_logged_in ? " moderator" : " normal-user") . "'>";
-							if(module_exists("feature-user-preferences")) {
-								$result .= "<a href='?action=user-preferences'>$settings->user_preferences_button_text</a>";
-							}
-							$result .= self::render_username($env->user);
-							$result .= " <small>(<a href='index.php?action=logout'>Logout</a>)</small>";
-							$result .= "</span>";
-							//$result .= page_renderer::$nav_divider;
-						}
-						else {
-							$returnto_url = $env->action !== "logout" ? $_SERVER["REQUEST_URI"] : "?action=view&page=" . rawurlencode($settings->defaultpage);
-							$result .= "<span class='not-logged-in'><a href='index.php?action=login&returnto=" . rawurlencode($returnto_url) . "'>Login</a></span>";
-						}
-						break;
-
-					case "search": // Renders the search bar
-						$result .= "<span class='inflexible'><form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /><input type='hidden' name='search-redirect' value='true' /></form></span>";
-						break;
-
-					case "divider": // Renders a divider
-						$result .= page_renderer::$nav_divider;
-						break;
-
-					case "menu": // Renders the "More..." menu
-						$result .= "<span class='inflexible nav-more'><label for='more-menu-toggler'>More...</label>
-<input type='checkbox' class='off-screen' id='more-menu-toggler' />";
-						$result .= page_renderer::render_navigation_bar($nav_links_extra, [], "nav-more-menu");
-						$result .= "</span>";
-						break;
-
-					// It isn't a keyword, so just output it directly
-					default:
-						$result .= "<span>$item</span>";
-				}
-			}
-			else
-			{
+		foreach($nav_links as $item) {
+			if(!is_string($item)) {
 				// Output the item as a link to a url
 				$result .= "<span><a href='" . str_replace("{page}", rawurlencode($env->page), $item[1]) . "'>$item[0]</a></span>";
+				continue;
+			}
+			
+			// The item is a string
+			switch($item)
+			{
+				//keywords
+				case "user-status": // Renders the user status box
+					if($env->is_logged_in)
+					{
+						$result .= "<span class='inflexible logged-in" . ($env->is_logged_in ? " moderator" : " normal-user") . "'>";
+						if(module_exists("feature-user-preferences")) {
+							$result .= "<a href='?action=user-preferences'>$settings->user_preferences_button_text</a>";
+						}
+						$result .= self::render_username($env->user);
+						$result .= " <small>(<a href='index.php?action=logout'>Logout</a>)</small>";
+						$result .= "</span>";
+						//$result .= page_renderer::$nav_divider;
+					}
+					else {
+						$returnto_url = $env->action !== "logout" ? $_SERVER["REQUEST_URI"] : "?action=view&page=" . rawurlencode($settings->defaultpage);
+						$result .= "<span class='not-logged-in'><a href='index.php?action=login&returnto=" . rawurlencode($returnto_url) . "'>Login</a></span>";
+					}
+					break;
+
+				case "search": // Renders the search bar
+					$result .= "<span class='inflexible'><form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /><input type='hidden' name='search-redirect' value='true' /></form></span>";
+					break;
+
+				case "divider": // Renders a divider
+					$result .= page_renderer::$nav_divider;
+					break;
+
+				case "menu": // Renders the "More..." menu
+					$result .= "<span class='inflexible nav-more'><label for='more-menu-toggler'>More...</label>
+<input type='checkbox' class='off-screen' id='more-menu-toggler' />";
+					$result .= page_renderer::render_navigation_bar($nav_links_extra, [], "nav-more-menu");
+					$result .= "</span>";
+					break;
+
+				// It isn't a keyword, so just output it directly
+				default:
+					$result .= "<span>$item</span>";
 			}
 		}
 
@@ -1522,8 +1519,7 @@ class page_renderer
 	 * @param  string $name The username to render.
 	 * @return string       The username rendered in HTML.
 	 */
-	public static function render_username($name)
-	{
+	public static function render_username($name) {
 		global $settings;
 		$result = "";
 		$result .= "<a href='?page=" . rawurlencode(get_user_pagename($name)) . "'>";
@@ -1544,20 +1540,16 @@ class page_renderer
 	 * @package core
 	 * @return string The search box datalist as HTML.
 	 */
-	public static function generate_all_pages_datalist()
-	{
+	public static function generate_all_pages_datalist() {
 		global $settings, $pageindex;
 		$arrayPageIndex = get_object_vars($pageindex);
 		ksort($arrayPageIndex);
 		$result = "<datalist id='allpages'>\n";
 		
 		// If dynamic page sugggestions are enabled, then we should send a loading message instead.
-		if($settings->dynamic_page_suggestion_count > 0)
-		{
+		if($settings->dynamic_page_suggestion_count > 0) {
 			$result .= "<option value='Loading suggestions...' />";
-		}
-		else
-		{
+		} else {
 			foreach($arrayPageIndex as $pagename => $pagedetails)
 			{
 				$escapedPageName = str_replace('"', '&quot;', $pagename);
