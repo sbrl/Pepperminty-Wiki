@@ -294,6 +294,8 @@ main:not(.printable) { position: relative; z-index: 1000; padding: 2em 2em 0.5em
 
 blockquote { padding-left: 1em; border-left: 0.2em solid #442772; border-radius: 0.2rem; }
 
+pre { white-space: pre-wrap; }
+
 a { cursor: pointer; }
 a.redlink:link { color: rgb(230, 7, 7); }
 a.redlink:visited { color: rgb(130, 15, 15); /*#8b1a1a*/ }
@@ -409,7 +411,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "1cb30b28ca8b7264041fc7a3660c12ac48f7819a";
+$commit = "dc860acfd3db082023b34fd769be7885c521b4cd";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();

@@ -25,6 +25,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Squashed a warning in the history revision system when creating new pages (thanks @tspivey for spotting this!)
  - Standardise line endings to `\n` (linux)
  - Enhanced setup instructions in README.
+ - Long lines in code blocks now wrap correctly.
 
 ## v0.17.1
 
