@@ -411,7 +411,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "dc860acfd3db082023b34fd769be7885c521b4cd";
+$commit = "c120902cda82e3efcd32d071ad8993c06fdc79ac";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -457,6 +457,8 @@ $paths->idindex = "idindex.json";
 $paths->statsindex = "statsindex.json";
 /** The interwiki index cache */
 $paths->interwiki_index = "interwiki_index.json";
+/** The cache directory, minus the trailing slash. Contains cached rendered versions of pages. If things don't update, try deleting this folder.  */
+$paths->cache_directory = "._cache";
 
 // Prepend the storage data directory to all the defined paths.
 foreach ($paths as &$path) {
@@ -467,6 +469,10 @@ foreach ($paths as &$path) {
 $paths->settings_file = $settingsFilename;
 /** The prefix to add to uploaded files */
 $paths->upload_file_prefix = "Files/";
+
+// Create the cache directory if it doesn't exist
+if(!is_dir($paths->cache_directory))
+	mkdir($paths->cache_directory, 0700);
 
 session_start();
 // Make sure that the login cookie lasts beyond the end of the user's session
@@ -2136,13 +2142,12 @@ function add_parser($name, $parser_code)
 /**
  * Parses the specified page source using the parser specified in the settings
  * into HTML.
- * The specified parser may (though it's unilkely) render it to other things.
+ * The specified parser may (though it's unlikely) render it to other things.
  * @package core
  * @param	string	$source	The source to render.
  * @return	string			The source rendered to HTML.
  */
-function parse_page_source($source)
-{
+function parse_page_source($source) {
 	global $settings, $parsers;
 	if(!isset($parsers[$settings->parser]))
 		exit(page_renderer::render_main("Parsing error - $settings->sitename", "<p>Parsing some page source data failed. This is most likely because $settings->sitename has the parser setting set incorrectly. Please contact <a href='mailto:" . hide_email($settings->admindetails_email) . "'>" . $settings->admindetails_name . "</a>, your $settings->sitename Administrator."));
@@ -7665,7 +7670,7 @@ function generate_page_hash($page_data) {
 
 register_module([
 	"name" => "Export",
-	"version" => "0.4",
+	"version" => "0.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that you can use to export your wiki as a .zip file. Uses \$settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
 	"id" => "page-export",
@@ -7710,9 +7715,10 @@ register_module([
 				exit(page_renderer::render("Export error - $settings->sitename", "Pepperminty Wiki was unable to open a temporary file to store the exported data in. Please contact $settings->sitename's administrator (" . $settings->admindetails_name . " at " . hide_email($settings->admindetails_email) . ") for assistance."));
 			}
 			
-			foreach($pageindex as $entry)
-			{
+			foreach($pageindex as $entry) {
 				$zip->addFile("$env->storage_prefix$entry->filename", $entry->filename);
+				if(isset($entry->uploadedfilepath))
+					$zip->addFile($entry->uploadedfilepath);
 			}
 			
 			if($zip->close() !== true)

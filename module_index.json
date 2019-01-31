@@ -190,11 +190,11 @@
     },
     {
         "name": "Export",
-        "version": "0.4",
+        "version": "0.5",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that you can use to export your wiki as a .zip file. Uses $settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
         "id": "page-export",
-        "lastupdate": 1472230366,
+        "lastupdate": 1548970758,
         "optional": false
     },
     {

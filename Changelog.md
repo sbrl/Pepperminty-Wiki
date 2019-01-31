@@ -26,6 +26,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Standardise line endings to `\n` (linux)
  - Enhanced setup instructions in README.
  - Long lines in code blocks now wrap correctly.
+ - The `export` action now correctly includes uploaded files alongside their descriptions
 
 ## v0.17.1
 

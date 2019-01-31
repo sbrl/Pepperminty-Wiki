@@ -56,6 +56,8 @@ $paths->idindex = "idindex.json";
 $paths->statsindex = "statsindex.json";
 /** The interwiki index cache */
 $paths->interwiki_index = "interwiki_index.json";
+/** The cache directory, minus the trailing slash. Contains cached rendered versions of pages. If things don't update, try deleting this folder.  */
+$paths->cache_directory = "._cache";
 
 // Prepend the storage data directory to all the defined paths.
 foreach ($paths as &$path) {
@@ -66,6 +68,10 @@ foreach ($paths as &$path) {
 $paths->settings_file = $settingsFilename;
 /** The prefix to add to uploaded files */
 $paths->upload_file_prefix = "Files/";
+
+// Create the cache directory if it doesn't exist
+if(!is_dir($paths->cache_directory))
+	mkdir($paths->cache_directory, 0700);
 
 session_start();
 // Make sure that the login cookie lasts beyond the end of the user's session
@@ -1735,13 +1741,12 @@ function add_parser($name, $parser_code)
 /**
  * Parses the specified page source using the parser specified in the settings
  * into HTML.
- * The specified parser may (though it's unilkely) render it to other things.
+ * The specified parser may (though it's unlikely) render it to other things.
  * @package core
  * @param	string	$source	The source to render.
  * @return	string			The source rendered to HTML.
  */
-function parse_page_source($source)
-{
+function parse_page_source($source) {
 	global $settings, $parsers;
 	if(!isset($parsers[$settings->parser]))
 		exit(page_renderer::render_main("Parsing error - $settings->sitename", "<p>Parsing some page source data failed. This is most likely because $settings->sitename has the parser setting set incorrectly. Please contact <a href='mailto:" . hide_email($settings->admindetails_email) . "'>" . $settings->admindetails_name . "</a>, your $settings->sitename Administrator."));

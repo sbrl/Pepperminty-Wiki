@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Export",
-	"version" => "0.4",
+	"version" => "0.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that you can use to export your wiki as a .zip file. Uses \$settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
 	"id" => "page-export",
@@ -46,9 +46,10 @@ register_module([
 				exit(page_renderer::render("Export error - $settings->sitename", "Pepperminty Wiki was unable to open a temporary file to store the exported data in. Please contact $settings->sitename's administrator (" . $settings->admindetails_name . " at " . hide_email($settings->admindetails_email) . ") for assistance."));
 			}
 			
-			foreach($pageindex as $entry)
-			{
+			foreach($pageindex as $entry) {
 				$zip->addFile("$env->storage_prefix$entry->filename", $entry->filename);
+				if(isset($entry->uploadedfilepath))
+					$zip->addFile($entry->uploadedfilepath);
 			}
 			
 			if($zip->close() !== true)
