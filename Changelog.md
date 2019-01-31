@@ -18,7 +18,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Uses a hash of the content, the _Pepperminty Wiki_ version, and the parser name as the cache id - so it should never serve stale content (unless you're actively working on particular areas of _Pepperminty Wiki_'s codebase of course)
      - Useful for longer pages
      - `parser_cache_min_size` may need tuning for your specific installation (lower it if you regularly use features that are slow to parse; raise if it's the opposite)
-     - You may need to turn this off if it interferes with complex includes
+     - You may need to turn this off if it interferes with complex dynamic includes
 
 ### Changed
  - Completely reworked the README to refactor out the documentation to its [own static site](https://starbeamrainbowlabs.com/labs/peppermint/_docpress/)
