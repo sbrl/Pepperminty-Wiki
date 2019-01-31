@@ -41,6 +41,8 @@ $guiConfig = <<<'GUICONFIG'
 	"anonedits": { "type": "checkbox", "description": "Whether users who aren't logged in are allowed to edit your wiki.", "default": false },
 	"maxpagesize": { "type": "number", "description": "The maximum page size in characters.", "default": 135000 },
 	"parser": { "type": "text", "description": "The parser to use when rendering pages. Defaults to an extended version of parsedown (http://parsedown.org/)", "default": "parsedown" },
+	"parser_cache": { "type": "checkbox", "description": "Whether parser output should be cached to speed things up. The cache directory is <code>._cache</code> in the data directory - delete it if you experience issues (unlikely).", "default": true },
+	"parser_cache_min_size": { "type": "number", "description": "The minimum size a source string must be (in bytes) before it's considered eligible for caching.", "default": 1024 },
 	"interwiki_index_location": { "type": "text", "description": "The location to find the interwiki wiki definition file, which contains a list of wikis along with their names, prefixes, and root urls. May be a URL, or simply a file path - as it's passed to file_get_contents(). If left blank, interwiki link parsing is disabled.", "default": null },
 	"clean_raw_html": { "type": "checkbox", "description": "Whether page sources should be cleaned of HTML before rendering. It is STRONGLY recommended that you keep this option turned on.", "default": true},
 	"enable_math_rendering": { "type": "checkbox", "description": "Whether to enable client side rendering of mathematical expressions with MathJax (https://www.mathjax.org/). Math expressions should be enclosed inside of dollar signs ($). Turn off if you don't use it.", "default": true},
@@ -411,7 +413,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "c120902cda82e3efcd32d071ad8993c06fdc79ac";
+$commit = "d51c3f163fbaeed63e8b0109e684a810d2a4604a";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -2144,19 +2146,43 @@ function add_parser($name, $parser_code)
  * into HTML.
  * The specified parser may (though it's unlikely) render it to other things.
  * @package core
- * @param	string	$source	The source to render.
- * @return	string			The source rendered to HTML.
+ * @param	string	$source		The source to render.
+ * @param	string	$use_cache	Whether to use the on-disk cache. Has no effect if parser caching is disabled in peppermint.json, or the source string is too small.
+ * @return	string	The source rendered to HTML.
  */
-function parse_page_source($source) {
-	global $settings, $parsers;
+function parse_page_source($source, $use_cache = true) {
+	global $settings, $paths, $parsers, $version;
+	$start_time = microtime(true);
+	
+	if(!$settings->parser_cache || strlen($source) < $settings->parser_cache_min_size) $use_cache = false;
+	
 	if(!isset($parsers[$settings->parser]))
 		exit(page_renderer::render_main("Parsing error - $settings->sitename", "<p>Parsing some page source data failed. This is most likely because $settings->sitename has the parser setting set incorrectly. Please contact <a href='mailto:" . hide_email($settings->admindetails_email) . "'>" . $settings->admindetails_name . "</a>, your $settings->sitename Administrator."));
-
+	
 /* Not needed atm because escaping happens when saving, not when rendering *
 	if($settings->clean_raw_html)
 		$source = htmlentities($source, ENT_QUOTES | ENT_HTML5);
 */
-	return $parsers[$settings->parser]($source);
+	
+	$cache_id = str_replace(["+","/"], ["-","_"], base64_encode(hash("sha256", "$version|$settings->parser|$source", true)));
+	$cache_file = "{$paths->cache_directory}/{$cache_id}.html";
+	
+	$result = null;
+	if($use_cache && file_exists($cache_file)) {
+		$result = file_get_contents($cache_file);
+		$result .= "\n<!-- cache: hit, id: $cache_id, took: " . round((microtime(true) - $start_time)*1000, 5) . "ms -->\n";
+	}
+	if($result == null) {
+		$result = $parsers[$settings->parser]($source);
+		// If we should use the cache and we failed to write to it, warn the admin.
+		// It's not terribible if we can't write to the cache directory (so we shouldn't stop dead & refuse service), but it's still of concern.
+		if($use_cache && !file_put_contents($cache_file, $result))
+			error_log("[Pepperminty Wiki] Warning: Failed to write to cache file $cache_file.");
+		
+		$result .= "\n<!-- cache: " . ($use_cache ? "miss" : "n/a") . ", id: $cache_id, took: " . round((microtime(true) - $start_time)*1000, 5) . "ms -->\n";
+	}
+	
+	return $result;
 }
 
 // Function to 

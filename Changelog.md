@@ -13,6 +13,11 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - All alternative formats for this action are advertised in via a `<link rel="alternate" />` in the `<head>` now
  - Added `count` and `offset` GET parameters to `recent-changes` action.
  - Added new `find_revisionid_timestamp()` function to `feature-recent-changes` module.
+ - Added new parser output caching system!
+     - 2 new settings have been added: `parser_cache` and `parser_cache_min_size`
+     - Uses a hash of the content, the _Pepperminty Wiki_ version, and the parser name as the cache id - so it should never serve stale content (unless you're actively working on particular areas of _Pepperminty Wiki_'s codebase of course)
+     - Useful for longer pages
+     - `parser_cache_min_size` may need tuning for your specific installation (lower it if you regularly use features that are slow to parse; raise if it's the opposite)
 
 ### Changed
  - Completely reworked the README to refactor out the documentation to its [own static site](https://starbeamrainbowlabs.com/labs/peppermint/_docpress/)
