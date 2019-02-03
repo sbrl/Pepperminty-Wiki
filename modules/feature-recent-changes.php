@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Recent Changes",
-	"version" => "0.3.5",
+	"version" => "0.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds recent changes. Access through the 'recent-changes' action.",
 	"id" => "feature-recent-changes",
@@ -451,7 +451,7 @@ function render_recent_change_atom($recent_changes) {
 		
 		$xml->startElement("author");
 		$xml->writeElement("name", $recent_change->user);
-		$xml->writeElement("uri", "$full_url_stem?page=".rawurlencode("$settings->user_page_prefix/$recent_change->page"));
+		$xml->writeElement("uri", "$full_url_stem?page=".rawurlencode("$settings->user_page_prefix/$recent_change->user"));
 		$xml->endElement();
 		
 		$xml->endElement();
