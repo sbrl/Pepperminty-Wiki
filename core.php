@@ -1720,9 +1720,14 @@ function has_action($action_name)
 }
 
 $parsers = [
-	"none" => function() {
-		throw new Exception("No parser registered!");
-	}
+	"none" => [
+		"parser" => function() {
+			throw new Exception("No parser registered!");
+		},
+		"hash_generator" => function() {
+			throw new Exception("No parser registered!");
+		}
+	]
 ];
 /**
  * Registers a new parser.
@@ -1730,13 +1735,16 @@ $parsers = [
  * @param string	$name       	The name of the new parser to register.
  * @param function	$parser_code	The function to register as a new parser.
  */
-function add_parser($name, $parser_code)
+function add_parser($name, $parser_code, $hash_generator)
 {
 	global $parsers;
 	if(isset($parsers[$name]))
 		throw new Exception("Can't register parser with name '$name' because a parser with that name already exists.");
 
-	$parsers[$name] = $parser_code;
+	$parsers[$name] = [
+		"parser" => $parser_code,
+		"hash_generator" => $hash_generator
+	];
 }
 /**
  * Parses the specified page source using the parser specified in the settings
@@ -1761,7 +1769,7 @@ function parse_page_source($source, $use_cache = true) {
 		$source = htmlentities($source, ENT_QUOTES | ENT_HTML5);
 */
 	
-	$cache_id = str_replace(["+","/"], ["-","_"], base64_encode(hash("sha256", "$version|$settings->parser|$source", true)));
+	$cache_id = $parsers[$settings->parser]["hash_generator"]($source);
 	$cache_file = "{$paths->cache_directory}/{$cache_id}.html";
 	
 	$result = null;
@@ -1770,7 +1778,7 @@ function parse_page_source($source, $use_cache = true) {
 		$result .= "\n<!-- cache: hit, id: $cache_id, took: " . round((microtime(true) - $start_time)*1000, 5) . "ms -->\n";
 	}
 	if($result == null) {
-		$result = $parsers[$settings->parser]($source);
+		$result = $parsers[$settings->parser]["parser"]($source);
 		// If we should use the cache and we failed to write to it, warn the admin.
 		// It's not terribible if we can't write to the cache directory (so we shouldn't stop dead & refuse service), but it's still of concern.
 		if($use_cache && !file_put_contents($cache_file, $result))

@@ -19,6 +19,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Useful for longer pages
      - `parser_cache_min_size` may need tuning for your specific installation (lower it if you regularly use features that are slow to parse; raise if it's the opposite)
      - You may need to turn this off if it interferes with complex dynamic includes
+ - Internal links now show the page name on hover (inter-wiki links are also supported here)
 
 ### Changed
  - Completely reworked the README to refactor out the documentation to its [own static site](https://starbeamrainbowlabs.com/labs/peppermint/_docpress/)

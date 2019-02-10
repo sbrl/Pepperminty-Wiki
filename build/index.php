@@ -413,7 +413,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "d51c3f163fbaeed63e8b0109e684a810d2a4604a";
+$commit = "1938bfd5b985a4a21872010d963553d10cab25e1";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -2123,9 +2123,14 @@ function has_action($action_name)
 }
 
 $parsers = [
-	"none" => function() {
-		throw new Exception("No parser registered!");
-	}
+	"none" => [
+		"parser" => function() {
+			throw new Exception("No parser registered!");
+		},
+		"hash_generator" => function() {
+			throw new Exception("No parser registered!");
+		}
+	]
 ];
 /**
  * Registers a new parser.
@@ -2133,13 +2138,16 @@ $parsers = [
  * @param string	$name       	The name of the new parser to register.
  * @param function	$parser_code	The function to register as a new parser.
  */
-function add_parser($name, $parser_code)
+function add_parser($name, $parser_code, $hash_generator)
 {
 	global $parsers;
 	if(isset($parsers[$name]))
 		throw new Exception("Can't register parser with name '$name' because a parser with that name already exists.");
 
-	$parsers[$name] = $parser_code;
+	$parsers[$name] = [
+		"parser" => $parser_code,
+		"hash_generator" => $hash_generator
+	];
 }
 /**
  * Parses the specified page source using the parser specified in the settings
@@ -2164,7 +2172,7 @@ function parse_page_source($source, $use_cache = true) {
 		$source = htmlentities($source, ENT_QUOTES | ENT_HTML5);
 */
 	
-	$cache_id = str_replace(["+","/"], ["-","_"], base64_encode(hash("sha256", "$version|$settings->parser|$source", true)));
+	$cache_id = $parsers[$settings->parser]["hash_generator"]($source);
 	$cache_file = "{$paths->cache_directory}/{$cache_id}.html";
 	
 	$result = null;
@@ -2173,7 +2181,7 @@ function parse_page_source($source, $use_cache = true) {
 		$result .= "\n<!-- cache: hit, id: $cache_id, took: " . round((microtime(true) - $start_time)*1000, 5) . "ms -->\n";
 	}
 	if($result == null) {
-		$result = $parsers[$settings->parser]($source);
+		$result = $parsers[$settings->parser]["parser"]($source);
 		// If we should use the cache and we failed to write to it, warn the admin.
 		// It's not terribible if we can't write to the cache directory (so we shouldn't stop dead & refuse service), but it's still of concern.
 		if($use_cache && !file_put_contents($cache_file, $result))
@@ -3723,7 +3731,7 @@ function is_interwiki_link($pagename) {
 
 register_module([
 	"name" => "Recent Changes",
-	"version" => "0.3.5",
+	"version" => "0.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds recent changes. Access through the 'recent-changes' action.",
 	"id" => "feature-recent-changes",
@@ -4173,7 +4181,7 @@ function render_recent_change_atom($recent_changes) {
 		
 		$xml->startElement("author");
 		$xml->writeElement("name", $recent_change->user);
-		$xml->writeElement("uri", "$full_url_stem?page=".rawurlencode("$settings->user_page_prefix/$recent_change->page"));
+		$xml->writeElement("uri", "$full_url_stem?page=".rawurlencode("$settings->user_page_prefix/$recent_change->user"));
 		$xml->endElement();
 		
 		$xml->endElement();
@@ -9022,7 +9030,7 @@ register_module([
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.9.12",
+	"version" => "0.9.13",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",
@@ -9037,6 +9045,28 @@ register_module([
 			$result = $parser->text($source);
 			
 			return $result;
+		}, function($source) {
+			global $version, $settings, $pageindex;
+			$id_text = "$version|$settings->parser|$source";
+			
+			// Find template includes
+			preg_match_all(
+				'/\{\{\s*([^|]+)\s*(?:\|[^}]*)?\}\}/',
+				$source, $includes
+			);
+			
+			foreach($includes[1] as $include_pagename) {
+				if(empty($pageindex->$include_pagename))
+				$id_text .= "|$include_pagename:" . parsedown_pagename_resolve(
+					$pageindex->$include_pagename->lastmodified
+				);
+			}
+			
+			return str_replace(["+","/"], ["-","_"], base64_encode(hash(
+				"sha256",
+				$id_text,
+				true
+			)));
 		});
 		
 		/*
@@ -9223,6 +9253,28 @@ if(!file_exists("./ParsedownExtra.php") || filesize("./ParsedownExtra.php") === 
 
 require_once("./Parsedown.php");
 require_once("./ParsedownExtra.php");
+
+/**
+ * Attempts to 'auto-correct' a page name by trying different capitalisation
+ * combinations.
+ * @param	string	$pagename	The page name to auto-correct.
+ * @return	string	The auto-corrected page name.
+ */
+function parsedown_pagename_resolve($pagename) {
+	global $pageindex;
+	
+	// If the page doesn't exist, check varying different
+	// capitalisations to see if it exists under some variant.
+	if(!empty($pageindex->$pagename))
+		return $pagename;
+	
+	$pagename = ucfirst($pagename);
+	if(!empty($pageindex->$pagename))
+		return $pagename;
+	
+	$pagename = ucwords($pagename);
+	return $pagename;
+}
 
 /*
  * ██████   █████  ██████  ███████ ███████ ██████   ██████  ██     ██ ███    ██
@@ -9501,14 +9553,10 @@ class PeppermintParsedown extends ParsedownExtra
 			// 3: Page name auto-correction
 			// -------------------------------
 			$is_interwiki_link = module_exists("feature-interwiki-links") && is_interwiki_link($link_page);
-			if(!$is_interwiki_link && empty($pageindex->$link_page)) {
-				// If the page doesn't exist, check varying different
-				// capitalisations to see if it exists under some variant.
-				if(!empty($pageindex->{ucfirst($link_page)}))
-					$link_page = ucfirst($link_page);
-				else if(!empty($pageindex->{ucwords($link_page)}))
-					$link_page = ucwords($link_page);
-			}
+			// Try different variants on the pagename to try and get it to 
+			// match something automagically
+			if(!$is_interwiki_link && empty($pageindex->$link_page))
+				$link_page = parsedown_pagename_resolve($link_page);
 			
 			
 			// 4: Construct the full url
@@ -9529,6 +9577,12 @@ class PeppermintParsedown extends ParsedownExtra
 				$is_interwiki_link = false;
 			}
 			
+			// 5: Construct the title
+			// -------------------------------
+			$title = $link_page;
+			if($is_interwiki_link)
+				$title = interwiki_pagename_resolve($link_page)->name . ": " . interwiki_pagename_parse($link_page)[1] . " (Interwiki)";
+			
 			if(strlen($hash_code) > 0)
 				$link_url .= "#$hash_code";
 			
@@ -9540,8 +9594,10 @@ class PeppermintParsedown extends ParsedownExtra
 				"element" => [
 					"name" => "a",
 					"text" => $display,
+					
 					"attributes" => [
-						"href" => $link_url
+						"href" => $link_url,
+						"title" => $title
 					]
 				]
 			];
