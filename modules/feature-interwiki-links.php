@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Interwiki links",
-	"version" => "0.1",
+	"version" => "0.1.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds interwiki link support. Set the interwiki_index_location setting at an index file to activate support.",
 	"id" => "feature-interwiki-links",
@@ -71,6 +71,7 @@ function interwiki_index_update() {
 
 /**
  * Parses an interwiki pagename into it's component parts.
+ * @package interwiki-links
  * @param  string	$interwiki_pagename	The interwiki pagename to parse.
  * @return string[]	An array containing the parsed components of the interwiki pagename, in the form ["prefix", "page_name"].
  */
@@ -84,6 +85,7 @@ function interwiki_pagename_parse($interwiki_pagename) {
 /**
  * Resolves an interwiki pagename to the associated
  * interwiki definition object.
+ * @package interwiki-links
  * @param	string		$interwiki_pagename	An interwiki pagename. Should be in the form "prefix:page name".
  * @return	stdClass	The interwiki definition object.
  */
@@ -106,6 +108,7 @@ function interwiki_pagename_resolve($interwiki_pagename) {
 }
 /**
  * Converts an interwiki pagename into a url.
+ * @package interwiki-links
  * @param	string	$interwiki_pagename		The interwiki pagename (in the form "prefix:page name")
  * @return	string	A url that points to the specified interwiki page.
  */
@@ -125,6 +128,7 @@ function interwiki_get_pagename_url($interwiki_pagename) {
 /**
  * Returns whether a given pagename is an interwiki link or not.
  * Note that this doesn't guarantee that it's a _valid_ interwiki link - only that it looks like one :P
+ * @package interwiki-links
  * @param	string	$pagename	The page name to check.
  * @return	boolean	Whether the given page name is an interwiki link or not.
  */

@@ -477,6 +477,7 @@ window.addEventListener("load", function(event) {
 
 /**
  * Holds a collection to methods to manipulate various types of search index.
+ * @package search
  */
 class search
 {

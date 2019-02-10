@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Recent Changes",
-	"version" => "0.4",
+	"version" => "0.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds recent changes. Access through the 'recent-changes' action.",
 	"id" => "feature-recent-changes",

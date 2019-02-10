@@ -28,19 +28,16 @@ register_module([
 		add_action("hash", function() {
 			global $settings;
 			
-			if(!isset($_GET["string"]))
-			{
+			if(!isset($_GET["string"])) {
 				http_response_code(422);
 				exit(page_renderer::render_main("Missing parameter", "<p>The <code>GET</code> parameter <code>string</code> must be specified.</p>
 		<p>It is strongly recommended that you utilise this page via a private or incognito window in order to prevent your password from appearing in your browser history.</p>"));
 			}
-			else if(!empty($_GET["raw"]))
-			{
+			else if(!empty($_GET["raw"])) {
 				header("content-type: text/plain");
 				exit(hash_password($_GET["string"]));
 			}
-			else
-			{
+			else {
 				exit(page_renderer::render_main("Hashed string", "<p>Algorithm: <code>$settings->password_algorithm</code></p>\n<p><code>" . $_GET["string"] . "</code> → <code>" . hash_password($_GET["string"]) . "</code></p>"));
 			}
 		});

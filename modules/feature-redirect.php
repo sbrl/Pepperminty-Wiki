@@ -18,8 +18,9 @@ register_module([
 /**
  * Updates the metadata associated with redirects in the pageindex entry
  * specified utilising the provided page content.
- * @param  object $index_entry The page index entry object to update.
- * @param  string $pagedata    The page content to operate on.
+ * @package	redirect
+ * @param	object	$index_entry	The page index entry object to update.
+ * @param	string	$pagedata		The page content to operate on.
  */
 function update_redirect_metadata(&$index_entry, &$pagedata) {
 	$matches = [];
