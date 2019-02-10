@@ -5,7 +5,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a utility action (that anyone can use) called hash that hashes a given string. Useful when changing a user's password.",
         "id": "action-hash",
-        "lastupdate": 1525991817,
+        "lastupdate": 1549840565,
         "optional": false
     },
     {
@@ -55,11 +55,11 @@
     },
     {
         "name": "Page Comments",
-        "version": "0.3.1",
+        "version": "0.3.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds threaded comments to the bottom of every page.",
         "id": "feature-comments",
-        "lastupdate": 1548629209,
+        "lastupdate": 1549840530,
         "optional": false
     },
     {
@@ -82,20 +82,20 @@
     },
     {
         "name": "Interwiki links",
-        "version": "0.1",
+        "version": "0.1.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds interwiki link support. Set the interwiki_index_location setting at an index file to activate support.",
         "id": "feature-interwiki-links",
-        "lastupdate": 1548373606,
+        "lastupdate": 1549840688,
         "optional": false
     },
     {
         "name": "Recent Changes",
-        "version": "0.4",
+        "version": "0.5",
         "author": "Starbeamrainbowlabs",
         "description": "Adds recent changes. Access through the 'recent-changes' action.",
         "id": "feature-recent-changes",
-        "lastupdate": 1549211706,
+        "lastupdate": 1549840473,
         "optional": false
     },
     {
@@ -104,7 +104,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
         "id": "feature-redirect",
-        "lastupdate": 1530570852,
+        "lastupdate": 1549840590,
         "optional": false
     },
     {
@@ -113,7 +113,7 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
         "id": "feature-search",
-        "lastupdate": 1548629209,
+        "lastupdate": 1549840628,
         "optional": false
     },
     {

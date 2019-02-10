@@ -412,8 +412,8 @@ if($settings->sessionprefix == "auto")
 ////// Do not edit below this line unless you know what you are doing! //////
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
-$version = "v0.18-dev";
-$commit = "a5563bb4587692a2d875a523d2782304423f3989";
+$version = "v0.18-beta1";
+$commit = "a3330829cb258a8c529a071be664af04cbae25e0";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -1463,7 +1463,7 @@ class page_renderer
 		<meta charset='utf-8' />
 		<title>{title}</title>
 		<meta name='viewport' content='width=device-width, initial-scale=1' />
-		<meta name='generator' content='Pepperminty Wiki v0.18-dev' />
+		<meta name='generator' content='Pepperminty Wiki v0.18-beta1' />
 		<link rel='shortcut-icon' href='{favicon-url}' />
 		<link rel='icon' href='{favicon-url}' />
 		{header-html}
@@ -1487,7 +1487,7 @@ class page_renderer
 		{extra}
 		<footer>
 			<p>{footer-message}</p>
-			<p>Powered by Pepperminty Wiki v0.18-dev, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
+			<p>Powered by Pepperminty Wiki v0.18-beta1, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
 			<p>Your local friendly moderators are {admins-name-list}.</p>
 			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
 		</footer>
@@ -1505,7 +1505,7 @@ class page_renderer
 			<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
 			<p>{footer-message}</p>
 			<p><em>Timed at {generation-date}</em></p>
-			<p><em>Powered by Pepperminty Wiki v0.18-dev.</em></p>
+			<p><em>Powered by Pepperminty Wiki v0.18-beta1.</em></p>
 		</footer>";
 	
 	/**
@@ -1620,7 +1620,7 @@ class page_renderer
 			"{body}" => $body_template,
 
 			"{sitename}" => $logo_html,
-			"v0.18-dev" => $version,
+			"v0.18-beta1" => $version,
 			"{favicon-url}" => $settings->favicon,
 			"{header-html}" => self::get_header_html(),
 
@@ -2134,12 +2134,12 @@ $parsers = [
 ];
 /**
  * Registers a new parser.
- * @package core
- * @param string	$name       	The name of the new parser to register.
- * @param function	$parser_code	The function to register as a new parser.
+ * @package	core
+ * @param	string		$name			The name of the new parser to register.
+ * @param	function	$parser_code	The function to register as a new parser.
+ * @param	function	$hash_generator	A function that should take a single argument of the input source text, and return a unique hash for that content. The return value is used as the filename for cache entries, so should be safe to use as such.
  */
-function add_parser($name, $parser_code, $hash_generator)
-{
+function add_parser($name, $parser_code, $hash_generator) {
 	global $parsers;
 	if(isset($parsers[$name]))
 		throw new Exception("Can't register parser with name '$name' because a parser with that name already exists.");
@@ -2283,19 +2283,16 @@ register_module([
 		add_action("hash", function() {
 			global $settings;
 			
-			if(!isset($_GET["string"]))
-			{
+			if(!isset($_GET["string"])) {
 				http_response_code(422);
 				exit(page_renderer::render_main("Missing parameter", "<p>The <code>GET</code> parameter <code>string</code> must be specified.</p>
 		<p>It is strongly recommended that you utilise this page via a private or incognito window in order to prevent your password from appearing in your browser history.</p>"));
 			}
-			else if(!empty($_GET["raw"]))
-			{
+			else if(!empty($_GET["raw"])) {
 				header("content-type: text/plain");
 				exit(hash_password($_GET["string"]));
 			}
-			else
-			{
+			else {
 				exit(page_renderer::render_main("Hashed string", "<p>Algorithm: <code>$settings->password_algorithm</code></p>\n<p><code>" . $_GET["string"] . "</code> → <code>" . hash_password($_GET["string"]) . "</code></p>"));
 			}
 		});
@@ -2636,7 +2633,7 @@ function render_sidebar($pageindex, $root_pagename = "")
 
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.3.1",
+	"version" => "0.3.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
@@ -3004,6 +3001,7 @@ function find_comment($comment_data, $comment_id)
 
 /**
  * Deletes the first comment found with the specified id.
+ * @package feature-comments
  * @param	array	$comment_data	An array of threaded comments to delete the comment from.
  * @param	string	$target_id		The id of the comment to delete.
  * @return	bool					Whether the comment was found and deleted or not.
@@ -3595,7 +3593,7 @@ function history_add_revision(&$pageinfo, &$newsource, &$oldsource, $save_pagein
 
 register_module([
 	"name" => "Interwiki links",
-	"version" => "0.1",
+	"version" => "0.1.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds interwiki link support. Set the interwiki_index_location setting at an index file to activate support.",
 	"id" => "feature-interwiki-links",
@@ -3665,6 +3663,7 @@ function interwiki_index_update() {
 
 /**
  * Parses an interwiki pagename into it's component parts.
+ * @package interwiki-links
  * @param  string	$interwiki_pagename	The interwiki pagename to parse.
  * @return string[]	An array containing the parsed components of the interwiki pagename, in the form ["prefix", "page_name"].
  */
@@ -3678,6 +3677,7 @@ function interwiki_pagename_parse($interwiki_pagename) {
 /**
  * Resolves an interwiki pagename to the associated
  * interwiki definition object.
+ * @package interwiki-links
  * @param	string		$interwiki_pagename	An interwiki pagename. Should be in the form "prefix:page name".
  * @return	stdClass	The interwiki definition object.
  */
@@ -3700,6 +3700,7 @@ function interwiki_pagename_resolve($interwiki_pagename) {
 }
 /**
  * Converts an interwiki pagename into a url.
+ * @package interwiki-links
  * @param	string	$interwiki_pagename		The interwiki pagename (in the form "prefix:page name")
  * @return	string	A url that points to the specified interwiki page.
  */
@@ -3719,6 +3720,7 @@ function interwiki_get_pagename_url($interwiki_pagename) {
 /**
  * Returns whether a given pagename is an interwiki link or not.
  * Note that this doesn't guarantee that it's a _valid_ interwiki link - only that it looks like one :P
+ * @package interwiki-links
  * @param	string	$pagename	The page name to check.
  * @return	boolean	Whether the given page name is an interwiki link or not.
  */
@@ -3731,7 +3733,7 @@ function is_interwiki_link($pagename) {
 
 register_module([
 	"name" => "Recent Changes",
-	"version" => "0.4",
+	"version" => "0.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds recent changes. Access through the 'recent-changes' action.",
 	"id" => "feature-recent-changes",
@@ -4212,8 +4214,9 @@ register_module([
 /**
  * Updates the metadata associated with redirects in the pageindex entry
  * specified utilising the provided page content.
- * @param  object $index_entry The page index entry object to update.
- * @param  string $pagedata    The page content to operate on.
+ * @package	redirect
+ * @param	object	$index_entry	The page index entry object to update.
+ * @param	string	$pagedata		The page content to operate on.
  */
 function update_redirect_metadata(&$index_entry, &$pagedata) {
 	$matches = [];
@@ -4716,6 +4719,7 @@ window.addEventListener("load", function(event) {
 
 /**
  * Holds a collection to methods to manipulate various types of search index.
+ * @package search
  */
 class search
 {
