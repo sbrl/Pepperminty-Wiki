@@ -1731,12 +1731,12 @@ $parsers = [
 ];
 /**
  * Registers a new parser.
- * @package core
- * @param string	$name       	The name of the new parser to register.
- * @param function	$parser_code	The function to register as a new parser.
+ * @package	core
+ * @param	string		$name			The name of the new parser to register.
+ * @param	function	$parser_code	The function to register as a new parser.
+ * @param	function	$hash_generator	A function that should take a single argument of the input source text, and return a unique hash for that content. The return value is used as the filename for cache entries, so should be safe to use as such.
  */
-function add_parser($name, $parser_code, $hash_generator)
-{
+function add_parser($name, $parser_code, $hash_generator) {
 	global $parsers;
 	if(isset($parsers[$name]))
 		throw new Exception("Can't register parser with name '$name' because a parser with that name already exists.");
