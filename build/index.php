@@ -413,7 +413,7 @@ if($settings->sessionprefix == "auto")
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
 $version = "v0.18-dev";
-$commit = "1938bfd5b985a4a21872010d963553d10cab25e1";
+$commit = "a5563bb4587692a2d875a523d2782304423f3989";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -9030,7 +9030,7 @@ register_module([
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.9.13",
+	"version" => "0.10",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",
@@ -9054,9 +9054,9 @@ register_module([
 				'/\{\{\s*([^|]+)\s*(?:\|[^}]*)?\}\}/',
 				$source, $includes
 			);
-			
 			foreach($includes[1] as $include_pagename) {
 				if(empty($pageindex->$include_pagename))
+					continue;
 				$id_text .= "|$include_pagename:" . parsedown_pagename_resolve(
 					$pageindex->$include_pagename->lastmodified
 				);

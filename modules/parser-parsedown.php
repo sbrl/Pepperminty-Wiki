@@ -25,9 +25,9 @@ register_module([
 				'/\{\{\s*([^|]+)\s*(?:\|[^}]*)?\}\}/',
 				$source, $includes
 			);
-			
 			foreach($includes[1] as $include_pagename) {
 				if(empty($pageindex->$include_pagename))
+					continue;
 				$id_text .= "|$include_pagename:" . parsedown_pagename_resolve(
 					$pageindex->$include_pagename->lastmodified
 				);
