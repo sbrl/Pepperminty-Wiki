@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.9.12",
+	"version" => "0.10",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
 	"id" => "parser-parsedown",
@@ -16,6 +16,28 @@ register_module([
 			$result = $parser->text($source);
 			
 			return $result;
+		}, function($source) {
+			global $version, $settings, $pageindex;
+			$id_text = "$version|$settings->parser|$source";
+			
+			// Find template includes
+			preg_match_all(
+				'/\{\{\s*([^|]+)\s*(?:\|[^}]*)?\}\}/',
+				$source, $includes
+			);
+			foreach($includes[1] as $include_pagename) {
+				if(empty($pageindex->$include_pagename))
+					continue;
+				$id_text .= "|$include_pagename:" . parsedown_pagename_resolve(
+					$pageindex->$include_pagename->lastmodified
+				);
+			}
+			
+			return str_replace(["+","/"], ["-","_"], base64_encode(hash(
+				"sha256",
+				$id_text,
+				true
+			)));
 		});
 		
 		/*
@@ -202,6 +224,28 @@ if(!file_exists("./ParsedownExtra.php") || filesize("./ParsedownExtra.php") === 
 
 require_once("./Parsedown.php");
 require_once("./ParsedownExtra.php");
+
+/**
+ * Attempts to 'auto-correct' a page name by trying different capitalisation
+ * combinations.
+ * @param	string	$pagename	The page name to auto-correct.
+ * @return	string	The auto-corrected page name.
+ */
+function parsedown_pagename_resolve($pagename) {
+	global $pageindex;
+	
+	// If the page doesn't exist, check varying different
+	// capitalisations to see if it exists under some variant.
+	if(!empty($pageindex->$pagename))
+		return $pagename;
+	
+	$pagename = ucfirst($pagename);
+	if(!empty($pageindex->$pagename))
+		return $pagename;
+	
+	$pagename = ucwords($pagename);
+	return $pagename;
+}
 
 /*
  * ██████   █████  ██████  ███████ ███████ ██████   ██████  ██     ██ ███    ██
@@ -480,14 +524,10 @@ class PeppermintParsedown extends ParsedownExtra
 			// 3: Page name auto-correction
 			// -------------------------------
 			$is_interwiki_link = module_exists("feature-interwiki-links") && is_interwiki_link($link_page);
-			if(!$is_interwiki_link && empty($pageindex->$link_page)) {
-				// If the page doesn't exist, check varying different
-				// capitalisations to see if it exists under some variant.
-				if(!empty($pageindex->{ucfirst($link_page)}))
-					$link_page = ucfirst($link_page);
-				else if(!empty($pageindex->{ucwords($link_page)}))
-					$link_page = ucwords($link_page);
-			}
+			// Try different variants on the pagename to try and get it to 
+			// match something automagically
+			if(!$is_interwiki_link && empty($pageindex->$link_page))
+				$link_page = parsedown_pagename_resolve($link_page);
 			
 			
 			// 4: Construct the full url
@@ -508,6 +548,12 @@ class PeppermintParsedown extends ParsedownExtra
 				$is_interwiki_link = false;
 			}
 			
+			// 5: Construct the title
+			// -------------------------------
+			$title = $link_page;
+			if($is_interwiki_link)
+				$title = interwiki_pagename_resolve($link_page)->name . ": " . interwiki_pagename_parse($link_page)[1] . " (Interwiki)";
+			
 			if(strlen($hash_code) > 0)
 				$link_url .= "#$hash_code";
 			
@@ -519,8 +565,10 @@ class PeppermintParsedown extends ParsedownExtra
 				"element" => [
 					"name" => "a",
 					"text" => $display,
+					
 					"attributes" => [
-						"href" => $link_url
+						"href" => $link_url,
+						"title" => $title
 					]
 				]
 			];

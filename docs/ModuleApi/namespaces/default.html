@@ -58,12 +58,12 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">45</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">47</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="../reports/markers.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">7</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">8</span>
                                 </a>
                             </li>
                             <li>
@@ -88,10 +88,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1466465921"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-133607805"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1466465921" class="accordion-body collapse in">
+            <div id="namespace-133607805" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -274,7 +274,7 @@ action is requested.</p></td>
             <article class="method">
                 <h3 class=" ">add_parser()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">add_parser(string  <span class="argument">$name</span>, \function  <span class="argument">$parser_code</span>) </pre>
+                <pre class="signature" style="margin-right: 54px;">add_parser(string  <span class="argument">$name</span>, \function  <span class="argument">$parser_code</span>, \function  <span class="argument">$hash_generator</span>) </pre>
                 <p><em>Registers a new parser.</em></p>
                 
 
@@ -289,6 +289,11 @@ action is requested.</p></td>
                                 <td>\function</td>
                                 <td>$parser_code </td>
                                 <td><p>The function to register as a new parser.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>\function</td>
+                                <td>$hash_generator </td>
+                                <td><p>A function that should take a single argument of the input source text, and return a unique hash for that content. The return value is used as the filename for cache entries, so should be safe to use as such.</p></td>
                             </tr>
                                             </table>
                 
@@ -449,7 +454,8 @@ action is requested.</p></td>
                             package
                         </th>
                         <td>
-                                                                                            <p>Default</p>
+                                                                                            <p>feature-comments</p>
+                                                                                            <p>feature-comments</p>
                                                     </td>
                     </tr>
                             </table>
@@ -858,6 +864,57 @@ false if it wasn't found.</p>
                         <td>
                                                                                             <p>feature-comments</p>
                                                                                             <p>feature-comments</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_find_revisionid_timestamp" name="method_find_revisionid_timestamp" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">find_revisionid_timestamp()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">find_revisionid_timestamp(string  <span class="argument">$pagename</span>,   <span class="argument">$timestamp</span>) : integer</pre>
+                <p><em>Given a page name and timestamp, returns the associated page revision number.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$pagename </td>
+                                <td><p>The page name to obtain the revision number for.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$timestamp </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                            &mdash; <p>The revision number of the given page at the given time.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper"></div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            package
+                        </th>
+                        <td>
+                                                                                            <p>Default</p>
                                                     </td>
                     </tr>
                             </table>
@@ -2230,10 +2287,10 @@ nothing was found.</p>
             <article class="method">
                 <h3 class=" ">parse_page_source()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">parse_page_source(string  <span class="argument">$source</span>) : string</pre>
+                <pre class="signature" style="margin-right: 54px;">parse_page_source(string  <span class="argument">$source</span>, string  <span class="argument">$use_cache = true</span>) : string</pre>
                 <p><em>Parses the specified page source using the parser specified in the settings
 into HTML.</em></p>
-                <p>The specified parser may (though it's unilkely) render it to other things.</p>
+                <p>The specified parser may (though it's unlikely) render it to other things.</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
@@ -2241,6 +2298,11 @@ into HTML.</em></p>
                                 <td>string</td>
                                 <td>$source </td>
                                 <td><p>The source to render.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$use_cache </td>
+                                <td><p>Whether to use the on-disk cache. Has no effect if parser caching is disabled in peppermint.json, or the source string is too small.</p></td>
                             </tr>
                                             </table>
                 
@@ -2324,6 +2386,53 @@ size string.</p>
                         </th>
                         <td>
                                                                                             <p>Lifted from Drupal by @meustrus from Stackoverflow</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_parsedown_pagename_resolve" name="method_parsedown_pagename_resolve" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">parsedown_pagename_resolve()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">parsedown_pagename_resolve(string  <span class="argument">$pagename</span>) : string</pre>
+                <p><em>Attempts to &#039;auto-correct&#039; a page name by trying different capitalisation
+combinations.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$pagename </td>
+                                <td><p>The page name to auto-correct.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The auto-corrected page name.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper"></div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            package
+                        </th>
+                        <td>
+                                                                                            <p>Default</p>
                                                     </td>
                     </tr>
                             </table>
@@ -2656,6 +2765,52 @@ at which the comments are being rendered.</p></td>
                         <td>
                                                                                             <p>feature-recent-changes</p>
                                                                                             <p>feature-recent-changes</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_render_recent_change_atom" name="method_render_recent_change_atom" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">render_recent_change_atom()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">render_recent_change_atom(array  <span class="argument">$recent_changes</span>) : string</pre>
+                <p><em>Renders a list of recent changes as an Atom 1.0 feed.</em></p>
+                <p>Requires the XMLWriter PHP class.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$recent_changes </td>
+                                <td><p>The array of recent changes to render.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The recent changes as an Atom 1.0 feed.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper"></div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            package
+                        </th>
+                        <td>
+                                                                                            <p>Default</p>
                                                     </td>
                     </tr>
                             </table>
@@ -3489,7 +3644,8 @@ specified utilising the provided page content.</em></p>
                             package
                         </th>
                         <td>
-                                                                                            <p>Default</p>
+                                                                                            <p>redirect</p>
+                                                                                            <p>redirect</p>
                                                     </td>
                     </tr>
                             </table>
@@ -3829,7 +3985,7 @@ specified utilising the provided page content.</em></p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on January 5th, 2019 at 22:23.
+                    on February 24th, 2019 at 16:02.
                 </section>
             </section>
         </section>

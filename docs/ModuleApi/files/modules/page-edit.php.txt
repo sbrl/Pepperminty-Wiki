@@ -149,7 +149,7 @@ register_module([
 					<input name='submit-edit' class='edit-page-button' type='submit' value='Save Page' tabindex='3' />
 					</form>";
 			// Allow tab characters in the page editor
-			page_renderer::AddJSSnippet("window.addEventListener('load', function(event) {
+			page_renderer::add_js_snippet("window.addEventListener('load', function(event) {
 	// Adapted from https://jsfiddle.net/2wAzx/13/
 	document.querySelector(\"[name=content]\").addEventListener(\"keydown\", (event) => {
 		if(event.keyCode !== 9) return true;
@@ -162,7 +162,7 @@ register_module([
 });");
 			
 			// Utilise the mirror to automatically resize the textarea to fit it's content
-			page_renderer::AddJSSnippet('function updateTextSize(textarea, mirror, event) {
+			page_renderer::add_js_snippet('function updateTextSize(textarea, mirror, event) {
 	let textareaFontSize = parseFloat(getComputedStyle(textarea).fontSize);
 	
 	let textareaWidth = textarea.getBoundingClientRect().width;// - parseInt(textarea.style.padding);
@@ -183,7 +183,7 @@ window.addEventListener("load", function(event) {
 			// ~
 			
 			/// ~~~ Smart saving ~~~ ///
-			page_renderer::AddJSSnippet('window.addEventListener("load", function(event) {
+			page_renderer::add_js_snippet('window.addEventListener("load", function(event) {
 	"use strict";
 	// Smart saving
 	let getSmartSaveKey = function() { return document.querySelector("main h1").innerHTML.replace("Creating ", "").replace("Editing ", "").trim(); }

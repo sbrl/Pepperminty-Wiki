@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.3.1",
+	"version" => "0.3.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
@@ -302,7 +302,7 @@ function display_reply_form(event)
 }
 
 REPLYJS;
-			page_renderer::AddJSSnippet($reply_js_snippet);
+			page_renderer::add_js_snippet($reply_js_snippet);
 			
 		}
 		
@@ -369,6 +369,7 @@ function find_comment($comment_data, $comment_id)
 
 /**
  * Deletes the first comment found with the specified id.
+ * @package feature-comments
  * @param	array	$comment_data	An array of threaded comments to delete the comment from.
  * @param	string	$target_id		The id of the comment to delete.
  * @return	bool					Whether the comment was found and deleted or not.

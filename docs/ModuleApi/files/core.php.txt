@@ -56,6 +56,8 @@ $paths->idindex = "idindex.json";
 $paths->statsindex = "statsindex.json";
 /** The interwiki index cache */
 $paths->interwiki_index = "interwiki_index.json";
+/** The cache directory, minus the trailing slash. Contains cached rendered versions of pages. If things don't update, try deleting this folder.  */
+$paths->cache_directory = "._cache";
 
 // Prepend the storage data directory to all the defined paths.
 foreach ($paths as &$path) {
@@ -66,6 +68,10 @@ foreach ($paths as &$path) {
 $paths->settings_file = $settingsFilename;
 /** The prefix to add to uploaded files */
 $paths->upload_file_prefix = "Files/";
+
+// Create the cache directory if it doesn't exist
+if(!is_dir($paths->cache_directory))
+	mkdir($paths->cache_directory, 0700);
 
 session_start();
 // Make sure that the login cookie lasts beyond the end of the user's session
@@ -1107,6 +1113,35 @@ class page_renderer
 	 */
 	protected static $http2_push_items = [];
 	
+	
+	/**
+	 * A string of extrar HTML that should be included at the bottom of the page <head>.
+	 * @var string
+	 */
+	private static $extraHeaderHTML = "";
+	
+	/**
+	 * The javascript snippets that will be included in the page.
+	 * @var string[]
+	 * @package core
+	 */
+	private static $jsSnippets = [];
+	/**
+	 * The urls of the external javascript files that should be referenced
+	 * by the page.
+	 * @var string[]
+	 * @package core
+	 */
+	private static $jsLinks = [];
+	
+	/**
+	 * The navigation bar divider.
+	 * @package core
+	 * @var string
+	 */
+	public static $nav_divider = "<span class='nav-divider inflexible'> | </span>";
+	
+	
 	/**
 	 * An array of functions that have been registered to process the
 	 * find / replace array before the page is rendered. Note that the function
@@ -1128,8 +1163,7 @@ class page_renderer
 	 * @package core
 	 * @param  function $function The part preprocessor to register.
 	 */
-	public static function register_part_preprocessor($function)
-	{
+	public static function register_part_preprocessor($function) {
 		global $settings;
 
 		// Make sure that the function we are about to register is valid
@@ -1161,12 +1195,10 @@ class page_renderer
 		if($body_template === false)
 			$body_template = self::$main_content_template;
 
-		if(strlen($settings->logo_url) > 0)
-		{
+		if(strlen($settings->logo_url) > 0) {
 			// A logo url has been specified
 			$logo_html = "<img class='logo" . (isset($_GET["printable"]) ? " small" : "") . "' src='$settings->logo_url' />";
-			switch($settings->logo_position)
-			{
+			switch($settings->logo_position) {
 				case "left":
 					$logo_html = "$logo_html $settings->sitename";
 					break;
@@ -1231,8 +1263,7 @@ class page_renderer
 	 * @param  string $content The content of the page.
 	 * @return string          The rendered page.
 	 */
-	public static function render_main($title, $content)
-	{
+	public static function render_main($title, $content) {
 		return self::render($title, $content, self::$main_content_template);
 	}
 	/**
@@ -1242,8 +1273,7 @@ class page_renderer
 	 * @param  string $content The content of the page.
 	 * @return string          The rendered page.
 	 */
-	public static function render_minimal($title, $content)
-	{
+	public static function render_minimal($title, $content) {
 		return self::render($title, $content, self::$minimal_content_template);
 	}
 	
@@ -1276,23 +1306,23 @@ class page_renderer
 	public static function get_header_html()
 	{
 		global $settings;
-		$result = self::get_css_as_html();
-		$result .= self::getJS();
+		$result = self::$extraHeaderHTML;
+		$result .= self::get_css_as_html();
+		$result .= self::_get_js();
 		
 		// We can't use module_exists here because sometimes global $modules
 		// hasn't populated yet when we get called O.o
 		if(class_exists("search"))
 			$result .= "\t\t<link rel='search' type='application/opensearchdescription+xml' href='?action=opensearch-description' title='$settings->sitename Search' />\n";
 		
-		if(!empty($settings->enable_math_rendering))
-		{
+		if(!empty($settings->enable_math_rendering)) {
 			$result .= "<script type='text/x-mathjax-config'>
 		MathJax.Hub.Config({
-		tex2jax: {
-		inlineMath: [ ['$','$'], ['\\\\(','\\\\)'] ],
-		processEscapes: true,
-		skipTags: ['script','noscript','style','textarea','pre','code']
-		}
+			tex2jax: {
+				inlineMath: [ ['$','$'], ['\\\\(','\\\\)'] ],
+				processEscapes: true,
+				skipTags: ['script','noscript','style','textarea','pre','code']
+			}
 		});
 	</script>";
 		}
@@ -1319,12 +1349,11 @@ class page_renderer
 
 		if(self::is_css_url()) {
 			if($settings->css[0] === "/") // Push it if it's a relative resource
-				self::AddServerPushIndicator("style", $settings->css);
+				self::add_server_push_indicator("style", $settings->css);
 			return "<link rel='stylesheet' href='$settings->css' />\n";
 		} else {
 			$css = $settings->css == "auto" ? $defaultCSS : $settings->css;
-			if(!empty($settings->optimize_pages))
-			{
+			if(!empty($settings->optimize_pages)) {
 				// CSS Minification ideas by Jean from catswhocode.com
 				// Link: http://www.catswhocode.com/blog/3-ways-to-compress-css-files-using-php
 				// Remove comments
@@ -1350,26 +1379,14 @@ class page_renderer
 			return "<style>$css</style>\n";
 		}
 	}
-	/**
-	 * The javascript snippets that will be included in the page.
-	 * @var string[]
-	 * @package core
-	 */
-	private static $jsSnippets = [];
-	/**
-	 * The urls of the external javascript files that should be referenced
-	 * by the page.
-	 * @var string[]
-	 * @package core
-	 */
-	private static $jsLinks = [];
+	
+	
 	/**
 	 * Adds the specified url to a javascript file as a reference to the page.
 	 * @package core
 	 * @param string $scriptUrl The url of the javascript file to reference.
 	 */
-	public function AddJSLink(string $scriptUrl)
-	{
+	public function add_js_link(string $scriptUrl) {
 		static::$jsLinks[] = $scriptUrl;
 	}
 	/**
@@ -1377,8 +1394,7 @@ class page_renderer
 	 * @package core
 	 * @param string $script The snippet of javascript to add.
 	 */
-	public function AddJSSnippet(string $script)
-	{
+	public function add_js_snippet(string $script) {
 		static::$jsSnippets[] = $script;
 	}
 	/**
@@ -1387,20 +1403,29 @@ class page_renderer
 	 * @package core
 	 * @return	string	The rendered javascript ready for inclusion in the page.
 	 */
-	private static function getJS()
-	{
+	private static function _get_js() {
 		$result = "<!-- Javascript -->\n";
 		foreach(static::$jsSnippets as $snippet)
 			$result .= "<script defer>\n$snippet\n</script>\n";
 		foreach(static::$jsLinks as $link) {
 			// Push it via HTTP/2.0 if it's relative
-			if($link[0] === "/") self::AddServerPushIndicator("script", $link);
+			if($link[0] === "/") self::add_server_push_indicator("script", $link);
 			$result .= "<script src='" . $link . "' defer></script>\n";
 		}
 		return $result;
 	}
 	
-	// ~
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	/**
+	 * Adds a string of HTML to the header of the rendered page.
+	 * @param string $html The string of HTML to add.
+	 */
+	public static function add_header_html($html) {
+		self::$extraHeaderHTML .= $html;
+	}
+	
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	/**
 	 * Adds a resource to the list of items to indicate that the web server should send via HTTP/2.0 Server Push.
@@ -1408,19 +1433,13 @@ class page_renderer
 	 * @param string $type The resource type. See https://fetch.spec.whatwg.org/#concept-request-destination for more information.
 	 * @param string $path The *relative url path* to the resource.
 	 */
-	public static function AddServerPushIndicator($type, $path) {
+	public static function add_server_push_indicator($type, $path) {
 		self::$http2_push_items[] = [ $type, $path ];
 	}
 	
-	// ~
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
-	/**
-	 * The navigation bar divider.
-	 * @package core
-	 * @var string
-	 */
-	public static $nav_divider = "<span class='nav-divider inflexible'> | </span>";
-
+	
 	/**
 	 * Renders a navigation bar from an array of links. See
 	 * $settings->nav_links for format information.
@@ -1431,62 +1450,56 @@ class page_renderer
 	 * @param string $class				The class(es) to assign to the rendered
 	 * 									navigation bar.
 	 */
-	public static function render_navigation_bar($nav_links, $nav_links_extra, $class = "")
-	{
+	public static function render_navigation_bar($nav_links, $nav_links_extra, $class = "") {
 		global $settings, $env;
 		$result = "<nav class='$class'>\n";
 
 		// Loop over all the navigation links
-		foreach($nav_links as $item)
-		{
-			if(is_string($item))
-			{
-				// The item is a string
-				switch($item)
-				{
-					//keywords
-					case "user-status": // Renders the user status box
-						if($env->is_logged_in)
-						{
-							$result .= "<span class='inflexible logged-in" . ($env->is_logged_in ? " moderator" : " normal-user") . "'>";
-							if(module_exists("feature-user-preferences")) {
-								$result .= "<a href='?action=user-preferences'>$settings->user_preferences_button_text</a>";
-							}
-							$result .= self::render_username($env->user);
-							$result .= " <small>(<a href='index.php?action=logout'>Logout</a>)</small>";
-							$result .= "</span>";
-							//$result .= page_renderer::$nav_divider;
-						}
-						else {
-							$returnto_url = $env->action !== "logout" ? $_SERVER["REQUEST_URI"] : "?action=view&page=" . rawurlencode($settings->defaultpage);
-							$result .= "<span class='not-logged-in'><a href='index.php?action=login&returnto=" . rawurlencode($returnto_url) . "'>Login</a></span>";
-						}
-						break;
-
-					case "search": // Renders the search bar
-						$result .= "<span class='inflexible'><form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /><input type='hidden' name='search-redirect' value='true' /></form></span>";
-						break;
-
-					case "divider": // Renders a divider
-						$result .= page_renderer::$nav_divider;
-						break;
-
-					case "menu": // Renders the "More..." menu
-						$result .= "<span class='inflexible nav-more'><label for='more-menu-toggler'>More...</label>
-<input type='checkbox' class='off-screen' id='more-menu-toggler' />";
-						$result .= page_renderer::render_navigation_bar($nav_links_extra, [], "nav-more-menu");
-						$result .= "</span>";
-						break;
-
-					// It isn't a keyword, so just output it directly
-					default:
-						$result .= "<span>$item</span>";
-				}
-			}
-			else
-			{
+		foreach($nav_links as $item) {
+			if(!is_string($item)) {
 				// Output the item as a link to a url
 				$result .= "<span><a href='" . str_replace("{page}", rawurlencode($env->page), $item[1]) . "'>$item[0]</a></span>";
+				continue;
+			}
+			
+			// The item is a string
+			switch($item) {
+				//keywords
+				case "user-status": // Renders the user status box
+					if($env->is_logged_in) {
+						$result .= "<span class='inflexible logged-in" . ($env->is_logged_in ? " moderator" : " normal-user") . "'>";
+						if(module_exists("feature-user-preferences")) {
+							$result .= "<a href='?action=user-preferences'>$settings->user_preferences_button_text</a>";
+						}
+						$result .= self::render_username($env->user);
+						$result .= " <small>(<a href='index.php?action=logout'>Logout</a>)</small>";
+						$result .= "</span>";
+						//$result .= page_renderer::$nav_divider;
+					}
+					else {
+						$returnto_url = $env->action !== "logout" ? $_SERVER["REQUEST_URI"] : "?action=view&page=" . rawurlencode($settings->defaultpage);
+						$result .= "<span class='not-logged-in'><a href='index.php?action=login&returnto=" . rawurlencode($returnto_url) . "'>Login</a></span>";
+					}
+					break;
+
+				case "search": // Renders the search bar
+					$result .= "<span class='inflexible'><form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /><input type='hidden' name='search-redirect' value='true' /></form></span>";
+					break;
+
+				case "divider": // Renders a divider
+					$result .= page_renderer::$nav_divider;
+					break;
+
+				case "menu": // Renders the "More..." menu
+					$result .= "<span class='inflexible nav-more'><label for='more-menu-toggler'>More...</label>
+<input type='checkbox' class='off-screen' id='more-menu-toggler' />";
+					$result .= page_renderer::render_navigation_bar($nav_links_extra, [], "nav-more-menu");
+					$result .= "</span>";
+					break;
+
+				// It isn't a keyword, so just output it directly
+				default:
+					$result .= "<span>$item</span>";
 			}
 		}
 
@@ -1499,8 +1512,7 @@ class page_renderer
 	 * @param  string $name The username to render.
 	 * @return string       The username rendered in HTML.
 	 */
-	public static function render_username($name)
-	{
+	public static function render_username($name) {
 		global $settings;
 		$result = "";
 		$result .= "<a href='?page=" . rawurlencode(get_user_pagename($name)) . "'>";
@@ -1514,29 +1526,24 @@ class page_renderer
 		return $result;
 	}
 	
-	// ~
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	/**
 	 * Renders the datalist for the search box as HTML.
 	 * @package core
 	 * @return string The search box datalist as HTML.
 	 */
-	public static function generate_all_pages_datalist()
-	{
+	public static function generate_all_pages_datalist() {
 		global $settings, $pageindex;
 		$arrayPageIndex = get_object_vars($pageindex);
 		ksort($arrayPageIndex);
 		$result = "<datalist id='allpages'>\n";
 		
 		// If dynamic page sugggestions are enabled, then we should send a loading message instead.
-		if($settings->dynamic_page_suggestion_count > 0)
-		{
+		if($settings->dynamic_page_suggestion_count > 0) {
 			$result .= "<option value='Loading suggestions...' />";
-		}
-		else
-		{
-			foreach($arrayPageIndex as $pagename => $pagedetails)
-			{
+		} else {
+			foreach($arrayPageIndex as $pagename => $pagedetails) {
 				$escapedPageName = str_replace('"', '&quot;', $pagename);
 				$result .= "\t\t\t<option value=\"$escapedPageName\" />\n";
 			}
@@ -1549,16 +1556,16 @@ class page_renderer
 
 // HTTP/2.0 Server Push static items
 foreach($settings->http2_server_push_items as $push_item) {
-	page_renderer::AddServerPushIndicator($push_item[0], $push_item[1]);
+	page_renderer::add_server_push_indicator($push_item[0], $push_item[1]);
 }
 
 // Math rendering support
 if(!empty($settings->enable_math_rendering))
 {
-	page_renderer::AddJSLink("https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML");
+	page_renderer::add_js_link("https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML");
 }
 // alt+enter support in the search box
-page_renderer::AddJSSnippet('// Alt + Enter support in the top search box
+page_renderer::add_js_snippet('// Alt + Enter support in the top search box
 window.addEventListener("load", function(event) {
 	document.querySelector("input[type=search]").addEventListener("keyup", function(event) {
 		// Listen for Alt + Enter
@@ -1713,43 +1720,74 @@ function has_action($action_name)
 }
 
 $parsers = [
-	"none" => function() {
-		throw new Exception("No parser registered!");
-	}
+	"none" => [
+		"parser" => function() {
+			throw new Exception("No parser registered!");
+		},
+		"hash_generator" => function() {
+			throw new Exception("No parser registered!");
+		}
+	]
 ];
 /**
  * Registers a new parser.
- * @package core
- * @param string	$name       	The name of the new parser to register.
- * @param function	$parser_code	The function to register as a new parser.
+ * @package	core
+ * @param	string		$name			The name of the new parser to register.
+ * @param	function	$parser_code	The function to register as a new parser.
+ * @param	function	$hash_generator	A function that should take a single argument of the input source text, and return a unique hash for that content. The return value is used as the filename for cache entries, so should be safe to use as such.
  */
-function add_parser($name, $parser_code)
-{
+function add_parser($name, $parser_code, $hash_generator) {
 	global $parsers;
 	if(isset($parsers[$name]))
 		throw new Exception("Can't register parser with name '$name' because a parser with that name already exists.");
 
-	$parsers[$name] = $parser_code;
+	$parsers[$name] = [
+		"parser" => $parser_code,
+		"hash_generator" => $hash_generator
+	];
 }
 /**
  * Parses the specified page source using the parser specified in the settings
  * into HTML.
- * The specified parser may (though it's unilkely) render it to other things.
+ * The specified parser may (though it's unlikely) render it to other things.
  * @package core
- * @param	string	$source	The source to render.
- * @return	string			The source rendered to HTML.
+ * @param	string	$source		The source to render.
+ * @param	string	$use_cache	Whether to use the on-disk cache. Has no effect if parser caching is disabled in peppermint.json, or the source string is too small.
+ * @return	string	The source rendered to HTML.
  */
-function parse_page_source($source)
-{
-	global $settings, $parsers;
+function parse_page_source($source, $use_cache = true) {
+	global $settings, $paths, $parsers, $version;
+	$start_time = microtime(true);
+	
+	if(!$settings->parser_cache || strlen($source) < $settings->parser_cache_min_size) $use_cache = false;
+	
 	if(!isset($parsers[$settings->parser]))
 		exit(page_renderer::render_main("Parsing error - $settings->sitename", "<p>Parsing some page source data failed. This is most likely because $settings->sitename has the parser setting set incorrectly. Please contact <a href='mailto:" . hide_email($settings->admindetails_email) . "'>" . $settings->admindetails_name . "</a>, your $settings->sitename Administrator."));
-
+	
 /* Not needed atm because escaping happens when saving, not when rendering *
 	if($settings->clean_raw_html)
 		$source = htmlentities($source, ENT_QUOTES | ENT_HTML5);
 */
-	return $parsers[$settings->parser]($source);
+	
+	$cache_id = $parsers[$settings->parser]["hash_generator"]($source);
+	$cache_file = "{$paths->cache_directory}/{$cache_id}.html";
+	
+	$result = null;
+	if($use_cache && file_exists($cache_file)) {
+		$result = file_get_contents($cache_file);
+		$result .= "\n<!-- cache: hit, id: $cache_id, took: " . round((microtime(true) - $start_time)*1000, 5) . "ms -->\n";
+	}
+	if($result == null) {
+		$result = $parsers[$settings->parser]["parser"]($source);
+		// If we should use the cache and we failed to write to it, warn the admin.
+		// It's not terribible if we can't write to the cache directory (so we shouldn't stop dead & refuse service), but it's still of concern.
+		if($use_cache && !file_put_contents($cache_file, $result))
+			error_log("[Pepperminty Wiki] Warning: Failed to write to cache file $cache_file.");
+		
+		$result .= "\n<!-- cache: " . ($use_cache ? "miss" : "n/a") . ", id: $cache_id, took: " . round((microtime(true) - $start_time)*1000, 5) . "ms -->\n";
+	}
+	
+	return $result;
 }
 
 // Function to 

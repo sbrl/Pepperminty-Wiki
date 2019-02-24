@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Old Default Parser",
-	"version" => "0.10",
+	"version" => "0.10.1",
 	"author" => "Johnny Broadway & Starbeamrainbowlabs",
 	"description" => "The *old* default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page. Superceded by a customised extension of parsedown extra.",
 	"id" => "parser-default-old",
@@ -11,6 +11,13 @@ register_module([
 		
 		add_parser("default", function($markdown) {
 			return Slimdown::render($markdown);
+		}, function($source) {
+			global $version, $settings;
+			return str_replace(["+","/"], ["-","_"], base64_encode(hash(
+				"sha256",
+				"$version|$settings->parser|$source",
+				true
+			)));
 		});
 		
 		// Register the help section
@@ -159,8 +166,8 @@ class Slimdown {
 		return trim ($text);
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 ?>
 

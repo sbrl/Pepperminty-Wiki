@@ -59,12 +59,12 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">45</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">47</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="../reports/markers.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">7</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">8</span>
                                 </a>
                             </li>
                             <li>
@@ -110,6 +110,7 @@
                                                                                                     <li><a href="#modules/page-view.php"><i class="icon-file"></i> modules/page-view.php</a></li>
                                                                                                     <li><a href="#modules/feature-upload.php"><i class="icon-file"></i> modules/feature-upload.php</a></li>
                                                                                                     <li><a href="#settings.fragment.php"><i class="icon-file"></i> settings.fragment.php</a></li>
+                                                                                                    <li><a href="#modules/feature-interwiki-links.php"><i class="icon-file"></i> modules/feature-interwiki-links.php</a></li>
                                                                                                     <li><a href="#modules/extra-sidebar.php"><i class="icon-file"></i> modules/extra-sidebar.php</a></li>
                                                                                                     <li><a href="#modules/action-raw.php"><i class="icon-file"></i> modules/action-raw.php</a></li>
                                                                                                     <li><a href="#modules/page-update.php"><i class="icon-file"></i> modules/page-update.php</a></li>
@@ -124,7 +125,6 @@
                                                                                                     <li><a href="#modules/api-status.php"><i class="icon-file"></i> modules/api-status.php</a></li>
                                                                                                     <li><a href="#modules/feature-search.php"><i class="icon-file"></i> modules/feature-search.php</a></li>
                                                                                                     <li><a href="#modules/page-move.php"><i class="icon-file"></i> modules/page-move.php</a></li>
-                                                                                                    <li><a href="#modules/feature-interwiki-links.php"><i class="icon-file"></i> modules/feature-interwiki-links.php</a></li>
                                                                     </ul>
         </div>
 
@@ -166,7 +166,7 @@
                         <h3>
                             <i class="icon-file"></i>
                             modules/feature-recent-changes.php
-                            <small style="float: right;padding-right: 10px;">1</small>
+                            <small style="float: right;padding-right: 10px;">3</small>
                         </h3>
                         <div>
                             <table class="table markers table-bordered">
@@ -182,6 +182,16 @@
                                         <td>error</td>
                                         <td>0</td>
                                         <td>No summary was found for this file</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>258</td>
+                                        <td>Name of argument $timestamp does not match with the DocBlock&#039;s name $timestamap in \find_revisionid_timestamp()</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>notice</td>
+                                        <td>258</td>
+                                        <td>Parameter $timestamap could not be found in \find_revisionid_timestamp()</td>
                                     </tr>
                                                             </tbody>
                             </table>
@@ -400,22 +410,22 @@
                                     </tr>
                                                                     <tr>
                                         <td>error</td>
-                                        <td>145</td>
+                                        <td>152</td>
                                         <td>Argument $regex is missing from the Docblock of add_rule</td>
                                     </tr>
                                                                     <tr>
                                         <td>error</td>
-                                        <td>145</td>
+                                        <td>152</td>
                                         <td>Argument $replacement is missing from the Docblock of add_rule</td>
                                     </tr>
                                                                     <tr>
                                         <td>error</td>
-                                        <td>151</td>
+                                        <td>158</td>
                                         <td>Argument $text is missing from the Docblock of render</td>
                                     </tr>
                                                                     <tr>
                                         <td>error</td>
-                                        <td>91</td>
+                                        <td>98</td>
                                         <td>No summary for property $rules</td>
                                     </tr>
                                                             </tbody>
@@ -709,6 +719,32 @@
                         </div>
                                     </div>
                             <div class="package-contents">
+                                            <a name="modules/feature-interwiki-links.php" id="modules/feature-interwiki-links.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            modules/feature-interwiki-links.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>0</td>
+                                        <td>No summary was found for this file</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
                                             <a name="modules/extra-sidebar.php" id="modules/extra-sidebar.php"></a>
                         <h3>
                             <i class="icon-file"></i>
@@ -940,22 +976,22 @@
                                     </tr>
                                                                     <tr>
                                         <td>error</td>
-                                        <td>219</td>
+                                        <td>263</td>
                                         <td>No summary for class \PeppermintParsedown</td>
                                     </tr>
                                                                     <tr>
                                         <td>error</td>
-                                        <td>226</td>
+                                        <td>270</td>
                                         <td>No summary for method __construct()</td>
                                     </tr>
                                                                     <tr>
                                         <td>error</td>
-                                        <td>728</td>
+                                        <td>776</td>
                                         <td>Argument $page_text is missing from the Docblock of extract_page_names</td>
                                     </tr>
                                                                     <tr>
                                         <td>error</td>
-                                        <td>728</td>
+                                        <td>776</td>
                                         <td>No summary for method extract_page_names()</td>
                                     </tr>
                                                             </tbody>
@@ -1092,32 +1128,6 @@
                             </table>
                         </div>
                                     </div>
-                            <div class="package-contents">
-                                            <a name="modules/feature-interwiki-links.php" id="modules/feature-interwiki-links.php"></a>
-                        <h3>
-                            <i class="icon-file"></i>
-                            modules/feature-interwiki-links.php
-                            <small style="float: right;padding-right: 10px;">1</small>
-                        </h3>
-                        <div>
-                            <table class="table markers table-bordered">
-                                <thead>
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Line</th>
-                                    <th>Description</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                                                    <tr>
-                                        <td>error</td>
-                                        <td>0</td>
-                                        <td>No summary was found for this file</td>
-                                    </tr>
-                                                            </tbody>
-                            </table>
-                        </div>
-                                    </div>
                     </div>
     </section>
 
@@ -1157,7 +1167,7 @@
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on January 5th, 2019 at 22:23.
+                    on February 24th, 2019 at 16:02.
                 </section>
             </section>
         </section>

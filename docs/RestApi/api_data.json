@@ -1249,7 +1249,7 @@
   },
   {
     "type": "get",
-    "url": "?action=recent-changes[&format={code}]",
+    "url": "?action=recent-changes[&offset={number}][&count={number}][&format={code}]",
     "title": "Get a list of recent changes",
     "name": "RecentChanges",
     "group": "Stats",
@@ -1265,10 +1265,24 @@
         "Parameter": [
           {
             "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "offset",
+            "description": "<p>If specified, start returning changes from this many changes in. 0 is the beginning.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "count",
+            "description": "<p>If specified, return at most this many changes. A value of 0 means no limit (the default) - apart from the limit on the number of changes stored by the server (configurable in pepppermint.json).</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "string",
             "optional": false,
             "field": "format",
-            "description": "<p>The format to return the recent changes in. Values: html, json. Default: html.</p>"
+            "description": "<p>The format to return the recent changes in. Valid values: html, json, csv, atom. Default: html.</p>"
           }
         ]
       }
