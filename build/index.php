@@ -412,8 +412,8 @@ if($settings->sessionprefix == "auto")
 ////// Do not edit below this line unless you know what you are doing! //////
 /////////////////////////////////////////////////////////////////////////////
 /** The version of Pepperminty Wiki currently running. */
-$version = "v0.18";
-$commit = "271e391a12a3a0cd01382682be1c8a386ac32d35";
+$version = "v0.19-dev";
+$commit = "9bb97cad5b4f557a79eddfa25962b356263dbb21";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
@@ -1463,7 +1463,7 @@ class page_renderer
 		<meta charset='utf-8' />
 		<title>{title}</title>
 		<meta name='viewport' content='width=device-width, initial-scale=1' />
-		<meta name='generator' content='Pepperminty Wiki v0.18' />
+		<meta name='generator' content='Pepperminty Wiki v0.19-dev' />
 		<link rel='shortcut-icon' href='{favicon-url}' />
 		<link rel='icon' href='{favicon-url}' />
 		{header-html}
@@ -1487,7 +1487,7 @@ class page_renderer
 		{extra}
 		<footer>
 			<p>{footer-message}</p>
-			<p>Powered by Pepperminty Wiki v0.18, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
+			<p>Powered by Pepperminty Wiki v0.19-dev, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
 			<p>Your local friendly moderators are {admins-name-list}.</p>
 			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
 		</footer>
@@ -1505,7 +1505,7 @@ class page_renderer
 			<p><em>From {sitename}, which is managed by {admin-details-name}.</em></p>
 			<p>{footer-message}</p>
 			<p><em>Timed at {generation-date}</em></p>
-			<p><em>Powered by Pepperminty Wiki v0.18.</em></p>
+			<p><em>Powered by Pepperminty Wiki v0.19-dev.</em></p>
 		</footer>";
 	
 	/**
@@ -1620,7 +1620,7 @@ class page_renderer
 			"{body}" => $body_template,
 
 			"{sitename}" => $logo_html,
-			"v0.18" => $version,
+			"v0.19-dev" => $version,
 			"{favicon-url}" => $settings->favicon,
 			"{header-html}" => self::get_header_html(),
 
@@ -9037,6 +9037,14 @@ register_module([
 	"version" => "0.10",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
+	"extra_data" => [
+		/******** Parsedown versions ********
+		 * Parsedown Core:	1.8.0-beta-5	*
+		 * Parsedown Extra:	0.8.0-beta-1	*
+		 ************************************/
+		"Parsedown.php" => "https://raw.githubusercontent.com/erusev/parsedown/819c68899d593503180ed79ef4be5a4dcd8c5f92/Parsedown.php",
+		"ParsedownExtra.php" => "https://raw.githubusercontent.com/erusev/parsedown-extra/f21b40a1973b6674903a6da9857ee215e8839f96/ParsedownExtra.php"
+	],
 	"id" => "parser-parsedown",
 	"code" => function() {
 		global $settings;
@@ -9239,21 +9247,6 @@ register_module([
 		</table>");
 	}
 ]);
-
-/*** Parsedown versions ***
- * Parsedown Core: 1.6.0  *
- * Parsedown Extra: 0.7.0 *
- **************************/
-$env->parsedown_paths = new stdClass();
-$env->parsedown_paths->parsedown = "https://cdn.rawgit.com/erusev/parsedown/3ebbd730b5c2cf5ce78bc1bf64071407fc6674b7/Parsedown.php";
-$env->parsedown_paths->parsedown_extra = "https://cdn.rawgit.com/erusev/parsedown-extra/11a44e076d02ffcc4021713398a60cd73f78b6f5/ParsedownExtra.php";
-
-// Download parsedown and parsedown extra if they don't already exist
-// These must still use this old method, as the parser may be asked to render some HTML before Pepperminty Wiki has had a chance to run the downloads
-if(!file_exists("./Parsedown.php") || filesize("./Parsedown.php") === 0)
-	file_put_contents("./Parsedown.php", fopen($env->parsedown_paths->parsedown, "r"));
-if(!file_exists("./ParsedownExtra.php") || filesize("./ParsedownExtra.php") === 0)
-	file_put_contents("./ParsedownExtra.php", fopen($env->parsedown_paths->parsedown_extra, "r"));
 
 require_once("./Parsedown.php");
 require_once("./ParsedownExtra.php");

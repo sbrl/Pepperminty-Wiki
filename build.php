@@ -37,7 +37,8 @@ function register_module($settings)
 		"description" => $settings["description"],
 		"id" => $settings["id"],
 		"lastupdate" => filemtime("modules/" . $settings["id"] . ".php"),
-		"optional" => $settings["optional"]
+		"optional" => $settings["optional"],
+		"extra_data" => $settings["extra_data"] ?? []
 	];
 	$module_index[] = $newmodule;
 }

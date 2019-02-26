@@ -6,7 +6,8 @@
         "description": "Adds a utility action (that anyone can use) called hash that hashes a given string. Useful when changing a user's password.",
         "id": "action-hash",
         "lastupdate": 1549840565,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Page protection",
@@ -15,7 +16,8 @@
         "description": "Exposes Pepperminty Wiki's new page protection mechanism and makes the protect button in the 'More...' menu on the top bar work.",
         "id": "action-protect",
         "lastupdate": 1465751051,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Random Page",
@@ -24,7 +26,8 @@
         "description": "Adds an action called 'random' that redirects you to a random page.",
         "id": "action-random",
         "lastupdate": 1530448215,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Raw page source",
@@ -33,7 +36,8 @@
         "description": "Adds a 'raw' action that shows you the raw source of a page.",
         "id": "action-raw",
         "lastupdate": 1507993763,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "API status",
@@ -42,7 +46,8 @@
         "description": "Provides a basic JSON status action that provides a few useful bits of information for API consumption.",
         "id": "api-status",
         "lastupdate": 1530565418,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Sidebar",
@@ -51,7 +56,8 @@
         "description": "Adds a sidebar to the left hand side of every page. Add '$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
         "id": "extra-sidebar",
         "lastupdate": 1505768813,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Page Comments",
@@ -60,7 +66,8 @@
         "description": "Adds threaded comments to the bottom of every page.",
         "id": "feature-comments",
         "lastupdate": 1549840530,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Settings GUI",
@@ -69,7 +76,8 @@
         "description": "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
         "id": "feature-guiconfig",
         "lastupdate": 1548629209,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Page History",
@@ -78,7 +86,8 @@
         "description": "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
         "id": "feature-history",
         "lastupdate": 1541003921,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Interwiki links",
@@ -87,7 +96,8 @@
         "description": "Adds interwiki link support. Set the interwiki_index_location setting at an index file to activate support.",
         "id": "feature-interwiki-links",
         "lastupdate": 1549840688,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Recent Changes",
@@ -96,7 +106,8 @@
         "description": "Adds recent changes. Access through the 'recent-changes' action.",
         "id": "feature-recent-changes",
         "lastupdate": 1549840473,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Redirect pages",
@@ -105,7 +116,8 @@
         "description": "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
         "id": "feature-redirect",
         "lastupdate": 1549840590,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Search",
@@ -114,7 +126,8 @@
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
         "id": "feature-search",
         "lastupdate": 1549840628,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Statistics",
@@ -123,7 +136,8 @@
         "description": "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
         "id": "feature-stats",
         "lastupdate": 1530614499,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Uploader",
@@ -132,7 +146,8 @@
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
         "id": "feature-upload",
         "lastupdate": 1548629209,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "User Preferences",
@@ -141,7 +156,8 @@
         "description": "Adds a user preferences page, letting people do things like change their email address and password.",
         "id": "feature-user-preferences",
         "lastupdate": 1526035213,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "User Organiser",
@@ -150,7 +166,8 @@
         "description": "Adds a organiser page that lets moderators (or better) control the reegistered user accounts, and perform adminstrative actions such as password resets, and adding \/ removing accounts.",
         "id": "feature-user-table",
         "lastupdate": 1526423111,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Credits",
@@ -159,7 +176,8 @@
         "description": "Adds the credits page. You *must* have this module :D",
         "id": "page-credits",
         "lastupdate": 1540998605,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Debug Information",
@@ -168,7 +186,8 @@
         "description": "Adds a debug action for administrator use only that collects a load of useful information to make reporting bugs easier.",
         "id": "page-debug-info",
         "lastupdate": 1524415876,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Page deleter",
@@ -177,7 +196,8 @@
         "description": "Adds an action to allow administrators to delete pages.",
         "id": "page-delete",
         "lastupdate": 1501009581,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Page editor",
@@ -186,7 +206,8 @@
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
         "id": "page-edit",
         "lastupdate": 1548629209,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Export",
@@ -195,7 +216,8 @@
         "description": "Adds a page that you can use to export your wiki as a .zip file. Uses $settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
         "id": "page-export",
         "lastupdate": 1548970758,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Help page",
@@ -204,7 +226,8 @@
         "description": "Adds a rather useful help page. Access through the 'help' action. This module also exposes help content added to Pepperminty Wiki's inbuilt invisible help section system.",
         "id": "page-help",
         "lastupdate": 1492433537,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Page list",
@@ -213,7 +236,8 @@
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
         "id": "page-list",
         "lastupdate": 1548364613,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Login",
@@ -222,7 +246,8 @@
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
         "id": "page-login",
         "lastupdate": 1540050129,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Logout",
@@ -231,7 +256,8 @@
         "description": "Adds an action to let users user out. For security reasons it is wise to add this module since logging in automatically opens a session that is valid for 30 days.",
         "id": "page-logout",
         "lastupdate": 1526034779,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Page mover",
@@ -240,7 +266,8 @@
         "description": "Adds an action to allow administrators to move pages.",
         "id": "page-move",
         "lastupdate": 1521408303,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Update",
@@ -249,7 +276,8 @@
         "description": "Adds an update page that downloads the latest stable version of Pepperminty Wiki. This module is currently outdated as it doesn't save your module preferences.",
         "id": "page-update",
         "lastupdate": 1476906745,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "User list",
@@ -258,7 +286,8 @@
         "description": "Adds a 'user-list' action that generates a list of users. Supports json output with 'format=json' in the queyr string.",
         "id": "page-user-list",
         "lastupdate": 1487454626,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Page viewer",
@@ -267,7 +296,8 @@
         "description": "Allows you to view pages. You really should include this one.",
         "id": "page-view",
         "lastupdate": 1548884009,
-        "optional": false
+        "optional": false,
+        "extra_data": null
     },
     {
         "name": "Old Default Parser",
@@ -276,7 +306,8 @@
         "description": "The *old* default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page. Superceded by a customised extension of parsedown extra.",
         "id": "parser-default-old",
         "lastupdate": 1549839049,
-        "optional": true
+        "optional": true,
+        "extra_data": null
     },
     {
         "name": "Parsedown",
@@ -284,7 +315,11 @@
         "author": "Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
         "id": "parser-parsedown",
-        "lastupdate": 1549840071,
-        "optional": false
+        "lastupdate": 1551211981,
+        "optional": false,
+        "extra_data": {
+            "Parsedown.php": "https:\/\/raw.githubusercontent.com\/erusev\/parsedown\/819c68899d593503180ed79ef4be5a4dcd8c5f92\/Parsedown.php",
+            "ParsedownExtra.php": "https:\/\/raw.githubusercontent.com\/erusev\/parsedown-extra\/f21b40a1973b6674903a6da9857ee215e8839f96\/ParsedownExtra.php"
+        }
     }
 ]
