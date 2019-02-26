@@ -1,7 +1,6 @@
 <?php
 
-if(php_sapi_name() == "cli")
-{
+if(php_sapi_name() == "cli") {
 	echo("*** Beginning main build sequence ***\n");
 	echo("Reading in module index...\n");
 }
@@ -33,7 +32,7 @@ if(php_sapi_name() != "cli")
 	header("content-disposition: attachment; filename=\"index.php\"");
 }
 
-if(php_sapi_name() == "cli") echo("Reading in core files...");
+if(php_sapi_name() == "cli") echo("Reading in core files...\n");
 
 $core = file_get_contents("core.php");
 $settings = file_get_contents("settings.fragment.php");
@@ -54,18 +53,19 @@ $core = str_replace([
 
 $result = $core;
 
+$module_list_count = count($module_list);
+$i = 1;
 foreach($module_list as $module_id)
 {
 	if($module_id == "") continue;
 	
-	if(php_sapi_name() == "cli") echo("Adding $module_id\n");
+	if(php_sapi_name() == "cli") echo("[$i / $module_list_count] Adding $module_id      \r");
 	
 	$module_filepath = "modules/" . preg_replace("[^a-zA-Z0-9\-]", "", $module_id) . ".php";
 	
 	//echo("id: $module_id | filepath: $module_filepath\n");
 	
-	if(!file_exists($module_filepath))
-	{
+	if(!file_exists($module_filepath)) {
 		http_response_code(400);
 		exit("Failed to load module with name: $module_filepath");
 	}
@@ -75,26 +75,27 @@ foreach($module_list as $module_id)
 	$result = str_replace(
 		"// %next_module% //",
 		"$modulecode\n// %next_module% //",
-		$result);
+		$result
+	);
+	
+	$i++;
 }
+echo("\n");
 
 if(php_sapi_name() == "cli")
 {
-	if(file_exists("build/index.php"))
-	{
+	if(file_exists("build/index.php")) {
 		echo("index.php already exists in the build folder, exiting\n");
 		exit(1);
 	}
-	else
-	{
+	else {
 		echo("Done. Saving to disk...");
 		file_put_contents("build/index.php", $result);
 		echo("complete!\n");
 		echo("*** Build completed! ***\n");
 	}
 }
-else
-{
+else {
 	exit($result);
 }
 

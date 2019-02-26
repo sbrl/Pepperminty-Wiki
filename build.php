@@ -42,13 +42,16 @@ function register_module($settings)
 	$module_index[] = $newmodule;
 }
 
+$module_count = count($modules);
+$i = 1;
 foreach($modules as $filename)
 {
-	echo("Processing $filename\n");
+	echo("[$i / $module_count] Processing $filename          \r");
 	require($filename);
+	$i++;
 }
 
-echo("*** Processing complete ***\n");
+echo("\n*** Processing complete ***\n");
 
 echo("Writing new module index to disk...");
 file_put_contents("module_index.json", json_encode($module_index, JSON_PRETTY_PRINT));
