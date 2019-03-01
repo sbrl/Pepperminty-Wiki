@@ -185,8 +185,8 @@ function full_url( $s = false, $use_forwarded_host = false )
  * @see	http://php.net/manual/en/function.filesize.php#106569	The original source
  * @author	rommel
  * @author	Edited by Starbeamrainbowlabs
- * @param	number	$bytes		The number of bytes to convert.
- * @param	number	$decimals	The number of decimal places to preserve.
+ * @param	int		$bytes		The number of bytes to convert.
+ * @param	int		$decimals	The number of decimal places to preserve.
  * @return 	string				A human-readable filesize.
  */
 function human_filesize($bytes, $decimals = 2)
@@ -202,9 +202,8 @@ function human_filesize($bytes, $decimals = 2)
  * human-readable result.
  * @package core
  * @see http://goo.gl/zpgLgq The original source. No longer exists, maybe the wayback machine caught it :-(
- * @param	integer	$time	The timestamp to convert.
- * @return	string			The time since the given timestamp as
- *                      	a human-readable string.
+ * @param	int		$time	The timestamp to convert.
+ * @return	string	The time since the given timestamp as a human-readable string.
  */
 function human_time_since($time)
 {
@@ -239,9 +238,9 @@ function human_time($seconds)
  * @package core
  * @see http://in.php.net/manual/en/function.glob.php#106595	The original source
  * @author	Mike
- * @param  string  $pattern The glob pattern to use to find filenames.
- * @param  integer $flags   The glob flags to use when finding filenames.
- * @return array			An array of the filepaths that match the given glob.
+ * @param	string	$pattern	The glob pattern to use to find filenames.
+ * @param	int		$flags		The glob flags to use when finding filenames.
+ * @return	array	An array of the filepaths that match the given glob.
  */
 function glob_recursive($pattern, $flags = 0)
 {
@@ -308,9 +307,9 @@ function get_subpages($pageindex, $pagename)
  * Makes sure that a subpage's parents exist.
  * Note this doesn't check the pagename itself.
  * @package core
- * @param $pagename	The pagename to check.
+ * @param string	$pagename	The pagename to check.
  */
-function check_subpage_parents($pagename)
+function check_subpage_parents(string $pagename)
 {
 	global $pageindex, $paths, $env;
 	// Save the new pageindex and return if there aren't any more parent pages to check
@@ -393,8 +392,7 @@ function hide_email($str)
  * @param	string	$haystack	The string to search.
  * @param	string	$needle		The string to search for at the beginning
  *                        		of $haystack.
- * @return	boolean				Whether $needle can be found at the beginning
- *                            	of $haystack.
+ * @return	bool	Whether $needle can be found at the beginning of $haystack.
  */
 function starts_with($haystack, $needle)
 {
@@ -726,10 +724,10 @@ function extract_user_from_userpage($userPagename) {
 /**
  * Sends a plain text email to a user, replacing {username} with the specified username.
  * @package core
- * @param  string $username The username to send the email to.
- * @param  string $subject  The subject of the email.
- * @param  string $body     The body of the email.
- * @return boolean          Whether the email was sent successfully or not. Currently, this may fail if the user doesn't have a registered email address.
+ * @param	string	$username	The username to send the email to.
+ * @param	string	$subject	The subject of the email.
+ * @param	string	$body		The body of the email.
+ * @return	bool	Whether the email was sent successfully or not. Currently, this may fail if the user doesn't have a registered email address.
  */
 function email_user($username, $subject, $body)
 {
@@ -759,7 +757,7 @@ function email_user($username, $subject, $body)
  * @param  string[]	$usernames	A list of usernames to email.
  * @param  string	$subject	The subject of the email.
  * @param  string	$body		The body of the email.
- * @return integer				The number of emails sent successfully.
+ * @return int					The number of emails sent successfully.
  */
 function email_users($usernames, $subject, $body)
 {
@@ -887,7 +885,7 @@ class ids
 	 * If it doesn't exist in the id index, it will be added.
 	 * @package core
 	 * @param	string	$pagename	The name of the page to fetch the id for.
-	 * @return	integer	The id for the specified page name.
+	 * @return	int		The id for the specified page name.
 	 */
 	public static function getid($pagename)
 	{
@@ -985,7 +983,7 @@ class ids
 	 * pagename doesn't already exist in the id index.
 	 * @package core
 	 * @param	string	$pagename	The page name to assign an id to.
-	 * @return	integer				The id assigned to the specified page name.
+	 * @return	int					The id assigned to the specified page name.
 	 */
 	protected static function assign($pagename)
 	{
@@ -1161,7 +1159,7 @@ class page_renderer
 	 * pass in here should take a *reference* to the components, as the return
 	 * value of the function passed is discarded.
 	 * @package core
-	 * @param  function $function The part preprocessor to register.
+	 * @param  callable $function The part preprocessor to register.
 	 */
 	public static function register_part_preprocessor($function) {
 		global $settings;
@@ -1183,10 +1181,10 @@ class page_renderer
 	/**
 	 * Renders a HTML page with the content specified.
 	 * @package core
-	 * @param  string  $title         The title of the page.
-	 * @param  string  $content       The (HTML) content of the page.
-	 * @param  boolean $body_template The HTML content template to use.
-	 * @return string                 The rendered HTML, ready to send to the client :-)
+	 * @param	string	$title			The title of the page.
+	 * @param	string	$content		The (HTML) content of the page.
+	 * @param	bool	$body_template	The HTML content template to use.
+	 * @return	string	The rendered HTML, ready to send to the client :-)
 	 */
 	public static function render($title, $content, $body_template = false)
 	{
@@ -1279,7 +1277,7 @@ class page_renderer
 	
 	/**
 	 * Sends the currently registered HTTP2 server push items to the client.
-	 * @return integer|FALSE	The number of resource hints included in the link: header, or false if server pushing is disabled.
+	 * @return int|false	The number of resource hints included in the link: header, or false if server pushing is disabled.
 	 */
 	public static function send_server_push_indicators() {
 		global $settings;
@@ -1332,7 +1330,7 @@ class page_renderer
 	/**
 	 * Figures out whether $settings->css is a url, or a string of css.
 	 * A url is something starting with "protocol://" or simply a "/".
-	 * @return	boolean	True if it's a url - false if we assume it's a string of css.
+	 * @return	bool	True if it's a url - false if we assume it's a string of css.
 	 */
 	public static function is_css_url() {
 		global $settings;
