@@ -1,9 +1,17 @@
 <?php
 
-if(php_sapi_name() == "cli") {
-	echo("*** Beginning main build sequence ***\n");
-	echo("Reading in module index...\n");
+/**
+ * Logs a string to stdout, but only on the CLI.
+ * @param  string $line The line to log.
+ */
+function log(string $line) {
+	if(php_sapi_name() == "cli")
+		echo($line);
+	//else error_log($line);
 }
+
+log("*** Beginning main build sequence ***\n");
+log("Reading in module index...\n");
 
 $module_index = json_decode(file_get_contents("module_index.json"));
 $module_list = [];
@@ -24,15 +32,15 @@ foreach($module_index as $module)
 if(isset($_GET["modules"]))
 	$module_list = explode(",", $_GET["modules"]);
 
-if(php_sapi_name() != "cli")
-{
+if(php_sapi_name() != "cli") {
 	header("content-type: text/php");
 	header("content-disposition: attachment; filename=\"index.php\"");
 }
 
-if(php_sapi_name() == "cli") echo("Reading in core files...\n");
+log("Reading in core files...\n");
 
-$core = file_get_contents("core.php");
+// We trim from the end here because of the __halt_compiler() directive
+$core = rtrim(file_get_contents("core.php"));
 $settings = file_get_contents("settings.fragment.php");
 $settings = str_replace([ "<?php", "?>" ], "", $settings);
 $core = str_replace([
@@ -57,18 +65,22 @@ if($extra_data_archive->open("php://temp/maxmemory:".(5*1024*1024), ZipArchive::
 	exit("Error: Failed to create temporary stream to store packing information");
 }
 
+// HACK! Determine the file descriptor of the ZipArchvie
+$temp = fopen("php://memory", "w");
+$archive_file_descriptor = $temp - 1;
+fclose($temp);
+
 $module_list_count = count($module_list);
 $i = 1;
 foreach($module_list as $module)
 {
 	if($module->id == "") continue;
 	
-	if(php_sapi_name() == "cli")
-		echo("[$i / $module_list_count] Adding $module->id      \r");
+	log("[$i / $module_list_count] Adding $module->id      \r");
 	
 	$module_filepath = "modules/" . preg_replace("[^a-zA-Z0-9\-]", "", $module->id) . ".php";
 	
-	//echo("id: $module->id | filepath: $module_filepath\n");
+	//log("id: $module->id | filepath: $module_filepath\n");
 	
 	if(!file_exists($module_filepath)) {
 		http_response_code(400);
@@ -95,23 +107,27 @@ foreach($module_list as $module)
 	
 	$i++;
 }
-echo("\n");
+log("\n");
 
-if(php_sapi_name() == "cli")
-{
+$archive_stream = fopen("php://fd/$archive_file_descriptor", "r");
+
+$output_stream = null;
+if(php_sapi_name() == "cli") {
 	if(file_exists("build/index.php")) {
-		echo("index.php already exists in the build folder, exiting\n");
+		log("index.php already exists in the build folder, exiting\n");
 		exit(1);
 	}
-	else {
-		echo("Done. Saving to disk...");
-		file_put_contents("build/index.php", $result);
-		echo("complete!\n");
-		echo("*** Build completed! ***\n");
-	}
+	
+	log("Done. Saving to disk...");
+	$output_stream = fopen("build/index.php", "w");
+	log("complete!\n");
+	log("*** Build completed! ***\n");
 }
 else {
-	exit($result);
+	$output_stream = fopen("php://output", "w");
 }
+
+fwrite($output_stream, $result);
+stream_copy_to_stream($archive_stream, $output_stream);
 
 ?>

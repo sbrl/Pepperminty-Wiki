@@ -21,6 +21,7 @@ $module_index = [];
 // Defined just in case a module needs to reference them when we require() them
 // to gain information
 $env = $paths = new stdClass();
+$paths->extra_data_directory = "._extra_data";
 
 function register_module($settings)
 {

@@ -66,6 +66,8 @@ foreach ($paths as &$path) {
 
 /** The master settings file @var string */
 $paths->settings_file = $settingsFilename;
+/** The directory to which the extra bundled data is extracted to @var string */
+$paths->extra_data_directory = "._extra_data";
 /** The prefix to add to uploaded files */
 $paths->upload_file_prefix = "Files/";
 
@@ -1696,7 +1698,7 @@ $actions = new stdClass();
  * Registers a new action handler.
  * @package core
  * @param	string		$action_name	The action to register.
- * @param	function	$func			The function to call when the specified
+ * @param	callable	$func			The function to call when the specified
  * 										action is requested.
  */
 function add_action($action_name, $func)
@@ -1707,9 +1709,9 @@ function add_action($action_name, $func)
 /**
  * Figures out whether a given action is currently registered.
  * Only guaranteed to be accurate in inside an existing action function
- * @package core
- * @param  string  $action_name The name of the action to search for
- * @return boolean              Whether an action with the specified name exists.
+ * @package	core
+ * @param	string	$action_name	The name of the action to search for
+ * @return	bool		Whether an action with the specified name exists.
  */
 function has_action($action_name)
 {
@@ -1731,8 +1733,8 @@ $parsers = [
  * Registers a new parser.
  * @package	core
  * @param	string		$name			The name of the new parser to register.
- * @param	function	$parser_code	The function to register as a new parser.
- * @param	function	$hash_generator	A function that should take a single argument of the input source text, and return a unique hash for that content. The return value is used as the filename for cache entries, so should be safe to use as such.
+ * @param	callable	$parser_code	The function to register as a new parser.
+ * @param	callable	$hash_generator	A function that should take a single argument of the input source text, and return a unique hash for that content. The return value is used as the filename for cache entries, so should be safe to use as such.
  */
 function add_parser($name, $parser_code, $hash_generator) {
 	global $parsers;
@@ -1794,7 +1796,7 @@ $save_preprocessors = [];
  * Register a new proprocessor that will be executed just before
  * an edit is saved.
  * @package core
- * @param	function	$func	The function to register.
+ * @param	callable	$func	The function to register.
  */
 function register_save_preprocessor($func)
 {
@@ -1837,9 +1839,9 @@ function statistic_add($stat_data) {
 }
 /**
  * Checks whether a specified statistic has been registered.
- * @package core
- * @param  string  $stat_id The id of the statistic to check the existence of.
- * @return boolean          Whether the specified statistic has been registered.
+ * @package	core
+ * @param	string	$stat_id	The id of the statistic to check the existence of.
+ * @return	bool		Whether the specified statistic has been registered.
  */
 function has_statistic($stat_id) {
 	global $statistic_calculators;
@@ -1909,4 +1911,4 @@ else
 	exit(page_renderer::render_main("Error - $settings->sitename", "<p>No action called " . strtolower($_GET["action"]) ." has been registered. Perhaps you are missing a module?</p>"));
 }
 
-?>
+__halt_compiler();

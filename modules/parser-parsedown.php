@@ -215,8 +215,10 @@ register_module([
 	}
 ]);
 
-require_once("./Parsedown.php");
-require_once("./ParsedownExtra.php");
+if(file_exists($paths->extra_data_directory)) {
+	require_once("$paths->extra_data_directory/Parsedown.php");
+	require_once("$paths->extra_data_directory/ParsedownExtra.php");
+}
 
 /**
  * Attempts to 'auto-correct' a page name by trying different capitalisation
