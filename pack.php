@@ -60,15 +60,12 @@ $core = str_replace([
 $result = $core;
 
 $extra_data_archive = new ZipArchive();
-if($extra_data_archive->open("php://temp/maxmemory:".(5*1024*1024), ZipArchive::CREATE) !== true) {
+// Use dev/shm if possible (it's *always* in memory). PHP will default to the system's temporary directory if it's not available
+$temp_filename = tempnam("/dev/shm", "pepperminty-wiki-pack");
+if($extra_data_archive->open($temp_filename, ZipArchive::CREATE) !== true) {
 	http_response_code(503);
 	exit("Error: Failed to create temporary stream to store packing information");
 }
-
-// HACK! Determine the file descriptor of the ZipArchvie
-$temp = fopen("php://memory", "w");
-$archive_file_descriptor = $temp - 1;
-fclose($temp);
 
 $module_list_count = count($module_list);
 $i = 1;
@@ -109,7 +106,9 @@ foreach($module_list as $module)
 }
 log_str("\n");
 
-$archive_stream = fopen("php://fd/$archive_file_descriptor", "r");
+$extra_data_archive->close();
+
+$archive_stream = fopen($temp_filename, "r");
 
 $output_stream = null;
 if(php_sapi_name() == "cli") {
