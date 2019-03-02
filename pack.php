@@ -97,7 +97,7 @@ foreach($module_list as $module)
 	);
 	
 	
-	// Pack the extra files
+	// Pack the extra files that were downloaded in build.php
 	foreach($module->extra_data as $filepath_pack => $extra_data_item) {
 		if(is_string($extra_data_item)) {
 			// TODO: Test whether this works for urls. If not, then we'll need to implement a workaround
