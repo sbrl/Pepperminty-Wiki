@@ -34,10 +34,11 @@ function add_parser($name, $parser_code, $hash_generator) {
  * The specified parser may (though it's unlikely) render it to other things.
  * @package core
  * @param	string	$source		The source to render.
- * @param	string	$use_cache	Whether to use the on-disk cache. Has no effect if parser caching is disabled in peppermint.json, or the source string is too small.
+ * @param	bool	$use_cache	Whether to use the on-disk cache. Has no effect if parser caching is disabled in peppermint.json, or the source string is too small.
+ * @param	bool	$untrusted	Whether the source string is 'untrusted' - i.e. a user comment. Untrusted source disallows HTML and protects against XSS attacks.
  * @return	string	The source rendered to HTML.
  */
-function parse_page_source($source, $use_cache = true) {
+function parse_page_source($source, $untrusted = false, $use_cache = true) {
 	global $settings, $paths, $parsers, $version;
 	$start_time = microtime(true);
 	
@@ -60,7 +61,7 @@ function parse_page_source($source, $use_cache = true) {
 		$result .= "\n<!-- cache: hit, id: $cache_id, took: " . round((microtime(true) - $start_time)*1000, 5) . "ms -->\n";
 	}
 	if($result == null) {
-		$result = $parsers[$settings->parser]["parser"]($source);
+		$result = $parsers[$settings->parser]["parser"]($source, $untrusted);
 		// If we should use the cache and we failed to write to it, warn the admin.
 		// It's not terribible if we can't write to the cache directory (so we shouldn't stop dead & refuse service), but it's still of concern.
 		if($use_cache && !file_put_contents($cache_file, $result))

@@ -1,6 +1,21 @@
 # Changelog
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
+
+## v0.19-dev
+> The update that changed the world! Turn everything upside-down.
+
+### Added
+ - [Module API] Added new extra data system. See `parser-parsedown` and `page-edit` for an example.
+     - Extra data is packed into a zip archive, which is packed into `index.php` via [`__halt_compiler();`](https://devdocs.io/php/function.halt-compiler)
+
+### Changed
+ - Core sharding: split `core.php` into multiple files
+
+### Removed
+ - [Module API] Not often I have a removed section! Remove remote file system.
+
+
 ## v0.18
 
 _(No changes have been made since the last beta release.)_

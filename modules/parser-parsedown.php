@@ -18,8 +18,9 @@ register_module([
 		
 		$parser = new PeppermintParsedown();
 		$parser->setInternalLinkBase("?page=%s");
-		add_parser("parsedown", function($source) use ($parser) {
+		add_parser("parsedown", function($source, $untrusted) use ($parser) {
 			global $settings;
+			$parser->setsafeMode($untrusted || $settings->all_untrusted);
 			$parser->setMarkupEscaped($settings->clean_raw_html);
 			$result = $parser->text($source);
 			
@@ -429,8 +430,8 @@ class PeppermintParsedown extends ParsedownExtra
 	
 	/**
 	 * Handles parsing out templates - recursively - and the parameter stack associated with it.
-	 * @param  [type] $source [description]
-	 * @return [type]         [description]
+	 * @param	string	$source		The source string to process.
+	 * @return	array	The parsed result
 	 */
 	protected function templateHandler($source)
 	{

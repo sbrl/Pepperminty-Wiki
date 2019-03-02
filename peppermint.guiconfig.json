@@ -21,7 +21,8 @@
 	"parser_cache": { "type": "checkbox", "description": "Whether parser output should be cached to speed things up. The cache directory is <code>._cache</code> in the data directory - delete it if you experience issues (unlikely).", "default": true },
 	"parser_cache_min_size": { "type": "number", "description": "The minimum size a source string must be (in bytes) before it's considered eligible for caching.", "default": 1024 },
 	"interwiki_index_location": { "type": "text", "description": "The location to find the interwiki wiki definition file, which contains a list of wikis along with their names, prefixes, and root urls. May be a URL, or simply a file path - as it's passed to file_get_contents(). If left blank, interwiki link parsing is disabled.", "default": null },
-	"clean_raw_html": { "type": "checkbox", "description": "Whether page sources should be cleaned of HTML before rendering. It is STRONGLY recommended that you keep this option turned on.", "default": true},
+	"clean_raw_html": { "type": "checkbox", "description": "Whether page sources should be cleaned of HTML before rendering. It is STRONGLY recommended that you keep this option turned on.", "default": true },
+	"all_untrusted": { "type": "checkbox", "description": "Whether to treat both page sources and comment text as untrusted input. Untrusted input has additional restrictions to protect against XSS attacks etc. Turn on if your wiki allows anonymous edits.", "default": false},
 	"enable_math_rendering": { "type": "checkbox", "description": "Whether to enable client side rendering of mathematical expressions with MathJax (https://www.mathjax.org/). Math expressions should be enclosed inside of dollar signs ($). Turn off if you don't use it.", "default": true},
 	"users": { "type": "usertable", "description": "An array of usernames and passwords - passwords should be hashed with password_hash() (the hash action can help here)", "default": {
 		"admin": {
