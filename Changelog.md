@@ -11,6 +11,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ### Changed
  - Core sharding: split `core.php` into multiple files
+ - Use Parsedown's new untrusted feature for comments
 
 ### Removed
  - [Module API] Not often I have a removed section! Remove remote file system.
