@@ -126,7 +126,11 @@ else {
 	$output_stream = fopen("php://output", "w");
 }
 
+// Write the built code
 fwrite($output_stream, $result);
+// Write the delimiter
+fwrite($output_stream, "__halt_compiler();");
+// Write the extra data
 stream_copy_to_stream($archive_stream, $output_stream);
 
 ?>

@@ -54,5 +54,3 @@ if(isset($actions->$action_name)) {
 else {
 	exit(page_renderer::render_main("Error - $settings->sitename", "<p>No action called " . strtolower($_GET["action"]) ." has been registered. Perhaps you are missing a module?</p>"));
 }
-
-__halt_compiler();
