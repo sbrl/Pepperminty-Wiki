@@ -1,5 +1,5 @@
 _docpress/
-build/*
+build/
 !build/index.php
 
 # Include the README

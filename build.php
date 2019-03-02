@@ -21,24 +21,38 @@ $module_index = [];
 // Defined just in case a module needs to reference them when we require() them
 // to gain information
 $env = $paths = new stdClass();
-$paths->extra_data_directory = "._extra_data";
+$paths->extra_data_directory = "build/._extra_data";
 
 function register_module($settings)
 {
-	global $module_index;
+	global $module_index, $paths;
 	
-	// If the optional flag isn't set, then we should set it to false.
-	if(!isset($settings["optional"]) || !is_bool($settings["optional"]))
-		$settings["optional"] = false;
+	// Prepare any extra files
+	if(!file_exists($paths->extra_data_directory))
+		mkdir($paths->extra_data_directory, 0750);
+	
+	foreach($settings["extra_data"] ?? [] as $filename => $file_def) {
+		$destination_filename = "$paths->extra_data_directory/{$settings["id"]}/$filename";
+		if(!file_exists(dirname($destination_filename)))
+			mkdir(dirname($destination_filename), 0750, true);
+		
+		$source = fopen($file_def, "r");
+		$destination = fopen($destination_filename, "w");
+		
+		stream_copy_to_stream($source, $destination);
+		fclose($source);
+		fclose($destination);
+	}
 	
 	$newmodule = [
+		"id" => $settings["id"],
 		"name" => $settings["name"],
 		"version" => $settings["version"],
 		"author" => $settings["author"],
 		"description" => $settings["description"],
-		"id" => $settings["id"],
 		"lastupdate" => filemtime("modules/" . $settings["id"] . ".php"),
-		"optional" => $settings["optional"],
+		// May not be set. Defaults to false
+		"optional" => $settings["optional"] ?? false,
 		"extra_data" => $settings["extra_data"] ?? []
 	];
 	$module_index[] = $newmodule;
