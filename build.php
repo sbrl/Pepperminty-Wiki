@@ -23,6 +23,10 @@ $module_index = [];
 $env = $paths = new stdClass();
 $paths->extra_data_directory = "build/._extra_data";
 
+/**
+ * Registers a new Pepperminty Wiki module. All module files should call this first.
+ * @param	array	$settings An associative array defining the module.
+ */
 function register_module($settings)
 {
 	global $module_index, $paths;

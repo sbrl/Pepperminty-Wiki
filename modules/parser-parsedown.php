@@ -253,13 +253,26 @@ function parsedown_pagename_resolve($pagename) {
  * ██       ██ ██     ██    ██      ██  ██ ██      ██ ██ ██    ██ ██  ██ ██      ██
  * ███████ ██   ██    ██    ███████ ██   ████ ███████ ██  ██████  ██   ████ ███████
 */
+/**
+ * The Peppermint-flavoured Parsedown parser.
+ */
 class PeppermintParsedown extends ParsedownExtra
 {
+	/**
+	 * The base directory with which internal links will be resolved.
+	 * @var string
+	 */
 	private $internalLinkBase = "./%s";
 	
-	protected $maxParamDepth = 0;
+	/**
+	 * The parameter stack. Used for recursive templating.
+	 * @var array
+	 */
 	protected $paramStack = [];
 	
+	/**
+	 * Creates a new Peppermint Parsedown instance.
+	 */
 	function __construct()
 	{
 		// Prioritise our internal link parsing over the regular link parsing
@@ -279,6 +292,10 @@ class PeppermintParsedown extends ParsedownExtra
 	 *    ██    █████   ██ ████ ██ ██████  ██      ███████    ██    ██ ██ ██  ██ ██   ███
 	 *    ██    ██      ██  ██  ██ ██      ██      ██   ██    ██    ██ ██  ██ ██ ██    ██
 	 *    ██    ███████ ██      ██ ██      ███████ ██   ██    ██    ██ ██   ████  ██████
+	 */
+	/**
+	 * Parses templating definitions.
+	 * @param string $fragment The fragment to parse it out from.
 	 */
 	protected function inlineTemplate($fragment)
 	{
@@ -410,6 +427,11 @@ class PeppermintParsedown extends ParsedownExtra
 		}
 	}
 	
+	/**
+	 * Handles parsing out templates - recursively - and the parameter stack associated with it.
+	 * @param  [type] $source [description]
+	 * @return [type]         [description]
+	 */
 	protected function templateHandler($source)
 	{
 		global $pageindex, $env;
@@ -426,7 +448,6 @@ class PeppermintParsedown extends ParsedownExtra
 			return false;
 		
 		// Parse the parameters
-		$this->maxParamDepth++;
 		$params = [];
 		$i = 0;
 		foreach($parts as $part)
@@ -480,6 +501,10 @@ class PeppermintParsedown extends ParsedownExtra
 	 * ██      ██ ██ ██  ██ █████   ███████
 	 * ██      ██ ██  ██ ██ ██  ██       ██
 	 * ███████ ██ ██   ████ ██   ██ ███████
+	 */
+	/**
+	 * Parses internal links
+	 * @param  string $fragment The fragment to parse.
 	 */
 	protected function inlineInternalLink($fragment)
 	{
@@ -592,6 +617,10 @@ class PeppermintParsedown extends ParsedownExtra
 	 * ██ ██ ████ ██ ███████ ██   ███ █████   ███████
 	 * ██ ██  ██  ██ ██   ██ ██    ██ ██           ██
 	 * ██ ██      ██ ██   ██  ██████  ███████ ███████
+ 	 */
+ 	/**
+ 	 * Parses the extended image syntax.
+ 	 * @param  string $fragment The source fragment to parse.
  	 */
 	protected function inlineExtendedImage($fragment)
 	{
@@ -766,6 +795,12 @@ class PeppermintParsedown extends ParsedownExtra
 	# Static Methods
 	# ~
 	
+	/**
+	 * Extracts the page names from internal links in a given markdown source.
+	 * Does not actually _parse_ the source - only extracts via a regex.
+	 * @param	string	$page_text	The source text to extract a list of page names from.
+	 * @return	array	A list of page names that the given source text links to.
+	 */
 	public static function extract_page_names($page_text) {
 		global $pageindex;
 		preg_match_all("/\[\[([^\]]+)\]\]/", $page_text, $linked_pages);
@@ -801,12 +836,23 @@ class PeppermintParsedown extends ParsedownExtra
 	# Utility Methods
 	# ~
 	
-	private function isFloatValue($value)
+	/**
+	 * Returns whether a string is a valid float: XXXXXX; value.
+	 * Used in parsing the extended image syntax.
+	 * @param	string	$value The value check.
+	 * @return	bool	Whether it's valid or not.
+	 */
+	private function isFloatValue(string $value)
 	{
 		return in_array(strtolower($value), [ "left", "right" ]);
 	}
 	
-	private function parseSizeSpec($text)
+	/**
+	 * Parses a size specifier into an array.
+	 * @param	string	$text	The source text to parse. e.g. "256x128"
+	 * @return	array|bool	The parsed size specifier. Example: ["x" => 256, "y" => 128]. Returns false if parsing failed.
+	 */
+	private function parseSizeSpec(string $text)
 	{
 		if(strpos($text, "x") === false)
 			return false;
@@ -827,6 +873,11 @@ class PeppermintParsedown extends ParsedownExtra
 		];
 	}
 	
+	/**
+	 * Escapes the source text via htmlentities.
+	 * @param	string	$text	The text to escape.
+	 * @return	string	The escaped string.
+	 */
 	protected function escapeText($text)
 	{
 		return htmlentities($text, ENT_COMPAT | ENT_HTML5);
