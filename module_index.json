@@ -25,7 +25,7 @@
         "version": "0.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action called 'random' that redirects you to a random page.",
-        "lastupdate": 1530448215,
+        "lastupdate": 1551543744,
         "optional": false,
         "extra_data": []
     },
@@ -205,9 +205,11 @@
         "version": "0.17.3",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
-        "lastupdate": 1548629209,
+        "lastupdate": 1551560775,
         "optional": false,
-        "extra_data": []
+        "extra_data": {
+            "diff.min.js": "https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/jsdiff\/2.2.2\/diff.min.js"
+        }
     },
     {
         "id": "page-export",

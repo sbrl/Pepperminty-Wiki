@@ -2,11 +2,12 @@
 
 echo("*** Preparing environment ***\n");
 
+ini_set("user_agent", "Pepperminty-Wiki-Downloader PHP/" . phpversion() . "; +https://github.com/sbrl/Pepperminty-Wiki/ Pepperminty-Wiki/" . file_get_contents("version"));
+
 $build_env = new stdClass();
 $build_env->target = "build/index.php";
 
-if(file_exists($build_env->target))
-{
+if(file_exists($build_env->target)) {
 	echo("Deleting old target...\n");
 	unlink($build_env->target);
 }

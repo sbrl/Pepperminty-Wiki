@@ -11,15 +11,6 @@ if(!isset($actions->credits))
 	exit(page_renderer::render_main("Error - $settings->$sitename", "<p>No credits page detected. The credits page is a required module!</p>"));
 }
 
-// Download all the requested remote files
-ini_set("user_agent", "$settings->sitename (Pepperminty-Wiki-Downloader; PHP/" . phpversion() . "; +https://github.com/sbrl/Pepperminty-Wiki/) Pepperminty-Wiki/$version");
-foreach($remote_files as $remote_file_def) {
-	if(file_exists($remote_file_def["local_filename"]) && filesize($remote_file_def["local_filename"]) > 0)
-		continue;
-	
-	error_log("[ Pepperminty-Wiki/$settings->sitename ] Downloading {$remote_file_def["local_filename"]} from {$remote_file_def["remote_url"]}");
-	file_put_contents($remote_file_def["local_filename"], fopen($remote_file_def["remote_url"], "rb"));
-}
 
 //////////////////////////////////
 /// Final Consistency Measures ///

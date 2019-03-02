@@ -5,15 +5,13 @@ register_module([
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
+	"extra_data" => [
+		"diff.min.js" => "https://cdnjs.cloudflare.com/ajax/libs/jsdiff/2.2.2/diff.min.js"
+	],
 	
 	"code" => function() {
 		global $settings, $env;
 		
-		// Download diff.min.js - which we use when displaying edit conflicts
-		register_remote_file([
-			"local_filename" => "diff.min.js",
-			"remote_url" => "https://cdnjs.cloudflare.com/ajax/libs/jsdiff/2.2.2/diff.min.js"
-		]);
 		
 		/**
 		 * @api {get} ?action=edit&page={pageName}[&newpage=yes]	Get an editing page
@@ -438,7 +436,7 @@ window.addEventListener("load", function(event) {
 });
 DIFFSCRIPT;
 					// diff.min.js is downloaded above
-					$content .= "\n<script src='diff.min.js'></script>
+					$content .= "\n<script src='$paths->extra_data_dir/page-edit/diff.min.js'></script>
 					<script>$diffScript</script>\n";
 					
 					header("x-failure-reason: edit-conflict");

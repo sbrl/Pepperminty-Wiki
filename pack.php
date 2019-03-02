@@ -39,18 +39,19 @@ if(php_sapi_name() != "cli") {
 
 log_str("Reading in core files...\n");
 
-// We trim from the end here because of the __halt_compiler() directive
-$core = rtrim(file_get_contents("core.php"));
-$settings = file_get_contents("settings.fragment.php");
-$settings = str_replace([ "<?php", "?>" ], "", $settings);
+$core_files_list = glob("core/*.php"); natsort($core_files_list);
+
+$core = "<?php\n";
+foreach($core_files_list as $core_filename)
+	$core .= str_replace([ "<?php", "?>" ], "", file_get_contents($core_filename));
+
+
 $core = str_replace([
-	"//{settings}",
 	"{version}",
 	"{commit}",
 	"{guiconfig}",
 	"{default-css}"
 ], [
-	$settings,
 	trim(file_get_contents("version")),
 	exec("git rev-parse HEAD"),
 	trim(file_get_contents("peppermint.guiconfig.json")),

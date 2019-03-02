@@ -121,13 +121,12 @@ function task_docs-livereload {
 function task_start-server {
 	task_begin "Starting Server";
 	if [ -f "${server_pid_file}" ]; then
-		echo -e "${FRED}${HC}Error: A development server appears to be running already. Try running the 'stop-server' task before starting it again.${RS}";
-		task_end 1;
+		task_end 1 "${FRED}${HC}Error: A development server appears to be running already. Try running the 'stop-server' task before starting it again.${RS}";
 	fi
 	php -S [::]:35623 -t build/ &
 	exit_code=$?; pid=$!;
 	echo "${pid}" >"${server_pid_file}";
-	task_end "${exit_code}";
+	task_end "${exit_code}" "";
 	
 	task_begin "Opening Browser";
 	sensible-browser [::]:35623;
