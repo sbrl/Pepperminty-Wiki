@@ -12,6 +12,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ### Changed
  - Core sharding: split `core.php` into multiple files
  - Use Parsedown's new untrusted feature for comments
+ - Added new `all_untrusted` setting to allow treating *everything* as untrusted (default: false) - turn it on if your wiki allows anonymous edits
 
 ### Removed
  - [Module API] Not often I have a removed section! Remove remote file system.
