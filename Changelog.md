@@ -5,6 +5,9 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ## v0.19-dev
 > The update that changed the world! Turn everything upside-down.
 
+### Fixed
+ - Fixed double-escaping of rendered HTML when nesting templates
+
 ### Added
  - [Module API] Added new extra data system. See `parser-parsedown` and `page-edit` for an example.
      - Extra data is packed into a zip archive, which is packed into `index.php` via [`__halt_compiler();`](https://devdocs.io/php/function.halt-compiler)
