@@ -134,4 +134,6 @@ fwrite($output_stream, "__halt_compiler();");
 // Write the extra data
 stream_copy_to_stream($archive_stream, $output_stream);
 
+// Cleanup
+unlink($temp_filename);
 ?>
