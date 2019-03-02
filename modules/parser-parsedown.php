@@ -483,7 +483,7 @@ class PeppermintParsedown extends ParsedownExtra
 		
 		return [
 			"name" => "div",
-			"text" => $parsedTemplateSource,
+			"rawHtml" => $parsedTemplateSource,
 			"attributes" => [
 				"class" => "template"
 			]
