@@ -623,3 +623,26 @@ function email_users($usernames, $subject, $body)
 	}
 	return $emailsSent;
 }
+
+/**
+ * Recursively deletes a directory and it's contents.
+ * Adapted by Starbeamrainbowlabs
+ * @param	string	$path			The path to the directory to delete.
+ * @param	bool	$delete_self	Whether to delete the top-level directory. Set this to false to delete only a directory's contents
+ * @source https://stackoverflow.com/questions/4490637/recursive-delete
+ */
+function delete_recursive($path, $delete_self = true) {
+    $it = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($path),
+        RecursiveIteratorIterator::CHILD_FIRST
+    );
+    foreach ($it as $file) {
+        if (in_array($file->getBasename(), [".", ".."]))
+            continue;
+        if($file->isDir())
+            rmdir($file->getPathname());
+		else
+            unlink($file->getPathname());
+    }
+    if($delete_self) rmdir($path);
+}
