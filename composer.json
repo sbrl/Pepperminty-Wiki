@@ -1,0 +1,15 @@
+{
+    "name": "sbrl/peppermint",
+    "description": "A wiki in a box.",
+    "type": "project",
+    "require": {
+        "luminous/luminous": "^0.7.0"
+    },
+    "license": "MPL-2.0",
+    "authors": [
+        {
+            "name": "Starbeamrainbowlabs",
+            "email": "sbrl@starbeamrainbowlabs.com"
+        }
+    ]
+}
