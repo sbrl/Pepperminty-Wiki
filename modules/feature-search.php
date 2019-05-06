@@ -483,6 +483,7 @@ class search
 {
 	/**
 	 * Words that we should exclude from the inverted index
+	 * @var string[]
 	 */
 	public static $stop_words = [
 		"a", "about", "above", "above", "across", "after", "afterwards", "again",
@@ -562,7 +563,7 @@ class search
 	/**
 	 * Converts a source string into a series of raw tokens.
 	 * @param	string	$source				The source string to process.
-	 * @param	boolean	$capture_offsets	Whether to capture & return the character offsets of the tokens detected. If true, then each token returned will be an array in the form [ token, char_offset ].
+	 * @param	bool	$capture_offsets	Whether to capture & return the character offsets of the tokens detected. If true, then each token returned will be an array in the form [ token, char_offset ].
 	 * @return	array	An array of raw tokens extracted from the specified source string.
 	 */
 	public static function tokenize($source, $capture_offsets = false)
@@ -690,13 +691,17 @@ class search
 	/**
 	 * Reads in and parses an inverted index, measuring the time it takes to do so.
 	 * @param  string $invindex_filename The path to the file inverted index to parse.
+	 * @return boolean Whether the measurement was actually able to take place. Usually this will be true, but it will return false if it can't find the specified index.
 	 */
 	public static function measure_invindex_load_time($invindex_filename) {
 		global $env;
-		
+		if(!file_exists($invindex_filename))
+			return false;
 		$searchindex_decode_start = microtime(true);
 		search::load_invindex($invindex_filename);
 		$env->perfdata->searchindex_decode_time = round((microtime(true) - $searchindex_decode_start)*1000, 3);
+		
+		return true;
 	}
 	
 	/**
