@@ -175,7 +175,7 @@ register_module([
 					$tag_counts[] = count($page_entry->tags ?? []);
 				
 				$result = new stdClass(); // value, state, completed
-				$result->value = round(array_sum($tag_counts) / count($tag_counts), 3);
+				$result->value = empty($tag_counts) ? -1 : round(array_sum($tag_counts) / count($tag_counts), 3);
 				$result->completed = true;
 				return $result;
 			}

@@ -8,6 +8,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ### Fixed
  - Fixed double-escaping of rendered HTML when nesting templates
  - Squashed a warning if the search index doesn't exist yet
+ - Fixed the stats updater if no pages in the system have tags yet
 
 ### Added
  - [Module API] Added new extra data system. See `parser-parsedown` and `page-edit` for an example.
