@@ -26,7 +26,15 @@ Here's a list of things that I want to add at some point (please feel free to [s
  - Intelligent auto-updating system that doesn't wipe your settings / module choices
  - A module registry of some sort (ideas welcome!)
  - Image maps (#103)
- - An app for Android (Sorry, iOS is not practical at the current time. Feel free to make one yourself! I'm happy to help out if you need help with Pepperminty Wiki itself (e.g. making it more machine-readable (#138)) - message on Gitter (see above), or open an issue on this repository.) - in progress over [here](https://github.com/sbrl/Pepperminty-Wiki-Client-Android/)!
+ - An app for Android - in progress over [here](https://github.com/sbrl/Pepperminty-Wiki-Client-Android/)!
+     - Participate in the beta: https://play.google.com/apps/testing/com.sbrl.peppermint
+     - Report issues [here](https://github.com/sbrl/Pepperminty-Wiki-Client-Android/issues/new)
+     - An iOS app is not practical for the foreseeable future.
+         - It's too expensive.
+         - The ecosystem is very closed off, and I've no idea how to make an iOS app (nor do I own a device to test it on)
+         - Feel free to make one yourself!
+         - I'm happy to help out if you need help with Pepperminty Wiki itself (e.g. making it more machine-readable (#138))
+         - Message on Gitter (see above), or open an issue on this repository.
  - User watchlists
  - Theme gallery (#5)
  - (See more on the [issue tracker](https://github.com/sbrl/Pepperminty-Wiki/issues)!)
