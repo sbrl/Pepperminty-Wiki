@@ -44,8 +44,8 @@ register_module([
 			foreach($settings->users as $username => $user_data) {
 				$content .= "<tr>";
 				$content .= "<td>" . page_renderer::render_username($username) . "</td>";
-				if(!empty($user_data->email))
-					$content .= "<td><a href='mailto:" . htmlentities($user_data->email, ENT_HTML5 | ENT_QUOTES) . "'>" . htmlentities($user_data->email) . "</a></td>\n";
+				if(!empty($user_data->emailAddress))
+					$content .= "<td><a href='mailto:" . htmlentities($user_data->emailAddress, ENT_HTML5 | ENT_QUOTES) . "'>" . htmlentities($user_data->emailAddress) . "</a></td>\n";
 				else
 					$content .= "<td><em>(None provided)</em></td>\n";
 				$content .= "<td>";
@@ -119,7 +119,7 @@ register_module([
 			$user_data = new stdClass();
 			$user_data->password = hash_password($new_password);
 			if(!empty($new_email))
-				$user_data->email = $new_email;
+				$user_data->emailAddress = $new_email;
 			
 			$settings->users->$new_username = $user_data;
 			

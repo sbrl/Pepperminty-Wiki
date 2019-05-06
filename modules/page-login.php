@@ -114,6 +114,13 @@ register_module([
 						error_log("[Pepperminty Wiki] Updated password hash for $user.");
 					}
 					
+					// If the email address is still in the old field, migrate it
+					if(!empty($settings->users->{$user}->email)) {
+						$settings->users->{$user}->emailAddress = $settings->users->{$user}->email;
+						unset($settings->users->{$user}->email);
+						save_settings();
+					}
+					
 					$_SESSION["$settings->sessionprefix-user"] = $user;
 					$_SESSION["$settings->sessionprefix-pass"] = $new_password_hash ?? hash_password($pass);
 					$_SESSION["$settings->sessionprefix-expiretime"] = time() + 60*60*24*30; // 30 days from now
