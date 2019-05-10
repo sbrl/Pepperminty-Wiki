@@ -29,8 +29,7 @@ if(file_exists("$settingsFilename.compromised")) {
 
 $guiConfig = json_decode($guiConfig);
 $settings = new stdClass();
-if(!file_exists($settingsFilename))
-{
+if(!file_exists($settingsFilename)) {
 	// Copy the default settings over to the main settings array
 	foreach ($guiConfig as $key => $value)
 		$settings->$key = $value->default;
@@ -41,18 +40,15 @@ if(!file_exists($settingsFilename))
 else
 	$settings = json_decode(file_get_contents("peppermint.json"));
 
-if($settings === null)
-{
+if($settings === null) {
 	header("content-type: text/plain");
 	exit("Error: Failed to decode the settings file! Does it contain a syntax error?");
 }
 
 // Fill in any missing properties
 $settingsUpgraded = false;
-foreach($guiConfig as $key => $propertyData)
-{
-	if(!isset($settings->$key))
-	{
+foreach($guiConfig as $key => $propertyData) {
+	if(!isset($settings->$key)) {
 		$settings->$key = $propertyData->default;
 		$settingsUpgraded = true;
 	}
