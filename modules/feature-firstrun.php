@@ -8,6 +8,7 @@ register_module([
 	"id" => "feature-firstrun",
 	"code" => function() {
 		
+		// TODO: Remove this line once it's ready
 		return true; // Stop this module from actually being executed - it's not ready yet!
 		
 		// TODO: Figure out how to detect pre-existing wikis here
