@@ -8,10 +8,7 @@ register_module([
 	"id" => "feature-firstrun",
 	"code" => function() {
 		
-		// TODO: Remove this line once it's ready
-		return true; // Stop this module from actually being executed - it's not ready yet!
-		
-		// TODO: Figure out how to detect pre-existing wikis here
+		// NOTE: We auto-detect pre-existing wikis in 01-settings.fragment.php
 		
 		/**
 		 * @api {get} ?action=firstrun	Display the firstrun page
@@ -104,6 +101,19 @@ register_module([
 		});
 		
 		
+		/**
+		 * @api {post} ?action=firstrun-complete	Complete the first-run wizard.
+		 * @apiName FirstRunComplete
+		 * @apiGroup Settings
+		 * @apiPermission Anonymous
+		 *
+		 * @apiParam	{string}	username		The username for the first admin account
+		 * @apiParam	{string}	password		The password for the first admin account
+		 * @apiParam	{string}	password-again	The password repeated for the first admin account
+		 * @apiParam	{string}	email-address	The email address for the first admin account
+		 * @apiParam	{string}	wiki-name		The name of the wiki. Saved to $settings->sitename
+		 * @apiParam	{string}	data-dir		The directory on the server to save the wiki data to. Saved to $settings->data_storage_dir.
+		 */
 		add_action("firstrun-complete", function() {
 			global $version, $commit, $settings;
 			
@@ -154,6 +164,7 @@ register_module([
 			$user_data->emailAddress = $_POST["email-address"];
 			$settings->users = new stdClass();
 			$settings->users->{$_POST["username"]} = $user_data;
+			$settings->admins = [ $_POST["username"] ]; // Don't forget to mark them as a mod
 			
 			// Apply the settings
 			$settings->firstrun_complete = true;

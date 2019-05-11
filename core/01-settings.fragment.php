@@ -46,15 +46,21 @@ if($settings === null) {
 }
 
 // Fill in any missing properties
-$settingsUpgraded = false;
+$settings_upgraded = false;
 foreach($guiConfig as $key => $propertyData) {
 	if(!isset($settings->$key)) {
 		$settings->$key = $propertyData->default;
-		$settingsUpgraded = true;
+		$settings_upgraded = true;
 	}
 }
-if($settingsUpgraded)
+if($settings_upgraded)
 	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
+
+// If the first-run wizard hasn't been completed but we've filled in 1 or more new settings, then we must be a pre-existing wiki upgrading from a previous version. We can guarantee this because of the new firstrun_complete setting	
+if(!$settings->firstrun_complete && $settings_upgraded) {
+	$settings->firstrun_complete = true;
+	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
+}
 
 // Insert the default CSS if requested
 $defaultCSS = <<<THEMECSS
@@ -67,4 +73,5 @@ THEMECSS;
 // often, and even if it does it shouldn't matter :P
 if($settings->sessionprefix == "auto")
 	$settings->sessionprefix = "pepperminty-wiki-" . preg_replace('/[^a-z0-9\-_]/', "-", strtolower($settings->sitename));
+
 ?>
