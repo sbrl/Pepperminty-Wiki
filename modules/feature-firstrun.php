@@ -13,10 +13,6 @@ register_module([
 		
 		// TODO: Figure out how to detect pre-existing wikis here
 		
-		if(!$firstrun_complete && count(glob("._peppermint_secret_*")) == 0) {
-			
-		}
-		
 		/**
 		 * @api {get} ?action=firstrun	Display the firstrun page
 		 * @apiName FirstRun
@@ -57,6 +53,13 @@ register_module([
 <p>Fill out the below form to get your wiki up and running!</p>
 <form method='post' action='?action=firstrun-complete'>
 	<fieldset>
+		<legend>Authorisation</legend>
+		
+		<p><em>Find your wiki secret in the <code>secret</code> property inside <code>peppermint.json</code>. Don't forget to avoid copying the quotes surrounding the value!</em></p>
+		<label for='secret'>Wiki Secret:</label>
+		<input type='password' id='secret' name='secret' />
+	</fieldset>
+	<fieldset>
 		<legend>Admin account details</legend>
 		
 		<label for='username'>Username:</label>
@@ -96,6 +99,11 @@ register_module([
 			if($settings->firstrun_complete) {
 				http_response_code(400);
 				exit(page_renderer::render_main("Setup complete - Error - $settings->sitename", "<p>Oops! Looks like $settings->sitename is already setup and ready to go! Go to the <a href='?action=$settings->defaultaction&page=".rawurlencode($settings->defaultpage)."'>" . htmlentities($settings->defaultpage)."</a> to get started!</p>"));
+			}
+			
+			if($_POST["secret"] !== $settings->secret) {
+				http_response_code(401);
+				exit(page_renderer::render_main("Incorrect secret - Pepperminty Wiki", "<p>Oops! That secret was incorrect. Open <code>peppermint.json</code> that is automatically written to the directory alongside the <code>index.php</code> that you uploaded to your web server and copy the value of the <code>secret</code> property into the wiki secret box on the previous page, taking care to avoid copying the quotation marks.</p>"));
 			}
 			
 			// $_POST: username, email-address, password, password-again, wiki-name, data-dir
