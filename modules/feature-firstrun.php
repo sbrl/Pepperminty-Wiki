@@ -29,7 +29,7 @@ register_module([
  		 * ██      ██ ██   ██ ███████    ██    ██   ██  ██████  ██   ████
 		 */
 		add_action("firstrun", function() {
-			global $settings;
+			global $settings, $settingsFilename;
 			
 			if($settings->firstrun_complete) {
 				http_response_code(400);
@@ -42,7 +42,16 @@ register_module([
 				<p>You can still complete the setup manually, however! Once done, set <code>firstrun_complete</code> in peppermint.json to <code>true</code>.</p>"));
 			}
 			
-			
+			$request_url = full_url();
+			$request_url = preg_replace("/\/(index.php)?\?.*$/", "/peppermint.json");
+			file_get_contents($request_url);
+			$response_code = intval(explode(" ", $http_response_header[0])[1]);
+			if($response_code >= 200 || $response_code < 300) {
+				file_put_contents("$settingsFilename.compromised", "compromised");
+				http_response_code(307);
+				header("location: index.php");
+				exit();
+			}
 			
 			// TODO: Check the environment here first
 			//  - Make sure peppermint.json isn't accessible
