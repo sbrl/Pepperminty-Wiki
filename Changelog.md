@@ -18,6 +18,9 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - See `parser-parsedown` and `page-edit` for examples on how to use it.
  - [Module API] Added new `delete_recursive()` function.
  - Added a new obvious link to the user table at the top of the master settings page.
+ - Added a new first-run wizard to help new users set up the basics of their wiki.
+     - It also checks to ensure that access to `peppermint.json` is blocked correctly (coming soon as a one-time check to pre-existing wikis)
+     - Pre-existing wikis will not see this first-run wizard - a new `firstrun_complete` setting has been added that's automatically set to true if Pepperminty Wiki does a settings upgrade
 
 ### Changed
  - Core sharding: split `core.php` into multiple files
