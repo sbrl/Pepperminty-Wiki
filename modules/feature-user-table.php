@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "User Organiser",
-	"version" => "0.1",
+	"version" => "0.1.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a organiser page that lets moderators (or better) control the reegistered user accounts, and perform adminstrative actions such as password resets, and adding / removing accounts.",
 	"id" => "feature-user-table",
@@ -190,7 +190,7 @@ https://github.com/sbrl/Pepperminty-Wiki/
 			global $env, $settings;
 			
 			if(!$env->is_admin) {
-				http_response_400(401);
+				http_response_code(401);
 				exit(page_renderer::render_main("Error - Set Password - $settings->sitename", "<p>Error: You aren't logged in as a moderator, so you don't have permission to set a user's password.</p>"));
 			}
 			if(empty($_POST["user"])) {
