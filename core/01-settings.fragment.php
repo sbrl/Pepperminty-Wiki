@@ -48,7 +48,8 @@ if($settings === null) {
 // Fill in any missing properties
 $settings_upgraded = false;
 foreach($guiConfig as $key => $propertyData) {
-	if(!isset($settings->$key)) {
+	if(!property_exists($settings, $key)) {
+		error_log("[settings] Upgrading $key");
 		$settings->$key = $propertyData->default;
 		$settings_upgraded = true;
 	}
