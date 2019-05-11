@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Login",
-	"version" => "0.9.3",
+	"version" => "0.9.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
@@ -239,8 +239,7 @@ function hash_password_properties() {
  * @package	page-login
  * @param	string	$pass	The password to hash.
  * 
- * @return	string	The hashed password. Uses sha3 if $settings->use_sha3 is
- * 					enabled, or sha256 otherwise.
+ * @return	string	The hashed password. Uses password_hash() under-the-hood, but with some additional extras to avoid known issues.
  */
 function hash_password($pass) {
 	$props = hash_password_properties();
@@ -278,7 +277,8 @@ function hash_password_update($pass, $hash) {
  * automatically.
  * Starts at 10 and works upwards in increments of 1. Goes on until a value is 
  * found that's greater than the target - or 10x the target time elapses.
- * @return integer The automatically calculated password hashing cost.
+ * @param	bool	$verbose	Whether to output verbose progress information to the client or not.
+ * @return	int		The automatically calculated password hashing cost.
  */
 function hash_password_compute_cost($verbose = false) {
 	global $settings;
