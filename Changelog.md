@@ -17,6 +17,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Extra data is packed into a zip archive, which is packed into `index.php` via [`__halt_compiler();`](https://devdocs.io/php/function.halt-compiler)
      - See `parser-parsedown` and `page-edit` for examples on how to use it.
  - [Module API] Added new `delete_recursive()` function.
+ - Added a new obvious link to the user table at the top of the master settings page.
 
 ### Changed
  - Core sharding: split `core.php` into multiple files
