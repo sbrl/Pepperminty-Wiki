@@ -1,4 +1,5 @@
 {
+	"firstrun_complete": { "type": "checkbox", "description": "Whether the first-run wizard has completed or not.", "default": false },
 	"sitename": { "type": "text", "description": "Your wiki's name.", "default": "Pepperminty Wiki" },
 	"defaultpage": { "type": "text", "description": "The name of the page that will act as the home page for the wiki. This page will be served if you don't specify a page.", "default": "Main Page" },
 	"admindetails_name": { "type": "text", "description": "Your name as the wiki administrator.", "default": "Administrator" },
