@@ -7,8 +7,15 @@ register_module([
 	"description" => "Displays a special page to aid in setting up a new wiki for the first time.",
 	"id" => "feature-firstrun",
 	"code" => function() {
+		global $settings, $env;
+		
 		
 		// NOTE: We auto-detect pre-existing wikis in 01-settings.fragment.php
+		if(!$settings->firstrun_complete && preg_match("/^firstrun/", $env->action) !== 1) {
+			http_response_code(307);
+			header("location: ?action=firstrun");
+			exit("Redirecting you to the first-run wizard....");
+		}
 		
 		/**
 		 * @api {get} ?action=firstrun	Display the firstrun page
@@ -39,15 +46,21 @@ register_module([
 				<p>You can still complete the setup manually, however! Once done, set <code>firstrun_complete</code> in peppermint.json to <code>true</code>.</p>"));
 			}
 			
-			$request_url = full_url();
-			$request_url = preg_replace("/\/(index.php)?\?.*$/", "/peppermint.json");
-			file_get_contents($request_url);
-			$response_code = intval(explode(" ", $http_response_header[0])[1]);
-			if($response_code >= 200 || $response_code < 300) {
-				file_put_contents("$settingsFilename.compromised", "compromised");
-				http_response_code(307);
-				header("location: index.php");
-				exit();
+			if(!$settings->disable_peppermint_access_check &&
+				php_sapi_name() !== "cli-server") { // The CLI server is single threaded, so it can't support loopback requests
+				$request_url = full_url();
+				$request_url = preg_replace("/\/(index.php)?\?.*$/", "/peppermint.json", $request_url);
+				file_get_contents($request_url);
+				$response_code = intval(explode(" ", $http_response_header[0])[1]);
+				if($response_code >= 200 || $response_code < 300) {
+					file_put_contents("$settingsFilename.compromised", "compromised");
+					http_response_code(307);
+					header("location: index.php");
+					exit();
+				}
+			}
+			else {
+				error_log("Warning: The public peppermint.json access check has been disabled (either manually or because you're using a local PHP development server with php -S ....). It's strongly recommended you ensure that access from outside is blocked to peppermint.json to avoid (many) security issues and other nastiness such as stealing of site secrets and password hashes.");
 			}
 			
 			// TODO: Check the environment here first
@@ -78,10 +91,10 @@ register_module([
 		<br />
 		<p><em>Longer is better! Aim for at least 14 characters.</em></p>
 		<label for='username'>Password:</label>
-		<input type='text' id='password' name='password' required />
+		<input type='password' id='password' name='password' required />
 		<br />
 		<label for='username'>Repeat Password:</label>
-		<input type='text' id='password-again' name='password-again' required />
+		<input type='password' id='password-again' name='password-again' required />
 	</fieldset>
 	<fieldset>
 		<legend>Wiki Details</legend>

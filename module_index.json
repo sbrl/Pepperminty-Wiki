@@ -75,7 +75,7 @@
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
         "description": "Displays a special page to aid in setting up a new wiki for the first time.",
-        "lastupdate": 1557582295,
+        "lastupdate": 1557611407,
         "optional": false,
         "extra_data": []
     },
@@ -205,7 +205,7 @@
         "version": "0.10",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to delete pages.",
-        "lastupdate": 1501009581,
+        "lastupdate": 1557585339,
         "optional": false,
         "extra_data": []
     },
