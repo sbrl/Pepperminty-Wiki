@@ -42,6 +42,8 @@ register_module([
 				<p>You can still complete the setup manually, however! Once done, set <code>firstrun_complete</code> in peppermint.json to <code>true</code>.</p>"));
 			}
 			
+			
+			
 			// TODO: Check the environment here first
 			//  - Make sure peppermint.json isn't accessible
 			//  - Check for required modules?
@@ -116,7 +118,7 @@ register_module([
 				http_response_code(400);
 				exit(page_renderer::render_main("Missing information - Error - Pepperminty Wiki", "<p>Oops! Looks like you forgot to enter an email address. Try going back in your browser and filling one in.</p>"));
 			}
-			if(!filter_var($_POST["email-address"], FILTER_VALIDATE_EMAIL)) {
+			if(filter_var($_POST["email-address"], FILTER_VALIDATE_EMAIL) === false) {
 				http_response_code(400);
 				exit(page_renderer::render_main("Invalid email address - Error - Pepperminty Wiki", "<p>Oops! Looks like that email address isn't valid. Try going back in your browser and correcting it.</p>"));
 			}
