@@ -108,13 +108,16 @@ function task_docs {
 	task_end $?;
 	
 	task_begin "Building Main Documentation";
-	node_modules/docpress/bin/docpress build;
+	node_modules/.bin/nightdocs -c nightdocs.toml
 	task_end $?;
 }
 
 function task_docs-livereload {
-	task_begin "Starting Livereload Documentation Server";
-	node_modules/docpress/bin/docpress serve;
+	task_begin "Listening for changes to docs";
+	while :; do
+		inotifywait -qr -e modify --format '%:e %f' ./docs/ nightdocs.toml;
+		node_modules/.bin/nightdocs -c nightdocs.toml;
+	done
 	task_end $?;
 }
 

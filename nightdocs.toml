@@ -1,0 +1,10 @@
+[template]
+project_name = "Pepperminty Wiki"
+logo_src = "https://sbrl.github.io/Pepperminty-Wiki/logo.svg"
+
+[directories]
+docs = "./docs"
+output = "./__nightdocs"
+
+[theme]
+file = "./docs/theme.css"
