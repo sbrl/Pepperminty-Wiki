@@ -26,6 +26,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Core sharding: split `core.php` into multiple files
  - Use Parsedown's new untrusted feature for comments
  - Added new `all_untrusted` setting to allow treating *everything* as untrusted (default: false) - turn it on if your wiki allows anonymous edits
+ - Switch to [nightdocs](https://gitlab.com/sbrl/nightdocs) instead of [docpress](https://docpress.github.io/) (the [official docs](https://starbeamrainbowlabs.com/labs/peppermint/_docpress/) will update & change URL on the next stable release)
 
 ### Removed
 Not often I have a removed section!
