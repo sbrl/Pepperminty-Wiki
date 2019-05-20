@@ -1,4 +1,4 @@
-# ![Pepperminty Wiki Logo](https://raw.githubusercontent.com/sbrl/Pepperminty-Wiki/master/logo.png) Pepperminty Wiki [![Build Status](https://travis-ci.org/sbrl/Pepperminty-Wiki.svg?branch=master)](https://travis-ci.org/sbrl/Pepperminty-Wiki) [![Join the chat at https://gitter.im/Pepperminty-Wiki/Lobby](https://badges.gitter.im/Pepperminty-Wiki/Lobby.svg)](https://gitter.im/Pepperminty-Wiki/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](https://raw.githubusercontent.com/sbrl/Pepperminty-Wiki/master/LICENSE)
+# ![Pepperminty Wiki Logo](https://raw.githubusercontent.com/sbrl/Pepperminty-Wiki/master/logo.png) Pepperminty Wiki [![Build Status](https://travis-ci.org/sbrl/Pepperminty-Wiki.svg?branch=master)](https://travis-ci.org/sbrl/Pepperminty-Wiki) [![Join the chat at https://gitter.im/Pepperminty-Wiki/Lobby](https://badges.gitter.im/Pepperminty-Wiki/Lobby.svg)](https://gitter.im/Pepperminty-Wiki/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](https://raw.githubusercontent.com/sbrl/Pepperminty-Wiki/master/LICENSE) [![Docker pulls count](https://img.shields.io/badge/dynamic/json.svg?color=blue&label=Docker%20Pulls&query=%24.pull_count&url=https%3A%2F%2Fhub.docker.com%2Fv2%2Frepositories%2Fsqlatenwiki%2Fpeppermintywiki%2F)](https://hub.docker.com/r/sqlatenwiki/peppermintywiki)
 
 > A Wiki in a box
 
@@ -43,7 +43,7 @@ Here's a list of things that I want to add at some point (please feel free to [s
 Is the feature you want to see not on this list or not implemented yet? [Open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) or [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls) - contributions welcome!
 
 ## Docker
-The recommended way of running Pepperminty Wiki is with a plain PHP-enabled web server. However, a docker container is generaourly provided by @SQL-enwiki. You can run it like so:
+The recommended way of running Pepperminty Wiki is with a plain PHP-enabled web server. However, a docker container is generously provided by @SQL-enwiki. You can run it like so:
 
 ```bash
 docker run -d sqlatenwiki/peppermintywiki:stable
