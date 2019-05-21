@@ -52,6 +52,7 @@ _(No changes have been made since the last beta release.)_
  - Added `count` and `offset` GET parameters to `recent-changes` action.
  - Added new `find_revisionid_timestamp()` function to `feature-recent-changes` module.
  - Added new parser output caching system!
+     - Saves to `._cache` in the data directory (alongside the pages themselves)
      - 2 new settings have been added: `parser_cache` and `parser_cache_min_size`
      - Uses a hash of the content, the _Pepperminty Wiki_ version, and the parser name as the cache id - so it should never serve stale content (unless you're actively working on particular areas of _Pepperminty Wiki_'s codebase of course)
      - Useful for longer pages
