@@ -144,7 +144,9 @@
 		"video/mp4",
 		"video/webm",
 		"audio/mp4",
-		"audio/mpeg"
+		"audio/mpeg",
+		"audio/flac",
+		"audio/ogg"
 	]},
 	"preview_file_type": { "type": "text", "description": "The default file type for previews.", "default": "image/png" },
 	"default_preview_size": { "type": "number", "description": "The default size of preview images in pixels.", "default": 640},
