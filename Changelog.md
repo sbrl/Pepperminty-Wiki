@@ -35,7 +35,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ### Removed
 Not often I have a removed section!
 
- - [Module API] Remove remote file system.
+ - [Module API] Remove remote file system in favour of the new extra data system. No more first-run downloads! They are all done at compile-time now.
 
 
 ## v0.18

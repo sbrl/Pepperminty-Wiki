@@ -22,7 +22,7 @@ None yet! Contact me or [open an issue](https://github.com/sbrl/Pepperminty-Wiki
 ## Todo
 Here's a list of things that I want to add at some point (please feel free to [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls) and help out!).
 
- - Better page history (revert to revision, compare revisions, etc.) (#78, #79)
+ - Better page history (~~revert to revision~~ done!, compare revisions, etc.) (~~#78~~, #79)
  - Intelligent auto-updating system that doesn't wipe your settings / module choices
  - A module registry of some sort (ideas welcome!)
  - Image maps (#103)
