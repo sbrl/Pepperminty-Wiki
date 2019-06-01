@@ -12,10 +12,10 @@
     {
         "id": "action-protect",
         "name": "Page protection",
-        "version": "0.2",
+        "version": "0.2.1",
         "author": "Starbeamrainbowlabs",
         "description": "Exposes Pepperminty Wiki's new page protection mechanism and makes the protect button in the 'More...' menu on the top bar work.",
-        "lastupdate": 1465751051,
+        "lastupdate": 1559400034,
         "optional": false,
         "extra_data": []
     },
@@ -75,7 +75,7 @@
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
         "description": "Displays a special page to aid in setting up a new wiki for the first time.",
-        "lastupdate": 1557611407,
+        "lastupdate": 1557611471,
         "optional": false,
         "extra_data": []
     },
@@ -92,10 +92,10 @@
     {
         "id": "feature-history",
         "name": "Page History",
-        "version": "0.4.1",
+        "version": "0.4.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
-        "lastupdate": 1541003921,
+        "lastupdate": 1559400114,
         "optional": false,
         "extra_data": []
     },
@@ -135,7 +135,7 @@
         "version": "0.7.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
-        "lastupdate": 1557182908,
+        "lastupdate": 1557653831,
         "optional": false,
         "extra_data": []
     },
@@ -152,10 +152,10 @@
     {
         "id": "feature-upload",
         "name": "Uploader",
-        "version": "0.5.14",
+        "version": "0.5.16",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
-        "lastupdate": 1548629209,
+        "lastupdate": 1559400139,
         "optional": false,
         "extra_data": []
     },
@@ -202,20 +202,20 @@
     {
         "id": "page-delete",
         "name": "Page deleter",
-        "version": "0.10",
+        "version": "0.10.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to delete pages.",
-        "lastupdate": 1557585339,
+        "lastupdate": 1559400151,
         "optional": false,
         "extra_data": []
     },
     {
         "id": "page-edit",
         "name": "Page editor",
-        "version": "0.17.3",
+        "version": "0.17.4",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
-        "lastupdate": 1551560775,
+        "lastupdate": 1559400186,
         "optional": false,
         "extra_data": {
             "diff.min.js": "https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/jsdiff\/2.2.2\/diff.min.js"
@@ -274,10 +274,10 @@
     {
         "id": "page-move",
         "name": "Page mover",
-        "version": "0.9.3",
+        "version": "0.9.4",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
-        "lastupdate": 1521408303,
+        "lastupdate": 1559400217,
         "optional": false,
         "extra_data": []
     },

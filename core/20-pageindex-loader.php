@@ -80,7 +80,7 @@ if(!file_exists($paths->pageindex))
 		// Store the new entry in the new page index
 		$pageindex->$pagekey = $newentry;
 	}
-	file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
+	save_pageindex();
 	unset($existingpages);
 }
 else

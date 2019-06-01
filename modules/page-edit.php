@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.17.3",
+	"version" => "0.17.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -504,8 +504,7 @@ DIFFSCRIPT;
 				if($pagedata !== $pagedata_orig)
 					file_put_contents("$env->storage_prefix$env->page.md", $pagedata);
 				
-				
-				file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
+				save_pageindex();
 				
 				if(isset($_GET["newpage"]))
 					http_response_code(201);

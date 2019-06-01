@@ -23,6 +23,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - It also checks to ensure that access to `peppermint.json` is blocked correctly (coming soon as a one-time check to pre-existing wikis)
      - Pre-existing wikis will not see this first-run wizard - a new `firstrun_complete` setting has been added that's automatically set to true if Pepperminty Wiki does a settings upgrade
  - Default to allowing lossless flac and ogg audio files to be uploaded
+ - Added new `minify_pageindex` setting, which defaults to `true` and causes the page index to be minified when saved. Improves performance slightly (especially on larger wikis as the page index grows), but makes debugging and ninja-edits more awkward.
+ - [Module API] Added new `save_pageindex()` function which respects the above setting.
 
 ### Changed
  - Core sharding: split `core.php` into multiple files

@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page mover",
-	"version" => "0.9.3",
+	"version" => "0.9.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to move pages.",
 	"id" => "page-move",
@@ -111,7 +111,7 @@ register_module([
 			}
 			
 			// Save the updated pageindex
-			file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
+			save_pageindex();
 			
 			// Move the page on the disk
 			rename("$env->storage_prefix$env->page.md", "$env->storage_prefix$new_name.md");

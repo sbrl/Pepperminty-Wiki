@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page protection",
-	"version" => "0.2",
+	"version" => "0.2.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Exposes Pepperminty Wiki's new page protection mechanism and makes the protect button in the 'More...' menu on the top bar work.",
 	"id" => "action-protect",
@@ -45,7 +45,7 @@ register_module([
 				}
 				
 				// Save the pageindex
-				file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
+				save_pageindex();
 				
 				$state = ($pageindex->$page->protect ? "enabled" : "disabled");
 				$title = "Page protection $state.";

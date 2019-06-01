@@ -169,10 +169,7 @@ function check_subpage_parents(string $pagename)
 	global $pageindex, $paths, $env;
 	// Save the new pageindex and return if there aren't any more parent pages to check
 	if(strpos($pagename, "/") === false)
-	{
-		file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
-		return;
-	}
+		return save_pageindex();
 
 	$parent_pagename = substr($pagename, 0, strrpos($pagename, "/"));
 	$parent_page_filename = "$parent_pagename.md";
@@ -527,20 +524,32 @@ function render_editor($editorName)
 
 /**
  * Saves the settings file back to peppermint.json.
- * @return bool Whether the settings were saved successfully.
+ * @package	core
+ * @return	bool	Whether the settings were saved successfully.
  */
 function save_settings() {
 	global $paths, $settings;
 	return file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT)) !== false;
 }
+/**
+ * Save the page index back to disk, respecting $settings->minify_pageindex
+ * @package	core
+ * @return	bool	Whether the page index was saved successfully or not.
+ */
+function save_pageindex() {
+	global $paths, $settings, $pageindex;
+	return file_put_contents(
+		$paths->pageindex,
+		json_encode($pageindex, $settings->minify_pageindex ? 0 : JSON_PRETTY_PRINT)
+	);
+}
 
 /**
  * Saves the currently logged in user's data back to peppermint.json.
- * @package core
- * @return bool Whether the user's data was saved successfully. Returns false if the user isn't logged in.
+ * @package	core
+ * @return	bool	Whether the user's data was saved successfully. Returns false if the user isn't logged in.
  */
-function save_userdata()
-{
+function save_userdata() {
 	global $env, $settings, $paths;
 	
 	if(!$env->is_logged_in)

@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Uploader",
-	"version" => "0.5.15",
+	"version" => "0.5.16",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -258,7 +258,7 @@ register_module([
 					}
 					
 					// Save the pageindex
-					file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
+					save_pageindex();
 					
 					if(module_exists("feature-recent-changes"))
 					{
