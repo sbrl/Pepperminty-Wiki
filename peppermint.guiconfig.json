@@ -146,7 +146,8 @@
 		"audio/mp4",
 		"audio/mpeg",
 		"audio/flac",
-		"audio/ogg"
+		"audio/ogg",
+		"application/pdf"
 	]},
 	"preview_file_type": { "type": "text", "description": "The default file type for previews.", "default": "image/png" },
 	"default_preview_size": { "type": "number", "description": "The default size of preview images in pixels.", "default": 640},

@@ -38,6 +38,7 @@ input[type=button], input[type=submit] { cursor: pointer; }
 .link-display { margin-left: 0.5rem; }
 
 audio, video, img { max-width: 100%; }
+object { width: 100%; height: 90vh; }
 figure:not(.preview) { display: inline-block; }
 figure:not(.preview) > :first-child { display: block; }
 figcaption { text-align: center; }

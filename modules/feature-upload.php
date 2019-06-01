@@ -471,16 +471,15 @@ register_module([
 				$dimensions = $mime_type !== "image/svg+xml" ? getimagesize($env->storage_prefix . $filepath) : getsvgsize($env->storage_prefix . $filepath);
 				$fileTypeDisplay = substr($mime_type, 0, strpos($mime_type, "/"));
 				$previewUrl = "?action=preview&size=$settings->default_preview_size&page=" . rawurlencode($env->page);
+				$originalUrl = $env->storage_prefix == "./" ? $filepath : "?action=preview&size=original&page=" . rawurlencode($env->page);
+				if($mime_type == "application/pdf")
+					$fileTypeDisplay = "pdf";
 				
 				$preview_html = "";
 				switch($fileTypeDisplay)
 				{
 					case "application":
 					case "image":
-						if($mime_type == "application/pdf")
-							$fileTypeDisplay = "file";
-						
-						$originalUrl = $env->storage_prefix == "./" ? $filepath : "?action=preview&size=original&page=" . rawurlencode($env->page);
 						$preview_sizes = [ 256, 512, 768, 1024, 1440, 1920 ];
 						$preview_html .= "\t\t\t<figure class='preview'>
 				<a href='$originalUrl'><img src='$previewUrl' /></a>
@@ -506,6 +505,11 @@ register_module([
 						$preview_html .= "\t\t\t<figure class='preview'>
 				<audio src='$previewUrl' controls preload='metadata'>Your browser doesn't support HTML5 audio, but you can still <a href='$previewUrl'>download it</a> if you'd like.</audio>
 			</figure>";
+						break;
+					
+					case "pdf":
+						$preview_html .= "\t\t\t<object type='application/pdf' data='$originalUrl'></object>";
+						break;
 				}
 				
 				$fileInfo = [];
