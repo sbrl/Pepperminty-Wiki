@@ -12,6 +12,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Consolidated `email` and `emailAddress` fields into the latter in the user table (#167)
  - Fixed a crash when trying to access the user table when not logged in as an administrator.
  - Fixed help text for the file upload module
+ - Squashed a warning when uploading a file
 
 ### Added
  - [Module API] Added new extra data system. See `parser-parsedown` and `page-edit` for an example.

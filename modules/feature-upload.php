@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Uploader",
-	"version" => "0.5.16",
+	"version" => "0.5.17",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -108,7 +108,7 @@ register_module([
 					// Make sure uploads are enabled
 					if(!$settings->upload_enabled)
 					{
-						if(!empty($_FILES["file"]))
+						if(!empty($_FILES["file"]) && file_exists($_FILES["file"]["tmp_name"]))
 							unlink($_FILES["file"]["tmp_name"]);
 						http_response_code(412);
 						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because uploads are currently disabled on $settings->sitename. <a href='index.php'>Go back to the main page</a>.</p>"));
