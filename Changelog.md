@@ -27,6 +27,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Added new `minify_pageindex` setting, which defaults to `true` and causes the page index to be minified when saved. Improves performance slightly (especially on larger wikis as the page index grows), but makes debugging and ninja-edits more awkward.
  - [Module API] Added new `save_pageindex()` function which respects the above setting.
  - Added PDF preview using your browser's default PDF viewer!
+ - Added download button for unsupported file types
 
 ### Changed
  - Core sharding: split `core.php` into multiple files

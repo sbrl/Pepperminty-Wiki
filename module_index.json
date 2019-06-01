@@ -155,7 +155,7 @@
         "version": "0.5.17",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
-        "lastupdate": 1559416947,
+        "lastupdate": 1559420955,
         "optional": false,
         "extra_data": []
     },
