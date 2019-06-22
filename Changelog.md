@@ -124,7 +124,7 @@ _(No changes have been made since the last beta release.)_
  - [Security] Made the site secret generator cryptographically secure. If you created your wiki before this change, you might want to change your site secret in `peppermint.json` to something more secure with a site like [random.org](https://www.random.org/).
      - The PHP function `openssl_pseudo_random_bytes()` was being used before, but [apparently that's not cryptographically secure](https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php).
  - [Module API] Fix `full_url()` logic
- - [Module API] Make  `email_user()` correctly return email sending failures
+ - [Module API] Make `email_user()` correctly return email sending failures
  - Squashed a warning in the search redirector
  - The search redirector will now check both the specified page name and the page name in Title Case
  - Improve help text description of image captions displayed alongside images
