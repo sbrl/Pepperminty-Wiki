@@ -17,7 +17,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ### Added
  - [Module API] Added new extra data system. See `parser-parsedown` and `page-edit` for an example.
      - Extra data is packed into a zip archive, which is packed into `index.php` via [`__halt_compiler();`](https://devdocs.io/php/function.halt-compiler)
-     - See `parser-parsedown` and `page-edit` for examples on how to use it.
+     - See the `parser-parsedown` and `page-edit` modules for examples on how to use it.
  - [Module API] Added new `delete_recursive()` function.
  - Added a new obvious link to the user table at the top of the master settings page.
  - Added a new first-run wizard to help new users set up the basics of their wiki.
