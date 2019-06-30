@@ -31,6 +31,8 @@ main {
 	box-sizing: border-box;
 }
 
+p, li, tr {	line-height: 1.65em; }
+
 /* Blockquote */
 blockquote {
 	border-left: 0.25em solid var(--primary-colour-soft);
@@ -46,6 +48,9 @@ h1 {
 h2 {
 	padding-bottom: 0.1em;
 	border-bottom: 0.08em solid var(--primary-colour);
+}
+h3 {
+	font-size: 1.5em;
 }
 
 /* Inline elements */
@@ -64,7 +69,7 @@ pre {
 	padding: 0.25em;
 	
 	background: hsla(0, 100%, 100%, 0.5);
-	border: 0.1em dashed var(--primary-colour-soft);
+	border: 0.2em dashed var(--primary-colour-soft);
 	
 	white-space: pre-wrap;
 	overflow-wrap: anywhere;
@@ -72,6 +77,8 @@ pre {
 pre, :not(pre) > code {
 	background: hsla(0, 100%, 100%, 0.6);
 	border-radius: 0.25em;
+	padding: 0.25em;
+	font-size: 1.25em;
 }
 
 
@@ -107,7 +114,7 @@ nav ul {
 	margin: 0 1.25em; padding: 0;
 }
 nav ul li {
-	padding: 0.25em 0;
+	padding: 0;
 }
 a, a:visited {
 	color: hsla(5, 87%, 53%, 0.8);
