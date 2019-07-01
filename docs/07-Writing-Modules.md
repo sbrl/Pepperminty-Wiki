@@ -4,13 +4,13 @@ The core of Pepperminty Wiki exposes several global objects, classes, functions,
 ## Table of Contents
  - [HTTP API](#http-api)
  - [Module API](#module-api)
-     - [Global Variables](#global-variables)
+	 - [Global Variables](#global-variables)
  - [Files](#files)
-     - [`pageindex.json`](#pageindexjson)
-     - [`idindex.json`](#idindexjson)
-     - [`invindex.json`](#invindexjson)
-     - [`recent-changes.json`](#recent-changesjson)
-     - [`statsindex.json`](#statsindexjson)
+	 - [`pageindex.json`](#pageindexjson)
+	 - [`idindex.json`](#idindexjson)
+	 - [`invindex.json`](#invindexjson)
+	 - [`recent-changes.json`](#recent-changesjson)
+	 - [`statsindex.json`](#statsindexjson)
 
 ## HTTP API
 The HTTP API provided by Pepperminty Wiki itself is documented for bot owners and software developers alike. Find it via the _HTTP API_ section in the sidebar of this page.
@@ -87,18 +87,33 @@ register_module([
 
 ### Global Variables
 There are a number of global variables floating around that can give you a lot of information about the current request. ~~I will be tidying them up into a single `$env` object soon.~~ Most of the below have been tidied up into a single `$env` object now! Below is a table of all the variables Pepperminty Wiki has lying around:
-TODO: Update this table
 
 Variable				| Description
 ------------------------|------------------------------------------
 `$env`					| An object that contains a _bunch_ of useful information about the current request.
 `$env->page`			| The current page name.
+`$env->page_filename`   | The filename that the current page is stored in.
+`$env->is_history_revision` | Whether the requested page is a history revision or not.
+`$env->history->revision_number`| The requested revision number.
+`$env->history->revision_data`	| The history revision object from the page index for the current page.
+`$env->user`			| The current user's name. Defaults to `$settings->anonymous_user_name`.
 `$env->is_logged_in`	| Whether the current user is currently logged in.
 `$env->is_admin`		| Whether the current user is an administrator.
-`$env->user`			| The current user's name. Currently only set if the user is logged in.
+`$env->user_data`		| The currently logged in user's data object from `$settings`. Don't forget to call `save_settings()` if you edit this.
+`$env->storage_prefix`	| The location that the wiki data is stored in, including the trailing directory separator.
+`$env->perfdata`		| Contains various performance information. Feel free to dump additional perf data in here.
 `$env->action`			| The current action.
 `$settings`				| The settings object from the top of the file.
 `$pageindex`			| Contains a list of all the pages that Pepperminty Wiki currently knows about, along with information about each page. Exists to improve performance.
+`$paths->pageindex`		| The location of the page index. Don't forget about `save_pageindex()`.
+`$paths->searchindex`	| The location of the search index.
+`$paths->idindex`		| The location of the page id index. Useful in conjunction with the search index, since page ids are used to compress & optimise the search index. Don't forget about the `ids` class, which automatically loads this index.
+`$paths->statsindex`	| The location of the statistics index, which holds a bunch of pre-calculated statistics. These may not all be updated.
+`$paths->interwiki_index`	| The interwiki index cache.
+`$paths->cache_directory`	| The cache directory, without a trailing directory separator. Store cached stuff in here. Current `parser-parsedown` stores HTML versions of pages in here, for example. Guaranteed to exist.
+`$paths->settings_file`	| The location of `peppermint.json`.
+`$paths->extra_data_directory`	| The location of the directory that extra data is extracted to.
+`$paths->upload_file_prefix`	| The prefix that's prepended when uploading files.
 
 
 ## Files
@@ -109,42 +124,42 @@ This is by _far_ the most important index. It contains an entry for each page, u
 
 ```json
 {
-    "Internal link": {
-        "filename": "Internal link.md",
-        "size": 120,
-        "lastmodified": 1446019377,
-        "lasteditor": "admin",
-        "tags": [
-            "testing",
-            "test tag with spaces",
-            "really really really really really really long tag"
-        ]
-    },
-    "Main Page": {
-        "filename": "Main Page.md",
-        "size": 151,
-        "lastmodified": 1446388276,
-        "lasteditor": "admin",
-        "tags": []
-    },
-    "Internal link\/Sub": {
-        "filename": "Internal link\/Sub.md",
-        "size": 35,
-        "lastmodified": 1446370194,
-        "lasteditor": "admin",
-        "tags": [
-            "test"
-        ]
-    },
-    "Files\/AJ Scr.png": {
-        "filename": "Files\/AJ Scr.png.md",
-        "size": 29,
-        "lastmodified": 1445501914,
-        "lasteditor": "admin",
-        "uploadedfile": true,
-        "uploadedfilepath": "Files\/AJ Scr.png",
-        "uploadedfilemime": "image\/png"
-    }
+	"Internal link": {
+		"filename": "Internal link.md",
+		"size": 120,
+		"lastmodified": 1446019377,
+		"lasteditor": "admin",
+		"tags": [
+			"testing",
+			"test tag with spaces",
+			"really really really really really really long tag"
+		]
+	},
+	"Main Page": {
+		"filename": "Main Page.md",
+		"size": 151,
+		"lastmodified": 1446388276,
+		"lasteditor": "admin",
+		"tags": []
+	},
+	"Internal link\/Sub": {
+		"filename": "Internal link\/Sub.md",
+		"size": 35,
+		"lastmodified": 1446370194,
+		"lasteditor": "admin",
+		"tags": [
+			"test"
+		]
+	},
+	"Files\/AJ Scr.png": {
+		"filename": "Files\/AJ Scr.png.md",
+		"size": 29,
+		"lastmodified": 1445501914,
+		"lasteditor": "admin",
+		"uploadedfile": true,
+		"uploadedfilepath": "Files\/AJ Scr.png",
+		"uploadedfilemime": "image\/png"
+	}
 }
 ```
 
