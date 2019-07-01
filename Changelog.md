@@ -4,7 +4,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ## v0.19-beta2
 
  - Updated the theme of the new documentation
- - Revised the writing modules section of the documentation (TODO: Complete this)
+ - Revised the writing modules section of the documentation
 
 ## v0.19-beta1
 > The update that changed the world! Turn everything upside-down.

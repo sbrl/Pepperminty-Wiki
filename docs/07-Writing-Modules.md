@@ -45,7 +45,6 @@ register_module([
 ```
 
 Currently, the following parts are used in the templating process:
-TODO: Check that this is up-to-date
 
 Key							| Purpose
 ----------------------------|------------------
