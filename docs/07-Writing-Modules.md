@@ -46,6 +46,7 @@ register_module([
 
 Currently, the following parts are used in the templating process:
 TODO: Check that this is up-to-date
+
 Key							| Purpose
 ----------------------------|------------------
 `{body}`					| Holds the main body of the page.
@@ -87,6 +88,7 @@ register_module([
 ### Global Variables
 There are a number of global variables floating around that can give you a lot of information about the current request. ~~I will be tidying them up into a single `$env` object soon.~~ Most of the below have been tidied up into a single `$env` object now! Below is a table of all the variables Pepperminty Wiki has lying around:
 TODO: Update this table
+
 Variable				| Description
 ------------------------|------------------------------------------
 `$env`					| An object that contains a _bunch_ of useful information about the current request.
