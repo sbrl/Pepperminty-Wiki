@@ -3,6 +3,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## v0.19-beta2
 
+### Changed
  - Updated the theme of the new documentation
  - Revised the writing modules section of the documentation
 
