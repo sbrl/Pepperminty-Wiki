@@ -51,6 +51,7 @@ Key							| Purpose
 ----------------------------|------------------
 `{body}`					| Holds the main body of the page.
 `{sitename}`				| The name of the current installation of Pepperminty Wiki
+`{version}`                 | The current version of Pepperminty Wiki
 `{favicon-url}`				| The url of the favicon.
 `{header-html}`				| The extra HTML that will be added to the `<head />` tag.
 `{navigation-bar}`			| The navigation bar's HTML.
@@ -60,6 +61,10 @@ Key							| Purpose
 `{admins-name-list}`		| The list of moderator's (user)names.
 `{generation-date}`			| The date at which the page was generated.
 `{all-pages-datalist}`		| The `<datalist />` tag that powers the search bar.
+`{footer-message}`          | The message in the footer of the page.
+`{content}`                 | The main content of the page
+`{extra}`                   | Content that gets put directly after the `<main>` element.
+`{title}`                   | The page title.
 
 [Take a look at the code](https://github.com/sbrl/Pepperminty-Wiki/blob/master/core.php#L394) to see the very latest list of parts.
 
@@ -90,6 +95,8 @@ There are a number of global variables floating around that can give you a lot o
 
 Variable				| Description
 ------------------------|------------------------------------------
+`$version`              | The current version of Pepperminty Wiki
+`$commit`               | The git commit that the current version of Pepperminty Wiki was built from.
 `$env`					| An object that contains a _bunch_ of useful information about the current request.
 `$env->page`			| The current page name.
 `$env->page_filename`   | The filename that the current page is stored in.
