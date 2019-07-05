@@ -45,7 +45,7 @@ _(No changes have been made since the last beta release.)_
  - Big update to the backend Markdown parser _Parsedown_
      - Use Parsedown's new untrusted feature for comments
      - Added new `all_untrusted` setting to allow treating *everything* as untrusted (default: false) - turn it on if your wiki allows anonymous edits
- - Switch to [nightdocs](https://gitlab.com/sbrl/nightdocs) instead of [docpress](https://docpress.github.io/) (the [official docs](https://starbeamrainbowlabs.com/labs/peppermint/_docpress/) will update & change URL on the next stable release)
+ - Switch to [nightdocs](https://gitlab.com/sbrl/nightdocs) instead of [docpress](https://docpress.github.io/) ~~(the [official docs](https://starbeamrainbowlabs.com/labs/peppermint/_docpress/) will update & change URL on the next stable release)~~ the new docs are available [here](https://starbeamrainbowlabs.com/labs/peppermint/__nightdocs/01-Welcome.html)!
  - Add moar [badges](https://shields.io/) to the README & docs :D
 
 ### Removed
