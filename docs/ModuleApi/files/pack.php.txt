@@ -1,10 +1,17 @@
 <?php
 
-if(php_sapi_name() == "cli")
-{
-	echo("*** Beginning main build sequence ***\n");
-	echo("Reading in module index...\n");
+/**
+ * Logs a string to stdout, but only on the CLI.
+ * @param  string $line The line to log.
+ */
+function log_str(string $line) {
+	if(php_sapi_name() == "cli")
+		echo($line);
+	//else error_log($line);
 }
+
+log_str("*** Beginning main build sequence ***\n");
+log_str("Reading in module index...\n");
 
 $module_index = json_decode(file_get_contents("module_index.json"));
 $module_list = [];
@@ -19,33 +26,32 @@ foreach($module_index as $module)
 		)
 	)
 		continue;
-	$module_list[] = $module->id;
+	$module_list[] = $module;
 }
 
 if(isset($_GET["modules"]))
-{
 	$module_list = explode(",", $_GET["modules"]);
-}
 
-if(php_sapi_name() != "cli")
-{
+if(php_sapi_name() != "cli") {
 	header("content-type: text/php");
 	header("content-disposition: attachment; filename=\"index.php\"");
 }
 
-if(php_sapi_name() == "cli") echo("Reading in core files...");
+log_str("Reading in core files...\n");
 
-$core = file_get_contents("core.php");
-$settings = file_get_contents("settings.fragment.php");
-$settings = str_replace([ "<?php", "?>" ], "", $settings);
+$core_files_list = glob("core/*.php"); natsort($core_files_list);
+
+$core = "<?php\n";
+foreach($core_files_list as $core_filename)
+	$core .= str_replace([ "<?php", "?>" ], "", file_get_contents($core_filename));
+
+
 $core = str_replace([
-	"//{settings}",
 	"{version}",
 	"{commit}",
 	"{guiconfig}",
 	"{default-css}"
 ], [
-	$settings,
 	trim(file_get_contents("version")),
 	exec("git rev-parse HEAD"),
 	trim(file_get_contents("peppermint.guiconfig.json")),
@@ -54,49 +60,81 @@ $core = str_replace([
 
 $result = $core;
 
-foreach($module_list as $module_id)
+$extra_data_archive = new ZipArchive();
+// Use dev/shm if possible (it's *always* in memory). PHP will default to the system's temporary directory if it's not available
+$temp_filename = tempnam("/dev/shm", "pepperminty-wiki-pack");
+if($extra_data_archive->open($temp_filename, ZipArchive::CREATE) !== true) {
+	http_response_code(503);
+	exit("Error: Failed to create temporary stream to store packing information");
+}
+
+$module_list_count = count($module_list);
+$i = 1;
+foreach($module_list as $module)
 {
-	if($module_id == "") continue;
+	if($module->id == "") continue;
 	
-	if(php_sapi_name() == "cli") echo("Adding $module_id\n");
+	log_str("[$i / $module_list_count] Adding $module->id      \r");
 	
-	$module_filepath = "modules/" . preg_replace("[^a-zA-Z0-9\-]", "", $module_id) . ".php";
+	$module_filepath = "modules/" . preg_replace("[^a-zA-Z0-9\-]", "", $module->id) . ".php";
 	
-	//echo("id: $module_id | filepath: $module_filepath\n");
+	//log_str("id: $module->id | filepath: $module_filepath\n");
 	
-	if(!file_exists($module_filepath))
-	{
+	if(!file_exists($module_filepath)) {
 		http_response_code(400);
 		exit("Failed to load module with name: $module_filepath");
 	}
 	
+	// Pack the module's source code
 	$modulecode = file_get_contents($module_filepath);
 	$modulecode = str_replace([ "<?php", "?>" ], "", $modulecode);
 	$result = str_replace(
 		"// %next_module% //",
 		"$modulecode\n// %next_module% //",
-		$result);
+		$result
+	);
+	
+	
+	// Pack the extra files that were downloaded in build.php
+	foreach($module->extra_data as $filepath_pack => $extra_data_item) {
+		if(is_string($extra_data_item)) {
+			// TODO: Test whether this works for urls. If not, then we'll need to implement a workaround
+			$extra_data_archive->addFile("$paths->extra_data_directory/$module->id/$filepath_pack", "$module->id/$filepath_pack");
+		}
+	}
+	
+	$i++;
 }
+log_str("\n");
 
-if(php_sapi_name() == "cli")
-{
-	if(file_exists("build/index.php"))
-	{
-		echo("index.php already exists in the build folder, exiting\n");
+$extra_data_archive->close();
+
+$archive_stream = fopen($temp_filename, "r");
+
+$output_stream = null;
+if(php_sapi_name() == "cli") {
+	if(file_exists("build/index.php")) {
+		log_str("index.php already exists in the build folder, exiting\n");
 		exit(1);
 	}
-	else
-	{
-		echo("Done. Saving to disk...");
-		file_put_contents("build/index.php", $result);
-		echo("complete!\n");
-		echo("*** Build completed! ***\n");
-	}
+	
+	log_str("Done. Saving to disk...");
+	$output_stream = fopen("build/index.php", "w");
+	log_str("complete!\n");
+	log_str("*** Build completed! ***\n");
 }
-else
-{
-	exit($result);
+else {
+	$output_stream = fopen("php://output", "w");
 }
 
+// Write the built code
+fwrite($output_stream, $result);
+// Write the delimiter
+fwrite($output_stream, "__halt_compiler();");
+// Write the extra data
+stream_copy_to_stream($archive_stream, $output_stream);
+
+// Cleanup
+unlink($temp_filename);
 ?>
 

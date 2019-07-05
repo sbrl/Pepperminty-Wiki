@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "User Organiser",
-	"version" => "0.1",
+	"version" => "0.1.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a organiser page that lets moderators (or better) control the reegistered user accounts, and perform adminstrative actions such as password resets, and adding / removing accounts.",
 	"id" => "feature-user-table",
@@ -44,8 +44,8 @@ register_module([
 			foreach($settings->users as $username => $user_data) {
 				$content .= "<tr>";
 				$content .= "<td>" . page_renderer::render_username($username) . "</td>";
-				if(!empty($user_data->email))
-					$content .= "<td><a href='mailto:" . htmlentities($user_data->email, ENT_HTML5 | ENT_QUOTES) . "'>" . htmlentities($user_data->email) . "</a></td>\n";
+				if(!empty($user_data->emailAddress))
+					$content .= "<td><a href='mailto:" . htmlentities($user_data->emailAddress, ENT_HTML5 | ENT_QUOTES) . "'>" . htmlentities($user_data->emailAddress) . "</a></td>\n";
 				else
 					$content .= "<td><em>(None provided)</em></td>\n";
 				$content .= "<td>";
@@ -119,7 +119,7 @@ register_module([
 			$user_data = new stdClass();
 			$user_data->password = hash_password($new_password);
 			if(!empty($new_email))
-				$user_data->email = $new_email;
+				$user_data->emailAddress = $new_email;
 			
 			$settings->users->$new_username = $user_data;
 			
@@ -190,7 +190,7 @@ https://github.com/sbrl/Pepperminty-Wiki/
 			global $env, $settings;
 			
 			if(!$env->is_admin) {
-				http_response_400(401);
+				http_response_code(401);
 				exit(page_renderer::render_main("Error - Set Password - $settings->sitename", "<p>Error: You aren't logged in as a moderator, so you don't have permission to set a user's password.</p>"));
 			}
 			if(empty($_POST["user"])) {

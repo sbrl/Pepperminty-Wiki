@@ -461,7 +461,7 @@ function render_comments($comments_data, $depth = 0)
 		$result .= "\t<div class='comment' id='comment-$comment->id' data-comment-id='$comment->id'>\n";
 		$result .= "\t<p class='comment-header'><span class='name'>" . page_renderer::render_username($comment->username ?? "<em>Unknown</em>") . "</span> said:</p>";
 		$result .= "\t<div class='comment-body'>\n";
-		$result .= "\t\t" . parse_page_source($comment->message);
+		$result .= "\t\t" . parse_page_source($comment->message, true);
 		$result .= "\t</div>\n";
 		$result .= "\t<div class='reply-box-container'></div>\n";
 		$result .= "\t<p class='comment-footer'>";

@@ -4,14 +4,23 @@ register_module([
 	"version" => "0.10",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
+	"extra_data" => [
+		/******** Parsedown versions ********
+		 * Parsedown Core:	1.8.0-beta-5	*
+		 * Parsedown Extra:	0.8.0-beta-1	*
+		 ************************************/
+		"Parsedown.php" => "https://raw.githubusercontent.com/erusev/parsedown/819c68899d593503180ed79ef4be5a4dcd8c5f92/Parsedown.php",
+		"ParsedownExtra.php" => "https://raw.githubusercontent.com/erusev/parsedown-extra/f21b40a1973b6674903a6da9857ee215e8839f96/ParsedownExtra.php"
+	],
 	"id" => "parser-parsedown",
 	"code" => function() {
 		global $settings;
 		
 		$parser = new PeppermintParsedown();
 		$parser->setInternalLinkBase("?page=%s");
-		add_parser("parsedown", function($source) use ($parser) {
+		add_parser("parsedown", function($source, $untrusted) use ($parser) {
 			global $settings;
+			$parser->setsafeMode($untrusted || $settings->all_untrusted);
 			$parser->setMarkupEscaped($settings->clean_raw_html);
 			$result = $parser->text($source);
 			
@@ -207,23 +216,8 @@ register_module([
 	}
 ]);
 
-/*** Parsedown versions ***
- * Parsedown Core: 1.6.0  *
- * Parsedown Extra: 0.7.0 *
- **************************/
-$env->parsedown_paths = new stdClass();
-$env->parsedown_paths->parsedown = "https://cdn.rawgit.com/erusev/parsedown/3ebbd730b5c2cf5ce78bc1bf64071407fc6674b7/Parsedown.php";
-$env->parsedown_paths->parsedown_extra = "https://cdn.rawgit.com/erusev/parsedown-extra/11a44e076d02ffcc4021713398a60cd73f78b6f5/ParsedownExtra.php";
-
-// Download parsedown and parsedown extra if they don't already exist
-// These must still use this old method, as the parser may be asked to render some HTML before Pepperminty Wiki has had a chance to run the downloads
-if(!file_exists("./Parsedown.php") || filesize("./Parsedown.php") === 0)
-	file_put_contents("./Parsedown.php", fopen($env->parsedown_paths->parsedown, "r"));
-if(!file_exists("./ParsedownExtra.php") || filesize("./ParsedownExtra.php") === 0)
-	file_put_contents("./ParsedownExtra.php", fopen($env->parsedown_paths->parsedown_extra, "r"));
-
-require_once("./Parsedown.php");
-require_once("./ParsedownExtra.php");
+require_once("$paths->extra_data_directory/parser-parsedown/Parsedown.php");
+require_once("$paths->extra_data_directory/parser-parsedown/ParsedownExtra.php");
 
 /**
  * Attempts to 'auto-correct' a page name by trying different capitalisation
@@ -260,13 +254,26 @@ function parsedown_pagename_resolve($pagename) {
  * ██       ██ ██     ██    ██      ██  ██ ██      ██ ██ ██    ██ ██  ██ ██      ██
  * ███████ ██   ██    ██    ███████ ██   ████ ███████ ██  ██████  ██   ████ ███████
 */
+/**
+ * The Peppermint-flavoured Parsedown parser.
+ */
 class PeppermintParsedown extends ParsedownExtra
 {
+	/**
+	 * The base directory with which internal links will be resolved.
+	 * @var string
+	 */
 	private $internalLinkBase = "./%s";
 	
-	protected $maxParamDepth = 0;
+	/**
+	 * The parameter stack. Used for recursive templating.
+	 * @var array
+	 */
 	protected $paramStack = [];
 	
+	/**
+	 * Creates a new Peppermint Parsedown instance.
+	 */
 	function __construct()
 	{
 		// Prioritise our internal link parsing over the regular link parsing
@@ -286,6 +293,10 @@ class PeppermintParsedown extends ParsedownExtra
 	 *    ██    █████   ██ ████ ██ ██████  ██      ███████    ██    ██ ██ ██  ██ ██   ███
 	 *    ██    ██      ██  ██  ██ ██      ██      ██   ██    ██    ██ ██  ██ ██ ██    ██
 	 *    ██    ███████ ██      ██ ██      ███████ ██   ██    ██    ██ ██   ████  ██████
+	 */
+	/**
+	 * Parses templating definitions.
+	 * @param string $fragment The fragment to parse it out from.
 	 */
 	protected function inlineTemplate($fragment)
 	{
@@ -417,6 +428,11 @@ class PeppermintParsedown extends ParsedownExtra
 		}
 	}
 	
+	/**
+	 * Handles parsing out templates - recursively - and the parameter stack associated with it.
+	 * @param	string	$source		The source string to process.
+	 * @return	array	The parsed result
+	 */
 	protected function templateHandler($source)
 	{
 		global $pageindex, $env;
@@ -433,7 +449,6 @@ class PeppermintParsedown extends ParsedownExtra
 			return false;
 		
 		// Parse the parameters
-		$this->maxParamDepth++;
 		$params = [];
 		$i = 0;
 		foreach($parts as $part)
@@ -468,7 +483,7 @@ class PeppermintParsedown extends ParsedownExtra
 		
 		return [
 			"name" => "div",
-			"text" => $parsedTemplateSource,
+			"rawHtml" => $parsedTemplateSource,
 			"attributes" => [
 				"class" => "template"
 			]
@@ -487,6 +502,10 @@ class PeppermintParsedown extends ParsedownExtra
 	 * ██      ██ ██ ██  ██ █████   ███████
 	 * ██      ██ ██  ██ ██ ██  ██       ██
 	 * ███████ ██ ██   ████ ██   ██ ███████
+	 */
+	/**
+	 * Parses internal links
+	 * @param  string $fragment The fragment to parse.
 	 */
 	protected function inlineInternalLink($fragment)
 	{
@@ -599,6 +618,10 @@ class PeppermintParsedown extends ParsedownExtra
 	 * ██ ██ ████ ██ ███████ ██   ███ █████   ███████
 	 * ██ ██  ██  ██ ██   ██ ██    ██ ██           ██
 	 * ██ ██      ██ ██   ██  ██████  ███████ ███████
+ 	 */
+ 	/**
+ 	 * Parses the extended image syntax.
+ 	 * @param  string $fragment The source fragment to parse.
  	 */
 	protected function inlineExtendedImage($fragment)
 	{
@@ -773,6 +796,12 @@ class PeppermintParsedown extends ParsedownExtra
 	# Static Methods
 	# ~
 	
+	/**
+	 * Extracts the page names from internal links in a given markdown source.
+	 * Does not actually _parse_ the source - only extracts via a regex.
+	 * @param	string	$page_text	The source text to extract a list of page names from.
+	 * @return	array	A list of page names that the given source text links to.
+	 */
 	public static function extract_page_names($page_text) {
 		global $pageindex;
 		preg_match_all("/\[\[([^\]]+)\]\]/", $page_text, $linked_pages);
@@ -808,12 +837,23 @@ class PeppermintParsedown extends ParsedownExtra
 	# Utility Methods
 	# ~
 	
-	private function isFloatValue($value)
+	/**
+	 * Returns whether a string is a valid float: XXXXXX; value.
+	 * Used in parsing the extended image syntax.
+	 * @param	string	$value The value check.
+	 * @return	bool	Whether it's valid or not.
+	 */
+	private function isFloatValue(string $value)
 	{
 		return in_array(strtolower($value), [ "left", "right" ]);
 	}
 	
-	private function parseSizeSpec($text)
+	/**
+	 * Parses a size specifier into an array.
+	 * @param	string	$text	The source text to parse. e.g. "256x128"
+	 * @return	array|bool	The parsed size specifier. Example: ["x" => 256, "y" => 128]. Returns false if parsing failed.
+	 */
+	private function parseSizeSpec(string $text)
 	{
 		if(strpos($text, "x") === false)
 			return false;
@@ -834,6 +874,11 @@ class PeppermintParsedown extends ParsedownExtra
 		];
 	}
 	
+	/**
+	 * Escapes the source text via htmlentities.
+	 * @param	string	$text	The text to escape.
+	 * @return	string	The escaped string.
+	 */
 	protected function escapeText($text)
 	{
 		return htmlentities($text, ENT_COMPAT | ENT_HTML5);

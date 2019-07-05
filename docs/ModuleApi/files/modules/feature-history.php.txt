@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page History",
-	"version" => "0.4.1",
+	"version" => "0.4.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
 	"id" => "feature-history",
@@ -213,11 +213,12 @@ register_module([
  * records a new revision against a page name. Thus it is possible to have a 
  * disparaty between the history revisions and the actual content displayed in 
  * the current revision if you're not careful!
- * @param object  $pageinfo       The pageindex object of the page to operate on.
- * @param string  $newsource      The page content to save as the new revision.
- * @param string  $oldsource      The old page content that is the current revision (before the update).
- * @param boolean $save_pageindex Whether the page index should be saved to disk.
- * @param string  $change_type    The type of change to record this as in the history revision log
+ * @package	feature-history
+ * @param	object	$pageinfo		The pageindex object of the page to operate on.
+ * @param	string	$newsource		The page content to save as the new revision.
+ * @param	string	$oldsource		The old page content that is the current revision (before the update).
+ * @param	bool	$save_pageindex	Whether the page index should be saved to disk.
+ * @param	string	$change_type	The type of change to record this as in the history revision log
  */
 function history_add_revision(&$pageinfo, &$newsource, &$oldsource, $save_pageindex = true, $change_type = "edit") {
 	global $env, $paths, $settings, $pageindex;
@@ -233,7 +234,7 @@ function history_add_revision(&$pageinfo, &$newsource, &$oldsource, $save_pagein
 	// this point
 	
 	// TODO Store tag changes here
-	end($pageinfo->history); // Calculate the next revision id - we can't just count the reivisions here because we might have a revision limit
+	end($pageinfo->history); // Calculate the next revision id - we can't just count the revisions here because we might have a revision limit
 	$nextRid = !empty($pageindex->history) ? $pageinfo->history[key($pageinfo->history)]->rid + 1 : 0;
 	$ridFilename = "$pageinfo->filename.r$nextRid";
 	// Insert a new entry into the history
@@ -261,7 +262,7 @@ function history_add_revision(&$pageinfo, &$newsource, &$oldsource, $save_pagein
 	
 	// Save the edited pageindex
 	if($result !== false && $save_pageindex)
-		$result = file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT));
+		$result = save_pageindex();
 	
 	
 	return $result;

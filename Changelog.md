@@ -1,11 +1,17 @@
 # Changelog
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
+## v0.19
+
+_(No changes have been made since the last beta release.)_
+
+
 ## v0.19-beta2
 
 ### Changed
  - Updated the theme of the new documentation
  - Revised the writing modules section of the documentation
+
 
 ## v0.19-beta1
 > The update that changed the world! Turn everything upside-down.
@@ -87,10 +93,12 @@ _(No changes have been made since the last beta release.)_
  - Long lines in code blocks now wrap correctly.
  - The `export` action now correctly includes uploaded files alongside their descriptions
 
+
 ## v0.17.1
 
 ### Fixed
  - Corrected default passwords. If you were having issues, try updating to this release, deleting `peppermint.json` and trying again (thanks for spotting this, @tspivey!)
+
 
 ## v0.17
 
@@ -98,10 +106,12 @@ _(No changes have been made since the last beta release.)_
  - Removed stray debugging output
  - Tweaked css to make new search context generation look better
 
+
 ## v0.17-beta2
 
 ### Fixed
  - Fixed the cost-climbing bug in the last beta release
+
 
 ## v0.17-beta1
 
@@ -152,8 +162,10 @@ _(No changes have been made since the last beta release.)_
  - Restyled "matching tags" in the search results in the default stylesheet
  - Added moar icons to the nav / more menus. Delete the appropriate entries in `peppermint.json` to get the updated ones!
 
+
 ## v0.16
 _(No changes since v0.16-beta1)_
+
 
 ## v0.16-beta1
 
@@ -198,6 +210,7 @@ _(No changes since v0.16-beta1)_
 ### Removed
  - [Module API] Removed `accept_contains_mime`, as it's both unstable and currently unnecessary. Contributions for a better version are welcome!
 
+
 ## v0.15.1
 
 ### Added
@@ -210,8 +223,10 @@ _(No changes since v0.16-beta1)_
  - Fix saving edits to pages with an ampersand in their name (#99)
  - [Security] Fixed an authenticated denial-of-service attack when uploading a malicious SVG (ref XXE billion laughs attack, #152)
 
+
 ## v0.15
 _(No changes since v0.15-beta2)_
+
 
 ## v0.15-beta2
 

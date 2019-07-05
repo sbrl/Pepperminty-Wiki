@@ -1093,6 +1093,88 @@
     "groupTitle": "Settings"
   },
   {
+    "type": "get",
+    "url": "?action=firstrun",
+    "title": "Display the firstrun page",
+    "name": "FirstRun",
+    "group": "Settings",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "./modules/feature-firstrun.php",
+    "groupTitle": "Settings"
+  },
+  {
+    "type": "post",
+    "url": "?action=firstrun-complete",
+    "title": "Complete the first-run wizard.",
+    "name": "FirstRunComplete",
+    "group": "Settings",
+    "permission": [
+      {
+        "name": "Anonymous",
+        "title": "Anybody may use this call.",
+        "description": ""
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "username",
+            "description": "<p>The username for the first admin account</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "password",
+            "description": "<p>The password for the first admin account</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "password-again",
+            "description": "<p>The password repeated for the first admin account</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "email-address",
+            "description": "<p>The email address for the first admin account</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "wiki-name",
+            "description": "<p>The name of the wiki. Saved to $settings-&gt;sitename</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "data-dir",
+            "description": "<p>The directory on the server to save the wiki data to. Saved to $settings-&gt;data_storage_dir.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./modules/feature-firstrun.php",
+    "groupTitle": "Settings"
+  },
+  {
     "type": "post",
     "url": "?action=user-add",
     "title": "Create a user account",

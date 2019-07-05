@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>Pepperminty Wiki Module API</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+        <script type="text/javascript">
+        function loadExternalCodeSnippets() {
+            Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+                var src = pre.getAttribute('data-src');
+                var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+                var language = 'php';
+
+                var code = document.createElement('code');
+                code.className = 'language-' + language;
+
+                pre.textContent = '';
+
+                code.textContent = 'Loading…';
+
+                pre.appendChild(code);
+
+                var xhr = new XMLHttpRequest();
+
+                xhr.open('GET', src, true);
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4) {
+
+                        if (xhr.status < 400 && xhr.responseText) {
+                            code.textContent = xhr.responseText;
+
+                            Prism.highlightElement(code);
+                        }
+                        else if (xhr.status >= 400) {
+                            code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                        }
+                        else {
+                            code.textContent = '✖ Error: File does not exist or is empty';
+                        }
+                    }
+                };
+
+                xhr.send(null);
+            });
+        }
+
+        $(document).ready(function(){
+            loadExternalCodeSnippets();
+        });
+        $('#source-view').on('shown', function () {
+            loadExternalCodeSnippets();
+        })
+    </script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">Pepperminty Wiki Module API</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">60</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">11</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-321442949"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-321442949" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/ids.html">ids</a></li>
+                                                    <li class="class"><a href="../classes/page_renderer.html">page_renderer</a></li>
+                                                    <li class="class"><a href="../classes/PeppermintParsedown.html">PeppermintParsedown</a></li>
+                                                    <li class="class"><a href="../classes/search.html">search</a></li>
+                                                    <li class="class"><a href="../classes/Slimdown.html">Slimdown</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content file">
+                    <nav>
+                                                                    </nav>
+
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+                    <h1><small>core</small>60-modules.php</h1>
+                    <p><em>A list of all the currently loaded modules. Not guaranteed to be populated until an action is executed.</em></p>
+                    <p>@var array</p>
+
+                    
+                    
+                                    </div>
+
+                <aside class="span4 detailsbar">
+                    <dl>
+                                                    <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">\Default</div></dd>
+                        
+                        
+                    </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                            </table>
+
+                </aside>
+            </div>
+
+            
+                        <div class="row-fluid">
+                <section class="span8 content file">
+                    <h2>Functions</h2>
+                </section>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_register_module" name="method_register_module" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">register_module()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">register_module(array  <span class="argument">$moduledata</span>) </pre>
+                <p><em>Registers a module.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$moduledata </td>
+                                <td><p>The module data to register.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+Warning: count(): Parameter must be an array or an object that implements Countable in phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Extension/Core.php on line 1293
+
+Call Stack:
+    0.0007     401624   1. {main}() /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:0
+    0.0486    2278744   2. require('phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc') /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:10
+    0.1048   11884520   3. phpDocumentor\Application->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc:23
+    0.1058   12089344   4. Cilex\Provider\Console\ContainerAwareApplication->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Application.php:183
+    0.1059   12089344   5. Cilex\Provider\Console\ContainerAwareApplication->doRun() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:126
+    0.1060   12089344   6. Cilex\Provider\Console\ContainerAwareApplication->doRunCommand() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:195
+    0.1060   12089344   7. phpDocumentor\Command\Project\RunCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:874
+    0.1062   12093272   8. phpDocumentor\Command\Project\RunCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.2876   17871696   9. phpDocumentor\Transformer\Command\Project\TransformCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Command/Project/RunCommand.php:275
+    0.2877   17873864  10. phpDocumentor\Transformer\Command\Project\TransformCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.3309   21077656  11. phpDocumentor\Console\Output\Output->writeTimedLog() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Command/Project/TransformCommand.php:206
+    0.3310   21077656  12. call_user_func_array:{phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59}() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3310   21077672  13. phpDocumentor\Transformer\Transformer->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3318   21085696  14. phpDocumentor\Transformer\Transformer->transformProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:141
+    0.8937   24277704  15. phpDocumentor\Transformer\Transformer->applyTransformationToProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:275
+    0.8937   24277864  16. phpDocumentor\Plugin\Twig\Writer\Twig->transform() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:312
+    1.0592   22815216  17. Twig_Environment->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Plugin/Twig/Writer/Twig.php:116
+    1.0594   22825048  18. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php:334
+    1.0594   22841560  19. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:366
+    1.0594   22842688  20. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22842688  21. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0594   22843064  22. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:25
+    1.0594   22843760  23. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22843760  24. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0624   22907264  25. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:312
+    1.0624   22907264  26. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->block_content() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0632   22926496  27. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:423
+    1.0632   22926496  28. __TwigTemplate_daae0115ec37e5a0b571749c1314278fe63bff5db2e95ba142e0832d4760b44d->block_method() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0634   22927888  29. twig_length_filter() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:140
+
+
+Warning: count(): Parameter must be an array or an object that implements Countable in phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Extension/Core.php on line 1293
+
+Call Stack:
+    0.0007     401624   1. {main}() /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:0
+    0.0486    2278744   2. require('phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc') /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:10
+    0.1048   11884520   3. phpDocumentor\Application->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc:23
+    0.1058   12089344   4. Cilex\Provider\Console\ContainerAwareApplication->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Application.php:183
+    0.1059   12089344   5. Cilex\Provider\Console\ContainerAwareApplication->doRun() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:126
+    0.1060   12089344   6. Cilex\Provider\Console\ContainerAwareApplication->doRunCommand() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:195
+    0.1060   12089344   7. phpDocumentor\Command\Project\RunCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:874
+    0.1062   12093272   8. phpDocumentor\Command\Project\RunCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.2876   17871696   9. phpDocumentor\Transformer\Command\Project\TransformCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Command/Project/RunCommand.php:275
+    0.2877   17873864  10. phpDocumentor\Transformer\Command\Project\TransformCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.3309   21077656  11. phpDocumentor\Console\Output\Output->writeTimedLog() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Command/Project/TransformCommand.php:206
+    0.3310   21077656  12. call_user_func_array:{phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59}() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3310   21077672  13. phpDocumentor\Transformer\Transformer->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3318   21085696  14. phpDocumentor\Transformer\Transformer->transformProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:141
+    0.8937   24277704  15. phpDocumentor\Transformer\Transformer->applyTransformationToProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:275
+    0.8937   24277864  16. phpDocumentor\Plugin\Twig\Writer\Twig->transform() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:312
+    1.0592   22815216  17. Twig_Environment->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Plugin/Twig/Writer/Twig.php:116
+    1.0594   22825048  18. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php:334
+    1.0594   22841560  19. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:366
+    1.0594   22842688  20. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22842688  21. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0594   22843064  22. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:25
+    1.0594   22843760  23. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22843760  24. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0624   22907264  25. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:312
+    1.0624   22907264  26. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->block_content() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0632   22926496  27. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:423
+    1.0632   22926496  28. __TwigTemplate_daae0115ec37e5a0b571749c1314278fe63bff5db2e95ba142e0832d4760b44d->block_method() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0637   22927888  29. twig_length_filter() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:140
+
+
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">core/60-modules.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            package
+                        </th>
+                        <td>
+                                                                                            <p>core</p>
+                                                                                            <p>core</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_module_exists" name="method_module_exists" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">module_exists()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">module_exists(string  <span class="argument">$id</span>) : boolean</pre>
+                <p><em>Checks to see whether a module with the given id exists.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$id </td>
+                                <td><p>The id to search for.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+Warning: count(): Parameter must be an array or an object that implements Countable in phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Extension/Core.php on line 1293
+
+Call Stack:
+    0.0007     401624   1. {main}() /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:0
+    0.0486    2278744   2. require('phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc') /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:10
+    0.1048   11884520   3. phpDocumentor\Application->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc:23
+    0.1058   12089344   4. Cilex\Provider\Console\ContainerAwareApplication->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Application.php:183
+    0.1059   12089344   5. Cilex\Provider\Console\ContainerAwareApplication->doRun() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:126
+    0.1060   12089344   6. Cilex\Provider\Console\ContainerAwareApplication->doRunCommand() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:195
+    0.1060   12089344   7. phpDocumentor\Command\Project\RunCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:874
+    0.1062   12093272   8. phpDocumentor\Command\Project\RunCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.2876   17871696   9. phpDocumentor\Transformer\Command\Project\TransformCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Command/Project/RunCommand.php:275
+    0.2877   17873864  10. phpDocumentor\Transformer\Command\Project\TransformCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.3309   21077656  11. phpDocumentor\Console\Output\Output->writeTimedLog() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Command/Project/TransformCommand.php:206
+    0.3310   21077656  12. call_user_func_array:{phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59}() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3310   21077672  13. phpDocumentor\Transformer\Transformer->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3318   21085696  14. phpDocumentor\Transformer\Transformer->transformProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:141
+    0.8937   24277704  15. phpDocumentor\Transformer\Transformer->applyTransformationToProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:275
+    0.8937   24277864  16. phpDocumentor\Plugin\Twig\Writer\Twig->transform() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:312
+    1.0592   22815216  17. Twig_Environment->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Plugin/Twig/Writer/Twig.php:116
+    1.0594   22825048  18. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php:334
+    1.0594   22841560  19. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:366
+    1.0594   22842688  20. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22842688  21. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0594   22843064  22. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:25
+    1.0594   22843760  23. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22843760  24. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0624   22907264  25. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:312
+    1.0624   22907264  26. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->block_content() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0641   22926496  27. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:423
+    1.0641   22926496  28. __TwigTemplate_daae0115ec37e5a0b571749c1314278fe63bff5db2e95ba142e0832d4760b44d->block_method() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0644   22944272  29. twig_length_filter() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:140
+
+
+Warning: count(): Parameter must be an array or an object that implements Countable in phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Extension/Core.php on line 1293
+
+Call Stack:
+    0.0007     401624   1. {main}() /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:0
+    0.0486    2278744   2. require('phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc') /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:10
+    0.1048   11884520   3. phpDocumentor\Application->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc:23
+    0.1058   12089344   4. Cilex\Provider\Console\ContainerAwareApplication->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Application.php:183
+    0.1059   12089344   5. Cilex\Provider\Console\ContainerAwareApplication->doRun() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:126
+    0.1060   12089344   6. Cilex\Provider\Console\ContainerAwareApplication->doRunCommand() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:195
+    0.1060   12089344   7. phpDocumentor\Command\Project\RunCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:874
+    0.1062   12093272   8. phpDocumentor\Command\Project\RunCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.2876   17871696   9. phpDocumentor\Transformer\Command\Project\TransformCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Command/Project/RunCommand.php:275
+    0.2877   17873864  10. phpDocumentor\Transformer\Command\Project\TransformCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.3309   21077656  11. phpDocumentor\Console\Output\Output->writeTimedLog() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Command/Project/TransformCommand.php:206
+    0.3310   21077656  12. call_user_func_array:{phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59}() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3310   21077672  13. phpDocumentor\Transformer\Transformer->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3318   21085696  14. phpDocumentor\Transformer\Transformer->transformProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:141
+    0.8937   24277704  15. phpDocumentor\Transformer\Transformer->applyTransformationToProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:275
+    0.8937   24277864  16. phpDocumentor\Plugin\Twig\Writer\Twig->transform() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:312
+    1.0592   22815216  17. Twig_Environment->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Plugin/Twig/Writer/Twig.php:116
+    1.0594   22825048  18. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php:334
+    1.0594   22841560  19. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:366
+    1.0594   22842688  20. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22842688  21. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0594   22843064  22. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:25
+    1.0594   22843760  23. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22843760  24. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0624   22907264  25. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:312
+    1.0624   22907264  26. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->block_content() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0641   22926496  27. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:423
+    1.0641   22926496  28. __TwigTemplate_daae0115ec37e5a0b571749c1314278fe63bff5db2e95ba142e0832d4760b44d->block_method() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0646   22944272  29. twig_length_filter() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:140
+
+
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>Whether a module is currently loaded with the given id.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">core/60-modules.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            package
+                        </th>
+                        <td>
+                                                                                            <p>core</p>
+                                                                                            <p>core</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_add_action" name="method_add_action" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">add_action()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">add_action(string  <span class="argument">$action_name</span>, callable  <span class="argument">$func</span>) </pre>
+                <p><em>Registers a new action handler.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$action_name </td>
+                                <td><p>The action to register.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>callable</td>
+                                <td>$func </td>
+                                <td><p>The function to call when the specified
+action is requested.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+Warning: count(): Parameter must be an array or an object that implements Countable in phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Extension/Core.php on line 1293
+
+Call Stack:
+    0.0007     401624   1. {main}() /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:0
+    0.0486    2278744   2. require('phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc') /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:10
+    0.1048   11884520   3. phpDocumentor\Application->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc:23
+    0.1058   12089344   4. Cilex\Provider\Console\ContainerAwareApplication->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Application.php:183
+    0.1059   12089344   5. Cilex\Provider\Console\ContainerAwareApplication->doRun() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:126
+    0.1060   12089344   6. Cilex\Provider\Console\ContainerAwareApplication->doRunCommand() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:195
+    0.1060   12089344   7. phpDocumentor\Command\Project\RunCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:874
+    0.1062   12093272   8. phpDocumentor\Command\Project\RunCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.2876   17871696   9. phpDocumentor\Transformer\Command\Project\TransformCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Command/Project/RunCommand.php:275
+    0.2877   17873864  10. phpDocumentor\Transformer\Command\Project\TransformCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.3309   21077656  11. phpDocumentor\Console\Output\Output->writeTimedLog() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Command/Project/TransformCommand.php:206
+    0.3310   21077656  12. call_user_func_array:{phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59}() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3310   21077672  13. phpDocumentor\Transformer\Transformer->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3318   21085696  14. phpDocumentor\Transformer\Transformer->transformProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:141
+    0.8937   24277704  15. phpDocumentor\Transformer\Transformer->applyTransformationToProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:275
+    0.8937   24277864  16. phpDocumentor\Plugin\Twig\Writer\Twig->transform() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:312
+    1.0592   22815216  17. Twig_Environment->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Plugin/Twig/Writer/Twig.php:116
+    1.0594   22825048  18. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php:334
+    1.0594   22841560  19. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:366
+    1.0594   22842688  20. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22842688  21. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0594   22843064  22. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:25
+    1.0594   22843760  23. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22843760  24. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0624   22907264  25. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:312
+    1.0624   22907264  26. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->block_content() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0652   22942880  27. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:423
+    1.0652   22942880  28. __TwigTemplate_daae0115ec37e5a0b571749c1314278fe63bff5db2e95ba142e0832d4760b44d->block_method() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0657   22944272  29. twig_length_filter() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:140
+
+
+Warning: count(): Parameter must be an array or an object that implements Countable in phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Extension/Core.php on line 1293
+
+Call Stack:
+    0.0007     401624   1. {main}() /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:0
+    0.0486    2278744   2. require('phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc') /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:10
+    0.1048   11884520   3. phpDocumentor\Application->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc:23
+    0.1058   12089344   4. Cilex\Provider\Console\ContainerAwareApplication->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Application.php:183
+    0.1059   12089344   5. Cilex\Provider\Console\ContainerAwareApplication->doRun() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:126
+    0.1060   12089344   6. Cilex\Provider\Console\ContainerAwareApplication->doRunCommand() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:195
+    0.1060   12089344   7. phpDocumentor\Command\Project\RunCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:874
+    0.1062   12093272   8. phpDocumentor\Command\Project\RunCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.2876   17871696   9. phpDocumentor\Transformer\Command\Project\TransformCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Command/Project/RunCommand.php:275
+    0.2877   17873864  10. phpDocumentor\Transformer\Command\Project\TransformCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.3309   21077656  11. phpDocumentor\Console\Output\Output->writeTimedLog() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Command/Project/TransformCommand.php:206
+    0.3310   21077656  12. call_user_func_array:{phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59}() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3310   21077672  13. phpDocumentor\Transformer\Transformer->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3318   21085696  14. phpDocumentor\Transformer\Transformer->transformProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:141
+    0.8937   24277704  15. phpDocumentor\Transformer\Transformer->applyTransformationToProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:275
+    0.8937   24277864  16. phpDocumentor\Plugin\Twig\Writer\Twig->transform() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:312
+    1.0592   22815216  17. Twig_Environment->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Plugin/Twig/Writer/Twig.php:116
+    1.0594   22825048  18. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php:334
+    1.0594   22841560  19. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:366
+    1.0594   22842688  20. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22842688  21. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0594   22843064  22. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:25
+    1.0594   22843760  23. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22843760  24. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0624   22907264  25. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:312
+    1.0624   22907264  26. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->block_content() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0652   22942880  27. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:423
+    1.0652   22942880  28. __TwigTemplate_daae0115ec37e5a0b571749c1314278fe63bff5db2e95ba142e0832d4760b44d->block_method() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0660   22960656  29. twig_length_filter() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:140
+
+
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">core/60-modules.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            package
+                        </th>
+                        <td>
+                                                                                            <p>core</p>
+                                                                                            <p>core</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_has_action" name="method_has_action" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">has_action()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">has_action(string  <span class="argument">$action_name</span>) : boolean</pre>
+                <p><em>Figures out whether a given action is currently registered.</em></p>
+                <p>Only guaranteed to be accurate in inside an existing action function</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$action_name </td>
+                                <td><p>The name of the action to search for</p></td>
+                            </tr>
+                                            </table>
+                
+                
+Warning: count(): Parameter must be an array or an object that implements Countable in phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Extension/Core.php on line 1293
+
+Call Stack:
+    0.0007     401624   1. {main}() /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:0
+    0.0486    2278744   2. require('phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc') /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:10
+    0.1048   11884520   3. phpDocumentor\Application->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc:23
+    0.1058   12089344   4. Cilex\Provider\Console\ContainerAwareApplication->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Application.php:183
+    0.1059   12089344   5. Cilex\Provider\Console\ContainerAwareApplication->doRun() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:126
+    0.1060   12089344   6. Cilex\Provider\Console\ContainerAwareApplication->doRunCommand() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:195
+    0.1060   12089344   7. phpDocumentor\Command\Project\RunCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:874
+    0.1062   12093272   8. phpDocumentor\Command\Project\RunCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.2876   17871696   9. phpDocumentor\Transformer\Command\Project\TransformCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Command/Project/RunCommand.php:275
+    0.2877   17873864  10. phpDocumentor\Transformer\Command\Project\TransformCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.3309   21077656  11. phpDocumentor\Console\Output\Output->writeTimedLog() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Command/Project/TransformCommand.php:206
+    0.3310   21077656  12. call_user_func_array:{phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59}() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3310   21077672  13. phpDocumentor\Transformer\Transformer->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3318   21085696  14. phpDocumentor\Transformer\Transformer->transformProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:141
+    0.8937   24277704  15. phpDocumentor\Transformer\Transformer->applyTransformationToProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:275
+    0.8937   24277864  16. phpDocumentor\Plugin\Twig\Writer\Twig->transform() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:312
+    1.0592   22815216  17. Twig_Environment->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Plugin/Twig/Writer/Twig.php:116
+    1.0594   22825048  18. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php:334
+    1.0594   22841560  19. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:366
+    1.0594   22842688  20. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22842688  21. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0594   22843064  22. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:25
+    1.0594   22843760  23. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22843760  24. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0624   22907264  25. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:312
+    1.0624   22907264  26. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->block_content() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0666   22959264  27. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:423
+    1.0666   22959264  28. __TwigTemplate_daae0115ec37e5a0b571749c1314278fe63bff5db2e95ba142e0832d4760b44d->block_method() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0673   22960656  29. twig_length_filter() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:140
+
+
+Warning: count(): Parameter must be an array or an object that implements Countable in phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Extension/Core.php on line 1293
+
+Call Stack:
+    0.0007     401624   1. {main}() /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:0
+    0.0486    2278744   2. require('phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc') /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:10
+    0.1048   11884520   3. phpDocumentor\Application->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc:23
+    0.1058   12089344   4. Cilex\Provider\Console\ContainerAwareApplication->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Application.php:183
+    0.1059   12089344   5. Cilex\Provider\Console\ContainerAwareApplication->doRun() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:126
+    0.1060   12089344   6. Cilex\Provider\Console\ContainerAwareApplication->doRunCommand() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:195
+    0.1060   12089344   7. phpDocumentor\Command\Project\RunCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:874
+    0.1062   12093272   8. phpDocumentor\Command\Project\RunCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.2876   17871696   9. phpDocumentor\Transformer\Command\Project\TransformCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Command/Project/RunCommand.php:275
+    0.2877   17873864  10. phpDocumentor\Transformer\Command\Project\TransformCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.3309   21077656  11. phpDocumentor\Console\Output\Output->writeTimedLog() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Command/Project/TransformCommand.php:206
+    0.3310   21077656  12. call_user_func_array:{phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59}() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3310   21077672  13. phpDocumentor\Transformer\Transformer->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3318   21085696  14. phpDocumentor\Transformer\Transformer->transformProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:141
+    0.8937   24277704  15. phpDocumentor\Transformer\Transformer->applyTransformationToProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:275
+    0.8937   24277864  16. phpDocumentor\Plugin\Twig\Writer\Twig->transform() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:312
+    1.0592   22815216  17. Twig_Environment->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Plugin/Twig/Writer/Twig.php:116
+    1.0594   22825048  18. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php:334
+    1.0594   22841560  19. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:366
+    1.0594   22842688  20. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22842688  21. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0594   22843064  22. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:25
+    1.0594   22843760  23. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22843760  24. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0624   22907264  25. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:312
+    1.0624   22907264  26. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->block_content() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0666   22959264  27. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:423
+    1.0666   22959264  28. __TwigTemplate_daae0115ec37e5a0b571749c1314278fe63bff5db2e95ba142e0832d4760b44d->block_method() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0676   22977040  29. twig_length_filter() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:140
+
+
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>Whether an action with the specified name exists.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">core/60-modules.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            package
+                        </th>
+                        <td>
+                                                                                            <p>core</p>
+                                                                                            <p>core</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_register_save_preprocessor" name="method_register_save_preprocessor" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">register_save_preprocessor()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">register_save_preprocessor(callable  <span class="argument">$func</span>) </pre>
+                <p><em>Register a new proprocessor that will be executed just before
+an edit is saved.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>callable</td>
+                                <td>$func </td>
+                                <td><p>The function to register.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+Warning: count(): Parameter must be an array or an object that implements Countable in phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Extension/Core.php on line 1293
+
+Call Stack:
+    0.0007     401624   1. {main}() /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:0
+    0.0486    2278744   2. require('phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc') /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:10
+    0.1048   11884520   3. phpDocumentor\Application->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc:23
+    0.1058   12089344   4. Cilex\Provider\Console\ContainerAwareApplication->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Application.php:183
+    0.1059   12089344   5. Cilex\Provider\Console\ContainerAwareApplication->doRun() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:126
+    0.1060   12089344   6. Cilex\Provider\Console\ContainerAwareApplication->doRunCommand() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:195
+    0.1060   12089344   7. phpDocumentor\Command\Project\RunCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:874
+    0.1062   12093272   8. phpDocumentor\Command\Project\RunCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.2876   17871696   9. phpDocumentor\Transformer\Command\Project\TransformCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Command/Project/RunCommand.php:275
+    0.2877   17873864  10. phpDocumentor\Transformer\Command\Project\TransformCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.3309   21077656  11. phpDocumentor\Console\Output\Output->writeTimedLog() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Command/Project/TransformCommand.php:206
+    0.3310   21077656  12. call_user_func_array:{phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59}() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3310   21077672  13. phpDocumentor\Transformer\Transformer->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3318   21085696  14. phpDocumentor\Transformer\Transformer->transformProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:141
+    0.8937   24277704  15. phpDocumentor\Transformer\Transformer->applyTransformationToProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:275
+    0.8937   24277864  16. phpDocumentor\Plugin\Twig\Writer\Twig->transform() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:312
+    1.0592   22815216  17. Twig_Environment->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Plugin/Twig/Writer/Twig.php:116
+    1.0594   22825048  18. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php:334
+    1.0594   22841560  19. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:366
+    1.0594   22842688  20. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22842688  21. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0594   22843064  22. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:25
+    1.0594   22843760  23. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22843760  24. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0624   22907264  25. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:312
+    1.0624   22907264  26. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->block_content() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0683   22975648  27. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:423
+    1.0683   22975648  28. __TwigTemplate_daae0115ec37e5a0b571749c1314278fe63bff5db2e95ba142e0832d4760b44d->block_method() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0686   22977040  29. twig_length_filter() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:140
+
+
+Warning: count(): Parameter must be an array or an object that implements Countable in phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Extension/Core.php on line 1293
+
+Call Stack:
+    0.0007     401624   1. {main}() /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:0
+    0.0486    2278744   2. require('phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc') /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:10
+    0.1048   11884520   3. phpDocumentor\Application->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc:23
+    0.1058   12089344   4. Cilex\Provider\Console\ContainerAwareApplication->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Application.php:183
+    0.1059   12089344   5. Cilex\Provider\Console\ContainerAwareApplication->doRun() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:126
+    0.1060   12089344   6. Cilex\Provider\Console\ContainerAwareApplication->doRunCommand() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:195
+    0.1060   12089344   7. phpDocumentor\Command\Project\RunCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:874
+    0.1062   12093272   8. phpDocumentor\Command\Project\RunCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.2876   17871696   9. phpDocumentor\Transformer\Command\Project\TransformCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Command/Project/RunCommand.php:275
+    0.2877   17873864  10. phpDocumentor\Transformer\Command\Project\TransformCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.3309   21077656  11. phpDocumentor\Console\Output\Output->writeTimedLog() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Command/Project/TransformCommand.php:206
+    0.3310   21077656  12. call_user_func_array:{phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59}() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3310   21077672  13. phpDocumentor\Transformer\Transformer->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3318   21085696  14. phpDocumentor\Transformer\Transformer->transformProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:141
+    0.8937   24277704  15. phpDocumentor\Transformer\Transformer->applyTransformationToProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:275
+    0.8937   24277864  16. phpDocumentor\Plugin\Twig\Writer\Twig->transform() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:312
+    1.0592   22815216  17. Twig_Environment->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Plugin/Twig/Writer/Twig.php:116
+    1.0594   22825048  18. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php:334
+    1.0594   22841560  19. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:366
+    1.0594   22842688  20. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22842688  21. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0594   22843064  22. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:25
+    1.0594   22843760  23. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22843760  24. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0624   22907264  25. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:312
+    1.0624   22907264  26. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->block_content() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0683   22975648  27. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:423
+    1.0683   22975648  28. __TwigTemplate_daae0115ec37e5a0b571749c1314278fe63bff5db2e95ba142e0832d4760b44d->block_method() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0688   22993424  29. twig_length_filter() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:140
+
+
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">core/60-modules.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            package
+                        </th>
+                        <td>
+                                                                                            <p>core</p>
+                                                                                            <p>core</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_add_help_section" name="method_add_help_section" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">add_help_section()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">add_help_section(string  <span class="argument">$index</span>, string  <span class="argument">$title</span>, string  <span class="argument">$content</span>) </pre>
+                <p><em>Adds a new help section to the help page.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$index </td>
+                                <td><p>The string to index the new section under.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$title </td>
+                                <td><p>The title to display above the section.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$content </td>
+                                <td><p>The content to display.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+Warning: count(): Parameter must be an array or an object that implements Countable in phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Extension/Core.php on line 1293
+
+Call Stack:
+    0.0007     401624   1. {main}() /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:0
+    0.0486    2278744   2. require('phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc') /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:10
+    0.1048   11884520   3. phpDocumentor\Application->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc:23
+    0.1058   12089344   4. Cilex\Provider\Console\ContainerAwareApplication->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Application.php:183
+    0.1059   12089344   5. Cilex\Provider\Console\ContainerAwareApplication->doRun() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:126
+    0.1060   12089344   6. Cilex\Provider\Console\ContainerAwareApplication->doRunCommand() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:195
+    0.1060   12089344   7. phpDocumentor\Command\Project\RunCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:874
+    0.1062   12093272   8. phpDocumentor\Command\Project\RunCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.2876   17871696   9. phpDocumentor\Transformer\Command\Project\TransformCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Command/Project/RunCommand.php:275
+    0.2877   17873864  10. phpDocumentor\Transformer\Command\Project\TransformCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.3309   21077656  11. phpDocumentor\Console\Output\Output->writeTimedLog() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Command/Project/TransformCommand.php:206
+    0.3310   21077656  12. call_user_func_array:{phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59}() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3310   21077672  13. phpDocumentor\Transformer\Transformer->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3318   21085696  14. phpDocumentor\Transformer\Transformer->transformProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:141
+    0.8937   24277704  15. phpDocumentor\Transformer\Transformer->applyTransformationToProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:275
+    0.8937   24277864  16. phpDocumentor\Plugin\Twig\Writer\Twig->transform() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:312
+    1.0592   22815216  17. Twig_Environment->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Plugin/Twig/Writer/Twig.php:116
+    1.0594   22825048  18. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php:334
+    1.0594   22841560  19. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:366
+    1.0594   22842688  20. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22842688  21. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0594   22843064  22. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:25
+    1.0594   22843760  23. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22843760  24. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0624   22907264  25. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:312
+    1.0624   22907264  26. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->block_content() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0693   22992032  27. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:423
+    1.0693   22992032  28. __TwigTemplate_daae0115ec37e5a0b571749c1314278fe63bff5db2e95ba142e0832d4760b44d->block_method() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0700   22993424  29. twig_length_filter() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:140
+
+
+Warning: count(): Parameter must be an array or an object that implements Countable in phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Extension/Core.php on line 1293
+
+Call Stack:
+    0.0007     401624   1. {main}() /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:0
+    0.0486    2278744   2. require('phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc') /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:10
+    0.1048   11884520   3. phpDocumentor\Application->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc:23
+    0.1058   12089344   4. Cilex\Provider\Console\ContainerAwareApplication->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Application.php:183
+    0.1059   12089344   5. Cilex\Provider\Console\ContainerAwareApplication->doRun() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:126
+    0.1060   12089344   6. Cilex\Provider\Console\ContainerAwareApplication->doRunCommand() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:195
+    0.1060   12089344   7. phpDocumentor\Command\Project\RunCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:874
+    0.1062   12093272   8. phpDocumentor\Command\Project\RunCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.2876   17871696   9. phpDocumentor\Transformer\Command\Project\TransformCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Command/Project/RunCommand.php:275
+    0.2877   17873864  10. phpDocumentor\Transformer\Command\Project\TransformCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.3309   21077656  11. phpDocumentor\Console\Output\Output->writeTimedLog() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Command/Project/TransformCommand.php:206
+    0.3310   21077656  12. call_user_func_array:{phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59}() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3310   21077672  13. phpDocumentor\Transformer\Transformer->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3318   21085696  14. phpDocumentor\Transformer\Transformer->transformProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:141
+    0.8937   24277704  15. phpDocumentor\Transformer\Transformer->applyTransformationToProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:275
+    0.8937   24277864  16. phpDocumentor\Plugin\Twig\Writer\Twig->transform() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:312
+    1.0592   22815216  17. Twig_Environment->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Plugin/Twig/Writer/Twig.php:116
+    1.0594   22825048  18. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php:334
+    1.0594   22841560  19. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:366
+    1.0594   22842688  20. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22842688  21. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0594   22843064  22. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:25
+    1.0594   22843760  23. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22843760  24. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0624   22907264  25. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:312
+    1.0624   22907264  26. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->block_content() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0693   22992032  27. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:423
+    1.0693   22992032  28. __TwigTemplate_daae0115ec37e5a0b571749c1314278fe63bff5db2e95ba142e0832d4760b44d->block_method() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0703   23009808  29. twig_length_filter() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:140
+
+
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">core/60-modules.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            package
+                        </th>
+                        <td>
+                                                                                            <p>core</p>
+                                                                                            <p>core</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_statistic_add" name="method_statistic_add" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">statistic_add()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">statistic_add(array  <span class="argument">$stat_data</span>) </pre>
+                <p><em>Registers a statistic calculator against the system.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$stat_data </td>
+                                <td><p>The statistic object to register.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+Warning: count(): Parameter must be an array or an object that implements Countable in phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Extension/Core.php on line 1293
+
+Call Stack:
+    0.0007     401624   1. {main}() /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:0
+    0.0486    2278744   2. require('phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc') /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:10
+    0.1048   11884520   3. phpDocumentor\Application->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc:23
+    0.1058   12089344   4. Cilex\Provider\Console\ContainerAwareApplication->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Application.php:183
+    0.1059   12089344   5. Cilex\Provider\Console\ContainerAwareApplication->doRun() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:126
+    0.1060   12089344   6. Cilex\Provider\Console\ContainerAwareApplication->doRunCommand() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:195
+    0.1060   12089344   7. phpDocumentor\Command\Project\RunCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:874
+    0.1062   12093272   8. phpDocumentor\Command\Project\RunCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.2876   17871696   9. phpDocumentor\Transformer\Command\Project\TransformCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Command/Project/RunCommand.php:275
+    0.2877   17873864  10. phpDocumentor\Transformer\Command\Project\TransformCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.3309   21077656  11. phpDocumentor\Console\Output\Output->writeTimedLog() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Command/Project/TransformCommand.php:206
+    0.3310   21077656  12. call_user_func_array:{phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59}() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3310   21077672  13. phpDocumentor\Transformer\Transformer->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3318   21085696  14. phpDocumentor\Transformer\Transformer->transformProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:141
+    0.8937   24277704  15. phpDocumentor\Transformer\Transformer->applyTransformationToProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:275
+    0.8937   24277864  16. phpDocumentor\Plugin\Twig\Writer\Twig->transform() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:312
+    1.0592   22815216  17. Twig_Environment->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Plugin/Twig/Writer/Twig.php:116
+    1.0594   22825048  18. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php:334
+    1.0594   22841560  19. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:366
+    1.0594   22842688  20. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22842688  21. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0594   22843064  22. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:25
+    1.0594   22843760  23. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22843760  24. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0624   22907264  25. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:312
+    1.0624   22907264  26. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->block_content() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0707   23008416  27. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:423
+    1.0707   23008416  28. __TwigTemplate_daae0115ec37e5a0b571749c1314278fe63bff5db2e95ba142e0832d4760b44d->block_method() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0710   23009808  29. twig_length_filter() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:140
+
+
+Warning: count(): Parameter must be an array or an object that implements Countable in phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Extension/Core.php on line 1293
+
+Call Stack:
+    0.0007     401624   1. {main}() /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:0
+    0.0486    2278744   2. require('phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc') /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:10
+    0.1048   11884520   3. phpDocumentor\Application->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc:23
+    0.1058   12089344   4. Cilex\Provider\Console\ContainerAwareApplication->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Application.php:183
+    0.1059   12089344   5. Cilex\Provider\Console\ContainerAwareApplication->doRun() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:126
+    0.1060   12089344   6. Cilex\Provider\Console\ContainerAwareApplication->doRunCommand() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:195
+    0.1060   12089344   7. phpDocumentor\Command\Project\RunCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:874
+    0.1062   12093272   8. phpDocumentor\Command\Project\RunCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.2876   17871696   9. phpDocumentor\Transformer\Command\Project\TransformCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Command/Project/RunCommand.php:275
+    0.2877   17873864  10. phpDocumentor\Transformer\Command\Project\TransformCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.3309   21077656  11. phpDocumentor\Console\Output\Output->writeTimedLog() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Command/Project/TransformCommand.php:206
+    0.3310   21077656  12. call_user_func_array:{phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59}() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3310   21077672  13. phpDocumentor\Transformer\Transformer->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3318   21085696  14. phpDocumentor\Transformer\Transformer->transformProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:141
+    0.8937   24277704  15. phpDocumentor\Transformer\Transformer->applyTransformationToProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:275
+    0.8937   24277864  16. phpDocumentor\Plugin\Twig\Writer\Twig->transform() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:312
+    1.0592   22815216  17. Twig_Environment->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Plugin/Twig/Writer/Twig.php:116
+    1.0594   22825048  18. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php:334
+    1.0594   22841560  19. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:366
+    1.0594   22842688  20. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22842688  21. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0594   22843064  22. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:25
+    1.0594   22843760  23. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22843760  24. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0624   22907264  25. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:312
+    1.0624   22907264  26. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->block_content() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0707   23008416  27. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:423
+    1.0707   23008416  28. __TwigTemplate_daae0115ec37e5a0b571749c1314278fe63bff5db2e95ba142e0832d4760b44d->block_method() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0712   23026192  29. twig_length_filter() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:140
+
+
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">core/60-modules.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            package
+                        </th>
+                        <td>
+                                                                                            <p>core</p>
+                                                                                            <p>core</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_has_statistic" name="method_has_statistic" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">has_statistic()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">has_statistic(string  <span class="argument">$stat_id</span>) : boolean</pre>
+                <p><em>Checks whether a specified statistic has been registered.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$stat_id </td>
+                                <td><p>The id of the statistic to check the existence of.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+Warning: count(): Parameter must be an array or an object that implements Countable in phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Extension/Core.php on line 1293
+
+Call Stack:
+    0.0007     401624   1. {main}() /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:0
+    0.0486    2278744   2. require('phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc') /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:10
+    0.1048   11884520   3. phpDocumentor\Application->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc:23
+    0.1058   12089344   4. Cilex\Provider\Console\ContainerAwareApplication->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Application.php:183
+    0.1059   12089344   5. Cilex\Provider\Console\ContainerAwareApplication->doRun() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:126
+    0.1060   12089344   6. Cilex\Provider\Console\ContainerAwareApplication->doRunCommand() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:195
+    0.1060   12089344   7. phpDocumentor\Command\Project\RunCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:874
+    0.1062   12093272   8. phpDocumentor\Command\Project\RunCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.2876   17871696   9. phpDocumentor\Transformer\Command\Project\TransformCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Command/Project/RunCommand.php:275
+    0.2877   17873864  10. phpDocumentor\Transformer\Command\Project\TransformCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.3309   21077656  11. phpDocumentor\Console\Output\Output->writeTimedLog() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Command/Project/TransformCommand.php:206
+    0.3310   21077656  12. call_user_func_array:{phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59}() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3310   21077672  13. phpDocumentor\Transformer\Transformer->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3318   21085696  14. phpDocumentor\Transformer\Transformer->transformProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:141
+    0.8937   24277704  15. phpDocumentor\Transformer\Transformer->applyTransformationToProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:275
+    0.8937   24277864  16. phpDocumentor\Plugin\Twig\Writer\Twig->transform() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:312
+    1.0592   22815216  17. Twig_Environment->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Plugin/Twig/Writer/Twig.php:116
+    1.0594   22825048  18. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php:334
+    1.0594   22841560  19. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:366
+    1.0594   22842688  20. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22842688  21. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0594   22843064  22. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:25
+    1.0594   22843760  23. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22843760  24. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0624   22907264  25. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:312
+    1.0624   22907264  26. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->block_content() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0716   23024800  27. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:423
+    1.0716   23024800  28. __TwigTemplate_daae0115ec37e5a0b571749c1314278fe63bff5db2e95ba142e0832d4760b44d->block_method() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0719   23026192  29. twig_length_filter() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:140
+
+
+Warning: count(): Parameter must be an array or an object that implements Countable in phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Extension/Core.php on line 1293
+
+Call Stack:
+    0.0007     401624   1. {main}() /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:0
+    0.0486    2278744   2. require('phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc') /home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc:10
+    0.1048   11884520   3. phpDocumentor\Application->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/bin/phpdoc:23
+    0.1058   12089344   4. Cilex\Provider\Console\ContainerAwareApplication->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Application.php:183
+    0.1059   12089344   5. Cilex\Provider\Console\ContainerAwareApplication->doRun() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:126
+    0.1060   12089344   6. Cilex\Provider\Console\ContainerAwareApplication->doRunCommand() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:195
+    0.1060   12089344   7. phpDocumentor\Command\Project\RunCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Application.php:874
+    0.1062   12093272   8. phpDocumentor\Command\Project\RunCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.2876   17871696   9. phpDocumentor\Transformer\Command\Project\TransformCommand->run() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Command/Project/RunCommand.php:275
+    0.2877   17873864  10. phpDocumentor\Transformer\Command\Project\TransformCommand->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:257
+    0.3309   21077656  11. phpDocumentor\Console\Output\Output->writeTimedLog() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Command/Project/TransformCommand.php:206
+    0.3310   21077656  12. call_user_func_array:{phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59}() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3310   21077672  13. phpDocumentor\Transformer\Transformer->execute() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Console/Output/Output.php:59
+    0.3318   21085696  14. phpDocumentor\Transformer\Transformer->transformProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:141
+    0.8937   24277704  15. phpDocumentor\Transformer\Transformer->applyTransformationToProject() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:275
+    0.8937   24277864  16. phpDocumentor\Plugin\Twig\Writer\Twig->transform() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Transformer/Transformer.php:312
+    1.0592   22815216  17. Twig_Environment->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/src/phpDocumentor/Plugin/Twig/Writer/Twig.php:116
+    1.0594   22825048  18. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->render() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php:334
+    1.0594   22841560  19. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:366
+    1.0594   22842688  20. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22842688  21. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0594   22843064  22. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->display() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:25
+    1.0594   22843760  23. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayWithErrorHandling() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:355
+    1.0594   22843760  24. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->doDisplay() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:381
+    1.0624   22907264  25. __TwigTemplate_e9b916bc8ec0395bf82abe33efb058fa2ccd8b51a970b8ce47218fc40bb2c6c1->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:312
+    1.0624   22907264  26. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->block_content() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0716   23024800  27. __TwigTemplate_02ba832c2ea972798e806ba44910ce32645ca11f1a2988694d0e257df1bd7d72->displayBlock() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:423
+    1.0716   23024800  28. __TwigTemplate_daae0115ec37e5a0b571749c1314278fe63bff5db2e95ba142e0832d4760b44d->block_method() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Template.php:167
+    1.0721   23042576  29. twig_length_filter() phar:///home/sbrl/Documents/code/php/peppermint/build/_tmp/phpdoc/vendor/twig/twig/lib/Twig/Environment.php(390) : eval()'d code:140
+
+
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>Whether the specified statistic has been registered.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">core/60-modules.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            package
+                        </th>
+                        <td>
+                                                                                            <p>core</p>
+                                                                                            <p>core</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+        </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label"></h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/core/60-modules.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on July 5th, 2019 at 19:50.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page deleter",
-	"version" => "0.10",
+	"version" => "0.10.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to delete pages.",
 	"id" => "page-delete",
@@ -78,7 +78,7 @@ register_module([
 			unset($pageindex->$page);
 			
 			// Save the new page index
-			file_put_contents($paths->pageindex, json_encode($pageindex, JSON_PRETTY_PRINT)); 
+			save_pageindex();
 			
 			// Remove the page's name from the id index
 			ids::deletepagename($env->page);
