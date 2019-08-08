@@ -211,7 +211,7 @@ register_module([
  * Adds a history revision against a page.
  * Note: Does not updaate the current page content! This function _only_ 
  * records a new revision against a page name. Thus it is possible to have a 
- * disparaty between the history revisions and the actual content displayed in 
+ * disparity between the history revisions and the actual content displayed in 
  * the current revision if you're not careful!
  * @package	feature-history
  * @param	object	$pageinfo		The pageindex object of the page to operate on.
