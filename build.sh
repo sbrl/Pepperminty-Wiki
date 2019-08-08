@@ -49,7 +49,7 @@ fi
 
 ###############################################################################
 
-function task_setup {
+task_setup() {
 	task_begin "Checking Environment";
 	
 	check_command git true;
@@ -72,7 +72,7 @@ function task_setup {
 	task_end $?;
 }
 
-function task_build {
+task_build() {
 	if [ -f "./build/index.php" ]; then
 		task_begin "Deleting old build result";
 		rm build/index.php;
@@ -84,7 +84,7 @@ function task_build {
 	task_end $?;
 }
 
-function task_docs {
+task_docs() {
 	task_begin "Building HTTP API Docs";
 	node_modules/apidoc/bin/apidoc -o './docs/RestApi/' --config apidoc.json -f '.*\.php' -e 'index.php|ModuleApi'
 	exit_code="$?";
@@ -115,7 +115,7 @@ function task_docs {
 	task_end $?;
 }
 
-function task_docs-livereload {
+task_docs-livereload() {
 	task_begin "Listening for changes to docs";
 	while :; do
 		inotifywait -qr -e modify --format '%:e %f' ./docs/ nightdocs.toml;
@@ -124,7 +124,7 @@ function task_docs-livereload {
 	task_end $?;
 }
 
-function task_start-server {
+task_start-server() {
 	task_begin "Starting Server";
 	if [ -f "${server_pid_file}" ]; then
 		task_end 1 "${FRED}${HC}Error: A development server appears to be running already. Try running the 'stop-server' task before starting it again.${RS}";
@@ -139,7 +139,7 @@ function task_start-server {
 	task_end $?;
 }
 
-function task_stop-server {
+task_stop-server() {
 	task_begin "Stopping Server";
 	
 	kill "$(cat "${server_pid_file}")";
