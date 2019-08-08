@@ -255,8 +255,8 @@ window.addEventListener("load", function(event) {
 		 * @apiGroup		Editing
 		 * @apiPermission	Anonymous
 		 * 
-		 * @apiUse	PageParameter
-		 * @apiPara	{string}	format	The format ot return the edit key in. Possible values: text, json. Default: text.
+		 * @apiUse		PageParameter
+		 * @apiParam	{string}	format	The format ot return the edit key in. Possible values: text, json. Default: text.
 		 */
 		
 		/*
