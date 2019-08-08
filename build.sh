@@ -94,11 +94,14 @@ function task_docs {
 	task_begin "Building PHP Module API Docs";
 	if [ ! -f "./build/_tmp/phpdoc" ]; then
 		subtask_begin "Downloading PHPDoc";
+		# Create the temporary directory if it doesn't exist yet
+		[ -d "./build/_tmp" ] || mkdir -p "./build/_tmp/";
+		
 		curl -sSL https://phpdoc.org/phpDocumentor.phar -o ./build/_tmp/phpdoc
 		subtask_end $?;
 	fi
 	
-	php ./build/_tmp/phpdoc run \
+	php ./buihttps://phpdoc.org/ld/_tmp/phpdoc run \
 		--directory . \
 		--target docs/ModuleApi\
 		--cache-folder build/_tmp/ModuleApiCache \
