@@ -101,7 +101,7 @@ task_docs() {
 		subtask_end $?;
 	fi
 	
-	php ./buihttps://phpdoc.org/ld/_tmp/phpdoc run \
+	php ./build/_tmp/phpdoc run \
 		--directory . \
 		--target docs/ModuleApi\
 		--cache-folder build/_tmp/ModuleApiCache \
