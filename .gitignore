@@ -4,6 +4,9 @@ __nightdocs/
 build/
 !build/index.php
 
+docs/RestApi
+docs/ModuleApi
+
 # Include the README
 !README.md
 # ...but ignore READMEs in the build folder
