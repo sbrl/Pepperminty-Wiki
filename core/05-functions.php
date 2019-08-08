@@ -112,7 +112,7 @@ function glob_recursive($pattern, $flags = 0)
 
 /**
  * Gets the name of the parent page to the specified page.
- * @since 0.15
+ * @apiVersion 0.15.0
  * @package core
  * @param  string		$pagename	The child page to get the parent
  * 									page name for.

@@ -13,7 +13,7 @@ register_module([
 		 * @apiName Stats
 		 * @apiGroup Utility
 		 * @apiPermission Anonymous
-		 * @since v0.15
+		 * @apiVersion v0.15
 		 * @apiParam	{string}	format	Specify the format the data should be returned in. Supported formats: html (default), json.
 		 * @apiParam	{string}	stat	HTML format only. If specified the page for the stat with this id is sent instead of the list of scalar stats.
 		 */
@@ -95,7 +95,7 @@ register_module([
 		 * @apiName UpdateStats
 		 * @apiGroup Utility
 		 * @apiPermission Administrator
-		 * @since v0.15
+		 * @apiVersion v0.15
 		 * @apiParam	{string}	secret	POST only, optional. If you're not logged in, you can specify the wiki's sekret instead (find it in peppermint.json) using this parameter.
 		 * @apiParam	{bool}		force	Whether the statistics should be recalculated anyway - even if they have already recently been recalculated. Default: no. Supported values: yes, no.
 		 */

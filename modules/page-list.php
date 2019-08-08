@@ -233,7 +233,7 @@ register_module([
 /**
  * Gets a list of all the tags currently used across the wiki.
  * @package	page-list
- * @since	v0.15
+ * @apiVersion	v0.15
  * @return	string[]	A list of all unique tags present on all pages across the wiki.
  */
 function get_all_tags()
