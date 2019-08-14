@@ -592,7 +592,7 @@ function get_max_upload_size()
  * @author	Lifted from Drupal by @meustrus from Stackoverflow
  * @see		http://stackoverflow.com/a/25370978/1460422 Source Stackoverflow answer
  * @param	string	$size	The size to parse.
- * @return	integer			The number of bytees represented by the specified
+ * @return	int		The number of bytees represented by the specified
  * 							size string.
  */
 function parse_size($size) {
