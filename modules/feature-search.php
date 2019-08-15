@@ -135,7 +135,7 @@ register_module([
 			$invindex = search::load_invindex($paths->searchindex);
 			$env->perfdata->invindex_decode_time = round((microtime(true) - $time_start)*1000, 3);
 			
-			$start = microtime(true);
+			$time_start = microtime(true);
 			$results = search::query_invindex($_GET["query"], $invindex);
 			$resultCount = count($results);
 			$env->perfdata->invindex_query_time = round((microtime(true) - $time_start)*1000, 3);
