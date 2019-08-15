@@ -95,7 +95,7 @@
         "version": "0.4.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
-        "lastupdate": 1559400114,
+        "lastupdate": 1565287856,
         "optional": false,
         "extra_data": []
     },
@@ -132,10 +132,10 @@
     {
         "id": "feature-search",
         "name": "Search",
-        "version": "0.7.1",
+        "version": "0.8",
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
-        "lastupdate": 1557653831,
+        "lastupdate": 1565906705,
         "optional": false,
         "extra_data": []
     },
@@ -145,17 +145,17 @@
         "version": "0.2",
         "author": "Starbeamrainbowlabs",
         "description": "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
-        "lastupdate": 1530614499,
+        "lastupdate": 1565741951,
         "optional": false,
         "extra_data": []
     },
     {
         "id": "feature-upload",
         "name": "Uploader",
-        "version": "0.6",
+        "version": "0.6.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
-        "lastupdate": 1559421090,
+        "lastupdate": 1565906134,
         "optional": false,
         "extra_data": []
     },
@@ -215,7 +215,7 @@
         "version": "0.17.4",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
-        "lastupdate": 1559400186,
+        "lastupdate": 1565287856,
         "optional": false,
         "extra_data": {
             "diff.min.js": "https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/jsdiff\/2.2.2\/diff.min.js"
@@ -247,7 +247,7 @@
         "version": "0.11.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
-        "lastupdate": 1557182882,
+        "lastupdate": 1565741951,
         "optional": false,
         "extra_data": []
     },

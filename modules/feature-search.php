@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Search",
-	"version" => "0.7.1",
+	"version" => "0.8",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
@@ -596,7 +596,7 @@ class search
 	
 	/**
 	 * Rebuilds the master inverted index and clears the page id index.
-	 * @param	boolean	$output	Whether to send progress information to the user's browser.
+	 * @param	bool	$output	Whether to send progress information to the user's browser.
 	 */
 	public static function rebuild_invindex($output = true)
 	{
@@ -715,36 +715,37 @@ class search
 	{
 		// Remove all the subentries that were removed since last time
 		foreach($removals as $nterm)
-		{
 			unset($invindex[$nterm][$pageid]);
-		}
 		
 		// Merge all the new / changed index entries into the inverted index
-		foreach($index as $nterm => $newentry)
-		{
+		foreach($index as $nterm => $newentry) {
 			// If the nterm isn't in the inverted index, then create a space for it
 			if(!isset($invindex[$nterm])) $invindex[$nterm] = [];
 			$invindex[$nterm][$pageid] = $newentry;
 			
 			// Sort the page entries for this word by frequency
+			/*
 			uasort($invindex[$nterm], function($a, $b) {
 				if($a["freq"] == $b["freq"]) return 0;
 				return ($a["freq"] < $b["freq"]) ? +1 : -1;
 			});
+			*/
 		}
 		
+		/*
 		// Sort the inverted index by rank
 		uasort($invindex, function($a, $b) {
 			$ac = count($a); $bc = count($b);
 			if($ac == $bc) return 0;
 			return ($ac < $bc) ? +1 : -1;
 		});
+		*/
 	}
 	
 	/**
 	 * Deletes the given pageid from the given pageindex.
-	 * @param  inverted_index	&$invindex	The inverted index.
-	 * @param  number			$pageid		The pageid to remove.
+	 * @param  array	&$invindex	The inverted index.
+	 * @param  int		$pageid		The pageid to remove.
 	 */
 	public static function delete_entry(&$invindex, $pageid)
 	{
