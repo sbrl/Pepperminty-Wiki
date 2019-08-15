@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Uploader",
-	"version" => "0.6",
+	"version" => "0.6.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -569,7 +569,7 @@ register_module([
  * @package feature-upload
  * @author	Lifted from Drupal by @meustrus from Stackoverflow
  * @see		http://stackoverflow.com/a/25370978/1460422 Source Stackoverflow answer
- * @return	integer		The maximum upload size supported bythe server, in bytes.
+ * @return	int		The maximum upload size supported bythe server, in bytes.
  */
 function get_max_upload_size()
 {
@@ -661,9 +661,9 @@ function getsvgsize($svgFilename)
  * Useful for sending errors back to the client.
  * @package feature-upload
  * @param	string	$text			The text to include in the image.
- * @param	integer	$target_size	The target width to aim for when creating
+ * @param	int		$target_size	The target width to aim for when creating
  * 									the image.
- * @return	image					The handle to the generated GD image.
+ * @return	resource				The handle to the generated GD image.
  */
 function errorimage($text, $target_size = null)
 {
