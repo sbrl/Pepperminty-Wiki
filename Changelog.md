@@ -4,6 +4,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ## v0.20-dev
  - Made `build.sh` build script more robust, especially when generating the documentation.
  - Improved search index update performance - especially when rebuilding the entire index through the master control panel
+     - The search index is no longer sorted, but this shouldn't affect lookup performance at all
 
 ## v0.19
 

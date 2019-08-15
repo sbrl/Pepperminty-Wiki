@@ -722,24 +722,7 @@ class search
 			// If the nterm isn't in the inverted index, then create a space for it
 			if(!isset($invindex[$nterm])) $invindex[$nterm] = [];
 			$invindex[$nterm][$pageid] = $newentry;
-			
-			// Sort the page entries for this word by frequency
-			/*
-			uasort($invindex[$nterm], function($a, $b) {
-				if($a["freq"] == $b["freq"]) return 0;
-				return ($a["freq"] < $b["freq"]) ? +1 : -1;
-			});
-			*/
 		}
-		
-		/*
-		// Sort the inverted index by rank
-		uasort($invindex, function($a, $b) {
-			$ac = count($a); $bc = count($b);
-			if($ac == $bc) return 0;
-			return ($ac < $bc) ? +1 : -1;
-		});
-		*/
 	}
 	
 	/**
