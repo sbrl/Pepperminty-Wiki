@@ -783,12 +783,10 @@ class search
 				continue;
 			
 			// Only search the inverted index if it actually exists there
-			if(isset($invindex[$qterm]))
-			{
+			if(isset($invindex[$qterm])) {
 				// Loop over each page in the inverted index entry
 				reset($invindex[$qterm]); // Reset array/object pointer
-				foreach($invindex[$qterm] as $pageid => $page_entry)
-				{
+				foreach($invindex[$qterm] as $pageid => $page_entry) {
 					// Create an entry in the matching pages array if it doesn't exist
 					if(!isset($matching_pages[$pageid]))
 						$matching_pages[$pageid] = [ "nterms" => [] ];
