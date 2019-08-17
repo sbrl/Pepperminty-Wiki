@@ -545,8 +545,7 @@ class search
 		$index = [];
 		
 		$terms = self::tokenize($source, true);
-		foreach($terms as $term)
-		{
+		foreach($terms as $term) {
 			// Skip over stop words (see https://en.wikipedia.org/wiki/Stop_words)
 			if(in_array($term[0], self::$stop_words)) continue;
 			
@@ -566,8 +565,7 @@ class search
 	 * @param	bool	$capture_offsets	Whether to capture & return the character offsets of the tokens detected. If true, then each token returned will be an array in the form [ token, char_offset ].
 	 * @return	array	An array of raw tokens extracted from the specified source string.
 	 */
-	public static function tokenize($source, $capture_offsets = false)
-	{
+	public static function tokenize($source, $capture_offsets = false) {
 		/** Normalises input characters for searching & indexing */
 		static $literator; if($literator == null) $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
 		
@@ -664,15 +662,12 @@ class search
 	 * @param	array	$changed	An array to be filled with the nterms of all the changed entries.
 	 * @param	array	$removed	An array to be filled with the nterms of all  the removed entries.
 	 */
-	public static function compare_indexes($oldindex, $newindex, &$changed, &$removed)
-	{
-		foreach($oldindex as $nterm => $entry)
-		{
+	public static function compare_indexes($oldindex, $newindex, &$changed, &$removed) {
+		foreach($oldindex as $nterm => $entry) {
 			if(!isset($newindex[$nterm]))
 				$removed[] = $nterm;
 		}
-		foreach($newindex as $nterm => $entry)
-		{
+		foreach($newindex as $nterm => $entry) {
 			if(!isset($oldindex[$nterm]) or // If this word is new
 			   $newindex[$nterm] !== $oldindex[$nterm]) // If this word has changed
 				$changed[$nterm] = $newindex[$nterm];
@@ -690,8 +685,8 @@ class search
 	}
 	/**
 	 * Reads in and parses an inverted index, measuring the time it takes to do so.
-	 * @param  string $invindex_filename The path to the file inverted index to parse.
-	 * @return boolean Whether the measurement was actually able to take place. Usually this will be true, but it will return false if it can't find the specified index.
+	 * @param	string	$invindex_filename	The path to the file inverted index to parse.
+	 * @return	bool	Whether the measurement was actually able to take place. Usually this will be true, but it will return false if it can't find the specified index.
 	 */
 	public static function measure_invindex_load_time($invindex_filename) {
 		global $env;
