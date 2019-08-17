@@ -1,12 +1,17 @@
 <?php
 register_module([
 	"name" => "Search",
-	"version" => "0.8",
+	"version" => "0.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
+	"extra_data" => [
+		"StorageBox.php" => "https://gist.githubusercontent.com/sbrl/c3bfbbbb3d1419332e9ece1bac8bb71c/raw/c4c858831e63d24fcecb2e221375486735cf3109/StorageBox.php"
+	],
 	"id" => "feature-search",
 	"code" => function() {
-		global $settings;
+		global $settings, $paths;
+		
+		require_once("$paths->extra_data_directory/feature-search/StorageBox.php");
 		
 		/**
 		 * @api {get} ?action=index&page={pageName} Get an index of words for a given page
