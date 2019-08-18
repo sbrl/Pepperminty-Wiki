@@ -454,20 +454,19 @@ DIFFSCRIPT;
 			if(file_exists("$env->storage_prefix$env->page.md"))
 			{
 				$oldpagedata = file_get_contents("$env->storage_prefix$env->page.md");
-				$oldindex = search::index($oldpagedata);
+				$oldindex = search::index_generate($oldpagedata);
 			}
-			$newindex = search::index($pagedata);
+			$newindex = search::index_generate($pagedata);
 			
 			// Compare the indexes of the old and new content
 			$additions = [];
 			$removals = [];
-			search::compare_indexes($oldindex, $newindex, $additions, $removals);
+			search::index_compare($oldindex, $newindex, $additions, $removals);
 			// Load in the inverted index
-			$invindex = search::load_invindex($env->storage_prefix . "invindex.json");
+			search::invindex_load($paths->searchindex);
 			// Merge the changes into the inverted index
-			search::merge_into_invindex($invindex, ids::getid($env->page), $additions, $removals);
+			search::invindex_merge(ids::getid($env->page), $additions, $removals);
 			// Save the inverted index back to disk
-			search::save_invindex($env->storage_prefix . "invindex.json", $invindex);
 			
 			// -----~~~==~~~-----
 			

@@ -80,17 +80,16 @@ register_module([
 			// Save the new page index
 			save_pageindex();
 			
-			// Remove the page's name from the id index
-			ids::deletepagename($env->page);
 			
 			// Delete the page from the search index, if that module is installed
-			if(module_exists("feature-search"))
-			{
+			if(module_exists("feature-search")) {
 				$pageid = ids::getid($env->page);
-				$invindex = search::load_invindex($paths->searchindex);
-				search::delete_entry($invindex, $pageid);
-				search::save_invindex($paths->searchindex, $invindex);
+				search::invindex_load($paths->searchindex);
+				search::invindex_delete($pageid);
 			}
+			
+			// Remove the page's name from the id index
+			ids::deletepagename($env->page);
 			
 			// Delete the page from the disk
 			unlink("$env->storage_prefix$env->page.md");

@@ -4,14 +4,9 @@ register_module([
 	"version" => "0.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
-	"extra_data" => [
-		"StorageBox.php" => "https://gist.githubusercontent.com/sbrl/c3bfbbbb3d1419332e9ece1bac8bb71c/raw/c4c858831e63d24fcecb2e221375486735cf3109/StorageBox.php"
-	],
 	"id" => "feature-search",
 	"code" => function() {
 		global $settings, $paths;
-		
-		require_once("$paths->extra_data_directory/feature-search/StorageBox.php");
 		
 		/**
 		 * @api {get} ?action=index&page={pageName} Get an index of words for a given page
@@ -39,7 +34,7 @@ register_module([
 			
 			$source = file_get_contents("$env->storage_prefix$env->page.md");
 			
-			$index = search::index($source);
+			$index = search::index_generate($source);
 			
 			echo("Page name: $env->page\n");
 			echo("--------------- Source ---------------\n");
@@ -83,7 +78,7 @@ register_module([
 					$_POST["secret"] === $settings->secret
 				)
 			)
-				search::rebuild_invindex();
+				search::invindex_rebuild();
 			else
 			{
 				http_response_code(401);
@@ -128,7 +123,7 @@ register_module([
 			// Create the inverted index if it doesn't exist.
 			// todo In the future perhaps a CLI for this would be good?
 			if(!file_exists($paths->searchindex))
-				search::rebuild_invindex(false);
+				search::invindex_rebuild(false);
 			
 			if(!isset($_GET["query"]))
 				exit(page_renderer::render("No Search Terms - Error - $settings->sitename", "<p>You didn't specify any search terms. Try typing some into the box above.</p>"));
@@ -137,7 +132,7 @@ register_module([
 			
 			
 			$time_start = microtime(true);
-			$invindex = search::load_invindex($paths->searchindex);
+			$invindex = search::invindex_load($paths->searchindex);
 			$env->perfdata->invindex_decode_time = round((microtime(true) - $time_start)*1000, 3);
 			
 			$time_start = microtime(true);
@@ -308,7 +303,7 @@ register_module([
 			}
 			
 			$env->perfdata->searchindex_decode_start = microtime(true);
-			$searchIndex = search::load_invindex($paths->searchindex);
+			$searchIndex = search::invindex_load($paths->searchindex);
 			$env->perfdata->searchindex_decode_time = (microtime(true) - $env->perfdata->searchindex_decode_start) * 1000;
 			$env->perfdata->searchindex_query_start = microtime(true);
 			$searchResults = search::query_invindex($_GET["query"], $searchIndex);
@@ -480,6 +475,117 @@ window.addEventListener("load", function(event) {
 	}
 ]);
 
+/*
+███████ ████████  ██████  ██████   █████   ██████  ███████ ██████   ██████  ██   ██
+██         ██    ██    ██ ██   ██ ██   ██ ██       ██      ██   ██ ██    ██  ██ ██
+███████    ██    ██    ██ ██████  ███████ ██   ███ █████   ██████  ██    ██   ███
+     ██    ██    ██    ██ ██   ██ ██   ██ ██    ██ ██      ██   ██ ██    ██  ██ ██
+███████    ██     ██████  ██   ██ ██   ██  ██████  ███████ ██████   ██████  ██   ██
+*/
+
+/**
+ * Represents a key-value data store.
+ */
+class StorageBox {
+	/**
+	 * The SQLite database connection.
+	 * @var \PDO
+	 */
+	private $db;
+	
+	/**
+	 * Initialises a new store connection.
+	 * @param	string	$filename	The filename that the store is located in.
+	 */
+	function __construct(string $filename) {
+		$firstrun = !file_exists($filename);
+		$this->db = new \PDO("sqlite:$filename");
+		if($firstrun) {
+			$this->query("CREATE TABLE store (key TEXT UNIQUE NOT NULL, value TEXT)");
+		}
+	}
+	/**
+	 * Makes a query against the database.
+	 * @param	string	$sql		The (potentially parametised) query to make.
+	 * @param	array	$variables	Optional. The variables to substitute into the SQL query.
+	 * @return	\PDOStatement		The result of the query, as a PDOStatement.
+	 */
+	private function query(string $sql, array $variables = []) {
+		// FUTURE: Optionally cache prepared statements?
+		$statement = $this->db->prepare($sql);
+		$statement->execute($variables);
+		
+		return $statement; // fetchColumn(), fetchAll(), etc. are defined on the statement, not the return value of execute()
+	}
+	
+	/**
+	 * Determines if the given key exists in the store or not.
+	 * @param	string	$key	The key to test.
+	 * @return	bool	Whether the key exists in the store or not.
+	 */
+	public function has(string $key) : bool {
+		return $this->query(
+			"SELECT COUNT(key) FROM store WHERE key = :key;",
+			[ "key" => $key ]
+		)->fetchColumn() > 0;
+	}
+	
+	/**
+	 * Gets a value from the store.
+	 * @param	string	$key	The key to store the value under.
+	 * @return	string	The value to store.
+	 */
+	public function get(string $key) : string {
+		return $this->query(
+			"SELECT value FROM store WHERE key = :key;",
+			[ "key" => $key ]
+		)->fetchColumn();
+	}
+	
+	/**
+	 * Sets a value in the data store.
+	 * @param	string	$key	The key to set the value of.
+	 * @param	string	$value	The value to store.
+	 */
+	public function set(string $key, string $value) : void {
+		$this->query(
+			"INSERT OR REPLACE INTO store(key, value) VALUES(:key, :value)",
+			[
+				"key" => $key,
+				"value" => $value
+			]
+		);
+	}
+	
+	/**
+	 * Deletes an item from the data store.
+	 * @param	string	$key	The key of the item to delete.
+	 * @return	bool	Whether it was really deleted or not. Note that if it doesn't exist, then it can't be deleted.
+	 */
+	public function delete(string $key) : bool {
+		$this->query(
+			"DELETE FROM store WHERE key = :key;",
+			[ "key" => $key ]
+		)->rowCount() > 0;
+	}
+	
+	/**
+	 * Empties the store.
+	 */
+	public function clear() : void {
+		$this->query("DELETE FROM store;");
+	}
+}
+
+
+/*
+███████ ███████  █████  ██████   ██████ ██   ██
+██      ██      ██   ██ ██   ██ ██      ██   ██
+███████ █████   ███████ ██████  ██      ███████
+     ██ ██      ██   ██ ██   ██ ██      ██   ██
+███████ ███████ ██   ██ ██   ██  ██████ ██   ██
+*/
+
 /**
  * Holds a collection to methods to manipulate various types of search index.
  * @package search
@@ -536,13 +642,19 @@ class search
 	];
 	
 	/**
+	 * The StorageBox that contains the inverted index.
+	 * @var StorageBox
+	 */
+	private static $invindex = null;
+	
+	/**
 	 * Converts a source string into an index of search terms that can be
 	 * merged into an inverted index.
+	 * Automatically transliterates the source string.
 	 * @param  string $source The source string to index.
 	 * @return array         An index represents the specified string.
 	 */
-	public static function index($source)
-	{
+	public static function index_generate(string $source) : array {
 		// We don't need to normalise or transliterate here because self::tokenize() does this for us
 		$source = html_entity_decode($source, ENT_QUOTES);
 		$source_length = mb_strlen($source);
@@ -570,7 +682,7 @@ class search
 	 * @param	bool	$capture_offsets	Whether to capture & return the character offsets of the tokens detected. If true, then each token returned will be an array in the form [ token, char_offset ].
 	 * @return	array	An array of raw tokens extracted from the specified source string.
 	 */
-	public static function tokenize($source, $capture_offsets = false) {
+	public static function tokenize(string $source, bool $capture_offsets = false) : array {
 		/** Normalises input characters for searching & indexing */
 		static $literator; if($literator == null) $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
 		
@@ -579,8 +691,8 @@ class search
 			$flags |= PREG_SPLIT_OFFSET_CAPTURE;
 		
 		// We don't need to normalise here because the transliterator handles 
-		// this for us. Also, we can't move the literator to a static variable 
-		// because PHP doesn't like it very much
+		// this for us. Also, we can't move the literator to a static member 
+		// variable because PHP doesn't like it very much
 		$source = $literator->transliterate($source);
 		$source = preg_replace('/[\[\]\|\{\}\/]/u', " ", $source);
 		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, $flags);
@@ -592,8 +704,7 @@ class search
 	 * @param	string	$source	The source string to process.
 	 * @return	string			The stripped string.
 	 */
-	public static function strip_markup($source)
-	{
+	public static function strip_markup(string $source) : string {
 		return preg_replace('/([\"*_\[\]]| - |`)/u', "", $source);
 	}
 	
@@ -601,8 +712,7 @@ class search
 	 * Rebuilds the master inverted index and clears the page id index.
 	 * @param	bool	$output	Whether to send progress information to the user's browser.
 	 */
-	public static function rebuild_invindex($output = true)
-	{
+	public static function invindex_rebuild(bool $output = true) : void {
 		global $pageindex, $env, $paths, $settings;
 		
 		if($output) {
@@ -613,8 +723,11 @@ class search
 		// Clear the id index out
 		ids::clear();
 		
+		// Clear the existing inverted index out
+		$this->invindex->clear();
+		$this->invindex->set("|termlist|", "[]");
+		
 		// Reindex each page in turn
-		$invindex = [];
 		$i = 0; $max = count(get_object_vars($pageindex));
 		$missing_files = 0;
 		foreach($pageindex as $pagename => $pagedetails)
@@ -627,10 +740,10 @@ class search
 				continue;
 			}
 			// We do not transliterate or normalise here because the indexer will take care of this for us
-			$index = self::index(file_get_contents($page_filename));
+			$index = self::index_generate(file_get_contents($page_filename));
 			
 			$pageid = ids::getid($pagename);
-			self::merge_into_invindex($invindex, $pageid, $index);
+			self::invindex_merge($pageid, $index);
 			
 			if($output) {
 				echo("data: [" . ($i + 1) . " / $max] Added $pagename (id #$pageid) to the new search index.\n\n");
@@ -646,7 +759,7 @@ class search
 			echo("data: Done! Saving new search index to '$paths->searchindex'.\n\n");
 		}
 		
-		self::save_invindex($paths->searchindex, $invindex);
+		// No need to save, it's an SQLite DB backend
 	}
 	
 	/**
@@ -655,10 +768,7 @@ class search
 	 * sequential search.
 	 * @param	array	$index	The index to sort.
 	 */
-	public static function sort_index(&$index)
-	{
-		ksort($index, SORT_NATURAL);
-	}
+	public static function index_sort(&$index) { ksort($index, SORT_NATURAL); }
 	
 	/**
 	 * Compares two *regular* indexes to find the differences between them.
@@ -667,7 +777,7 @@ class search
 	 * @param	array	$changed	An array to be filled with the nterms of all the changed entries.
 	 * @param	array	$removed	An array to be filled with the nterms of all  the removed entries.
 	 */
-	public static function compare_indexes($oldindex, $newindex, &$changed, &$removed) {
+	public static function index_compare($oldindex, $newindex, &$changed, &$removed) {
 		foreach($oldindex as $nterm => $entry) {
 			if(!isset($newindex[$nterm]))
 				$removed[] = $nterm;
@@ -681,77 +791,95 @@ class search
 	
 	/**
 	 * Reads in and parses an inverted index.
-	 * @param	string	$invindex_filename	The path tp the inverted index to parse.
+	 * @param	string	$invindex_filename	The path to the inverted index to load.
 	 * @todo	Remove this function and make everything streamable
 	 */
-	public static function load_invindex($invindex_filename) {
-		$invindex = json_decode(file_get_contents($invindex_filename), true);
-		return $invindex;
-	}
-	/**
-	 * Reads in and parses an inverted index, measuring the time it takes to do so.
-	 * @param	string	$invindex_filename	The path to the file inverted index to parse.
-	 * @return	bool	Whether the measurement was actually able to take place. Usually this will be true, but it will return false if it can't find the specified index.
-	 */
-	public static function measure_invindex_load_time($invindex_filename) {
+	public static function invindex_load(string $invindex_filename) {
 		global $env;
-		if(!file_exists($invindex_filename))
-			return false;
-		$searchindex_decode_start = microtime(true);
-		search::load_invindex($invindex_filename);
-		$env->perfdata->searchindex_decode_time = round((microtime(true) - $searchindex_decode_start)*1000, 3);
-		
-		return true;
+		$start_time = microtime(true);
+		$this->invindex = new StorageBox($invindex_filename);
+		$env->perfdata->searchindex_load_time = round((microtime(true) - $start_time)*1000, 3);
 	}
 	
 	/**
 	 * Merge an index into an inverted index.
-	 * @param	array	$invindex	The inverted index to merge into.
 	 * @param	int		$pageid		The id of the page to assign to the index that's being merged.
 	 * @param	array	$index		The regular index to merge.
 	 * @param	array	$removals	An array of index entries to remove from the inverted index. Useful for applying changes to an inverted index instead of deleting and remerging an entire page's index.
 	 */
-	public static function merge_into_invindex(&$invindex, $pageid, &$index, &$removals = [])
-	{
+	public static function invindex_merge($pageid, &$index, &$removals = []) : void {
+		if($this->invindex == null)
+			throw new Exception("Error: Can't merge into an inverted index that isn't loaded.");
+			
+		$termlist = json_decode($this->invindex->get("|termlist|"));
+		
 		// Remove all the subentries that were removed since last time
-		foreach($removals as $nterm)
-			unset($invindex[$nterm][$pageid]);
+		foreach($removals as $nterm) {
+			// Delete the offsets
+			$this->invindex->delete("$nterm|$pageid");
+			// Delete the item from the list of pageids containing this term
+			$nterm_pageids = json_decode($this->invindex->get($nterm));
+			array_splice($nterm_pageids, array_search($pageid, $nterm_pageids), 1);
+			if(empty($nterm_pageids)) { // No need to keep the pageid list if there's nothing in it
+				$this->invindex->delete($nterm);
+				// Update the termlist if we're deleting the term completely
+				$termlist_loc = array_search($nterm, $termlist);
+				if($termlist_loc !== false) array_splice($termlist, $termlist_loc, 1);
+			}
+			else
+				$this->invindex->set($nterm, json_encode($nterm_pageids));
+		}
 		
 		// Merge all the new / changed index entries into the inverted index
 		foreach($index as $nterm => $newentry) {
-			// If the nterm isn't in the inverted index, then create a space for it
-			if(!isset($invindex[$nterm])) $invindex[$nterm] = [];
-			$invindex[$nterm][$pageid] = $newentry;
+			if(!$this->invindex->has($nterm)) {
+				$this->invindex->set($nterm, "[]");
+				$termlist[] = $nterm;
+			}
+			
+			// Update the nterm pageid list
+			$nterm_pageids = json_decode($this->invindex->get($nterm));
+			if(array_search($pageid, $nterm_pageids) === false) {
+				$nterm_pageids[] = $pageid;
+				$this->invindex->set($nterm, json_encode($nterm_pageids));
+			}
+			
+			// Store the offset list
+			$this->invindex->set("$nterm|$pageid", json_encode($newentry));
 		}
+		
+		$this->invindex->set("|termlist|", json_encode($termlist));
 	}
 	
 	/**
 	 * Deletes the given pageid from the given pageindex.
-	 * @param  array	&$invindex	The inverted index.
 	 * @param  int		$pageid		The pageid to remove.
 	 */
-	public static function delete_entry(&$invindex, $pageid)
-	{
-		$str_pageid = (string)$pageid;
-		foreach($invindex as $nterm => &$entry)
-		{
-			if(isset($entry[$pageid]))
-				unset($entry[$pageid]);
-			if(isset($entry[$str_pageid]))
-				unset($entry[$str_pageid]);
-			if(count($entry) === 0)
-				unset($invindex[$nterm]);
+	public static function invindex_delete(int $pageid) {
+		$termlist = json_decode($this->invindex->get("|termlist|"));
+		foreach($termlist as $nterm) {
+			$nterm_pageids = json_decode($this->invindex->get("$nterm"));
+			$nterm_loc = array_search($pageid, $nterm_pageids);
+			// If this nterm doesn't appear in the list, we're not interested
+			if($nterm_loc === false)
+				continue;
+			
+			// Delete it from the ntemr list
+			array_splice($nterm_pageids, $nterm_loc, 1);
+			
+			// Delete the offset list
+			$this->invindex->delete("$nterm|$pageid");
+			
+			// If this term doesn't appear in any other documents, delete it
+			if(count($nterm_pageids) === 0) {
+				$this->invindex->delete($nterm);
+				array_splice($termlist, array_search($nterm, $termlist), 1);
+			}
+			else // Save the document id list back, since it still contains other pageids
+				$this->invindex->set($nterm, json_encode($nterm_pageids));
 		}
-	}
-	
-	/**
-	 * Saves the given inverted index back to disk.
-	 * @param	string	$filename	The path to the file to save the inverted index to.
-	 * @param	array	$invindex	The inverted index to save.
-	 */
-	public static function save_invindex($filename, &$invindex)
-	{
-		file_put_contents($filename, json_encode($invindex));
+		// Save the termlist back to the store
+		$this->invindex->set("|termlist|", json_encode($termlist));
 	}
 	
 	/**
