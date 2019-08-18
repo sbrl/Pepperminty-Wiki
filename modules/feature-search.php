@@ -136,7 +136,7 @@ register_module([
 			$env->perfdata->invindex_decode_time = round((microtime(true) - $time_start)*1000, 3);
 			
 			$time_start = microtime(true);
-			$results = search::query_invindex($_GET["query"], $invindex);
+			$results = search::invindex_query($_GET["query"], $invindex);
 			$resultCount = count($results);
 			$env->perfdata->invindex_query_time = round((microtime(true) - $time_start)*1000, 3);
 			
@@ -306,7 +306,7 @@ register_module([
 			$searchIndex = search::invindex_load($paths->searchindex);
 			$env->perfdata->searchindex_decode_time = (microtime(true) - $env->perfdata->searchindex_decode_start) * 1000;
 			$env->perfdata->searchindex_query_start = microtime(true);
-			$searchResults = search::query_invindex($_GET["query"], $searchIndex);
+			$searchResults = search::invindex_query($_GET["query"], $searchIndex);
 			$env->perfdata->searchindex_query_time = (microtime(true) - $env->perfdata->searchindex_query_start) * 1000;
 			
 			header("content-type: application/json");
@@ -882,90 +882,294 @@ class search
 		$this->invindex->set("|termlist|", json_encode($termlist));
 	}
 	
+	
+	/*
+	 * ███████ ████████  █████  ███████
+	 * ██         ██    ██   ██ ██
+	 * ███████    ██    ███████ ███████
+	 *      ██    ██    ██   ██      ██
+	 * ███████    ██    ██   ██ ███████
+	 */
+	
+	/**
+	 * Splits a *transliterated* query string into tokens.
+	 * Actually based on my earlier explode_adv https://starbeamrainbowlabs.com/blog/article.php?article=posts/081-PHP-String-Splitting.html
+	 * @param	string	$query	The queyr string to split.
+	 */
+	private function stas_split($query) {
+		$chars = str_split($query);
+		$terms = [];
+		$next_term = "";
+		$toggle_state = false; // true = now inside, false = now outside
+		foreach($chars as $char)
+		{
+			if($char == '"') {
+				// Invert the toggle block state
+				$toggle_state = !$toggle_state;
+			}
+			
+			// If this char is whitespace *and* we're outside a toggle block, then it's a token
+			if(ctype_space($char) && !$toggle_state) {
+				// If the string is empty, then don't bother
+				if(empty($next_term)) continue;
+				$terms[] = $next_term;
+				$next_term = "";
+			}
+			// If it's not whitespace, or it is whitespace and we're inside a toggle block....
+			else if(!ctype_space($char) || ($toggle_state && ctype_space($char)))
+				$next_term .= $char; // ...then add the char to the next part
+		}
+		
+		if(strlen($next_term) > 0)
+			$terms[] = $next_term;
+
+		return $terms;
+	}
+
+	/**
+	 * Parses an array of query tokens into an associative array of search directives.
+	 * Supported syntax derived from these sources:
+		 * https://help.duckduckgo.com/duckduckgo-help-pages/results/syntax/
+		 * https://docs.microsoft.com/en-us/windows/win32/lwef/-search-2x-wds-aqsreference
+
+	 * @param	string[]	$tokens	The array of query tokens to parse.
+	 */
+	private function stas_parse($tokens) {
+		/* Supported Syntax *
+		 * 
+		 * -term				exclude a term
+		 * +term				double the weighting of a term
+		 * terms !dest terms	redirect entire query (minus the !bang) to interwiki with registered shortcut dest
+		 * prefix:term			apply prefix operator to term
+		 */
+		var_dump($tokens);
+		$result = [
+			"terms" => [],
+			"exclude" => [],
+			"interwiki" => null
+		];
+		// foreach($operators as $op)
+		// 	$result[$op] = [];
+
+
+		$count = count($tokens);
+		for($i = count($tokens) - 1; $i >= 0; $i--) {
+			// Look for excludes
+			if($tokens[$i][0] == "-") {
+				$result["exclude"][] = substr($tokens[$i], 1);
+				continue;
+			}
+
+			// Look for weighted terms
+			if($tokens[$i][0] == "+") {
+				$result["terms"][] = [
+					"term" => substr($tokens[$i], 1),
+					"weight" => 2,
+					"location" => "all"
+				];
+				continue;
+			}
+
+			// Look for interwiki searches
+			if($tokens[$i][0] == "!" || substr($tokens[$i], -1) == "!") {
+				// You can only go to 1 interwiki destination at once, so we replace any previous finding with this one
+				$result["interwiki"] = trim($tokens[$i], "!");
+			}
+
+			// Look for colon directives in the form directive:term
+			// Also supports prefix:"quoted term with spaces", quotes stripped automatically
+			/*** Example directives *** (. = implemented, * = not implemented)
+			 . intitle		search only page titles for term
+			 . intags		search only tags for term
+			 . inbody		search page body only for term
+			 * before		search only pages that were last modified before term
+			 * after		search only pages that were last modified after term
+			 * size			search only pages that match the size spec term (e.g. 1k+ -> more than 1k bytes, 2k- -> less than 2k bytes, >5k -> more than 5k bytes, <10k -> less than 10k bytes)
+			 **************************/
+			if(strpos($tokens[$i], ":") !== false) {
+				$parts = explode(":", $tokens[$i], 2);
+				if(!isset($result[$parts[0]]))
+					$result[$parts[0]] = [];
+				
+				switch($parts[0]) {
+					case "intitle":
+						$result["terms"][] = [
+							"term" => $parts[1],
+							"weight" => $settings->search_title_matches_weighting * mb_strlen($parts[1]),
+							"location" => "title"
+						];
+						break;
+					case "intags":
+						$result["terms"][] = [
+							"term" => $parts[1],
+							"weight" => $settings->search_tags_matches_weighting * mb_strlen($parts[1]),
+							"location" => "tags"
+						];
+						break;
+					case "inbody":
+						$result["terms"][] = [
+							"term" => $parts[1],
+							"weight" => 1,
+							"location" => "body"
+						];
+						break;
+					default:
+						$result[$parts[0]][] = trim($parts[1], '"');
+						break;
+				}
+				continue;
+			}
+
+			// Doesn't appear to be particularly special *shrugs*
+			// Set the weight to -1 if it's a stop word
+			$result["terms"][] = [
+				"term" => $tokens[$i],
+				"weight" => in_array($tokens[$i], self::$stop_words) ? 0 : -1,
+				"location" => "all"
+			];
+		}
+
+		return $result;
+	}
+	
 	/**
 	 * Searches the given inverted index for the specified search terms.
 	 * @param	string	$query		The search query.
-	 * @param	array	$invindex	The inverted index to search.
 	 * @return	array	An array of matching pages.
 	 */
-	public static function query_invindex($query, &$invindex)
+	public static function invindex_query($query)
 	{
 		global $settings, $pageindex;
 		
 		/** Normalises input characters for searching & indexing */
 		static $literator; if($literator == null) $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
 		
-		$query_terms = self::tokenize($query);
+		$query_stas = $this->stas_parse(
+			$this->stas_split($literator->transliterate($query))
+		);
+		
+		/* Sub-array format:
+		 * [
+		 * 	nterms : [ nterm => frequency, nterm => frequency, .... ],
+		 * 	offsets_body : int[],
+		 * 	matches_title : int,
+		 * 	matches_tags : int
+		 * ]
+		 */
 		$matching_pages = [];
+		$match_template = [
+			"nterms" => [],
+			"offsets_body" => [],
+			"rank_title" => 0,
+			"rank_tags" => 0
+		];
 		
-		
-		// Loop over each term in the query and find the matching page entries
-		$count = count($query_terms);
-		for($i = 0; $i < $count; $i++)
-		{
-			$qterm = $query_terms[$i];
+		// Query the inverted index
+		foreach($query_stas as $term_def) {
+			if($term_def["weight"] == -1)
+				continue; // Skip stop words
 			
-			// Stop words aren't worth the bother - make sure we don't search
-			// the title or the tags for them
-			if(in_array($qterm, self::$stop_words))
-				continue;
+			if(!in_array($term_def["location"], ["all", "inbody"]))
+				continue; // Skip terms we shouldn't search the page body for
 			
-			// Only search the inverted index if it actually exists there
-			if(isset($invindex[$qterm])) {
-				// Loop over each page in the inverted index entry
-				reset($invindex[$qterm]); // Reset array/object pointer
-				foreach($invindex[$qterm] as $pageid => $page_entry) {
-					// Create an entry in the matching pages array if it doesn't exist
-					if(!isset($matching_pages[$pageid]))
-						$matching_pages[$pageid] = [ "nterms" => [] ];
-					$matching_pages[$pageid]["nterms"][$qterm] = $page_entry;
+			if(!$this->$invindex->has($term_def["term"]))
+				continue; // Skip if it's not in the index
+			
+			// For each page that contains this term.....
+			$term_pageids = json_decode($this->invindex->get($term_def["term"]));
+			foreach($term_pageids as $pageid) {
+				// Check to see if it contains any words we should exclude
+				$skip = false;
+				foreach($query_stas["exclude"] as $exlc_term) {
+					if($this->invindex->has("$excl_term|$pageid")) {
+						$skip = true;
+						break;
+					}
 				}
+				if($skip) continue;
+				
+				// Get the list of offsets
+				$page_offsets = json_decode($this->invindex->get("{$term_def["term"]}|$pageid"));
+				
+				if(!isset($matching_pages[$pageid]))
+					$matching_pages[$pageid] = $match_template; // Arrays are assigned by copy in php
+				
+				// Add it to the appropriate $matching_pages entry, not forgetting to apply the weighting
+				$matching_pages[$pageid]["offsets_body"] = array_merge(
+					$matching_pages[$pageid]["offsets_body"],
+					$page_offsets
+				);
+				$matching_pages[$pageid]["nterms"][$term_def["term"]] = count($page_offsets) * $term_def["weight"];
 			}
 			
+		}
+		
+		// Query page titles & tags
+		foreach($terms as $term_def) {
+			// No need to skip stop words here, since we're doing a normal 
+			// sequential search anyway
+			if(!in_array($term_def["location"], ["all", "intitle", "intags"]))
+				continue; // Skip terms we shouldn't search the page body for
 			
 			// Loop over the pageindex and search the titles / tags
 			reset($pageindex); // Reset array/object pointer
-			foreach ($pageindex as $pagename => $pagedata)
-			{
+			foreach ($pageindex as $pagename => $pagedata) {
 				// Setup a variable to hold the current page's id
-				$pageid = false; // Only fill this out if we find a match
+				$pageid = null; // Cache the page id
+				
+				$lit_title = $literator->transliterate($pagename);
+				$lit_tags = $literator->transliterate(implode(" ", $pagedata->tags));
+				
+				// Make sure that the title & tags don't contain a term we should exclude
+				$skip = false;
+				foreach($query_stas["exclude"] as $excl_term) {
+					if(mb_strpos($lit_title, $excl_term) !== false) {
+						$skip = true;
+						// Delete it from the candidate matches (it might be present in the tags / title but not the body)
+						if(isset($matching_pages[$excl_term]))
+							unset($matching_pages[$excl_term]);
+						break;
+					}
+				}
+				if($skip) continue;
+				
 				// Consider matches in the page title
-				// FUTURE: We may be able to optimise this further by using preg_match_all + preg_quote instead of mb_stripos_all. Experimentation / benchmarking is required to figure out which one is faster
-				$title_matches = mb_stripos_all($literator->transliterate($pagename), $qterm);
-				$title_matches_count = $title_matches !== false ? count($title_matches) : 0;
-				if($title_matches_count > 0)
-				{
-					$pageid = ids::getid($pagename); // Fill out the page id
-					// We found the qterm in the title
-					if(!isset($matching_pages[$pageid]))
-						$matching_pages[$pageid] = [ "nterms" => [] ];
-					
-					// Set up a counter for page title matches if it doesn't exist already
-					if(!isset($matching_pages[$pageid]["title-matches"]))
-						$matching_pages[$pageid]["title-matches"] = 0;
-					
-					$matching_pages[$pageid]["title-matches"] += $title_matches_count * strlen($qterm);
+				if(in_array($term_def["location"], ["all", "intitle"])) {
+					// FUTURE: We may be able to optimise this further by using preg_match_all + preg_quote instead of mb_stripos_all. Experimentation / benchmarking is required to figure out which one is faster
+					$title_matches = mb_stripos_all($lit_title, $term_def["term"]);
+					$title_matches_count = $title_matches !== false ? count($title_matches) : 0;
+					if($title_matches_count > 0) {
+						$pageid = ids::getid($pagename); // Fetch the page id
+						// We found the qterm in the title
+						if(!isset($matching_pages[$pageid]))
+						$matching_pages[$pageid] = $match_template; // Assign by copy
+						
+						$matching_pages[$pageid]["rank_title"] += $title_matches_count * $term_def["weight"];
+					}
 				}
 				
+				if(!in_array($term_def["location"], ["all", "intags"]))
+					continue; // If we shouldn't search the tags, no point in continuing
+				
 				// Consider matches in the page's tags
-				$tag_matches = isset($pagedata->tags) ? mb_stripos_all($literator->transliterate(implode(" ", $pagedata->tags)), $qterm) : false;
+				$tag_matches = isset($pagedata->tags) ? mb_stripos_all($lit_tags, $term_def["term"]) : false;
 				$tag_matches_count = $tag_matches !== false ? count($tag_matches) : 0;
 				
-				if($tag_matches_count > 0) // And we found the qterm in the tags
-				{
-					if($pageid == false) // Fill out the page id if it hasn't been already
+				if($tag_matches_count > 0) {// And we found the qterm in the tags
+					if($pageid === null) // Fill out the page id if it hasn't been already
 						$pageid = ids::getid($pagename);
 					
 					if(!isset($matching_pages[$pageid]))
-						$matching_pages[$pageid] = [ "nterms" => [] ];
+						$matching_pages[$pageid] = $match_template; // Assign by copy
 					
-					// Set up a counter for tag match if there isn't one already
-					if(!isset($matching_pages[$pageid]["tag-matches"]))
-						$matching_pages[$pageid]["tag-matches"] = 0;
-					$matching_pages[$pageid]["tag-matches"] += $tag_matches_count * strlen($qterm);
+					$matching_pages[$pageid]["rank_tags"] += $tag_matches_count * $term_def["weight"];
 				}
 			}
 		}
+		
+		// TODO: Implement the rest of STAS here
+		
+		// TODO: We got up to here; finish refactoring invindex_query
 		
 		reset($matching_pages);
 		foreach($matching_pages as $pageid => &$pagedata)
@@ -987,29 +1191,6 @@ class search
 				foreach($entry["offsets"] as $offset)
 					$pageOffsets[] = $offset;
 			}
-			/*
-			// Sort the list of offsets
-			$pageOffsets = array_unique($pageOffsets);
-			sort($pageOffsets);
-			var_dump($pageOffsets);
-			
-			// Calcualate the clump distances via a variable moving window size
-			$pageOffsetsCount = count($pageOffsets);
-			$clumpDistanceWindow = min($count, $pageOffsetsCount); // a.k.a. count($query_terms) - see above
-			$clumpDistances = [];
-			for($i = 0; $i < $pageOffsetsCount - $clumpDistanceWindow; $i++)
-				$clumpDistances[] = $pageOffsets[$i] - $pageOffsets[$i + $clumpDistanceWindow];
-			
-			// Sort the new list of clump distances
-			sort($clumpDistances);
-			// Calcualate a measure of how clumped the offsets are
-			$tightClumpLimit = floor((count($clumpDistances) - 1) / 0.25);
-			$tightClumpsMeasure = $clumpDistances[$tightClumpLimit] - $clumpDistances[0];
-			$clumpsRange = $clumpDistances[count($clumpDistances) - 1] - $clumpDistances[0];
-			
-			$clumpiness = $tightClumpsMeasure / $clumpsRange;
-			echo("{$pagedata["pagename"]} - $clumpiness");
-			*/
 			
 			// Consider matches in the title / tags
 			if(isset($pagedata["title-matches"]))
