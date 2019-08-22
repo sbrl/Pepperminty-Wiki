@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.17.4",
+	"version" => "0.17.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -448,26 +448,27 @@ DIFFSCRIPT;
 			
 			// Update the inverted search index
 			
-			// Construct an index for the old and new page content
-			$oldindex = [];
-			$oldpagedata = ""; // We need the old page data in order to pass it to the preprocessor
-			if(file_exists("$env->storage_prefix$env->page.md"))
-			{
-				$oldpagedata = file_get_contents("$env->storage_prefix$env->page.md");
-				$oldindex = search::index_generate($oldpagedata);
+			if(module_exists("feature-search")) {
+				// Construct an index for the old and new page content
+				$oldindex = [];
+				$oldpagedata = ""; // We need the old page data in order to pass it to the preprocessor
+				if(file_exists("$env->storage_prefix$env->page.md")) {
+					$oldpagedata = file_get_contents("$env->storage_prefix$env->page.md");
+					$oldindex = search::index_generate($oldpagedata);
+				}
+				$newindex = search::index_generate($pagedata);
+				
+				// Compare the indexes of the old and new content
+				$additions = [];
+				$removals = [];
+				search::index_compare($oldindex, $newindex, $additions, $removals);
+				// Load in the inverted index
+				search::invindex_load($paths->searchindex);
+				// Merge the changes into the inverted index
+				search::invindex_merge(ids::getid($env->page), $additions, $removals);
+				// Save the inverted index back to disk
+				search::invindex_close();
 			}
-			$newindex = search::index_generate($pagedata);
-			
-			// Compare the indexes of the old and new content
-			$additions = [];
-			$removals = [];
-			search::index_compare($oldindex, $newindex, $additions, $removals);
-			// Load in the inverted index
-			search::invindex_load($paths->searchindex);
-			// Merge the changes into the inverted index
-			search::invindex_merge(ids::getid($env->page), $additions, $removals);
-			// Save the inverted index back to disk
-			
 			// -----~~~==~~~-----
 			
 			if(file_put_contents("$env->storage_prefix$env->page.md", $pagedata) !== false)

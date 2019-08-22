@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Settings GUI",
-	"version" => "0.1.4",
+	"version" => "0.1.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
 	"id" => "feature-guiconfig",
@@ -65,6 +65,8 @@ window.addEventListener("load", function(event) {
 			if(message.startsWith("Done! Saving new search index to"))
 				rebuildActionEvents.close();
 		});
+		// Close the connection on error & don't try again
+		rebuildActionEvents.addEventListener("error", (_event) => rebuildActionEvents.close());
 	});
 });
 SCRIPT;

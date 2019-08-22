@@ -41,7 +41,7 @@ $paths = new stdClass();
 /** The pageindex. Contains extensive information about all pages currently in this wiki. Individual entries for pages may be extended with arbitrary properties. */
 $paths->pageindex = "pageindex.json";
 /** The inverted index used for searching. Use the `search` class to interact with this - otherwise your brain might explode :P */
-$paths->searchindex = "invindex.json";
+$paths->searchindex = "invindex.sqlite";
 /** The index that maps ids to page names. Use the `ids` class to interact with it :-) */
 $paths->idindex = "idindex.json";
 /** The cache of the most recently calculated statistics. */

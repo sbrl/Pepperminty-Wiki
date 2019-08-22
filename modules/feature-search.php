@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Search",
-	"version" => "0.9",
+	"version" => "0.10",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
@@ -146,7 +146,7 @@ register_module([
 			$start = microtime(true);
 			foreach($results as &$result) {
 				$result["context"] = search::extract_context(
-					$invindex, $result["pagename"],
+					$result["pagename"],
 					$_GET["query"],
 					file_get_contents($env->storage_prefix . $result["pagename"] . ".md")
 				);
@@ -386,9 +386,8 @@ register_module([
 				exit("Error: The type '$type' is not one of the supported output types. Available values: json, opensearch. Default: json");
 			}
 			
-			$literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
 			
-			$query = $literator->transliterate($_GET["query"]);
+			$query = search::transliterate($_GET["query"]);
 			
 			
 			// Rank each page name
@@ -397,7 +396,7 @@ register_module([
 				$results[] = [
 					"pagename" => $pageName,
 					// Costs: Insert: 1, Replace: 8, Delete: 6
-					"distance" => levenshtein($query, $literator->transliterate($pageName), 1, 8, 6)
+					"distance" => levenshtein($query, search::transliterate($pageName), 1, 8, 6)
 				];
 			}
 			
@@ -491,12 +490,25 @@ class StorageBox {
 	private $db;
 	
 	/**
+	 * A cache of values.
+	 * @var object[]
+	 */
+	private $cache = [];
+	
+	/**
+	 * A cache of prepared SQL statements.
+	 * @var \PDOStatement[]
+	 */
+	private $query_cache = [];
+	
+	/**
 	 * Initialises a new store connection.
 	 * @param	string	$filename	The filename that the store is located in.
 	 */
 	function __construct(string $filename) {
 		$firstrun = !file_exists($filename);
-		$this->db = new \PDO("sqlite:$filename");
+		$this->db = new \PDO("sqlite:" . path_resolve($filename, __DIR__)); // HACK: This might not work on some systems, because it depends on the current working directory
+		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if($firstrun) {
 			$this->query("CREATE TABLE store (key TEXT UNIQUE NOT NULL, value TEXT)");
 		}
@@ -508,11 +520,11 @@ class StorageBox {
 	 * @return	\PDOStatement		The result of the query, as a PDOStatement.
 	 */
 	private function query(string $sql, array $variables = []) {
-		// FUTURE: Optionally cache prepared statements?
-		$statement = $this->db->prepare($sql);
-		$statement->execute($variables);
-		
-		return $statement; // fetchColumn(), fetchAll(), etc. are defined on the statement, not the return value of execute()
+		// Add to the query cache if it doesn't exist
+		if(!isset($this->query_cache[$sql]))
+			$this->query_cache[$sql] = $this->db->prepare($sql);
+		$this->query_cache[$sql]->execute($variables);
+		return $this->query_cache[$sql]; // fetchColumn(), fetchAll(), etc. are defined on the statement, not the return value of execute()
 	}
 	
 	/**
@@ -521,6 +533,8 @@ class StorageBox {
 	 * @return	bool	Whether the key exists in the store or not.
 	 */
 	public function has(string $key) : bool {
+		if(isset($this->cache[$key]))
+			return true;
 		return $this->query(
 			"SELECT COUNT(key) FROM store WHERE key = :key;",
 			[ "key" => $key ]
@@ -529,29 +543,30 @@ class StorageBox {
 	
 	/**
 	 * Gets a value from the store.
-	 * @param	string	$key	The key to store the value under.
-	 * @return	string	The value to store.
+	 * @param	string	$key	The key value is stored under.
+	 * @return	mixed	The stored value.
 	 */
-	public function get(string $key) : string {
-		return $this->query(
-			"SELECT value FROM store WHERE key = :key;",
-			[ "key" => $key ]
-		)->fetchColumn();
+	public function get(string $key) {
+		// If it's not in the cache, insert it
+		if(!isset($this->cache[$key])) {
+			$this->cache[$key] = [ "modified" => false, "value" => json_decode($this->query(
+				"SELECT value FROM store WHERE key = :key;",
+				[ "key" => $key ]
+			)->fetchColumn()) ];
+		}
+		return $this->cache[$key]["value"];
 	}
 	
 	/**
 	 * Sets a value in the data store.
+	 * Note that this does NOT save changes to disk until you close the connection!
 	 * @param	string	$key	The key to set the value of.
-	 * @param	string	$value	The value to store.
+	 * @param	mixed	$value	The value to store.
 	 */
-	public function set(string $key, string $value) : void {
-		$this->query(
-			"INSERT OR REPLACE INTO store(key, value) VALUES(:key, :value)",
-			[
-				"key" => $key,
-				"value" => $value
-			]
-		);
+	public function set(string $key, $value) : void {
+		if(!isset($this->cache[$key])) $this->cache[$key] = [];
+		$this->cache[$key]["value"] = $value;
+		$this->cache[$key]["modified"] = true;
 	}
 	
 	/**
@@ -560,6 +575,10 @@ class StorageBox {
 	 * @return	bool	Whether it was really deleted or not. Note that if it doesn't exist, then it can't be deleted.
 	 */
 	public function delete(string $key) : bool {
+		// Remove it from the cache
+		if(isset($this->cache[$key]))
+			unset($this->cache[$key]);
+		// Remove it from disk
 		$this->query(
 			"DELETE FROM store WHERE key = :key;",
 			[ "key" => $key ]
@@ -570,7 +589,32 @@ class StorageBox {
 	 * Empties the store.
 	 */
 	public function clear() : void {
+		// Empty the cache;
+		$this->cache = [];
+		// Empty the disk
 		$this->query("DELETE FROM store;");
+	}
+	
+	/**
+	 * Syncs changes to disk and closes the PDO connection.
+	 */
+	public function close() : void {
+		$this->db->beginTransaction();
+		foreach($this->cache as $key => $value_data) {
+			// If it wasn't modified, there's no point in saving it, is there?
+			if(!$value_data["modified"])
+				continue;
+			
+			$this->query(
+				"INSERT OR REPLACE INTO store(key, value) VALUES(:key, :value)",
+				[
+					"key" => $key,
+					"value" => json_encode($value_data["value"])
+				]
+			);
+		}
+		$this->db->commit();
+		$this->db = null;
 	}
 }
 
@@ -644,6 +688,20 @@ class search
 	 */
 	private static $invindex = null;
 	
+	private static $literator = null;
+	
+	/**
+	 * Transliterates a string to make it more suitable for entry into the search index.
+	 * @param  string $str The string to transliterate.
+	 * @return string      The transliterated string.
+	 */
+	public static function transliterate(string $str) : string {
+		if(self::$literator == null)
+			self::$literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
+		
+		return self::$literator->transliterate($_GET["query"]);
+	}
+	
 	/**
 	 * Converts a source string into an index of search terms that can be
 	 * merged into an inverted index.
@@ -680,8 +738,6 @@ class search
 	 * @return	array	An array of raw tokens extracted from the specified source string.
 	 */
 	public static function tokenize(string $source, bool $capture_offsets = false) : array {
-		/** Normalises input characters for searching & indexing */
-		static $literator; if($literator == null) $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
 		
 		$flags = PREG_SPLIT_NO_EMPTY; // Don't return empty items
 		if($capture_offsets)
@@ -690,7 +746,7 @@ class search
 		// We don't need to normalise here because the transliterator handles 
 		// this for us. Also, we can't move the literator to a static member 
 		// variable because PHP doesn't like it very much
-		$source = $literator->transliterate($source);
+		$source = self::transliterate($source);
 		$source = preg_replace('/[\[\]\|\{\}\/]/u', " ", $source);
 		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, $flags);
 	}
@@ -721,8 +777,10 @@ class search
 		ids::clear();
 		
 		// Clear the existing inverted index out
-		$this->invindex->clear();
-		$this->invindex->set("|termlist|", "[]");
+		if(self::$invindex == null)
+			self::invindex_load($paths->searchindex);
+		self::$invindex->clear();
+		self::$invindex->set("|termlist|", []);
 		
 		// Reindex each page in turn
 		$i = 0; $max = count(get_object_vars($pageindex));
@@ -749,6 +807,9 @@ class search
 			
 			$i++;
 		}
+		
+		echo("data: Syncing to disk....\n\n");
+		self::invindex_close();
 		
 		if($output) {
 			echo("data: Search index rebuilding complete.\n\n");
@@ -787,15 +848,26 @@ class search
 	}
 	
 	/**
-	 * Reads in and parses an inverted index.
+	 * Loads a connection to an inverted index.
 	 * @param	string	$invindex_filename	The path to the inverted index to load.
 	 * @todo	Remove this function and make everything streamable
 	 */
 	public static function invindex_load(string $invindex_filename) {
-		global $env;
+		global $env, $paths;
 		$start_time = microtime(true);
-		$this->invindex = new StorageBox($invindex_filename);
+		self::$invindex = new StorageBox($invindex_filename);
 		$env->perfdata->searchindex_load_time = round((microtime(true) - $start_time)*1000, 3);
+	}
+	
+	/**
+	 * Closes the currently open inverted index.
+	 */
+	public static function invindex_close() {
+		global $env;
+		
+		$start_time = microtime(true);
+		self::$invindex->close();
+		$env->perfdata->searchindex_close_time = round((microtime(true) - $start_time)*1000, 3);
 	}
 	
 	/**
@@ -805,47 +877,49 @@ class search
 	 * @param	array	$removals	An array of index entries to remove from the inverted index. Useful for applying changes to an inverted index instead of deleting and remerging an entire page's index.
 	 */
 	public static function invindex_merge($pageid, &$index, &$removals = []) : void {
-		if($this->invindex == null)
+		if(self::$invindex == null)
 			throw new Exception("Error: Can't merge into an inverted index that isn't loaded.");
-			
-		$termlist = json_decode($this->invindex->get("|termlist|"));
+		
+		if(!self::$invindex->has("|termlist|"))
+			self::$invindex->set("|termlist|", []);
+		$termlist = self::$invindex->get("|termlist|");
 		
 		// Remove all the subentries that were removed since last time
 		foreach($removals as $nterm) {
 			// Delete the offsets
-			$this->invindex->delete("$nterm|$pageid");
+			self::$invindex->delete("$nterm|$pageid");
 			// Delete the item from the list of pageids containing this term
-			$nterm_pageids = json_decode($this->invindex->get($nterm));
+			$nterm_pageids = self::$invindex->get($nterm);
 			array_splice($nterm_pageids, array_search($pageid, $nterm_pageids), 1);
 			if(empty($nterm_pageids)) { // No need to keep the pageid list if there's nothing in it
-				$this->invindex->delete($nterm);
+				self::$invindex->delete($nterm);
 				// Update the termlist if we're deleting the term completely
 				$termlist_loc = array_search($nterm, $termlist);
 				if($termlist_loc !== false) array_splice($termlist, $termlist_loc, 1);
 			}
 			else
-				$this->invindex->set($nterm, json_encode($nterm_pageids));
+				self::$invindex->set($nterm, $nterm_pageids);
 		}
 		
 		// Merge all the new / changed index entries into the inverted index
 		foreach($index as $nterm => $newentry) {
-			if(!$this->invindex->has($nterm)) {
-				$this->invindex->set($nterm, "[]");
+			if(!self::$invindex->has($nterm)) {
+				self::$invindex->set($nterm, []);
 				$termlist[] = $nterm;
 			}
 			
 			// Update the nterm pageid list
-			$nterm_pageids = json_decode($this->invindex->get($nterm));
+			$nterm_pageids = self::$invindex->get($nterm);
 			if(array_search($pageid, $nterm_pageids) === false) {
 				$nterm_pageids[] = $pageid;
-				$this->invindex->set($nterm, json_encode($nterm_pageids));
+				self::$invindex->set($nterm, $nterm_pageids);
 			}
 			
 			// Store the offset list
-			$this->invindex->set("$nterm|$pageid", json_encode($newentry));
+			self::$invindex->set("$nterm|$pageid", $newentry);
 		}
 		
-		$this->invindex->set("|termlist|", json_encode($termlist));
+		self::$invindex->set("|termlist|", $termlist);
 	}
 	
 	/**
@@ -853,9 +927,9 @@ class search
 	 * @param  int		$pageid		The pageid to remove.
 	 */
 	public static function invindex_delete(int $pageid) {
-		$termlist = json_decode($this->invindex->get("|termlist|"));
+		$termlist = self::$invindex->get("|termlist|");
 		foreach($termlist as $nterm) {
-			$nterm_pageids = json_decode($this->invindex->get("$nterm"));
+			$nterm_pageids = self::$invindex->get("$nterm");
 			$nterm_loc = array_search($pageid, $nterm_pageids);
 			// If this nterm doesn't appear in the list, we're not interested
 			if($nterm_loc === false)
@@ -865,18 +939,18 @@ class search
 			array_splice($nterm_pageids, $nterm_loc, 1);
 			
 			// Delete the offset list
-			$this->invindex->delete("$nterm|$pageid");
+			self::$invindex->delete("$nterm|$pageid");
 			
 			// If this term doesn't appear in any other documents, delete it
 			if(count($nterm_pageids) === 0) {
-				$this->invindex->delete($nterm);
+				self::$invindex->delete($nterm);
 				array_splice($termlist, array_search($nterm, $termlist), 1);
 			}
 			else // Save the document id list back, since it still contains other pageids
-				$this->invindex->set($nterm, json_encode($nterm_pageids));
+				self::$invindex->set($nterm, $nterm_pageids);
 		}
 		// Save the termlist back to the store
-		$this->invindex->set("|termlist|", json_encode($termlist));
+		self::$invindex->set("|termlist|", $termlist);
 	}
 	
 	
@@ -893,8 +967,8 @@ class search
 	 * Actually based on my earlier explode_adv https://starbeamrainbowlabs.com/blog/article.php?article=posts/081-PHP-String-Splitting.html
 	 * @param	string	$query	The queyr string to split.
 	 */
-	private function stas_split($query) {
-		$chars = str_split($query);
+	public function stas_split($query) {
+		$chars = str_split(self::transliterate($query));
 		$terms = [];
 		$next_term = "";
 		$toggle_state = false; // true = now inside, false = now outside
@@ -931,7 +1005,7 @@ class search
 
 	 * @param	string[]	$tokens	The array of query tokens to parse.
 	 */
-	private function stas_parse($tokens) {
+	public function stas_parse($tokens) {
 		/* Supported Syntax *
 		 * 
 		 * -term				exclude a term
@@ -939,7 +1013,7 @@ class search
 		 * terms !dest terms	redirect entire query (minus the !bang) to interwiki with registered shortcut dest
 		 * prefix:term			apply prefix operator to term
 		 */
-		var_dump($tokens);
+		// var_dump($tokens);
 		$result = [
 			"terms" => [],
 			"exclude" => [],
@@ -1038,11 +1112,8 @@ class search
 	{
 		global $settings, $pageindex;
 		
-		/** Normalises input characters for searching & indexing */
-		static $literator; if($literator == null) $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
-		
-		$query_stas = $this->stas_parse(
-			$this->stas_split($literator->transliterate($query))
+		$query_stas = self::stas_parse(
+			self::stas_split(self::transliterate($query))
 		);
 		
 		/* Sub-array format:
@@ -1062,23 +1133,23 @@ class search
 		];
 		
 		// Query the inverted index
-		foreach($query_stas as $term_def) {
+		foreach($query_stas["terms"] as $term_def) {
 			if($term_def["weight"] == -1)
 				continue; // Skip stop words
 			
 			if(!in_array($term_def["location"], ["all", "inbody"]))
 				continue; // Skip terms we shouldn't search the page body for
 			
-			if(!$this->$invindex->has($term_def["term"]))
+			if(!self::$invindex->has($term_def["term"]))
 				continue; // Skip if it's not in the index
 			
 			// For each page that contains this term.....
-			$term_pageids = json_decode($this->invindex->get($term_def["term"]));
+			$term_pageids = self::$invindex->get($term_def["term"]);
 			foreach($term_pageids as $pageid) {
 				// Check to see if it contains any words we should exclude
 				$skip = false;
 				foreach($query_stas["exclude"] as $exlc_term) {
-					if($this->invindex->has("$excl_term|$pageid")) {
+					if(self::$invindex->has("$excl_term|$pageid")) {
 						$skip = true;
 						break;
 					}
@@ -1086,7 +1157,7 @@ class search
 				if($skip) continue;
 				
 				// Get the list of offsets
-				$page_offsets = json_decode($this->invindex->get("{$term_def["term"]}|$pageid"));
+				$page_offsets = self::$invindex->get("{$term_def["term"]}|$pageid");
 				
 				if(!isset($matching_pages[$pageid]))
 					$matching_pages[$pageid] = $match_template; // Arrays are assigned by copy in php
@@ -1102,7 +1173,7 @@ class search
 		}
 		
 		// Query page titles & tags
-		foreach($terms as $term_def) {
+		foreach($query_stas["terms"] as $term_def) {
 			// No need to skip stop words here, since we're doing a normal 
 			// sequential search anyway
 			if(!in_array($term_def["location"], ["all", "intitle", "intags"]))
@@ -1114,8 +1185,8 @@ class search
 				// Setup a variable to hold the current page's id
 				$pageid = null; // Cache the page id
 				
-				$lit_title = $literator->transliterate($pagename);
-				$lit_tags = $literator->transliterate(implode(" ", $pagedata->tags));
+				$lit_title = self::transliterate($pagename);
+				$lit_tags = isset($pagedata->tags) ? self::transliterate(implode(" ", $pagedata->tags)) : null;
 				
 				// Make sure that the title & tags don't contain a term we should exclude
 				$skip = false;
@@ -1144,6 +1215,10 @@ class search
 						$matching_pages[$pageid]["rank_title"] += $title_matches_count * $term_def["weight"];
 					}
 				}
+				
+				// If this page doesn't have any tags, skip it
+				if($lit_tags == null)
+					continue;
 				
 				if(!in_array($term_def["location"], ["all", "intags"]))
 					continue; // If we shouldn't search the tags, no point in continuing
@@ -1204,30 +1279,29 @@ class search
 	/**
 	 * Extracts a context string (in HTML) given a search query that could be displayed
 	 * in a list of search results.
-	 * @param	string	$invindex	The inverted index to consult.
 	 * @param	string	$pagename	The name of the paget that this source belongs to. Used when consulting the inverted index.
 	 * @param	string	$query		The search queary to generate the context for.
 	 * @param	string	$source		The page source to extract the context from.
 	 * @return	string				The generated context string.
 	 */
-	public static function extract_context($invindex, $pagename, $query, $source)
+	public static function extract_context($pagename, $query, $source)
 	{
 		global $settings;
 		
 		$pageid = ids::getid($pagename);
-		$nterms = self::tokenize($query);
-		$matches = [];
+		$nterms = self::stas_parse(self::stas_split($query))["terms"];
 		
+		// Query the inverted index for offsets
+		$matches = [];
 		foreach($nterms as $nterm) {
-			// Skip over words that don't appear in the inverted index (e.g. stop words)
-			if(!isset($invindex[$nterm]))
-				continue;
 			// Skip if the page isn't found in the inverted index for this word
-			if(!isset($invindex[$nterm][$pageid]))
+			if(!self::$invindex->has("{$nterm["term"]}|$pageid"))
 				continue;
 			
-			foreach($invindex[$nterm][$pageid]["offsets"] as $next_offset)
-				$matches[] = [ $nterm, $next_offset ];
+			$nterm_offsets = self::$invindex->get("{$nterm["term"]}|$pageid")->offsets;
+			
+			foreach($nterm_offsets as $next_offset)
+				$matches[] = [ $nterm["term"], $next_offset ];
 		}
 		
 		// Sort the matches by offset
@@ -1279,6 +1353,8 @@ class search
 			$contexts_text[] = substr($source, $context["from"], $context["to"] - $context["from"]);
 		}
 		
+		// BUG: Make sure that a snippet is centred on the word in question if we have to cut it short
+		
 		$result = implode(" … ", $contexts_text);
 		end($contexts); // If there's at least one item in the list and were not at the very end of the page, add an extra ellipsis
 		if(isset($contexts[0]) && $contexts[key($contexts)]["to"] < $sourceLength) $result .= "… ";
@@ -1296,15 +1372,15 @@ class search
 	 */
 	public static function highlight_context($query, $context)
 	{
-		$qterms = self::tokenize($query);
+		$qterms = self::stas_parse(self::stas_split($query))["terms"];
 		
-		foreach($qterms as $qterm)
-		{
-			if(in_array($qterm, static::$stop_words))
+		foreach($qterms as $qterm) {
+			// Stop words are marked by STAS
+			if($qterm["weight"] <= 0)
 				continue;
 			
 			// From http://stackoverflow.com/a/2483859/1460422
-			$context = preg_replace("/" . preg_replace('/\\//u', "\/", preg_quote($qterm)) . "/iu", "<strong class='search-term-highlight'>$0</strong>", $context);
+			$context = preg_replace("/" . preg_replace('/\\//u', "\/", preg_quote($qterm["term"])) . "/iu", "<strong class='search-term-highlight'>$0</strong>", $context);
 		}
 		
 		return $context;

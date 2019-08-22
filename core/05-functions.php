@@ -111,6 +111,39 @@ function glob_recursive($pattern, $flags = 0)
 }
 
 /**
+ * Resolves a relative path against a given base directory.
+ * @apiVersion	0.20.0
+ * @source	https://stackoverflow.com/a/44312137/1460422
+ * @param	string		$path		The relative path to resolve.
+ * @param	string|null	$basePath	The base directory to resolve against.
+ * @return	string		An absolute path.
+ */
+function path_resolve(string $path, string $basePath = null) {
+    // Make absolute path
+    if (substr($path, 0, 1) !== DIRECTORY_SEPARATOR) {
+        if ($basePath === null) {
+            // Get PWD first to avoid getcwd() resolving symlinks if in symlinked folder
+            $path=(getenv('PWD') ?: getcwd()).DIRECTORY_SEPARATOR.$path;
+        } elseif (strlen($basePath)) {
+            $path=$basePath.DIRECTORY_SEPARATOR.$path;
+        }
+    }
+
+    // Resolve '.' and '..'
+    $components=array();
+    foreach(explode(DIRECTORY_SEPARATOR, rtrim($path, DIRECTORY_SEPARATOR)) as $name) {
+        if ($name === '..') {
+            array_pop($components);
+        } elseif ($name !== '.' && !(count($components) && $name === '')) {
+            // … && !(count($components) && $name === '') - we want to keep initial '/' for abs paths
+            $components[]=$name;
+        }
+    }
+
+    return implode(DIRECTORY_SEPARATOR, $components);
+}
+
+/**
  * Gets the name of the parent page to the specified page.
  * @apiVersion 0.15.0
  * @package core

@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page deleter",
-	"version" => "0.10.1",
+	"version" => "0.10.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to delete pages.",
 	"id" => "page-delete",
@@ -86,6 +86,7 @@ register_module([
 				$pageid = ids::getid($env->page);
 				search::invindex_load($paths->searchindex);
 				search::invindex_delete($pageid);
+				search::invindex_close();
 			}
 			
 			// Remove the page's name from the id index
