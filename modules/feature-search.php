@@ -300,10 +300,10 @@ register_module([
 			}
 			
 			$env->perfdata->searchindex_decode_start = microtime(true);
-			$searchIndex = search::invindex_load($paths->searchindex);
+			search::invindex_load($paths->searchindex);
 			$env->perfdata->searchindex_decode_time = (microtime(true) - $env->perfdata->searchindex_decode_start) * 1000;
 			$env->perfdata->searchindex_query_start = microtime(true);
-			$searchResults = search::invindex_query($_GET["query"], $searchIndex);
+			$searchResults = search::invindex_query($_GET["query"]);
 			$env->perfdata->searchindex_query_time = (microtime(true) - $env->perfdata->searchindex_query_start) * 1000;
 			
 			header("content-type: application/json");
@@ -312,6 +312,7 @@ register_module([
 			$result->decode_time = $env->perfdata->searchindex_decode_time;
 			$result->query_time = $env->perfdata->searchindex_query_time;
 			$result->total_time = $result->decode_time + $result->query_time;
+			$result->stas = search::stas_parse(search::stas_split($_GET["query"]));
 			$result->search_results = $searchResults;
 			exit(json_encode($result, JSON_PRETTY_PRINT));
 		});
@@ -684,7 +685,10 @@ class search
 	 * @var StorageBox
 	 */
 	private static $invindex = null;
-	
+	/**
+	 * Cache variable for the transliterator instance used by search::transliterate.
+	 * @var Transliterator
+	 */
 	private static $literator = null;
 	
 	/**
@@ -1020,8 +1024,8 @@ class search
 		];
 		// foreach($operators as $op)
 		// 	$result[$op] = [];
-
-
+		
+		
 		$count = count($tokens);
 		for($i = count($tokens) - 1; $i >= 0; $i--) {
 			// Look for excludes
@@ -1180,7 +1184,7 @@ class search
 			
 			// Loop over the pageindex and search the titles / tags
 			reset($pageindex); // Reset array/object pointer
-			foreach ($pageindex as $pagename => $pagedata) {
+			foreach($pageindex as $pagename => $pagedata) {
 				// Setup a variable to hold the current page's id
 				$pageid = null; // Cache the page id
 				
