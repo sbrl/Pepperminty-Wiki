@@ -132,15 +132,15 @@ register_module([
 			
 			
 			$time_start = microtime(true);
-			$invindex = search::invindex_load($paths->searchindex);
+			search::invindex_load($paths->searchindex);
 			$env->perfdata->invindex_decode_time = round((microtime(true) - $time_start)*1000, 3);
 			
 			$time_start = microtime(true);
-			$results = search::invindex_query($_GET["query"], $invindex);
+			$results = search::invindex_query($_GET["query"]);
 			$resultCount = count($results);
 			$env->perfdata->invindex_query_time = round((microtime(true) - $time_start)*1000, 3);
 			
-			header("x-invindex-decode-time: {$env->perfdata->invindex_decode_time}ms");
+			header("x-invindex-load-time: {$env->perfdata->invindex_decode_time}ms");
 			header("x-invindex-query-time: {$env->perfdata->invindex_query_time}ms");
 			
 			$start = microtime(true);
@@ -179,29 +179,26 @@ register_module([
 			$content .= "<p>Found $resultCount " . ($resultCount === 1 ? "result" : "results") . " in " . $env->perfdata->search_time . "ms. ";
 			
 			$query = $_GET["query"];
-			if(isset($pageindex->$query))
-			{
+			if(isset($pageindex->$query)) {
 				$content .= "There's a page on $settings->sitename called <a href='?page=" . rawurlencode($query) . "'>$query</a>.";
 			}
 			else
 			{
 				$content .= "There isn't a page called $query on $settings->sitename, but you ";
-				if((!$settings->anonedits && !$env->is_logged_in) || !$settings->editing)
-				{
+				if((!$settings->anonedits && !$env->is_logged_in) || !$settings->editing) {
 					$content .= "do not have permission to create it.";
-					if(!$env->is_logged_in)
-					{
+					if(!$env->is_logged_in) {
 						$content .= " You could try <a href='?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.";
 					}
 				}
-				else
-				{
+				else {
 					$content .= "can <a href='?action=edit&page=" . rawurlencode($query) . "'>create it</a>.";
 				}
 			}
 			$content .= "</p>";
 			
 			if(module_exists("page-list")) {
+				// TODO: Refactor ths to use STAS
 				$nterms = search::tokenize($query);
 				$nterms_regex = implode("|", array_map(function($nterm) {
 					return preg_quote(strtolower(trim($nterm)));
@@ -1172,8 +1169,7 @@ class search
 		// TODO: We got up to here; finish refactoring invindex_query
 		
 		reset($matching_pages);
-		foreach($matching_pages as $pageid => &$pagedata)
-		{
+		foreach($matching_pages as $pageid => &$pagedata) {
 			$pagedata["pagename"] = ids::getpagename($pageid);
 			$pagedata["rank"] = 0;
 			
@@ -1181,24 +1177,20 @@ class search
 			
 			// Loop over each search term found on this page
 			reset($pagedata["nterms"]);
-			foreach($pagedata["nterms"] as $pterm => $entry)
-			{
+			foreach($pagedata["nterms"] as $pterm => $frequency) {
 				// Add the number of occurrences of this search term to the ranking
 				// Multiply it by the length of the word
-				$pagedata["rank"] += $entry["freq"] * strlen($pterm);
-				
-				// Add the offsets to a listof all offsets on this page
-				foreach($entry["offsets"] as $offset)
-					$pageOffsets[] = $offset;
+				$pagedata["rank"] += $frequency * strlen($pterm);
 			}
 			
 			// Consider matches in the title / tags
-			if(isset($pagedata["title-matches"]))
-				$pagedata["rank"] += $pagedata["title-matches"] * $settings->search_title_matches_weighting;
-			if(isset($pagedata["tag-matches"]))
-				$pagedata["rank"] += $pagedata["tag-matches"] * $settings->search_tags_matches_weighting;
+			$pagedata["rank"] += $pagedata["rank_title"] + $pagedata["rank_tags"];
 			
-			// todo remove items if the rank is below a threshold
+			// TODO: Consider implementing kernel density estimation here.
+			// https://en.wikipedia.org/wiki/Kernel_density_estimation
+			// We want it to have more of an effect the more words that are present in the query. Maybe a logarithmic function would be worth investigating here?
+			
+			// TODO: Remove items if the computed rank is below a threshold
 		}
 		
 		uasort($matching_pages, function($a, $b) {
