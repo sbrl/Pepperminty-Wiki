@@ -366,8 +366,7 @@ register_module([
 		add_action("suggest-pages", function() {
 			global $settings, $pageindex;
 			
-			if($settings->dynamic_page_suggestion_count === 0)
-			{
+			if($settings->dynamic_page_suggestion_count === 0) {
 				header("content-type: application/json");
 				header("content-length: 3");
 				exit("[]\n");
@@ -386,9 +385,7 @@ register_module([
 				exit("Error: The type '$type' is not one of the supported output types. Available values: json, opensearch. Default: json");
 			}
 			
-			
 			$query = search::transliterate($_GET["query"]);
-			
 			
 			// Rank each page name
 			$results = [];
@@ -699,7 +696,7 @@ class search
 		if(self::$literator == null)
 			self::$literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
 		
-		return self::$literator->transliterate($_GET["query"]);
+		return self::$literator->transliterate($str);
 	}
 	
 	/**
@@ -1095,7 +1092,7 @@ class search
 			// Set the weight to -1 if it's a stop word
 			$result["terms"][] = [
 				"term" => $tokens[$i],
-				"weight" => in_array($tokens[$i], self::$stop_words) ? 0 : -1,
+				"weight" => in_array($tokens[$i], self::$stop_words) ? -1 : 1,
 				"location" => "all"
 			];
 		}
@@ -1148,7 +1145,7 @@ class search
 			foreach($term_pageids as $pageid) {
 				// Check to see if it contains any words we should exclude
 				$skip = false;
-				foreach($query_stas["exclude"] as $exlc_term) {
+				foreach($query_stas["exclude"] as $excl_term) {
 					if(self::$invindex->has("$excl_term|$pageid")) {
 						$skip = true;
 						break;
@@ -1165,9 +1162,9 @@ class search
 				// Add it to the appropriate $matching_pages entry, not forgetting to apply the weighting
 				$matching_pages[$pageid]["offsets_body"] = array_merge(
 					$matching_pages[$pageid]["offsets_body"],
-					$page_offsets
+					$page_offsets->offsets
 				);
-				$matching_pages[$pageid]["nterms"][$term_def["term"]] = count($page_offsets) * $term_def["weight"];
+				$matching_pages[$pageid]["nterms"][$term_def["term"]] = $page_offsets->freq * $term_def["weight"];
 			}
 			
 		}
@@ -1240,8 +1237,6 @@ class search
 		}
 		
 		// TODO: Implement the rest of STAS here
-		
-		// TODO: We got up to here; finish refactoring invindex_query
 		
 		reset($matching_pages);
 		foreach($matching_pages as $pageid => &$pagedata) {
@@ -1376,7 +1371,7 @@ class search
 		
 		foreach($qterms as $qterm) {
 			// Stop words are marked by STAS
-			if($qterm["weight"] <= 0)
+			if($qterm["weight"] == -1)
 				continue;
 			
 			// From http://stackoverflow.com/a/2483859/1460422
