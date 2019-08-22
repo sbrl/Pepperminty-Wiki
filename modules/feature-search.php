@@ -1003,6 +1003,8 @@ class search
 	 * @param	string[]	$tokens	The array of query tokens to parse.
 	 */
 	public function stas_parse($tokens) {
+		global $settings;
+		
 		/* Supported Syntax *
 		 * 
 		 * -term				exclude a term
@@ -1173,7 +1175,7 @@ class search
 		foreach($query_stas["terms"] as $term_def) {
 			// No need to skip stop words here, since we're doing a normal 
 			// sequential search anyway
-			if(!in_array($term_def["location"], ["all", "intitle", "intags"]))
+			if(!in_array($term_def["location"], ["all", "title", "tags"]))
 				continue; // Skip terms we shouldn't search the page body for
 			
 			// Loop over the pageindex and search the titles / tags
@@ -1199,7 +1201,7 @@ class search
 				if($skip) continue;
 				
 				// Consider matches in the page title
-				if(in_array($term_def["location"], ["all", "intitle"])) {
+				if(in_array($term_def["location"], ["all", "title"])) {
 					// FUTURE: We may be able to optimise this further by using preg_match_all + preg_quote instead of mb_stripos_all. Experimentation / benchmarking is required to figure out which one is faster
 					$title_matches = mb_stripos_all($lit_title, $term_def["term"]);
 					$title_matches_count = $title_matches !== false ? count($title_matches) : 0;
@@ -1217,7 +1219,7 @@ class search
 				if($lit_tags == null)
 					continue;
 				
-				if(!in_array($term_def["location"], ["all", "intags"]))
+				if(!in_array($term_def["location"], ["all", "tags"]))
 					continue; // If we shouldn't search the tags, no point in continuing
 				
 				// Consider matches in the page's tags
