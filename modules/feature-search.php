@@ -317,6 +317,16 @@ register_module([
 			exit(json_encode($result, JSON_PRETTY_PRINT));
 		});
 		
+		/**
+		 * @api {get} ?action=stas-parse&query={text}	Debug search queries
+		 * @apiDescription Debug Pepperminty Wiki's understanding of search queries.
+		 * If you want something machine-readable, check out the new stas property on the object returned by query-searchindex.
+		 * @apiName SearchSTASParse
+		 * @apiGroup Search
+		 * @apiPermission Anonymous
+		 * 
+		 * @apiParam {string}	query	The query string to parse.
+		 */
 		add_action("stas-parse", function() {
 			global $settings;
 			
