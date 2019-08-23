@@ -336,7 +336,7 @@ register_module([
 			$result = "";
 			foreach($tokens as $token) {
 				if(in_array(substr($token, 1), $stas_query["exclude"])) {
-					$result .= "<span title='explicit exclude' style='color: red; text-decoration: dotted line-through;'>$token</span> ";
+					$result .= "<span title='explicit exclude' style='color: red; text-decoration: dotted line-through;'>" . substr($token, 1) . "</span> ";
 					continue;
 				}
 				
@@ -362,8 +362,8 @@ register_module([
 				}
 				switch($term["location"]) {
 					case "body": $style = "color: cyan"; $title = "body only"; break;
-					case "title": $style .= "font-weight: bolder; font-size: 1.2em; color: orange;"; $title = "searching title only"; break;
-					case "tags": $style .= "font-weight: bolder; color: purple;"; $title = "searching tags only"; break;
+					case "title": $style .= "font-weight: bolder; font-size: 1.2em; color: orange;"; $title = "searching title only"; $token = $token_part; break;
+					case "tags": $style .= "font-weight: bolder; color: purple;"; $title = "searching tags only"; $token = $token_part; break;
 					case "all": $title .= ", searching everywhere";
 				}
 				
