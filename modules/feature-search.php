@@ -316,6 +316,53 @@ register_module([
 			$result->search_results = $searchResults;
 			exit(json_encode($result, JSON_PRETTY_PRINT));
 		});
+		
+		add_action("stas-parse", function() {
+			global $settings;
+			
+			$tokens = search::stas_split($_GET["query"]);
+			$stas_query = search::stas_parse($tokens);
+			
+			$result = "";
+			foreach($tokens as $token) {
+				if(in_array(substr($token, 1), $stas_query["exclude"])) {
+					$result .= "<span title='explicit exclude' style='color: red; text-decoration: dotted line-through;'>$token</span> ";
+					continue;
+				}
+				
+				$term = null;
+				$token_part = $token;
+				if(strpos($token_part, ":") !== false) $token_part = explode(":", $token_part, 2)[1];
+				foreach($stas_query["terms"] as $c_term) {
+					if($c_term["term"] == $token_part) {
+						$term = $c_term;
+						break;
+					}
+				}
+				if($term == null) {
+					$result .= "<span title='unknown' style='color: black; text-decoration: wavy underline;'>$token</span> ";
+					continue;
+				}
+				
+				$title = "?";
+				$style = "";
+				switch($term["weight"]) {
+					case -1: $style .= "color: grey; text-decoration: wavy line-through;"; $title = "stop word"; break;
+					case 1: $style .= "color: blue;"; $title = "normal word"; break;
+				}
+				switch($term["location"]) {
+					case "body": $style = "color: cyan"; $title = "body only"; break;
+					case "title": $style .= "font-weight: bolder; font-size: 1.2em; color: orange;"; $title = "searching title only"; break;
+					case "tags": $style .= "font-weight: bolder; color: purple;"; $title = "searching tags only"; break;
+					case "all": $title .= ", searching everywhere";
+				}
+				
+				$result .= "<span title='$title' style='$style'>$token</span> ";
+			}
+			
+			exit(page_renderer::render_main("STAS Query Analysis - $settings->sitename", "<p>$settings->sitename understood your query to mean the following:</p>
+				<blockquote>$result</blockquote>"));
+		});
 	
 /*
  *  ██████  ██████  ███████ ███    ██ ███████ ███████  █████  ██████   ██████ ██   ██
@@ -1066,7 +1113,7 @@ class search
 					$result[$parts[0]] = [];
 				
 				switch($parts[0]) {
-					case "intitle":
+					case "intitle": // BUG: What if a normal word is found in a title?
 						$result["terms"][] = [
 							"term" => $parts[1],
 							"weight" => $settings->search_title_matches_weighting * mb_strlen($parts[1]),
