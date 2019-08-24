@@ -195,7 +195,7 @@ register_module([
 					$content .= "can <a href='?action=edit&page=" . rawurlencode($query) . "'>create it</a>.";
 				}
 			}
-			$content .= "</p>";
+			$content .= "<br /><small><em>Pssst! Power users can make use of $settings->sitename's advanced query syntax. Learn about it <a href='?action=help#27-search'>here</a>!</em></small></p>";
 			
 			if(module_exists("page-list")) {
 				// TODO: Refactor ths to use STAS
