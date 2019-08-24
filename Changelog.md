@@ -6,11 +6,13 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ### Fixed
  - Fixed a bug in the search query performance metrics
+ - Fill out the statistics help text
 
 ### Changed
  - Made `build.sh` build script more robust, especially when generating the documentation.
- - Improved search index update performance - especially when rebuilding the entire index through the master control panel
-     - The search index is no longer sorted, but this shouldn't affect lookup performance at all
+ - Vastly improved search engine performance
+     - A new SQLite-based index format is now used, so search indexes will need to be rebuilt (migrating would probably take longer than a rebuild :-/)
+ - New search query syntax
 
 
 ## v0.19

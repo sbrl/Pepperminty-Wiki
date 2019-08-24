@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Statistics",
-	"version" => "0.2",
+	"version" => "0.2.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
 	"id" => "feature-stats",
@@ -133,7 +133,8 @@ register_module([
 			echo(file_get_contents($paths->statsindex) . "\n");
 		});
 		
-		add_help_section("150-statistics", "Statistics", "<p></p>");
+		add_help_section("150-statistics", "Statistics", "<p>$settings->sitename records some statistics about itself, including the number of pages, the longest pages, the most wanted pages, the most linked-to pages, and more. They are updated roughly every " . human_time($settings->stats_update_interval) . ", though moderators may occasionally update them sooner.</p>
+		<p>You can see these statistics <a href='?action=stats'>here</a>.</p>");
 		
 		//////////////////////////
 		/// Built-in Statisics ///

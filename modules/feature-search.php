@@ -523,6 +523,18 @@ window.addEventListener("load", function(event) {
 });
 ');
 		}
+		
+		add_help_section("27-search", "Searching", "<p>$settings->sitename has an integrated full-text search engine, allowing you to search all of the pages on $settings->sitename and their content. To use it, simply enter your query into the page name box and press enter. If a page isn't found with the exact name of your query terms, a search will be performed instead.</p>
+		<p>Additionally, advanced users can take advantage of some extra query syntax that $settings->sitename supports, which is inspired by popular search engines:</p>
+		<table>
+		<tr><th style='width: 33%;'>Example</th><th style='width: 66%;'>Meaning</th></tr>
+		<tr><td><code>cat -dog</code></td><td>Search for pages containing \"cat\", but not \"dog\". This syntax does not make sense on it's own - other words must be present for it to take effect.</td>
+		<tr><td><code>+glass marble</code></td><td>Double the weighting of the word \"glass\".</td>
+		<tr><td><code>intitle:rocket</code></td><td>Search only page titles for \"rocket\".</td>
+		<tr><td><code>intags:bill</code></td><td>Search only tags for \"bill\".</td>
+		<tr><td><code>inbody:satellite</code></td><td>Search only the page body for \"satellite\".</td>
+		</table>
+		<p>More query syntax will be added in the future, so keep an eye on <a href='https://github.com/sbrl/Pepperminty-Wiki/releases/'>the latest releases</a> of <em>Pepperminty Wiki</em> to stay up-to-date (<a href='https://github.com/sbrl/Pepperminty-Wiki/releases.atom'>Atom / RSS feed available here</a>).</p>");
 	}
 ]);
 
