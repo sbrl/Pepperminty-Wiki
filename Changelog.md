@@ -7,6 +7,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ### Fixed
  - Fixed a bug in the search query performance metrics
  - Fill out the statistics help text
+ - Added table of contents to help page
 
 ### Changed
  - Made `build.sh` build script more robust, especially when generating the documentation.

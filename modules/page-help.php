@@ -31,8 +31,7 @@ register_module([
 			// Sort the help sections by key
 			ksort($help_sections, SORT_NATURAL);
 			
-			if(isset($_GET["dev"]) and $_GET["dev"] == "yes")
-			{
+			if(isset($_GET["dev"]) and $_GET["dev"] == "yes") {
 				$title = "Developers Help - $settings->sitename";
 				$content = "<p>$settings->sitename runs on Pepperminty Wiki, an entire wiki packed into a single file. This page contains some information that developers may find useful.</p>
 				<p>A full guide to developing a Pepperminty Wiki module can be found <a href='//github.com/sbrl/Pepperminty-Wiki/blob/master/Module_API_Docs.md#module-api-documentation'>on GitHub</a>.</p>
@@ -117,21 +116,25 @@ register_module([
 				$content .= "<div class='stacked-bar-part' style='flex: $wikiSize->other; background: hsla(62, 55%, 90%, 0.6)'>Other: " . human_filesize($wikiSize->other) . "</div>\n";
 				$content .= "</div>";
 			}
-			else
-			{
+			else {
 				$title = "Help - $settings->sitename";
 				
 				$content = "	<h1>$settings->sitename Help</h1>
 		<p>Welcome to $settings->sitename!</p>
-		<p>$settings->sitename is powered by Pepperminty Wiki, a complete wiki in a box you can drop into your server and expect it to just <em>work</em>.</p>";
+		<p>$settings->sitename is powered by Pepperminty Wiki, a complete wiki in a box you can drop into your server and expect it to just <em>work</em>.</p>
+		
+		<h2 id='contents' class='help-section-header'>Contents</h2>
+		<ol>";
+			foreach($help_sections as $index => $section)
+				$content .= "<li><a href='#{$index}'>{$section["title"]}</a></li>\n";
 				
+			$content .= "</ol>\n";
 				// Todo Insert a table of contents here?
 				
-				foreach($help_sections as $index => $section)
-				{
+				foreach($help_sections as $index => $section) {
 					// Todo add a button that you can click to get a permanent link
 					// to this section.
-					$content .= "<h2 id='$index' class='help-section-header'>" . $section["title"] . "</h2>\n";
+					$content .= "<h2 id='$index' class='help-section-header'>{$section["title"]}</h2>\n";
 					$content .= $section["content"] . "\n";
 				}
 			}
