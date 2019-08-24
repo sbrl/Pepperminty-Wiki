@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Help page",
-	"version" => "0.9.4",
+	"version" => "0.10",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a rather useful help page. Access through the 'help' action. This module also exposes help content added to Pepperminty Wiki's inbuilt invisible help section system.",
 	"id" => "page-help",
