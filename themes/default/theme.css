@@ -1,3 +1,11 @@
+/**
+ * @id				default
+ * @name			Default
+ * @description		The default theme.
+ * @author			Starbeamrainbowlabs
+ * @author_link		https://starbeamrainbowlabs.com/
+ */
+
 body { margin: 2rem 0 0 0; background: #eee8f2; line-height: 1.45em; color: #111111; font-family: sans-serif; }
 
 nav { display: flex; background-color: #8a62a7; color: #ffa74d;  }

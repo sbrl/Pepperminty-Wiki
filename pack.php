@@ -55,7 +55,7 @@ $core = str_replace([
 	trim(file_get_contents("version")),
 	exec("git rev-parse HEAD"),
 	trim(file_get_contents("peppermint.guiconfig.json")),
-	trim(file_get_contents("theme_default.css"))
+	trim(file_get_contents("themes/default/theme.css"))
 ], $core);
 
 $result = $core;
