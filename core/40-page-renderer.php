@@ -292,7 +292,7 @@ class page_renderer
 	 */
 	public static function is_css_url() {
 		global $settings;
-		return preg_match("/^[^\/]*\/\/|^\//", $settings->css);
+		return preg_match("/^[^\/]*\/\/|^\/[^\*]/", $settings->css);
 	}
 	/**
 	 * Renders all the CSS as HTML.

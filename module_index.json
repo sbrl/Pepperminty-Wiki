@@ -150,6 +150,16 @@
         "extra_data": []
     },
     {
+        "id": "feature-theme-gallery",
+        "name": "Theme Gallery",
+        "version": "0.1",
+        "author": "Starbeamrainbowlabs",
+        "description": "Adds a theme gallery page and optional automatic theme updates.",
+        "lastupdate": 1566733743,
+        "optional": false,
+        "extra_data": []
+    },
+    {
         "id": "feature-upload",
         "name": "Uploader",
         "version": "0.6.1",

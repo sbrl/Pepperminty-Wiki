@@ -58,7 +58,11 @@ task_setup() {
 	check_command jq true optional;
 	[[ "$?" -eq 0 ]] || echo -e "${FYEL}${HC}Warning: jq is required to update the theme index.${RS}";
 	check_command firefox true optional;
-	[[ "$?" -eq 0 ]] || echo -e "${FYEL}${HC}Warning: firefox is required to generate the theme previews.${RS}";
+	[[ "$?" -eq 0 ]] || echo -e "${FYEL}${HC}Warning: firefox is required to generate theme previews.${RS}";
+	check_command convert true optional;
+	[[ "$?" -eq 0 ]] || echo -e "${FYEL}${HC}Warning: The convert imagemagick command is required to generate theme previews.${RS}";
+	check_command nproc true optional;
+	[[ "$?" -eq 0 ]] || echo -e "${FYEL}${HC}Warning: nproc is required to generate theme previews.${RS}";
 	
 	task_end $?;
 	
@@ -90,17 +94,28 @@ task_build() {
 
 task_themes() {
 	if [[ ! -f "${server_pid_file}" ]]; then
-		tasks_run start-server; # TODO: Change this to call PHP directly, so we don't open the browser? Or maybe add an environment variable to start-server.
+		NO_BROWSER=true tasks_run start-server;
 	fi
 	
-	task_begin "Updating theme index";
-	cp "themes/themeindex.json" "themes/themeindex.json.old";
+	stage_begin "Updating theme index";
 	
-	# Temporary firefox profile
+	
+	task_begin "Preparing";
+	
+	[ -f "themes/themeindex.json" ] && cp "themes/themeindex.json" "themes/themeindex.json.old";
+	
+	# Temporary firefox profile directory
 	tmp_profile="$(mktemp -d /tmp/peppermint-firefox-profile-XXXXXXX)";
 	
-	while read filename; do
-		subtask_begin "Processing ${filename}";
+	# Temporary file for theme index items
+	tmp_themeindex_parts="$(mktemp /tmp/peppermint-themeindex-items-XXXXXXX)";
+	
+	task_end $?;
+	
+	preview_regen=false;
+	
+	while read -r filename; do
+		task_begin "Processing ${filename}";
 		
 		hash="$(sha256sum "${filename}" | cut -d' ' -f1)";
 		read -r -d "" awk_script <<'AWK'
@@ -125,27 +140,58 @@ END {
 }
 AWK
 		# TODO: Consider mapping it out as TSV, then using JQ to generate the object
-		awk -v prop_hash="${hash}" "${awk_script}" <"${filename}";
+		subtask_begin "Generating index entry";
+		awk -v prop_hash="${hash}" "${awk_script}" <"${filename}" >>"${tmp_themeindex_parts}";
+		subtask_end "$?";
 		
 		
 		# Capture the screenshot
+		if [ -f "themes/themeindex.json.old" ]; then 
+			theme_id="$(awk '/@id/ { print $3 }' <"${filename}")";
+			old_hash="$(jq --raw-output --arg theme_id "${theme_id}" '.[] | select(.id == $theme_id).hash' <"themes/themeindex.json")";
+			
+			# If the hash is the same as last time, don't bother to retake the screenshot
+			if [[ "${hash}" = "${hash_old}" ]]; then
+				continue;
+			fi
+		fi
+		preview_regen=true;
+		
 		screenshot_loc_full="$(dirname "${filename}")/preview_full.png";
 		screenshot_loc_small="$(dirname "${filename}")/preview_small.png";
 		
 		# Set the theme
+		cp "build/peppermint.json" "build/peppermint.json.bak";
 		tmp_file="$(mktemp /tmp/peppermint-json-XXXXXXX)";
 		jq --arg theme_css "$(cat "${filename}")" '.css = $theme_css' <"build/peppermint.json" >"${tmp_file}";
 		mv "${tmp_file}" "build/peppermint.json";
 		
 		# Capture the full-res screenshot
-		firefox --new-instance --headless --profile "${tmp_profile}" --window-size 1920x1080 --screenshot "${screenshot_loc_full}" "http://[::1]:35623/index.php";
+		execute firefox --new-instance --headless --profile "${tmp_profile}" --window-size 1920,1080 --screenshot "${screenshot_loc_full}" "http://[::1]:35623/index.php";
 		
-		subtask_end "$?";
-	done < <(find themes -type f -name "theme.css") | jq --tab --slurp . >themes/themeindex.json;
+		# Resize to get the smaller preview
+		execute convert "${screenshot_loc_full}" -resize 512x512 "${screenshot_loc_small}";
+		
+		mv "build/peppermint.json.bak" "build/peppermint.json";
+		
+		task_end "$?";
+	done < <(find themes -type f -name "theme.css");
 	
+	task_begin "Optimising new previews";
+	find "themes/" -iname "*.png" -print0 | xargs -0 -P"$(nproc)" -n1 optipng -preserve;
+	task_end "$?";
 	
-	rm -r "${tmp_profile}";
-	rm "themes/themeindex.json.old";
+	task_begin "Generating theme index";
+	jq --tab --slurp . <"${tmp_themeindex_parts}" >"themes/themeindex.json"
+	task_end "$?";
+	
+	# Clean up
+	task_begin "Cleaning up";
+	[[ -d "${tmp_profile}" ]] && rm -r "${tmp_profile}";
+	[[ -f "themes/themeindex.json.old" ]] && rm "themes/themeindex.json.old";
+	task_end 0;
+	
+	stage_end 0;
 }
 
 task_docs() {
@@ -198,9 +244,11 @@ task_start-server() {
 	echo "${pid}" >"${server_pid_file}";
 	task_end "${exit_code}" "";
 	
-	task_begin "Opening Browser";
-	sensible-browser [::]:35623;
-	task_end $?;
+	if [[ -z "${NO_BROWSER}" ]]; then
+		task_begin "Opening Browser";
+		sensible-browser [::]:35623;
+		task_end $?;
+	fi
 }
 
 task_stop-server() {
