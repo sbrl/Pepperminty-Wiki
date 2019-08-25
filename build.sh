@@ -55,6 +55,10 @@ task_setup() {
 	check_command git true;
 	check_command npm true;
 	check_command npm true;
+	check_command jq true optional;
+	[[ "$?" -eq 0 ]] || echo -e "${FYEL}${HC}Warning: jq is required to update the theme index.${RS}";
+	check_command firefox true optional;
+	[[ "$?" -eq 0 ]] || echo -e "${FYEL}${HC}Warning: firefox is required to generate the theme previews.${RS}";
 	
 	task_end $?;
 	
@@ -84,6 +88,66 @@ task_build() {
 	task_end $?;
 }
 
+task_themes() {
+	if [[ ! -f "${server_pid_file}" ]]; then
+		tasks_run start-server; # TODO: Change this to call PHP directly, so we don't open the browser? Or maybe add an environment variable to start-server.
+	fi
+	
+	task_begin "Updating theme index";
+	cp "themes/themeindex.json" "themes/themeindex.json.old";
+	
+	# Temporary firefox profile
+	tmp_profile="$(mktemp -d /tmp/peppermint-firefox-profile-XXXXXXX)";
+	
+	while read filename; do
+		subtask_begin "Processing ${filename}";
+		
+		hash="$(sha256sum "${filename}" | cut -d' ' -f1)";
+		read -r -d "" awk_script <<'AWK'
+BEGIN {
+	items[0] = "\"hash\": \"" prop_hash "\"";
+	count=1;
+}
+/\s+\*\s+@/ {
+	atrule=$2;
+	gsub(/@/, "", atrule);
+	gsub(/\s*\*\s*@[a-z\_]+\s+/, "", $0);
+	items[count] = "\"" atrule "\": \"" $0 "\"";
+	count++;
+}
+END {
+	result="{";
+	for(i = 0; i < count; i++) {
+		result = result items[i];
+		if(i < count - 1) result = result ",";
+	}
+	print(result "}");
+}
+AWK
+		# TODO: Consider mapping it out as TSV, then using JQ to generate the object
+		awk -v prop_hash="${hash}" "${awk_script}" <"${filename}";
+		
+		
+		# Capture the screenshot
+		screenshot_loc_full="$(dirname "${filename}")/preview_full.png";
+		screenshot_loc_small="$(dirname "${filename}")/preview_small.png";
+		
+		# Set the theme
+		tmp_file="$(mktemp /tmp/peppermint-json-XXXXXXX)";
+		jq --arg theme_css "$(cat "${filename}")" '.css = $theme_css' <"build/peppermint.json" >"${tmp_file}";
+		mv "${tmp_file}" "build/peppermint.json";
+		
+		# Capture the full-res screenshot
+		firefox --new-instance --headless --profile "${tmp_profile}" --window-size 1920x1080 --screenshot "${screenshot_loc_full}" "http://[::1]:35623/index.php";
+		
+		subtask_end "$?";
+	done < <(find themes -type f -name "theme.css") | jq --tab --slurp . >themes/themeindex.json;
+	
+	
+	rm -r "${tmp_profile}";
+	rm "themes/themeindex.json.old";
+}
+
 task_docs() {
 	task_begin "Building HTTP API Docs";
 	node_modules/apidoc/bin/apidoc -o './docs/RestApi/' --config apidoc.json -f '.*\.php' -e 'index.php|ModuleApi'
@@ -96,7 +160,7 @@ task_docs() {
 		subtask_begin "Downloading PHPDoc";
 		# Create the temporary directory if it doesn't exist yet
 		[ -d "./build/_tmp" ] || mkdir -p "./build/_tmp/";
-		
+			
 		curl -sSL https://phpdoc.org/phpDocumentor.phar -o ./build/_tmp/phpdoc
 		subtask_end $?;
 	fi
