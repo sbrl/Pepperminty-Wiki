@@ -1,3 +1,5 @@
+themes/**/*.png
+themes/themeindex.json
 build.*/
 _docpress/
 __nightdocs/
