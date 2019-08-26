@@ -18,7 +18,7 @@ nav:not(.nav-more-menu) a { text-decoration: none; font-weight: bolder; color: i
 .nav-divider { color: transparent; }
 
 .nav-more { position: relative; background-color: #442772; min-width: 10em; }
-.nav-more label { cursor: pointer; }
+label { cursor: pointer; }
 .nav-more-menu { display: none; z-index: 10000; position: absolute; flex-direction: column; top: 2.6rem; right: -0.2rem; background-color: #8a62a7; border-top: 3px solid #442772; border-bottom: 3px solid #442772; }
 input[type=checkbox]:checked ~ .nav-more-menu { display: block; box-shadow: 0.4rem 0.4rem 1rem 0 rgba(50, 50, 50, 0.5); }
 .nav-more-menu span { min-width: 10rem; }
@@ -93,6 +93,9 @@ textarea, textarea[name=content] + pre, textarea ~ input[type=submit], #search-b
 textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: bolder; }
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
 input.edit-page-button[type='submit'] { width: 49.5%; box-sizing: border-box; }
+input[type=radio] { transform: scale(2); }
+input[type=submit].large { width: 100%; box-sizing: border-box; padding: 0.5em; font-size: 1.25em; font-weight: bolder; }
+
 .preview-message { text-align: center; }
 @media (min-width: 800px) {
 	.jump-to-comments { position: absolute; top: 3.5em; right: 2em; display: block; text-align: right; pointer-events: none; }
@@ -120,6 +123,11 @@ input.edit-page-button[type='submit'] { width: 49.5%; box-sizing: border-box; }
 .tag-list { list-style-type: none; margin: 0.5rem; padding: 0.5rem; }
 .tag-list li { display: inline-block; margin: 1rem; }
 .mini-tag { background: #e2d5eb; padding: 0.2rem 0.4rem; color: #fb701a; text-decoration: none; }
+
+.grid-large { display: grid; grid-template-columns: repeat(auto-fit, minmax(25em, 1fr)); grid-auto-rows: min-content; grid-gap: 1em; justify-content: center;}
+
+.theme-item { justify-self: center; text-align: center; }
+.theme-item label { min-width: auto; }
 
 .help-section-header::after { content: "#" attr(id); float: right; color: rgba(0, 0, 0, 0.4); font-size: 0.8rem; font-weight: normal; }
 

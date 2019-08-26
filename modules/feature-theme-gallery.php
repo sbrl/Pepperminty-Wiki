@@ -15,7 +15,16 @@ register_module([
 		 */
 		
 		add_action("theme-gallery", function() {
-			global $settings;
+			global $settings, $env;
+			
+			if(!$env->is_admin) {
+				$errorMessage = "<p>You don't have permission to change $settings->sitename's theme.</p>\n";
+				if(!$env->is_logged_in)
+					$errorMessage .= "<p>You could try <a href='?action=login&returnto=%3Faction%3Dconfigure'>logging in</a>.</p>";
+				else
+					$errorMessage .= "<p>You could try <a href='?action=logout&returnto=%3Faction%3Dconfigure'>logging out</a> and then <a href='?action=login&returnto=%3Faction%3Dconfigure'>logging in</a> again with a different account that has the appropriate privileges.</a>.</p>";
+				exit(page_renderer::render_main("Error - $settings->sitename", $errorMessage));
+			}
 			
 			$themes_available = [];
 			$gallery_urls = explode(" ", $settings->css_theme_gallery_index_url);
@@ -42,17 +51,22 @@ register_module([
 			});
 			
 			$content = "<h1>Theme Gallery</h1>
-			<div class='grid theme-list'>\n";
+			
+			<form method='get' action='theme-gallery-select'>
+			<div class='grid-large theme-list'>\n";
 			foreach($themes_available as $theme) {
+				$selected = $theme->id == $settings->css_theme_gallery_selected_id ? " selected" : "";
 				$content .= "<div class='theme-item'>
-					<a href='" . htmlentities($theme->preview_large) . "'><img src='" . htmlentities($theme->preview_small) . "' title='Click to enlarge.' /></a>
-					<input type='radio' id='" . htmlentities($theme->id) . "' name='theme-selector' value='" . htmlentities($theme->id) . "'  />
-					<label for='" . htmlentities($theme->id) . "'>" . htmlentities($theme->name) . "</label>
+					<a href='" . htmlentities($theme->preview_large) . "'><img src='" . htmlentities($theme->preview_small) . "' title='Click to enlarge' /></a><br />
+					<input type='radio' id='" . htmlentities($theme->id) . "' name='theme-selector' value='" . htmlentities($theme->id) . "'$selected />
+					<label class='link-display-label' for='" . htmlentities($theme->id) . "'>" . htmlentities($theme->name) . "</label>
 					<p>" . str_replace("\n", "</p>\n<p>", htmlentities($theme->description)) . "</p>
 					<p>By <a href='" . htmlentities($theme->author_link) . "'>" . htmlentities($theme->author) . "</a> (<a href='" . htmlentities($theme->url) . "'>View CSS</a>, <a href='" . htmlentities($theme->index_url) . "'>View Index</a>)
 				</div>";
 			}
-			$content .= "</div>";
+			$content .= "</div>
+			<input type='submit' class='large' value='Change Theme' />
+			</form>";
 			
 			exit(page_renderer::render_main("Theme Gallery - $settings->sitename", "$content"));
 			
