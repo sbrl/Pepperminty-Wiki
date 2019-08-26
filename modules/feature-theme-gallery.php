@@ -27,10 +27,14 @@ register_module([
 					exit(page_renderer::render_main("Error - Theme Gallery - $settings->sitename", "<p>Error: Failed to download theme index file from <code>" . htmlentities($url) . "</code>."));
 				}
 				
-				$themes_available = array_merge(
-					$themes_available,
-					$next_obj
-				);
+				foreach($next_obj as $theme) {
+					$theme["index_url"] = $url;
+					$theme["root"] = dirname($url) . "/{$theme["id"]}";
+					$theme["url"] = "{$theme["root"]}/theme.css";
+					$theme["preview_large"] = "{$theme["root"]}/preview_large.png";
+					$theme["preview_small"] = "{$theme["root"]}/preview_small.png";
+					$themes_available[] = $theme;
+				}
 			}
 			
 			$content = "<h1>Theme Gallery</h1>
@@ -41,7 +45,7 @@ register_module([
 					<a href='" . htmlentities($theme["preview_large"]) . "'><img src='" . htmlentities($theme["preview_small"]) . "' title='Click to enlarge.' /></a>
 					<label for='" . htmlentities($theme["id"]) . "'>" . htmlentities($theme["name"]) . "</label>
 					<p>" . str_replace("\n", "</p>\n<p>", htmlentities($theme["description"])) . "</p>
-					<p>By <a href='" . htmlentities($theme["author_link"]) . "'>" . htmlentities($theme["author"]) . "</a> (<a href='" . htmlentities($theme["url"]) . "'>View CSS</a>)
+					<p>By <a href='" . htmlentities($theme["author_link"]) . "'>" . htmlentities($theme["author"]) . "</a> (<a href='" . htmlentities($theme["url"]) . "'>View CSS</a>, <a href='" . htmlentities($theme["index_url"]) . "'>View Index</a>)
 				</div>";
 			}
 			$content .= "</div>";

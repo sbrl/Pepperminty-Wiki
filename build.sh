@@ -157,7 +157,7 @@ AWK
 		fi
 		preview_regen=true;
 		
-		screenshot_loc_full="$(dirname "${filename}")/preview_full.png";
+		screenshot_loc_full="$(dirname "${filename}")/preview_large.png";
 		screenshot_loc_small="$(dirname "${filename}")/preview_small.png";
 		
 		# Set the theme
