@@ -18,6 +18,9 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Vastly improved search engine performance
      - A new SQLite-based index format is now used, so search indexes will need to be rebuilt (migrating would probably take longer than a rebuild :-/)
  - New search query syntax
+ - When making remote requests, Pepperminty Wiki will now correctly set the user agent string
+     - The server's `expose_php` setting is respected - if it's disabled, then the PHP version will not be exposed.
+     - Pepperminty Wiki _shouldn't_ make remote requests without you asking it to - see above and the theme gallery
 
 
 ## v0.19

@@ -64,10 +64,11 @@ register_module([
 			}
 			
 			// TODO: Check the environment here first
-			//  - Make sure peppermint.json isn't accessible
 			//  - Check for required modules?
 			
 			// TODO: Add a button to skip the firstrun wizard & do your own manual setup
+			
+			// TODO: Add option to configure theme auto-update here - make sure it doesn't do anything until configuration it complete!
 			
 			$result = "<h1>Welcome!</h1>
 <p>Welcome to Pepperminty Wiki.</p>

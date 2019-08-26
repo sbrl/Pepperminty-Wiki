@@ -75,7 +75,7 @@
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
         "description": "Displays a special page to aid in setting up a new wiki for the first time.",
-        "lastupdate": 1557611471,
+        "lastupdate": 1566827225,
         "optional": false,
         "extra_data": []
     },
@@ -154,8 +154,8 @@
         "name": "Theme Gallery",
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
-        "description": "Adds a theme gallery page and optional automatic theme updates.",
-        "lastupdate": 1566733743,
+        "description": "Adds a theme gallery page and optional automatic theme updates. Contacts a remote server, where IP addresses are stored in automatic server logs for security and attack mitigation purposes.",
+        "lastupdate": 1566828460,
         "optional": false,
         "extra_data": []
     },

@@ -3,7 +3,7 @@ register_module([
 	"name" => "Theme Gallery",
 	"version" => "0.1",
 	"author" => "Starbeamrainbowlabs",
-	"description" => "Adds a theme gallery page and optional automatic theme updates.",
+	"description" => "Adds a theme gallery page and optional automatic theme updates. Contacts a remote server, where IP addresses are stored in automatic server logs for security and attack mitigation purposes.",
 	"id" => "feature-theme-gallery",
 	"code" => function() {
 		global $settings;
@@ -28,11 +28,11 @@ register_module([
 				}
 				
 				foreach($next_obj as $theme) {
-					$theme["index_url"] = $url;
-					$theme["root"] = dirname($url) . "/{$theme["id"]}";
-					$theme["url"] = "{$theme["root"]}/theme.css";
-					$theme["preview_large"] = "{$theme["root"]}/preview_large.png";
-					$theme["preview_small"] = "{$theme["root"]}/preview_small.png";
+					$theme->index_url = $url;
+					$theme->root = dirname($url) . "/{$theme->id}";
+					$theme->url = "{$theme->root}/theme.css";
+					$theme->preview_large = "{$theme->root}/preview_large.png";
+					$theme->preview_small = "{$theme->root}/preview_small.png";
 					$themes_available[] = $theme;
 				}
 			}
@@ -41,16 +41,16 @@ register_module([
 			<div class='grid theme-list'>\n";
 			foreach($themes_available as $theme) {
 				$content .= "<div class='theme-item'>
-					<input type='radio' id='" . htmlentities($theme["id"]) . "' name='theme-selector' value='" . htmlentities($theme["id"]) . "'  /><br />
-					<a href='" . htmlentities($theme["preview_large"]) . "'><img src='" . htmlentities($theme["preview_small"]) . "' title='Click to enlarge.' /></a>
-					<label for='" . htmlentities($theme["id"]) . "'>" . htmlentities($theme["name"]) . "</label>
-					<p>" . str_replace("\n", "</p>\n<p>", htmlentities($theme["description"])) . "</p>
-					<p>By <a href='" . htmlentities($theme["author_link"]) . "'>" . htmlentities($theme["author"]) . "</a> (<a href='" . htmlentities($theme["url"]) . "'>View CSS</a>, <a href='" . htmlentities($theme["index_url"]) . "'>View Index</a>)
+					<a href='" . htmlentities($theme->preview_large) . "'><img src='" . htmlentities($theme->preview_small) . "' title='Click to enlarge.' /></a>
+					<input type='radio' id='" . htmlentities($theme->id) . "' name='theme-selector' value='" . htmlentities($theme->id) . "'  />
+					<label for='" . htmlentities($theme->id) . "'>" . htmlentities($theme->name) . "</label>
+					<p>" . str_replace("\n", "</p>\n<p>", htmlentities($theme->description)) . "</p>
+					<p>By <a href='" . htmlentities($theme->author_link) . "'>" . htmlentities($theme->author) . "</a> (<a href='" . htmlentities($theme->url) . "'>View CSS</a>, <a href='" . htmlentities($theme->index_url) . "'>View Index</a>)
 				</div>";
 			}
 			$content .= "</div>";
 			
-			exit(page_renderer::render_main("Theme Gallery - $settings->sitename", ""));
+			exit(page_renderer::render_main("Theme Gallery - $settings->sitename", "$content"));
 			
 		});
 		
