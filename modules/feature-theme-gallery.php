@@ -52,7 +52,8 @@ register_module([
 			
 			$content = "<h1>Theme Gallery</h1>
 			
-			<form method='get' action='theme-gallery-select'>
+			<form method='get' action='index.php'>
+			<input type='hidden' name='action' value='theme-gallery-select' />
 			<div class='grid-large theme-list'>\n";
 			foreach($themes_available as $theme) {
 				$selected = $theme->id == $settings->css_theme_gallery_selected_id ? " selected" : "";
