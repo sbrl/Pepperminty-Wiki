@@ -37,6 +37,10 @@ register_module([
 				}
 			}
 			
+			usort($themes_available, function($a, $b) {
+				return strcmp($a->name, $b->name);
+			});
+			
 			$content = "<h1>Theme Gallery</h1>
 			<div class='grid theme-list'>\n";
 			foreach($themes_available as $theme) {
