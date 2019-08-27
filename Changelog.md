@@ -12,6 +12,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Fixed a bug in the search query performance metrics
  - Fill out the statistics help text
  - Added table of contents to help page
+ - Squashed the large blank space that sometimes appears at the bottom of the page editor page
 
 ### Changed
  - Made `build.sh` build script more robust, especially when generating the documentation.
