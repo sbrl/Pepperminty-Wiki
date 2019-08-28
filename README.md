@@ -6,7 +6,7 @@ Pepperminty Wiki is a complete wiki engine contained in a single file, inspired 
 
 Developed by Starbeamrainbowlabs (though contributions from others are welcome!), Pepperminty Wiki has a variety of useful (and cool!) features - such as file upload, a dynamic help page, page revision history, page tags, and more! Other amazing features are in the works too (like a theme gallery, auto update, and user watchlists), so check the release notes to see what's been added recently.
 
-**Latest Version:** [![stable version badge](https://img.shields.io/github/release/sbrl/Pepperminty-Wiki.svg?color=brightgreen&label=stable)](https://github.com/sbrl/Pepperminty-Wiki/releases/latest) ![pre-release version badge](https://img.shields.io/github/v/release/sbrl/Pepperminty-Wiki.svg?color=yellow&label=pre-release) ![development version badge](https://img.shields.io/badge/development-v0.20--dev-orange.svg) ([Changelog](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md))
+**Latest Version:** [![stable version badge](https://img.shields.io/github/release/sbrl/Pepperminty-Wiki.svg?color=brightgreen&label=stable)](https://github.com/sbrl/Pepperminty-Wiki/releases/latest) ![pre-release version badge](https://img.shields.io/github/v/release/sbrl/Pepperminty-Wiki.svg?color=yellow&label=pre-release) ![development version badge](https://img.shields.io/badge/dynamic/json?color=orange&label=development&query=latest_version&url=https%3A%2F%2Fstarbeamrainbowlabs.com%2Flabs%2Fpeppermint%2Fpack.php%3Fdetermine-latest-version) ([Changelog](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md))
 
 ## Screenshot
 [![Main Page Example](https://i.imgur.com/5dmbKlz.png)](https://imgur.com/a/lsBc3cM)
