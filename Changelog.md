@@ -24,7 +24,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Pepperminty Wiki _shouldn't_ make remote requests without you asking it to - see above and the theme gallery
 
 
-## v0.19.1-hotfix
+## v0.19.1-hotfix1
  - Patched [the downloader](https://starbeamrainbowlabs.com/labs/peppermint/download.php) which was throwing warnings when packing downloads
 
 
