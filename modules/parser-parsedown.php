@@ -5,12 +5,15 @@ register_module([
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation.",
 	"extra_data" => [
-		/******** Parsedown versions ********
-		 * Parsedown Core:	1.8.0-beta-5	*
-		 * Parsedown Extra:	0.8.0-beta-1	*
-		 ************************************/
+		/********** Parsedown versions **********
+		 * Parsedown Core:		1.8.0-beta-5	* TODO: Update Parsedown core & extra
+		 * Parsedown Extra:		0.8.0-beta-1	*
+		 * Parsedown Extreme:	0.1.6			*
+		 ****************************************/
 		"Parsedown.php" => "https://raw.githubusercontent.com/erusev/parsedown/819c68899d593503180ed79ef4be5a4dcd8c5f92/Parsedown.php",
-		"ParsedownExtra.php" => "https://raw.githubusercontent.com/erusev/parsedown-extra/f21b40a1973b6674903a6da9857ee215e8839f96/ParsedownExtra.php"
+		"ParsedownExtra.php" => "https://raw.githubusercontent.com/erusev/parsedown-extra/f21b40a1973b6674903a6da9857ee215e8839f96/ParsedownExtra.php",
+		"ParsedownExtreme.php" => "https://raw.githubusercontent.com/BenjaminHoegh/parsedown-extreme/adae4136534ad1e4159fe04c74c4683681855b84/ParsedownExtreme.php"
+		// TODO: Add Parsedown Extreme support
 	],
 	"id" => "parser-parsedown",
 	"code" => function() {
@@ -218,6 +221,7 @@ register_module([
 
 require_once("$paths->extra_data_directory/parser-parsedown/Parsedown.php");
 require_once("$paths->extra_data_directory/parser-parsedown/ParsedownExtra.php");
+require_once("$paths->extra_data_directory/parser-parsedown/ParsedownExtreme.php");
 
 /**
  * Attempts to 'auto-correct' a page name by trying different capitalisation
@@ -257,7 +261,7 @@ function parsedown_pagename_resolve($pagename) {
 /**
  * The Peppermint-flavoured Parsedown parser.
  */
-class PeppermintParsedown extends ParsedownExtra
+class PeppermintParsedown extends ParsedownExtreme
 {
 	/**
 	 * The base directory with which internal links will be resolved.
