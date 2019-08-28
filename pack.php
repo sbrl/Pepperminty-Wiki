@@ -1,5 +1,19 @@
 <?php
 
+<<<<<<< HEAD
+=======
+$paths = new stdClass();
+$paths->extra_data_directory = "._extra_data";
+
+if(isset($_GET["determine-latest-version"])) {
+	header("content-type: application/json");
+	exit(json_encode([
+		"latest_version" => trim(file_get_contents("https://raw.githubusercontent.com/sbrl/Pepperminty-Wiki/master/version")),
+		"local_version" => trim(file_get_contents("version"))
+	]));
+}
+
+>>>>>>> 24d15b1... Hotfix: Patch download packer, which was inadvertently broken
 /**
  * Logs a string to stdout, but only on the CLI.
  * @param  string $line The line to log.
@@ -13,12 +27,23 @@ function log_str(string $line) {
 log_str("*** Beginning main build sequence ***\n");
 log_str("Reading in module index...\n");
 
+if(isset($_GET["modules"]))
+	$requested_modules = explode(",", $_GET["modules"]);
+
 $module_index = json_decode(file_get_contents("module_index.json"));
 $module_list = [];
-foreach($module_index as $module)
-{
-	// If the module is optional, the module's id isn't present in the command line arguments, and the special 'all' module id wasn't passed in, skip it
-	if($module->optional &&
+foreach($module_index as $module) {
+	/*
+	 * If:
+	 *  - The module is optional
+	 *  - ...AND we're on the command line
+	 *  - ...AND the module isn't specified in the CLI arguments
+	 *  - ...AND the special keyword "all" isn't specified in the CLI arguments
+	 * ....then skip it.
+	 */
+	if(
+		php_sapi_name() == "cli" &&
+		$module->optional &&
 		(
 			isset($argv) &&
 			strrpos(implode(" ", $argv), $module->id) === false &&
@@ -26,11 +51,18 @@ foreach($module_index as $module)
 		)
 	)
 		continue;
+	
+	/*
+	 * If:
+	 *  - We're NOT on the command line
+	 *  - ...AND the module isn't requested
+	 * ...then skip it.
+	 */
+	if(php_sapi_name() != "cli" && !in_array($module->id, $requested_modules))
+		continue;
+	
 	$module_list[] = $module;
 }
-
-if(isset($_GET["modules"]))
-	$module_list = explode(",", $_GET["modules"]);
 
 if(php_sapi_name() != "cli") {
 	header("content-type: text/php");
