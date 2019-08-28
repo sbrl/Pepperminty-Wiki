@@ -1,5 +1,13 @@
 <?php
 
+if(isset($_GET["determine-latest-version"])) {
+	header("content-type: application/json");
+	exit(json_encode([
+		"latest_version" => trim(file_get_contents("https://raw.githubusercontent.com/sbrl/Pepperminty-Wiki/master/version")),
+		"local_version" => trim(file_get_contents("version"))
+	]));
+}
+
 /**
  * Logs a string to stdout, but only on the CLI.
  * @param  string $line The line to log.
