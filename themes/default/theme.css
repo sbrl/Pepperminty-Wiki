@@ -58,13 +58,14 @@ nav { display: flex; background-color: var(--accent-a2); color: var(--accent-b1)
 nav.top { position: absolute; top: 0; left: 0; right: 0; box-shadow: inset 0 -0.6rem 0.8rem -0.5rem var(--shadow); }
 nav.bottom { position: absolute; left: 0; right: 0; box-shadow: inset 0 0.8rem 0.8rem -0.5rem var(--shadow); }
 
-nav > span { flex: 1; text-align: center; line-height: 2; display: inline-block; margin: 0; padding: 0.3rem 0.5rem; border-left: 3px solid var(--accent-a3); border-right: 3px solid var(--accent-a3); }
+nav > span { flex: 1; line-height: 2; display: inline-block; margin: 0; padding: 0.3rem 0.5rem; border-left: 3px solid var(--accent-a3); border-right: 3px solid var(--accent-a3); }
+nav:not(.nav-more-menu) > span { text-align: center; }
 nav:not(.nav-more-menu) a { text-decoration: none; font-weight: bolder; color: inherit; }
 .nav-divider { color: transparent; }
 
-.nav-more { position: relative; background-color: var(--accent-a3); min-width: 10em; }
+.nav-more { position: relative; background-color: var(--accent-a3); min-width: 10em; font-weight: bold; }
 label { cursor: pointer; }
-.nav-more-menu { display: none; z-index: 10000; position: absolute; flex-direction: column; top: 2.6rem; right: -0.2rem; background-color: var(--accent-a2); border-top: 3px solid var(--accent-a3); border-bottom: 3px solid var(--accent-a3); }
+.nav-more-menu { display: none; z-index: 10000; position: absolute; flex-direction: column; top: 2.6rem; right: -0.2rem; text-align: left; background-color: var(--accent-a2); border-top: 3px solid var(--accent-a3); border-bottom: 3px solid var(--accent-a3); }
 input[type=checkbox]:checked ~ .nav-more-menu { display: block; box-shadow: 0.4rem 0.4rem 1rem 0 var(--shadow); }
 .nav-more-menu span { min-width: 10rem; }
 
