@@ -50,6 +50,8 @@
 	/* #ffdb6d #36962c hsl(36, 78%, 80%) hsla(262, 92%, 68%, 0.42) */
 }
 
+/* TODO: Refactor to use the CSS grid */
+
 body { margin: 2rem 0 0 0; background: var(--bg-back); line-height: 1.45em; color: var(--text-dark); font-family: sans-serif; }
 
 nav { display: flex; background-color: var(--accent-a2); color: var(--accent-b1);  }
