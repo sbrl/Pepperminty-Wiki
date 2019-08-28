@@ -69,52 +69,60 @@
 		],
 		"menu"
 	]},
-	"nav_links_extra": { "type": "nav", "description": "An array of additional links in the above format that will be shown under \"More\" subsection.", "default": [
-		[
-			"&#x231b; Page History",
-			"?action=history&page={page}"
+	"nav_links_extra": { "type": "nav", "description": "An array of additional links in the above format that will be shown under \"More\" subsection.", "default": {
+		"Page": [
+			[
+				"&#x231b; Page History",
+				"?action=history&page={page}"
+			],
+			[
+				"&#x1f4e4; Upload",
+				"index.php?action=upload"
+			]
 		],
-		[
-			"&#x1f3ab; All&nbsp;Tags",
-			"index.php?action=list-tags"
+		"Navigation": [
+			[
+				"&#x1f3ab; All&nbsp;Tags",
+				"index.php?action=list-tags"
+			],
+			[
+				"&#x1f38a; Random Page",
+				"?action=random"
+			],
+			[
+				"&#x1f4c5; Recent changes",
+				"?action=recent-changes"
+			]
 		],
-		[
-			"&#x1f465; All Users",
-			"index.php?action=user-list"
+		"Wiki": [
+			[
+				"&#x1f4ca; Statistics",
+				"?action=stats"
+			],
+			[
+				"&#x1f465; All Users",
+				"index.php?action=user-list"
+			]
 		],
-		[
-			"&#x1f38a; Random Page",
-			"?action=random"
-		],
-		[
-			"&#x1f5d3; Recent changes",
-			"?action=recent-changes"
-		],
-		[
-			"&#x1f4ca; Statistics",
-			"?action=stats"
-		],
-		[
-			"&#x1f325; Upload",
-			"index.php?action=upload"
-		],
-		[
-			"&#9670; &#x1f6ab; Delete",
-			"index.php?action=delete&page={page}"
-		],
-		[
-			"&#9670; &#x1f6a0; Move",
-			"index.php?action=move&page={page}"
-		],
-		[
-			"&#9670; &#x1f510; Toggle Protection",
-			"index.php?action=protect&page={page}"
-		],
-		[
-			"&#9670; &#x1f527; Edit master settings",
-			"index.php?action=configure"
+		"Moderator": [
+			[
+				"&#9670; &#x1f6ab; Delete",
+				"index.php?action=delete&page={page}"
+			],
+			[
+				"&#9670; &#x1f6a0; Move",
+				"index.php?action=move&page={page}"
+			],
+			[
+				"&#9670; &#x1f510; Toggle Protection",
+				"index.php?action=protect&page={page}"
+			],
+			[
+				"&#9670; &#x1f527; Edit master settings",
+				"index.php?action=configure"
+			]
 		]
-	]},
+	} },
 	"nav_links_bottom": { "type": "nav", "description": "An array of links in the above format that will be shown at the bottom of the page.", "default": [
 		[
 			"&#x1f5a8; Printable version",
