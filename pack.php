@@ -1,7 +1,5 @@
 <?php
 
-<<<<<<< HEAD
-=======
 $paths = new stdClass();
 $paths->extra_data_directory = "._extra_data";
 
@@ -13,7 +11,6 @@ if(isset($_GET["determine-latest-version"])) {
 	]));
 }
 
->>>>>>> 24d15b1... Hotfix: Patch download packer, which was inadvertently broken
 /**
  * Logs a string to stdout, but only on the CLI.
  * @param  string $line The line to log.
