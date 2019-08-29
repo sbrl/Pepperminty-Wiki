@@ -58,16 +58,24 @@ nav { display: flex; background-color: var(--accent-a2); color: var(--accent-b1)
 nav.top { position: absolute; top: 0; left: 0; right: 0; box-shadow: inset 0 -0.6rem 0.8rem -0.5rem var(--shadow); }
 nav.bottom { position: absolute; left: 0; right: 0; box-shadow: inset 0 0.8rem 0.8rem -0.5rem var(--shadow); }
 
-nav > span { flex: 1; line-height: 2; display: inline-block; margin: 0; padding: 0.3rem 0.5rem; border-left: 3px solid var(--accent-a3); border-right: 3px solid var(--accent-a3); }
+nav.mega-menu { display: flex; flex-direction: row; padding-bottom: 0.4em; border-left: 3px solid var(--accent-a3); border-right: 3px solid var(--accent-a3); }
+nav.mega-menu .category { padding: 0.3em 1em; }
+nav.mega-menu strong { display: block; }
+nav.mega-menu span { display: block; }
+
+nav > span { flex: 1; line-height: 2; display: inline-block; margin: 0; padding: 0.3rem 0.5rem; }
+nav:not(.mega-menu) > span { border-left: 3px solid var(--accent-a3); border-right: 3px solid var(--accent-a3); }
 nav:not(.nav-more-menu) > span { text-align: center; }
-nav:not(.nav-more-menu) a { text-decoration: none; font-weight: bolder; color: inherit; }
+nav:not(.nav-more-menu) a { text-decoration: none; color: inherit; }
+nav:not(.nav-more-menu):not(.mega-menu) > span > a { font-weight: bolder; }
 .nav-divider { color: transparent; }
 
-.nav-more { position: relative; background-color: var(--accent-a3); min-width: 10em; font-weight: bold; }
+.nav-more { position: relative; background-color: var(--accent-a3); min-width: 10em; }
+.nav-more > label { font-weight: bold; }
 label { cursor: pointer; }
-.nav-more-menu { display: none; z-index: 10000; position: absolute; flex-direction: column; top: 2.6rem; right: -0.2rem; text-align: left; background-color: var(--accent-a2); border-top: 3px solid var(--accent-a3); border-bottom: 3px solid var(--accent-a3); }
-input[type=checkbox]:checked ~ .nav-more-menu { display: block; box-shadow: 0.4rem 0.4rem 1rem 0 var(--shadow); }
-.nav-more-menu span { min-width: 10rem; }
+.nav-more-menu { z-index: 10000; position: absolute; flex-direction: column; top: 2.6rem; right: 100000px; text-align: left; background-color: var(--accent-a2); border-top: 3px solid var(--accent-a3); border-bottom: 3px solid var(--accent-a3); }
+input[type=checkbox]:checked ~ .nav-more-menu { right: -0.2rem; box-shadow: 0.4rem 0.4rem 1rem 0 var(--shadow); }
+.nav-more-menu span { white-space: nowrap; }
 
 .inflexible { flex: none; }
 .off-screen { position: absolute; top: -1000px; left: -1000px;}

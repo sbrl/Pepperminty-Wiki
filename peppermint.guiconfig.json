@@ -70,40 +70,6 @@
 		"menu"
 	]},
 	"nav_links_extra": { "type": "nav", "description": "An array of additional links in the above format that will be shown under \"More\" subsection.", "default": {
-		"Page": [
-			[
-				"&#x231b; Page History",
-				"?action=history&page={page}"
-			],
-			[
-				"&#x1f4e4; Upload",
-				"index.php?action=upload"
-			]
-		],
-		"Navigation": [
-			[
-				"&#x1f3ab; All&nbsp;Tags",
-				"index.php?action=list-tags"
-			],
-			[
-				"&#x1f38a; Random Page",
-				"?action=random"
-			],
-			[
-				"&#x1f4c5; Recent changes",
-				"?action=recent-changes"
-			]
-		],
-		"Wiki": [
-			[
-				"&#x1f4ca; Statistics",
-				"?action=stats"
-			],
-			[
-				"&#x1f465; All Users",
-				"index.php?action=user-list"
-			]
-		],
 		"Moderator": [
 			[
 				"&#9670; &#x1f6ab; Delete",
@@ -120,6 +86,40 @@
 			[
 				"&#9670; &#x1f527; Edit master settings",
 				"index.php?action=configure"
+			]
+		],
+		"Wiki": [
+			[
+				"&#x1f4ca; Statistics",
+				"?action=stats"
+			],
+			[
+				"&#x1f465; All Users",
+				"index.php?action=user-list"
+			]
+		],
+		"Navigation": [
+			[
+				"&#x1f3ab; All&nbsp;Tags",
+				"index.php?action=list-tags"
+			],
+			[
+				"&#x1f38a; Random Page",
+				"?action=random"
+			],
+			[
+				"&#x1f4c5; Recent changes",
+				"?action=recent-changes"
+			]
+		],
+		"Page": [
+			[
+				"&#x231b; Page History",
+				"?action=history&page={page}"
+			],
+			[
+				"&#x1f4e4; Upload",
+				"index.php?action=upload"
 			]
 		]
 	} },

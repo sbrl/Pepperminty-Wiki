@@ -426,7 +426,6 @@ class page_renderer
 		}
 		
 		$result = "<nav class='$class'>\n";
-		if($mega_menu) $result .= "<span class='category'>";
 		$is_first_category = true;
 		// Loop over all the navigation links
 		foreach($nav_links as $item) {
@@ -477,7 +476,6 @@ class page_renderer
 					break;
 				
 				case "category": // Renders a category header
-					error_log("[category] " . substr($item, 9));
 					if(!$is_first_category) $result .= "</span>";
 					$result .= "<span class='category'><strong>" . substr($item, 9) . "</strong>";
 					$is_first_category = false;
