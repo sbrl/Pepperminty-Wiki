@@ -24,6 +24,10 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Pepperminty Wiki _shouldn't_ make remote requests without you asking it to - see above and the theme gallery
 
 
+## v0.19.2-hotfix2
+ - Patched another crazy bug in the extra data system in the downloader
+
+
 ## v0.19.1-hotfix1
  - Patched [the downloader](https://starbeamrainbowlabs.com/labs/peppermint/download.php) which was throwing warnings when packing downloads
 
@@ -72,7 +76,7 @@ _(No changes have been made since the last beta release.)_
  - Big update to the backend Markdown parser _Parsedown_
      - Use Parsedown's new untrusted feature for comments
      - Added new `all_untrusted` setting to allow treating *everything* as untrusted (default: false) - turn it on if your wiki allows anonymous edits
- - Switch to [nightdocs](https://gitlab.com/sbrl/nightdocs) instead of [docpress](https://docpress.github.io/) ~~(the [official docs](https://starbeamrainbowlabs.com/labs/peppermint/_docpress/) will update & change URL on the next stable release)~~ the new docs are available [here](https://starbeamrainbowlabs.com/labs/peppermint/__nightdocs/01-Welcome.html)!
+ - Switch to [nightdocs](https://gitlab.com/sbrl/nightdocs) instead of [docpress](https://docpress.github.io/) (the [official docs](https://starbeamrainbowlabs.com/labs/peppermint/_docpress/) will update & change URL on the next stable release)
  - Add moar [badges](https://shields.io/) to the README & docs :D
 
 ### Removed
