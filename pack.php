@@ -1,7 +1,12 @@
 <?php
 
-$paths = new stdClass();
-$paths->extra_data_directory = "._extra_data";
+// If this script is called directly, it must be because of the downloader.
+// If this script is to be called directly, it MUST have been called previously 
+// via build.php at least once first.
+if(!isset($paths)) {
+	$paths = new stdClass();
+	$paths->extra_data_directory = "build/._extra_data";
+}
 
 if(isset($_GET["determine-latest-version"])) {
 	header("content-type: application/json");
@@ -128,6 +133,7 @@ foreach($module_list as $module)
 	foreach($module->extra_data as $filepath_pack => $extra_data_item) {
 		if(is_string($extra_data_item)) {
 			// TODO: Test whether this works for urls. If not, then we'll need to implement a workaround
+			log_str("\n[pack] $paths->extra_data_directory/$module->id/$filepath_pack -> $module->id/$filepath_pack\n");
 			$extra_data_archive->addFile("$paths->extra_data_directory/$module->id/$filepath_pack", "$module->id/$filepath_pack");
 		}
 	}
