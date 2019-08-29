@@ -408,8 +408,25 @@ class page_renderer
 	 */
 	public static function render_navigation_bar($nav_links, $nav_links_extra, $class = "") {
 		global $settings, $env;
+		
+		$mega_menu = false;
+		if(is_object($nav_links)) {
+			$mega_menu = true;
+			$class = trim("$class mega-menu");
+			$links_list = [];
+			$keys = array_keys(get_object_vars($nav_links));
+			foreach($keys as $key) {
+				$links_list[] =  "category\0$key";
+				$links_list = array_merge(
+					$links_list,
+					$nav_links->$key
+				);
+			}
+			$nav_links = $links_list;
+		}
+		
 		$result = "<nav class='$class'>\n";
-
+		if($mega_menu) $result .= "<span class='category'>";
 		// Loop over all the navigation links
 		foreach($nav_links as $item) {
 			if(!is_string($item)) {
@@ -418,8 +435,13 @@ class page_renderer
 				continue;
 			}
 			
+			// Extract the item key - a null character can be used to separate extra data from an item type
+			$item_key = $item;
+			if(strpos($item_key, "\0") !== false)
+				$item_key = substr($item_key, 0, strpos($item_key, "\0"));
+			
 			// The item is a string
-			switch($item) {
+			switch($item_key) {
 				//keywords
 				case "user-status": // Renders the user status box
 					if($env->is_logged_in) {
@@ -452,12 +474,17 @@ class page_renderer
 					$result .= page_renderer::render_navigation_bar($nav_links_extra, [], "nav-more-menu");
 					$result .= "</span>";
 					break;
+				
+				case "category": // Renders a category header
+					$result .= "</span><span class='category'><strong>" . substr($item, 9) . "</strong>";
+					break;
 
 				// It isn't a keyword, so just output it directly
 				default:
 					$result .= "<span>$item</span>";
 			}
 		}
+		if($mega_menu) $result .= "</span>";
 
 		$result .= "</nav>";
 		return $result;
