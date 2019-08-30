@@ -13,6 +13,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Fill out the statistics help text
  - Added table of contents to help page
  - Squashed the large blank space that sometimes appears at the bottom of the page editor page
+ - Marked the user avatar on the top navigation bar as hidden for screen readers
 
 ### Changed
  - Made `build.sh` build script more robust, especially when generating the documentation.

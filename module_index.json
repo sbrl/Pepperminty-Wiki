@@ -337,10 +337,10 @@
         "version": "0.10",
         "author": "Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation.",
-        "lastupdate": 1567107944,
+        "lastupdate": 1567168168,
         "optional": false,
         "extra_data": {
-            "Parsedown.php": "https:\/\/raw.githubusercontent.com\/erusev\/parsedown\/819c68899d593503180ed79ef4be5a4dcd8c5f92\/Parsedown.php",
+            "Parsedown.php": "https:\/\/raw.githubusercontent.com\/erusev\/parsedown\/fe7a50eceb4a3c867cc9fa9c0aa906b1067d1955\/Parsedown.php",
             "ParsedownExtra.php": "https:\/\/raw.githubusercontent.com\/erusev\/parsedown-extra\/f21b40a1973b6674903a6da9857ee215e8839f96\/ParsedownExtra.php",
             "ParsedownExtreme.php": "https:\/\/raw.githubusercontent.com\/BenjaminHoegh\/parsedown-extreme\/adae4136534ad1e4159fe04c74c4683681855b84\/ParsedownExtreme.php"
         }

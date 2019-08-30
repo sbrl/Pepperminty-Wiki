@@ -50,6 +50,33 @@
 	/* #ffdb6d #36962c hsl(36, 78%, 80%) hsla(262, 92%, 68%, 0.42) */
 }
 
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg-back: hsl(270, 29%, 28%);
+		--bg-page: hsl(273, 15%, 16%);
+		
+		--text-dark: hsl(277, 38%, 89%);
+		/* --text-light: hsl(0, 0%, 6%); */
+		
+		--text-soft: hsla(0, 0%, 92%, 0.4);
+		--text-ultrasoft: hsla(0, 0%, 95%, 0.4);
+		
+		--shadow: rgba(20, 20, 20, 0.5);
+		
+		--accent-a1: #9e7eb4;
+		--accent-a2: #442772;
+		--accent-a3: hsl(274, 40%, 41%);
+		
+		--accent-c1: hsl(5, 100%, 76%);
+		--accent-c2: hsl(4, 95%, 68%); /*#8b1a1a*/
+		--accent-d1: hsl(160, 73%, 46%);
+		
+		--tag: hsl(273, 46%, 27%);
+	}
+	a { color: hsl(208, 67%, 67%); }
+	a:visited { color: hsl(264, 77%, 65%); }
+}
+
 /* TODO: Refactor to use the CSS grid */
 
 body { margin: 2rem 0 0 0; background: var(--bg-back); line-height: 1.45em; color: var(--text-dark); font-family: sans-serif; }

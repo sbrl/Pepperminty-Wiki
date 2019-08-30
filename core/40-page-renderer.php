@@ -502,7 +502,7 @@ class page_renderer
 		$result = "";
 		$result .= "<a href='?page=" . rawurlencode(get_user_pagename($name)) . "'>";
 		if($settings->avatars_show)
-			$result .= "<img class='avatar' src='?action=avatar&user=" . urlencode($name) . "&size=$settings->avatars_size' /> ";
+			$result .= "<img class='avatar' aria-hidden='true' src='?action=avatar&user=" . urlencode($name) . "&size=$settings->avatars_size' /> ";
 		if(in_array($name, $settings->admins))
 			$result .= $settings->admindisplaychar;
 		$result .= htmlentities($name);
