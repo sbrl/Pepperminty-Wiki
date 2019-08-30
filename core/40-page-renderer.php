@@ -447,7 +447,7 @@ class page_renderer
 					if($env->is_logged_in) {
 						$result .= "<span class='inflexible logged-in" . ($env->is_logged_in ? " moderator" : " normal-user") . "'>";
 						if(module_exists("feature-user-preferences")) {
-							$result .= "<a href='?action=user-preferences'>$settings->user_preferences_button_text</a>";
+							$result .= "<a href='?action=user-preferences' aria-label='Change user preferences'>$settings->user_preferences_button_text</a>";
 						}
 						$result .= self::render_username($env->user);
 						$result .= " <small>(<a href='index.php?action=logout'>Logout</a>)</small>";
@@ -461,7 +461,7 @@ class page_renderer
 					break;
 
 				case "search": // Renders the search bar
-					$result .= "<span class='inflexible'><form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='Type a page name here and hit enter' /><input type='hidden' name='search-redirect' value='true' /></form></span>";
+					$result .= "<span class='inflexible'><form method='get' action='index.php' style='display: inline;'><input type='search' name='page' list='allpages' placeholder='&#x1f50e; Type a page name here and hit enter' /><input type='hidden' name='search-redirect' value='true' /></form></span>";
 					break;
 
 				case "divider": // Renders a divider
