@@ -18,6 +18,7 @@
 	
 	--text-dark: #111111;
 	--text-light: hsl(0, 0%, 96%);
+	--text-bright: hsl(274, 40%, 41%);
 	--text-placeholder-light: hsla(0, 0%, 100%, 0.9);
 	--text-os-button: #514C4C;
 	
@@ -28,10 +29,12 @@
 	--checkerboard-bg: #eee;
 	--checkerboard-overlay: rgba(200, 200, 200, 0.2);
 	
-	--accent-a0: 253, 79%, 88%; /*hsl(253, 79%, 88%)*/
+	--accent-a0: hsl(253, 79%, 88%);
+	--accent-a0t: hsla(253, 79%, 88%, 0.3);
 	--accent-a1: #9e7eb4;
 	--accent-a2: #8a62a7;
 	--accent-a3: #442772;
+	--accent-a4: hsl(253, 79%, 88%);
 	
 	--accent-b1: #ffa74d;
 	--accent-b2: #fb701a;
@@ -58,6 +61,7 @@
 		--bg-comments-1: hsl(31, 64%, 85%);
 		
 		--text-dark: hsl(277, 38%, 89%);
+		--text-bright: hsl(274, 75%, 81%);
 		/* --text-light: hsl(0, 0%, 6%); */
 		
 		--text-soft: hsla(0, 0%, 92%, 0.4);
@@ -65,9 +69,11 @@
 		
 		--shadow: rgba(20, 20, 20, 0.5);
 		
+		--accent-a0: hsl(253, 79%, 88%);
 		--accent-a1: #9e7eb4;
 		--accent-a2: #442772;
 		--accent-a3: hsl(274, 40%, 41%);
+		--accent-a4: hsl(253, 49%, 20%);
 		
 		--accent-c1: hsl(5, 100%, 76%);
 		--accent-c2: hsl(4, 95%, 68%); /*#8b1a1a*/
@@ -109,9 +115,10 @@ input[type=checkbox]:checked ~ .nav-more-menu { right: -0.2rem; box-shadow: 0.4r
 .inflexible { flex: none; }
 .off-screen { position: absolute; top: -1000px; left: -1000px;}
 
-input[type=search] { width: 14rem; padding: 0.3rem 0.4rem; font-size: 1rem; color: var(--text-light); background: hsla(var(--accent-a0), 0.4); border: 0; border-radius: 0.3rem; }
+input[type=search] { width: 14rem; padding: 0.3rem 0.4rem; font-size: 1rem; color: var(--text-light); background: var(--accent-a0t); border: 0; border-radius: 0.3rem; }
 input[type=search]::-webkit-input-placeholder { color: var(--text-placeholder-light); }
 input[type=search]::-moz-placeholder { color: var(--text-placeholder-light); }
+input:focus, textarea:focus { outline: 0.15em solid var(--accent-a0); }
 input[type=button], input[type=submit] { cursor: pointer; }
 
 .sidebar + .main-container nav.bottom { position: relative; }
@@ -172,7 +179,7 @@ textarea[name=content] { resize: none; }
 .fit-text-mirror { position: absolute; top: 0; left: -10000vw; word-wrap: break-word; white-space: pre-wrap; }
 main label:not(.link-display-label) { display: inline-block; min-width: 16rem; }
 input[type=text]:not(.link-display), input[type=password], input[type=url], input[type=email], input[type=number], textarea { margin: 0.5rem 0; }
-input[type=text], input[type=password], input[type=url], input[type=email], input[type=number], textarea, textarea[name=content] + pre, #search-box { padding: 0.5rem 0.8rem; background: hsl(var(--accent-a0)); border: 0; border-radius: 0.3rem; font-size: 1rem; color: var(--accent-a3); }
+input[type=text], input[type=password], input[type=url], input[type=email], input[type=number], textarea, textarea[name=content] + pre, #search-box { padding: 0.5rem 0.8rem; background: var(--accent-a4); border: 0; border-radius: 0.3rem; font-size: 1rem; color: var(--text-bright); }
 textarea { min-height: 10em; line-height: 1.3em; font-size: 1.25rem; }
 textarea, textarea[name=content] + pre, textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); box-sizing: border-box; }
 textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: bolder; }
