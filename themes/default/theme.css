@@ -58,7 +58,10 @@
 		--bg-back: hsl(270, 29%, 28%);
 		--bg-page: hsl(273, 15%, 16%);
 		
-		--bg-comments-1: hsl(31, 64%, 85%);
+		--bg-comments-1: hsl(263, 25%, 16%);
+		--bg-comments-2: hsla(264, 45%, 16%, 0.64);
+		--bg-comments-3: hsla(266, 64%, 28%, 0.54);
+		--bg-comments-4: hsla(268, 82%, 32%, 0.3);
 		
 		--text-dark: hsl(277, 38%, 89%);
 		--text-bright: hsl(274, 75%, 81%);
