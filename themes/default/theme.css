@@ -41,6 +41,7 @@
 	
 	--accent-c1: #e60707;
 	--accent-c2: #820f0f; /*#8b1a1a*/
+	--accent-c3: hsl(0, 59%, 20%); /*#8b1a1a*/
 	--accent-d1: #127757;
 	
 	--tag: #e2d5eb;
@@ -80,11 +81,14 @@
 		
 		--accent-c1: hsl(5, 100%, 76%);
 		--accent-c2: hsl(4, 95%, 68%); /*#8b1a1a*/
+		--accent-c3: hsl(2, 90%, 58%);
 		--accent-d1: hsl(160, 73%, 46%);
 		
 		--tag: hsl(273, 46%, 27%);
 	}
 	a { color: hsl(208, 67%, 67%); }
+	a:hover { color: hsl(214, 67%, 75%); }
+	a:active, a:focus { color: hsl(214, 87%, 85%); }
 	a:visited { color: hsl(264, 77%, 65%); }
 }
 
@@ -163,8 +167,10 @@ pre { white-space: pre-wrap; }
 a { cursor: pointer; }
 a.redlink:link { color: var(--accent-c1); }
 a.redlink:visited { color: var(--accent-c2); }
+a.redlink:active, a.redlink:focus { color: var(--accent-c3); }
 a.interwiki_link::before { content: "\\1f6f8"; display: inline-block; margin-right: 0.25em; }
 a.interwiki_link { color: var(--accent-d1); }
+a:focus { outline-width: 0.1em; }
 
 .matching-tags-display { display: flex; margin: 0 -2em; padding: 1em 2em; background: hsla(30, 84%, 72%, 0.75); }
 .matching-tags-display > label { flex: 0; font-weight: bold; color: var(--accent-a3); }
