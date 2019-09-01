@@ -7,6 +7,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ### Added
  - TODO Update the first-run wizard to ask whether people want the theme auto-updater to turned on because privacy and inadvertent requests to my web server
  - NOTE Don't forget to tell people how to turn the theme auto-updater off in this changelog
+ - Added automatic dark mode to default theme using `prefers-color-scheme`
 
 ### Fixed
  - Fixed a bug in the search query performance metrics
