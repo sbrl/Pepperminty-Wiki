@@ -108,6 +108,11 @@ register_module([
 	}
 ]);
 
+/**
+ * Updates the currently selected theme by fetching it from a remote url.
+ * @param	bool	$force_update Whether to force an update - even if we've already updated recently.
+ * @return	bool	Whether the update was sucessful. It might fail because of network issues, or the theme update requires a newer version of Pepperminty Wiki than is currently installed.
+ */
 function theme_update($force_update = false) : bool {
 	global $version, $settings;
 	
