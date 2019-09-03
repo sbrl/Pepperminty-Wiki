@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Sidebar",
-	"version" => "0.3.1",
+	"version" => "0.3.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a sidebar to the left hand side of every page. Add '\$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
 	"id" => "extra-sidebar",
@@ -51,7 +51,11 @@ register_module([
 				
 				// Sort the pageindex
 				$sorted_pageindex = get_object_vars($pageindex);
-				ksort($sorted_pageindex, SORT_NATURAL);
+				
+				$sorter = new Collator("");
+				uksort($sorted_pageindex, function($a, $b) use($sorter) : int {
+					return $sorter->compare($a, $b);
+				});
 				
 				$sidebar_contents = "";
 				$sidebar_contents .= render_sidebar($sorted_pageindex);

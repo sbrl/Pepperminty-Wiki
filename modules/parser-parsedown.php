@@ -132,7 +132,8 @@ register_module([
 						$orphaned_pages[] = $pagename;
 				}
 				
-				sort($orphaned_pages);
+				$sorter = new Collator("");
+				$sorter->sort($orphaned_pages);
 				
 				$result->value = $orphaned_pages;
 				$result->completed = true;

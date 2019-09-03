@@ -19,7 +19,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Added aria label to user preferences button
      - Hide site logo from screen readers
  - Lists of pages that have a specific tag will now be sorted alphabetically (unicode characters should be handled correctly too)
- - Support Unicode characters when sorting the list of all tags
+ - Support Unicode characters when sorting. If it's a list of something, then it's now sorted correctly (e.g. includes pages, tags, etc).
 
 ### Changed
  - Made `build.sh` build script more robust, especially when generating the documentation.

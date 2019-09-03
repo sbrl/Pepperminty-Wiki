@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Search",
-	"version" => "0.10",
+	"version" => "0.10.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
@@ -891,12 +891,17 @@ class search
 	}
 	
 	/**
-	 * Sorts an index alphabetically. Will also sort an inverted index.
+	 * Sorts an index alphabetically.
 	 * This allows us to do a binary search instead of a regular
 	 * sequential search.
 	 * @param	array	$index	The index to sort.
 	 */
-	public static function index_sort(&$index) { ksort($index, SORT_NATURAL); }
+	public static function index_sort(&$index) {
+		$sorter = new Collator("");
+		uksort($index, function($a, $b) use($sorter) : int {
+			return $sorter->compare($a, $b);
+		});
+	}
 	
 	/**
 	 * Compares two *regular* indexes to find the differences between them.

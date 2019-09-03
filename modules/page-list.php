@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page list",
-	"version" => "0.11.2",
+	"version" => "0.11.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that lists all the pages in the index along with their metadata.",
 	"id" => "page-list",
@@ -32,7 +32,10 @@ register_module([
 			$format = $_GET["format"] ?? "html";
 			
 			$sorted_pageindex = get_object_vars($pageindex);
-			ksort($sorted_pageindex, SORT_NATURAL);
+			$sorter = new Collator("");
+			uksort($sorted_pageindex, function($a, $b) use($sorter) : int {
+				return $sorter->compare($a, $b);
+			});
 			
 			switch($format) {
 				case "html":

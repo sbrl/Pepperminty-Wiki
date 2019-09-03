@@ -52,10 +52,10 @@
     {
         "id": "extra-sidebar",
         "name": "Sidebar",
-        "version": "0.3.1",
+        "version": "0.3.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a sidebar to the left hand side of every page. Add '$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
-        "lastupdate": 1505768813,
+        "lastupdate": 1567528758,
         "optional": false,
         "extra_data": []
     },
@@ -132,30 +132,30 @@
     {
         "id": "feature-search",
         "name": "Search",
-        "version": "0.10",
+        "version": "0.10.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
-        "lastupdate": 1567107944,
+        "lastupdate": 1567528763,
         "optional": false,
         "extra_data": []
     },
     {
         "id": "feature-stats",
         "name": "Statistics",
-        "version": "0.2.1",
+        "version": "0.2.2",
         "author": "Starbeamrainbowlabs",
         "description": "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
-        "lastupdate": 1567107944,
+        "lastupdate": 1567528768,
         "optional": false,
         "extra_data": []
     },
     {
         "id": "feature-theme-gallery",
         "name": "Theme Gallery",
-        "version": "0.1",
+        "version": "0.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a theme gallery page and optional automatic theme updates. Contacts a remote server, where IP addresses are stored in automatic server logs for security and attack mitigation purposes.",
-        "lastupdate": 1567369192,
+        "lastupdate": 1567528753,
         "optional": false,
         "extra_data": []
     },
@@ -254,10 +254,10 @@
     {
         "id": "page-list",
         "name": "Page list",
-        "version": "0.11.2",
+        "version": "0.11.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
-        "lastupdate": 1567513003,
+        "lastupdate": 1567530955,
         "optional": false,
         "extra_data": []
     },
@@ -337,7 +337,7 @@
         "version": "0.10",
         "author": "Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation.",
-        "lastupdate": 1567168168,
+        "lastupdate": 1567530862,
         "optional": false,
         "extra_data": {
             "Parsedown.php": "https:\/\/raw.githubusercontent.com\/erusev\/parsedown\/fe7a50eceb4a3c867cc9fa9c0aa906b1067d1955\/Parsedown.php",

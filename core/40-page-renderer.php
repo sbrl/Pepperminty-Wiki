@@ -521,7 +521,10 @@ class page_renderer
 	public static function generate_all_pages_datalist() {
 		global $settings, $pageindex;
 		$arrayPageIndex = get_object_vars($pageindex);
-		ksort($arrayPageIndex);
+		$sorter = new Collator("");
+		uksort($arrayPageIndex, function($a, $b) use($sorter) : int {
+			return $sorter->compare($a, $b);
+		});
 		$result = "<datalist id='allpages'>\n";
 		
 		// If dynamic page sugggestions are enabled, then we should send a loading message instead.

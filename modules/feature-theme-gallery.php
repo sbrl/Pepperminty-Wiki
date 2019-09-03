@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Theme Gallery",
-	"version" => "0.1",
+	"version" => "0.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a theme gallery page and optional automatic theme updates. Contacts a remote server, where IP addresses are stored in automatic server logs for security and attack mitigation purposes.",
 	"id" => "feature-theme-gallery",
@@ -46,8 +46,9 @@ register_module([
 				}
 			}
 			
-			usort($themes_available, function($a, $b) {
-				return strcmp($a->name, $b->name);
+			$sorter = new Collator("");
+			usort($themes_available, function($a, $b) use ($sorter) : int {
+				return $sorter->compare($a->name, $b->name);
 			});
 			
 			$content = "<h1>Theme Gallery</h1>
