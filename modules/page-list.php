@@ -118,10 +118,6 @@ register_module([
 			}
 			$tag = $_GET["tag"];
 			
-			
-			$sorted_pageindex = get_object_vars($pageindex);
-			ksort($sorted_pageindex, SORT_NATURAL);
-			
 			$pagelist = [];
 			foreach($pageindex as $pagename => $pagedetails)
 			{
@@ -129,6 +125,9 @@ register_module([
 				if(in_array($tag, $pagedetails->tags))
 					$pagelist[] = $pagename;
 			}
+			
+			$sorter = new Collator("");
+			$sorter->sort($pagelist, Collator::SORT_STRING);
 			
 			switch($format)
 			{
