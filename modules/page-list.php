@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page list",
-	"version" => "0.11.1",
+	"version" => "0.11.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that lists all the pages in the index along with their metadata.",
 	"id" => "page-list",
@@ -92,7 +92,8 @@ register_module([
 				// Render a list of all tags
 				$all_tags = get_all_tags();
 				
-				sort($all_tags, SORT_NATURAL);
+				$sorter = new Collator("");
+				$sorter->sort($all_tags, Collator::SORT_STRING);
 				
 				switch($format) {
 					case "html":
