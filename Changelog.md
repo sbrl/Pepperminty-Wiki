@@ -29,6 +29,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - When making remote requests, Pepperminty Wiki will now correctly set the user agent string
      - The server's `expose_php` setting is respected - if it's disabled, then the PHP version will not be exposed.
      - Pepperminty Wiki _shouldn't_ make remote requests without you asking it to - see above and the theme gallery
+ - Improved peppermint.json.compromised error message - if it's still unclear, please let me know
 
 
 ## v0.19.2-hotfix2
