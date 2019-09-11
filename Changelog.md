@@ -20,6 +20,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Hide site logo from screen readers
  - Lists of pages that have a specific tag will now be sorted alphabetically (unicode characters should be handled correctly too)
  - Support Unicode characters when sorting. If it's a list of something, then it's now sorted correctly (e.g. includes pages, tags, etc).
+ - Squashed a bunch of warnings about a non-static methid in the page renderer
 
 ### Changed
  - Made `build.sh` build script more robust, especially when generating the documentation.
