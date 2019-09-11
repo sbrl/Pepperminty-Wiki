@@ -202,10 +202,10 @@
     {
         "id": "page-debug-info",
         "name": "Debug Information",
-        "version": "0.1.1",
+        "version": "0.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a debug action for administrator use only that collects a load of useful information to make reporting bugs easier.",
-        "lastupdate": 1524415876,
+        "lastupdate": 1568229660,
         "optional": false,
         "extra_data": []
     },
