@@ -22,11 +22,12 @@ if(!file_exists($paths->extra_data_directory) ||
 		http_response_code(503);
 		exit(page_renderer::render_minimal("Unpacking error - $settings->sitename", "<p>Oops! It looks like $settings->sitename isn't able to change the last modified time of the extra data directory.</p>$error_message_help"));
 	}
-		
-	$temp_file = tmpfile();
+	
+	$temp_filename = tempnam(sys_get_temp_dir(), "PeppermintExtract");
+	$temp_file = fopen($temp_filename, "wb+");
 	if($temp_file === false) {
 		http_response_code(503);
-		exit(page_renderer::render_minimal("Unpacking error - $settings->sitename", "<p>Oops! $settings->sitename wasn't able to create a new temporary file with <code>tmpfile()</code>. Perhaps your server is mis-configured?</p>"));
+		exit(page_renderer::render_minimal("Unpacking error - $settings->sitename", "<p>Oops! $settings->sitename wasn't able to create a new temporary file with <code>tempnam()</code>. Perhaps your server is mis-configured?</p>"));
 	}
 	$source = fopen(__FILE__, "r");
 	if($source === false) {
@@ -36,17 +37,14 @@ if(!file_exists($paths->extra_data_directory) ||
 	
 	fseek($source, __COMPILER_HALT_OFFSET__);
 	stream_copy_to_stream($source, $temp_file);
-	
-	$temp_filename = stream_get_meta_data($temp_file)["uri"];
+	fclose($temp_file);
 	
 	$extractor = new ZipArchive();
 	$extractor->open($temp_filename);
 	$extractor->extractTo($paths->extra_data_directory);
 	$extractor->close();
-	if(fclose($temp_file) === false) {
-		http_response_code(503);
-		exit(page_renderer::render_minimal("Unpacking error - $settings->sitename", "<p>Oops! $settings->sitename wasn't able to close the temporary file that it created with <code>tmpfile()</code>. Perhaps your server is mis-configured?</p>"));
-	}
+	
+	unlink($temp_filename);
 	
 	unset($error_message_help);
 }
