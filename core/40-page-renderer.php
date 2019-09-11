@@ -342,7 +342,7 @@ class page_renderer
 	 * @package core
 	 * @param string $scriptUrl The url of the javascript file to reference.
 	 */
-	public function add_js_link(string $scriptUrl) {
+	public static function add_js_link(string $scriptUrl) {
 		static::$jsLinks[] = $scriptUrl;
 	}
 	/**
@@ -350,7 +350,7 @@ class page_renderer
 	 * @package core
 	 * @param string $script The snippet of javascript to add.
 	 */
-	public function add_js_snippet(string $script) {
+	public static function add_js_snippet(string $script) {
 		static::$jsSnippets[] = $script;
 	}
 	/**
