@@ -34,6 +34,12 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Fiddled with the extra data extractor, as it seems that some people were experiencing strange issues with `stream_get_meta_data()`
 
 
+## v0.19.3-hotfix3
+ - Improve error messages in the extra data unpacker
+ - Change the extra data unpacker to us  `tempnam()` instead of `tmpfile()`, since some people appeared to be having issues with the other approach
+ - Squash a deprecation warning caused by a typo
+
+
 ## v0.19.2-hotfix2
  - Patched another crazy bug in the extra data system in the downloader
 
