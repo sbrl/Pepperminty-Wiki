@@ -55,7 +55,7 @@
         "version": "0.3.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a sidebar to the left hand side of every page. Add '$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
-        "lastupdate": 1505768813,
+        "lastupdate": 1568295635,
         "optional": false,
         "extra_data": []
     },
@@ -75,7 +75,7 @@
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
         "description": "Displays a special page to aid in setting up a new wiki for the first time.",
-        "lastupdate": 1567106717,
+        "lastupdate": 1568295635,
         "optional": false,
         "extra_data": []
     },
@@ -85,7 +85,7 @@
         "version": "0.1.4",
         "author": "Starbeamrainbowlabs",
         "description": "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
-        "lastupdate": 1567106717,
+        "lastupdate": 1568295635,
         "optional": false,
         "extra_data": []
     },
@@ -95,7 +95,7 @@
         "version": "0.4.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
-        "lastupdate": 1567106717,
+        "lastupdate": 1568295635,
         "optional": false,
         "extra_data": []
     },
@@ -135,7 +135,7 @@
         "version": "0.7.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
-        "lastupdate": 1567106717,
+        "lastupdate": 1568295635,
         "optional": false,
         "extra_data": []
     },
@@ -145,7 +145,7 @@
         "version": "0.2",
         "author": "Starbeamrainbowlabs",
         "description": "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
-        "lastupdate": 1567106717,
+        "lastupdate": 1568295635,
         "optional": false,
         "extra_data": []
     },
@@ -155,7 +155,7 @@
         "version": "0.6",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
-        "lastupdate": 1567106717,
+        "lastupdate": 1568295635,
         "optional": false,
         "extra_data": []
     },
@@ -195,7 +195,7 @@
         "version": "0.1.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a debug action for administrator use only that collects a load of useful information to make reporting bugs easier.",
-        "lastupdate": 1524415876,
+        "lastupdate": 1568295635,
         "optional": false,
         "extra_data": []
     },
@@ -205,7 +205,7 @@
         "version": "0.10.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to delete pages.",
-        "lastupdate": 1567106717,
+        "lastupdate": 1568295635,
         "optional": false,
         "extra_data": []
     },
@@ -215,7 +215,7 @@
         "version": "0.17.4",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
-        "lastupdate": 1567106717,
+        "lastupdate": 1568295635,
         "optional": false,
         "extra_data": {
             "diff.min.js": "https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/jsdiff\/2.2.2\/diff.min.js"
@@ -237,7 +237,7 @@
         "version": "0.9.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a rather useful help page. Access through the 'help' action. This module also exposes help content added to Pepperminty Wiki's inbuilt invisible help section system.",
-        "lastupdate": 1567106717,
+        "lastupdate": 1568295635,
         "optional": false,
         "extra_data": []
     },
@@ -247,7 +247,7 @@
         "version": "0.11.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
-        "lastupdate": 1567106717,
+        "lastupdate": 1568295635,
         "optional": false,
         "extra_data": []
     },
@@ -327,7 +327,7 @@
         "version": "0.10",
         "author": "Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation, and also *requires* write access to the disk on first load.",
-        "lastupdate": 1567106717,
+        "lastupdate": 1568295635,
         "optional": false,
         "extra_data": {
             "Parsedown.php": "https:\/\/raw.githubusercontent.com\/erusev\/parsedown\/819c68899d593503180ed79ef4be5a4dcd8c5f92\/Parsedown.php",
