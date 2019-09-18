@@ -17,5 +17,5 @@
 1. Once you've ensured your web server meets the requirements, obtain a copy of Pepperminty Wiki (see _[Getting a copy](05-Getting-A-Copy.html)_).
 2. Put the `index.php` file on your web server.
 3. Navigate to Pepperminty Wiki in your web browser. If you uploaded the `index.php` to `wiki/` on your web server `bobsrockets.com`, then you should navigate to `bobsrockets.com/wiki/`.
-4. See the [Configuring](06-Configuration.html) section for information on how to customize your installation, including the default login credentials.
+4. See the [Configuring](06-Configuration.html) section for information on how to customise your installation, including the default login credentials.
 5. Ensure you configure your web server to block access to `peppermint.json`, as this contains all your account details (including your hashed password!)
