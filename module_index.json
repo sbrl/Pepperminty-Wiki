@@ -5,7 +5,7 @@
         "version": "0.7",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a utility action (that anyone can use) called hash that hashes a given string. Useful when changing a user's password.",
-        "lastupdate": 1549840565,
+        "lastupdate": 1565283587,
         "optional": false,
         "extra_data": []
     },
@@ -15,7 +15,7 @@
         "version": "0.2.1",
         "author": "Starbeamrainbowlabs",
         "description": "Exposes Pepperminty Wiki's new page protection mechanism and makes the protect button in the 'More...' menu on the top bar work.",
-        "lastupdate": 1559400034,
+        "lastupdate": 1565283587,
         "optional": false,
         "extra_data": []
     },
@@ -25,7 +25,7 @@
         "version": "0.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action called 'random' that redirects you to a random page.",
-        "lastupdate": 1551543744,
+        "lastupdate": 1546368101,
         "optional": false,
         "extra_data": []
     },
@@ -35,7 +35,7 @@
         "version": "0.7",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a 'raw' action that shows you the raw source of a page.",
-        "lastupdate": 1507993763,
+        "lastupdate": 1511518191,
         "optional": false,
         "extra_data": []
     },
@@ -45,7 +45,7 @@
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
         "description": "Provides a basic JSON status action that provides a few useful bits of information for API consumption.",
-        "lastupdate": 1530565418,
+        "lastupdate": 1546368101,
         "optional": false,
         "extra_data": []
     },
@@ -55,7 +55,7 @@
         "version": "0.3.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a sidebar to the left hand side of every page. Add '$settings->sidebar_show = true;' to your configuration, or append '&sidebar=yes' to the url to enable. Adding to the url sets a cookie to remember your setting.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1568881003,
         "optional": false,
         "extra_data": []
     },
@@ -65,7 +65,7 @@
         "version": "0.3.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds threaded comments to the bottom of every page.",
-        "lastupdate": 1551562406,
+        "lastupdate": 1565283587,
         "optional": false,
         "extra_data": []
     },
@@ -75,7 +75,7 @@
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
         "description": "Displays a special page to aid in setting up a new wiki for the first time.",
-        "lastupdate": 1568802471,
+        "lastupdate": 1568881003,
         "optional": false,
         "extra_data": []
     },
@@ -85,7 +85,7 @@
         "version": "0.1.5",
         "author": "Starbeamrainbowlabs",
         "description": "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1568881003,
         "optional": false,
         "extra_data": []
     },
@@ -95,7 +95,7 @@
         "version": "0.4.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
-        "lastupdate": 1568879874,
+        "lastupdate": 1568881003,
         "optional": false,
         "extra_data": []
     },
@@ -105,7 +105,7 @@
         "version": "0.1.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds interwiki link support. Set the interwiki_index_location setting at an index file to activate support.",
-        "lastupdate": 1549840688,
+        "lastupdate": 1565283587,
         "optional": false,
         "extra_data": []
     },
@@ -115,7 +115,7 @@
         "version": "0.5",
         "author": "Starbeamrainbowlabs",
         "description": "Adds recent changes. Access through the 'recent-changes' action.",
-        "lastupdate": 1549840473,
+        "lastupdate": 1565283587,
         "optional": false,
         "extra_data": []
     },
@@ -125,7 +125,7 @@
         "version": "0.3.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
-        "lastupdate": 1549840590,
+        "lastupdate": 1565283587,
         "optional": false,
         "extra_data": []
     },
@@ -135,7 +135,7 @@
         "version": "0.10.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1568881003,
         "optional": false,
         "extra_data": []
     },
@@ -145,7 +145,7 @@
         "version": "0.2.2",
         "author": "Starbeamrainbowlabs",
         "description": "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1568881003,
         "optional": false,
         "extra_data": []
     },
@@ -155,7 +155,7 @@
         "version": "0.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a theme gallery page and optional automatic theme updates. Contacts a remote server, where IP addresses are stored in automatic server logs for security and attack mitigation purposes.",
-        "lastupdate": 1568296832,
+        "lastupdate": 1568881003,
         "optional": false,
         "extra_data": []
     },
@@ -165,7 +165,7 @@
         "version": "0.6.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1568881003,
         "optional": false,
         "extra_data": []
     },
@@ -175,7 +175,7 @@
         "version": "0.3.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a user preferences page, letting people do things like change their email address and password.",
-        "lastupdate": 1566671167,
+        "lastupdate": 1529093844,
         "optional": false,
         "extra_data": []
     },
@@ -185,7 +185,7 @@
         "version": "0.1.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a organiser page that lets moderators (or better) control the reegistered user accounts, and perform adminstrative actions such as password resets, and adding \/ removing accounts.",
-        "lastupdate": 1557574803,
+        "lastupdate": 1565283587,
         "optional": false,
         "extra_data": []
     },
@@ -195,7 +195,7 @@
         "version": "0.7.9",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
-        "lastupdate": 1540998605,
+        "lastupdate": 1546368101,
         "optional": false,
         "extra_data": []
     },
@@ -205,7 +205,7 @@
         "version": "0.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a debug action for administrator use only that collects a load of useful information to make reporting bugs easier.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1568881003,
         "optional": false,
         "extra_data": []
     },
@@ -215,7 +215,7 @@
         "version": "0.10.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to delete pages.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1568881003,
         "optional": false,
         "extra_data": []
     },
@@ -225,7 +225,7 @@
         "version": "0.17.5",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1568881003,
         "optional": false,
         "extra_data": {
             "diff.min.js": "https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/jsdiff\/2.2.2\/diff.min.js"
@@ -237,7 +237,7 @@
         "version": "0.5",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that you can use to export your wiki as a .zip file. Uses $settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
-        "lastupdate": 1548970758,
+        "lastupdate": 1565283587,
         "optional": false,
         "extra_data": []
     },
@@ -247,7 +247,7 @@
         "version": "0.10",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a rather useful help page. Access through the 'help' action. This module also exposes help content added to Pepperminty Wiki's inbuilt invisible help section system.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1568881003,
         "optional": false,
         "extra_data": []
     },
@@ -257,7 +257,7 @@
         "version": "0.11.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a page that lists all the pages in the index along with their metadata.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1568881003,
         "optional": false,
         "extra_data": []
     },
@@ -267,7 +267,7 @@
         "version": "0.9.4",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
-        "lastupdate": 1557573174,
+        "lastupdate": 1565283587,
         "optional": false,
         "extra_data": []
     },
@@ -277,7 +277,7 @@
         "version": "0.6.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to let users user out. For security reasons it is wise to add this module since logging in automatically opens a session that is valid for 30 days.",
-        "lastupdate": 1526034779,
+        "lastupdate": 1529093844,
         "optional": false,
         "extra_data": []
     },
@@ -287,7 +287,7 @@
         "version": "0.9.4",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an action to allow administrators to move pages.",
-        "lastupdate": 1559400217,
+        "lastupdate": 1565283587,
         "optional": false,
         "extra_data": []
     },
@@ -297,7 +297,7 @@
         "version": "0.6.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds an update page that downloads the latest stable version of Pepperminty Wiki. This module is currently outdated as it doesn't save your module preferences.",
-        "lastupdate": 1476906745,
+        "lastupdate": 1511518191,
         "optional": false,
         "extra_data": []
     },
@@ -307,7 +307,7 @@
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a 'user-list' action that generates a list of users. Supports json output with 'format=json' in the queyr string.",
-        "lastupdate": 1487454626,
+        "lastupdate": 1511518191,
         "optional": false,
         "extra_data": []
     },
@@ -317,7 +317,7 @@
         "version": "0.16.7",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You really should include this one.",
-        "lastupdate": 1548884009,
+        "lastupdate": 1565283587,
         "optional": false,
         "extra_data": []
     },
@@ -327,7 +327,7 @@
         "version": "0.10.1",
         "author": "Johnny Broadway & Starbeamrainbowlabs",
         "description": "The *old* default parser for Pepperminty Wiki. Based on Johnny Broadway's Slimdown (with more than a few modifications). This parser's features are documented in the help page. Superceded by a customised extension of parsedown extra.",
-        "lastupdate": 1549839049,
+        "lastupdate": 1565283587,
         "optional": true,
         "extra_data": []
     },
@@ -337,7 +337,7 @@
         "version": "0.10",
         "author": "Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1568881003,
         "optional": false,
         "extra_data": {
             "Parsedown.php": "https:\/\/raw.githubusercontent.com\/erusev\/parsedown\/fe7a50eceb4a3c867cc9fa9c0aa906b1067d1955\/Parsedown.php",
