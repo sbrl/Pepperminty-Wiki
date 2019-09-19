@@ -1,3 +1,4 @@
+*.backup
 build.*/
 _docpress/
 __nightdocs/
