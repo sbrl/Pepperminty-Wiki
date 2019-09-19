@@ -2,6 +2,10 @@
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
 
+## v0.19.4-hotfix4
+ - Fixed page id incrementing if you don't have a page called `history` on your wiki
+
+
 ## v0.19.3-hotfix3
  - Improve error messages in the extra data unpacker
  - Change the extra data unpacker to us  `tempnam()` instead of `tmpfile()`, since some people appeared to be having issues with the other approach
