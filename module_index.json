@@ -75,7 +75,7 @@
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
         "description": "Displays a special page to aid in setting up a new wiki for the first time.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1568802471,
         "optional": false,
         "extra_data": []
     },
@@ -95,7 +95,7 @@
         "version": "0.4.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to keep unlimited page history, limited only by your disk space. Note that this doesn't store file history (yet). Currently depends on feature-recent-changes for rendering of the history page.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1568879874,
         "optional": false,
         "extra_data": []
     },

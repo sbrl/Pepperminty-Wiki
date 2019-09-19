@@ -209,7 +209,7 @@ register_module([
 
 /**
  * Adds a history revision against a page.
- * Note: Does not updaate the current page content! This function _only_ 
+ * Note: Does not update the current page content! This function _only_ 
  * records a new revision against a page name. Thus it is possible to have a 
  * disparity between the history revisions and the actual content displayed in 
  * the current revision if you're not careful!
@@ -234,8 +234,8 @@ function history_add_revision(&$pageinfo, &$newsource, &$oldsource, $save_pagein
 	// this point
 	
 	// TODO Store tag changes here
-	end($pageinfo->history); // Calculate the next revision id - we can't just count the revisions here because we might have a revision limit
-	$nextRid = !empty($pageindex->history) ? $pageinfo->history[key($pageinfo->history)]->rid + 1 : 0;
+	// Calculate the next revision id - we can't just count the revisions here because we might have a revision limit
+	$nextRid = !empty($pageinfo->history) ? end($pageinfo->history)->rid + 1 : 0;
 	$ridFilename = "$pageinfo->filename.r$nextRid";
 	// Insert a new entry into the history
 	$pageinfo->history[] = [
