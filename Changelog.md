@@ -18,10 +18,11 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Marked the user avatar on the top navigation bar as hidden for screen readers
      - Added aria label to user preferences button
      - Hide site logo from screen readers
- - Lists of pages that have a specific tag will now be sorted alphabetically (unicode characters should be handled correctly too)
+ - Lists of pages that have a specific tag will now be sorted alphabetically (Unicode characters should be handled correctly too)
  - Support Unicode characters when sorting. If it's a list of something, then it's now sorted correctly (e.g. includes pages, tags, etc).
- - Squashed a bunch of warnings about a non-static methid in the page renderer
+ - Squashed a bunch of warnings about a non-static method in the page renderer
  - Fixed a warning message in the `peppermint.json` access checker
+ - Fixed page id incrementing if you don't have a page called `history` on your wiki
 
 ### Changed
  - Made `build.sh` build script more robust, especially when generating the documentation.
