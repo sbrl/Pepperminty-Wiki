@@ -22,7 +22,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Support Unicode characters when sorting. If it's a list of something, then it's now sorted correctly (e.g. includes pages, tags, etc).
  - Squashed a bunch of warnings about a non-static method in the page renderer
  - Fixed a warning message in the `peppermint.json` access checker
- - Fixed page id incrementing if you don't have a page called `history`on your wiki (thanks @SeanFromIT!)
+ - Fixed page id incrementing if you don't have a page called `history` on your wiki (thanks @SeanFromIT!)
 
 ### Changed
  - Made `build.sh` build script more robust, especially when generating the documentation.
