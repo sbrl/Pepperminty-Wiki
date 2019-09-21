@@ -22,7 +22,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Support Unicode characters when sorting. If it's a list of something, then it's now sorted correctly (e.g. includes pages, tags, etc).
  - Squashed a bunch of warnings about a non-static method in the page renderer
  - Fixed a warning message in the `peppermint.json` access checker
- - Fixed page id incrementing if you don't have a page called `history` on your wiki (thanks @SeanFromIT!)
+ - Fixed footnote rendering (thanks again, @SeanFromIT!)
 
 ### Changed
  - Made `build.sh` build script more robust, especially when generating the documentation.
@@ -34,6 +34,10 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Pepperminty Wiki _shouldn't_ make remote requests without you asking it to - see above and the theme gallery
  - Improved peppermint.json.compromised error message - if it's still unclear, please let me know
  - Fiddled with the extra data extractor, as it seems that some people were experiencing strange issues with `stream_get_meta_data()`
+
+
+## v0.19.4-hotfix4
+ - Fixed page revision id incrementing if you don't have a page called `history` on your wiki (thanks @SeanFromIT!)
 
 
 ## v0.19.3-hotfix3
