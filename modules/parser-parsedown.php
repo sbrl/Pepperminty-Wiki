@@ -281,6 +281,8 @@ class PeppermintParsedown extends ParsedownExtreme
 	 */
 	function __construct()
 	{
+        parent::__construct();
+		
 		// Prioritise our internal link parsing over the regular link parsing
 		array_unshift($this->InlineTypes["["], "InternalLink");
 		// Prioritise our image parser over the regular image parser
@@ -516,7 +518,7 @@ class PeppermintParsedown extends ParsedownExtreme
 	{
 		global $pageindex, $env;
 		
-		if(preg_match('/^\[\[([^\]]*)\]\]([^\s!?",;.()\[\]{}*=+\/]*)/u', $fragment["text"], $matches)) {
+		if(preg_match('/^\[\[([^\]]*)\]\]([^\s!?",;.()\[\]{}*=+\/]*)/u', $fragment["text"], $matches) === 1) {
 			// 1: Parse parameters out
 			// -------------------------------
 			$link_page = trim($matches[1]);
