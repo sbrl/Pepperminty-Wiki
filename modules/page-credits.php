@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Credits",
-	"version" => "0.7.9",
+	"version" => "0.7.10",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
@@ -98,6 +98,12 @@ register_module([
 					"author_url" => "https://github.com/ProDigySML",
 					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/issues/152",
 					"icon" => "https://avatars3.githubusercontent.com/u/16996819?s=24&v=4"
+				],
+				"Many miscellaneus bug fixes over Gitter" => [
+					"author" => "Sean Feeney",
+					"author_url" => "https://github.com/SeanFromIT",
+					"thing_url" => "https://gitter.im/Pepperminty-Wiki/Lobby?at=5d786927460a6f5a1600f1c1",
+					"icon" => "https://avatars3.githubusercontent.com/u/10387753?s=24&v=4"
 				]
 			];
 			
