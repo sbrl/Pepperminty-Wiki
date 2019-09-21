@@ -1,3 +1,4 @@
+*.backup
 themes/**/*.png
 themes/themeindex.json
 build.*/
