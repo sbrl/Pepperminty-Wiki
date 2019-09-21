@@ -646,7 +646,7 @@ class StorageBox {
 		if(isset($this->cache[$key]))
 			unset($this->cache[$key]);
 		// Remove it from disk
-		$this->query(
+		return $this->query(
 			"DELETE FROM store WHERE key = :key;",
 			[ "key" => $key ]
 		)->rowCount() > 0;
