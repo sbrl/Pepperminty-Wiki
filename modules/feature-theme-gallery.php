@@ -67,6 +67,7 @@ register_module([
 				</div>";
 			}
 			$content .= "</div>
+			<p><strong>Warning: If you've altered $settings->sitename's CSS by changing the value of the <code>css</code> setting, then your changes will be overwritten by clicking the button below! If necessary, move your changes to the <code>css_custom</code> setting first before continuing here.</strong></p>
 			<input type='submit' class='large' value='Change Theme' />
 			</form>";
 			
