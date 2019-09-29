@@ -288,11 +288,14 @@ class page_renderer
 	/**
 	 * Figures out whether $settings->css is a url, or a string of css.
 	 * A url is something starting with "protocol://" or simply a "/".
+	 * Before v0.20, this method took no arguments and checked $settings->css directly.
+	 * @apiVerion		0.20.0
+	 * @param	string	$str	The CSS string to check.
 	 * @return	bool	True if it's a url - false if we assume it's a string of css.
 	 */
-	public static function is_css_url() {
+	public static function is_css_url($str) {
 		global $settings;
-		return preg_match("/^[^\/]*\/\/|^\/[^\*]/", $settings->css);
+		return preg_match("/^[^\/]*\/\/|^\/[^\*]/", $str);
 	}
 	/**
 	 * Renders all the CSS as HTML.
@@ -304,21 +307,30 @@ class page_renderer
 		global $settings, $defaultCSS;
 		
 		$result = "";
-		if(self::is_css_url()) {
+		$css = "\n";
+		if(self::is_css_url($settings->css)) {
 			if($settings->css[0] === "/") // Push it if it's a relative resource
 				self::add_server_push_indicator("style", $settings->css);
 			$result .= "<link rel='stylesheet' href='$settings->css' />\n";
 		} else {
-			$css = $settings->css == "auto" ? $defaultCSS : $settings->css;
+			$css .= $settings->css == "auto" ? $defaultCSS : $settings->css;
 			
 			if(!empty($settings->optimize_pages))
 				$css = minify_css($css);
-			$result .= "<style>$css</style>\n";
+			
 		}
 		
 		if(!empty($settings->css_custom)) {
-			$css .= "\n/*** Custom CSS ***/\n$settings->css_custom\n/******************/\n";
+			if(self::is_css_url($settings->css_custom)) {
+				if($settings->css_custom[0] === "/") // Push it if it's a relative resource
+					self::add_server_push_indicator("style", $settings->css);
+				$result .= "<link rel='stylesheet' href='$settings->css_custom' />\n";
+			}
+			$css .= "\n/*** Custom CSS ***/\n";
+			$css .= !empty($settings->optimize_pages) ? minify_css($settings->css_custom) : $settings->css_custom;
+			$css .= "\n/******************/\n";
 		}
+		$result .= "<style>$css</style>\n";
 	}
 	
 	

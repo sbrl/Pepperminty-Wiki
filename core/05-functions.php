@@ -555,18 +555,18 @@ function render_editor($editorName) {
  */
 function minify_css($css_str) {
 	// Remove comments
-	$css = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', "", $css);
+	$result = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', "", $css_str);
 	// Cut down whitespace
-	$css = preg_replace('/\s+/', " ", $css);
+	$result = preg_replace('/\s+/', " ", $result);
 	// Remove whitespace after colons and semicolons
-	$css = str_replace([
+	$result = str_replace([
 		" :", ": ", "; ",
 		" { ", " } ", "{ ", " {", "} ", " }"
 	], [
 		":", ":", ";",
 		"{", "}", "{", "{", "}", "}"
-	], $css);
-	return $css;
+	], $result);
+	return $result;
 }
 
 /**

@@ -9,6 +9,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - NOTE Don't forget to tell people how to turn the theme auto-updater off in this changelog
  - Added automatic dark mode to default theme using `prefers-color-scheme`
  - [Module API] Added new `minify_css` module API function by refactoring the page renderer
+ - [Module API] Change `page_renderer::is_css_url()` to require an argument
 
 ### Fixed
  - Fixed a bug in the search query performance metrics
