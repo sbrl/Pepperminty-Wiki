@@ -148,7 +148,9 @@ function theme_update($force_update = false) : bool {
 	if($new_css == $settings->css)
 		return true;
 	
+	$settings->css = $new_css;
 	
+	return save_settings();
 }
 
 ?>

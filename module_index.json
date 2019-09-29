@@ -82,10 +82,10 @@
     {
         "id": "feature-guiconfig",
         "name": "Settings GUI",
-        "version": "0.1.5",
+        "version": "0.1.6",
         "author": "Starbeamrainbowlabs",
         "description": "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1569768162,
         "optional": false,
         "extra_data": []
     },
@@ -155,7 +155,7 @@
         "version": "0.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a theme gallery page and optional automatic theme updates. Contacts a remote server, where IP addresses are stored in automatic server logs for security and attack mitigation purposes.",
-        "lastupdate": 1568296832,
+        "lastupdate": 1569770257,
         "optional": false,
         "extra_data": []
     },
