@@ -38,6 +38,7 @@ if [[ "$#" -lt 1 ]]; then
 	echo -e "${CSECTION}Available actions${RS}";
 	echo -e "    ${CACTION}setup${RS}           - Perform initial setup, check the environment (skip if only building Pepperminty Wiki itself)";
 	echo -e "    ${CACTION}build${RS}           - Build Pepperminty Wiki";
+	echo -e "    ${CACTION}themes${RS}          - Rebuild the theme index";
 	echo -e "    ${CACTION}docs${RS}            - Build the documentation";
 	echo -e "    ${CACTION}docs-livereload${RS} - Start the documentation livereload server";
 	echo -e "    ${CACTION}start-server${RS}    - Start a development server";
@@ -235,14 +236,21 @@ task_docs-livereload() {
 }
 
 task_start-server() {
-	task_begin "Starting Server";
+	task_begin "Starting server";
 	if [ -f "${server_pid_file}" ]; then
 		task_end 1 "${FRED}${HC}Error: A development server appears to be running already. Try running the 'stop-server' task before starting it again.${RS}";
 	fi
 	php -S [::]:35623 -t build/ &
-	exit_code=$?; pid=$!;
+	local exit_code=$?; local pid=$!;
 	echo "${pid}" >"${server_pid_file}";
+	
 	task_end "${exit_code}" "";
+	
+	task_begin "Starting theme server";
+	php -S [::]:35624 -t themes/ &
+	exit_code=$?; pid=$!;
+	echo "${pid}" >"${server_pid_file}.themes";
+	task_end "${exit_code}";
 	
 	if [[ -z "${NO_BROWSER}" ]]; then
 		task_begin "Opening Browser";
@@ -252,12 +260,15 @@ task_start-server() {
 }
 
 task_stop-server() {
-	task_begin "Stopping Server";
-	
+	task_begin "Stopping server";
 	kill "$(cat "${server_pid_file}")";
 	rm "${server_pid_file}";
-	
 	task_end $?;
+	
+	task_begin "Stopping theme server";
+	kill "$(cat "${server_pid_file}.themes")";
+	rm "${server_pid_file}.themes";
+	task_end "$?";
 }
 ###############################################################################
 
