@@ -302,37 +302,22 @@ class page_renderer
 	public static function get_css_as_html()
 	{
 		global $settings, $defaultCSS;
-
+		
+		$result = "";
 		if(self::is_css_url()) {
 			if($settings->css[0] === "/") // Push it if it's a relative resource
 				self::add_server_push_indicator("style", $settings->css);
-			return "<link rel='stylesheet' href='$settings->css' />\n";
+			$result .= "<link rel='stylesheet' href='$settings->css' />\n";
 		} else {
 			$css = $settings->css == "auto" ? $defaultCSS : $settings->css;
-			if(!empty($settings->optimize_pages)) {
-				// CSS Minification ideas by Jean from catswhocode.com
-				// Link: http://www.catswhocode.com/blog/3-ways-to-compress-css-files-using-php
-				// Remove comments
-				$css = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', "", $css);
-				// Cut down whitespace
-				$css = preg_replace('/\s+/', " ", $css);
-				// Remove whitespace after colons and semicolons
-				$css = str_replace([
-					" :",
-					": ",
-					"; ",
-					" { ",
-					" } "
-				], [
-					":",
-					":",
-					";",
-					"{",
-					"}"
-				], $css);
-				
-			}
-			return "<style>$css</style>\n";
+			
+			if(!empty($settings->optimize_pages))
+				$css = minify_css($css);
+			$result .= "<style>$css</style>\n";
+		}
+		
+		if(!empty($settings->css_custom)) {
+			$css .= "\n/*** Custom CSS ***/\n$settings->css_custom\n/******************/\n";
 		}
 	}
 	

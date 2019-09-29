@@ -10,14 +10,14 @@
 function url_origin( $s = false, $use_forwarded_host = false )
 {
 	if($s === false) $s = $_SERVER;
-    $ssl      = ( ! empty( $s['HTTPS'] ) && $s['HTTPS'] == 'on' );
-    $sp       = strtolower( $s['SERVER_PROTOCOL'] );
-    $protocol = substr( $sp, 0, strpos( $sp, '/' ) ) . ( ( $ssl ) ? 's' : '' );
-    $port     = $s['SERVER_PORT'];
-    $port     = ( ( ! $ssl && $port=='80' ) || ( $ssl && $port=='443' ) ) ? '' : ':'.$port;
-    $host     = ( $use_forwarded_host && isset( $s['HTTP_X_FORWARDED_HOST'] ) ) ? $s['HTTP_X_FORWARDED_HOST'] : ( isset( $s['HTTP_HOST'] ) ? $s['HTTP_HOST'] : null );
-    $host     = isset( $host ) ? $host : $s['SERVER_NAME'] . $port;
-    return $protocol . '://' . $host;
+	$ssl      = ( ! empty( $s['HTTPS'] ) && $s['HTTPS'] == 'on' );
+	$sp       = strtolower( $s['SERVER_PROTOCOL'] );
+	$protocol = substr( $sp, 0, strpos( $sp, '/' ) ) . ( ( $ssl ) ? 's' : '' );
+	$port     = $s['SERVER_PORT'];
+	$port     = ( ( ! $ssl && $port=='80' ) || ( $ssl && $port=='443' ) ) ? '' : ':'.$port;
+	$host     = ( $use_forwarded_host && isset( $s['HTTP_X_FORWARDED_HOST'] ) ) ? $s['HTTP_X_FORWARDED_HOST'] : ( isset( $s['HTTP_HOST'] ) ? $s['HTTP_HOST'] : null );
+	$host     = isset( $host ) ? $host : $s['SERVER_NAME'] . $port;
+	return $protocol . '://' . $host;
 }
 
 /**
@@ -31,7 +31,7 @@ function url_origin( $s = false, $use_forwarded_host = false )
 function full_url( $s = false, $use_forwarded_host = false )
 {
 	if($s == false) $s = $_SERVER;
-    return url_origin( $s, $use_forwarded_host ) . $s['REQUEST_URI'];
+	return url_origin( $s, $use_forwarded_host ) . $s['REQUEST_URI'];
 }
 
 /**
@@ -119,28 +119,28 @@ function glob_recursive($pattern, $flags = 0)
  * @return	string		An absolute path.
  */
 function path_resolve(string $path, string $basePath = null) {
-    // Make absolute path
-    if (substr($path, 0, 1) !== DIRECTORY_SEPARATOR) {
-        if ($basePath === null) {
-            // Get PWD first to avoid getcwd() resolving symlinks if in symlinked folder
-            $path=(getenv('PWD') ?: getcwd()).DIRECTORY_SEPARATOR.$path;
-        } elseif (strlen($basePath)) {
-            $path=$basePath.DIRECTORY_SEPARATOR.$path;
-        }
-    }
+	// Make absolute path
+	if (substr($path, 0, 1) !== DIRECTORY_SEPARATOR) {
+		if ($basePath === null) {
+			// Get PWD first to avoid getcwd() resolving symlinks if in symlinked folder
+			$path=(getenv('PWD') ?: getcwd()).DIRECTORY_SEPARATOR.$path;
+		} elseif (strlen($basePath)) {
+			$path=$basePath.DIRECTORY_SEPARATOR.$path;
+		}
+	}
 
-    // Resolve '.' and '..'
-    $components=array();
-    foreach(explode(DIRECTORY_SEPARATOR, rtrim($path, DIRECTORY_SEPARATOR)) as $name) {
-        if ($name === '..') {
-            array_pop($components);
-        } elseif ($name !== '.' && !(count($components) && $name === '')) {
-            // … && !(count($components) && $name === '') - we want to keep initial '/' for abs paths
-            $components[]=$name;
-        }
-    }
+	// Resolve '.' and '..'
+	$components=array();
+	foreach(explode(DIRECTORY_SEPARATOR, rtrim($path, DIRECTORY_SEPARATOR)) as $name) {
+		if ($name === '..') {
+			array_pop($components);
+		} elseif ($name !== '.' && !(count($components) && $name === '')) {
+			// … && !(count($components) && $name === '') - we want to keep initial '/' for abs paths
+			$components[]=$name;
+		}
+	}
 
-    return implode(DIRECTORY_SEPARATOR, $components);
+	return implode(DIRECTORY_SEPARATOR, $components);
 }
 
 /**
@@ -279,10 +279,9 @@ function hide_email($str)
  *                        		of $haystack.
  * @return	bool	Whether $needle can be found at the beginning of $haystack.
  */
-function starts_with($haystack, $needle)
-{
-	 $length = strlen($needle);
-	 return (substr($haystack, 0, $length) === $needle);
+function starts_with($haystack, $needle) {
+	$length = strlen($needle);
+	return (substr($haystack, 0, $length) === $needle);
 }
 
 /**
@@ -328,9 +327,8 @@ function startsWith($haystack, $needle) {
  * @param  string $end   The substring test for.
  * @return bool          Whether $whole ends in $end.
  */
-function endsWith($whole, $end)
-{
-    return (strpos($whole, $end, strlen($whole) - strlen($end)) !== false);
+function endsWith($whole, $end) {
+	return (strpos($whole, $end, strlen($whole) - strlen($end)) !== false);
 }
 /**
  * Replaces the first occurrence of $find with $replace.
@@ -340,8 +338,7 @@ function endsWith($whole, $end)
  * @param  string $subject The string ot perform the search and replace on.
  * @return string		   The source string after the find and replace has been performed.
  */
-function str_replace_once($find, $replace, $subject)
-{
+function str_replace_once($find, $replace, $subject) {
 	$index = strpos($subject, $find);
 	if($index !== false)
 		return substr_replace($subject, $replace, $index, strlen($find));
@@ -357,8 +354,7 @@ function str_replace_once($find, $replace, $subject)
  * @author	Edited by Starbeamrainbowlabs
  * @return array	An array of mime type mappings.
  */
-function system_mime_type_extensions()
-{
+function system_mime_type_extensions() {
 	global $settings;
 	$out = array();
 	$file = fopen($settings->mime_extension_mappings_location, 'r');
@@ -386,8 +382,7 @@ function system_mime_type_extensions()
  * @param  string $type The mime type to convert.
  * @return string       The extension for the given mime type.
  */
-function system_mime_type_extension($type)
-{
+function system_mime_type_extension($type) {
 	static $exts;
 	if(!isset($exts))
 		$exts = system_mime_type_extensions();
@@ -402,24 +397,23 @@ function system_mime_type_extension($type)
  * @author	Edited by Starbeamrainbowlabs
  * @return array An array mapping file extensions to their associated mime types.
  */
-function system_extension_mime_types()
-{
+function system_extension_mime_types() {
 	global $settings;
-    $out = array();
-    $file = fopen($settings->mime_extension_mappings_location, 'r');
-    while(($line = fgets($file)) !== false) {
-        $line = trim(preg_replace('/#.*/', '', $line));
-        if(!$line)
-            continue;
-        $parts = preg_split('/\s+/', $line);
-        if(count($parts) == 1)
-            continue;
-        $type = array_shift($parts);
-        foreach($parts as $part)
-            $out[$part] = $type;
-    }
-    fclose($file);
-    return $out;
+	$out = array();
+	$file = fopen($settings->mime_extension_mappings_location, 'r');
+	while(($line = fgets($file)) !== false) {
+		$line = trim(preg_replace('/#.*/', '', $line));
+		if(!$line)
+			continue;
+		$parts = preg_split('/\s+/', $line);
+		if(count($parts) == 1)
+			continue;
+		$type = array_shift($parts);
+		foreach($parts as $part)
+			$out[$part] = $type;
+	}
+	fclose($file);
+	return $out;
 }
 /**
  * Converts a given file extension to it's associated mime type.
@@ -432,10 +426,10 @@ function system_extension_mime_types()
  */
 function system_extension_mime_type($ext) {
 	static $types;
-    if(!isset($types))
-        $types = system_extension_mime_types();
-    $ext = strtolower($ext);
-    return isset($types[$ext]) ? $types[$ext] : null;
+	if(!isset($types))
+		$types = system_extension_mime_types();
+	$ext = strtolower($ext);
+	return isset($types[$ext]) ? $types[$ext] : null;
 }
 
 /**
@@ -505,19 +499,18 @@ if (!function_exists('getallheaders'))  {
 	 * @package core
 	 * @todo	Identify which platforms don't have it and whether we still need this
 	 */
-    function getallheaders()
-    {
-        if (!is_array($_SERVER))
-            return [];
+	function getallheaders() {
+		if (!is_array($_SERVER))
+			return [];
 
-        $headers = array();
-        foreach ($_SERVER as $name => $value) {
-            if (substr($name, 0, 5) == 'HTTP_') {
-                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
-            }
-        }
-        return $headers;
-    }
+		$headers = array();
+		foreach ($_SERVER as $name => $value) {
+			if (substr($name, 0, 5) == 'HTTP_') {
+				$headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+			}
+		}
+		return $headers;
+	}
 }
 /**
  * Renders a timestamp in HTML.
@@ -525,8 +518,7 @@ if (!function_exists('getallheaders'))  {
  * @param  int $timestamp The timestamp to render.
  * @return string         HTML representing the given timestamp.
  */
-function render_timestamp($timestamp)
-{
+function render_timestamp($timestamp) {
 	return "<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $timestamp) . "'>" . human_time_since($timestamp) . "</time>";
 }
 /**
@@ -535,8 +527,7 @@ function render_timestamp($timestamp)
  * @param  object $rchange The recent change to render as a page name
  * @return string          HTML representing the name of the given page.
  */
-function render_pagename($rchange)
-{
+function render_pagename($rchange) {
 	global $pageindex;
 	$pageDisplayName = $rchange->page;
 	if(isset($pageindex->$pageDisplayName) and !empty($pageindex->$pageDisplayName->redirect))
@@ -550,9 +541,32 @@ function render_pagename($rchange)
  * @param  string $editorName The name of the editor to render.
  * @return string             HTML representing the given editor's name.
  */
-function render_editor($editorName)
-{
+function render_editor($editorName) {
 	return "<span class='editor'>&#9998; $editorName</span>";
+}
+
+/**
+ * Minifies CSS. Uses simple computationally-cheap optimisations to reduce size.
+ * CSS Minification ideas by Jean from catswhocode.com
+ * @source	http://www.catswhocode.com/blog/3-ways-to-compress-css-files-using-php
+ * @apiVersion		0.20.0
+ * @param	string	$css_str	The string of CSS to minify.
+ * @return	string	The minified CSS string.
+ */
+function minify_css($css_str) {
+	// Remove comments
+	$css = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', "", $css);
+	// Cut down whitespace
+	$css = preg_replace('/\s+/', " ", $css);
+	// Remove whitespace after colons and semicolons
+	$css = str_replace([
+		" :", ": ", "; ",
+		" { ", " } ", "{ ", " {", "} ", " }"
+	], [
+		":", ":", ";",
+		"{", "}", "{", "{", "}", "}"
+	], $css);
+	return $css;
 }
 
 /**
@@ -674,17 +688,17 @@ function email_users($usernames, $subject, $body)
  * @source https://stackoverflow.com/questions/4490637/recursive-delete
  */
 function delete_recursive($path, $delete_self = true) {
-    $it = new RecursiveIteratorIterator(
-        new RecursiveDirectoryIterator($path),
-        RecursiveIteratorIterator::CHILD_FIRST
-    );
-    foreach ($it as $file) {
-        if (in_array($file->getBasename(), [".", ".."]))
-            continue;
-        if($file->isDir())
-            rmdir($file->getPathname());
+	$it = new RecursiveIteratorIterator(
+		new RecursiveDirectoryIterator($path),
+		RecursiveIteratorIterator::CHILD_FIRST
+	);
+	foreach ($it as $file) {
+		if (in_array($file->getBasename(), [".", ".."]))
+			continue;
+		if($file->isDir())
+			rmdir($file->getPathname());
 		else
-            unlink($file->getPathname());
-    }
-    if($delete_self) rmdir($path);
+			unlink($file->getPathname());
+	}
+	if($delete_self) rmdir($path);
 }
