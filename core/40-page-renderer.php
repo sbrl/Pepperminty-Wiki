@@ -307,7 +307,7 @@ class page_renderer
 		global $settings, $defaultCSS;
 		
 		$result = "";
-		$css = "\n";
+		$css = "";
 		if(self::is_css_url($settings->css)) {
 			if($settings->css[0] === "/") // Push it if it's a relative resource
 				self::add_server_push_indicator("style", $settings->css);
@@ -328,9 +328,11 @@ class page_renderer
 			}
 			$css .= "\n/*** Custom CSS ***/\n";
 			$css .= !empty($settings->optimize_pages) ? minify_css($settings->css_custom) : $settings->css_custom;
-			$css .= "\n/******************/\n";
+			$css .= "\n/******************/";
 		}
-		$result .= "<style>$css</style>\n";
+		$result .= "<style>\n$css\n</style>\n";
+		
+		return $result;
 	}
 	
 	
