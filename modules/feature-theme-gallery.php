@@ -26,8 +26,25 @@ register_module([
 				exit(page_renderer::render_main("Error - $settings->sitename", $errorMessage));
 			}
 			
-			$themes_available = [];
 			$gallery_urls = explode(" ", $settings->css_theme_gallery_index_url);
+			
+			if(!isset($_GET["load"]) || $_GET["load"] !== "yes") {
+				$result = "<h1>Theme Gallery</h1>
+				<p>Load the theme gallery? A HTTP request will be made to the following endpoints:</p>
+				<ul>";
+				foreach($gallery_urls as $url) {
+					$result .= "<li><a href='".htmlentities($url)."'>".htmlentities($url)."</a></li>\n";
+				}
+				$result .= "</ul>
+				<p>...with the following user agent string: <code>".ini_get("user_agent")."</code></p>
+				<p>No external HTTP requests will be made without your consent.</p>
+				<p><a href='?action=theme-gallery&load=yes'>Ok, load the gallery</a>.</p>
+				<p> <a href='javascript:history.back();'>Actually, take me back</a>.</p>";
+				exit(page_renderer::render_main("Theme Gallery - $settings->sitename", $result));
+			}
+			
+			$themes_available = [];
+			
 			foreach($gallery_urls as $url) {
 				if(empty($url)) continue;
 				$next_obj = json_decode(@file_get_contents($url));

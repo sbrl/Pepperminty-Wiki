@@ -165,12 +165,12 @@ blockquote { padding-left: 1em; border-left: 0.2em solid var(--accent-a3); borde
 pre { white-space: pre-wrap; }
 
 a { cursor: pointer; }
+a:focus { outline-width: 0.1em; }
 a.redlink:link { color: var(--accent-c1); }
 a.redlink:visited { color: var(--accent-c2); }
 a.redlink:active, a.redlink:focus { color: var(--accent-c3); }
 a.interwiki_link::before { content: "\\1f6f8"; display: inline-block; margin-right: 0.25em; }
 a.interwiki_link { color: var(--accent-d1); }
-a:focus { outline-width: 0.1em; }
 
 .matching-tags-display { display: flex; margin: 0 -2em; padding: 1em 2em; background: hsla(30, 84%, 72%, 0.75); }
 .matching-tags-display > label { flex: 0; font-weight: bold; color: var(--accent-a3); }
