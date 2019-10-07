@@ -42,7 +42,10 @@
 	--accent-c1: #e60707;
 	--accent-c2: #820f0f; /*#8b1a1a*/
 	--accent-c3: hsl(0, 59%, 20%); /*#8b1a1a*/
-	--accent-d1: #127757;
+	
+	--accent-d1: hsl(160, 73%, 26%);
+	--accent-d2: hsl(159, 76%, 23%);
+	--accent-d3: hsl(160, 80%, 70%);
 	
 	--tag: #e2d5eb;
 	--file: white;
@@ -171,6 +174,8 @@ a.redlink:visited { color: var(--accent-c2); }
 a.redlink:active, a.redlink:focus { color: var(--accent-c3); }
 a.interwiki_link::before { content: "\\1f6f8"; display: inline-block; margin-right: 0.25em; }
 a.interwiki_link { color: var(--accent-d1); }
+a.interwiki_link:visited { color: var(--accent-d2); }
+a.interwiki_link:active { color: var(--accent-d3); }
 
 .matching-tags-display { display: flex; margin: 0 -2em; padding: 1em 2em; background: hsla(30, 84%, 72%, 0.75); }
 .matching-tags-display > label { flex: 0; font-weight: bold; color: var(--accent-a3); }
