@@ -111,8 +111,37 @@ register_module([
 			
 			// Set the new theme's id
 			$settings->css_theme_gallery_selected_id = $_GET["theme-selector"];
+			$gallery_urls = explode(" ", $settings->css_theme_gallery_index_url);
 			
-			// TODO: Set the autoupdate_url here
+			// Find the URL of the selected theme
+			// FUTURE: Figure out a way to pass this information through the UI interface instead to avoid a re-download?
+			$theme_autoupdate_url = null;
+			foreach($gallery_urls as $url) {
+				$next_index = json_decode(@file_get_contents($url));
+				if(empty($next_index)) {
+					error_log("Error: Failed to download theme idnex file from '$url' when setting the wiki theme.");
+					continue;
+				}
+				foreach($next_index as $next_theme) {
+					if($next_theme->id == $settings->css_theme_gallery_selected_id) {
+						$theme_autoupdate_url = dirname($url) . "/{$next_theme->id}/theme.css";
+						break;
+					}
+				}
+				if($theme_autoupdate_url !== null) break;
+			}
+			if($theme_autoupdate_url === null) {
+				http_response_code(503);
+				exit(page_renderer::render_main("Failed to set theme - Error - $settings->sitename)", "<p>Oops! $settings->sitename couldn't find the theme you selected. Perhaps it has been changed or deleted, or perhaps there was an error during the download process.</p>
+				<p>Try <a href='?action=theme-gallery'>heading back to the theme gallery</a> and trying again.</p>"));
+			}
+			$settings->css_theme_autoupdate_url = $theme_autoupdate_url;
+			
+			if(!theme_update(true)) {
+				http_response_code(503);
+				exit(page_renderer::render_main("Failed to download theme - $settings->sitename", "<p>Oops! $settings->sitename wasn't able to download the theme you selected. If you're the administrator, try checking the PHP server logs. If not, try contacting $settings->sitename's administrator, who's contact details can be found at the bottom of every page.</p>"));
+			}
+			
 			// TODO: Add option to disable theme updates
 			
 			if(!save_settings()) {
@@ -120,9 +149,12 @@ register_module([
 				exit(page_renderer::render_main("Server error - $settings->sitename", "<p>Oops! $settings->sitename wasn't able to save the <code>peppermint.json</code> settings file back to disk. If you're the administrator, try checking the permissions on disk. If not, try contacting $settings->sitename's administrator, who's contact details can be found at the bottom of every page.</p>"));
 			}
 			
-			
+			http_response_code(200);
+			exit(page_renderer::render_main("Theme Changed - $settings->sitename", "<p>$settings->sitename's theme was changed successfully to $settings->css_theme_gallery_selected_id.</p>
+			<p>Go to the <a href='?action=$settings->defaultaction'>homepage</a>.</p>"));
 		});
 		
+		// TODO: Fill this in properly
 		add_help_section("26-random-redirect", "Jumping to a random page", "<p>$settings->sitename has a function that can send you to a random page. To use it, click <a href='?action=random'>here</a>. $settings->admindetails_name ($settings->sitename's adminstrator) may have added it to one of the menus.</p>");
 	}
 ]);
