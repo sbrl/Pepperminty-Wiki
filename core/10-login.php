@@ -27,12 +27,9 @@ if(isset($_SESSION[$settings->sessionprefix . "-user"]) and
 
 // Check to see if the currently logged in user is an admin
 $env->is_admin = false;
-if($env->is_logged_in)
-{
-	foreach($settings->admins as $admin_username)
-	{
-		if($admin_username == $env->user)
-		{
+if($env->is_logged_in) {
+	foreach($settings->admins as $admin_username){
+		if($admin_username == $env->user) {
 			$env->is_admin = true;
 			break;
 		}

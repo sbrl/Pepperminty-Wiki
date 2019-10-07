@@ -86,75 +86,72 @@ register_module([
 		add_action("checklogin", function() {
 			global $settings, $env;
 			
-			// Actually do the login
-			if(isset($_POST["user"]) and isset($_POST["pass"]))
-			{
-				// The user wants to log in
-				$user = $_POST["user"];
-				$pass = $_POST["pass"];
-				if(!empty($settings->users->$user) && verify_password($pass, $settings->users->$user->password))
-				{
-					// Success! :D
-					
-					// Update the environment
-					$env->is_logged_in = true;
-					$env->user = $user;
-					$env->user_data = $settings->users->{$env->user};
-					
-					$new_password_hash = hash_password_update($pass, $settings->users->$user->password);
-					
-					// Update the password hash
-					if($new_password_hash !== null) {
-						$env->user_data->password = $new_password_hash;
-						if(!save_userdata()) {
-							http_response_code(503);
-							exit(page_renderer::render_main("Login Error - $settings->sitename", "<p>Your credentials were correct, but $settings->sitename was unable to log you in as an updated hash of your password couldn't be saved. Updating your password hash to the latest and strongest hashing algorithm is an important part of keeping your account secure.</p>
-							<p>Please contact $settings->admindetails_name, $settings->sitename's adminstrator, for assistance (their email address can be found at the bottom of every page, including this one).</p>"));
-						}
-						error_log("[Pepperminty Wiki] Updated password hash for $user.");
-					}
-					
-					// If the email address is still in the old field, migrate it
-					if(!empty($settings->users->{$user}->email)) {
-						$settings->users->{$user}->emailAddress = $settings->users->{$user}->email;
-						unset($settings->users->{$user}->email);
-						save_settings();
-					}
-					
-					$_SESSION["$settings->sessionprefix-user"] = $user;
-					$_SESSION["$settings->sessionprefix-pass"] = $new_password_hash ?? hash_password($pass);
-					$_SESSION["$settings->sessionprefix-expiretime"] = time() + 60*60*24*30; // 30 days from now
-					
-					// Redirect to wherever the user was going
-					http_response_code(302);
-					header("x-login-success: yes");
-					if(isset($_GET["returnto"]))
-						header("location: " . $_GET["returnto"]);
-					else
-						header("location: index.php");
-					exit();
-				}
-				else
-				{
-					// Login failed :-(
-					http_response_code(302);
-					header("x-login-success: no");
-					$nextUrl = "index.php?action=login&failed=yes";
-					if(!empty($_GET["returnto"]))
-						$nextUrl .= "&returnto=" . rawurlencode($_GET["returnto"]);
-					header("location: $nextUrl");
-					exit();
-				}
-			}
-			else
-			{
+			if(!isset($_POST["user"]) or !isset($_POST["pass"])) {
 				http_response_code(302);
 				$nextUrl = "index.php?action=login&failed=yes&badrequest=yes";
+				if(!empty($_GET["returnto"]))
+				$nextUrl .= "&returnto=" . rawurlencode($_GET["returnto"]);
+				header("location: $nextUrl");
+				exit();
+			}
+			
+			// Actually do the login
+			
+			// The user wants to log in
+			$user = $_POST["user"];
+			$pass = $_POST["pass"];
+			
+			// Verify their password
+			if(empty($settings->users->$user) || !verify_password($pass, $settings->users->$user->password)) {
+				// Login failed :-(
+				http_response_code(302);
+				header("x-login-success: no");
+				$nextUrl = "index.php?action=login&failed=yes";
 				if(!empty($_GET["returnto"]))
 					$nextUrl .= "&returnto=" . rawurlencode($_GET["returnto"]);
 				header("location: $nextUrl");
 				exit();
 			}
+			
+			// Success! :D
+			
+			// Update the environment
+			$env->is_logged_in = true;
+			$env->user = $user;
+			$env->user_data = $settings->users->{$env->user};
+			
+			$new_password_hash = hash_password_update($pass, $settings->users->$user->password);
+			
+			// Update the password hash
+			if($new_password_hash !== null) {
+				$env->user_data->password = $new_password_hash;
+				if(!save_userdata()) {
+					http_response_code(503);
+					exit(page_renderer::render_main("Login Error - $settings->sitename", "<p>Your credentials were correct, but $settings->sitename was unable to log you in as an updated hash of your password couldn't be saved. Updating your password hash to the latest and strongest hashing algorithm is an important part of keeping your account secure.</p>
+					<p>Please contact $settings->admindetails_name, $settings->sitename's adminstrator, for assistance (their email address can be found at the bottom of every page, including this one).</p>"));
+				}
+				error_log("[Pepperminty Wiki] Updated password hash for $user.");
+			}
+			
+			// If the email address is still in the old field, migrate it
+			if(!empty($settings->users->{$user}->email)) {
+				$settings->users->{$user}->emailAddress = $settings->users->{$user}->email;
+				unset($settings->users->{$user}->email);
+				save_settings();
+			}
+			
+			$_SESSION["$settings->sessionprefix-user"] = $user;
+			$_SESSION["$settings->sessionprefix-pass"] = $new_password_hash ?? hash_password($pass);
+			$_SESSION["$settings->sessionprefix-expiretime"] = time() + 60*60*24*30; // 30 days from now
+			
+			// Redirect to wherever the user was going
+			http_response_code(302);
+			header("x-login-success: yes");
+			if(isset($_GET["returnto"]))
+				header("location: " . $_GET["returnto"]);
+			else
+				header("location: index.php");
+			exit();
 		});
 		
 		add_action("hash-cost-test", function() {
