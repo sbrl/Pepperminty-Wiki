@@ -59,7 +59,32 @@ register_module([
 				http_response_code(400);
 				header("content-type: image/png");
 				imagepng(errorimage("Error: No source text \nspecified."));
+				exit();
 			}
+			
+			if(!isset($_GET["language"])) {
+				http_response_code(400);
+				header("content-type: image/png");
+				imagepng(errorimage("Error: No external renderer \nlanguage specified."));
+				exit();
+			}
+			
+			$source = $_GET["source"];
+			$language = $_GET["language"];
+			
+			if(!isset($settings->parser_ext_renderers->$language)) {
+				$message = "Error: Unknown language {$_GET["language"]}.\nSupported languages:\n";
+				foreach($settings->parser_ext_renderers as $language => $spec)
+					$message .= "$spec->name ($language)\n";
+					
+				http_response_code(400);
+				header("content-type: image/png");
+				imagepng(errorimage(trim($message)));
+				exit();
+			}
+			
+			header("content-type: image/png");
+			imagepng(errorimage("Not implemented yet.\nComing soon :-)"));
 		});
 		
 		/*
