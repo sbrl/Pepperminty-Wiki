@@ -43,6 +43,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Pepperminty Wiki _shouldn't_ make remote requests without you asking it to - see above and the theme gallery
  - Improved peppermint.json.compromised error message - if it's still unclear, please let me know
  - Fiddled with the extra data extractor, as it seems that some people were experiencing strange issues with `stream_get_meta_data()`
+ - [Module API] Refactored the `errorimage()` function into core, added automatic image size calculation, and multi-line support
 
 
 ## v0.19.4-hotfix4
