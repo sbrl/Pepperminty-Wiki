@@ -9,6 +9,7 @@
  * **Configuration**
      * [Configuring your instance](06-Configuration.md)
      * [Inter-wiki links](06.5-Interwiki-Links.md)
+     * [Custom Themes](06.7-Custom-Themes.md)
  * [Writing Modules](07-Writing-Modules.md)
  * **References**
 	 * [Configuration Settings](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php)
