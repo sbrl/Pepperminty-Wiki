@@ -90,8 +90,82 @@ register_module([
 				exit();
 			}
 			
-			header("content-type: image/png");
-			imagepng(errorimage("Not implemented yet.\nComing soon :-)"));
+			$renderer = $settings->parser_ext_renderers->$language;
+			
+			$cache_id = hash("sha256",
+				hash("sha256", $language) . 
+				hash("sha256", $source) . 
+				($_GET["immutable_key"] ?? "")
+			);
+			
+			$cache_file_location = "{$paths->cache_directory}/render_ext/$cache_id." . system_mime_type_extension($renderer->output_format);
+			
+			// If it exists on disk already, then serve that instead
+			if(file_exists($cache_file_location)) {
+				header("cache-control: public, max-age=31536000, immutable");
+				header("content-type: $renderer->output_format");
+				header("content-length: " . filesize($cache_file_location));
+				header("x-cache: render_ext/hit");
+				readfile($cache_file_location);
+				exit();
+			}
+			
+			$source_handle = tmpfile();
+			fwrite($source_handle, $source);
+			fseek($source_handle, 0);
+			
+			// Create the cache directory if doesn't exist already
+			if(!file_exists(dirname($cache_file_location)))
+				mkdir(dirname($cache_file_location), 0750, true);
+			
+			$dest_handle = fopen($cache_file_location, "wb+");
+			
+			$error_text_handle = tmpfile();
+			
+			$start_time = microtime(true);
+			$process_handle = proc_open(
+				$renderer->cli,
+				[
+					0 => $source_handle,
+					1 => $dest_handle,
+					2 => $error_text_handle
+				],
+				$pipes,
+				null, // working directory
+				null // environment variables
+			);
+			if(!is_resource($process_handle)) {
+				http_response_code(503);
+				header("cache-control: no-cache, no-store, must-revalidate");
+				header("content-type: image/png");
+				imagepng(errorimage("Error: Failed to start external renderer.\nIs $renderer->name installed?"));
+				exit();
+			}
+			// Wait for it to exit
+			$exit_code = proc_close($process_handle);
+			
+			fclose($dest_handle);
+			fclose($source_handle);
+			
+			$time_taken = round((microtime(true) - $start_time) * 1000, 2);
+			
+			if($exit_code !== 0) {
+				fseek($error_text_handle, 0);
+				$error_details = stream_get_contents($error_text_handle);
+				
+				http_response_code(503);
+				header("content-type: image/png");
+				imagepng(errorimage(
+					"Error: The external renderer ($renderer->name)\nexited with code $exit_code.\nDetails:\n" . wordwrap($error_details)
+				));
+				exit();
+			}
+			
+			header("cache-control: public, max-age=31536000, immutable");
+			header("content-type: $renderer->output_format");
+			header("content-length: " . filesize($cache_file_location));
+			header("x-cache: render_ext/miss, renderer took {$time_taken}ms");
+			readfile($cache_file_location);
 		});
 		
 		/*
@@ -840,6 +914,21 @@ class PeppermintParsedown extends ParsedownExtreme
 		}
 	}
 	
+	
+	/*
+	 *  ██████  ██████  ██████  ███████     ██████  ██       ██████   ██████ ██   ██
+	 * ██      ██    ██ ██   ██ ██          ██   ██ ██      ██    ██ ██      ██  ██
+	 * ██      ██    ██ ██   ██ █████       ██████  ██      ██    ██ ██      █████
+	 * ██      ██    ██ ██   ██ ██          ██   ██ ██      ██    ██ ██      ██  ██
+	 *  ██████  ██████  ██████  ███████     ██████  ███████  ██████   ██████ ██   ██
+	 * 
+	 * ██    ██ ██████   ██████  ██████   █████  ██████  ███████
+	 * ██    ██ ██   ██ ██       ██   ██ ██   ██ ██   ██ ██
+	 * ██    ██ ██████  ██   ███ ██████  ███████ ██   ██ █████
+	 * ██    ██ ██      ██    ██ ██   ██ ██   ██ ██   ██ ██
+	 *  ██████  ██       ██████  ██   ██ ██   ██ ██████  ███████
+	 */
+	
 	protected function blockFencedCodeComplete($block) {
 		global $settings;
 		$result = parent::blockFencedCodeComplete($block);
@@ -856,7 +945,7 @@ class PeppermintParsedown extends ParsedownExtreme
 			"name" => "img",
 			"attributes" => [
 				"alt" => "Diagram rendered by {$renderer->name}",
-				"src" => "?action=parsedown-render-ext&language=$language&source=".rawurlencode($text)
+				"src" => "?action=parsedown-render-ext&language=$language&immutable_key=".hash("crc32b", json_encode($renderer))."&source=".rawurlencode($text)
 			]
 		];
 		
