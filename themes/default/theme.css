@@ -10,7 +10,7 @@
 :root {
 	--bg-back: #eee8f2;
 	--bg-page: #faf8fb;
-	--bg-page-inset: #faf8fb;
+	--bg-page-inset: hsl(270, 22%, 88%);
 	
 	--bg-comments-1: hsl(31, 64%, 85%);
 	--bg-comments-2: hsla(27, 92%, 68%, 0.64);
@@ -25,7 +25,7 @@
 	
 	--text-soft: rgba(33, 33, 33, 0.3);
 	--text-ultrasoft: rgba(50, 50, 50, 0.3);
-	--shadow: rgba(50, 50, 50, 0.5);
+	--shadow: rgba(80, 80, 80, 0.5);
 	
 	--checkerboard-bg: #eee;
 	--checkerboard-overlay: rgba(200, 200, 200, 0.2);
