@@ -55,6 +55,13 @@ register_module([
 		add_action("parsedown-render-ext", function() {
 			global $settings, $env, $paths;
 			
+			if(!$settings->parser_ext_renderers_enabled) {
+				http_response_code(403);
+				header("content-type: image/png");
+				imagepng(errorimage("Error: External diagram renderer support\nhas been disabled on $settings->sitename.\nTry contacting {$settings->admindetails_name}, $settings->sitename's administrator."));
+				exit();
+			}
+			
 			if(!isset($_GET["source"])) {
 				http_response_code(400);
 				header("content-type: image/png");

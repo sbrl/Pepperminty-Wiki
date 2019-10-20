@@ -21,6 +21,7 @@
 	"parser": { "type": "text", "description": "The parser to use when rendering pages. Defaults to an extended version of parsedown (http://parsedown.org/)", "default": "parsedown" },
 	"parser_cache": { "type": "checkbox", "description": "Whether parser output should be cached to speed things up. The cache directory is <code>._cache</code> in the data directory - delete it if you experience issues (unlikely).", "default": true },
 	"parser_cache_min_size": { "type": "number", "description": "The minimum size a source string must be (in bytes) before it's considered eligible for caching.", "default": 1024 },
+	"parser_ext_renderers_enabled": { "type": "checkbox", "description": "Whether to enable external diagram renderer support, which is part of the parsedown parser. See the <code>parser_ext_renderers</code> setting below for more information.", "default": true },
 	"parser_ext_renderers": { "type": "parserext", "description": "Used by the parsedown parser as an object mapping fenced code block languages to their respective external renderers. Should be in the form <code>language_code</code> → <code>external renderer definition</code>. See the default for examples on how to define an external renderer.", "default": {
 		"nomnoml": {
 			"name": "nomnoml",
