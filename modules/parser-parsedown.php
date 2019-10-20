@@ -829,7 +829,6 @@ class PeppermintParsedown extends ParsedownExtreme
 			$this->headingIdsUsed[] = $result["element"]["attributes"]["id"];
 		}
 		
-		error_log("[header info] " . var_export($result, true));
 		return $result;
 	}
 	
