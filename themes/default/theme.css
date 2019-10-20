@@ -168,6 +168,7 @@ main:not(.printable) { position: relative; z-index: 1000; padding: 2em 2em 0.5em
 blockquote { padding-left: 1em; border-left: 0.2em solid var(--accent-a3); border-radius: 0.2rem; }
 
 pre { white-space: pre-wrap; padding: 0.3em 0.5em; background: var(--bg-page-inset); border-radius: 0.25em; box-shadow: inset 0 0 0.5em var(--shadow); }
+code { font-size: 1.1em; }
 
 a { cursor: pointer; }
 a:focus { outline-width: 0.1em; }
