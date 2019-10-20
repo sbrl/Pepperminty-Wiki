@@ -121,8 +121,13 @@ register_module([
 			
 			if($_GET["theme-selector"] === "default-internal") {
 				$settings->css_theme_gallery_selected_id = $guiConfig->css_theme_gallery_selected_id->default;
-				$settings->css_theme_gallery_selected_id = $guiConfig->css_theme_gallery_selected_id->default;
+				$settings->css_theme_autoupdate_url = $guiConfig->css_theme_autoupdate_url->default;
 				$settings->css = $guiConfig->css->default;
+				
+				if(!save_settings()) {
+					http_response_code(503);
+					exit(page_renderer::render_main("Server error - $settings->sitename", "<p>Oops! $settings->sitename wasn't able to save the <code>peppermint.json</code> settings file back to disk. If you're the administrator, try checking the permissions on disk. If not, try contacting $settings->sitename's administrator, who's contact details can be found at the bottom of every page.</p>"));
+				}
 				
 				exit(page_renderer::render_main("Theme reset - Theme Gallery - $settings->sitename", "<p>$settings->sitename's theme has been reset  to the internal theme.</p>
 				<p>Go to the <a href='?action=$settings->defaultaction'>homepage</a>.</p>"));
