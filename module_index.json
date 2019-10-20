@@ -85,7 +85,7 @@
         "version": "0.1.6",
         "author": "Starbeamrainbowlabs",
         "description": "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
-        "lastupdate": 1569768162,
+        "lastupdate": 1571530165,
         "optional": false,
         "extra_data": []
     },
@@ -155,7 +155,7 @@
         "version": "0.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a theme gallery page and optional automatic theme updates. Contacts a remote server, where IP addresses are stored in automatic server logs for security and attack mitigation purposes.",
-        "lastupdate": 1570464845,
+        "lastupdate": 1571530718,
         "optional": false,
         "extra_data": []
     },
@@ -267,7 +267,7 @@
         "version": "0.9.4",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
-        "lastupdate": 1557573174,
+        "lastupdate": 1570468766,
         "optional": false,
         "extra_data": []
     },

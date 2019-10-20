@@ -39,7 +39,7 @@ register_module([
 			if(module_exists("feature-user-table"))
 				$content .= "<p><em>Looking to manage $settings->sitename's users? Try the <a href='?action=user-table'>user table</a> instead!</p>\n";
 			if(module_exists("feature-theme-gallery"))
-				$content .= "<p><em>Want to change $settings->sitename's theme? Try the <a href='?action=theme-gallery'>theme gallery</a>! ($settings->sitename will make a HTTP request to fetch the theme gallery from a remote location)</em></p>";
+				$content .= "<p><em>Want to change $settings->sitename's theme? Try the <a href='?action=theme-gallery'>theme gallery</a>!</em></p>";
 			$content .= "<p>You're currently running Pepperminty Wiki $version+" . substr($commit, 0, 7) . ".</p>\n";
 			$content .= "<h2>Actions</h2>";
 			

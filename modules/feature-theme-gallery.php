@@ -68,8 +68,10 @@ register_module([
 				return $sorter->compare($a->name, $b->name);
 			});
 			
-			$content = "<h1>Theme Gallery</h1>
 			
+			
+			$content = "<h1>Theme Gallery</h1>
+			<p>$settings->sitename is currently using ".(strlen($settings->css_theme_autoupdate_url) > 0 ? "an external" : "the internal")." theme".(strlen($settings->css_theme_autoupdate_url) > 0 ? " (<a href='?action=theme-gallery-select&amp;theme-selector=default-internal'>reset to the internal default theme</a>)" : "").".</p>
 			<form method='get' action='index.php'>
 			<input type='hidden' name='action' value='theme-gallery-select' />
 			<div class='grid-large theme-list'>\n";
@@ -92,8 +94,16 @@ register_module([
 			
 		});
 		
+		/**
+		 * @api {get} ?action=theme-gallery-select&theme-selector=theme-id	Set the site theme
+		 * @apiName ThemeGallerySelect
+		 * @apiGroup Utility
+		 * @apiPermission Moderator
+		 * 
+		 * @apiParam	{string}	theme-selector	The id of the theme to switch into, or 'default-internal' to switch back to the internal theme.
+		 */
 		add_action("theme-gallery-select", function() {
-			global $env, $settings;
+			global $env, $settings, $guiConfig;
 			
 			if(!$env->is_admin) {
 				$errorMessage = "<p>You don't have permission to change $settings->sitename's theme.</p>\n";
@@ -107,6 +117,15 @@ register_module([
 			if(!isset($_GET["theme-selector"])) {
 				http_response_code(400);
 				exit(page_renderer::render_main("No theme selected - Error - $settings->sitename", "<p>Oops! Looks like you didn't select a theme. Try <a href='?action=theme-gallery'>going back</a> and selecting one.</p>"));
+			}
+			
+			if($_GET["theme-selector"] === "default-internal") {
+				$settings->css_theme_gallery_selected_id = $guiConfig->css_theme_gallery_selected_id->default;
+				$settings->css_theme_gallery_selected_id = $guiConfig->css_theme_gallery_selected_id->default;
+				$settings->css = $guiConfig->css->default;
+				
+				exit(page_renderer::render_main("Theme reset - Theme Gallery - $settings->sitename", "<p>$settings->sitename's theme has been reset  to the internal theme.</p>
+				<p>Go to the <a href='?action=$settings->defaultaction'>homepage</a>.</p>"));
 			}
 			
 			// Set the new theme's id
