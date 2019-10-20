@@ -799,8 +799,25 @@ class PeppermintParsedown extends ParsedownExtreme
 	}
 	
 	protected function blockFencedCodeComplete($block) {
+		global $settings;
 		$result = parent::blockFencedCodeComplete($block);
-		error_log("[code block] " . var_export($block, true));
+		
+		$language = preg_replace("/^language-/", "", $block["element"]["element"]["attributes"]["class"]);
+		
+		if(!isset($settings->parser_ext_renderers->$language))
+			return $result;
+		
+		$text = $result["element"]["element"]["text"];
+		$renderer = $settings->parser_ext_renderers->$language;
+		
+		$result["element"] = [
+			"name" => "img",
+			"attributes" => [
+				"alt" => "Diagram rendered by {$renderer->name}",
+				"src" => "?action=parsedown-render-ext&language=$language&source=".rawurlencode($text)
+			]
+		];
+		
 		return $result;
 	}
 	
