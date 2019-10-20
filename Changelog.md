@@ -16,6 +16,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Added mega-menu support to the `nav_links_extra` setting - the default value for the `nav_links_extra` setting has now changed (delete/rename it in your `peppermint.json` file to get the new version)
      - An object can now be used to define groups of items in the more menu
      - Hopefully it now looks less cluttered :P
+ - Headings now have an automatic id if you don't specify one (part of #141)
 
 ### Fixed
  - Fixed a bug in the search query performance metrics

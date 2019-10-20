@@ -774,8 +774,7 @@ class PeppermintParsedown extends ParsedownExtreme
 			
 			// ~
 			
-			if($imageCaption)
-			{
+			if($imageCaption) {
 				$rawStyle = $result["element"]["text"][0]["attributes"]["style"];
 				$containerStyle = preg_replace('/^.*float/', "float", $rawStyle);
 				$mediaStyle = preg_replace('/\s*float.*;/', "", $rawStyle);
@@ -797,6 +796,41 @@ class PeppermintParsedown extends ParsedownExtreme
 			}
 			return $result;
 		}
+	}
+	
+	/*
+	 * ██   ██ ███████  █████  ██████  ███████ ██████
+	 * ██   ██ ██      ██   ██ ██   ██ ██      ██   ██
+	 * ███████ █████   ███████ ██   ██ █████   ██████
+	 * ██   ██ ██      ██   ██ ██   ██ ██      ██   ██
+	 * ██   ██ ███████ ██   ██ ██████  ███████ ██   ██
+	 */
+	
+	private $headingIdsUsed = [];
+	
+	protected function blockHeader($line) {
+		// This function overrides the header function defined in ParsedownExtra
+		$result = parent::blockHeader($line);
+		
+		// If this heading doesn't have an id already, add an automatic one
+		if(!isset($result["element"]["attributes"]["id"])) {
+			$heading_id = str_replace(" ", "-",
+				mb_strtolower(makepathsafe(
+					$result["element"]["handler"]["argument"]
+				))
+			);
+			$suffix = "";
+			while(in_array($heading_id . $suffix, $this->headingIdsUsed)) {
+				$heading_number = intval(str_replace("_", "", $suffix));
+				if($heading_number == 0) $heading_number++;
+				$suffix = "_" . ($heading_number + 1);
+			}
+			$result["element"]["attributes"]["id"] = $heading_id . $suffix;
+			$this->headingIdsUsed[] = $result["element"]["attributes"]["id"];
+		}
+		
+		error_log("[header info] " . var_export($result, true));
+		return $result;
 	}
 	
 	# ~
@@ -840,9 +874,14 @@ class PeppermintParsedown extends ParsedownExtreme
 		return $result;
 	}
 	
-	# ~
-	# Utility Methods
-	# ~
+	
+	/*
+	 * ██    ██ ████████ ██ ██      ██ ████████ ██ ███████ ███████
+	 * ██    ██    ██    ██ ██      ██    ██    ██ ██      ██
+	 * ██    ██    ██    ██ ██      ██    ██    ██ █████   ███████
+	 * ██    ██    ██    ██ ██      ██    ██    ██ ██           ██
+	 *  ██████     ██    ██ ███████ ██    ██    ██ ███████ ███████
+	 */
 	
 	/**
 	 * Returns whether a string is a valid float: XXXXXX; value.
