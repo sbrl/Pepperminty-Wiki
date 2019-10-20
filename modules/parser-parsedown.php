@@ -798,6 +798,12 @@ class PeppermintParsedown extends ParsedownExtreme
 		}
 	}
 	
+	protected function blockFencedCodeComplete($block) {
+		$result = parent::blockFencedCodeComplete($block);
+		error_log("[code block] " . var_export($block, true));
+		return $result;
+	}
+	
 	/*
 	 * ██   ██ ███████  █████  ██████  ███████ ██████
 	 * ██   ██ ██      ██   ██ ██   ██ ██      ██   ██

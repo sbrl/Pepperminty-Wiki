@@ -10,6 +10,7 @@
 :root {
 	--bg-back: #eee8f2;
 	--bg-page: #faf8fb;
+	--bg-page-inset: #faf8fb;
 	
 	--bg-comments-1: hsl(31, 64%, 85%);
 	--bg-comments-2: hsla(27, 92%, 68%, 0.64);
@@ -61,6 +62,7 @@
 	:root {
 		--bg-back: hsl(270, 29%, 28%);
 		--bg-page: hsl(273, 15%, 16%);
+		--bg-page-inset: hsl(273, 20%, 20%);
 		
 		--bg-comments-1: hsl(263, 25%, 16%);
 		--bg-comments-2: hsla(264, 45%, 16%, 0.64);
@@ -165,7 +167,7 @@ main:not(.printable) { position: relative; z-index: 1000; padding: 2em 2em 0.5em
 
 blockquote { padding-left: 1em; border-left: 0.2em solid var(--accent-a3); border-radius: 0.2rem; }
 
-pre { white-space: pre-wrap; }
+pre { white-space: pre-wrap; padding: 0.3em 0.5em; background: var(--bg-page-inset); border-radius: 0.25em; box-shadow: inset 0 0 0.5em var(--shadow); }
 
 a { cursor: pointer; }
 a:focus { outline-width: 0.1em; }
