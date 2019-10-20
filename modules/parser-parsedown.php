@@ -135,6 +135,12 @@ register_module([
 				null // environment variables
 			);
 			if(!is_resource($process_handle)) {
+				fclose($dest_handle);
+				fclose($source_handle);
+				fclose($error_text_handle);
+				
+				unlink($cache_file_location);
+				
 				http_response_code(503);
 				header("cache-control: no-cache, no-store, must-revalidate");
 				header("content-type: image/png");
@@ -152,6 +158,9 @@ register_module([
 			if($exit_code !== 0) {
 				fseek($error_text_handle, 0);
 				$error_details = stream_get_contents($error_text_handle);
+				// Delete the cache file, which is guaranteed to exist because
+				// we pre-emptively create it above
+				unlink($cache_file_location);
 				
 				http_response_code(503);
 				header("content-type: image/png");
