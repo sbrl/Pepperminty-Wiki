@@ -5,11 +5,17 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ## v0.20-dev
 
 ### Added
- - TODO Update the first-run wizard to ask whether people want the theme auto-updater to turned on because privacy and inadvertent requests to my web server
- - NOTE Don't forget to tell people how to turn the theme auto-updater off in this changelog
- - Added automatic dark mode to default theme using `prefers-color-scheme`
+ - Added automatic dark mode to default theme using [`prefers-color-scheme`](https://starbeamrainbowlabs.com/blog/article.php?article=posts%2F353-prefers-color-scheme.html)
  - [Module API] Added new `minify_css` module API function by refactoring the page renderer
  - [Module API] Change `page_renderer::is_css_url()` to require an argument
+ - Added theme gallery, which can be accessed through a link in the master settings (if the new `feature-theme-gallery` module is present)
+     - Theme gallery URLs can be added to the `css_theme_autoupdate_url` setting
+     - A graphical interface can be used to switch between available themes from the galleries
+     - No external HTTP requests will be made without consent
+     - Themes from galleries auto-update every week by default (adjustable/disable-able with the `css_theme_autoupdate_interval` setting)
+ - Added mega-menu support to the `nav_links_extra` setting - the default value for the `nav_links_extra` setting has now changed (delete/rename it in your `peppermint.json` file to get the new version)
+     - An object can now be used to define groups of items in the more menu
+     - Hopefully it now looks less cluttered :P
 
 ### Fixed
  - Fixed a bug in the search query performance metrics
