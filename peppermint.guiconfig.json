@@ -27,9 +27,9 @@
 			"name": "nomnoml",
 			"description": "The nomnoml UML diagram renderer. Requires the nomnoml-cli npm package to be globally installed.",
 			"url": "http://nomnoml.com/",
-			"cli": "nomnoml --format svg",
+			"cli": "nomnoml",
 			"cli_mode": "pipe",
-			"output_format": "image/svg+xml"
+			"output_format": "image/png"
 		},
 		"plantuml": {
 			"name": "PlantUML",
