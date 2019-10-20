@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Uploader",
-	"version" => "0.6.1",
+	"version" => "0.6.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -654,39 +654,6 @@ function getsvgsize($svgFilename)
 		$imageSize = array_map("intval", array_slice(explode(" ", $rootAttrs->viewBox), -2, 2));
 	
 	return $imageSize;
-}
-
-/**
- * Creates an images containing the specified text.
- * Useful for sending errors back to the client.
- * @package feature-upload
- * @param	string	$text			The text to include in the image.
- * @param	int		$target_size	The target width to aim for when creating
- * 									the image.
- * @return	resource				The handle to the generated GD image.
- */
-function errorimage($text, $target_size = null)
-{
-	$width = 640;
-	$height = 480;
-	
-	if(!empty($target_size))
-	{
-		$width = $target_size;
-		$height = $target_size * (2 / 3);
-	}
-	
-	$image = imagecreatetruecolor($width, $height);
-	imagefill($image, 0, 0, imagecolorallocate($image, 238, 232, 242)); // Set the background to #eee8f2
-	$fontwidth = imagefontwidth(3);
-	imagestring($image, 3,
-		($width / 2) - (($fontwidth * strlen($text)) / 2),
-		($height / 2) - (imagefontheight(3) / 2),
-		$text,
-		imagecolorallocate($image, 17, 17, 17) // #111111
-	);
-	
-	return $image;
 }
 
 ?>

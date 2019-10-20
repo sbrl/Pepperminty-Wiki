@@ -433,6 +433,58 @@ function system_extension_mime_type($ext) {
 }
 
 /**
+ * Creates an images containing the specified text.
+ * Useful for sending errors back to the client.
+ * @package core
+ * @param	string	$text			The text to include in the image.
+ * @param	int		$target_size	The target width to aim for when creating 
+ * 									the image. Not not specified, a value is 
+ * 									determined automatically.
+ * @return	resource				The handle to the generated GD image.
+ */
+function errorimage($text, $target_size = null)
+{
+	$width = 0;
+	$height = 0;
+	$border_size = 10; // in px, if $target_size isn't null has no effect
+	$line_spacing = 2; // in px
+	$font_size = 5; // 1 - 5
+	
+	$font_width = imagefontwidth($font_size);	// in px
+	$font_height = imagefontheight($font_size);	// in px
+	$text_lines = array_map("trim", explode("\n", $text));
+	
+	if(!empty($target_size)) {
+		$width = $target_size;
+		$height = $target_size * (2 / 3);
+	}
+	else {
+		$height = count($text_lines) * $font_height + 
+			(count($text_lines) - 1) * $line_spacing +
+			$border_size * 2;
+		foreach($text_lines as $line)
+			$width = max($width, $font_width * strlen($line));
+		$width += $border_size * 2;
+	}
+	
+	$image = imagecreatetruecolor($width, $height);
+	imagefill($image, 0, 0, imagecolorallocate($image, 250, 249, 251)); // Set the background to #faf8fb
+	
+	$i = 0;
+	foreach($text_lines as $line) {
+		imagestring($image, $font_size,
+			($width / 2) - (($font_width * strlen($line)) / 2),
+			$border_size + $i * ($font_height + $line_spacing),
+			$line,
+			imagecolorallocate($image, 68, 39, 113) // #442772
+		);
+		$i++;	
+	}
+	
+	return $image;
+}
+
+/**
  * Generates a stack trace.
  * @package core
  * @param	bool	$log_trace	Whether to send the stack trace to the error log.

@@ -52,6 +52,16 @@ register_module([
 			)));
 		});
 		
+		add_action("parsedown-render-ext", function() {
+			global $settings, $env, $paths;
+			
+			if(!isset($_GET["source"])) {
+				http_response_code(400);
+				header("content-type: image/png");
+				imagepng(errorimage("Error: No source text \nspecified."));
+			}
+		});
+		
 		/*
  		 * ███████ ████████  █████  ████████ ██ ███████ ████████ ██  ██████ ███████
  		 * ██         ██    ██   ██    ██    ██ ██         ██    ██ ██      ██
