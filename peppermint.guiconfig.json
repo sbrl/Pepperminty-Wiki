@@ -43,7 +43,7 @@
 			"name": "LilyPond",
 			"description": "A music notation typesetter. Requires lilypond to be installed.",
 			"url": "http://lilypond.org/manuals.html",
-			"cli": "lilypondzzzzzz --silent --ddelete-intermediate-files -dbackend=eps -dresolution=600 --output {output_file} {input_file}",
+			"cli": "lilypondzzzzzz --silent -ddelete-intermediate-files -dbackend=eps -dresolution=600 --output {output_file} {input_file}",
 			"cli_mode": "file",
 			"output_format": "image/svg+xml"
 		}
