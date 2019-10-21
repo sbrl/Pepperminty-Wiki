@@ -43,9 +43,9 @@
 			"name": "LilyPond",
 			"description": "A music notation typesetter. Requires lilypond to be installed.",
 			"url": "http://lilypond.org/manuals.html",
-			"cli": "lilypond --png --output {output_file} {input_file}",
+			"cli": "lilypondzzzzzz --silent --ddelete-intermediate-files -dbackend=eps -dresolution=600 --output {output_file} {input_file}",
 			"cli_mode": "file",
-			"output_format": "image/png"
+			"output_format": "image/svg+xml"
 		}
 	} },
 	"interwiki_index_location": { "type": "text", "description": "The location to find the interwiki wiki definition file, which contains a list of wikis along with their names, prefixes, and root urls. May be a URL, or simply a file path - as it's passed to file_get_contents(). If left blank, interwiki link parsing is disabled.", "default": null },
