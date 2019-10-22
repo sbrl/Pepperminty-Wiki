@@ -463,7 +463,7 @@ function errorimage($text, $target_size = null)
 			(count($text_lines) - 1) * $line_spacing +
 			$border_size * 2;
 		foreach($text_lines as $line)
-			$width = max($width, $font_width * strlen($line));
+			$width = max($width, $font_width * mb_strlen($line));
 		$width += $border_size * 2;
 	}
 	
@@ -473,7 +473,7 @@ function errorimage($text, $target_size = null)
 	$i = 0;
 	foreach($text_lines as $line) {
 		imagestring($image, $font_size,
-			($width / 2) - (($font_width * strlen($line)) / 2),
+			($width / 2) - (($font_width * mb_strlen($line)) / 2),
 			$border_size + $i * ($font_height + $line_spacing),
 			$line,
 			imagecolorallocate($image, 68, 39, 113) // #442772
