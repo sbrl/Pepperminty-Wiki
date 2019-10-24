@@ -110,36 +110,85 @@ register_module([
 				exit();
 			}
 			
-			$source_handle = tmpfile();
-			fwrite($source_handle, $source);
-			fseek($source_handle, 0);
-			
 			// Create the cache directory if doesn't exist already
 			if(!file_exists(dirname($cache_file_location)))
 				mkdir(dirname($cache_file_location), 0750, true);
 			
-			$dest_handle = fopen($cache_file_location, "wb+");
+			$cli_to_execute = $renderer->cli;
 			
-			$error_text_handle = tmpfile();
+			$descriptors = [
+				0 => null,		// stdin
+				1 => null,		// stdout
+				2 => tmpfile()	// stderr
+			];
+			
+			switch ($renderer->cli_mode) {
+				case "pipe":
+					// Fill stdin with the input text
+					$descriptors[0] = tmpfile();
+					fwrite($descriptors[0], $source);
+					fseek($descriptors[0], 0);
+					
+					// Pipe the output to be the cache file
+					$descriptors[1] = fopen($cache_file_location, "wb+");
+					break;
+					
+				case "substitution_pipe":
+					// Update the command that we're going to execute
+					$cli_to_execute = str_replace(
+						"{input_text}",
+						escapeshellarg($source),
+						$cli_to_execute
+					);
+					
+					// Set the descriptors
+					$descriptors[0] = tmpfile();
+					$descriptors[1] = fopen($cache_file_location, "wb+");
+					break;
+				
+				case "file":
+					$descriptors[0] = tmpfile();
+					fwrite($descriptors[0], $source);
+					$descriptors[1] = tmpfile();
+					
+					$cli_to_execute = str_replace(
+						[ "{input_file}", "{output_file}" ],
+						[
+							escapeshellarg(stream_get_meta_data($descriptors[0])["uri"]),
+							escapeshellarg($cache_file_location)
+						],
+						$cli_to_execute
+					);
+					break;
+				
+				default:
+					http_response_code(503);
+					header("cache-control: no-cache, no-store, must-revalidate");
+					header("content-type: image/png");
+					imagepng(errorimage("Error: Unknown external renderer mode '$renderer->cli_mode'.\nPlease contact $settings->admindetails_name, $settings->sitename's administrator."));
+					exit();
+					break;
+			}
+			
+			if('\\' !== DIRECTORY_SEPARATOR) {
+				// We're not on Windows, so we can use timeout to force-kill if it takes too long
+				$cli_to_execute = "timeout {$settings->parser_ext_time_limit} $cli_to_execute";
+			}
 			
 			$start_time = microtime(true);
 			$process_handle = proc_open(
-				$renderer->cli,
-				[
-					0 => $source_handle,
-					1 => $dest_handle,
-					2 => $error_text_handle
-				],
+				$cli_to_execute,
+				$descriptors,
 				$pipes,
 				null, // working directory
 				null // environment variables
 			);
 			if(!is_resource($process_handle)) {
-				fclose($dest_handle);
-				fclose($source_handle);
-				fclose($error_text_handle);
+				fclose($descriptors[0]);
+				fclose($descriptors[1]);
+				fclose($descriptors[2]);
 				
-				unlink($cache_file_location);
+				if(file_exists($cache_file_location)) unlink($cache_file_location);
 				
 				http_response_code(503);
 				header("cache-control: no-cache, no-store, must-revalidate");
@@ -150,22 +199,22 @@ register_module([
 			// Wait for it to exit
 			$exit_code = proc_close($process_handle);
 			
-			fclose($dest_handle);
-			fclose($source_handle);
+			fclose($descriptors[0]);
+			fclose($descriptors[1]);
 			
 			$time_taken = round((microtime(true) - $start_time) * 1000, 2);
 			
-			if($exit_code !== 0) {
-				fseek($error_text_handle, 0);
-				$error_details = stream_get_contents($error_text_handle);
+			if($exit_code !== 0 || !file_exists($cache_file_location)) {
+				fseek($descriptors[2], 0);
+				$error_details = stream_get_contents($descriptors[2]);
 				// Delete the cache file, which is guaranteed to exist because
 				// we pre-emptively create it above
-				unlink($cache_file_location);
+				if(file_exists($cache_file_location)) unlink($cache_file_location);
 				
 				http_response_code(503);
 				header("content-type: image/png");
 				imagepng(errorimage(
-					"Error: The external renderer ($renderer->name)\nexited with code $exit_code.\nDetails:\n" . wordwrap($error_details)
+					"Error: The external renderer ($renderer->name)\nexited with code $exit_code,\nor potentially did not create the output file.\nDetails:\n" . wordwrap($error_details)
 				));
 				exit();
 			}

@@ -22,14 +22,14 @@
 	"parser_cache": { "type": "checkbox", "description": "Whether parser output should be cached to speed things up. The cache directory is <code>._cache</code> in the data directory - delete it if you experience issues (unlikely).", "default": true },
 	"parser_cache_min_size": { "type": "number", "description": "The minimum size a source string must be (in bytes) before it's considered eligible for caching.", "default": 1024 },
 	"parser_ext_renderers_enabled": { "type": "checkbox", "description": "Whether to enable external diagram renderer support, which is part of the parsedown parser. See the <code>parser_ext_renderers</code> setting below for more information.", "default": true },
-	"parser_ext_renderers": { "type": "parserext", "description": "Used by the parsedown parser as an object mapping fenced code block languages to their respective external renderers. Should be in the form <code>language_code</code> → <code>external renderer definition</code>. See the default for examples on how to define an external renderer.", "default": {
+	"parser_ext_renderers": { "type": "parserext", "description": "Used by the parsedown parser as an object mapping fenced code block languages to their respective external renderers. Should be in the form <code>language_code</code> → <code>external renderer definition</code>. See the default for examples on how to define an external renderer. Warning: On Windows, the enforcement of strict time limits is not possible. Beware of DoS attacks!", "default": {
 		"nomnoml": {
 			"name": "nomnoml",
-			"description": "The nomnoml UML diagram renderer. Requires the nomnoml-cli npm package to be globally installed.",
+			"description": "The nomnoml UML diagram renderer. Requires the nomnoml npm package to be globally installed.",
 			"url": "http://nomnoml.com/",
-			"cli": "nomnoml",
-			"cli_mode": "pipe",
-			"output_format": "image/png"
+			"cli": "nomnoml {input_file} {output_file} 0",
+			"cli_mode": "file",
+			"output_format": "image/svg+xml"
 		},
 		"plantuml": {
 			"name": "PlantUML",
@@ -41,13 +41,22 @@
 		},
 		"lilypond": {
 			"name": "LilyPond",
-			"description": "A music notation typesetter. Requires lilypond to be installed.",
+			"description": "A music notation typesetter. Requires lilypond to be installed. WARNING: Don't enable lilypond if you allow anonymous edits. While every effort has been made to close loopholes, a DoS attack may still be possible against your server.",
 			"url": "http://lilypond.org/manuals.html",
 			"cli": "lilypondzzzzzz --silent -ddelete-intermediate-files -dbackend=eps -dresolution=600 --output {output_file} {input_file}",
 			"cli_mode": "file",
 			"output_format": "image/svg+xml"
+		},
+		"latexserver": {
+			"name": "Server-Side MathJax",
+			"description": "Client-side Mathjax via the 'enable_math_rendering' setting not your thing? Try it server-side instead! Requires the 'mathjax-node-cli' npm package to be globally installed.",
+			"url": "https://github.com/mathjax/mathjax-node-cli/blob/master/package.json#L41",
+			"cli": "tex2svg -- {input_text} >{output_file}",
+			"cli_mode": "substitution_pipe",
+			"output_format": "image/svg+xml"
 		}
 	} },
+	"parser_ext_time_limit": { "type": "number", "description": "The number of seconds external renderers are allowed to run for. Has no effect if external renderers are turned off. Also currently has no effect on Windows.", "default": 5 },
 	"interwiki_index_location": { "type": "text", "description": "The location to find the interwiki wiki definition file, which contains a list of wikis along with their names, prefixes, and root urls. May be a URL, or simply a file path - as it's passed to file_get_contents(). If left blank, interwiki link parsing is disabled.", "default": null },
 	"clean_raw_html": { "type": "checkbox", "description": "Whether page sources should be cleaned of HTML before rendering. It is STRONGLY recommended that you keep this option turned on.", "default": true },
 	"all_untrusted": { "type": "checkbox", "description": "Whether to treat both page sources and comment text as untrusted input. Untrusted input has additional restrictions to protect against XSS attacks etc. Turn on if your wiki allows anonymous edits.", "default": false},
