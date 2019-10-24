@@ -226,7 +226,7 @@ input[type=submit].large { width: 100%; box-sizing: border-box; padding: 0.5em; 
 
 .page-list { list-style-type: none; margin: 0.3rem; padding: 0.3rem; }
 .page-list li:not(.header) { margin: 0.3rem; padding: 0.3rem; }
-.page-list li .size { margin-left: 0.7rem; color: rgba(30, 30, 30, 0.5); }
+.page-list li .size { margin-left: 0.7rem; color: var(--text-soft); }
 .page-list li .editor { display: inline-block; margin: 0 0.5rem; }
 .page-list li .tags { margin: 0 1rem; }
 .tag-list { list-style-type: none; margin: 0.5rem; padding: 0.5rem; }
