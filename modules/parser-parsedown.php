@@ -110,6 +110,13 @@ register_module([
 				exit();
 			}
 			
+			if(!$settings->parser_ext_allow_anon && !$env->is_logged_in) {
+				http_response_code(401);
+				header("content-type: image/png");
+				imagepng(errorimage(wordwrap("Error: You aren't logged in, that image hasn't yet been cached, and $settings->sitename does not allow anonymous users to invoke external renderers, so that image can't be generated right now. Try contacting $settings->admindetails_name, $settings->sitename's administrator (their details can be found at the bottom of every page).")));
+				exit();
+			}
+			
 			// Create the cache directory if doesn't exist already
 			if(!file_exists(dirname($cache_file_location)))
 				mkdir(dirname($cache_file_location), 0750, true);
@@ -132,7 +139,7 @@ register_module([
 					// Pipe the output to be the cache file
 					$descriptors[1] = fopen($cache_file_location, "wb+");
 					break;
-					
+				
 				case "substitution_pipe":
 					// Update the command that we're going to execute
 					$cli_to_execute = str_replace(
