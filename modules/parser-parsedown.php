@@ -1007,10 +1007,13 @@ class PeppermintParsedown extends ParsedownExtreme
 		$renderer = $settings->parser_ext_renderers->$language;
 		
 		$result["element"] = [
-			"name" => "img",
-			"attributes" => [
-				"alt" => "Diagram rendered by {$renderer->name}",
-				"src" => "?action=parsedown-render-ext&language=$language&immutable_key=".hash("crc32b", json_encode($renderer))."&source=".rawurlencode($text)
+			"name" => "p",
+			"element" => [
+				"name" => "img",
+				"attributes" => [
+					"alt" => "Diagram rendered by {$renderer->name}",
+					"src" => "?action=parsedown-render-ext&language=$language&immutable_key=".hash("crc32b", json_encode($renderer))."&source=".rawurlencode($text)
+				]
 			]
 		];
 		
