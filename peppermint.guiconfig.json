@@ -51,7 +51,7 @@
 			"name": "Server-Side MathJax",
 			"description": "Client-side Mathjax via the 'enable_math_rendering' setting not your thing? Try it server-side instead! Requires the 'mathjax-node-cli' npm package to be globally installed.",
 			"url": "https://github.com/mathjax/mathjax-node-cli/blob/master/package.json#L41",
-			"cli": "tex2svg -- {input_text} >{output_file}",
+			"cli": "tex2svg -- {input_text}",
 			"cli_mode": "substitution_pipe",
 			"output_format": "image/svg+xml"
 		}
