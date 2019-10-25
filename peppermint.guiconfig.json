@@ -23,38 +23,40 @@
 	"parser_cache_min_size": { "type": "number", "description": "The minimum size a source string must be (in bytes) before it's considered eligible for caching.", "default": 1024 },
 	"parser_ext_renderers_enabled": { "type": "checkbox", "description": "Whether to enable external diagram renderer support, which is part of the parsedown parser. See the <code>parser_ext_renderers</code> setting below for more information.", "default": true },
 	"parser_ext_renderers": { "type": "parserext", "description": "Used by the parsedown parser as an object mapping fenced code block languages to their respective external renderers. Should be in the form <code>language_code</code> → <code>external renderer definition</code>. See the default for examples on how to define an external renderer. Warning: On Windows, the enforcement of strict time limits is not possible. Beware of DoS attacks!", "default": {
-		"nomnoml": {
-			"name": "nomnoml",
-			"description": "The nomnoml UML diagram renderer. Requires the 'nomnoml' npm package to be globally installed.",
-			"url": "http://nomnoml.com/",
-			"cli": "nomnoml {input_file} {output_file} 0",
-			"cli_mode": "file",
-			"output_format": "image/svg+xml"
-		},
-		"plantuml": {
-			"name": "PlantUML",
-			"description": "The PlantUML diagram renderer. Supports many different diagram types. Requires plantuml to be installed.",
-			"url": "http://plantuml.com/",
-			"cli": "plantuml -tsvg -pipe",
-			"cli_mode": "pipe",
-			"output_format": "image/svg+xml"
-		},
-		"abc": {
-			"name": "ABC Notation",
-			"description": "A simple music notation typesetter. Much easier to understand than Lilypond. Requires abcm2ps to be installed.",
-			"url": "https://abcnotation.com/",
-			"cli": "abcm2ps -g -O - -",
-			"cli_mode": "pipe",
-			"output_format": "image/svg+xml"
-		},
-		"latexserver": {
-			"name": "Server-Side MathJax",
-			"description": "Client-side Mathjax via the 'enable_math_rendering' setting not your thing? Try it server-side instead! Requires the 'mathjax-node-cli' npm package to be globally installed.",
-			"url": "https://github.com/mathjax/mathjax-node-cli/blob/master/package.json#L41",
-			"cli": "tex2svg -- {input_text}",
-			"cli_mode": "substitution_pipe",
-			"output_format": "image/svg+xml"
-		}
+        "nomnoml": {
+            "name": "nomnoml",
+            "description": "The nomnoml UML diagram renderer. Requires the 'nomnoml' npm package to be globally installed.",
+            "url": "http:\/\/nomnoml.com\/",
+            "cli": "nomnoml {input_file} {output_file} 0",
+            "cli_mode": "file",
+            "output_format": "image\/svg+xml"
+        },
+        "plantuml": {
+            "name": "PlantUML",
+            "description": "The PlantUML diagram renderer. Supports many different diagram types. Requires plantuml to be installed.",
+            "url": "http:\/\/plantuml.com\/",
+            "cli": "plantuml -tsvg -pipe",
+            "cli_mode": "pipe",
+            "output_format": "image\/svg+xml"
+        },
+        "abc": {
+            "name": "ABC Notation",
+            "description": "A simple music notation typesetter. Much easier to understand than Lilypond. Requires abcm2ps to be installed.",
+            "url": "https:\/\/abcnotation.com\/",
+            "cli": "abcm2ps -g -O - -",
+            "cli_mode": "pipe",
+            "output_format": "image\/svg+xml",
+            "output_classes": [ "invert-when-dark" ]
+        },
+        "latexserver": {
+            "name": "Server-Side MathJax",
+            "description": "Client-side Mathjax via the 'enable_math_rendering' setting not your thing? Try it server-side instead! Requires the 'mathjax-node-cli' npm package to be globally installed.",
+            "url": "https:\/\/github.com\/mathjax\/mathjax-node-cli\/blob\/master\/package.json#L41",
+            "cli": "tex2svg -- {input_text}",
+            "cli_mode": "substitution_pipe",
+            "output_format": "image\/svg+xml",
+            "output_classes": [ "invert-when-dark" ]
+        }
 	} },
 	"parser_ext_time_limit": { "type": "number", "description": "The number of seconds external renderers are allowed to run for. Has no effect if external renderers are turned off. Also currently has no effect on Windows.", "default": 5 },
 	"parser_ext_allow_anon": { "type": "checkbox", "description": "<p>Whether to allow anonymous users to render new diagrams with the external renderer. When disabled, anonymous users will still be allowed to recall pre-rendered items from the cache, but will be unable to generate brand-new diagrams.</p><p>Note that if you allow anonymous edits this setting won't fully protect you: anonymous users could edit a page and insert a malicious diagram, and then laer a logged in user could unwittingly invoke the external renderer on the anonymous user's behalf.", "default": false },

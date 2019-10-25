@@ -95,6 +95,8 @@
 	a:hover { color: hsl(214, 67%, 75%); }
 	a:active, a:focus { color: hsl(214, 87%, 85%); }
 	a:visited { color: hsl(264, 77%, 65%); }
+	
+	.invert-when-dark { filter: invert(100%); }
 }
 
 /* TODO: Refactor to use the CSS grid */

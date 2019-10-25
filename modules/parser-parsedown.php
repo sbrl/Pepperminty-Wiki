@@ -1012,10 +1012,12 @@ class PeppermintParsedown extends ParsedownExtreme
 				"name" => "img",
 				"attributes" => [
 					"alt" => "Diagram rendered by {$renderer->name}",
-					"src" => "?action=parsedown-render-ext&language=$language&immutable_key=".hash("crc32b", json_encode($renderer))."&source=".rawurlencode($text)
+					"src" => "?action=parsedown-render-ext&language=".rawurlencode($language)."&immutable_key=".hash("crc32b", json_encode($renderer))."&source=".rawurlencode($text)
 				]
 			]
 		];
+		if(!empty($renderer->output_classes))
+			$result["element"]["element"]["attributes"]["class"] = implode(" ", $renderer->output_classes);
 		
 		return $result;
 	}
