@@ -25,7 +25,7 @@
 	"parser_ext_renderers": { "type": "parserext", "description": "Used by the parsedown parser as an object mapping fenced code block languages to their respective external renderers. Should be in the form <code>language_code</code> → <code>external renderer definition</code>. See the default for examples on how to define an external renderer. Warning: On Windows, the enforcement of strict time limits is not possible. Beware of DoS attacks!", "default": {
 		"nomnoml": {
 			"name": "nomnoml",
-			"description": "The nomnoml UML diagram renderer. Requires the nomnoml npm package to be globally installed.",
+			"description": "The nomnoml UML diagram renderer. Requires the 'nomnoml' npm package to be globally installed.",
 			"url": "http://nomnoml.com/",
 			"cli": "nomnoml {input_file} {output_file} 0",
 			"cli_mode": "file",
@@ -39,12 +39,12 @@
 			"cli_mode": "pipe",
 			"output_format": "image/svg+xml"
 		},
-		"lilypond": {
-			"name": "LilyPond",
-			"description": "A music notation typesetter. Requires lilypond to be installed. WARNING: Don't enable lilypond if you allow anonymous edits. While every effort has been made to close loopholes, a DoS attack may still be possible against your server.",
-			"url": "http://lilypond.org/manuals.html",
-			"cli": "lilypondzzzzzz --silent -ddelete-intermediate-files -dbackend=eps -dresolution=600 --output {output_file} {input_file}",
-			"cli_mode": "file",
+		"abc": {
+			"name": "ABC Notation",
+			"description": "A simple music notation typesetter. Much easier to understand than Lilypond. Requires abcm2ps to be installed.",
+			"url": "https://abcnotation.com/",
+			"cli": "abcm2ps -g -O - -",
+			"cli_mode": "pipe",
 			"output_format": "image/svg+xml"
 		},
 		"latexserver": {
