@@ -397,7 +397,8 @@ register_module([
 			<tr><td><code>{{{~}}}</code></td><td>Outputs the requested page's name.</td></tr>
 			<tr><td><code>{{{*}}}</code></td><td>Outputs a comma separated list of all the subpages of the current page.</td></tr>
 			<tr><td><code>{{{+}}}</code></td><td>Shows a gallery containing all the files that are sub pages of the current page.</td></tr>
-		</table>");
+		</table>
+		<p>This list can be edited by $settings->admindetails_name, $settings->sitename's administrator. Documentation on how to do that is <a href='https://starbeamrainbowlabs.com/labs/peppermint/__nightdocs/06.5-Interwiki-Links.html'>available here</a>.</p>");
 	}
 ]);
 
