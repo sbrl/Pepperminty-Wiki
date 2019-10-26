@@ -51,8 +51,8 @@
         },
         "latexserver": {
             "name": "Server-Side MathJax",
-            "description": "Client-side Mathjax via the 'enable_math_rendering' setting not your thing? Try it server-side instead! Requires the 'mathjax-node-cli' npm package to be globally installed.",
-            "url": "https:\/\/github.com\/mathjax\/mathjax-node-cli\/blob\/master\/package.json#L41",
+            "description": "Client-side Mathjax via the 'enable_math_rendering' setting not your thing? Try it server-side instead! Requires the 'mathjax-node-cli' npm package to be globally installed. Note that you obviously don't want to include the latex math inside dolar signs $$ as the reference link tells you to.",
+            "url": "https://math.meta.stackexchange.com/q/5020/221181",
             "cli": "tex2svg -- {input_text}",
             "cli_mode": "substitution_pipe",
             "output_format": "image\/svg+xml",

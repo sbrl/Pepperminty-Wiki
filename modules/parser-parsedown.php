@@ -398,6 +398,31 @@ register_module([
 			<tr><td><code>{{{*}}}</code></td><td>Outputs a comma separated list of all the subpages of the current page.</td></tr>
 			<tr><td><code>{{{+}}}</code></td><td>Shows a gallery containing all the files that are sub pages of the current page.</td></tr>
 		</table>");
+		if($settings->parser_ext_renderers_enabled) {
+			$doc_help = "<p>$settings->sitename supports external renderers. External renderers take the content of a code fence block, like this:</p>
+			<pre><code>```language_code
+Insert text here
+```</code></pre>
+<p>...and render it to an image. This is based on the <code>language_code</code> specified, as is done in the above example. Precisely what the output of a external renderer is depends on the external renderers defined, but $settings->sitename currently has the following external renderers registered:</p>
+<table>
+<tr><th>Name</th><th>Language code</th><th>Description</th><th>Reference Link</th></tr>
+";
+			
+			foreach($settings->parser_ext_renderers as $code => $renderer) {
+				$row = array_map("htmlentities", [
+					$renderer->name,
+					$code,
+					$renderer->description,
+					$renderer->url
+				]);
+				$row[3] = "<a href='$row[3]'>&#x1f517;</a>";
+				$doc_help .= "<tr><td>".implode("</td><td>", $row)."</td></tr>\n";
+			}
+			$doc_help .= "</table>
+			$settings->admindetails_name can register more external renderers - see the <a href='https://starbeamrainbowlabs.com/labs/peppermint/__nightdocs/06.8-External-Renderers.html'>documentation</a> for more information.</p>";
+			
+			add_help_section("24-external-renderers", "External Renderers", $doc_help);
+		}
 	}
 ]);
 
