@@ -29,7 +29,8 @@
             "url": "http:\/\/nomnoml.com\/",
             "cli": "nomnoml {input_file} {output_file} 0",
             "cli_mode": "file",
-            "output_format": "image\/svg+xml"
+            "output_format": "image\/svg+xml",
+			"output_classes": [ "invert-when-dark" ]
         },
         "plantuml": {
             "name": "PlantUML",
