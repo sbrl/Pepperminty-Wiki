@@ -28,12 +28,18 @@ register_module([
 </code></pre>
 
 <p>Note that unlike normal internal links, the page name is case-sensitive and can't be case-corrected automatically. The wikis supported by $settings->sitename are as follows:</p>
+
+{supported_interwikis}
+
+<p>This list can be edited by $settings->admindetails_name, $settings->sitename's administrator. Documentation on how to do that is <a href='https://starbeamrainbowlabs.com/labs/peppermint/__nightdocs/06.5-Interwiki-Links.html'>available here</a>.</p>
 HELP_BLOCK;
 
-			$doc_help .= "<table><tr><th>Name</th><th>Prefix</th>\n";
+			$doc_help_insert = "<table><tr><th>Name</th><th>Prefix</th>\n";
 			foreach($env->interwiki_index as $interwiki_def)
-				$doc_help .= "<tr><td>$interwiki_def->name</td><td><code>$interwiki_def->prefix</code></td></tr>\n";
-			$doc_help .= "</table>";
+				$doc_help_insert .= "<tr><td>$interwiki_def->name</td><td><code>$interwiki_def->prefix</code></td></tr>\n";
+			$doc_help_insert .= "</table>";
+			
+			$doc_help = str_replace("{supported_interwikis}", $doc_help_insert, $doc_help);
 		}
 		
 		add_help_section("22-interwiki-links", "Interwiki Links", $doc_help);
