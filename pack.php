@@ -7,6 +7,7 @@ if(!isset($paths)) {
 	$paths = new stdClass();
 	$paths->extra_data_directory = "build/._extra_data";
 }
+$theme_id = "default";
 
 if(isset($_GET["determine-latest-version"])) {
 	header("content-type: application/json");
@@ -89,7 +90,7 @@ $core = str_replace([
 	trim(file_get_contents("version")),
 	exec("git rev-parse HEAD"),
 	trim(file_get_contents("peppermint.guiconfig.json")),
-	trim(file_get_contents("themes/default/theme.css"))
+	trim(file_get_contents("themes/$theme_id/theme.css"))
 ], $core);
 
 $result = $core;

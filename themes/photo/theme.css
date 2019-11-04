@@ -1,0 +1,96 @@
+/**
+ * @id				photo
+ * @name			Photo 
+ * @description		A different theme that looks great with a high-res photo behind it.
+ * @author			Starbeamrainbowlabs
+ * @author_link		https://starbeamrainbowlabs.com/
+ * @minversion		v0.20
+ */
+
+:root {
+	--bg-colour: hsl(20, 66%, 44%);
+	--image-url: url("https://i.imgur.com/NSIDIeo.jpg");
+	
+	--bg-a: hsla(0, 0%, 95%, 0.5);
+	--bg-b: hsla(0, 0%, 95%, 0.8);
+	
+	--text-a: hsl(0, 0%, 10%);
+	
+	--shadow-a: hsla(0, 0%, 25%, 0.3);
+	
+	--panel-padding: 0.7em;
+}
+
+html, body { font-size: 100%; }
+body {
+	display: grid;
+	grid-template-columns: 1fr 4fr 1fr;
+	grid-template-rows: repeat(6, auto);
+	grid-template-areas: "side-left header side-right"
+		"side-left nav-top side-right"
+		"side-left content side-right"
+		"side-left comments side-right"
+		"side-left footer side-right"
+		"side-left nav-bottom side-right";
+	
+	background: var(--image-url) no-repeat top center / contain,
+		var(--bg-colour);
+	
+	color: var(--text-a);
+    font-family: sans-serif;
+}
+
+body > nav, main, .comments, footer {
+	margin: 1em 0;
+	background: var(--bg-a);
+	padding: var(--panel-padding);
+	box-shadow: 0.5em 0.5em 0.5em var(--shadow-a);
+}
+nav.top { grid-area: nav-top; }
+nav.bottom { grid-area: nav-bottom; }
+
+body > nav {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-evenly;
+}
+
+.nav-more { position: relative; }
+.nav-more label { font-weight: bolder; cursor: pointer; }
+.nav-more input[type=checkbox] { display: none; }
+.nav-more-menu {
+	z-index: 10000;
+	position: absolute; top: 2.6rem; right: 100000px;
+	text-align: left;
+	background: var(--bg-b);
+}
+input[type=checkbox]:checked ~ .nav-more-menu { top: 2.15em; right: -2.7em; }
+
+nav.mega-menu > span { flex: 1; line-height: 2; display: inline-block; margin: 0; padding: 0.3rem 0.5rem; }
+nav.mega-menu { display: flex; flex-direction: row; padding-bottom: 0.4em; }
+nav.mega-menu .category { min-width: 7.5em; padding: 0.3em 1em; }
+nav.mega-menu strong { display: block; }
+nav.mega-menu span { display: block; }
+
+h1 {
+	grid-area: header;
+	text-align: center;
+}
+.logo { max-width: 1.75em; vertical-align: middle; }
+
+main		{ grid-area: content; position: relative;	}
+.jump-to-comments { position: absolute; top: var(--panel-padding); right: var(--panel-padding); }
+
+main > h1:first-child, .comments > h2:first-child { margin-top: 0; }
+pre, code, input, textarea { font-size: 1rem; }
+
+textarea {
+	width: 100%; min-height: 10em;
+	box-sizing: border-box;
+}
+
+.comments	{ grid-area: comments;	}
+.avatar { vertical-align: middle; max-height: 1.5em; }
+
+footer		{ grid-area: footer;	}
