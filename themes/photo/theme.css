@@ -7,9 +7,23 @@
  * @minversion		v0.20
  */
 
+/*
+To use this theme, copy the following into your custom css;
+
 :root {
+	--image-url: url("https://imgur.com/NSIDIeo.jpg");
 	--bg-colour: hsl(20, 66%, 44%);
-	--image-url: url("https://i.imgur.com/NSIDIeo.jpg");
+}
+
+....changing URL to point to an image (can be absolute or relative), and the background colour to a colour that will be displayed behind the image. It works best if the image has relatively plain bottom edge, as then it blends with the background colour better.
+ */
+
+:root {
+	/* --bg-colour: hsl(20, 66%, 44%); */
+	/* --image-url: url("https://i.imgur.com/NSIDIeo.jpg"); */
+	
+	--image-url: url("https://imgur.com/6KfDsYS.png");
+	--bg-colour: #34243D;
 	
 	--bg-a: hsla(0, 0%, 95%, 0.5);
 	--bg-b: hsla(0, 0%, 95%, 0.8);
@@ -30,6 +44,7 @@
 
 html, body { font-size: 100%; }
 body {
+	margin: 0;
 	display: grid;
 	grid-template-columns: 1fr 4fr 1fr;
 	grid-template-rows: repeat(6, auto);
@@ -109,7 +124,7 @@ textarea, #tags, #search-box {
 
 textarea, input:not([type=submit]):not([type=button]) {
 	font-family: "Ubuntu", sans-serif;
-	font-weight: light;
+	/* font-weight: light; */
 	font-size: 1.1em;
 	
 	background: var(--bg-b);
@@ -183,3 +198,10 @@ figure > .avatar, .avatar ~ figcaption { display: inline-block;	}
 
 
 footer		{ grid-area: footer;	}
+
+
+@media (max-width: 640px) {
+	body { grid-template-columns: 1fr 16fr 1fr; }
+	nav { flex-direction: column !important; }
+	nav > span { padding: 0.5em; }
+}

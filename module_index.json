@@ -222,10 +222,10 @@
     {
         "id": "page-edit",
         "name": "Page editor",
-        "version": "0.17.5",
+        "version": "0.17.6",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1573400642,
         "optional": false,
         "extra_data": {
             "diff.min.js": "https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/jsdiff\/2.2.2\/diff.min.js"
@@ -244,10 +244,10 @@
     {
         "id": "page-help",
         "name": "Help page",
-        "version": "0.10",
+        "version": "0.10.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a rather useful help page. Access through the 'help' action. This module also exposes help content added to Pepperminty Wiki's inbuilt invisible help section system.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1573400569,
         "optional": false,
         "extra_data": []
     },
