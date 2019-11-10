@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Help page",
-	"version" => "0.10",
+	"version" => "0.10.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a rather useful help page. Access through the 'help' action. This module also exposes help content added to Pepperminty Wiki's inbuilt invisible help section system.",
 	"id" => "page-help",
@@ -88,7 +88,7 @@ register_module([
 						$wikiSize->history += $nextFilesize;
 					else if($extension == "md") // It's a page
 						$wikiSize->pages += $nextFilesize;
-					else if($extension == "json") // It's an index
+					else if(in_array($extension, ["json", "sqlite"])) // It's an index
 						$wikiSize->indexes += $nextFilesize;
 					else if(in_array($extension, [ // It's an uploaded image
 						"jpg", "jpeg", "png", "gif", "webp", "svg"
