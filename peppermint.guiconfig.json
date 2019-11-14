@@ -57,7 +57,16 @@
             "cli_mode": "substitution_pipe",
             "output_format": "image\/svg+xml",
             "output_classes": [ "invert-when-dark" ]
-        }
+        },
+		"svginkscape": {
+			"name": "Inkscape SVG",
+			"description": "Server-side SVG-to-PNG rendering with inkscape. Requires inkscape to be installed and in your PATH, of course.",
+			"url": "https://developer.mozilla.org/en-US/docs/Web/SVG/Element",
+			"cli": "inkscape {input_file} -e {output_file}",
+			"cli_mode": "file",
+			"output_format": "image\/svg+xml",
+			"output_classes": [  ]
+		}
 	} },
 	"parser_ext_time_limit": { "type": "number", "description": "The number of seconds external renderers are allowed to run for. Has no effect if external renderers are turned off. Also currently has no effect on Windows.", "default": 5 },
 	"parser_ext_allow_anon": { "type": "checkbox", "description": "<p>Whether to allow anonymous users to render new diagrams with the external renderer. When disabled, anonymous users will still be allowed to recall pre-rendered items from the cache, but will be unable to generate brand-new diagrams.</p><p>Note that if you allow anonymous edits this setting won't fully protect you: anonymous users could edit a page and insert a malicious diagram, and then laer a logged in user could unwittingly invoke the external renderer on the anonymous user's behalf.", "default": false },
