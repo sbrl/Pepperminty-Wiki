@@ -1,7 +1,7 @@
 /**
  * @id				photo
  * @name			Photo 
- * @description		A different theme that looks great with a high-res photo behind it.
+ * @description		A different theme that looks great with a high-res photo behind it. Check the comment at the top of the CSS file for instructions on how to configure the photo behind it and the background colour.
  * @author			Starbeamrainbowlabs
  * @author_link		https://starbeamrainbowlabs.com/
  * @minversion		v0.20
@@ -19,11 +19,11 @@ To use this theme, copy the following into your custom css;
  */
 
 :root {
-	/* --bg-colour: hsl(20, 66%, 44%); */
-	/* --image-url: url("https://i.imgur.com/NSIDIeo.jpg"); */
+	--bg-colour: hsl(20, 66%, 44%);
+	--image-url: url("https://i.imgur.com/NSIDIeo.jpg");
 	
-	--image-url: url("https://imgur.com/6KfDsYS.png");
-	--bg-colour: #34243D;
+	/* --image-url: url("https://imgur.com/6KfDsYS.png"); */
+	/* --bg-colour: #34243D; */
 	
 	--bg-a: hsla(0, 0%, 95%, 0.5);
 	--bg-b: hsla(0, 0%, 95%, 0.8);
