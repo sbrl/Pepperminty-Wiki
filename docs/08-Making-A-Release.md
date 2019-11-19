@@ -7,12 +7,11 @@ The following things need to be done to prepare for a release:
  - Check the changelog
  - Make sure that the README is up to date
  - Make sure that Pepperminty Wiki actually works
- - Make suure that the [downloader actually works](https://github.com/sbrl/Pepperminty-Wiki/releases/tag/v0.19.1-hotfix1)
+ - Make sure that the [downloader actually works](https://github.com/sbrl/Pepperminty-Wiki/releases/tag/v0.19.1-hotfix1)
  - Bump the version:
 	 - In the `version` file
 	 - In the changelog
 	 - In `apidoc.json` (TODO: Automate this?)
-	 - In the README.md (TODO: Automate this?)
      - In `package.json` (TODO: Automate this?)
  - (Stable releases only):
      - Pull down changes to update [online downloader](https://starbeamrainbowlabs.com/labs/peppermint/download.php)

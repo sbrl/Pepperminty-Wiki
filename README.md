@@ -36,7 +36,7 @@ Here's a list of things that I want to add at some point (please feel free to [s
          - I'm happy to help out if you need help with Pepperminty Wiki itself (e.g. making it more machine-readable (#138))
          - Message on Gitter (see above), or open an issue on this repository.
  - User watchlists
- - Theme gallery (#5 - coming soon in v0.20!)
+ - ~~Theme gallery (#5 - coming soon in v0.20!)~~ done, as of v0.20-beta1
  - (See more on the [issue tracker](https://github.com/sbrl/Pepperminty-Wiki/issues)!)
  - ...?
 

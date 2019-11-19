@@ -2,7 +2,7 @@
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
 
-## v0.20-dev
+## v0.20-beta1
 
 ### Added
  - Added automatic dark mode to default theme using [`prefers-color-scheme`](https://starbeamrainbowlabs.com/blog/article.php?article=posts%2F353-prefers-color-scheme.html)
