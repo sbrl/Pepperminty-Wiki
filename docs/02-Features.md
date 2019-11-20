@@ -4,6 +4,7 @@ Pepperminty Wiki has actually acquired a rather extensive feature set.
  - Configurable settings
 	 - Via `peppermint.json`
 	 - GUI available for moderators
+ - First-run wizard to help with basic configuration (since v0.19)
  - User login system
 	 - Graphical user management table for moderators
  - Page creation
@@ -22,9 +23,9 @@ Pepperminty Wiki has actually acquired a rather extensive feature set.
  - Simple edit conflict detection
  - Edit previewing (since v0.14, thanks to @ikisler)
  - Printable page view
- - Customisable theme
- - ~~Basic 'search' bar~~ A full-text search engine!
-	 - Dynamic server-side suggestions (since v0.13!)
+ - Customisable theme + theme gallery (new in v0.20!)
+ - ~~Basic 'search' bar~~ A full-text search engine (since v0.13), with high-performance advanced query syntax (since v0.20)!
+	 - Dynamic server-side suggestions (since v0.13)
  - Sidebar with a tree of all the current pages [optional]
  - Page tags
  - Page lists
