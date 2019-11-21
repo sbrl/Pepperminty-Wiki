@@ -19,6 +19,11 @@ For everything you need to know (including how to get your own copy!), you proba
 ## Real World Usage
 None yet! Contact me or [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) and tell me about where you are using Pepperminty Wiki and I'll add you to this section :smiley_cat:
 
+Pepperminty Wiki has been mentioned in a few places though:
+
+ - [Twitter, by @flameborn](https://twitter.com/flameborn/status/1196916602953961472)
+ - [Reddit, by u/flameborn](https://www.reddit.com/r/selfhosted/comments/d23mhx/yet_another_wiki/ezsu4rs?utm_source=share&utm_medium=web2x)
+
 ## Todo
 Here's a list of things that I want to add at some point (please feel free to [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls) and help out!).
 
