@@ -24,6 +24,9 @@ _Just 1 change since the previous beta release._
      - An object can now be used to define groups of items in the more menu
      - Hopefully it now looks less cluttered :P
  - Headings now have an automatic id if you don't specify one (part of #141)
+ - Server-side diagramming support! See the [`parser_ext_renderers`](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_parser_ext_renderers_enabled) setting for more information on how to configure it
+	 - It hooks into external programs such as [nomnoml](http://nomnoml.com), [plantuml](http://plantuml.com/), and `abcm2ps` ([ABC musical notation](https://abcnotation.com/) rendering)
+	 - It's generic enough to allow you to hook into any program that takes an input of some source text, and output some form of image
 
 ### Fixed
  - Fixed a bug in the search query performance metrics
