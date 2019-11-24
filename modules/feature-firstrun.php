@@ -33,7 +33,7 @@ register_module([
  		 * ██      ██ ██   ██ ███████    ██    ██   ██  ██████  ██   ████
 		 */
 		add_action("firstrun", function() {
-			global $settings, $settingsFilename;
+			global $settings, $settingsFilename, $version;
 			
 			if($settings->firstrun_complete) {
 				http_response_code(400);
@@ -74,6 +74,7 @@ register_module([
 			$result = "<h1>Welcome!</h1>
 <p>Welcome to Pepperminty Wiki.</p>
 <p>Fill out the below form to get your wiki up and running!</p>
+<p>Optionally, <a target='_blank' href='https://starbeamrainbowlabs.com/blog/viewtracker.php?action=record&post-id=pepperminty-wiki/$version&format=text'>click this link</a> to say hi and let Starbeamrainbowlabs know that you're setting up a new Pepperminty Wiki $version instance.</p>
 <form method='post' action='?action=firstrun-complete'>
 	<fieldset>
 		<legend>Authorisation</legend>
