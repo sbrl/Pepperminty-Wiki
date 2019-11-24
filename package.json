@@ -1,6 +1,6 @@
 {
 	"name": "pepperminty-wiki",
-	"version": "0.20.0-beta1",
+	"version": "0.20.0",
 	"description": "A wiki in a box",
 	"main": "index.js",
 	"directories": {
