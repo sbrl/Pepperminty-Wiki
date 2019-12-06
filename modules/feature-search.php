@@ -550,6 +550,9 @@ window.addEventListener("load", function(event) {
  * Represents a key-value data store.
  */
 class StorageBox {
+	const MODE_JSON = 0;
+	const MODE_ARR_SIMPLE = 1;
+	
 	/**
 	 * The SQLite database connection.
 	 * @var \PDO
@@ -623,6 +626,19 @@ class StorageBox {
 		}
 		return $this->cache[$key]["value"];
 	}
+	public function get_arr_simple(string $key, string $delimiter = "|") {
+		// If it's not in the cache, insert it
+		if(!isset($this->cache[$key])) {
+			$this->cache[$key] = [
+				"modified" => false,
+				"value" => explode($delimiter, $this->query(
+					"SELECT value FROM store WHERE key = :key;",
+					[ "key" => $key ]
+				)->fetchColumn())
+			];
+		}
+		return $this->cache[$key]["value"];
+	}
 	
 	/**
 	 * Sets a value in the data store.
@@ -634,6 +650,14 @@ class StorageBox {
 		if(!isset($this->cache[$key])) $this->cache[$key] = [];
 		$this->cache[$key]["value"] = $value;
 		$this->cache[$key]["modified"] = true;
+		$this->cache[$key]["mode"] = self::MODE_JSON;
+	}
+	public function set_arr_simple(string $key, $value, string $delimiter = "|") : void {
+		if(!isset($this->cache[$key])) $this->cache[$key] = [];
+		$this->cache[$key]["value"] = $value;
+		$this->cache[$key]["modified"] = true;
+		$this->cache[$key]["delimiter"] = $delimiter;
+		$this->cache[$key]["mode"] = self::MODE_ARR_SIMPLE;
 	}
 	
 	/**
@@ -646,6 +670,7 @@ class StorageBox {
 		if(isset($this->cache[$key]))
 			unset($this->cache[$key]);
 		// Remove it from disk
+		// TODO: Queue this action for the transaction later
 		return $this->query(
 			"DELETE FROM store WHERE key = :key;",
 			[ "key" => $key ]
@@ -676,7 +701,9 @@ class StorageBox {
 				"INSERT OR REPLACE INTO store(key, value) VALUES(:key, :value)",
 				[
 					"key" => $key,
-					"value" => json_encode($value_data["value"])
+					"value" => $value_data["mode"] == self::MODE_ARR_SIMPLE ?
+						implode($value_data["delimiter"], $value_data["value"]) :
+						json_encode($value_data["value"])
 				]
 			);
 		}
@@ -964,7 +991,7 @@ class search
 			// Delete the offsets
 			self::$invindex->delete("$nterm|$pageid");
 			// Delete the item from the list of pageids containing this term
-			$nterm_pageids = self::$invindex->get($nterm);
+			$nterm_pageids = self::$invindex->get_arr_simple($nterm);
 			array_splice($nterm_pageids, array_search($pageid, $nterm_pageids), 1);
 			if(empty($nterm_pageids)) { // No need to keep the pageid list if there's nothing in it
 				self::$invindex->delete($nterm);
@@ -973,21 +1000,22 @@ class search
 				if($termlist_loc !== false) array_splice($termlist, $termlist_loc, 1);
 			}
 			else
-				self::$invindex->set($nterm, $nterm_pageids);
+				self::$invindex->get_arr_simple($nterm, $nterm_pageids);
 		}
 		
 		// Merge all the new / changed index entries into the inverted index
 		foreach($index as $nterm => $newentry) {
+			// if(!is_string($nterm)) $nterm = strval($nterm);
 			if(!self::$invindex->has($nterm)) {
-				self::$invindex->set($nterm, []);
+				self::$invindex->set_arr_simple($nterm, []);
 				$termlist[] = $nterm;
 			}
 			
 			// Update the nterm pageid list
-			$nterm_pageids = self::$invindex->get($nterm);
+			$nterm_pageids = self::$invindex->get_arr_simple($nterm);
 			if(array_search($pageid, $nterm_pageids) === false) {
 				$nterm_pageids[] = $pageid;
-				self::$invindex->set($nterm, $nterm_pageids);
+				self::$invindex->set_arr_simple($nterm, $nterm_pageids);
 			}
 			
 			// Store the offset list
@@ -1004,7 +1032,7 @@ class search
 	public static function invindex_delete(int $pageid) {
 		$termlist = self::$invindex->get("|termlist|");
 		foreach($termlist as $nterm) {
-			$nterm_pageids = self::$invindex->get("$nterm");
+			$nterm_pageids = self::$invindex->get_arr_simple($nterm);
 			$nterm_loc = array_search($pageid, $nterm_pageids);
 			// If this nterm doesn't appear in the list, we're not interested
 			if($nterm_loc === false)
@@ -1022,7 +1050,7 @@ class search
 				array_splice($termlist, array_search($nterm, $termlist), 1);
 			}
 			else // Save the document id list back, since it still contains other pageids
-				self::$invindex->set($nterm, $nterm_pageids);
+				self::$invindex->set_arr_simple($nterm, $nterm_pageids);
 		}
 		// Save the termlist back to the store
 		self::$invindex->set("|termlist|", $termlist);
@@ -1221,7 +1249,7 @@ class search
 				continue; // Skip if it's not in the index
 			
 			// For each page that contains this term.....
-			$term_pageids = self::$invindex->get($term_def["term"]);
+			$term_pageids = self::$invindex->get_arr_simple($term_def["term"]);
 			foreach($term_pageids as $pageid) {
 				// Check to see if it contains any words we should exclude
 				$skip = false;

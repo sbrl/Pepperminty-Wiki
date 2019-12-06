@@ -75,7 +75,7 @@
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
         "description": "Displays a special page to aid in setting up a new wiki for the first time.",
-        "lastupdate": 1574596170,
+        "lastupdate": 1574596190,
         "optional": false,
         "extra_data": []
     },
@@ -135,7 +135,7 @@
         "version": "0.10.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
-        "lastupdate": 1569096292,
+        "lastupdate": 1575675114,
         "optional": false,
         "extra_data": []
     },
