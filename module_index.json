@@ -132,20 +132,20 @@
     {
         "id": "feature-search",
         "name": "Search",
-        "version": "0.10.1",
+        "version": "0.11",
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
-        "lastupdate": 1575675114,
+        "lastupdate": 1575838820,
         "optional": false,
         "extra_data": []
     },
     {
         "id": "feature-stats",
         "name": "Statistics",
-        "version": "0.2.2",
+        "version": "0.3",
         "author": "Starbeamrainbowlabs",
         "description": "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
-        "lastupdate": 1575837611,
+        "lastupdate": 1575837905,
         "optional": false,
         "extra_data": []
     },

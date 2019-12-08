@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Search",
-	"version" => "0.10.1",
+	"version" => "0.11",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
@@ -443,7 +443,7 @@ register_module([
 				exit("Error: The type '$type' is not one of the supported output types. Available values: json, opensearch. Default: json");
 			}
 			
-			$query = search::transliterate($_GET["query"]);
+			$query = search::$literator->transliterate($_GET["query"]);
 			
 			// Rank each page name
 			$results = [];
@@ -451,7 +451,7 @@ register_module([
 				$results[] = [
 					"pagename" => $pageName,
 					// Costs: Insert: 1, Replace: 8, Delete: 6
-					"distance" => levenshtein($query, search::transliterate($pageName), 1, 8, 6)
+					"distance" => levenshtein($query, search::$literator->transliterate($pageName), 1, 8, 6)
 				];
 			}
 			
@@ -782,22 +782,22 @@ class search
 	 */
 	private static $invindex = null;
 	/**
-	 * Cache variable for the transliterator instance used by search::transliterate.
+	 * The transliterator that can be used to transliterate strings.
+	 * Transliterated strings are more suitable for use with the search index.
+	 * Note that this is no longer wrapped in a function as of v0.21 for 
+	 * performance reasons.
 	 * @var Transliterator
 	 */
-	private static $literator = null;
+	public static $literator = null;
 	
 	/**
-	 * Transliterates a string to make it more suitable for entry into the search index.
-	 * @param  string $str The string to transliterate.
-	 * @return string      The transliterated string.
+	 * Initialises the search system.
+	 * Do not call this function! It is called automatically.
 	 */
-	public static function transliterate(string $str) : string {
-		if(self::$literator == null)
-			self::$literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
-		
-		return self::$literator->transliterate($str);
+	public static function init() {
+		self::$literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
 	}
+	
 	
 	/**
 	 * Converts a source string into an index of search terms that can be
@@ -843,7 +843,7 @@ class search
 		// We don't need to normalise here because the transliterator handles 
 		// this for us. Also, we can't move the literator to a static member 
 		// variable because PHP doesn't like it very much
-		$source = self::transliterate($source);
+		$source = self::$literator->transliterate($source);
 		$source = preg_replace('/[\[\]\|\{\}\/]/u', " ", $source);
 		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, $flags);
 	}
@@ -1071,7 +1071,7 @@ class search
 	 * @param	string	$query	The queyr string to split.
 	 */
 	public function stas_split($query) {
-		$chars = str_split(self::transliterate($query));
+		$chars = str_split(self::$literator->transliterate($query));
 		$terms = [];
 		$next_term = "";
 		$toggle_state = false; // true = now inside, false = now outside
@@ -1218,7 +1218,7 @@ class search
 		global $settings, $pageindex;
 		
 		$query_stas = self::stas_parse(
-			self::stas_split(self::transliterate($query))
+			self::stas_split(self::$literator->transliterate($query))
 		);
 		
 		/* Sub-array format:
@@ -1290,8 +1290,8 @@ class search
 				// Setup a variable to hold the current page's id
 				$pageid = null; // Cache the page id
 				
-				$lit_title = self::transliterate($pagename);
-				$lit_tags = isset($pagedata->tags) ? self::transliterate(implode(" ", $pagedata->tags)) : null;
+				$lit_title = self::$literator->transliterate($pagename);
+				$lit_tags = isset($pagedata->tags) ? self::$literator->transliterate(implode(" ", $pagedata->tags)) : null;
 				
 				// Make sure that the title & tags don't contain a term we should exclude
 				$skip = false;
@@ -1489,5 +1489,7 @@ class search
 		return $context;
 	}
 }
+// Run the init function
+search::init();
 
 ?>
