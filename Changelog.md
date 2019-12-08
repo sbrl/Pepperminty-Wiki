@@ -6,8 +6,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ## Changed
  - Improved the search indexing system performance - again
      - Another search index rebuild is required
- - Don't generate the list of pages for the datalist if it isn't going to be displayed - especially noticeable on wikis with lots of pages
- - 
+ - Optimisation: Don't generate the list of pages for the datalist if it isn't going to be displayed (especially noticeable on wikis with lots of pages)
+ - Optimisation: Don't load the statistics index if it's not needed (also esp. noticeable on wikis with lots of pages)
 
 ## v0.20
 _Just 1 change since the previous beta release._

@@ -145,7 +145,7 @@
         "version": "0.2.2",
         "author": "Starbeamrainbowlabs",
         "description": "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1575837611,
         "optional": false,
         "extra_data": []
     },

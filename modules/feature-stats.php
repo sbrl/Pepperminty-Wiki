@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Statistics",
-	"version" => "0.2.2",
+	"version" => "0.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
 	"id" => "feature-stats",
@@ -239,15 +239,23 @@ register_module([
  */
 function update_statistics($update_all = false, $force = false)
 {
-	global $settings, $statistic_calculators;
+	global $settings, $paths, $statistic_calculators;
+	
+	$stats_mtime = filemtime($paths->statsindex);
 	
 	// Clear the existing statistics if we are asked to recalculate them all
 	if($force)
 		stats_save(new stdClass());
+	// If the stats index exists and has been modified recently, then don't 
+	// even bother to load it
+	// This is an important optimisation, because json_decode is *slow*
+	else if(file_exists($paths->statsindex) && time() - $stats_mtime < $settings->stats_update_interval)
+		return;
 	
 	$stats = stats_load();
 	
 	$start_time = microtime(true);
+	$ran_out_of_time = false;
 	$stats_updated = 0;
 	foreach($statistic_calculators as $stat_id => $stat_calculator)
 	{
@@ -274,8 +282,11 @@ function update_statistics($update_all = false, $force = false)
 		
 		$stats_updated++;
 		
-		if(!$update_all && microtime(true) - $start_time >= $settings->stats_update_processingtime)
+		// Check to make sure we haven't run out of time to update the statistics this session
+		if(!$update_all && microtime(true) - $start_time >= $settings->stats_update_processingtime) {
+			$ran_out_of_time = true;
 			break;
+		}
 	}
 	
 	header("x-stats-recalculated: $stats_updated");
@@ -283,6 +294,10 @@ function update_statistics($update_all = false, $force = false)
 	header("x-stats-calctime: " . round((microtime(true) - $start_time)*1000, 3) . "ms");
 	
 	stats_save($stats);
+	// If we ran out of time, reset the mtime for performance reasons (see the 
+	// beginning of this function)
+	if($ran_out_of_time) 
+		touch($paths->statsindex, $stats_mtime);
 }
 
 /**
