@@ -52,9 +52,7 @@ register_module([
 			
 			$pagetext = "";
 			if(isset($pageindex->{$env->page}))
-			{
 				$pagetext = file_get_contents($filename);
-			}
 			
 			$isOtherUsersPage = false;
 			if(

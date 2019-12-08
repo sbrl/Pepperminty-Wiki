@@ -225,7 +225,7 @@
         "version": "0.17.6",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
-        "lastupdate": 1573400642,
+        "lastupdate": 1575835535,
         "optional": false,
         "extra_data": {
             "diff.min.js": "https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/jsdiff\/2.2.2\/diff.min.js"

@@ -519,17 +519,19 @@ class page_renderer
 	 */
 	public static function generate_all_pages_datalist() {
 		global $settings, $pageindex;
-		$arrayPageIndex = get_object_vars($pageindex);
-		$sorter = new Collator("");
-		uksort($arrayPageIndex, function($a, $b) use($sorter) : int {
-			return $sorter->compare($a, $b);
-		});
+		
 		$result = "<datalist id='allpages'>\n";
 		
 		// If dynamic page sugggestions are enabled, then we should send a loading message instead.
 		if($settings->dynamic_page_suggestion_count > 0) {
 			$result .= "<option value='Loading suggestions...' />";
 		} else {
+			$arrayPageIndex = get_object_vars($pageindex);
+			$sorter = new Collator("");
+			uksort($arrayPageIndex, function($a, $b) use($sorter) : int {
+				return $sorter->compare($a, $b);
+			});
+			
 			foreach($arrayPageIndex as $pagename => $pagedetails) {
 				$escapedPageName = str_replace('"', '&quot;', $pagename);
 				$result .= "\t\t\t<option value=\"$escapedPageName\" />\n";
