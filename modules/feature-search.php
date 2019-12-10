@@ -1066,8 +1066,8 @@ class search
 	 */
 	
 	/**
-	 * Splits a *transliterated* query string into tokens.
-	 * Actually based on my earlier explode_adv https://starbeamrainbowlabs.com/blog/article.php?article=posts/081-PHP-String-Splitting.html
+	 * Splits a query string into tokens. Does not require that the input string be transliterated.
+	 * Actually based on my earlier explode_adv: https://starbeamrainbowlabs.com/blog/article.php?article=posts/081-PHP-String-Splitting.html
 	 * @param	string	$query	The queyr string to split.
 	 */
 	public function stas_split($query) {
