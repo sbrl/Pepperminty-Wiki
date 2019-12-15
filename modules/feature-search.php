@@ -750,7 +750,7 @@ class search
 		"because", "become", "becomes", "becoming", "been", "before",
 		"beforehand", "behind", "being", "below", "beside", "besides",
 		"between", "beyond", "bill", "both", "bottom", "but", "by", "call",
-		"can", "cannot", "cant", "co", "con", "could", "couldnt", "cry", "de",
+		"can", "can't", "cannot", "co", "con", "could", "couldnt", "cry", "de",
 		"describe", "detail", "do", "done", "down", "due", "during", "each",
 		"eg", "eight", "either", "eleven", "else", "elsewhere", "empty",
 		"enough", "etc", "even", "ever", "every", "everyone", "everything",
@@ -760,7 +760,7 @@ class search
 		"has", "hasnt", "have", "he", "hence", "her", "here", "hereafter",
 		"hereby", "herein", "hereupon", "hers", "herself", "him", "himself",
 		"his", "how", "however", "ie", "if", "in", "inc", "indeed",
-		"interest", "into", "is", "it", "its", "itself", "keep", "last",
+		"interest", "into", "is", "it", "its", "it's", "itself", "keep", "last",
 		"latter", "latterly", "least", "less", "ltd", "made", "many", "may",
 		"me", "meanwhile", "might", "mine", "more", "moreover", "most",
 		"mostly", "move", "much", "must", "my", "myself", "name", "namely",
@@ -851,8 +851,6 @@ class search
 			$flags |= PREG_SPLIT_OFFSET_CAPTURE;
 		
 		// We don't need to normalise here because the transliterator handles 
-		// this for us. Also, we can't move the literator to a static member 
-		// variable because PHP doesn't like it very much
 		$source = self::$literator->transliterate($source);
 		$source = preg_replace('/[\[\]\|\{\}\/]/u', " ", $source);
 		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, $flags);
