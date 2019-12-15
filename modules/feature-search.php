@@ -738,7 +738,8 @@ class StorageBox {
 class search
 {
 	/**
-	 * Words that we should exclude from the inverted index
+	 * Words that we should exclude from the inverted index.
+	 * @source	http://xpo6.com/list-of-english-stop-words/
 	 * @var string[]
 	 */
 	public static $stop_words = [
