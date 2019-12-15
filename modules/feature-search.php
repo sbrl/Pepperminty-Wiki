@@ -360,11 +360,13 @@ register_module([
 					case -1: $style .= "color: grey; text-decoration: wavy line-through;"; $title = "stop word"; break;
 					case 1: $style .= "color: blue;"; $title = "normal word"; break;
 				}
-				switch($term["location"]) {
-					case "body": $style = "color: cyan"; $title = "body only"; break;
-					case "title": $style .= "font-weight: bolder; font-size: 1.2em; color: orange;"; $title = "searching title only"; $token = $token_part; break;
-					case "tags": $style .= "font-weight: bolder; color: purple;"; $title = "searching tags only"; $token = $token_part; break;
-					case "all": $title .= ", searching everywhere";
+				if($term["weight"] !== -1) {
+					switch($term["location"]) {
+						case "body": $style = "color: cyan"; $title = "body only"; break;
+						case "title": $style .= "font-weight: bolder; font-size: 1.2em; color: orange;"; $title = "searching title only"; $token = $token_part; break;
+						case "tags": $style .= "font-weight: bolder; color: purple;"; $title = "searching tags only"; $token = $token_part; break;
+						case "all": $title .= ", searching everywhere";
+					}
 				}
 				
 				$result .= "<span title='$title' style='$style'>$token</span> ";
@@ -1067,36 +1069,29 @@ class search
 	
 	/**
 	 * Splits a query string into tokens. Does not require that the input string be transliterated.
-	 * Actually based on my earlier explode_adv: https://starbeamrainbowlabs.com/blog/article.php?article=posts/081-PHP-String-Splitting.html
-	 * @param	string	$query	The queyr string to split.
+	 * Was based on my earlier explode_adv: https://starbeamrainbowlabs.com/blog/article.php?article=posts/081-PHP-String-Splitting.html
+	 * Now improved to be strtok-based, since it's much faster.
+	 * Example I used when writing this: https://www.php.net/manual/en/function.strtok.php#94463
+	 * @param	string	$query	The query string to split.
 	 */
 	public function stas_split($query) {
-		$chars = str_split(self::$literator->transliterate($query));
+		$query = self::$literator->transliterate($query);
+		
 		$terms = [];
-		$next_term = "";
-		$toggle_state = false; // true = now inside, false = now outside
-		foreach($chars as $char)
-		{
-			if($char == '"') {
-				// Invert the toggle block state
-				$toggle_state = !$toggle_state;
-			}
+		$next_token = strtok($query, " \r\n\t");
+		while(true) {
 			
-			// If this char is whitespace *and* we're outside a toggle block, then it's a token
-			if(ctype_space($char) && !$toggle_state) {
-				// If the string is empty, then don't bother
-				if(empty($next_term)) continue;
-				$terms[] = $next_term;
-				$next_term = "";
-			}
-			// If it's not whitespace, or it is whitespace and we're inside a toggle block....
-			else if(!ctype_space($char) || ($toggle_state && ctype_space($char)))
-				$next_term .= $char; // ...then add the char to the next part
+			if(strpos($next_token, '"') !== false)
+				$next_token .= " " . strtok('"') . '"';
+			if(strpos($next_token, "'") !== false)
+				$next_token .= " " . strtok("'") . "'";
+
+			$terms[] = $next_token;
+			
+			$next_token = strtok(" \r\n\t");
+			if($next_token === false) break;
 		}
 		
-		if(strlen($next_term) > 0)
-			$terms[] = $next_term;
-
 		return $terms;
 	}
 
@@ -1132,17 +1127,31 @@ class search
 		for($i = count($tokens) - 1; $i >= 0; $i--) {
 			// Look for excludes
 			if($tokens[$i][0] == "-") {
-				$result["exclude"][] = substr($tokens[$i], 1);
+				if(in_array(substr($tokens[$i], 1), self::$stop_words)) {
+					$result["tokens"][] = [
+						"term" => substr($tokens[$i], 1),
+						"weight" => -1,
+						"location" => "all"
+					];
+				}
+				else
+					$result["exclude"][] = substr($tokens[$i], 1);
+				
 				continue;
 			}
 
 			// Look for weighted terms
 			if($tokens[$i][0] == "+") {
-				$result["terms"][] = [
-					"term" => substr($tokens[$i], 1),
-					"weight" => 2,
-					"location" => "all"
-				];
+				if(in_array(substr($tokens[$i], 1), self::$stop_words)) {
+					$result["tokens"] = [ "term" => substr($tokens[$i], 1), "weight" => -1, "location" => "all" ];
+				}
+				else {
+					$result["terms"][] = [
+						"term" => substr($tokens[$i], 1),
+						"weight" => 2,
+						"location" => "all"
+					];
+				}
 				continue;
 			}
 
