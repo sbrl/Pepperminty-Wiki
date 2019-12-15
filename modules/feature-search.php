@@ -340,10 +340,13 @@ register_module([
 					continue;
 				}
 				
+				
 				$term = null;
 				$token_part = $token;
+				if($token_part[0] == "+") $token_part = substr($token_part, 1);
 				if(strpos($token_part, ":") !== false) $token_part = explode(":", $token_part, 2)[1];
 				foreach($stas_query["terms"] as $c_term) {
+					// echo(var_export($token_part, true) . " / {$c_term["term"]}\n");
 					if($c_term["term"] == $token_part) {
 						$term = $c_term;
 						break;
@@ -360,6 +363,10 @@ register_module([
 					case -1: $style .= "color: grey; text-decoration: wavy line-through;"; $title = "stop word"; break;
 					case 1: $style .= "color: blue;"; $title = "normal word"; break;
 				}
+				if($term["weight"] > 1) {
+					$style .= "color: darkblue; font-weight: bold;";
+					$title = "weighted word";
+				}
 				if($term["weight"] !== -1) {
 					switch($term["location"]) {
 						case "body": $style = "color: cyan"; $title = "body only"; break;
@@ -368,6 +375,7 @@ register_module([
 						case "all": $title .= ", searching everywhere";
 					}
 				}
+				$title .= ", weight: {$term["weight"]}";
 				
 				$result .= "<span title='$title' style='$style'>$token</span> ";
 			}

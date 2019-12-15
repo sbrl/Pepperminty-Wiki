@@ -3,6 +3,9 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## v0.21-dev
 
+## Fixed
+ - Fixed weighted word support on search query analysis debug page
+
 ## Changed
  - Improved the search indexing system performance - again
      - Another search index rebuild is required
