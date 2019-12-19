@@ -6,6 +6,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ## Fixed
  - Fixed weighted word support on search query analysis debug page
  - Added missing apostrophes to stop words in search system. Regenerating your search index will now yield a slightly smaller index
+ - Fixed link loop when logging in for crawlers
 
 ## Changed
  - Improved the search indexing system performance - again
