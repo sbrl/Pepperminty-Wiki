@@ -135,7 +135,7 @@
         "version": "0.11",
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
-        "lastupdate": 1576440066,
+        "lastupdate": 1576615079,
         "optional": false,
         "extra_data": []
     },
@@ -186,6 +186,16 @@
         "author": "Starbeamrainbowlabs",
         "description": "Adds a organiser page that lets moderators (or better) control the reegistered user accounts, and perform adminstrative actions such as password resets, and adding \/ removing accounts.",
         "lastupdate": 1557574803,
+        "optional": false,
+        "extra_data": []
+    },
+    {
+        "id": "feature-watchlist",
+        "name": "User watchlists",
+        "version": "0.1",
+        "author": "Starbeamrainbowlabs",
+        "description": "Adds per-user watchlists. When a page on a user's watchlist is edited, a notification email is sent.",
+        "lastupdate": 1577024516,
         "optional": false,
         "extra_data": []
     },
