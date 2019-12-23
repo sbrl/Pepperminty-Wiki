@@ -61,10 +61,10 @@ register_module([
 					if(!empty($watchlist)) {
 						$content .= "<ul class='page-list watchlist'>\n";
 						foreach($watchlist as $pagename) {
-							$content .= "<li><a href='?action=watchlist-edit&page=".rawurlencode($pagename)."&do=remove'>&#x274c;</a> <a href='?page=".rawurlencode($pagename)."'>".htmlentities($pagename)."</a></li>";
+							$content .= "<li><a href='?action=watchlist-edit&amp;page=".rawurlencode($pagename)."&amp;do=remove&amp;returnto=".rawurlencode("?action=watchlist&success=yes")."'>&#x274c;</a> <a href='?page=".rawurlencode($pagename)."'>".htmlentities($pagename)."</a></li>";
 						}
 						$content .= "</ul>";
-						$content .= "<p>You can also <a href='?action=watchlist&do=clear'>clear your entire list</a> and start again.</p>";
+						$content .= "<p>You can also <a href='?action=watchlist-edit&amp;do=clear&amp;returnto=".rawurlencode("?action=watchlist")."'>clear your entire list</a> and start again.</p>";
 					}
 					else {
 						$content .= "<p><em>You don't have any pages on your watchlist. Try visiting some pages and adding them to your watchlist and then coming back here.</em></p>";
@@ -194,6 +194,7 @@ register_module([
 				case "clear":
 					$env->user_data->watchlist = [];
 					save_settings();
+					break;
 				default:
 					http_response_code(400);
 					header("x-status: failed");

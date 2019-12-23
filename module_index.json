@@ -195,7 +195,7 @@
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds per-user watchlists. When a page on a user's watchlist is edited, a notification email is sent.",
-        "lastupdate": 1577116869,
+        "lastupdate": 1577117322,
         "optional": false,
         "extra_data": []
     },
