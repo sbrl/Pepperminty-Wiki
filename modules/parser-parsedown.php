@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.10",
+	"version" => "0.10.1",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation.",
 	"extra_data" => [
@@ -10,8 +10,8 @@ register_module([
 		 * Parsedown Extra:		0.8.0-beta-1	*
 		 * Parsedown Extreme:	0.1.6			*
 		 ****************************************/
-		"Parsedown.php" => "https://raw.githubusercontent.com/erusev/parsedown/fe7a50eceb4a3c867cc9fa9c0aa906b1067d1955/Parsedown.php",
-		"ParsedownExtra.php" => "https://raw.githubusercontent.com/erusev/parsedown-extra/f21b40a1973b6674903a6da9857ee215e8839f96/ParsedownExtra.php",
+		"Parsedown.php" => "https://raw.githubusercontent.com/erusev/parsedown/3825db53a2be5d9ce54436a9cc557c6bdce1808a/Parsedown.php",
+		"ParsedownExtra.php" => "https://raw.githubusercontent.com/erusev/parsedown-extra/352d03d941fc801724e82e49424ff409175261fd/ParsedownExtra.php",
 		"ParsedownExtreme.php" => "https://raw.githubusercontent.com/BenjaminHoegh/parsedown-extreme/adae4136534ad1e4159fe04c74c4683681855b84/ParsedownExtreme.php"
 		// TODO: Add Parsedown Extreme support
 	],
