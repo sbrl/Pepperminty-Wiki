@@ -210,6 +210,8 @@ register_module([
 				header("location: $returnto");
 				$message .= " <a href='".htmlentities($returnto)."'>Click here</a> to return to your previous page.";
 			}
+			else
+				$message .= " <a href='javascript:history.back();'>Go back</a> to your previous page, or <a href='?action=watchlist'>review your watchlist</a>.</a>";
 			exit(page_renderer::render_main("Watchlist update successful", "<p>$message</p>"));
 		});
 	}

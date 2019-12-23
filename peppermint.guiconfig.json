@@ -170,6 +170,10 @@
 			[
 				"&#x1f4e4; Upload",
 				"index.php?action=upload"
+			],
+			[
+				"&#x1f52d; Watch",
+				"index.php?action=watchlist-edit&do=add&page={page}"
 			]
 		]
 	} },
