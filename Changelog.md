@@ -3,6 +3,10 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## v0.21-dev
 
+## Added
+ - Watchlists! A new addition has been added to the more menu to add the current page to your personal watchlist
+     - An email will be sent to all users watching a page when an edit is saved to it (uses the PHP `mail()` function internally, via the [`email_user()`](https://starbeamrainbowlabs.com/labs/peppermint/docs/ModuleApi/#method_email_user) internal Pepperminty Wiki utility function)
+
 ## Fixed
  - Fixed weighted word support on search query analysis debug page
  - Added missing apostrophes to stop words in search system. Regenerating your search index will now yield a slightly smaller index
