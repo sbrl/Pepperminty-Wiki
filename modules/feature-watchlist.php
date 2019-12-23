@@ -61,7 +61,7 @@ register_module([
 					if(!empty($watchlist)) {
 						$content .= "<ul class='page-list watchlist'>\n";
 						foreach($watchlist as $pagename) {
-							$content .= "<li><a href='?action=watchlist-edit&amp;page=".rawurlencode($pagename)."&amp;do=remove&amp;returnto=".rawurlencode("?action=watchlist&success=yes")."'>&#x274c;</a> <a href='?page=".rawurlencode($pagename)."'>".htmlentities($pagename)."</a></li>";
+							$content .= "<li><a href='?action=watchlist-edit&amp;page=".rawurlencode($pagename)."&amp;do=remove&amp;returnto=".rawurlencode("?action=watchlist&success=yes")."' title='Remove from watchlist'>&#x274c;</a> <a href='?page=".rawurlencode($pagename)."'>".htmlentities($pagename)."</a></li>";
 						}
 						$content .= "</ul>";
 						$content .= "<p>You can also <a href='?action=watchlist-edit&amp;do=clear&amp;returnto=".rawurlencode("?action=watchlist")."'>clear your entire list</a> and start again.</p>";
