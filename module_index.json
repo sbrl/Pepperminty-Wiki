@@ -195,7 +195,7 @@
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds per-user watchlists. When a page on a user's watchlist is edited, a notification email is sent.",
-        "lastupdate": 1577117779,
+        "lastupdate": 1577132588,
         "optional": false,
         "extra_data": []
     },
@@ -232,10 +232,10 @@
     {
         "id": "page-edit",
         "name": "Page editor",
-        "version": "0.17.6",
+        "version": "0.17.7",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
-        "lastupdate": 1575835535,
+        "lastupdate": 1577118172,
         "optional": false,
         "extra_data": {
             "diff.min.js": "https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/jsdiff\/2.2.2\/diff.min.js"

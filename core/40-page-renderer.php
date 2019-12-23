@@ -556,17 +556,32 @@ if(!empty($settings->enable_math_rendering))
 // alt+enter support in the search box
 page_renderer::add_js_snippet('// Alt + Enter support in the top search box
 window.addEventListener("load", function(event) {
-	document.querySelector("input[type=search]").addEventListener("keyup", function(event) {
-		// Listen for Alt + Enter
-		if(event.keyCode == 13 && event.altKey) {
-			event.stopPropagation();
-			event.preventDefault();
-			event.cancelBubble = true;
-			event.target.form.setAttribute("target", "_blank");
-			event.target.form.submit();
-			event.target.form.removeAttribute("target");
-			return false; // Required by some browsers
+	let search_box = document.querySelector("input[type=search]"),
+		alt_pressed = false;
+	document.addEventListener("keyup", (event) => {
+		if(event.keyCode !== 18) return;
+		alt_pressed = false;
+		console.info("[search box/alt-tracker] alt released");
+	});
+	document.addEventListener("keydown", (event) => {
+		if(event.keyCode !== 18) return;
+		alt_pressed = true;
+		console.info("[search box/alt-tracker] alt pressed");
+	});
+	
+	search_box.form.addEventListener("submit", (event) => {
+		if(!alt_pressed) {
+			console.log("[search box/form] Alt wasn\'t pressed");
+			event.target.removeAttribute("target");
+			return;
 		}
+		
+		console.log("[search box/form] Fiddling target");
+		
+		event.target.setAttribute("target", "_blank");
+		setTimeout(() => {
+			alt_pressed = false;
+		}, 100);
 	});
 });
 ');
