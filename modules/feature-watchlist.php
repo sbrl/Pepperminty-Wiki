@@ -154,7 +154,7 @@ register_module([
 			
 			// If the watchlist doesn't exist, create it
 			// Note that saving this isn't essential - so we don't bother unless we perform some other action too.
-			if(!is_array($env->user_data->watchlist))
+			if(!isset($env->user_data->watchlist) || !is_array($env->user_data->watchlist))
 				$env->user_data->watchlist = [];
 			
 			switch($do) {

@@ -172,10 +172,10 @@
     {
         "id": "feature-user-preferences",
         "name": "User Preferences",
-        "version": "0.3.3",
+        "version": "0.3.4",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a user preferences page, letting people do things like change their email address and password.",
-        "lastupdate": 1577140256,
+        "lastupdate": 1577140301,
         "optional": false,
         "extra_data": []
     },
