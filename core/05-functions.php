@@ -730,7 +730,19 @@ function email_user($username, $subject, $body)
 	foreach($headers as $header => $value)
 		$compiled_headers .= "$header: $value\r\n";
 	
-	return mail($settings->users->{$username}->emailAddress, $subject, $body, $compiled_headers, "-t");
+	if($settings->email_debug_dontsend) {
+		error_log("[email] Username: $username ({$settings->users->{$username}->emailAddress})
+Subject: $subject
+----- Headers -----
+$compiled_headers
+-------------------
+----- Body -----
+$body
+----------------");
+		return true;
+	}
+	else
+		return mail($settings->users->{$username}->emailAddress, $subject, $body, $compiled_headers, "-t");
 }
 /**
  * Sends a plain text email to a list of users, replacing {username} with each user's name.
