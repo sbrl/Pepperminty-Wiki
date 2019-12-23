@@ -111,7 +111,9 @@ register_module([
 		 * @apiError	NotLoggedIn			You aren't logged in, so you can't edit your watchlist (only logged in users have a watchlist).
 		 * @apiError	NoEmailAddress		The currently logged in user doesn't have an email address specified in their account.
 		 * @apiError	DoVerbNotRecognised	The specified do verb was not recognised. Supported verbs: add, remove, clear (a canonical list is returned with this error).
-		 * @apiError	PageNotFound	The page name was not found in your watchlist.
+		 *
+		 * @apiError	PageNotFoundOnWiki		The page name specified was not found on the wiki, so it can't be watched.
+		 * @apiError	PageNotFoundOnWatchlist	The page name was not found in your watchlist.
 		 */
 		
 		/*
@@ -122,29 +124,33 @@ register_module([
 		 * ███████ ██████  ██    ██
 		 */
 		add_action("watchlist-edit", function () {
-			global $settings, $env;
+			global $settings, $env, $pageindex;
+			
+			// The thing we should do.
+			$do = $_GET["do"] ?? "null";
+			// The location we should redirect to after doing it successfully, if anywhere
+			$returnto = empty($_GET["returnto"]) ? null : $_GET["returnto"];
 			
 			if(!$settings->watchlists_enable) {
 				http_response_code(403);
+				header("x-status: failed");
 				header("x-problem: watchlists-disabled");
 				exit(page_renderer::render_main("Watchlists disabled - $settings->sitename", "<p>Sorry, but watchlists are currently disabled on $settings->sitename. Contact your moderators to learn - their details are at the bottom of every page.</p>"));
 			}
 			
 			if(!$env->is_logged_in) {
 				http_response_code(401);
+				header("x-status: failed");
 				header("x-problem: not-logged-in");
-				exit(page_renderer::render_main("Not logged in - $settings->sitename", "<p>Only logged in users can have watchlists. Try <a href='?action=login&amp;returnto=".rawurlencode("?action=watchlist")."'>logging in</a>."));
+				exit(page_renderer::render_main("Not logged in - $settings->sitename", "<p>Only logged in users can have watchlists. Try <a href='?action=login&amp;returnto=".rawurlencode("?action=watchlist-edit&do=$do&returnto=$returnto")."'>logging in</a>.</p>"));
 			}
 			
 			if(empty($env->user_data->emailAddress)) {
 				http_response_code(422);
+				header("x-status: failed");
 				header("x-problem: no-email-address-in-user-preferences");
 				exit(page_renderer::render_main("No email address specified -$settings->sitename", "<p>You are logged in, but have not specified an email address to send notifications to. Try specifying one in your <a href='?action=user-preferences'>user preferences</a> and then coming back here.</p>"));
 			}
-			// The thing we should do.
-			$do = $_GET["do"] ?? "null";
-			// The location we should redirect to after doing it successfully, if anywhere
-			$returnto = $_GET["returnto"] ?? null;
 			
 			// If the watchlist doesn't exist, create it
 			// Note that saving this isn't essential - so we don't bother unless we perform some other action too.
@@ -153,10 +159,22 @@ register_module([
 			
 			switch($do) {
 				case "add":
+					if(empty($pageindex->{$env->page})) {
+						http_response_code(404);
+						header("x-status: failed");
+						header("x-problem: page-not-found-on-wiki");
+						exit(page_renderer::render_main("Page not found - Error - $settings->sitename", "<p>Oops! The page name <em>".htmlentities($env->page)."</em> couldn't be found on $settings->sitename. Try <a href='?action=edit&page=".rawurlencode($env->page)."'>creating it</a> and trying to add it to your watchlist again!</p>"));
+					}
+					if(in_array($env->page, $env->user_data->watchlist)) {
+						http_response_code(422);
+						header("x-status: failed");
+						header("x-problem: watchlist-page-already-present");
+						exit(page_renderer::render_main("Already on watchlist - Error - $settings->sitename", "<p>The page with the name <em>".htmlentities($env->page)."</em> is already on your watchlist, so it can't be added again.</p>"));
+					}
 					// Add the new page to the watchlist
 					$env->user_data->watchlist[] = $env->page;
 					// Sort the list
-					$collator = new Collator();
+					$collator = new Collator("");
 					$collator->sort($env->user_data->watchlist, SORT_NATURAL | SORT_FLAG_CASE);
 					// Save back to disk
 					save_settings();
@@ -165,6 +183,8 @@ register_module([
 					$index = array_search($env->page, $env->user_data->watchlist);
 					if($index === false) {
 						http_response_code(400);
+						header("x-status: failed");
+						header("x-problem: watchlist-item-not-found");
 						exit(page_renderer::render_main("Watchlist item not found - Error - $settings->sitename", "<p>Oops! The page with the name <em>".htmlentities($env->page)."</em> isn't currently on your watchlist, so it couldn't be removed. Perhaps you already removed it?</p>
 						<p>Try going <a href='?action=watchlist'>back to your watchlist</a>.</p>"));
 					}
@@ -176,15 +196,20 @@ register_module([
 					save_settings();
 				default:
 					http_response_code(400);
+					header("x-status: failed");
+					header("x-problem: watchlist-do-verb-not-recognised");
 					header("content-type: text/plain");
 					exit("Error: The do verb '$do' wasn't recognised. Current verbs supported: add, remove, clear");
 			}
 			
-			if($redirect) {
+			$message = "Your watchlist was updated successfully.";
+			if(!empty($returnto)) {
 				http_response_code(302);
+				header("x-status: success");
 				header("location: $returnto");
+				$message .= " <a href='".htmlentities($returnto)."'>Click here</a> to return to your previous page.";
 			}
-			exit(page_renderer::render_main("Watchlist update successful", "<p>Your watchlist was updated successful. <a href='".htmlentities($returnto)."'>Click here</a> to return to your previous page.</p>"));
+			exit(page_renderer::render_main("Watchlist update successful", "<p>$message</p>"));
 		});
 	}
 ]);

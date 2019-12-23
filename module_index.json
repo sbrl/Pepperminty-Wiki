@@ -75,7 +75,7 @@
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
         "description": "Displays a special page to aid in setting up a new wiki for the first time.",
-        "lastupdate": 1574596190,
+        "lastupdate": 1577025060,
         "optional": false,
         "extra_data": []
     },
@@ -195,7 +195,7 @@
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds per-user watchlists. When a page on a user's watchlist is edited, a notification email is sent.",
-        "lastupdate": 1577024516,
+        "lastupdate": 1577116869,
         "optional": false,
         "extra_data": []
     },
