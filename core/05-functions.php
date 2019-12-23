@@ -567,11 +567,17 @@ if (!function_exists('getallheaders'))  {
 /**
  * Renders a timestamp in HTML.
  * @package core
- * @param  int $timestamp The timestamp to render.
+ * @param	int		$timestamp	The timestamp to render.
+ * @param	boolean	$absolute	Whether the time should be displayed absolutely, or relative to the current time.
+ * @param	boolean	$html		Whether the result should formatted as HTML (true) or plain text (false).
  * @return string         HTML representing the given timestamp.
  */
-function render_timestamp($timestamp) {
-	return "<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $timestamp) . "'>" . human_time_since($timestamp) . "</time>";
+function render_timestamp($timestamp, $absolute = false, $html = true) {
+	$time_rendered = $absolute ? date("Y-m-d g:ia e", $timestamp) : human_time_since($timestamp);
+	if($html)
+		return "<time class='cursor-query' datetime='".date("c",  $timestamp)."' title='" . date("l jS \of F Y \a\\t h:ia T", $timestamp) . "'>$time_rendered</time>";
+	else
+		return $time_rendered;
 }
 /**
  * Renders a page name in HTML.
