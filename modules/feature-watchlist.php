@@ -30,16 +30,19 @@ register_module([
 			
 			if(!$settings->watchlists_enable) {
 				http_response_code(403);
+				header("x-problem: watchlists-disabled");
 				exit(page_renderer::render_main("Watchlists disabled - $settings->sitename", "<p>Sorry, but watchlists are currently disabled on $settings->sitename. Contact your moderators to learn - their details are at the bottom of every page.</p>"));
 			}
 			
 			if(!$env->is_logged_in) {
 				http_response_code(401);
+				header("x-problem: not-logged-in");
 				exit(page_renderer::render_main("Not logged in - $settings->sitename", "<p>Only logged in users can have watchlists. Try <a href='?action=login&amp;returnto=".rawurlencode("?action=watchlist")."'>logging in</a>."));
 			}
 			
 			if(empty($env->user_data->emailAddress)) {
 				http_response_code(422);
+				header("x-problem: no-email-address-in-user-preferences");
 				exit(page_renderer::render_main("No email address specified -$settings->sitename", "<p>You are logged in, but have not specified an email address to send notifications to. Try specifying one in your <a href='?action=user-preferences'>user preferences</a> and then coming back here.</p>"));
 			}
 			
@@ -113,7 +116,41 @@ register_module([
 		 * ███████ ██████  ██    ██
 		 */
 		add_action("watchlist-edit", function () {
-			// TODO: Fill this in
+			global $settings, $env;
+			
+			if(!$settings->watchlists_enable) {
+				http_response_code(403);
+				header("x-problem: watchlists-disabled");
+				exit(page_renderer::render_main("Watchlists disabled - $settings->sitename", "<p>Sorry, but watchlists are currently disabled on $settings->sitename. Contact your moderators to learn - their details are at the bottom of every page.</p>"));
+			}
+			
+			if(!$env->is_logged_in) {
+				http_response_code(401);
+				header("x-problem: not-logged-in");
+				exit(page_renderer::render_main("Not logged in - $settings->sitename", "<p>Only logged in users can have watchlists. Try <a href='?action=login&amp;returnto=".rawurlencode("?action=watchlist")."'>logging in</a>."));
+			}
+			
+			if(empty($env->user_data->emailAddress)) {
+				http_response_code(422);
+				header("x-problem: no-email-address-in-user-preferences");
+				exit(page_renderer::render_main("No email address specified -$settings->sitename", "<p>You are logged in, but have not specified an email address to send notifications to. Try specifying one in your <a href='?action=user-preferences'>user preferences</a> and then coming back here.</p>"));
+			}
+			$do = $_GET["do"] ?? "null";
+			
+			if(!is_array($env->user_data->watchlist))
+				$env->user_data->watchlist = [];
+			
+			switch($do) {
+				case "add":
+					$env->user_data->watchlist[] = $env->page;
+					$collator = new Collator();
+					$collator->sort($env->user_data->watchlist, SORT_NATURAL | SORT_FLAG_CASE);
+					break;
+				default:
+					http_response_code(400);
+					header("content-type: text/plain");
+					exit("Error: The do verb '$do' wasn't recognised. Current verbs supported: add, remove, clear");
+			}
 		});
 	}
 ]);
