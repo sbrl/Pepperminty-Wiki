@@ -215,7 +215,7 @@ register_module([
 			exit(page_renderer::render_main("Watchlist update successful", "<p>$message</p>"));
 		});
 		
-		if(!module_exists("edit")) {
+		if(!module_exists("page-edit")) {
 			error_log("[module/feature-watchlist] Note: Without the page-edit module, the feature-watchlist module doesn't make much sense. If you don't want anonymous people to edit your wiki, try the 'anonedits' setting.");
 			return false;
 		}
