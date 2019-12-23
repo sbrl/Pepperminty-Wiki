@@ -10,7 +10,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - [security] Bugfix: Don't leak the PHP version in emails when expose_php is turned off
  - Fixed handling of Unicode characters when emailing users - added new `email_subject_utf8` and `email_body_utf8` settings to control the new behaviour
  - Add new `email_debug_dontsend` setting for debugging emails sent by Pepperminty Wiki
- - Fixed pressing alt + enter to open a search in a new tab - it should no longer fail and briefly prompt to allow popups
+ - Fixed pressing alt + enter to open a search in a new tab - it should no longer fail and briefly prompt to allow pop-ups
+ - Squashed a bug in the new upgraded get/set_array_simple search optimisation
 
 ## Changed
  - Improved the search indexing system performance - again

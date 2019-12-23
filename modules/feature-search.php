@@ -994,7 +994,7 @@ class search
 		if(!self::$invindex->has("|termlist|"))
 			self::$invindex->set("|termlist|", []);
 		$termlist = self::$invindex->get("|termlist|");
-		
+		error_log(var_export($removals, true));
 		// Remove all the subentries that were removed since last time
 		foreach($removals as $nterm) {
 			// Delete the offsets
@@ -1009,7 +1009,7 @@ class search
 				if($termlist_loc !== false) array_splice($termlist, $termlist_loc, 1);
 			}
 			else
-				self::$invindex->get_arr_simple($nterm, $nterm_pageids);
+				self::$invindex->set_arr_simple($nterm, $nterm_pageids);
 		}
 		
 		// Merge all the new / changed index entries into the inverted index
