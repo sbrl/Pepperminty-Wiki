@@ -89,4 +89,5 @@ else
 	$pageindex = json_decode(file_get_contents($paths->pageindex));
 	$env->perfdata->pageindex_decode_time = round((microtime(true) - $pageindex_read_start)*1000, 3);
 	header("x-pageindex-decode-time: " . $env->perfdata->pageindex_decode_time . "ms");
+	unset($pageindex_read_start);
 }
