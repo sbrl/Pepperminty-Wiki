@@ -43,5 +43,6 @@ Pepperminty Wiki has actually acquired a rather extensive feature set.
 	 - Change password
  - Threaded page comments (since v0.14)
  - Statistics system - can be extended by modules (since v0.15)
+ - Should be fully accessible (screen readers etc) - [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) if you encounter any problems
  - Customisable module based system
 	 - Allows you to add or remove features at will
