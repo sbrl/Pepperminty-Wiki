@@ -18,6 +18,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Optimisation: Don't load the statistics index if it's not needed (also esp. noticeable on wikis with lots of pages)
  - Optimisation: Refactor `stas_split()` to be faster (informal testing shows ~18% → 4% total time)
  - [Module Api] Optimisation: Remove `search::transliterate` because it has a huge overhead. Use `search::$literator->transliterate()` instead.
+ - [Module Api] Add new `absolute` and `html` optional boolean arguments to `render_timestamp()`
 
 ## v0.20
 _Just 1 change since the previous beta release._

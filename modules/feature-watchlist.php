@@ -214,6 +214,52 @@ register_module([
 				$message .= " <a href='javascript:history.back();'>Go back</a> to your previous page, or <a href='?action=watchlist'>review your watchlist</a>.</a>";
 			exit(page_renderer::render_main("Watchlist update successful", "<p>$message</p>"));
 		});
+		
+		if(!module_exists("edit")) {
+			error_log("[module/feature-watchlist] Note: Without the page-edit module, the feature-watchlist module doesn't make much sense. If you don't want anonymous people to edit your wiki, try the 'anonedits' setting.");
+			return false;
+		}
+		
+		register_save_preprocessor(function($indexentry, $new_data, $old_data) {
+			global $version, $commit, $env, $settings;
+			
+			$usernames = [];
+			foreach($settings->users as $username => $user_data) {
+				if(empty($user_data->watchlist))
+					continue;
+				
+				if(!in_array($env->page, $user_data->watchlist))
+					continue;
+				
+				$usernames[] = $username;
+			}
+			
+			$chars_changed = strlen($new_data) - strlen($old_data);
+			$chars_changed_text = ($chars_changed < 0 ? "removes " : "adds ") . "$chars_changed characters";
+			
+			// Calculate the stem from the current full URL by stripping everything after the question mark ('?')
+			$url_stem = full_url();
+			if(mb_strrpos($url_stem, "?") !== false) $url_steam = mb_substr($url_stem, mb_strrpos($url_stem, "?"));
+			
+			email_users(
+				$usernames,
+				"{$env->page} was updated by {$env->user} - $settings->sitename",
+				"Hey there!
+
+{$env->page} was updated by {$env->user} at ".render_timestamp(time(), true, false).", which $chars_changed_text.
+
+View the latest revision here: {$url_stem}?page=".rawurlencode($env->page)."
+
+---------- New page text ----------
+$new_data
+-----------------------------------
+
+--$settings->sitename, powered by Pepperminty Wiki $version-".substr($commit, 0, 7)."
+
+(P.S. Don't reply to this email, because it may not recieve a reply. Instead try contacting $settings->admindetails_name at $settings->admindetails_email, who is $settings->sitename's administrator if you have any issues.)
+"
+			);
+		});
 	}
 ]);
 
