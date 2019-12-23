@@ -69,5 +69,5 @@ if(!is_dir($paths->cache_directory))
 
 // Set the user agent string
 $php_version = ini_get("expose_php") == "1" ? "PHP/".phpversion() : "PHP";
-ini_set("user_agent", "$php_version (".PHP_SAPI."; ".PHP_OS." ".php_uname("m")."; ".(PHP_INT_SIZE*8)." bits; rv:$version) Pepperminty-Wiki/$version-".substr($commit, 0, 7));
+ini_set("user_agent", "$php_version ($settings->sitename; ".PHP_SAPI."; ".PHP_OS." ".php_uname("m")."; ".(PHP_INT_SIZE*8)." bits; rv:$version) Pepperminty-Wiki/$version-".substr($commit, 0, 7));
 unset($php_version);

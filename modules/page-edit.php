@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.17.6",
+	"version" => "0.17.7",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -38,17 +38,11 @@ register_module([
 			$filename = "$env->storage_prefix$env->page.md";
 			$creatingpage = !isset($pageindex->{$env->page});
 			if((isset($_GET["newpage"]) and $_GET["newpage"] == "true") or $creatingpage)
-			{
 				$title = "Creating $env->page";
-			}
 			else if(isset($_POST['preview-edit']) && isset($_POST['content']))
-			{
 				$title = "Preview Edits for $env->page";
-			}
 			else
-			{
 				$title = "Editing $env->page";
-			}
 			
 			$pagetext = "";
 			if(isset($pageindex->{$env->page}))
@@ -495,9 +489,7 @@ DIFFSCRIPT;
 				
 				// Execute all the preprocessors
 				foreach($save_preprocessors as $func)
-				{
 					$func($pageindex->{$env->page}, $pagedata, $oldpagedata);
-				}
 				
 				if($pagedata !== $pagedata_orig)
 					file_put_contents("$env->storage_prefix$env->page.md", $pagedata);

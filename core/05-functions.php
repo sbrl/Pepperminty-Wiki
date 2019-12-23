@@ -696,18 +696,36 @@ function email_user($username, $subject, $body)
 {
 	global $version, $settings;
 	
+	static $literator = null;
+	if($literator == null) $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: NFC;', Transliterator::FORWARD);
+	
 	// If the user doesn't have an email address, then we can't email them :P
 	if(empty($settings->users->{$username}->emailAddress))
 		return false;
 	
+	
+	$headers = [
+		"x-mailer" => ini_get("user_agent"),
+		"reply-to" => "$settings->admindetails_name <$settings->admindetails_email>"
+	];
+	
+	// Correctly encode the subject
+	if($settings->email_subject_utf8)
+		$subject = "=?utf-8?B?" . base64_encode($username) . "?=";
+	else
+		$subject = $literator->transliterate($subject);
+	
+	// Correctly encode the message body
+	if($settings->email_body_utf8)
+		$headers["content-type"] = "text/plain; charset=utf-8";
+	else {
+		$headers["content-type"] = "text/plain";
+		$body = $literator->transliterate($body);
+	}
+	
 	$subject = str_replace("{username}", $username, $subject);
 	$body = str_replace("{username}", $username, $body);
 	
-	$headers = [
-		"content-type" => "text/plain",
-		"x-mailer" => "$settings->sitename Pepperminty-Wiki/$version PHP/" . phpversion(),
-		"reply-to" => "$settings->admindetails_name <$settings->admindetails_email>"
-	];
 	$compiled_headers = "";
 	foreach($headers as $header => $value)
 		$compiled_headers .= "$header: $value\r\n";
