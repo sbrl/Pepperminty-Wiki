@@ -135,7 +135,7 @@
         "version": "0.11",
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
-        "lastupdate": 1577135005,
+        "lastupdate": 1577138545,
         "optional": false,
         "extra_data": []
     },
@@ -344,10 +344,10 @@
     {
         "id": "parser-parsedown",
         "name": "Parsedown",
-        "version": "0.10",
+        "version": "0.10.1",
         "author": "Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation.",
-        "lastupdate": 1577135577,
+        "lastupdate": 1577135603,
         "optional": false,
         "extra_data": {
             "Parsedown.php": "https:\/\/raw.githubusercontent.com\/erusev\/parsedown\/3825db53a2be5d9ce54436a9cc557c6bdce1808a\/Parsedown.php",
