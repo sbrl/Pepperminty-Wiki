@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "User Preferences",
-	"version" => "0.3.3",
+	"version" => "0.3.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a user preferences page, letting people do things like change their email address and password.",
 	"id" => "feature-user-preferences",
@@ -45,10 +45,14 @@ register_module([
 			}
 			
 			$content = "<h2>User Preferences</h2>\n";
-			if(isset($_GET["success"]) && $_GET["success"] === "yes")
-			{
+			if(isset($_GET["success"]) && $_GET["success"] === "yes") {
 				$content .= "<p class='user-prefs-status-message'><em>" . $statusMessages[$_GET["operation"]] . "</em></p>\n";
 			}
+			
+			if(has_action("watchlist") && module_exists("feature-watchlist")) {
+				$content .= "<p><em>Looking for your watchlist? Find it <a href='?action=watchlist'>here</a>!</p>";
+			}
+			
 			// If avatar support is present, allow the user to upload a new avatar
 			if(has_action("avatar") && module_exists("feature-upload")) {
 				$content .= "<a href='?action=upload&avatar=yes' class='preview'><figure>\n";

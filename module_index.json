@@ -175,7 +175,7 @@
         "version": "0.3.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a user preferences page, letting people do things like change their email address and password.",
-        "lastupdate": 1566671167,
+        "lastupdate": 1577140256,
         "optional": false,
         "extra_data": []
     },
