@@ -48,6 +48,24 @@ if [[ "$#" -lt 1 ]]; then
 	exit 1;
 fi
 
+# Tests to see if a PHP module is installed.
+# $1 - The name of the module to check for
+# $2 - The mode of operation. Values: optional, required
+# $3 - The error message to show
+test_php_module() {
+	module_name="${1}";
+	mode="${2}";
+	reason="${3}";
+	
+	subtask_begin "Checking for ${module_name} PHP module";
+	php -m | grep -q "${module_name}";
+	exit_code="${?}";
+	if [[ "${mode}" = "optional" ]] && [[ "${exit_code}" -ne 0 ]]; then
+		echo "${FYEL}${HC}Warning: The PHP module ${module} was not found. It is needed to ${reason}.${RS}";
+	fi
+	subtask_end "${exit_code}";
+}
+
 ###############################################################################
 
 task_setup() {
@@ -55,7 +73,13 @@ task_setup() {
 	
 	check_command git true;
 	check_command npm true;
-	check_command npm true;
+	check_command php true;
+	test_php_module "mbstring" "required" "handle utf-8 characters correctly";
+	test_php_module "imagick" "optional" "generate image previews";
+	test_php_module "fileinfo" "optional" "properly check the mime type of uploaded files";
+	test_php_module "zip" "optional" "compressing exports";
+	test_php_module "intl" "required" "transliteration in the search engine and when sending emails when utf-8 is disabled";
+	test_php_module "sqlite" "optional" "store the inverted search index";
 	check_command jq true optional;
 	[[ "$?" -eq 0 ]] || echo -e "${FYEL}${HC}Warning: jq is required to update the theme index.${RS}";
 	check_command firefox true optional;
