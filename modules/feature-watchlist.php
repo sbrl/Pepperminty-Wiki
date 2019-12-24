@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "User watchlists",
-	"version" => "0.1",
+	"version" => "0.1.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds per-user watchlists. When a page on a user's watchlist is edited, a notification email is sent.",
 	"id" => "feature-watchlist",
