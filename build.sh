@@ -23,7 +23,7 @@ server_pid_file="/tmp/pepperminty-wiki-dev-server.pid";
 ###############################################################################
 
 # Check out the lantern git submodule if needed
-if [ ! -d "${lantern_path}" ]; then git submodule update --init "${lantern_path}"; fi
+if [ ! -f "${lantern_path}/lantern.sh" ]; then git submodule update --init "${lantern_path}"; fi
 
 source "${lantern_path}/lantern.sh";
 
