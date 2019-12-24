@@ -225,9 +225,15 @@ register_module([
 			
 			$usernames = [];
 			foreach($settings->users as $username => $user_data) {
+				// Skip if this is the user that made the edit
+				if($username == $env->user)
+					continue;
+				
+				// If the user's watchlist is empty, then there's no point in checking it
 				if(empty($user_data->watchlist))
 					continue;
 				
+				// If it's not in the watchlist, then we shouldn't send an email
 				if(!in_array($env->page, $user_data->watchlist))
 					continue;
 				
