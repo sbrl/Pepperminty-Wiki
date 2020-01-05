@@ -67,7 +67,7 @@ register_module([
 			$content .= "	<input type='email' id='email-address' name='email-address' placeholder='e.g. bob@bobsrockets.com' value='{$env->user_data->emailAddress}' />\n";
 			$content .= "	<p><small>Used to send you notifications etc. Never shared with anyone except $settings->admindetails_name, $settings->sitename's administrator.</small></p>\n";
 			if($settings->email_user_verify) {
-				$content .= "	<p>Verification status: ".(!empty($env->user_data->emailAddressVerificationCode) || !$env->user_data->emailAddressVerificationCode ? "not " : "")."verified</p>";
+				$content .= "	<p>Email verification status: ".(!empty($env->user_data->emailAddressVerificationCode) || !$env->user_data->emailAddressVerificationCode ? "not " : "")."verified <em>Email address verification is required in order to receive emails (other than the verification email itself, of course). Click the link in the verification email sent to you to verify your address, or change it here to get another verification email.</em></p>";
 			}
 			$content .= "	<input type='submit' value='Save Preferences' />\n";
 			$content .= "</form>\n";
@@ -175,7 +175,7 @@ register_module([
 				http_resonse_code(400);
 				header("x-status: failed");
 				header("x-problem: code-incorrect");
-				exit(page_renderer::render_main("Verification code incorrect", "<p>That  verification code was incorrect. Try specifying another one, or going to your <a href='?action=user-preferences'>user preferences</a> and changing your email address to re-send another code (you can change it to the same address).</p>"));
+				exit(page_renderer::render_main("Verification code incorrect", "<p>That  verification code was incorrect. Try specifying another one, or going to your <a href='?action=user-preferences'>user preferences</a> and changing your email address to re-send another code.</p>"));
 			}
 			
 			// The code supplied must be valid
