@@ -136,7 +136,7 @@ function interwiki_get_pagename_url($interwiki_pagename) {
  * Note that this doesn't guarantee that it's a _valid_ interwiki link - only that it looks like one :P
  * @package interwiki-links
  * @param	string	$pagename	The page name to check.
- * @return	boolean	Whether the given page name is an interwiki link or not.
+ * @return	bool	Whether the given page name is an interwiki link or not.
  */
 function is_interwiki_link($pagename) {
 	return strpos($pagename, ":") !== false;

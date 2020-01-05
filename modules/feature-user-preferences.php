@@ -50,7 +50,7 @@ register_module([
 			}
 			
 			if(has_action("watchlist") && module_exists("feature-watchlist")) {
-				$content .= "<p><em>Looking for your watchlist? Find it <a href='?action=watchlist'>here</a>!</p>";
+				$content .= "<p><em>Looking for your watchlist? Find it <a href='?action=watchlist'>here</a>!</em></p>";
 			}
 			
 			// If avatar support is present, allow the user to upload a new avatar
@@ -67,7 +67,7 @@ register_module([
 			$content .= "	<input type='email' id='email-address' name='email-address' placeholder='e.g. bob@bobsrockets.com' value='{$env->user_data->emailAddress}' />\n";
 			$content .= "	<p><small>Used to send you notifications etc. Never shared with anyone except $settings->admindetails_name, $settings->sitename's administrator.</small></p>\n";
 			if($settings->email_user_verify) {
-				$content .= "	<p>Email verification status: ".(!empty($env->user_data->emailAddressVerificationCode) || !$env->user_data->emailAddressVerificationCode ? "not " : "")."verified <em>Email address verification is required in order to receive emails (other than the verification email itself, of course). Click the link in the verification email sent to you to verify your address, or change it here to get another verification email.</em></p>";
+				$content .= "	<p>Email verification status: <strong>".(empty($env->user_data->emailAddressVerificationCode) ? "not " : "")."verified</strong> <small><em>(Email address verification is required in order to receive emails (other than the verification email itself, of course). Click the link in the verification email sent to you to verify your address, or change it here to get another verification email)</em></small></p>";
 			}
 			$content .= "	<input type='submit' value='Save Preferences' />\n";
 			$content .= "</form>\n";
@@ -303,9 +303,9 @@ register_module([
  * If a user does not need to verify their email address, no verification email 
  * is sent and true is returned.
  * @param	string	$username	The name of the user to send the verification code to.
- * @return	boolean	Whether the verification code was sent successfully. If a user does not need to verify their email address, this returns true.
+ * @return	bool	Whether the verification code was sent successfully. If a user does not need to verify their email address, this returns true.
  */
-function email_user_verify(string $username) : boolean {
+function email_user_verify(string $username) : bool {
 	global $settings;
 	
 	$user_data = $settings->users->$username;

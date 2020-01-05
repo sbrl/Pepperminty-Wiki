@@ -13,7 +13,7 @@ register_module([
 		 * @apiGroup Stats
 		 * @apiPermission Anonymous
 		 *
-		 * @apiParam	{boolean}	Whether or not the result should be minified JSON. Default: false
+		 * @apiParam	{bool}	Whether or not the result should be minified JSON. Default: false
 		 */
 		
 	 	/*

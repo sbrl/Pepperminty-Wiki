@@ -13,7 +13,7 @@ register_module([
 		 * @apiGroup Upload
 		 * @apiPermission User
 		 *
-		 * @apiParam	{boolean}	avatar	Optional. If true then a special page to upload your avatar is displayed instead.
+		 * @apiParam	{bool}	avatar	Optional. If true then a special page to upload your avatar is displayed instead.
 		*/
 		
 		/**
@@ -25,7 +25,7 @@ register_module([
 		 * @apiParam {string}	name		The name of the file to upload.
 		 * @apiParam {string}	description	A description of the file.
 		 * @apiParam {file}		file		The file to upload.
-		 * @apiParam {boolean}	avatar		Whether this upload should be uploaded as the current user's avatar. If specified, any filenames provided will be ignored.
+		 * @apiParam {bool}	avatar		Whether this upload should be uploaded as the current user's avatar. If specified, any filenames provided will be ignored.
 		 *
 		 * @apiUse	UserNotLoggedInError
 		 * @apiError	UploadsDisabledError	Uploads are currently disabled in the wiki's settings.

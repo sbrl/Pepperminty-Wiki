@@ -234,8 +234,8 @@ register_module([
 /**
  * Updates the wiki's statistics.
  * @package feature-stats
- * @param  boolean $update_all Whether all the statistics should be checked and recalculated, or just as many as we have time for according to the settings.
- * @param  boolean $force      Whether we should recalculate statistics that don't currently require recalculating anyway.
+ * @param  bool $update_all Whether all the statistics should be checked and recalculated, or just as many as we have time for according to the settings.
+ * @param  bool $force      Whether we should recalculate statistics that don't currently require recalculating anyway.
  */
 function update_statistics($update_all = false, $force = false)
 {

@@ -13,7 +13,7 @@ register_module([
 		 * @apiPermission Anonymous
 		 * 
 		 * @apiParam {string}	string	The string to hash.
-		 * @apiParam {boolean}	raw		Whether to return the hashed password as a raw string instead of as part of an HTML page.
+		 * @apiParam {bool}	raw		Whether to return the hashed password as a raw string instead of as part of an HTML page.
 		 *
 		 * @apiError	ParamNotFound	The string parameter was not specified.
 		 */

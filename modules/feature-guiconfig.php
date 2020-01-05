@@ -172,7 +172,7 @@ SCRIPT;
 					else
 						$configValue = $_POST[$configKey];
 					
-					// Convert boolean settings to a boolean, since POST
+					// Convert bool settings to a bool, since POST
 					// parameters don't decode correctly.
 					if(is_bool($settings->$configKey))
 						$configValue = in_array($configValue, [ 1, "on"], true) ? true : false;

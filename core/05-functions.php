@@ -713,7 +713,7 @@ function extract_user_from_userpage($userPagename) {
  * @param	string	$body		The body of the email.
  * @return	bool	Whether the email was sent successfully or not. Currently, this may fail if the user doesn't have a registered email address.
  */
-function email_user(string $username, string $subject, string $body) : boolean
+function email_user(string $username, string $subject, string $body) : bool
 {
 	global $version, $env, $settings;
 	
