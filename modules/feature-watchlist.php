@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "User watchlists",
-	"version" => "0.1.1",
+	"version" => "0.1.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds per-user watchlists. When a page on a user's watchlist is edited, a notification email is sent.",
 	"id" => "feature-watchlist",
@@ -101,8 +101,7 @@ register_module([
 		 * @apiName WatchlistEdit
 		 * @apiGroup Settings
 		 * @apiPermission User
-		 *
-		 * TODO: Finish filling this out
+		 * 
 		 * @apiParam {string}	pagename	The name of the page to operate on.
 		 * @apiParam {string}	do			The thing to do. Supported verbs: add, remove, clear. The first 2 require the page GET parameter to be specified, but the clear verb doesn't (as it clears the entire list).
 		 * @apiParam {string}	returnto	Optional. Specifies a URL to redirect to (with the http status code 302) upon success.
@@ -243,9 +242,7 @@ register_module([
 			$chars_changed = strlen($new_data) - strlen($old_data);
 			$chars_changed_text = ($chars_changed < 0 ? "removes " : "adds ") . "$chars_changed characters";
 			
-			// Calculate the stem from the current full URL by stripping everything after the question mark ('?')
-			$url_stem = full_url();
-			if(mb_strrpos($url_stem, "?") !== false) $url_steam = mb_substr($url_stem, mb_strrpos($url_stem, "?"));
+			$url_stem = url_stem();
 			
 			email_users(
 				$usernames,
