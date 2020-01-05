@@ -9,6 +9,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Email address verification
      - Enabled by default. In order to receive emails users now need to verify their email address
      - This is done via a verification email that's sent when you change your email address (even if your email address is the same when you change your preferences and you haven't yet verified it)
+     - A new `email_verify_addresses` setting has been added to control the functionality
 
 ## Fixed
  - Fixed weighted word support on search query analysis debug page

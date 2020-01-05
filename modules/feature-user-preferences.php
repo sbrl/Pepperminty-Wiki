@@ -66,7 +66,7 @@ register_module([
 			$content .= "	<label for='email-address'>Email Address:</label>\n";
 			$content .= "	<input type='email' id='email-address' name='email-address' placeholder='e.g. bob@bobsrockets.com' value='{$env->user_data->emailAddress}' />\n";
 			$content .= "	<p><small>Used to send you notifications etc. Never shared with anyone except $settings->admindetails_name, $settings->sitename's administrator.</small></p>\n";
-			if($settings->email_user_verify) {
+			if($settings->email_verify_addresses) {
 				$content .= "	<p>Email verification status: <strong>".(empty($env->user_data->emailAddressVerified) ? "not " : "")."verified</strong> <small><em>(Email address verification is required in order to receive emails (other than the verification email itself, of course). Click the link in the verification email sent to you to verify your address, or change it here to get another verification email - changing it to the same email address is ok)</em></small></p>";
 			}
 			$content .= "	<input type='submit' value='Save Preferences' />\n";
@@ -121,11 +121,11 @@ register_module([
 				
 				// If email address verification is required and the email 
 				// address has changed, send a verification email now
-				if($settings->email_user_verify) {
+				if($settings->email_verify_addresses) {
 					if(empty($env->user_data->emailAddressVerified) && $old_address !== $_POST["email-address"])
 						$env->user_data->emailAddressVerified = false;
 					
-					if(empty($env->user_data->emailAddressVerified) && !email_user_verify($env->user)) {
+					if(empty($env->user_data->emailAddressVerified) && !email_verify_addresses($env->user)) {
 						http_response_code(503);
 						exit(page_renderer::render_main("Server error sending verification code - $settings->sitename", "<p>$settings->sitename tried to send you an email to verify your email address, but was unable to do so. The changes to your settings have not been saved. Please contact $settings->admindetails_name, whose email address can be found at the bottom of this page.</p>"));
 					}
