@@ -67,7 +67,7 @@ register_module([
 			$content .= "	<input type='email' id='email-address' name='email-address' placeholder='e.g. bob@bobsrockets.com' value='{$env->user_data->emailAddress}' />\n";
 			$content .= "	<p><small>Used to send you notifications etc. Never shared with anyone except $settings->admindetails_name, $settings->sitename's administrator.</small></p>\n";
 			if($settings->email_user_verify) {
-				$content .= "	<p>Email verification status: <strong>".(empty($env->user_data->emailAddressVerified) ? "not " : "")."verified</strong> <small><em>(Email address verification is required in order to receive emails (other than the verification email itself, of course). Click the link in the verification email sent to you to verify your address, or change it here to get another verification email)</em></small></p>";
+				$content .= "	<p>Email verification status: <strong>".(empty($env->user_data->emailAddressVerified) ? "not " : "")."verified</strong> <small><em>(Email address verification is required in order to receive emails (other than the verification email itself, of course). Click the link in the verification email sent to you to verify your address, or change it here to get another verification email - changing it to the same email address is ok)</em></small></p>";
 			}
 			$content .= "	<input type='submit' value='Save Preferences' />\n";
 			$content .= "</form>\n";
@@ -118,11 +118,14 @@ register_module([
 				}
 				$old_address = $env->user_data->emailAddress ?? null;
 				$env->user_data->emailAddress = $_POST["email-address"];
+				
 				// If email address verification is required and the email 
 				// address has changed, send a verification email now
-				if($settings->email_user_verify && $old_address !== $_POST["email-address"]) {
-					$env->user_data->emailAddressVerified = false;
-					if(!email_user_verify($env->user)) {
+				if($settings->email_user_verify) {
+					if(empty($env->user_data->emailAddressVerified) && $old_address !== $_POST["email-address"])
+						$env->user_data->emailAddressVerified = false;
+					
+					if(empty($env->user_data->emailAddressVerified) && !email_user_verify($env->user)) {
 						http_response_code(503);
 						exit(page_renderer::render_main("Server error sending verification code - $settings->sitename", "<p>$settings->sitename tried to send you an email to verify your email address, but was unable to do so. The changes to your settings have not been saved. Please contact $settings->admindetails_name, whose email address can be found at the bottom of this page.</p>"));
 					}
@@ -175,7 +178,7 @@ register_module([
 				http_resonse_code(400);
 				header("x-status: failed");
 				header("x-problem: code-incorrect");
-				exit(page_renderer::render_main("Verification code incorrect", "<p>That  verification code was incorrect. Try specifying another one, or going to your <a href='?action=user-preferences'>user preferences</a> and changing your email address to re-send another code.</p>"));
+				exit(page_renderer::render_main("Verification code incorrect", "<p>That  verification code was incorrect. Try specifying another one, or going to your <a href='?action=user-preferences'>user preferences</a> and changing your email address to re-send another code (changing it to the same email address is ok).</p>"));
 			}
 			
 			// The code supplied must be valid
