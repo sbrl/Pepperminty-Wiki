@@ -67,7 +67,7 @@ register_module([
 			$content .= "	<input type='email' id='email-address' name='email-address' placeholder='e.g. bob@bobsrockets.com' value='{$env->user_data->emailAddress}' />\n";
 			$content .= "	<p><small>Used to send you notifications etc. Never shared with anyone except $settings->admindetails_name, $settings->sitename's administrator.</small></p>\n";
 			if($settings->email_user_verify) {
-				$content .= "	<p>Email verification status: <strong>".(empty($env->user_data->emailAddressVerificationCode) ? "not " : "")."verified</strong> <small><em>(Email address verification is required in order to receive emails (other than the verification email itself, of course). Click the link in the verification email sent to you to verify your address, or change it here to get another verification email)</em></small></p>";
+				$content .= "	<p>Email verification status: <strong>".(empty($env->user_data->emailAddressVerified) ? "not " : "")."verified</strong> <small><em>(Email address verification is required in order to receive emails (other than the verification email itself, of course). Click the link in the verification email sent to you to verify your address, or change it here to get another verification email)</em></small></p>";
 			}
 			$content .= "	<input type='submit' value='Save Preferences' />\n";
 			$content .= "</form>\n";
@@ -190,7 +190,7 @@ register_module([
 			}
 			
 			header("x-status: success");
-			exit(page_renderer::render_main("Email Address Verified - $settings->sitename", "<p>Your email address was verified successfully. <a href='index.php'>Go to the main page</p>, or <a href='?action=user-preferences'>to your user preferences</a> to make further changes.</p>"));
+			exit(page_renderer::render_main("Email Address Verified - $settings->sitename", "<p>Your email address was verified successfully. <a href='index.php'>Go to the main page</a>, or to your <a href='?action=user-preferences'>user preferences</a> to make further changes.</p>"));
 		});
 		
 		/**
@@ -330,7 +330,8 @@ function email_user_verify(string $username) : bool {
 $settings->sitename requires that you verify your email address in order to use it.
 
 --$settings->sitename
-Powered by Pepperminty Wiki"
+Powered by Pepperminty Wiki",
+		true // ignore that the user's email address isn't verified
 	);
 }
 
