@@ -67,7 +67,7 @@ register_module([
 			$content .= "	<input type='email' id='email-address' name='email-address' placeholder='e.g. bob@bobsrockets.com' value='{$env->user_data->emailAddress}' />\n";
 			$content .= "	<p><small>Used to send you notifications etc. Never shared with anyone except $settings->admindetails_name, $settings->sitename's administrator.</small></p>\n";
 			if($settings->email_user_verify) {
-				$content .= "	<p>Verification status: ".(!empty($env->user_data->emailAddressVerificationCode) || !$env->user_data->emailAddressVerificationCode ? "not " : "")."verified</p>";
+				$content .= "	<p>Verification status: ".(!empty($env->user_data->emailAddressVerificationCode) || !$env->user_data->emailAddressVerificationCode ? "not " : "")."verified <em>Email address verification is required in order to receive emails (other than the verification email itself, of course).</em></p>";
 			}
 			$content .= "	<input type='submit' value='Save Preferences' />\n";
 			$content .= "</form>\n";
