@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "User Preferences",
-	"version" => "0.3.4",
+	"version" => "0.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a user preferences page, letting people do things like change their email address and password.",
 	"id" => "feature-user-preferences",
