@@ -39,13 +39,13 @@ function full_url($s = false, $use_forwarded_host = false) {
  * Uses full_url() under the hood.
  * Note that this is based on the URL of the current request.
  * @param	array	$s					The $_SERVER variable (defaults to $_SERVER)
- * @param	boolean	$use_forwarded_host	Whether to use the x-forwarded-host header or ignore it.
+ * @param	bool	$use_forwarded_host	Whether to use the x-forwarded-host header or ignore it.
  * @return	string	The stem url, as described above
  */
-function url_stem( $s = false, $use_forwarded_host = false) {
+function url_stem( $s = false, bool $use_forwarded_host = false) : string {
 	// Calculate the stem from the current full URL by stripping everything after the question mark ('?')
 	$url_stem = full_url();
-	if(mb_strrpos($url_stem, "?") !== false) $url_stem = mb_substr($url_stem, mb_strrpos($url_stem, "?"));
+	if(mb_strpos($url_stem, "?") !== false) $url_stem = mb_substr($url_stem, 0, mb_strpos($url_stem, "?"));
 	return $url_stem;
 }
 
@@ -711,9 +711,10 @@ function extract_user_from_userpage($userPagename) {
  * @param	string	$username	The username to send the email to.
  * @param	string	$subject	The subject of the email.
  * @param	string	$body		The body of the email.
+ * @param	bool	$ignore_verification	Whether to ignore user email verification status and send the email anyway. Defaults to false.
  * @return	bool	Whether the email was sent successfully or not. Currently, this may fail if the user doesn't have a registered email address.
  */
-function email_user(string $username, string $subject, string $body) : bool
+function email_user(string $username, string $subject, string $body, bool $ignore_verification = false) : bool
 {
 	global $version, $env, $settings;
 	
@@ -725,7 +726,7 @@ function email_user(string $username, string $subject, string $body) : bool
 		return false;
 	
 	// If email address verification is required but hasn't been done for this user, skip them
-	if(empty($env->user_data->emailAddressVerified))
+	if(empty($env->user_data->emailAddressVerified) && !$ignore_verification)
 		return false;
 	
 	
