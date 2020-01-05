@@ -28,10 +28,25 @@ function url_origin( $s = false, $use_forwarded_host = false )
  * @param	bool		$use_forwarded_host Whether to take the X-Forwarded-Host header into account.
  * @return	string						The full url, as requested by the client.
  */
-function full_url( $s = false, $use_forwarded_host = false )
-{
+function full_url($s = false, $use_forwarded_host = false) {
 	if($s == false) $s = $_SERVER;
 	return url_origin( $s, $use_forwarded_host ) . $s['REQUEST_URI'];
+}
+
+/**
+ * Get the stem URL at which this Pepperminty Wiki instance is located
+ * You can just append ?get_params_here to this and it will be a valid URL.
+ * Uses full_url() under the hood.
+ * Note that this is based on the URL of the current request.
+ * @param	array	$s					The $_SERVER variable (defaults to $_SERVER)
+ * @param	boolean	$use_forwarded_host	Whether to use the x-forwarded-host header or ignore it.
+ * @return	string	The stem url, as described above
+ */
+function url_stem( $s = false, $use_forwarded_host = false) {
+	// Calculate the stem from the current full URL by stripping everything after the question mark ('?')
+	$url_stem = full_url();
+	if(mb_strrpos($url_stem, "?") !== false) $url_stem = mb_substr($url_stem, mb_strrpos($url_stem, "?"));
+	return $url_stem;
 }
 
 /**
@@ -698,15 +713,19 @@ function extract_user_from_userpage($userPagename) {
  * @param	string	$body		The body of the email.
  * @return	bool	Whether the email was sent successfully or not. Currently, this may fail if the user doesn't have a registered email address.
  */
-function email_user($username, $subject, $body)
+function email_user(string $username, string $subject, string $body) : boolean
 {
-	global $version, $settings;
+	global $version, $env, $settings;
 	
 	static $literator = null;
 	if($literator == null) $literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: NFC;', Transliterator::FORWARD);
 	
 	// If the user doesn't have an email address, then we can't email them :P
 	if(empty($settings->users->{$username}->emailAddress))
+		return false;
+	
+	// If email address verification is required but hasn't been done for this user, skip them
+	if(empty($env->user_data->emailAddressVerified))
 		return false;
 	
 	
@@ -789,4 +808,17 @@ function delete_recursive($path, $delete_self = true) {
 			unlink($file->getPathname());
 	}
 	if($delete_self) rmdir($path);
+}
+
+/**
+ * Generates a crytographically-safe random id of the given length.
+ * @param	int		$length		The length of id to generate.
+ * @return	string	The random id.
+ */
+function crypto_id(int $length) : string {
+	// It *should* be the right length already, but it doesn't hurt to be safe
+	return substr(strtr(
+		base64_encode(random_bytes($length * 0.75)),
+		[ "=" => "", "+" => "-", "/" => "_"]
+	), 0, $length);
 }

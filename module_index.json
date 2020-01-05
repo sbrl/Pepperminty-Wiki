@@ -175,7 +175,7 @@
         "version": "0.3.4",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a user preferences page, letting people do things like change their email address and password.",
-        "lastupdate": 1577140301,
+        "lastupdate": 1578257121,
         "optional": false,
         "extra_data": []
     },
@@ -192,10 +192,10 @@
     {
         "id": "feature-watchlist",
         "name": "User watchlists",
-        "version": "0.1",
+        "version": "0.1.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds per-user watchlists. When a page on a user's watchlist is edited, a notification email is sent.",
-        "lastupdate": 1577141571,
+        "lastupdate": 1578255352,
         "optional": false,
         "extra_data": []
     },
