@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Credits",
-	"version" => "0.7.10",
+	"version" => "0.7.11",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
@@ -107,7 +107,7 @@ register_module([
 				],
 				"Inverted logic fix in the peppermint.json access detector (#179)" => [
 					"author" => "Kevin Otte",
-					"author_url" => "https://www.nivex.net/legacy.html",
+					"author_url" => "https://www.nivex.net/",
 					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/pull/179",
 					"icon" => "https://avatars3.githubusercontent.com/u/3833404?s=24&v=4"
 				]
