@@ -21,6 +21,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Fixed pressing alt + enter to open a search in a new tab - it should no longer fail and briefly prompt to allow pop-ups
  - Squashed a bug in the new upgraded get/set_array_simple search optimisation
  - Update Parsedown to squash warning in PHP 7.4+
+ - Fixed logic error in peppermint.json access checker (thanks, @nivex! #179)
 
 ## Changed
  - Improved the search indexing system performance - again
