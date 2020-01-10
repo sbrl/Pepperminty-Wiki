@@ -104,6 +104,12 @@ register_module([
 					"author_url" => "https://github.com/SeanFromIT",
 					"thing_url" => "https://gitter.im/Pepperminty-Wiki/Lobby?at=5d786927460a6f5a1600f1c1",
 					"icon" => "https://avatars3.githubusercontent.com/u/10387753?s=24&v=4"
+				],
+				"Inverted logic fix in the peppermint.json access detector (#179)" => [
+					"author" => "Kevin Otte",
+					"author_url" => "https://www.nivex.net/legacy.html",
+					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/pull/179",
+					"icon" => "https://avatars3.githubusercontent.com/u/3833404?s=24&v=4"
 				]
 			];
 			
