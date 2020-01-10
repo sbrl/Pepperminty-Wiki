@@ -49,7 +49,7 @@ register_module([
 			if(!$settings->disable_peppermint_access_check &&
 				php_sapi_name() !== "cli-server") { // The CLI server is single threaded, so it can't support loopback requests
 				$request_url = full_url();
-				$request_url = preg_replace("/\/(index.php)?\?.*$/", "/".$settingsFilename, $request_url);
+				$request_url = preg_replace("/\/(index.php)?\?.*$/", "/$settingsFilename", $request_url);
 				@file_get_contents($request_url);
 				// $http_response_header is a global reserved variable. More information: https://devdocs.io/php/reserved.variables.httpresponseheader
 				$response_code = intval(explode(" ", $http_response_header[0])[1]);
