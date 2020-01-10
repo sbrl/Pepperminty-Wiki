@@ -1,8 +1,10 @@
 # Changelog
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
+
 ## v0.20.1-hotfix1
  - Fixed logic error in peppermint.json access checker (thanks, @nivex! #179)
+
 
 ## v0.20
 _Just 1 change since the previous beta release._
