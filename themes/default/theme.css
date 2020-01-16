@@ -282,3 +282,32 @@ summary { cursor: pointer; }
 .reply-box-container.active { padding: 1em; background: var(--bg-comments-4); }
 
 footer { padding: 2rem; }
+
+/* Small screen adjustments */
+@media (max-width: 480px) {
+	body {
+		margin: 0;
+	}
+	nav.top {
+		position: static;
+		flex-direction: column;
+	}
+	nav.mega-menu {
+		flex-direction: column;
+	}
+	nav.top > span:first-child {
+		border-top: 3px solid var(--accent-a3);
+	}
+	
+	main:not(.printable) {
+		padding: 1em 1em 0.5em 1em;
+	}
+	
+	.comments {
+		padding: 1em;
+	}
+	
+	footer {
+		padding: 1em;
+	}
+}

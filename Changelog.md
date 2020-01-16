@@ -12,6 +12,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - This is done via a verification email that's sent when you change your email address (even if your email address is the same when you change your preferences and you haven't yet verified it)
      - A new `email_verify_addresses` setting has been added to control the functionality
  - Added dark theme to the [downloader](https://starbeamrainbowlabs.com/labs/peppermint/download.php) (will be updated at the next stable release)
+ - Added initial mobile theme support to the default theme
+     - There's still a bunch of work to do in this department, but it's a bit of a challenge to do so without breaking desktop support
 
 ### Fixed
  - Fixed weighted word support on search query analysis debug page
