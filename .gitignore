@@ -1,3 +1,4 @@
+module_index.json
 .serenata
 *.backup
 themes/**/*.png
