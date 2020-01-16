@@ -60,8 +60,21 @@
 		<!------------------->
 		<link rel="stylesheet" href="//starbeamrainbowlabs.com/theme/basic.css" />
 		<style>
-			body			{ padding: 1rem; color: #442772; background-colour: #eee8f2; } /* syntaxtic gets confused sometimes */
-			a 				{ color: #9e7eb4;	}
+			:root {
+				--bg-colour: #eee8f2;
+				--text-colour: #442772;
+				--link-colour: #9e7eb4;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--bg-colour: hsl(273, 15%, 16%);
+					/* --bg-colour: hsl(270, 29%, 28%); */
+					--text-colour: hsl(274, 75%, 81%);
+				}
+			}
+			
+			body			{ padding: 1rem; color: var(--text-colour); background-color: var(--bg-colour); } /* syntaxtic gets confused sometimes */
+			a 				{ color: var(--link-colour);	}
 			.largebutton	{ font-size: 2rem;	}
 			
 			.logo			{ max-width: 1.25em; vertical-align: middle;	}
