@@ -25,7 +25,7 @@ The following template text can be used for releases:
 ```markdown
 INTRODUCTION_HERE
 
-
+(DELETE_IF_APPROPRIATE)
 Note that this is a maintenance release that backports some urgent bugfixes to LATEST_STABLE_VERSION. Current development efforts are focused on NEXT_VERSION. The work-in-progress changelog for NEXT_VERSION can be found [here](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md).
 
 ## Updating
