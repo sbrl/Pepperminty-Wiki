@@ -3,9 +3,11 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Pepperminty Wiki Download</title>
+		
+		<link rel="shortcut icon" href="logo.png" />
 	</head>
 	<body>
-		<h1><img src="https://starbeamrainbowlabs.com/images/logos/peppermint.png" class="logo" /> Pepperminty Wiki Downloader</h1>
+		<h1><img src="https://starbeamrainbowlabs.com/images/logos/peppermint.png" class="logo" aria-hidden="true" /> Pepperminty Wiki Downloader</h1>
 		
 		<!-------------->
 		<h2>Module selector</h2>
