@@ -1,9 +1,10 @@
 # Changelog
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
+
 ## v0.21-dev
 
-## Added
+### Added
  - Watchlists! A new addition has been added to the more menu to add the current page to your personal watchlist
      - An email will be sent to all users watching a page when an edit is saved to it (uses the PHP `mail()` function internally, via the [`email_user()`](https://starbeamrainbowlabs.com/labs/peppermint/docs/ModuleApi/#method_email_user) internal Pepperminty Wiki utility function)
  - Email address verification
@@ -11,7 +12,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - This is done via a verification email that's sent when you change your email address (even if your email address is the same when you change your preferences and you haven't yet verified it)
      - A new `email_verify_addresses` setting has been added to control the functionality
 
-## Fixed
+### Fixed
  - Fixed weighted word support on search query analysis debug page
  - Added missing apostrophes to stop words in search system. Regenerating your search index will now yield a slightly smaller index
  - Fixed link loop when logging in for crawlers
@@ -22,7 +23,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Squashed a bug in the new upgraded get/set_array_simple search optimisation
  - Update Parsedown to squash warning in PHP 7.4+
 
-## Changed
+### Changed
  - Improved the search indexing system performance - again
      - Another search index rebuild is required
  - Optimisation: Don't generate the list of pages for the datalist if it isn't going to be displayed (especially noticeable on wikis with lots of pages)
@@ -31,7 +32,11 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - [Module Api] Optimisation: Remove `search::transliterate` because it has a huge overhead. Use `search::$literator->transliterate()` instead.
  - [Module Api] Add new `absolute` and `html` optional boolean arguments to `render_timestamp()`
 
- 
+
+## v0.20.2-hotfix2
+ - Update Parsedown to squash warnings in PHP 7.4
+ - Update the docs about how to get a copy
+
 ## v0.20.1-hotfix1
  - Fixed logic error in peppermint.json access checker (thanks, @nivex! #179)
 
