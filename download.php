@@ -20,7 +20,7 @@
 		
 		<table>
 			<tr>
-				<th></th>
+				<th>#</th>
 				<th>Name</th>
 				<th>Description</th>
 				<th>Author</th>
@@ -53,10 +53,10 @@
 		<hr />
 		
 		<p>
-			Pepperminty Wiki was built by <a href="https://starbeamrainbowlabs.com/"><img src="https://starbeamrainbowlabs.com/images/sbrl/SBRL-Small-64.png" class="logo" /> Starbeamrainbowlabs</a>. The code is available on <a href="//github.com/sbrl/pepperminty-wiki">GitHub</a>.
+			Pepperminty Wiki was built by <a href="https://starbeamrainbowlabs.com/"><img src="https://starbeamrainbowlabs.com/images/sbrl/SBRL-Small-64.png" class="logo" aria-hidden="true" /> Starbeamrainbowlabs</a>. The code is available on <a href="//github.com/sbrl/pepperminty-wiki">GitHub</a>.
 		</p>
 		<p>
-			Other contributors: <a href="https://github.com/ikisler"><img src="https://avatars2.githubusercontent.com/u/12506147?v=3&s=32" class="logo" /> @ikisler</a>
+			Other contributors: <a href="https://github.com/ikisler"><img src="https://avatars2.githubusercontent.com/u/12506147?v=3&s=32" class="logo" aria-hidden="true" /> @ikisler</a>
 		</p>
 		
 		<!------------------->
@@ -72,6 +72,7 @@
 					--bg-colour: hsl(273, 15%, 16%);
 					/* --bg-colour: hsl(270, 29%, 28%); */
 					--text-colour: hsl(274, 75%, 81%);
+					--link-colour: #b598c9;
 				}
 			}
 			
@@ -83,8 +84,7 @@
 		</style>
 		
 		<script>
-			function select(state)
-			{
+			function select(state) {
 				var checkboxes = document.querySelectorAll("input[type=checkbox]");
 				for(var i = 0; i < checkboxes.length; i++)
 				{
@@ -92,8 +92,7 @@
 				}
 			}
 			
-			function download()
-			{
+			function download() {
 				var url = "pack.php?web=true&modules=",
 					checkboxes = document.querySelectorAll("input[type=checkbox]");
 				for(var i = 0; i < checkboxes.length; i++) {
