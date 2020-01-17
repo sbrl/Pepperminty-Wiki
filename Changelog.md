@@ -40,6 +40,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Update Parsedown to squash warnings in PHP 7.4
  - Update the docs about how to get a copy
 
+
 ## v0.20.1-hotfix1
  - Fixed logic error in peppermint.json access checker (thanks, @nivex! #179)
 
