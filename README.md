@@ -8,6 +8,8 @@ Developed by Starbeamrainbowlabs (though contributions from others are welcome!)
 
 **Latest Version:** [![stable version badge](https://img.shields.io/github/release/sbrl/Pepperminty-Wiki.svg?color=brightgreen&label=stable)](https://github.com/sbrl/Pepperminty-Wiki/releases/latest) ![pre-release version badge](https://img.shields.io/github/v/release/sbrl/Pepperminty-Wiki?color=yellow&include_prereleases&label=pre-release) ![development version badge](https://img.shields.io/badge/dynamic/json?color=orange&label=development&query=latest_version&url=https%3A%2F%2Fstarbeamrainbowlabs.com%2Flabs%2Fpeppermint%2Fpack.php%3Fdetermine-latest-version) ([Changelog](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md))
 
+Stay up-to-date! [![RSS feed](https://img.shields.io/badge/%F0%9F%8D%84-RSS-orange)](https://github.com/sbrl/Pepperminty-Wiki/releases.atom) [![GitHub Releases](https://img.shields.io/badge/%E2%8E%94-GitHub%20Releases-black)](https://github.com/sbrl/Pepperminty-Wiki/releases) (Don't forget you can watch releases too) 
+
 ## Screenshot
 [![Main Page Example](https://i.imgur.com/5dmbKlz.png)](https://imgur.com/a/lsBc3cM)
 
