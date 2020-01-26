@@ -14,6 +14,10 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Added dark theme to the [downloader](https://starbeamrainbowlabs.com/labs/peppermint/download.php) (will be updated at the next stable release)
  - Added initial mobile theme support to the default theme
      - There's still a bunch of work to do in this department, but it's a bit of a challenge to do so without breaking desktop support
+ - Added autocomplete for tags when editing pages, powered by [Awesomplete](https://leaverou.github.io/awesomplete/)
+     - The new `editing_tags_autocomplete` setting - enabled by default - toggles it, but why would you want to turn it off? :P
+     - It should be reasonably accessible, judging from all the aria tags I'm seeing
+     - Get in touch if you experience performance issues with fetching tag lists from your wiki
 
 ### Fixed
  - Fixed weighted word support on search query analysis debug page

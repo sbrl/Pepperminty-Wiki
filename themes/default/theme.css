@@ -196,6 +196,13 @@ a.interwiki_link:active { color: var(--accent-d3); }
 .editform { position: relative; }
 textarea[name=content] { resize: none; }
 .fit-text-mirror { position: absolute; top: 0; left: -10000vw; word-wrap: break-word; white-space: pre-wrap; }
+
+.awesomplete { width: 100%; color: var(--text-dark); }
+.awesomplete > ul::before { display: none; }
+/* Overly specific to override library css */
+.awesomplete > ul[role=listbox] { top: 2.5em; background: var(--accent-a2); }
+
+
 main label:not(.link-display-label) { display: inline-block; min-width: 16rem; }
 input[type=text]:not(.link-display), input[type=password], input[type=url], input[type=email], input[type=number], textarea { margin: 0.5rem 0; }
 input[type=text], input[type=password], input[type=url], input[type=email], input[type=number], textarea, textarea[name=content] + pre, #search-box { padding: 0.5rem 0.8rem; background: var(--accent-a4); border: 0; border-radius: 0.3rem; font-size: 1rem; color: var(--text-bright); }

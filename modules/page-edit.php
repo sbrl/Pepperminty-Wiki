@@ -6,7 +6,9 @@ register_module([
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
 	"extra_data" => [
-		"diff.min.js" => "https://cdnjs.cloudflare.com/ajax/libs/jsdiff/2.2.2/diff.min.js"
+		"diff.min.js" => "https://cdnjs.cloudflare.com/ajax/libs/jsdiff/2.2.2/diff.min.js",
+		"awesomplete.min.js" => "https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js",
+		"awesomplete.min.css" => "https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css"
 	],
 	
 	"code" => function() {
@@ -33,7 +35,7 @@ register_module([
 		 *             %edit%
 		 */
 		add_action("edit", function() {
-			global $pageindex, $settings, $env;
+			global $pageindex, $settings, $env, $paths;
 			
 			$filename = "$env->storage_prefix$env->page.md";
 			$creatingpage = !isset($pageindex->{$env->page});
@@ -194,6 +196,41 @@ window.addEventListener("load", function(event) {
 		smartsave_restore();
 	});
 });');
+			// Why would anyone want this disabled?
+			if($settings->editing_tags_autocomplete) {
+				page_renderer::add_js_link("$paths->extra_data_directory/page-edit/awesomplete.min.js");
+				page_renderer::add_js_snippet('window.addEventListener("load", async (event) => {
+	// FUTURE: Optionally cache this?
+	let response = await fetch("?action=list-tags&format=text");
+	if(!response.ok) {
+		console.warn(`Warning: Failed to fetch tags list with status code ${response.status} ${response.statusText}`);
+		return;
+	}
+	
+	let tags = (await response.text()).split("\n");
+	console.log(tags);
+	window.input_tags_completer = new Awesomplete(
+		document.querySelector("#tags"), {
+			list: tags,
+			filter: function(text, input) {
+				console.log(arguments);
+				// Avoid suggesting tags that are already present
+				if(input.split(/,\s*/).includes(text.value)) return false;
+				return Awesomplete.FILTER_CONTAINS(text, input.match(/[^,]*$/)[0]);
+			},
+			item: function(text, input) {
+				return Awesomplete.ITEM(text, input.match(/[^,]*$/)[0]);
+			},
+			replace: function(text) {
+				var before = this.input.value.match(/^.+,\s*|/)[0];
+				this.input.value = before + text + ", ";
+			}
+		}
+	);
+});
+				');
+				$content .= "<link rel=\"stylesheet\" href=\"$paths->extra_data_directory/page-edit/awesomplete.min.css\" />";
+			}
 			
 			exit(page_renderer::render_main("$title - $settings->sitename", $content));
 		});
@@ -413,7 +450,7 @@ window.addEventListener("load", function(event) {
 					</form>";
 					
 					// Insert a reference to jsdiff to generate the diffs
-					$diffScript = <<<'DIFFSCRIPT'
+					$diff_script = <<<'DIFFSCRIPT'
 window.addEventListener("load", function(event) {
 	var destination = document.getElementById("highlighted-diff"),
 	diff = JsDiff.diffWords(document.getElementById("original-content").value, document.getElementById("new-content").value),
@@ -427,9 +464,9 @@ window.addEventListener("load", function(event) {
 	destination.innerHTML = output;
 });
 DIFFSCRIPT;
-					// diff.min.js is downloaded above
-					$content .= "\n<script src='$paths->extra_data_dir/page-edit/diff.min.js'></script>
-					<script>$diffScript</script>\n";
+
+					page_renderer::add_js_link("$paths->extra_data_directory/page-edit/diff.min.js");
+					page_renderer::add_js_snippet($diff_script);
 					
 					header("x-failure-reason: edit-conflict");
 					exit(page_renderer::render_main("Edit Conflict - $env->page - $settings->sitename", $content));

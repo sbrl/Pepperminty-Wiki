@@ -121,6 +121,7 @@ textarea, #tags, #search-box {
 	
 }
 .fit-text-mirror { position: absolute; left: -1000000px; }
+.awesomplete { width: 100%; }
 
 textarea, input:not([type=submit]):not([type=button]) {
 	font-family: "Ubuntu", sans-serif;

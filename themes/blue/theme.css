@@ -283,6 +283,7 @@ main label:not(.link-display-label){
 	display:inline-block;
 	min-width:16rem;
 }
+.awesomplete { width: 100%; }
 input[type=text]:not(.link-display), input[type=password], input[type=url], input[type=email], input[type=number], textarea{
 	margin:0.5rem 0;
 }
