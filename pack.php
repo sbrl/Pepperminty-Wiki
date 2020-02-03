@@ -7,7 +7,7 @@ if(!isset($paths)) {
 	$paths = new stdClass();
 	$paths->extra_data_directory = "build/._extra_data";
 }
-$theme_id = "default";
+$theme_id = $_ENV["PEPPERMINT_THEME"] ?? "default";
 
 if(isset($_GET["determine-latest-version"])) {
 	header("content-type: application/json");
