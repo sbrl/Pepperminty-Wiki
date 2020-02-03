@@ -28,6 +28,8 @@ INTRODUCTION_HERE
 (DELETE_IF_APPROPRIATE)
 Note that this is a maintenance release that backports some urgent bugfixes to LATEST_STABLE_VERSION. Current development efforts are focused on NEXT_VERSION. The work-in-progress changelog for NEXT_VERSION can be found [here](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md).
 
+Have you updated to this release? [Click this link to say hi](https://starbeamrainbowlabs.com/blog/viewtracker.php?action=record&format=text&post-id=pepperminty-wiki/PEPPERMINTY_WIKI_VERSION)!
+
 ## Updating
 You can update to this release simply by grabbing an updated copy of `index.php` and replacing the version in your current wiki (don't forget to take backups! I make every effort to squash as many bugs as possible, but you can never be too certain). You can get an updated copy of `index.php` in a number of ways:
 
