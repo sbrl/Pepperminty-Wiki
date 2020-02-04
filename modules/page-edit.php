@@ -108,8 +108,7 @@ register_module([
 			
 			$content = "<h1>$title</h1>\n";
 			$page_tags = implode(", ", (!empty($pageindex->{$env->page}->tags)) ? $pageindex->{$env->page}->tags : []);
-			if(!$env->is_logged_in and $settings->anonedits)
-			{
+			if(!$env->is_logged_in and $settings->anonedits) {
 				$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
 			}
 			
@@ -410,12 +409,16 @@ window.addEventListener("load", function(event) {
 			// Read in the new page tags, so long as there are actually some
 			// tags to read in
 			$page_tags = [];
-			if(strlen(trim($_POST["tags"])) > 0)
-			{
+			if(strlen(trim($_POST["tags"])) > 0) {
 				$page_tags = explode(",", $_POST["tags"]);
 				// Trim off all the whitespace
-				foreach($page_tags as &$tag)
+				foreach($page_tags as &$tag) {
 					$tag = trim($tag);
+				}
+				// Ignore empty tags
+				$page_tags = array_filter($page_tags, function($value) {
+					return !is_null($value) && $value !== '';
+				});
 			}
 			
 			// Check for edit conflicts
