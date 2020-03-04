@@ -1,3 +1,5 @@
+enable1*.txt
+*.sqlite
 module_index.json
 .serenata
 *.backup
