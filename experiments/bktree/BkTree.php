@@ -292,6 +292,40 @@ class BkTree
 		return $result;
 	}
 	
+	public function walk() {
+		$stack = [ (object)[
+			"id" => 0,
+			"node" => $this->box->get("node|0"),
+			"parent_id" => -1,
+			"parent" => null,
+			"depth" => 0
+		] ];
+		$stack_top = 0;
+		
+		// https://softwareengineering.stackexchange.com/a/226162/58491
+		while(!empty($stack)) {
+			// Take the topmost node off the stack
+			$current = $stack[$stack_top];
+			unset($stack[$stack_top]);
+			$stack_top--;
+			
+			// echo("Visiting "); var_dump($current);
+			yield $current;
+			
+			// Iterate over the child nodes
+			foreach($current->node->children as $child_distance => $child_id) {
+				$stack_top++;
+				$stack[$stack_top] = (object) [
+					"id" => $child_id,
+					"node" => $this->box->get("node|{$current->node->children->$child_distance}"),
+					"parent_id" => $current->id,
+					"parent" => $current->node,
+					"depth" => $current->depth + 1
+				];
+			}
+		}
+	}
+	
 	/**
 	 * Saves changes to the tree back to disk.
 	 * @return	void
