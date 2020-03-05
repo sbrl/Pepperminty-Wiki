@@ -1,4 +1,6 @@
 enable1*.txt
+*.dot
+experiments/bktree/*.png
 *.sqlite
 module_index.json
 .serenata
