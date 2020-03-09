@@ -134,7 +134,7 @@ class JsonStorageBox {
 	/**
 	 * Deletes an item from the data store.
 	 * @param	string	$key	The key of the item to delete.
-	 * @return	bool	Whether it was really deleted or not. Note that if it doesn't exist, then it can't be deleted.
+	 * @return	bool	Whether it was really deleted or not. Note that if it doesn't exist, then it can't be deleted. Note also that if a node is deleted before being persisted to disk, this will return false when in actuality it was deleted successfully.
 	 */
 	public function delete(string $key) : bool {
 		// Remove it from the cache

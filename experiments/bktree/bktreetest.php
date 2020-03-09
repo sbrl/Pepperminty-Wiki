@@ -73,7 +73,7 @@ else
 echo("Tree created in ".($tree["time"]*1000)."ms\n");
 $tree = $tree["value"];
 
-writegraph(); exit();
+// writegraph(); exit();
 
 function test_auto() {
 	global $tree;
@@ -98,7 +98,8 @@ while(true) {
 	readline_add_history($line);
 	
 	if($line[0] == ".") {
-		switch ($line) {
+		$parts = explode(" ", $line, 2);
+		switch ($parts[0]) {
 			case ".quit":
 			case ".exit":
 				$result = time_callable(function() use ($tree) {
@@ -110,19 +111,44 @@ while(true) {
 			
 			case ".help":
 				echo("dot commands:
-.exit          Exit, saving edits to the tree to disk
-.writegraph    Write a graphviz dot file to disk representing the tree in the current directory
-.stats         Compute statistics about the tree
+.exit               Exit, saving edits to the tree to disk
+.writegraph         Write a graphviz dot file to disk representing the tree in the current directory
+.stats              Compute statistics about the tree
+.trace {{string}}   Trace the path through the tree to {{string}}
+.remove {{string}}  Delete {{string}} from the tree
+.add {{string}}     Add {{string}} to the tree
 ");
 				break;
 			
 			case ".writegraph":
 				writegraph();
 				break;
+				
+			case ".remove":
+				$start_time = microtime(true);
+				$result = $tree->remove($parts[1]);
+				echo("{$parts[1]}".($result?"":" not")." successfully deleted from the tree in ".round((microtime(true) - $start_time)*1000)."ms\n");
+				break;
+			case ".add":
+				$start_time = microtime(true);
+				$depth = $tree->add($parts[1]);
+				echo("{$parts[1]} successfully added to the tree at depth $depth in ".round((microtime(true) - $start_time)*1000)."ms\n");
+				break;
+			
+			case ".trace":
+				$trace = $tree->trace($parts[1]);
+				foreach($trace as $depth => $item) {
+					echo("$depth: {$item->node->value} (#$item->id)\n");
+				}
+				break;
 			
 			case ".stats":
 				echo("Tree stats: ");
 				var_dump($tree->stats());
+				break;
+			
+			default:
+				echo("Error: Unknown dot-command {$parts[0]} (try .help)\n");
 				break;
 		}
 		continue;

@@ -104,7 +104,7 @@ class BkTree
 		// if($string == "bunny") echo("\nStart $string\n");
 		
 		$next_node = $this->box->get("node|$starting_node_id"); // Grab the root to start with
-		$next_node_id = 0;
+		$next_node_id = $starting_node_id;
 		$depth = 0; $visted = 0;
 		while(true) {
 			$visted++;
@@ -160,10 +160,11 @@ class BkTree
 			
 			$node_target_id = $node_target->children->$distance;
 			$node_target = $this->box->get("node|$node_target_id");
-			$stack[] = [ "node" => $node_target, "id" => $node_target->children->$distance ];
+			$stack[] = [ "node" => $node_target, "id" => $node_target_id ];
 		}
 		
-		$parent = end($stack); // The last item on the stack is the parent node
+		// The last item but 1 on the stack is the parent node
+		$parent = $stack[count($stack) - 2];
 		
 		// 1. Delete the connection from parent -> target
 		foreach($parent["node"]->children as $distance -> $id) {
@@ -180,16 +181,53 @@ class BkTree
 		// 2. Iterate over the target's children (if any) and re-hang them from the parent
 		// NOTE: We need to be careful that the characteristics of the tree are preserved. We should test this by tracing a node's location in the tree and purposefully removing nodes in the chain and see if the results returned as still the same
 		// 
-		// Hang the now orphaned children from the parent
+		// Hang the now orphaned children and all their decendants from the parent
 		foreach($node_target->children as $distance -> $id) {
 			$orphan = $this->box->get("node|$id");
-			// TODO: Optimise this
-			$this->box->delete("node|$id"); // Delete the orphan node
-			$this->add($orphan->value, $parent["id"]); // Re-hang it from the parent
+			$substack = [ [ "node" => $orphan, "id" => $id ] ]; $substack_top = 0;
+			while($substack_top >= 0) {
+				$next = $substack[$substack_top];
+				unset($substack[$substack_top]);
+				$substack_top--;
+				
+				$this->box->delete("node|{$next["id"]}"); // Delete the orphan node
+				$this->add($next["node"], $parent["id"]); // Re-hang it from the parent
+				
+				foreach($next["node"]->children as $distance => $sub_id) {
+					$substack[++$substack_top] = [
+						"node" => $this->box->get("node|$sub_id"),
+						"id" => $sub_id
+					];
+				}
+			}
 		}
 		
 		// Delete the target node
 		$this->box->delete("node|$node_target_id");
+		
+		return true;
+	}
+	
+	public function trace(string $string) {
+		$stack = [
+			(object) [ "node" => $this->box->get("node|0"), "id" => 0 ]
+		];
+		$node_target = $stack[0]->node;
+		
+		while($node_target->value !== $string) {
+			$distance = levenshtein($string, $node_target->value, $this->cost_insert, $this->cost_replace, $this->cost_delete);
+			
+			var_dump($node_target);
+			
+			// Failed to recurse to find the node with the value in question
+			if(!isset($node_target->children->$distance))
+				return null;
+			
+			$node_target_id = $node_target->children->$distance;
+			$node_target = $this->box->get("node|$node_target_id");
+			$stack[] = (object) [ "node" => $node_target, "id" => $node_target_id ];
+		}
+		return $stack;
 	}
 	
 	/**
@@ -259,8 +297,7 @@ class BkTree
 				// echo("[lookup] Recursing on child ".$this->box->get("node|$child->id")->value." (distance $child->distance)\n");
 				// Push the node onto the stack
 				// Note that it doesn't actually matter that the stack isn't an accurate representation of ancestor nodes at any given time here. The stack is really a hybrid between a stack and a queue, having features of both.
-				$stack_top++;
-				$stack[$stack_top] = $this->box->get("node|{$node_current->children->$child_distance}");
+				$stack[++$stack_top] = $this->box->get("node|{$node_current->children->$child_distance}");
 			}
 		}
 		
