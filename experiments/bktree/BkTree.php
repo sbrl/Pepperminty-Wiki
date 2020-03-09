@@ -81,12 +81,14 @@ class BkTree
 	
 	/**
 	 * Adds a string to the tree.
-	 * @param	string	$string		The string to add.
+	 * @param	string	$string				The string to add.
+	 * @param	int		$starting_node_id	The id fo node to start insertion from. Defaults to 0 - for internal use only.
 	 * @return	int		The depth at which the new node was added.
 	 */
-	public function add(string $string) : int {
+	public function add(string $string, int $starting_node_id = 0) : int {
 		// FUTURE: When we support deletes, we'll need to ensure that the root node is handled correctly
 		if(!$this->box->has("node|0")) {
+			// If the root node of the tree doesn't exist, create it
 			$new = new stdClass();
 			$new->value = $string;
 			$new->children = new stdClass(); // [ "id" => int, "distance" => int ]
@@ -96,9 +98,12 @@ class BkTree
 			return 0;
 		}
 		
+		if(!$this->box->has("node|$starting_node_id"))
+			throw new Exception("Error: Failed to find node with id $starting_node_id to begin insertion");
+		
 		// if($string == "bunny") echo("\nStart $string\n");
 		
-		$next_node = $this->box->get("node|0"); // Grab the root to start with
+		$next_node = $this->box->get("node|$starting_node_id"); // Grab the root to start with
 		$next_node_id = 0;
 		$depth = 0; $visted = 0;
 		while(true) {
@@ -142,11 +147,49 @@ class BkTree
 	 * @return	bool	Whether the removal was successful.
 	 */
 	public function remove(string $string) : bool {
-		throw new Error("Error: Not implemented");
-		// TODO: Remove a node from the tree.
+		$stack = [ [ "node" => $this->box->get("node|0"), "id" => 0 ] ];
+		$node_target = $stack[0]["node"];
+		$node_target_id = 0;
+		
+		while($node_target->value !== $string) {
+			$distance = levenshtein($string, $node_target->value, $this->cost_insert, $this->cost_replace, $this->cost_delete);
+			
+			// Failed to recurse to find the node with the value in question
+			if(!isset($node_target->children->$distance))
+				return false;
+			
+			$node_target_id = $node_target->children->$distance;
+			$node_target = $this->box->get("node|$node_target_id");
+			$stack[] = [ "node" => $node_target, "id" => $node_target->children->$distance ];
+		}
+		
+		$parent = end($stack); // The last item on the stack is the parent node
+		
 		// 1. Delete the connection from parent -> target
+		foreach($parent["node"]->children as $distance -> $id) {
+			if($id == $node_target_id) {
+				unset($parent["node"]->children->$distance);
+				break;
+			}
+		}
+		
+		// Save the parent node's back to disk
+		// Note that we do this *before* sorting out the orphans, since it's possible that $this->add() will modify it further
+		$this->box->set("node|{$parent["id"]}", $parent["node"]);
+		
 		// 2. Iterate over the target's children (if any) and re-hang them from the parent
 		// NOTE: We need to be careful that the characteristics of the tree are preserved. We should test this by tracing a node's location in the tree and purposefully removing nodes in the chain and see if the results returned as still the same
+		// 
+		// Hang the now orphaned children from the parent
+		foreach($node_target->children as $distance -> $id) {
+			$orphan = $this->box->get("node|$id");
+			// TODO: Optimise this
+			$this->box->delete("node|$id"); // Delete the orphan node
+			$this->add($orphan->value, $parent["id"]); // Re-hang it from the parent
+		}
+		
+		// Delete the target node
+		$this->box->delete("node|$node_target_id");
 	}
 	
 	/**
