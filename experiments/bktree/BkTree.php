@@ -167,7 +167,7 @@ class BkTree
 		$parent = $stack[count($stack) - 2];
 		
 		// 1. Delete the connection from parent -> target
-		foreach($parent["node"]->children as $distance -> $id) {
+		foreach($parent["node"]->children as $distance => $id) {
 			if($id == $node_target_id) {
 				unset($parent["node"]->children->$distance);
 				break;
@@ -182,7 +182,7 @@ class BkTree
 		// NOTE: We need to be careful that the characteristics of the tree are preserved. We should test this by tracing a node's location in the tree and purposefully removing nodes in the chain and see if the results returned as still the same
 		// 
 		// Hang the now orphaned children and all their decendants from the parent
-		foreach($node_target->children as $distance -> $id) {
+		foreach($node_target->children as $distance => $id) {
 			$orphan = $this->box->get("node|$id");
 			$substack = [ [ "node" => $orphan, "id" => $id ] ]; $substack_top = 0;
 			while($substack_top >= 0) {
@@ -191,7 +191,7 @@ class BkTree
 				$substack_top--;
 				
 				$this->box->delete("node|{$next["id"]}"); // Delete the orphan node
-				$this->add($next["node"], $parent["id"]); // Re-hang it from the parent
+				$this->add($next["node"]->value, $parent["id"]); // Re-hang it from the parent
 				
 				foreach($next["node"]->children as $distance => $sub_id) {
 					$substack[++$substack_top] = [
