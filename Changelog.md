@@ -18,6 +18,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - The new `editing_tags_autocomplete` setting - enabled by default - toggles it, but why would you want to turn it off? :P
      - It should be reasonably accessible, judging from all the aria tags I'm seeing
      - Get in touch if you experience performance issues with fetching tag lists from your wiki
+ - A command-line interface!
+     - Wiki administrators with terminal/console access can now make use of a brand-new CLI by executing `php ./index.php` (warning: strange things will happen if the current working directory is not the directory that contains index.php and peppermint.json)
 
 ### Fixed
  - Fixed weighted word support on search query analysis debug page
