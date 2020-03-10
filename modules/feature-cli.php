@@ -116,7 +116,9 @@ function cli_shell() {
 	
 	echo(wordwrap("Welcome to the Pepperminty Wiki CLI shell!
 Type \"help\" (without quotes) to get help.
+
 Be warned that you are effectively the superuser for your wiki right now, with completely unrestricted access!
+
 "));
 	
 	while(true) {
