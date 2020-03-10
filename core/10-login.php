@@ -1,6 +1,6 @@
 <?php
 
-session_start();
+if(!is_cli()) session_start();
 // Make sure that the login cookie lasts beyond the end of the user's session
 setcookie(session_name(), session_id(), time() + $settings->sessionlifetime, "", "", false, true);
 ///////// Login System /////////

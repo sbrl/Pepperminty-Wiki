@@ -11,7 +11,9 @@
 //  - A login is required to view this wiki
 //  - The user isn't already requesting the login page
 // Note we use $_GET here because $env->action isn't populated at this point
-if($settings->require_login_view === true && // If this site requires a login in order to view pages
+if(
+    !is_cli() &&
+    $settings->require_login_view === true && // If this site requires a login in order to view pages
    !$env->is_logged_in && // And the user isn't logged in
    !in_array($_GET["action"], [ "login", "checklogin", "opensearch-description", "invindex-rebuild", "stats-update" ])) // And the user isn't trying to login, or get the opensearch description, or access actions that apply their own access rules
 {

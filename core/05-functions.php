@@ -823,3 +823,13 @@ function crypto_id(int $length) : string {
 		[ "=" => "", "+" => "-", "/" => "_"]
 	), 0, $length);
 }
+
+/**
+ * Returns whether we are both on the cli AND the cli is enabled.
+ * @return boolean
+ */
+function is_cli() {
+	global $settings;
+	return php_sapi_name() == "cli" &&
+		$settings->cli_enabled;
+}

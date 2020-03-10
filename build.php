@@ -1,5 +1,8 @@
 <?php
 
+// This is the Pepperminty Wiki build environment
+define("PEPPERMINTY_WIKI_BUILD", true);
+
 echo("*** Preparing environment ***\n");
 
 ini_set("user_agent", "Pepperminty-Wiki-Downloader PHP/" . phpversion() . "; +https://github.com/sbrl/Pepperminty-Wiki/ Pepperminty-Wiki/" . file_get_contents("version"));

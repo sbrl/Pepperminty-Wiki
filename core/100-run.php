@@ -11,6 +11,12 @@ if(!isset($actions->credits))
 	exit(page_renderer::render_main("Error - $settings->$sitename", "<p>No credits page detected. The credits page is a required module!</p>"));
 }
 
+// If we're on the CLI, then start it
+if(!defined("PEPPERMINTY_WIKI_BUILD") &&
+	module_exists("feature-cli") &&
+	$settings->cli_enabled &&
+	php_sapi_name() == "cli")
+	cli();
 
 //////////////////////////////////
 /// Final Consistency Measures ///

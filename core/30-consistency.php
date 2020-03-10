@@ -5,7 +5,7 @@
 
 // Work around an Opera + Syntaxtic bug where there is no margin at the left
 // hand side if there isn't a query string when accessing a .php file.
-if(!isset($_GET["action"]) and !isset($_GET["page"]) and basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) == "index.php")
+if(!is_cli() && !isset($_GET["action"]) && !isset($_GET["page"]) && basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) == "index.php")
 {
 	http_response_code(302);
 	header("location: " . dirname(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)));
