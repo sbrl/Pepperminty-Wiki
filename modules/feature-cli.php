@@ -97,7 +97,7 @@ Commands:
     help                  Displays this message
     version               Shows the current version of Pepperminty Wiki
     shell                 Starts the Pepperminty Wiki shell
-    exec \"{command}\"    Executes a Pepperminty Wiki shell command
+    exec \"{command}\"      Executes a Pepperminty Wiki shell command
 ");
 			break;
 	}

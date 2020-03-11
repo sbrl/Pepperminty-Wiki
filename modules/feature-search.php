@@ -534,6 +534,29 @@ window.addEventListener("load", function(event) {
 ');
 		}
 		
+		if(module_exists("feature-cli")) {
+			cli_register("search", "Query and manipulate the search index", function(array $args) : int {
+				if(count($args) < 1) {
+					echo("search: query and manipulate the search index
+Usage:
+    search {subcommand} 
+
+Subcommands:
+    rebuild     Rebuilds the search index
+");
+					return 0;
+				}
+				
+				switch($args[0]) {
+					case "rebuild":
+						search::invindex_rebuild();
+						break;
+				}
+				
+				return 0;
+			});
+		}
+		
 		add_help_section("27-search", "Searching", "<p>$settings->sitename has an integrated full-text search engine, allowing you to search all of the pages on $settings->sitename and their content. To use it, simply enter your query into the page name box and press enter. If a page isn't found with the exact name of your query terms, a search will be performed instead.</p>
 		<p>Additionally, advanced users can take advantage of some extra query syntax that $settings->sitename supports, which is inspired by popular search engines:</p>
 		<table>
@@ -873,11 +896,13 @@ class search
 	 */
 	public static function invindex_rebuild(bool $output = true) : void {
 		global $pageindex, $env, $paths, $settings;
+		$env->perfdata->invindex_rebuild = microtime(true);
 		
-		if($output) {
+		if($output && !is_cli()) {
 			header("content-type: text/event-stream");
 			ob_end_flush();
 		}
+		
 		
 		// Clear the id index out
 		ids::clear();
@@ -895,7 +920,8 @@ class search
 		{
 			$page_filename = $env->storage_prefix . $pagedetails->filename;
 			if(!file_exists($page_filename)) {
-				echo("data: [" . ($i + 1) . " / $max] Error: Can't find $page_filename\n");
+				if(!is_cli()) echo("data: ");
+				echo("[" . ($i + 1) . " / $max] Error: Can't find $page_filename\n");
 				flush();
 				$i++; $missing_files++;
 				continue;
@@ -907,22 +933,31 @@ class search
 			self::invindex_merge($pageid, $index);
 			
 			if($output) {
-				echo("data: [" . ($i + 1) . " / $max] Added $pagename (id #$pageid) to the new search index.\n\n");
+				$message = "[" . ($i + 1) . " / $max] Added $pagename (id #$pageid) to the new search index.";
+				if(!is_cli()) $message = "data: $message\n\n";
+				else $message = "$message\r";
+				echo($message);
 				flush();
 			}
 			
 			$i++;
 		}
 		
-		echo("data: Syncing to disk....\n\n");
+		$msg = "Syncing to disk....";
+		if(!is_cli()) $msg = "data: $msg\n\n";
+		else $msg = "$msg\r";
+		echo($msg);
+		
 		self::invindex_close();
 		
-		if($output) {
-			echo("data: Search index rebuilding complete.\n\n");
+		$env->perfdata->invindex_rebuild = round(microtime(true) - $env->perfdata->invindex_rebuild, 4);
+		
+		if($output && !is_cli()) {
+			echo("data: Search index rebuilding complete in {$env->perfdata->invindex_rebuild}s.\n\n");
 			echo("data: Couldn't find $missing_files pages on disk. If $settings->sitename couldn't find some pages on disk, then you might need to manually correct $settings->sitename's page index (stored in pageindex.json).\n\n");
 			echo("data: Done! Saving new search index to '$paths->searchindex'.\n\n");
 		}
-		
+		if(is_cli()) echo("\nSearch index rebuilding complete in {$env->perfdata->invindex_rebuild}s.\n");
 		// No need to save, it's an SQLite DB backend
 	}
 	
