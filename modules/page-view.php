@@ -1,10 +1,14 @@
 <?php
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.16.7",
+	"version" => "0.16.8",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
+	// Another random protection to ensure the credits are included
+	// The aim is to make it as annoying as possible to disentangle the credits from the rest of Pepperminty Wiki
+	// If you're reading this, you should know that credits are really important - lots of people have put in a huge amount of time and effort to make Pepperminty Wiki what it is today!
+	"depends" => [ "page-credits" ],
 	"code" => function() {
 		/**
 		 * @api	{get}	?action=view[&page={pageName}][&revision=rid][&printable=yes][&mode={mode}]	View a page
