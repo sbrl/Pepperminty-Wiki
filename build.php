@@ -61,7 +61,8 @@ function register_module($settings)
 		"lastupdate" => filemtime("modules/" . $settings["id"] . ".php"),
 		// May not be set. Defaults to false
 		"optional" => $settings["optional"] ?? false,
-		"extra_data" => $settings["extra_data"] ?? []
+		"extra_data" => $settings["extra_data"] ?? [],
+		"depends" => $settings["depends"] ?? []
 	];
 	$module_index[] = $newmodule;
 }

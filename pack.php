@@ -27,6 +27,20 @@ function log_str(string $line) {
 	//else error_log($line);
 }
 
+/*
+███    ███  ██████  ██████  ██    ██ ██      ███████
+████  ████ ██    ██ ██   ██ ██    ██ ██      ██
+██ ████ ██ ██    ██ ██   ██ ██    ██ ██      █████
+██  ██  ██ ██    ██ ██   ██ ██    ██ ██      ██
+██      ██  ██████  ██████   ██████  ███████ ███████
+
+██       ██████   █████  ██████  ██ ███    ██  ██████
+██      ██    ██ ██   ██ ██   ██ ██ ████   ██ ██
+██      ██    ██ ███████ ██   ██ ██ ██ ██  ██ ██   ███
+██      ██    ██ ██   ██ ██   ██ ██ ██  ██ ██ ██    ██
+███████  ██████  ██   ██ ██████  ██ ██   ████  ██████
+*/
+	
 log_str("*** Beginning main build sequence ***\n");
 log_str("Reading in module index...\n");
 
@@ -67,11 +81,69 @@ foreach($module_index as $module) {
 	$module_list[] = $module;
 }
 
+/*
+██████  ███████ ██████  ███████ ███    ██ ██████  ███████ ███    ██  ██████ ██    ██
+██   ██ ██      ██   ██ ██      ████   ██ ██   ██ ██      ████   ██ ██       ██  ██
+██   ██ █████   ██████  █████   ██ ██  ██ ██   ██ █████   ██ ██  ██ ██        ████
+██   ██ ██      ██      ██      ██  ██ ██ ██   ██ ██      ██  ██ ██ ██         ██
+██████  ███████ ██      ███████ ██   ████ ██████  ███████ ██   ████  ██████    ██
+
+███████  ██████  █████  ███    ██ ███    ██ ██ ███    ██  ██████
+██      ██      ██   ██ ████   ██ ████   ██ ██ ████   ██ ██
+███████ ██      ███████ ██ ██  ██ ██ ██  ██ ██ ██ ██  ██ ██   ███
+     ██ ██      ██   ██ ██  ██ ██ ██  ██ ██ ██ ██  ██ ██ ██    ██
+███████  ██████ ██   ██ ██   ████ ██   ████ ██ ██   ████  ██████
+*/
+
+	
+function module_list_search(array $list, string $id) : bool {
+	foreach($list as $item) {
+		if($item->id === $id)
+			return true;
+	}
+	return false;
+}
+function module_list_find(array $list, string $id) {
+	foreach($list as $item) {
+		if($item->id === $id)
+			return $item;
+	}
+	return null;
+}
+
+log_str("Scanning for dependencies...\n");
+$module_count = count($module_list);
+for($i = 0; $i < $module_count; $i++) {
+	foreach($module_list[$i]->depends as $dependency) {
+		echo("scanning {$module_list[$i]->id}: $dependency\n");
+		if(!module_list_search($module_list, $dependency)) {
+			log_str("Adding missing dependency $dependency for {$module_list[$i]->id}\n");
+			$missing_dependency = module_list_find($module_index, $dependency);
+			if($missing_dependency == null) {
+				if(php_sapi_name() != "cli") header("content-type: text/plain");
+				echo("Error: {$module_list[$i]->id} requires $dependency as a dependency, but it couldn't be found in the module index. This looks like a bug.\n");
+				if(php_sapi_name() == "cli") exit(2);
+				else exit();
+			}
+			$module_list[] = $missing_dependency;
+			$module_count++;
+		}
+	}
+}
+
 if(php_sapi_name() != "cli") {
 	header("content-type: text/php");
 	header("content-disposition: attachment; filename=\"index.php\"");
 }
 
+
+/*
+ ██████  ██████  ██████  ███████
+██      ██    ██ ██   ██ ██
+██      ██    ██ ██████  █████
+██      ██    ██ ██   ██ ██
+ ██████  ██████  ██   ██ ███████
+*/
 log_str("Reading in core files...\n");
 
 $core_files_list = glob("core/*.php"); natsort($core_files_list);
@@ -94,6 +166,15 @@ $core = str_replace([
 ], $core);
 
 $result = $core;
+
+
+/*
+██████   █████   ██████ ██   ██ ███████ ██████
+██   ██ ██   ██ ██      ██  ██  ██      ██   ██
+██████  ███████ ██      █████   █████   ██████
+██      ██   ██ ██      ██  ██  ██      ██   ██
+██      ██   ██  ██████ ██   ██ ███████ ██   ██
+*/
 
 $extra_data_archive = new ZipArchive();
 // Use dev/shm if possible (it's *always* in memory). PHP will default to the system's temporary directory if it's not available
@@ -144,6 +225,15 @@ foreach($module_list as $module)
 log_str("\n");
 
 $extra_data_archive->close();
+
+
+/*
+███████ ██ ███    ██ ██ ███████ ██   ██ ███████ ██████
+██      ██ ████   ██ ██ ██      ██   ██ ██      ██   ██
+█████   ██ ██ ██  ██ ██ ███████ ███████ █████   ██████
+██      ██ ██  ██ ██ ██      ██ ██   ██ ██      ██   ██
+██      ██ ██   ████ ██ ███████ ██   ██ ███████ ██   ██
+*/
 
 $archive_stream = fopen($temp_filename, "r");
 
