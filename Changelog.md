@@ -32,6 +32,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Squashed a bug in the new upgraded get/set_array_simple search optimisation
  - Updated Parsedown to squash warning in PHP 7.4+
  - Trailing commas in the tags box will no longer result in empty tags being added to pages.
+ - Minor UI fixes
+     - Multiple tags in search results and on page lists now have a margin between them
 
 ### Changed
  - Improved the search indexing system performance - again

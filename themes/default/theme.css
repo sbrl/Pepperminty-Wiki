@@ -240,7 +240,7 @@ input[type=submit].large { width: 100%; box-sizing: border-box; padding: 0.5em; 
 .page-list li .tags { margin: 0 1rem; }
 .tag-list { list-style-type: none; margin: 0.5rem; padding: 0.5rem; }
 .tag-list li { display: inline-block; margin: 1rem; }
-.mini-tag { background: var(--tag); padding: 0.2rem 0.4rem; color: var(--accent-b2); text-decoration: none; }
+.mini-tag { background: var(--tag); margin: 0 0.4em; padding: 0.2rem 0.4rem; color: var(--accent-b2); text-decoration: none; }
 
 .grid-large { display: grid; grid-template-columns: repeat(auto-fit, minmax(25em, 1fr)); grid-auto-rows: min-content; grid-gap: 1em; justify-content: center;}
 
