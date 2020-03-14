@@ -66,8 +66,7 @@ register_module([
 			exit();
 		});
 		
-		if($env->is_admin)
-		{
+		if($env->is_admin) {
 			add_help_section("950-debug-information", "Gathering debug information", "<p>As a moderator, $settings->sitename gives you the ability to generate a report on $settings->sitename's installation of Pepperminty Wiki for debugging purposes.</p>
 			<p>To generate such a report, visit the <code>debug</code> action or <a href='?action=debug'>click here</a>.</p>");
 		}

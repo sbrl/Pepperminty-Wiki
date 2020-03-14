@@ -1,6 +1,15 @@
 <?php
-
-require_once("JsonStorageBox.php");
+register_module([
+	"name" => "Did you mean? support",
+	"version" => "0.1",
+	"author" => "Starbeamrainbowlabs",
+	"description" => "Ever searched for something but couldn't find it because you couldn't spell it correctly? This module is for you! It adds spelling correction for search queries based on the words in the inverted search index.",
+	"id" => "lib-storage-box",
+	"depends" => [ "lib-search-engine" ],
+	"code" => function() {
+		
+	}
+]);
 
 /**
  * Calculates the standard deviation of an array of numbers.
@@ -22,11 +31,8 @@ function standard_deviation(array $array): float {
  * A serialisable BK-Tree Implementation.
  * Ref: https://nullwords.wordpress.com/2013/03/13/the-bk-tree-a-data-structure-for-spell-checking/
  */
-class BkTree
-{
+class BkTree {
 	private $box = null;
-	
-	private $nodes = [];
 	
 	// private $touched_ids = [];
 	
@@ -68,7 +74,6 @@ class BkTree
 	 * @return	int		The depth at which the new node was added.
 	 */
 	public function add(string $string, int $starting_node_id = 0) : int {
-		// FUTURE: When we support deletes, we'll need to ensure that the root node is handled correctly
 		if(!$this->box->has("node|0")) {
 			// If the root node of the tree doesn't exist, create it
 			$new = new stdClass();
@@ -92,18 +97,13 @@ class BkTree
 			$visted++;
 			$distance = levenshtein($string, $next_node->value, $this->cost_insert, $this->cost_replace, $this->cost_delete);
 			
-			// if($string == "bunny") echo("$visted: Visiting $next_node->value, distance $distance (child distances ".implode(", ", array_map(function($el) { return $el->distance; }, $next_node->children)).")\n");
-			
 			if(isset($next_node->children->$distance)) {
 				$child_id = $next_node->children->$distance;
 				$next_node = $this->box->get("node|$child_id");
 				$next_node_id = $child_id;
-				// if($string == "cake") echo("Identical distance as {$next_node["value"]}, restarting loop\n");
 				$depth++;
 				continue; // Continue on the outer while loop
 			}
-			
-			// if($string == "bunny") echo("Inserting on $next_node->value\n");
 			
 			// If we got here, then no existing children have the same edit distance
 			// Note that here we don't push to avoid the overhead from either array_push() (considerable) or count() (also considerable).
@@ -125,6 +125,7 @@ class BkTree
 	
 	/**
 	 * Removes a string from the tree.
+	 * BUG: If this deletes the root node, then it's all over and it will crash
  	 * @param	string	$string	The string to remove.
 	 * @return	bool	Whether the removal was successful.
 	 */
@@ -161,8 +162,7 @@ class BkTree
 		$this->box->set("node|{$parent["id"]}", $parent["node"]);
 		
 		// 2. Iterate over the target's children (if any) and re-hang them from the parent
-		// NOTE: We need to be careful that the characteristics of the tree are preserved. We should test this by tracing a node's location in the tree and purposefully removing nodes in the chain and see if the results returned as still the same
-		// 
+		
 		// Hang the now orphaned children and all their decendants from the parent
 		foreach($node_target->children as $distance => $id) {
 			$orphan = $this->box->get("node|$id");
@@ -199,7 +199,7 @@ class BkTree
 		while($node_target->value !== $string) {
 			$distance = levenshtein($string, $node_target->value, $this->cost_insert, $this->cost_replace, $this->cost_delete);
 			
-			var_dump($node_target);
+			// var_dump($node_target);
 			
 			// Failed to recurse to find the node with the value in question
 			if(!isset($node_target->children->$distance))
@@ -222,18 +222,15 @@ class BkTree
 		$result = $this->lookup($string, $distance, 1);
 		if(empty($result)) return null;
 		return $result[0];
-		
-		// foreach($this->lookup($string, $distance) as $item)
-		// 	return $item;
 	}
 	
 	/**
 	 * Generator that walks the BK-Tree and iteratively yields results.
-	 * TODO: Refactor this to use an array, since generators are ~
+	 * Note that the returned array is *not* sorted.
 	 * @param	string	$string			The search string.
 	 * @param	integer	$max_distance	The maximum edit distance to search.
 	 * @param	integer	$count			The number of results to return. 0 = All results found. Note that results will be in a random order.
-	 * @return	Generator<string>		Iteratively yielded similar resultant strings from the BK-Tree.
+	 * @return	array<string>			Similar resultant strings from the BK-Tree.
 	 */
 	public function lookup(string $string, int $max_distance = 1, int $count = 0) {
 		if($this->get_node_count() == 0) return null;
@@ -251,34 +248,17 @@ class BkTree
 			
 			$distance = levenshtein($string, $node_current->value, $this->cost_insert, $this->cost_replace, $this->cost_delete);
 			
-			/*
-			echo("[lookup] Visiting $node_current->value (distance $distance, child distances ".implode(", ", array_map(function($el) { return $el->distance; }, $node_current->children)).")\n");
-			
-			if(in_array($node_current->value, ["worlds", "domicil", "mealiest", "stopgaps", "pibroch", "upwardly", "nontruth", "vizoring"])) {
-				echo("[lookup] Children: ".implode(", ", array_map(function($el) {
-					return "$el->distance: ".$this->box->get("node|$el->id")->value;
-				}, $node_current->children))."\n");
-			}
-			if($node_current->value == "bunny") exit();
-			*/
-			
-			// If the edit distance from the target string to this node is within the tolerance, yield it
+			// If the edit distance from the target string to this node is within the tolerance, store it
 			if($distance <= $max_distance) {
-				// readline("press any key to continue");
 				$result[] = $node_current->value;
+				$result_count++;
 				if($count != 0 && $result_count >= $count) break;
-				// yield $node_current["value"];
 			}
 			
-			// Adding the key here speeds it up, apparently
-			// Ref: https://phpbench.com/
 			for($child_distance = $distance - $max_distance; $child_distance <= $distance + $max_distance; $child_distance++) {
 				if(!isset($node_current->children->$child_distance))
 					continue;
-					
-				// echo("[lookup] Recursing on child ".$this->box->get("node|$child->id")->value." (distance $child->distance)\n");
-				// Push the node onto the stack
-				// Note that it doesn't actually matter that the stack isn't an accurate representation of ancestor nodes at any given time here. The stack is really a hybrid between a stack and a queue, having features of both.
+				
 				$stack[++$stack_top] = $this->box->get("node|{$node_current->children->$child_distance}");
 			}
 		}
@@ -314,8 +294,6 @@ class BkTree
 		while(!empty($stack)) {
 			// Take the top-most node off the stack
 			$current = array_pop($stack);
-			
-			// echo("Visiting "); var_dump($current);
 			
 			// Operate on the node
 			$result["depth_standard_deviation"][] = $current["depth"];
@@ -354,6 +332,11 @@ class BkTree
 		return $result;
 	}
 	
+	/**
+	 * Iteratively walks the BkTree.
+	 * Warning: This is *slow*
+	 * @return Generator<stdClass> A generator that iteratively walks the tree and yields every item therein that's connected to the root node.
+	 */
 	public function walk() {
 		$stack = [ (object)[
 			"id" => 0,
@@ -396,3 +379,6 @@ class BkTree
 		$this->box->close();
 	}
 }
+
+
+?>
