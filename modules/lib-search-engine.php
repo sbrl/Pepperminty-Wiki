@@ -170,7 +170,18 @@ class search
 	 * @return	string|null		The closest correction found, or null if none could be located.
 	 */
 	public static function didyoumean_correct(string $term) : ?string {
-		global $settings;
+		global $settings, $paths, $env;
+		
+		$start_time = microtime(true);
+		
+		// Load the didyoumean index, but only if it's enabled etc
+		if(!module_exists("feature-search-didyoumean") || !$settings->search_didyoumean_enabled)
+			return null;
+		
+		// If it's not loaded already, load the didyoumean index on-demand
+		if(self::$didyoumeanindex == null)
+			search::didyoumean_load($paths->searchindex);
+		
 		$results = self::$didyoumeanindex->lookup(
 			$term,
 			$settings->search_didyoumean_editdistance
@@ -179,6 +190,10 @@ class search
 		usort($results, function($a, $b) : int {
 			return self::compare($a, $b);
 		});
+		
+		if(!isset($env->perfdata->didyoumean_correction))
+			$env->perfdata->didyoumean_correction = 0; 
+		$env->perfdata->didyoumean_correction += (microtime(true) - $start_time) * 1000;
 		return $results[0];
 	}
 	
@@ -664,7 +679,8 @@ class search
 					self::invindex_term_exists($term_data["term"])) continue;
 				
 				// It's not a stop word or in the index, try and correct it
-				$correction = self::didyoumean_correct($termdata["term"]);
+				// self::didyoumean_correct auto-loads the didyoumean index on-demand
+				$correction = self::didyoumean_correct($term_data["term"]);
 				// Make a note if we fail to correct a term
 				if(!is_string($correction)) {
 					$term_data["corrected"] = false;

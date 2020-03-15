@@ -316,6 +316,8 @@ register_module([
 			$result->time_format = "ms";
 			$result->decode_time = $env->perfdata->searchindex_decode_time;
 			$result->query_time = $env->perfdata->searchindex_query_time;
+			if(isset($env->perfdata->didyoumean_correction))
+				$result->didyoumean_correction_time = $env->perfdata->didyoumean_correction;
 			$result->total_time = $result->decode_time + $result->query_time;
 			$result->stas = search::stas_parse(search::stas_split($_GET["query"]));
 			$result->search_results = $searchResults;
@@ -340,12 +342,6 @@ register_module([
 				header("x-status: failed");
 				header("x-problem: no-query-specified");
 				exit(page_renderer::render_main("Error - STAS Query Analysis - $settings->sitename", "<p>No query was present in the <code>query</code> GET parameter.</p>"));
-			}
-			
-			// The indexes are only needed if didyoumean is enabled
-			if(module_exists("feature-search-didyoumean") && $settings->search_didyoumean_enabled) {
-				search::invindex_load();
-				search::didyoumean_load();
 			}
 			
 			$tokens = search::stas_split($_GET["query"]);
