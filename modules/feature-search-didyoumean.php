@@ -348,11 +348,14 @@ class BkTree {
 	 * @return	array<string>			Similar resultant strings from the BK-Tree.
 	 */
 	public function lookup(string $string, int $max_distance = 1, int $count = 0) : array {
+		error_log("[BkTree/lookup]".var_export($string, true).", dist ".var_export($max_distance, true).", count:".var_export($count, true));
 		if($this->get_node_count() == 0) return null;
 		
 		$result = []; $result_count = 0;
 		$stack = [ $this->box->get("node|0") ];
 		$stack_top = 0;
+		
+		$nodes = 0;
 		
 		// https://softwareengineering.stackexchange.com/a/226162/58491
 		while($stack_top >= 0) {
@@ -360,6 +363,7 @@ class BkTree {
 			$node_current = $stack[$stack_top];
 			unset($stack[$stack_top]);
 			$stack_top--;
+			$nodes++;
 			
 			$distance = levenshtein($string, $node_current->value, $this->cost_insert, $this->cost_replace, $this->cost_delete);
 			
@@ -378,6 +382,8 @@ class BkTree {
 				$stack[++$stack_top] = $this->box->get("node|{$node_current->children->$child_distance}");
 			}
 		}
+		
+		error_log("Nodes traversed: $nodes\n");
 		
 		return $result;
 	}

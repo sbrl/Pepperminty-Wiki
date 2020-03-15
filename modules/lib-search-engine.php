@@ -171,7 +171,6 @@ class search
 	 */
 	public static function didyoumean_correct(string $term) : ?string {
 		global $settings, $paths, $env;
-		
 		$start_time = microtime(true);
 		
 		// Load the didyoumean index, but only if it's enabled etc
@@ -186,15 +185,16 @@ class search
 			$term,
 			$settings->search_didyoumean_editdistance
 		);
-		if(empty($results)) return null;
-		usort($results, function($a, $b) : int {
-			return self::compare($a, $b);
-		});
+		if(!empty($results)) {
+			usort($results, function($a, $b) : int {
+				return self::compare($a, $b);
+			});
+		}
 		
 		if(!isset($env->perfdata->didyoumean_correction))
 			$env->perfdata->didyoumean_correction = 0; 
 		$env->perfdata->didyoumean_correction += (microtime(true) - $start_time) * 1000;
-		return $results[0];
+		return $results[0] ?? null;
 	}
 	
 	public static function didyoumean_rebuild(bool $output = true) : void {
@@ -674,6 +674,7 @@ class search
 		if(module_exists("feature-search-didyoumean") && $settings->search_didyoumean_enabled) {
 			$terms_count = count($result["terms"]);
 			for($i = 0; $i < $terms_count; $i++) {
+				error_log("[stas_parse/didyoumean] Now looking at #$i:  ".var_export($result["terms"][$i], true)."(total count: $terms_count)");
 				if($result["terms"][$i]["exact"] || // Skip exact-only
 					$result["terms"][$i]["weight"] < 1 || // Skip stop & irrelevant words
 					self::invindex_term_exists($result["terms"][$i]["term"])) continue;
@@ -712,10 +713,14 @@ class search
 	
 	/**
 	 * Searches the given inverted index for the specified search terms.
-	 * @param	string	$query		The search query.
+	 * Note that this automatically pushes the query string through STAS which
+	 * can  be a fairly expensive operation, so use 2nd argument if you need
+	 * to debug the STAS parsing result if possible.
+	 * @param	string		$query		The search query.
+	 * @param	&stdClass	$query_stas	An object to fill with the result of the STAS parsing.
 	 * @return	array	An array of matching pages.
 	 */
-	public static function invindex_query($query)
+	public static function invindex_query($query, &$query_stas = null)
 	{
 		global $settings, $pageindex;
 		

@@ -308,7 +308,8 @@ register_module([
 			search::invindex_load($paths->searchindex);
 			$env->perfdata->searchindex_decode_time = (microtime(true) - $env->perfdata->searchindex_decode_start) * 1000;
 			$env->perfdata->searchindex_query_start = microtime(true);
-			$searchResults = search::invindex_query($_GET["query"]);
+			$query_stas = null;
+			$searchResults = search::invindex_query($_GET["query"], $query_stas);
 			$env->perfdata->searchindex_query_time = (microtime(true) - $env->perfdata->searchindex_query_start) * 1000;
 			
 			header("content-type: application/json");
@@ -319,7 +320,8 @@ register_module([
 			if(isset($env->perfdata->didyoumean_correction))
 				$result->didyoumean_correction_time = $env->perfdata->didyoumean_correction;
 			$result->total_time = $result->decode_time + $result->query_time;
-			$result->stas = search::stas_parse(search::stas_split($_GET["query"]));
+			// $result->stas = search::stas_parse(search::stas_split($_GET["query"]));
+			$result->stas = $query_stas;
 			$result->search_results = $searchResults;
 			exit(json_encode($result, JSON_PRETTY_PRINT));
 		});
