@@ -82,6 +82,13 @@ class search
 	 */
 	private static $invindex = null;
 	/**
+	 * The 'did you mean?' index for typo correction.
+	 * Only populated if the feature-search-didyoumean module is present.
+	 * @var BkTree
+	 */
+	private static $didyoumeanindex = null;
+	
+	/**
 	 * The transliterator that can be used to transliterate strings.
 	 * Transliterated strings are more suitable for use with the search index.
 	 * Note that this is no longer wrapped in a function as of v0.21 for 
@@ -91,13 +98,63 @@ class search
 	public static $literator = null;
 	
 	/**
+	 * Sorter for sorting lists of *transliterated* strings.
+	 * Should work for non-transliterated strings too.
+	 * @var Collator
+	 */
+	private static $sorter;
+	
+	/**
 	 * Initialises the search system.
 	 * Do not call this function! It is called automatically.
 	 */
 	public static function init() {
 		self::$literator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: Lower(); :: NFC;', Transliterator::FORWARD);
+		self::$sorter = new Collator("");
 	}
 	
+	/**
+	 * Loads the didyoumean index.
+	 * Don't forget to call this before making any search queries if didyoumean
+	 * typoy correction is enabled.
+	 * @param	string	$filename	The filename of the didyoumean index.
+	 * @param	string	$seed_word	The seed word. If this changes, the index must be rebuilt.
+	 * @return	bool	Whether the index was loaded successfully or not. Returns false if the feature-search-didyoumean module is not present.
+	 */
+	public static function didyoumean_load(string $filename, string $seed_word) : bool {
+		global $settings;
+		if(!module_exists("feature-search-didyoumean"))
+			return false;
+		
+		$this->didyoumeanindex = new BkTree($filename, $seed_word);
+		$this->didyoumeanindex->set_costs(
+			$settings->search_didyoumean_cost_insert,
+			$settings->search_didyoumean_cost_delete,
+			$settings->search_didyoumean_cost_replace
+		);
+		return true;
+	}
+	
+	/**
+	 * Returns a correction for a given word according to the didyoumean index.
+	 * Note that this is quite an expensive call.
+	 * Check that the word exists in the regular search index first, and that
+	 * it's not a stop word before calling this function.
+	 * @param	string	$term	The term to correct.
+	 * @return	string|null		The closest correction found, or null if none could be located.
+	 */
+	public static function didyoumean_correct(string $term) : ?string {
+		global $settings;
+		$results = $this->didyoumeanindex->lookup(
+			$term,
+			$settings->search_didyoumean_editdistance
+		);
+		if(empty($results)) return null;
+		usort($results, function($a, $b) : int {
+			return self::compare($a, $b);
+		});
+		return $results[0];
+	}
 	
 	/**
 	 * Converts a source string into an index of search terms that can be

@@ -34,14 +34,58 @@ function standard_deviation(array $array): float {
 class BkTree {
 	private $box = null;
 	
-	// private $touched_ids = [];
+	/**
+	 * The seed word of the tree.
+	 * This word is the root node of the tree, and has a number of special properties::
+	 *  - It's never removed
+	 *  - It can't be added
+	 *  - It is never returned as a suggestion
+	 * This is essential because we can't delete the root node of the tree without effectively rebuilding the entire thing, because the root node of the three doesn't have a parent.
+	 * @var string
+	 */
+	private $seed_word = null;
 	
 	private $cost_insert = 1;
 	private $cost_delete = 1;
 	private $cost_replace = 1;
 	
-	public function __construct($filename) {
+	public function __construct(string $filename, string $seed_word) {
 		$this->box = new JsonStorageBox($filename);
+		$this->seed_word = $seed_word;
+		
+		if(!$this->box->has("node|0")) {
+			// If the root node of the tree doesn't exist, create it
+			$new = new stdClass();
+			$new->value = $string;
+			$new->children = new stdClass(); // [ "id" => int, "distance" => int ]
+			$this->box->set("node|0", $this->seed_word);
+			$this->increment_node_count();
+			return 0;
+		}
+	}
+	
+	/**
+	 * Set the levenshtien insert/delete/replace costs.
+	 * Note that if these values change, the entire tree needs to be rebuilt.
+	 * @param int $insert  The insert cost.
+	 * @param int $delete  The cost to delete a character.
+	 * @param int $replace The cost to replace a character.
+	 */
+	public function set_costs(int $insert, int $delete, int $replace) : void {
+		$this->cost_insert = $insert;
+		$this->cost_delete = $delete;
+		$this->cost_replace = $replace;
+	}
+	/**
+	 * Get the current levenshtein costs.
+	 * @return stdClass The current levenshtein insert/delete/replace costs.
+	 */
+	public function get_costs() : stdClass {
+		return (object) [
+			"insert" => $this->cost_insert,
+			"delete" => $this->cost_delete,
+			"replace" => $this->cost_replace
+		];
 	}
 	
 	/**
@@ -60,31 +104,25 @@ class BkTree {
 			$this->set_node_count(0);
 		return $this->box->get("node_count");
 	}
-	private function set_node_count(int $value) {
+	private function set_node_count(int $value) : void {
 		$this->box->set("node_count", $value);
 	}
-	private function increment_node_count() {
+	private function increment_node_count() : void {
 		$this->box->set("node_count", $this->box->get("node_count") + 1);
 	}
 	
 	/**
 	 * Adds a string to the tree.
+	 * Note that duplicates can be added if you're not careful!
 	 * @param	string	$string				The string to add.
 	 * @param	int		$starting_node_id	The id fo node to start insertion from. Defaults to 0 - for internal use only.
 	 * @return	int		The depth at which the new node was added.
 	 */
-	public function add(string $string, int $starting_node_id = 0) : int {
-		if(!$this->box->has("node|0")) {
-			// If the root node of the tree doesn't exist, create it
-			$new = new stdClass();
-			$new->value = $string;
-			$new->children = new stdClass(); // [ "id" => int, "distance" => int ]
-			$this->box->set("node|0", $new);
-			$this->touched_ids[] = 0;
-			$this->increment_node_count();
-			return 0;
-		}
-		
+	public function add(string $string, int $starting_node_id = 0) : ?int {
+		// Can't add the seed word to the tree
+		if($string == $this->seed_word)
+			return null;
+			
 		if(!$this->box->has("node|$starting_node_id"))
 			throw new Exception("Error: Failed to find node with id $starting_node_id to begin insertion");
 		
@@ -130,6 +168,12 @@ class BkTree {
 	 * @return	bool	Whether the removal was successful.
 	 */
 	public function remove(string $string) : bool {
+		// Not allowed to remove the seed word
+		if($string == $this->seed_word) {
+			error_log("[PeppermintyWiki/DidYouMean-BkTree] Blocked an attempt to remove the seed word $this->seed_word");
+			return false;
+		}
+		
 		$stack = [ [ "node" => $this->box->get("node|0"), "id" => 0 ] ];
 		$node_target = $stack[0]["node"];
 		$node_target_id = 0;
@@ -190,7 +234,7 @@ class BkTree {
 		return true;
 	}
 	
-	public function trace(string $string) {
+	public function trace(string $string) : array {
 		$stack = [
 			(object) [ "node" => $this->box->get("node|0"), "id" => 0 ]
 		];
@@ -218,7 +262,7 @@ class BkTree {
 	 * @param	integer	$distance	The maximum edit distance to search.
 	 * @return	string|null			The first matching string, or null if no results were found.
 	 */
-	public function lookup_one(string $string, int $distance = 1) {
+	public function lookup_one(string $string, int $distance = 1) : ?string {
 		$result = $this->lookup($string, $distance, 1);
 		if(empty($result)) return null;
 		return $result[0];
@@ -232,7 +276,7 @@ class BkTree {
 	 * @param	integer	$count			The number of results to return. 0 = All results found. Note that results will be in a random order.
 	 * @return	array<string>			Similar resultant strings from the BK-Tree.
 	 */
-	public function lookup(string $string, int $max_distance = 1, int $count = 0) {
+	public function lookup(string $string, int $max_distance = 1, int $count = 0) : array {
 		if($this->get_node_count() == 0) return null;
 		
 		$result = []; $result_count = 0;
@@ -249,7 +293,8 @@ class BkTree {
 			$distance = levenshtein($string, $node_current->value, $this->cost_insert, $this->cost_replace, $this->cost_delete);
 			
 			// If the edit distance from the target string to this node is within the tolerance, store it
-			if($distance <= $max_distance) {
+			// If it's the seed word, then we shouldn't return it either
+			if($distance <= $max_distance && $node_current->value != $this->seed_word) {
 				$result[] = $node_current->value;
 				$result_count++;
 				if($count != 0 && $result_count >= $count) break;
@@ -272,7 +317,7 @@ class BkTree {
 	 * If the tree isn't balanced, you may need to insert items in a different order.
 	 * @return array An array of statistics about this BK-Tree.
 	 */
-	public function stats() {
+	public function stats() array {
 		$result = [
 			"depth_max" => 0,
 			"depth_min_leaf" => INF,
