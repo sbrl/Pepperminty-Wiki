@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Command-line interface",
-	"version" => "0.1",
+	"version" => "0.1.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows interaction with Pepperminty Wiki on the command line.",
 	"id" => "feature-cli",
@@ -123,10 +123,18 @@ Be warned that you are effectively the superuser for your wiki right now, with c
 	
 	while(true) {
 		$next_line = readline($settings->cli_prompt);
-		if($next_line == false) { echo("\nexit\n"); exit(0); }
+		if($next_line === false) { echo("\nexit\n"); exit(0); }
 		if(strlen($next_line) == 0) continue;
 		
-		$exit_code = cli_exec($next_line);
+		readline_add_history($next_line);
+		$exit_code = -1;
+		try {
+			$exit_code = cli_exec($next_line);
+		}
+		catch (Exception $error) {
+			echo("***** Error *****\n");
+			echo($error);
+		}
 		echo("<<<< $exit_code <<<<\n");
 	}
 }
