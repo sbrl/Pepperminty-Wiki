@@ -278,7 +278,7 @@ class search
 		if($capture_offsets)
 			$flags |= PREG_SPLIT_OFFSET_CAPTURE;
 		
-		// We don't need to normalise here because the transliterator handles 
+		// We don't need to normalise here because the transliterator handles that
 		$source = self::$literator->transliterate($source);
 		$source = preg_replace('/[\[\]\|\{\}\/]/u', " ", $source);
 		return preg_split("/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))|\|/u", $source, -1, $flags);

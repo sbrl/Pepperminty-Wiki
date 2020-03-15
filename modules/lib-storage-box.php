@@ -91,7 +91,7 @@ class StorageBox {
 	 */
 	public function get_keys(string $exclude) : \PDOStatement {
 		return $this->query(
-			"SELECT key FROM store WHERE key LIKE :containing;",
+			"SELECT key FROM store WHERE key NOT LIKE :containing;",
 			[ "containing" => "%$exclude%" ]
 		);
 	}
