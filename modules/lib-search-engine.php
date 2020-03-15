@@ -187,7 +187,7 @@ class search
 		);
 		if(!empty($results)) {
 			usort($results, function($a, $b) : int {
-				return self::compare($a, $b);
+				return self::$sorter->compare($a, $b);
 			});
 		}
 		
