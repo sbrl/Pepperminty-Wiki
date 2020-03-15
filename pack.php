@@ -115,9 +115,9 @@ log_str("Scanning for dependencies...\n");
 $module_count = count($module_list);
 for($i = 0; $i < $module_count; $i++) {
 	foreach($module_list[$i]->depends as $dependency) {
-		// echo("scanning {$module_list[$i]->id}: $dependency\n");
+		log_str("scanning {$module_list[$i]->id}: $dependency\n");
 		if(!module_list_search($module_list, $dependency)) {
-			log_str("Adding missing dependency $dependency for {$module_list[$i]->id}\n");
+			log_str("Adding missing dependency $dependency for {$module_list[$i]->id}\n\n");
 			$missing_dependency = module_list_find($module_index, $dependency);
 			if($missing_dependency == null) {
 				if(php_sapi_name() != "cli") header("content-type: text/plain");
@@ -127,6 +127,9 @@ for($i = 0; $i < $module_count; $i++) {
 			}
 			$module_list[] = $missing_dependency;
 			$module_count++;
+		}
+		else {
+			log_str("present, no action needed\n");
 		}
 	}
 }

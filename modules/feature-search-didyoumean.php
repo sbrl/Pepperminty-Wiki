@@ -4,10 +4,72 @@ register_module([
 	"version" => "0.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Ever searched for something but couldn't find it because you couldn't spell it correctly? This module is for you! It adds spelling correction for search queries based on the words in the inverted search index.",
-	"id" => "lib-storage-box",
-	"depends" => [ "lib-search-engine" ],
+	"id" => "feature-search-didyoumean",
+	"depends" => [ "lib-search-engine", "lib-storage-box" ],
 	"code" => function() {
+		/*
+		██████  ███████ ██████  ██    ██ ██ ██      ██████
+		██   ██ ██      ██   ██ ██    ██ ██ ██      ██   ██
+		██████  █████   ██████  ██    ██ ██ ██      ██   ██
+		██   ██ ██      ██   ██ ██    ██ ██ ██      ██   ██
+		██   ██ ███████ ██████   ██████  ██ ███████ ██████
+		*/
+		add_action("didyoumean-rebuild", function() {
+			global $env, $settings;
+			if($env->is_admin ||
+				(
+					!empty($_POST["secret"]) &&
+					$_POST["secret"] === $settings->secret
+				)
+			)
+				search::didyoumean_rebuild();
+			else
+			{
+				http_response_code(401);
+				exit(page_renderer::render_main("Error - didyoumean index regenerator - $settings->sitename", "<p>Error: You aren't allowed to regenerate the didyoumean index. Try logging in as an admin, or setting the <code>secret</code> POST parameter to $settings->sitename's secret - which can be found in $settings->sitename's <code>peppermint.json</code> file.</p>"));
+			}
+		});
 		
+		/*
+ 		 *  ██████ ██      ██
+		 * ██      ██      ██
+		 * ██      ██      ██
+		 * ██      ██      ██
+ 		 *  ██████ ███████ ██
+		 */
+		 
+	 	if(module_exists("feature-cli")) {
+	 		cli_register("didyoumean", "Query and manipulate the didyoumean index", function(array $args) : int {
+	 			if(count($args) < 1) {
+	 				echo("didyoumean: query and manipulate the didyoumean index
+Usage:
+	didyoumean {subcommand} 
+
+Subcommands:
+	rebuild           Rebuilds the didyoumean index
+	correct {word}    Corrects {word} using the didyoumean index (careful: it's case-sensitive and operates on transliterated text *only*)
+");
+	 				return 0;
+	 			}
+	 			
+	 			switch($args[0]) {
+	 				case "rebuild":
+	 					search::didyoumean_rebuild();
+	 					break;
+					case "correct":
+						search::didyoumean_load();
+						if(count($args) < 2) {
+							echo("Error: Not enough arguments\n");
+							return 1;
+						}
+						echo("Correction: ".search::didyoumean_correct($args[1])."\n");
+						break;
+	 			}
+	 			
+	 			return 0;
+	 		});
+	 	}
+
 	}
 ]);
 
@@ -50,17 +112,20 @@ class BkTree {
 	private $cost_replace = 1;
 	
 	public function __construct(string $filename, string $seed_word) {
-		$this->box = new JsonStorageBox($filename);
+		$this->box = new StorageBox($filename);
 		$this->seed_word = $seed_word;
 		
+		$this->init();
+	}
+	
+	private function init() : void {
 		if(!$this->box->has("node|0")) {
 			// If the root node of the tree doesn't exist, create it
 			$new = new stdClass();
-			$new->value = $string;
+			$new->value = $this->seed_word;
 			$new->children = new stdClass(); // [ "id" => int, "distance" => int ]
-			$this->box->set("node|0", $this->seed_word);
+			$this->box->set("node|0", $new);
 			$this->increment_node_count();
-			return 0;
 		}
 	}
 	
@@ -121,6 +186,9 @@ class BkTree {
 	public function add(string $string, int $starting_node_id = 0) : ?int {
 		// Can't add the seed word to the tree
 		if($string == $this->seed_word)
+			return null;
+		// PHP's levenshtein() function only works on strings up to 255 chars, apparently
+		if(strlen($string) > 255)
 			return null;
 			
 		if(!$this->box->has("node|$starting_node_id"))
@@ -317,7 +385,7 @@ class BkTree {
 	 * If the tree isn't balanced, you may need to insert items in a different order.
 	 * @return array An array of statistics about this BK-Tree.
 	 */
-	public function stats() array {
+	public function stats() : array {
 		$result = [
 			"depth_max" => 0,
 			"depth_min_leaf" => INF,
@@ -414,6 +482,11 @@ class BkTree {
 				];
 			}
 		}
+	}
+	
+	public function clear() : void {
+		$this->box->clear();
+		$this->init();
 	}
 	
 	/**

@@ -114,20 +114,46 @@ class search
 	}
 	
 	/**
+	 * Logs a progress message in the right format depending on the current
+	 * environment.
+	 * @param string $message The message to log.
+	 */
+	private static function log_progress(string $message, bool $sameline = false) : void {
+		if(is_cli()) {
+			if($sameline) $message = "$message\r";
+			else $message = "$message\n";
+			echo($message);
+		}
+		else {
+			echo("data: $message\n\n");
+			flush();
+		}
+	}
+	
+	/**
 	 * Loads the didyoumean index.
 	 * Don't forget to call this before making any search queries if didyoumean
-	 * typoy correction is enabled.
+	 * typo correction is enabled.
+	 * Note that calling it multiple times has no effect. Returns true if the
+	 * didyoumean index is already loaded.
 	 * @param	string	$filename	The filename of the didyoumean index.
 	 * @param	string	$seed_word	The seed word. If this changes, the index must be rebuilt.
 	 * @return	bool	Whether the index was loaded successfully or not. Returns false if the feature-search-didyoumean module is not present.
 	 */
-	public static function didyoumean_load(string $filename, string $seed_word) : bool {
-		global $settings;
+	public static function didyoumean_load() : bool {
+		global $settings, $paths;
 		if(!module_exists("feature-search-didyoumean"))
 			return false;
 		
-		$this->didyoumeanindex = new BkTree($filename, $seed_word);
-		$this->didyoumeanindex->set_costs(
+		// Avoid loading twice
+		if(is_a(self::$didyoumeanindex, BkTree::class))
+			return true;
+		
+		self::$didyoumeanindex = new BkTree(
+			$paths->didyoumeanindex,
+			$settings->search_didyoumean_seed_word
+		);
+		self::$didyoumeanindex->set_costs(
 			$settings->search_didyoumean_cost_insert,
 			$settings->search_didyoumean_cost_delete,
 			$settings->search_didyoumean_cost_replace
@@ -145,7 +171,7 @@ class search
 	 */
 	public static function didyoumean_correct(string $term) : ?string {
 		global $settings;
-		$results = $this->didyoumeanindex->lookup(
+		$results = self::$didyoumeanindex->lookup(
 			$term,
 			$settings->search_didyoumean_editdistance
 		);
@@ -154,6 +180,46 @@ class search
 			return self::compare($a, $b);
 		});
 		return $results[0];
+	}
+	
+	public static function didyoumean_rebuild(bool $output = true) : void {
+		global $env;
+		if($output && !is_cli()) {
+			header("content-type: text/event-stream");
+			ob_end_flush();
+		}
+		
+		$env->perfdata->didyoumean_rebuild = microtime(true);
+		
+		if($output) self::log_progress("Beginning didyoumean index rebuild");
+		if($output) self::log_progress("Loading indexes");
+		
+		self::invindex_load();
+		self::didyoumean_load();
+		
+		if($output) self::log_progress("Populating index");
+		
+		self::$didyoumeanindex->clear();
+		$i = 0;
+		foreach(self::$invindex->get_keys("|") as $key) {
+			$key = $key["key"];
+			
+			if(self::$didyoumeanindex->add($key) === null && $output)
+				self::log_progress("[$i] Skipping '$key' as it's too long");
+			elseif($output && $i % 1500 == 0) self::log_progress("[$i] Added '$key'", true);
+			$i++;
+		}
+		self::log_progress(""); // Blank newline
+		if($output) self::log_progress("Syncing to disk...");
+		
+		// Closing = saving, but we can't use it afterwards
+		self::$didyoumeanindex->close();
+		
+		// Just in case it's loaded again later
+		self::$didyoumeanindex = null;
+		
+		$env->perfdata->didyoumean_rebuild = round(microtime(true) - $env->perfdata->didyoumean_rebuild, 4);
+		if($output) self::log_progress("didyoumean index rebuild complete in {$env->perfdata->didyoumean_rebuild}s");
 	}
 	
 	/**
@@ -281,7 +347,6 @@ class search
 			echo("data: Done! Saving new search index to '$paths->searchindex'.\n\n");
 		}
 		if(is_cli()) echo("\nSearch index rebuilding complete in {$env->perfdata->invindex_rebuild}s.\n");
-		// No need to save, it's an SQLite DB backend
 	}
 	
 	/**
@@ -318,13 +383,11 @@ class search
 	
 	/**
 	 * Loads a connection to an inverted index.
-	 * @param	string	$invindex_filename	The path to the inverted index to load.
-	 * @todo	Remove this function and make everything streamable
 	 */
-	public static function invindex_load(string $invindex_filename) {
+	public static function invindex_load() {
 		global $env, $paths;
 		$start_time = microtime(true);
-		self::$invindex = new StorageBox($invindex_filename);
+		self::$invindex = new StorageBox($paths->searchindex);
 		$env->perfdata->searchindex_load_time = round((microtime(true) - $start_time)*1000, 3);
 	}
 	
@@ -445,7 +508,6 @@ class search
 		$terms = [];
 		$next_token = strtok($query, " \r\n\t");
 		while(true) {
-			
 			if(strpos($next_token, '"') !== false)
 				$next_token .= " " . strtok('"') . '"';
 			if(strpos($next_token, "'") !== false)
@@ -477,15 +539,13 @@ class search
 		 * +term				double the weighting of a term
 		 * terms !dest terms	redirect entire query (minus the !bang) to interwiki with registered shortcut dest
 		 * prefix:term			apply prefix operator to term
+		 * "term"				exactly this term (don't try and correct)
 		 */
-		// var_dump($tokens);
 		$result = [
 			"terms" => [],
 			"exclude" => [],
 			"interwiki" => null
 		];
-		// foreach($operators as $op)
-		// 	$result[$op] = [];
 		
 		
 		$count = count($tokens);
@@ -496,10 +556,11 @@ class search
 					$result["tokens"][] = [
 						"term" => substr($tokens[$i], 1),
 						"weight" => -1,
-						"location" => "all"
+						"location" => "all",
+						"exact" => false
 					];
 				}
-				else
+				else // FUTURE: Correct excludes too
 					$result["exclude"][] = substr($tokens[$i], 1);
 				
 				continue;
@@ -511,21 +572,23 @@ class search
 					$result["tokens"] = [ "term" => substr($tokens[$i], 1), "weight" => -1, "location" => "all" ];
 				}
 				else {
+					$term = trim(substr($tokens[$i], 1), '"');
 					$result["terms"][] = [
-						"term" => substr($tokens[$i], 1),
+						"term" => $term,
 						"weight" => 2,
-						"location" => "all"
+						"location" => "all",
+						// if it's different, then there were quotes
+						"exact" => substr($tokens[$i], 1) != $term
 					];
 				}
 				continue;
 			}
 
 			// Look for interwiki searches
-			if($tokens[$i][0] == "!" || substr($tokens[$i], -1) == "!") {
-				// You can only go to 1 interwiki destination at once, so we replace any previous finding with this one
+			// You can only go to 1 interwiki destination at once, so we replace any previous finding with this one
+			if($tokens[$i][0] == "!" || substr($tokens[$i], -1) == "!")
 				$result["interwiki"] = trim($tokens[$i], "!");
-			}
-
+			
 			// Look for colon directives in the form directive:term
 			// Also supports prefix:"quoted term with spaces", quotes stripped automatically
 			/*** Example directives *** (. = implemented, * = not implemented)
@@ -538,48 +601,97 @@ class search
 			 **************************/
 			if(strpos($tokens[$i], ":") !== false) {
 				$parts = explode(":", $tokens[$i], 2);
-				if(!isset($result[$parts[0]]))
-					$result[$parts[0]] = [];
+				
+				$exact = false;
+				$term = trim($parts[1], '"');
+				// If we trim off quotes, then it must be because it should be exact
+				if($parts[1] != $term) $exact = true;
 				
 				switch($parts[0]) {
 					case "intitle": // BUG: What if a normal word is found in a title?
 						$result["terms"][] = [
-							"term" => $parts[1],
+							"term" => $term,
 							"weight" => $settings->search_title_matches_weighting * mb_strlen($parts[1]),
-							"location" => "title"
+							"location" => "title",
+							"exact" => $exact
 						];
 						break;
 					case "intags":
 						$result["terms"][] = [
-							"term" => $parts[1],
+							"term" => $term,
 							"weight" => $settings->search_tags_matches_weighting * mb_strlen($parts[1]),
-							"location" => "tags"
+							"location" => "tags",
+							"exact" => $exact
 						];
 						break;
 					case "inbody":
 						$result["terms"][] = [
-							"term" => $parts[1],
+							"term" => $term,
 							"weight" => 1,
-							"location" => "body"
+							"location" => "body",
+							"exact" => $exact
 						];
 						break;
 					default:
-						$result[$parts[0]][] = trim($parts[1], '"');
+						if(!isset($result[$parts[0]]))
+							$result[$parts[0]] = [];
+						$result[$parts[0]][] = $term;
 						break;
 				}
 				continue;
 			}
-
+			
+			$exact = false;
+			$term = trim($tokens[$i], '"');
+			// If we trim off quotes, then it must be because it should be exact
+			if($tokens[$i] != $term) $exact = true;
+			
 			// Doesn't appear to be particularly special *shrugs*
 			// Set the weight to -1 if it's a stop word
 			$result["terms"][] = [
-				"term" => $tokens[$i],
+				"term" => $term,
 				"weight" => in_array($tokens[$i], self::$stop_words) ? -1 : 1,
-				"location" => "all"
+				"location" => "all",
+				"exact" => $exact // If true then we shouldn't try to autocorrect it
 			];
 		}
-
+		
+		// Correct typos, but only if that's enabled
+		if(module_exists("feature-search-didyoumean") && $settings->search_didyoumean_enabled) {
+			foreach($result["terms"] as $term_data) {
+				if($term_data["exact"] || // Skip exact-only
+					$term_data["weight"] < 1 || // Skip stop & irrelevant words
+					self::invindex_term_exists($term_data["term"])) continue;
+				
+				// It's not a stop word or in the index, try and correct it
+				$correction = self::didyoumean_correct($termdata["term"]);
+				// Make a note if we fail to correct a term
+				if(!is_string($correction)) {
+					$term_data["corrected"] = false;
+					continue;
+				}
+				
+				$term_data["term_before"] = $term_data["term"];
+				$term_data["term"] = $correction;
+				$term_data["corrected"] = true;
+			}
+		}
+		
 		return $result;
+	}
+	
+	/**
+	 * Determines whether a term exists in the currently loaded inverted search
+	 * index.
+	 * Note that this only checked for precisely $term. See
+	 * search::didyoumean_correct() for typo correction.
+	 * @param	string	$term	The term to search for.
+	 * @return	bool	Whether term exists in the inverted index or not.
+	 */
+	public static function invindex_term_exists(string $term) {
+		// In the inverted index $term should have a list of page names in it
+		// if the temr exists in the index, and won't exists if not
+		return self::$invindex->has($term);
 	}
 	
 	/**

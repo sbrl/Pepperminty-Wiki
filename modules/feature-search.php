@@ -123,9 +123,12 @@ register_module([
 			global $settings, $env, $pageindex, $paths;
 			
 			// Create the inverted index if it doesn't exist.
-			// todo In the future perhaps a CLI for this would be good?
 			if(!file_exists($paths->searchindex))
 				search::invindex_rebuild(false);
+				
+			// Create the didyoumean index if it doesn't exist.
+			if(module_exists("feature-search-didyoumean") && !file_exists($paths->didyoumeanindex))
+				search::didyoumean_rebuild(false);
 			
 			if(!isset($_GET["query"]))
 				exit(page_renderer::render("No Search Terms - Error - $settings->sitename", "<p>You didn't specify any search terms. Try typing some into the box above.</p>"));
@@ -332,6 +335,19 @@ register_module([
 		add_action("stas-parse", function() {
 			global $settings;
 			
+			if(!isset($_GET["query"])) {
+				http_response_code(400);
+				header("x-status: failed");
+				header("x-problem: no-query-specified");
+				exit(page_renderer::render_main("Error - STAS Query Analysis - $settings->sitename", "<p>No query was present in the <code>query</code> GET parameter.</p>"));
+			}
+			
+			// The indexes are only needed if didyoumean is enabled
+			if(module_exists("feature-search-didyoumean") && $settings->search_didyoumean_enabled) {
+				search::invindex_load();
+				search::didyoumean_load();
+			}
+			
 			$tokens = search::stas_split($_GET["query"]);
 			$stas_query = search::stas_parse($tokens);
 			
@@ -341,7 +357,6 @@ register_module([
 					$result .= "<span title='explicit exclude' style='color: red; text-decoration: dotted line-through;'>" . substr($token, 1) . "</span> ";
 					continue;
 				}
-				
 				
 				$term = null;
 				$token_part = $token;

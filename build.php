@@ -69,8 +69,7 @@ function register_module($settings)
 
 $module_count = count($modules);
 $i = 1;
-foreach($modules as $filename)
-{
+foreach($modules as $filename) {
 	echo("[$i / $module_count] Processing $filename          \r");
 	require($filename);
 	$i++;

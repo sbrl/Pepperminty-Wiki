@@ -20,6 +20,7 @@ register_module([
 
 /**
  * Represents a key-value data store.
+ * 
  */
 class StorageBox {
 	const MODE_JSON = 0;
@@ -81,6 +82,18 @@ class StorageBox {
 			"SELECT COUNT(key) FROM store WHERE key = :key;",
 			[ "key" => $key ]
 		)->fetchColumn() > 0;
+	}
+	
+	/**
+	 * Returns an iterable that returns all the keys that do not contain the given string.
+	 * @param	string			$exclude		The string to search for when excluding keys.
+	 * @return	PDOStatement	The iterable. Use a foreach loop on it.
+	 */
+	public function get_keys(string $exclude) : \PDOStatement {
+		return $this->query(
+			"SELECT key FROM store WHERE key LIKE :containing;",
+			[ "containing" => "%$exclude%" ]
+		);
 	}
 	
 	/**
