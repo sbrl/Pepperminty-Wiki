@@ -86,7 +86,7 @@ class search
 	 * Only populated if the feature-search-didyoumean module is present.
 	 * @var BkTree
 	 */
-	private static $didyoumeanindex = null;
+	public static $didyoumeanindex = null;
 	
 	/**
 	 * The transliterator that can be used to transliterate strings.
@@ -670,26 +670,26 @@ class search
 				"exact" => $exact // If true then we shouldn't try to autocorrect it
 			];
 		}
-		
 		// Correct typos, but only if that's enabled
 		if(module_exists("feature-search-didyoumean") && $settings->search_didyoumean_enabled) {
-			foreach($result["terms"] as $term_data) {
-				if($term_data["exact"] || // Skip exact-only
-					$term_data["weight"] < 1 || // Skip stop & irrelevant words
-					self::invindex_term_exists($term_data["term"])) continue;
+			$terms_count = count($result["terms"]);
+			for($i = 0; $i < $terms_count; $i++) {
+				if($result["terms"][$i]["exact"] || // Skip exact-only
+					$result["terms"][$i]["weight"] < 1 || // Skip stop & irrelevant words
+					self::invindex_term_exists($result["terms"][$i]["term"])) continue;
 				
 				// It's not a stop word or in the index, try and correct it
 				// self::didyoumean_correct auto-loads the didyoumean index on-demand
-				$correction = self::didyoumean_correct($term_data["term"]);
+				$correction = self::didyoumean_correct($result["terms"][$i]["term"]);
 				// Make a note if we fail to correct a term
 				if(!is_string($correction)) {
-					$term_data["corrected"] = false;
+					$result["terms"][$i]["corrected"] = false;
 					continue;
 				}
 				
-				$term_data["term_before"] = $term_data["term"];
-				$term_data["term"] = $correction;
-				$term_data["corrected"] = true;
+				$result["terms"][$i]["term_before"] = $result["terms"][$i]["term"];
+				$result["terms"][$i]["term"] = $correction;
+				$result["terms"][$i]["corrected"] = true;
 			}
 		}
 		

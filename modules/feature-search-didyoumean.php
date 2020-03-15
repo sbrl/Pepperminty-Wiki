@@ -40,6 +40,7 @@ register_module([
 		 
 	 	if(module_exists("feature-cli")) {
 	 		cli_register("didyoumean", "Query and manipulate the didyoumean index", function(array $args) : int {
+				global $settings;
 	 			if(count($args) < 1) {
 	 				echo("didyoumean: query and manipulate the didyoumean index
 Usage:
@@ -47,7 +48,8 @@ Usage:
 
 Subcommands:
 	rebuild           Rebuilds the didyoumean index
-	correct {word}    Corrects {word} using the didyoumean index (careful: it's case-sensitive and operates on transliterated text *only*)
+	correct {word}    Corrects {word} using the didyoumean index (careful: the index is case-sensitive and operates on transliterated text *only*)
+	lookup {word}     Looks up {word} in the didyoumean index and displays all the (unsorted) results.
 ");
 	 				return 0;
 	 			}
@@ -57,12 +59,25 @@ Subcommands:
 	 					search::didyoumean_rebuild();
 	 					break;
 					case "correct":
-						search::didyoumean_load();
 						if(count($args) < 2) {
 							echo("Error: Not enough arguments\n");
 							return 1;
 						}
-						echo("Correction: ".search::didyoumean_correct($args[1])."\n");
+						$correction = search::didyoumean_correct($args[1]);
+						if($correction === null) $correction = "(nothing found)";
+						echo("Correction: $correction\n");
+						break;
+					case "lookup":
+						if(count($args) < 2) {
+							echo("Error: Not enough arguments\n");
+							return 1;
+						}
+						search::didyoumean_load();
+						$results = search::$didyoumeanindex->lookup(
+							$args[1],
+							$settings->search_didyoumean_editdistance
+						);
+						var_dump($results);
 						break;
 	 			}
 	 			
@@ -322,18 +337,6 @@ class BkTree {
 			$stack[] = (object) [ "node" => $node_target, "id" => $node_target_id ];
 		}
 		return $stack;
-	}
-	
-	/**
-	 * Convenience function that returns just the first result when looking up a string.
-	 * @param	string	$string		The string to lookup
-	 * @param	integer	$distance	The maximum edit distance to search.
-	 * @return	string|null			The first matching string, or null if no results were found.
-	 */
-	public function lookup_one(string $string, int $distance = 1) : ?string {
-		$result = $this->lookup($string, $distance, 1);
-		if(empty($result)) return null;
-		return $result[0];
 	}
 	
 	/**
