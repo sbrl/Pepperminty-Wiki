@@ -259,5 +259,5 @@
 	"css": { "type": "textarea", "description": "A string of css to include. Will be included in the &lt;head&gt; of every page inside a &lt;style&gt; tag. This may also be an absolute url - urls will be referenced via a &lt;link rel='stylesheet' /&gt; tag. If the theme gallery is installed and automatic updates enabled, then the value of this property is managed by the theme gallery and changes may be overwritten (try the css_custom setting instead).", "default": "auto" },
 	"css_custom": { "type": "textarea", "description": "A string of custom CSS to include on top of the base theme css. Allows for theme customisations while still enabling automatic updates :D Just like the css setting, this one can also be a url.", "default": "/* Enter your custom css here. */" },
 	"cli_enabled": { "type": "text", "description": "Whether the Pepperminty Wiki CLI is enabled or not.", "default": true },
-	"cli_prompt": { "type": "text", "description": "The string to use as the prompt in the CLI shell.", "default": "# " }
+	"cli_prompt": { "type": "text", "description": "The string to use as the prompt in the CLI shell.", "default": "\u0001\u001b[1m\u001b[31m\u0002#\u0001\u001b[0m\u0002 " }
 }
