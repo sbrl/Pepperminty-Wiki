@@ -38,7 +38,7 @@ register_module([
 			if(!$env->is_logged_in) {
 				http_response_code(401);
 				exit(page_renderer::render_main("Error posting comment - $settings->sitename", "<p>Your comment couldn't be posted because you're not logged in. You can login <a href='?action=index'>here</a>. Here's the comment you tried to post:</p>
-				<textarea readonly>$message</textarea>"));
+				<textarea readonly>".htmlentities($message)."</textarea>"));
 			}
 			
 			$message_length = strlen($message);
