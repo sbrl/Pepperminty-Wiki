@@ -44,6 +44,11 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - [Module Api] Optimisation: Remove `search::transliterate` because it has a huge overhead. Use `search::$literator->transliterate()` instead.
  - [Module Api] Add new `absolute` and `html` optional boolean arguments to `render_timestamp()`
 
+ 
+## v0.20.3-hotfix3
+ - Squash password-based warning (thanks, @SeanFromIT!)
+ - Fix double-dot issue in uploaded files (thanks, @SeanFromIT!)
+
 
 ## v0.20.2-hotfix2
  - Update Parsedown to squash warnings in PHP 7.4
