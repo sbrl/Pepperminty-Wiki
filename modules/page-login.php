@@ -13,7 +13,7 @@ register_module([
 		 * @apiName		Login
 		 * @apiGroup	Authorisation
 		 * @apiPermission	Anonymous
-		 * 
+		 *
 		 * @apiParam	{string}	failed		Setting to yes causes a login failure message to be displayed above the login form.
 		 * @apiParam	{string}	returnto	Set to the url to redirect to upon a successful login.
 		 */
@@ -62,7 +62,7 @@ register_module([
 		 * @apiName		CheckLogin
 		 * @apiGroup	Authorisation
 		 * @apiPermission	Anonymous
-		 * 
+		 *
 		 * @apiParam	{string}	user		The user name to login with.
 		 * @apiParam	{string}	pass		The password to login with.
 		 * @apiParam	{string}	returnto	The URL to redirect to upon a successful login.
@@ -76,7 +76,7 @@ register_module([
 		 * ██     ███████ █████   ██      █████
 		 * ██     ██   ██ ██      ██      ██  ██
  		 * ██████ ██   ██ ███████  ██████ ██   ██
- 		 * 
+ 		 *
 		 * ██       ██████   ██████  ██ ███    ██
 		 * ██      ██    ██ ██       ██ ████   ██
 		 * ██      ██    ██ ██   ███ ██ ██ ██  ██
@@ -193,9 +193,9 @@ function do_password_hash_code_update() {
 	global $settings, $paths;
 	
 	// There's no point if we're using Argon2i, as it doesn't take a cost
-	if(hash_password_properties()["algorithm"] == PASSWORD_ARGON2I)
+	if(defined("PASSWORD_ARGON2I") && hash_password_properties()["algorithm"] == PASSWORD_ARGON2I)
 		return;
-		
+	
 	// Skip rechecking if the automatic check has been disabled
 	if($settings->password_cost_time_interval == -1)
 		return;
@@ -215,7 +215,7 @@ function do_password_hash_code_update() {
 }
 
 /**
- * Figures out the appropriate algorithm & options for hashing passwords based 
+ * Figures out the appropriate algorithm & options for hashing passwords based
  * on the current settings.
  * @return array The appropriate password hashing algorithm and options.
  */
@@ -235,7 +235,7 @@ function hash_password_properties() {
  * in $settings.
  * @package	page-login
  * @param	string	$pass	The password to hash.
- * 
+ *
  * @return	string	The hashed password. Uses password_hash() under-the-hood, but with some additional extras to avoid known issues.
  */
 function hash_password($pass) {
@@ -272,7 +272,7 @@ function hash_password_update($pass, $hash) {
 /**
  * Computes the appropriate cost value for password_hash based on the settings
  * automatically.
- * Starts at 10 and works upwards in increments of 1. Goes on until a value is 
+ * Starts at 10 and works upwards in increments of 1. Goes on until a value is
  * found that's greater than the target - or 10x the target time elapses.
  * @param	bool	$verbose	Whether to output verbose progress information to the client or not.
  * @return	int		The automatically calculated password hashing cost.

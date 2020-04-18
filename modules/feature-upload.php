@@ -13,19 +13,19 @@ register_module([
 		 * @apiGroup Upload
 		 * @apiPermission User
 		 *
-		 * @apiParam	{boolean}	avatar	Optional. If true then a special page to upload your avatar is displayed instead.
-		*/
+		 * @apiParam	{bool}	avatar	Optional. If true then a special page to upload your avatar is displayed instead.
+		 */
 		
 		/**
 		 * @api {post} ?action=upload Upload a file
 		 * @apiName UploadFile
 		 * @apiGroup Upload
 		 * @apiPermission User
-		 * 
+		 *
 		 * @apiParam {string}	name		The name of the file to upload.
 		 * @apiParam {string}	description	A description of the file.
 		 * @apiParam {file}		file		The file to upload.
-		 * @apiParam {boolean}	avatar		Whether this upload should be uploaded as the current user's avatar. If specified, any filenames provided will be ignored.
+		 * @apiParam {bool}	avatar		Whether this upload should be uploaded as the current user's avatar. If specified, any filenames provided will be ignored.
 		 *
 		 * @apiUse	UserNotLoggedInError
 		 * @apiError	UploadsDisabledError	Uploads are currently disabled in the wiki's settings.
@@ -37,11 +37,11 @@ register_module([
 		 */
 		
 		/*
-		 * ██    ██ ██████  ██       ██████   █████  ██████  
-		 * ██    ██ ██   ██ ██      ██    ██ ██   ██ ██   ██ 
-		 * ██    ██ ██████  ██      ██    ██ ███████ ██   ██ 
-		 * ██    ██ ██      ██      ██    ██ ██   ██ ██   ██ 
-		 *  ██████  ██      ███████  ██████  ██   ██ ██████  
+		 * ██    ██ ██████  ██       ██████   █████  ██████
+		 * ██    ██ ██   ██ ██      ██    ██ ██   ██ ██   ██
+		 * ██    ██ ██████  ██      ██    ██ ███████ ██   ██
+		 * ██    ██ ██      ██      ██    ██ ██   ██ ██   ██
+		 *  ██████  ██      ███████  ██████  ██   ██ ██████
 		 */
 		add_action("upload", function() {
 			global $settings, $env, $pageindex, $paths;
@@ -99,7 +99,7 @@ register_module([
 					break;
 				
 				case "POST":
-					// Recieve file
+					// Receive file
 					
 					if(!$settings->editing) {
 						exit(page_renderer::render_main("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because editing is currently disabled on $settings->sitename. Please contact $settings->admindetails_name, $settings->sitename's administrator for more information - their contact details can be found at the bottom of this page. <a href='index.php'>Go back to the main page</a>."));
@@ -122,7 +122,7 @@ register_module([
 						http_response_code(401);
 						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because you are not logged in.</p><p>Try <a href='?action=login&returnto=" . rawurlencode("?action=upload") . "'>logging in</a> first."));
 					}
-
+					
 					// Check for php upload errors
 					if($_FILES["file"]["error"] > 0)
 					{
@@ -194,7 +194,7 @@ register_module([
 					
 					// The path to the place (relative to the wiki data root)
 					// that we're actually going to store the uploaded file itself
-					$new_filename = "$paths->upload_file_prefix$target_name.$file_extension";
+					$new_filename = "$paths->upload_file_prefix$target_name$file_extension";
 					// The path (relative, as before) to the description file
 					$new_description_filename = "$new_filename.md";
 					
@@ -215,7 +215,7 @@ register_module([
 					// file history online.
 					if($is_avatar && isset($pageindex->$new_pagepath) && $pageindex->$new_pagepath->uploadedfile)
 						unlink($pageindex->$new_pagepath->uploadedfilepath);
-					
+
 					// Make sure that the palce we're uploading to exists
 					if(!file_exists(dirname($env->storage_prefix . $new_filename)))
 						mkdir(dirname($env->storage_prefix . $new_filename), 0775, true);
@@ -238,7 +238,7 @@ register_module([
 					$entry = new stdClass();
 					// Point to the description's filepath since this property
 					// should point to a markdown file
-					$entry->filename = $new_description_filename; 
+					$entry->filename = $new_description_filename;
 					$entry->size = strlen($description ?? "(No description provided)");
 					$entry->lastmodified = time();
 					$entry->lasteditor = $env->user;
@@ -282,7 +282,7 @@ register_module([
 		 * @apiName PreviewFile
 		 * @apiGroup Upload
 		 * @apiPermission Anonymous
-		 * 
+		 *
 		 * @apiParam {string}	page		The name of the file to preview.
 		 * @apiParam {number}	size		Optional. The size fo the resulting preview. Will be clamped to fit within the bounds specified in the wiki's settings. May also be set to the keyword 'original', which will cause the original file to be returned with it's appropriate mime type instead.
 		 *
@@ -291,11 +291,11 @@ register_module([
 		 */
 		
 		/*
-		 * ██████  ██████  ███████ ██    ██ ██ ███████ ██     ██ 
-		 * ██   ██ ██   ██ ██      ██    ██ ██ ██      ██     ██ 
-		 * ██████  ██████  █████   ██    ██ ██ █████   ██  █  ██ 
-		 * ██      ██   ██ ██       ██  ██  ██ ██      ██ ███ ██ 
-		 * ██      ██   ██ ███████   ████   ██ ███████  ███ ███  
+		 * ██████  ██████  ███████ ██    ██ ██ ███████ ██     ██
+		 * ██   ██ ██   ██ ██      ██    ██ ██ ██      ██     ██
+		 * ██████  ██████  █████   ██    ██ ██ █████   ██  █  ██
+		 * ██      ██   ██ ██       ██  ██  ██ ██      ██ ███ ██
+		 * ██      ██   ██ ███████   ████   ██ ███████  ███ ███
 		 */
 		add_action("preview", function() {
 			global $settings, $env, $pageindex, $start_time;
@@ -354,11 +354,8 @@ register_module([
 			$allheaders = getallheaders();
 			$allheaders = array_change_key_case($allheaders, CASE_LOWER);
 			if(!isset($allheaders["if-none-match"]))
-			{
 				header("etag: $preview_etag");
-			}
-			else
-			{
+			else {
 				if($allheaders["if-none-match"] === $preview_etag)
 				{
 					http_response_code(304);
@@ -450,7 +447,7 @@ register_module([
 		 * ██████  ██████  █████   ██    ██ ██ █████   ██  █  ██
 		 * ██      ██   ██ ██       ██  ██  ██ ██      ██ ███ ██
 		 * ██      ██   ██ ███████   ████   ██ ███████  ███ ███
-		 * 
+		 *
 		 * ██████  ██ ███████ ██████  ██       █████  ██    ██ ███████ ██████
 		 * ██   ██ ██ ██      ██   ██ ██      ██   ██  ██  ██  ██      ██   ██
 		 * ██   ██ ██ ███████ ██████  ██      ███████   ████   █████   ██████
@@ -500,7 +497,7 @@ register_module([
 				<video src='$previewUrl' controls preload='metadata'>Your browser doesn't support HTML5 video, but you can still <a href='$previewUrl'>download it</a> if you'd like.</video>
 			</figure>";
 						break;
-						
+					
 					case "audio":
 						$preview_html .= "\t\t\t<figure class='preview'>
 				<audio src='$previewUrl' controls preload='metadata'>Your browser doesn't support HTML5 audio, but you can still <a href='$previewUrl'>download it</a> if you'd like.</audio>
@@ -622,7 +619,7 @@ function upload_check_svg($temp_filename)
 		exit(page_renderer::render("Upload Error - $settings->sitename", "<p>$settings->sitename detected that you uploaded an SVG image and performed some extra security checks on your file. Whilst performing these checks it was discovered that the file you uploaded contains some Javascript, which could be dangerous. The uploaded file has been discarded. <a href='?action=upload'>Go back to try again</a>.</p>
 		<p>You may wish to consider <a href='https://github.com/sbrl/Pepperminty-Wiki'>opening an issue</a> against Pepperminty Wiki (the software that powers $settings->sitename) if this isn't the first time that you have seen this message.</p>"));
 	}
-	
+
 	// Find and return the size of the SVG image
 	return getsvgsize($temp_filename);
 }
