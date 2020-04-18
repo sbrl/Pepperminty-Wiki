@@ -35,7 +35,7 @@ register_module([
 			$reply_to = $_POST["replyto"] ?? null;
 			$message = $_POST["message"] ?? "";
 			
-			if(!$env->is_logged_in) {
+			if(!$env->is_logged_in && !$settings->anoncomments) {
 				http_response_code(401);
 				exit(page_renderer::render_main("Error posting comment - $settings->sitename", "<p>Your comment couldn't be posted because you're not logged in. You can login <a href='?action=index'>here</a>. Here's the comment you tried to post:</p>
 				<textarea readonly>".htmlentities($message)."</textarea>"));
@@ -102,6 +102,7 @@ register_module([
 						"$thread_comment->message\n" . 
 						"\n";
 					
+					// If the user is anonymous, this will fail and return false (it accounts for non-existent users automatically)
 					email_user($thread_comment->username, $email_subject, $email_body);
 				}
 			}
