@@ -2,6 +2,11 @@
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
 
+## v0.20.3-hotfix3
+ - Squash password-based warning (thanks, @SeanFromIT!)
+ - Fix double-dot issue in uploaded files (thanks, @SeanFromIT!)
+
+
 ## v0.20.2-hotfix2
  - Update Parsedown to squash warnings in PHP 7.4
  - Update the docs about how to get a copy

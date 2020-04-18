@@ -5,7 +5,7 @@
         "version": "0.7",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a utility action (that anyone can use) called hash that hashes a given string. Useful when changing a user's password.",
-        "lastupdate": 1578676709,
+        "lastupdate": 1587210110,
         "optional": false,
         "extra_data": []
     },
@@ -35,7 +35,7 @@
         "version": "0.7",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a 'raw' action that shows you the raw source of a page.",
-        "lastupdate": 1507993763,
+        "lastupdate": 1584205864,
         "optional": false,
         "extra_data": []
     },
@@ -45,7 +45,7 @@
         "version": "0.1",
         "author": "Starbeamrainbowlabs",
         "description": "Provides a basic JSON status action that provides a few useful bits of information for API consumption.",
-        "lastupdate": 1578676709,
+        "lastupdate": 1587210110,
         "optional": false,
         "extra_data": []
     },
@@ -65,7 +65,7 @@
         "version": "0.3.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds threaded comments to the bottom of every page.",
-        "lastupdate": 1551562406,
+        "lastupdate": 1587210110,
         "optional": false,
         "extra_data": []
     },
@@ -85,7 +85,7 @@
         "version": "0.1.7",
         "author": "Starbeamrainbowlabs",
         "description": "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
-        "lastupdate": 1578676709,
+        "lastupdate": 1587210110,
         "optional": false,
         "extra_data": []
     },
@@ -105,7 +105,7 @@
         "version": "0.1.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds interwiki link support. Set the interwiki_index_location setting at an index file to activate support.",
-        "lastupdate": 1578676709,
+        "lastupdate": 1587210110,
         "optional": false,
         "extra_data": []
     },
@@ -135,7 +135,7 @@
         "version": "0.10.1",
         "author": "Starbeamrainbowlabs",
         "description": "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
-        "lastupdate": 1578676709,
+        "lastupdate": 1587210110,
         "optional": false,
         "extra_data": []
     },
@@ -145,7 +145,7 @@
         "version": "0.2.2",
         "author": "Starbeamrainbowlabs",
         "description": "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
-        "lastupdate": 1578676709,
+        "lastupdate": 1587210110,
         "optional": false,
         "extra_data": []
     },
@@ -165,7 +165,7 @@
         "version": "0.6.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File\/' prefix.",
-        "lastupdate": 1578676709,
+        "lastupdate": 1587210110,
         "optional": false,
         "extra_data": []
     },
@@ -175,7 +175,7 @@
         "version": "0.3.3",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a user preferences page, letting people do things like change their email address and password.",
-        "lastupdate": 1578676709,
+        "lastupdate": 1587210110,
         "optional": false,
         "extra_data": []
     },
@@ -195,7 +195,7 @@
         "version": "0.7.10",
         "author": "Starbeamrainbowlabs",
         "description": "Adds the credits page. You *must* have this module :D",
-        "lastupdate": 1578676871,
+        "lastupdate": 1587210110,
         "optional": false,
         "extra_data": []
     },
@@ -205,7 +205,7 @@
         "version": "0.2",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a debug action for administrator use only that collects a load of useful information to make reporting bugs easier.",
-        "lastupdate": 1568296731,
+        "lastupdate": 1587210110,
         "optional": false,
         "extra_data": []
     },
@@ -225,7 +225,7 @@
         "version": "0.17.6",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
-        "lastupdate": 1578676709,
+        "lastupdate": 1587210110,
         "optional": false,
         "extra_data": {
             "diff.min.js": "https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/jsdiff\/2.2.2\/diff.min.js"
@@ -267,7 +267,7 @@
         "version": "0.9.4",
         "author": "Starbeamrainbowlabs",
         "description": "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
-        "lastupdate": 1570468766,
+        "lastupdate": 1587210110,
         "optional": false,
         "extra_data": []
     },
@@ -317,7 +317,7 @@
         "version": "0.16.7",
         "author": "Starbeamrainbowlabs",
         "description": "Allows you to view pages. You really should include this one.",
-        "lastupdate": 1548884009,
+        "lastupdate": 1587210110,
         "optional": false,
         "extra_data": []
     },
@@ -334,14 +334,14 @@
     {
         "id": "parser-parsedown",
         "name": "Parsedown",
-        "version": "0.10",
+        "version": "0.10.1",
         "author": "Emanuil Rusev & Starbeamrainbowlabs",
         "description": "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https:\/\/github.com\/erusev\/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation.",
-        "lastupdate": 1578676709,
+        "lastupdate": 1579199519,
         "optional": false,
         "extra_data": {
-            "Parsedown.php": "https:\/\/raw.githubusercontent.com\/erusev\/parsedown\/fe7a50eceb4a3c867cc9fa9c0aa906b1067d1955\/Parsedown.php",
-            "ParsedownExtra.php": "https:\/\/raw.githubusercontent.com\/erusev\/parsedown-extra\/f21b40a1973b6674903a6da9857ee215e8839f96\/ParsedownExtra.php",
+            "Parsedown.php": "https:\/\/raw.githubusercontent.com\/erusev\/parsedown\/3825db53a2be5d9ce54436a9cc557c6bdce1808a\/Parsedown.php",
+            "ParsedownExtra.php": "https:\/\/raw.githubusercontent.com\/erusev\/parsedown-extra\/352d03d941fc801724e82e49424ff409175261fd\/ParsedownExtra.php",
             "ParsedownExtreme.php": "https:\/\/raw.githubusercontent.com\/BenjaminHoegh\/parsedown-extreme\/adae4136534ad1e4159fe04c74c4683681855b84\/ParsedownExtreme.php"
         }
     }
