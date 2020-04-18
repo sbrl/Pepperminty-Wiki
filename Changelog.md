@@ -46,8 +46,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
  
 ## v0.20.3-hotfix3
- - Squash password-based warning (thanks, @SeanFromIT!)
- - Fix double-dot issue in uploaded files (thanks, @SeanFromIT!)
+ - Squash password-based warning (#182, thanks, @SeanFromIT!)
+ - Fix double-dot issue in uploaded files (#182, thanks, @SeanFromIT!)
 
 
 ## v0.20.2-hotfix2
