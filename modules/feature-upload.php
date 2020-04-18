@@ -14,8 +14,8 @@ register_module([
 		 * @apiPermission User
 		 *
 		 * @apiParam	{bool}	avatar	Optional. If true then a special page to upload your avatar is displayed instead.
-		*/
-
+		 */
+		
 		/**
 		 * @api {post} ?action=upload Upload a file
 		 * @apiName UploadFile
@@ -35,7 +35,7 @@ register_module([
 		 * @apiError	DuplicateFileError		The filename specified is a duplicate of a file that already exists.
 		 * @apiError	FileTamperedError		Pepperminty Wiki couldn't verify that the file wasn't tampered with during theupload process.
 		 */
-
+		
 		/*
 		 * ██    ██ ██████  ██       ██████   █████  ██████
 		 * ██    ██ ██   ██ ██      ██    ██ ██   ██ ██   ██
@@ -45,20 +45,20 @@ register_module([
 		 */
 		add_action("upload", function() {
 			global $settings, $env, $pageindex, $paths;
-
+			
 			$is_avatar = !empty($_POST["avatar"]) || !empty($_GET["avatar"]);
-
+			
 			switch($_SERVER["REQUEST_METHOD"])
 			{
 				case "GET":
 					// Send upload page
-
+					
 					if(!$settings->upload_enabled)
 						exit(page_renderer::render("Upload Disabled - $setting->sitename", "<p>You can't upload anything at the moment because $settings->sitename has uploads disabled. Try contacting $settings->admindetails_name, your site Administrator. <a href='javascript:history.back();'>Go back</a>.</p>"));
 					if(!$env->is_logged_in)
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>You are not currently logged in, so you can't upload anything.</p>
 		<p>Try <a href='?action=login&returnto=" . rawurlencode("?action=upload") . "'>logging in</a> first.</p>"));
-
+					
 					if($is_avatar) {
 						exit(page_renderer::render("Upload avatar - $settings->sitename", "<h1>Upload avatar</h1>
 			<p>Select an image below, and then press upload. $settings->sitename currently supports the following file types (though not all of them may be suitable for an avatar): " . implode(", ", $settings->upload_allowed_file_types) . "</p>
@@ -66,13 +66,13 @@ register_module([
 				<label for='file'>Select a file to upload.</label>
 				<input type='file' name='file' id='file-upload-selector' tabindex='1' />
 				<br />
-
+				
 				<p class='editing_message'>$settings->editing_message</p>
 				<input type='hidden' name='avatar' value='yes' />
 				<input type='submit' value='Upload' tabindex='20' />
 			</form>"));
 					}
-
+					
 					exit(page_renderer::render("Upload - $settings->sitename", "<h1>Upload file</h1>
 		<p>Select an image or file below, and then type a name for it in the box. This server currently supports uploads up to " . human_filesize(get_max_upload_size()) . " in size.</p>
 		<p>$settings->sitename currently supports uploading of the following file types: " . implode(", ", $settings->upload_allowed_file_types) . ".</p>
@@ -95,16 +95,16 @@ register_module([
 				document.getElementById('file-upload-name').value = newName;
 			});
 		</script>"));
-
+					
 					break;
-
+				
 				case "POST":
 					// Receive file
-
+					
 					if(!$settings->editing) {
 						exit(page_renderer::render_main("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because editing is currently disabled on $settings->sitename. Please contact $settings->admindetails_name, $settings->sitename's administrator for more information - their contact details can be found at the bottom of this page. <a href='index.php'>Go back to the main page</a>."));
 					}
-
+					
 					// Make sure uploads are enabled
 					if(!$settings->upload_enabled)
 					{
@@ -113,7 +113,7 @@ register_module([
 						http_response_code(412);
 						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because uploads are currently disabled on $settings->sitename. <a href='index.php'>Go back to the main page</a>.</p>"));
 					}
-
+					
 					// Make sure that the user is logged in
 					if(!$env->is_logged_in)
 					{
@@ -122,7 +122,7 @@ register_module([
 						http_response_code(401);
 						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because you are not logged in.</p><p>Try <a href='?action=login&returnto=" . rawurlencode("?action=upload") . "'>logging in</a> first."));
 					}
-
+					
 					// Check for php upload errors
 					if($_FILES["file"]["error"] > 0)
 					{
@@ -135,16 +135,16 @@ register_module([
 						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because " . (($_FILES["file"]["error"] == 1 || $_FILES["file"]["error"] == 2) ? "the file is too large" : "an error occurred") . ".</p><p>Please contact $settings->admindetails_name, $settings->sitename's administrator for help.</p>"));
 
 					}
-
+					
 					// Calculate the target name, removing any characters we
 					// are unsure about.
 					$target_name = makepathsafe($_POST["name"] ?? "Users/$env->user/Avatar");
 					$temp_filename = $_FILES["file"]["tmp_name"];
-
+					
 					$mimechecker = finfo_open(FILEINFO_MIME_TYPE);
 					$mime_type = finfo_file($mimechecker, $temp_filename);
 					finfo_close($mimechecker);
-
+					
 					if(!in_array($mime_type, $settings->upload_allowed_file_types))
 					{
 						http_response_code(415);
@@ -152,20 +152,20 @@ register_module([
 						<p>The file you tried to upload appeared to be of type <code>$mime_type</code>, but $settings->sitename currently only allows the uploading of the following file types: <code>" . implode("</code>, <code>", $settings->upload_allowed_file_types) . "</code>.</p>
 						<p><a href='?action=$settings->defaultaction'>Go back</a> to the Main Page.</p>"));
 					}
-
+					
 					// Perform appropriate checks based on the *real* filetype
 					if($is_avatar && substr($mime_type, 0, strpos($mime_type, "/")) !== "image") {
 						http_response_code(415);
 						exit(page_renderer::render_main("Error uploading avatar - $settings->sitename", "<p>That file appears to be unsuitable as an avatar, as $settings->sitename has detected it to be of type <code>$mime_type</code>, which doesn't appear to be an image. Please try <a href='?action=upload&avatar=yes'>uploading a different file</a> to use as your avatar.</p>"));
 					}
-
+					
 					switch(substr($mime_type, 0, strpos($mime_type, "/")))
 					{
 						case "image":
 							$extra_data = [];
 							// Check SVG uploads with a special function
 							$imagesize = $mime_type !== "image/svg+xml" ? getimagesize($temp_filename, $extra_data) : upload_check_svg($temp_filename);
-
+							
 							// Make sure that the image size is defined
 							if(!is_int($imagesize[0]) or !is_int($imagesize[1]))
 							{
@@ -175,41 +175,41 @@ register_module([
 							}
 							break;
 					}
-
+					
 					$file_extension = system_mime_type_extension($mime_type);
-
+					
 					// Override the detected file extension if a file extension
 					// is explicitly specified in the settings
 					if(isset($settings->mime_mappings_overrides->$mime_type))
 						$file_extension = $settings->mime_mappings_overrides->$mime_type;
-
+					
 					if(in_array($file_extension, [ "php", ".htaccess", "asp", "aspx" ]))
 					{
 						http_response_code(415);
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded appears to be dangerous and has been discarded. Please contact $settings->sitename's administrator for assistance.</p>
 						<p>Additional information: The file uploaded appeared to be of type <code>$mime_type</code>, which mapped onto the extension <code>$file_extension</code>. This file extension has the potential to be executed accidentally by the web server.</p>"));
 					}
-
+					
 					// Rewrite the name to include the _actual_ file extension we've cleverly calculated :D
-
+					
 					// The path to the place (relative to the wiki data root)
 					// that we're actually going to store the uploaded file itself
 					$new_filename = "$paths->upload_file_prefix$target_name$file_extension";
 					// The path (relative, as before) to the description file
 					$new_description_filename = "$new_filename.md";
-
+					
 					// The page path that the new file will be stored under
 					$new_pagepath = $new_filename;
-
+					
 					// Rewrite the paths to store avatars in the right place
 					if($is_avatar) {
 						$new_pagepath = $target_name;
 						$new_filename = "$target_name.$file_extension";
 					}
-
+					
 					if(isset($pageindex->$new_pagepath) && !$is_avatar)
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>A page or file has already been uploaded with the name '$new_filename'. Try deleting it first. If you do not have permission to delete things, try contacting one of the moderators.</p>"));
-
+					
 					// Delete the previously uploaded avatar, if it exists
 					// In the future we _may_ not need this once we have
 					// file history online.
@@ -219,21 +219,21 @@ register_module([
 					// Make sure that the palce we're uploading to exists
 					if(!file_exists(dirname($env->storage_prefix . $new_filename)))
 						mkdir(dirname($env->storage_prefix . $new_filename), 0775, true);
-
+					
 					if(!move_uploaded_file($temp_filename, $env->storage_prefix . $new_filename))
 					{
 						http_response_code(409);
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that either is a configuration error, or that $settings->sitename has been attacked. Please contact " . $settings->admindetails_name . ", your $settings->sitename Administrator.</p>"));
 					}
-
+					
 					$description = $_POST["description"] ?? "_(No description provided)_\n";
-
+					
 					// Escape the raw html in the provided description if the setting is enabled
 					if($settings->clean_raw_html)
 						$description = htmlentities($description, ENT_QUOTES);
-
+					
 					file_put_contents($env->storage_prefix . $new_description_filename, $description);
-
+					
 					// Construct a new entry for the pageindex
 					$entry = new stdClass();
 					// Point to the description's filepath since this property
@@ -249,17 +249,17 @@ register_module([
 					// Assign the new entry to the image's filepath as that
 					// should be the page name.
 					$pageindex->$new_pagepath = $entry;
-
+					
 					// Generate a revision to keep the page history up to date
 					if(module_exists("feature-history"))
 					{
 						$oldsource = ""; // Only variables can be passed by reference, not literals
 						history_add_revision($entry, $description, $oldsource, false);
 					}
-
+					
 					// Save the pageindex
 					save_pageindex();
-
+					
 					if(module_exists("feature-recent-changes"))
 					{
 						add_recent_change([
@@ -270,13 +270,13 @@ register_module([
 							"filesize" => filesize($env->storage_prefix . $entry->uploadedfilepath)
 						]);
 					}
-
+					
 					header("location: ?action=view&page=$new_pagepath&upload=success");
-
+					
 					break;
 			}
 		});
-
+		
 		/**
 		 * @api {get} ?action=preview&page={pageName}[&size={someSize}] Get a preview of a file
 		 * @apiName PreviewFile
@@ -289,7 +289,7 @@ register_module([
 		 * @apiError	PreviewNoFileError	No file was found associated with the specified page.
 		 * @apiError	PreviewUnknownFileTypeError	Pepperminty Wiki was unable to generate a preview for the requested file's type.
 		 */
-
+		
 		/*
 		 * ██████  ██████  ███████ ██    ██ ██ ███████ ██     ██
 		 * ██   ██ ██   ██ ██      ██    ██ ██ ██      ██     ██
@@ -299,7 +299,7 @@ register_module([
 		 */
 		add_action("preview", function() {
 			global $settings, $env, $pageindex, $start_time;
-
+			
 			if(empty($pageindex->{$env->page}->uploadedfilepath))
 			{
 				$im = errorimage("The page '$env->page' doesn't have an associated file.");
@@ -307,14 +307,14 @@ register_module([
 				imagepng($im);
 				exit();
 			}
-
+			
 			$filepath = realpath($env->storage_prefix . $pageindex->{$env->page}->uploadedfilepath);
 			$mime_type = $pageindex->{$env->page}->uploadedfilemime;
 			$shortFilename = substr($filepath, 1 + (strrpos($filepath, '/') !== false ? strrpos($filepath, '/') : -1));
-
+			
 			header("content-disposition: inline; filename=\"$shortFilename\"");
 			header("last-modified: " . gmdate('D, d M Y H:i:s T', $pageindex->{$env->page}->lastmodified));
-
+			
 			// If the size is set to original, then send (or redirect to) the original image
 			// Also do the same for SVGs if svg rendering is disabled.
 			if(isset($_GET["size"]) and $_GET["size"] == "original" or
@@ -322,18 +322,18 @@ register_module([
 			{
 				// Get the file size
 				$filesize = filesize($filepath);
-
+				
 				// Send some headers
 				header("content-length: $filesize");
 				header("content-type: $mime_type");
-
+				
 				// Open the file and send it to the user
 				$handle = fopen($filepath, "rb");
 				fpassthru($handle);
 				fclose($handle);
 				exit();
 			}
-
+			
 			// Determine the target size of the image
 			$target_size = 512;
 			if(isset($_GET["size"]))
@@ -342,23 +342,20 @@ register_module([
 				$target_size = $settings->min_preview_size;
 			if($target_size > $settings->max_preview_size)
 				$target_size = $settings->max_preview_size;
-
+			
 			// Determine the output file type
 			$output_mime = $settings->preview_file_type;
 			if(isset($_GET["type"]) and in_array($_GET["type"], [ "image/png", "image/jpeg", "image/webp" ]))
 				$output_mime = $_GET["type"];
-
+			
 			/// ETag handling ///
 			// Generate the etag and send it to the client
 			$preview_etag = sha1("$output_mime|$target_size|$filepath|$mime_type");
 			$allheaders = getallheaders();
 			$allheaders = array_change_key_case($allheaders, CASE_LOWER);
 			if(!isset($allheaders["if-none-match"]))
-			{
 				header("etag: $preview_etag");
-			}
-			else
-			{
+			else {
 				if($allheaders["if-none-match"] === $preview_etag)
 				{
 					http_response_code(304);
@@ -367,24 +364,24 @@ register_module([
 				}
 			}
 			/// ETag handling end ///
-
+			
 			/* Disabled until we work out what to do about caching previews *
 			$previewFilename = "$filepath.preview.$outputFormat";
 			if($target_size === $settings->default_preview_size)
 			{
 				// The request is for the default preview size
 				// Check to see if we have a preview pre-rendered
-
+				
 			}
 			*/
-
+			
 			$preview = new Imagick();
 			switch(substr($mime_type, 0, strpos($mime_type, "/")))
 			{
 				case "image":
 					$preview->readImage($filepath);
 					break;
-
+				
 				case "application":
 					if($mime_type == "application/pdf")
 					{
@@ -394,7 +391,7 @@ register_module([
 						$preview->setImageColorspace(255);
 						break;
 					}
-
+				
 				case "video":
 				case "audio":
 					if($settings->data_storage_dir == ".")
@@ -408,18 +405,18 @@ register_module([
 					// TODO: Add support for ranges here.
 					// Get the file size
 					$filesize = filesize($filepath);
-
+					
 					// Send some headers
 					header("content-length: $filesize");
 					header("content-type: $mime_type");
-
+					
 					// Open the file and send it to the user
 					$handle = fopen($filepath, "rb");
 					fpassthru($handle);
 					fclose($handle);
 					exit();
 					break;
-
+				
 				default:
 					http_response_code(501);
 					$preview = errorimage("Unrecognised file type '$mime_type'.", $target_size);
@@ -427,10 +424,10 @@ register_module([
 					imagepng($preview);
 					exit();
 			}
-
+			
 			// Scale the image down to the target size
 			$preview->resizeImage($target_size, $target_size, imagick::FILTER_LANCZOS, 1, true);
-
+			
 			// Send the completed preview image to the user
 			header("content-type: $output_mime");
 			header("x-generation-time: " . (microtime(true) - $start_time) . "s");
@@ -443,7 +440,7 @@ register_module([
 				file_put_contents($previewFilename, $preview->getImageBlob());
 			*/
 		});
-
+		
 		/*
 		 * ██████  ██████  ███████ ██    ██ ██ ███████ ██     ██
 		 * ██   ██ ██   ██ ██      ██    ██ ██ ██      ██     ██
@@ -462,7 +459,7 @@ register_module([
 			// Don't do anything if the action isn't view
 			if($env->action !== "view")
 				return;
-
+			
 			if(isset($pageindex->{$env->page}->uploadedfile) and $pageindex->{$env->page}->uploadedfile == true)
 			{
 				// We are looking at a page that is paired with an uploaded file
@@ -474,7 +471,7 @@ register_module([
 				$originalUrl = $env->storage_prefix == "./" ? $filepath : "?action=preview&size=original&page=" . rawurlencode($env->page);
 				if($mime_type == "application/pdf")
 					$fileTypeDisplay = "pdf";
-
+				
 				$preview_html = "";
 				switch($fileTypeDisplay)
 				{
@@ -494,29 +491,29 @@ register_module([
 						}
 						$preview_html .= "</ul></nav>\n\t\t\t</figure>";
 						break;
-
+					
 					case "video":
 						$preview_html .= "\t\t\t<figure class='preview'>
 				<video src='$previewUrl' controls preload='metadata'>Your browser doesn't support HTML5 video, but you can still <a href='$previewUrl'>download it</a> if you'd like.</video>
 			</figure>";
 						break;
-
+					
 					case "audio":
 						$preview_html .= "\t\t\t<figure class='preview'>
 				<audio src='$previewUrl' controls preload='metadata'>Your browser doesn't support HTML5 audio, but you can still <a href='$previewUrl'>download it</a> if you'd like.</audio>
 			</figure>";
 						break;
-
+					
 					case "pdf":
 						$preview_html .= "\t\t\t<object type='application/pdf' data='$originalUrl'></object>";
 						break;
-
+					
 					default:
 						$preview_html .= "\t\t\t<p><em>No preview is available, but you can download it instead:</em></p>
 						<a class='button' href='$originalUrl'>Download</a>";
 						break;
 				}
-
+				
 				$fileInfo = [];
 				$fileInfo["Name"] = str_replace("Files/", "", $filepath);
 				$fileInfo["Type"] = $mime_type;
@@ -530,7 +527,7 @@ register_module([
 				}
 				$fileInfo["Uploaded by"] = $pageindex->{$env->page}->lasteditor;
 				$fileInfo["Short markdown embed code"] = "<input type='text' class='short-embed-markdown-code' value='![" . htmlentities($fileInfo["Name"], ENT_QUOTES | ENT_HTML5) . "](" . htmlentities($filepath, ENT_QUOTES | ENT_HTML5) . " | right | 350x350)' readonly /> <button class='short-embed-markdown-button'>Copy</button>";
-
+				
 				$preview_html .= "\t\t\t<h2>File Information</h2>
 			<table>";
 				foreach ($fileInfo as $displayName => $displayValue)
@@ -538,11 +535,11 @@ register_module([
 					$preview_html .= "<tr><th>$displayName</th><td>$displayValue</td></tr>\n";
 				}
 				$preview_html .= "</table>";
-
+				
 				$parts["{content}"] = str_replace("</h1>", "</h1>\n$preview_html", $parts["{content}"]);
 			}
 		});
-
+		
 		// Add the snippet that copies the embed markdown code to the clipboard
 		page_renderer::add_js_snippet('window.addEventListener("load", function(event) {
 	let button = document.querySelector(".short-embed-markdown-button");
@@ -553,7 +550,7 @@ register_module([
 		button.innerHTML = document.execCommand("copy") ? "Copied!" : "Failed to copy :-(";
 	});
 });');
-
+		
 		// Register a section on the help page on uploading files
 		add_help_section("28-uploading-files", "Uploading Files", "<p>$settings->sitename supports the uploading of files, though it is up to " . $settings->admindetails_name . ", $settings->sitename's administrator as to whether it is enabled or not (uploads are currently " . (($settings->upload_enabled) ? "enabled" : "disabled") . ").</p>
 		<p>Currently Pepperminty Wiki (the software that $settings->sitename uses) only supports the uploading of images, videos, and audio, although more file types should be supported in the future (<a href='//github.com/sbrl/Pepperminty-Wiki/issues'>open an issue on GitHub</a> if you are interested in support for more file types).</p>
@@ -652,7 +649,7 @@ function getsvgsize($svgFilename)
 		$imageSize = [ intval($rootAttrs->width), intval($rootAttrs->height) ];
 	else if(isset($rootAttrs->viewBox))
 		$imageSize = array_map("intval", array_slice(explode(" ", $rootAttrs->viewBox), -2, 2));
-
+	
 	return $imageSize;
 }
 
