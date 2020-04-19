@@ -74,7 +74,8 @@ register_module([
 		});
 		
 		add_help_section("50-sidebar", "Sidebar", "<p>$settings->sitename has an optional sidebar which displays a list of all the current pages (but not subpages) that it is currently hosting. It may or may not be enabled.</p>
-		<p>If it isn't enabled, it can be enabled for your current browser only by appending <code>sidebar=yes</code> to the current page's query string.</p>");
+		<p>If it isn't enabled, it can be enabled for your current browser only by appending <code>sidebar=yes</code> to the current page's query string.</p>
+		<p>If it is enabled, it can be disabled for your current browser only by appending <code>nosidebar</code> to the current page's query string.</p>");
 	}
 ]);
 
