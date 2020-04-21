@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Library: Search engine",
-	"version" => "0.13",
+	"version" => "0.13.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "A library module that provides the backend to the search engine module.",
 	"id" => "lib-search-engine",
@@ -670,16 +670,17 @@ class search
 				"exact" => $exact // If true then we shouldn't try to autocorrect it
 			];
 		}
+		
+		
 		// Correct typos, but only if that's enabled
 		if(module_exists("feature-search-didyoumean") && $settings->search_didyoumean_enabled) {
 			$terms_count = count($result["terms"]);
 			for($i = 0; $i < $terms_count; $i++) {
-				error_log("[stas_parse/didyoumean] Now looking at #$i:  ".var_export($result["terms"][$i], true)."(total count: $terms_count)");
+				// error_log("[stas_parse/didyoumean] Now looking at #$i:  ".var_export($result["terms"][$i], true)."(total count: $terms_count)");
 				if($result["terms"][$i]["exact"] || // Skip exact-only
 					$result["terms"][$i]["weight"] < 1 || // Skip stop & irrelevant words
-					self::invindex_term_exists($result["terms"][$i]["term"])) {
-						$i++; continue;
-				}
+					self::invindex_term_exists($result["terms"][$i]["term"]))
+						continue;
 				
 				// It's not a stop word or in the index, try and correct it
 				// self::didyoumean_correct auto-loads the didyoumean index on-demand
@@ -687,7 +688,7 @@ class search
 				// Make a note if we fail to correct a term
 				if(!is_string($correction)) {
 					$result["terms"][$i]["corrected"] = false;
-					$i++; continue;
+					continue;
 				}
 				
 				$result["terms"][$i]["term_before"] = $result["terms"][$i]["term"];
@@ -718,7 +719,7 @@ class search
 	 * Note that this automatically pushes the query string through STAS which
 	 * can  be a fairly expensive operation, so use 2nd argument if you need
 	 * to debug the STAS parsing result if possible.
-	 * @param	string		$query		The search query.
+	 * @param	string		$query		The search query. If an array is passed, it is assumed it has already been pre-parsed with search::stas_parse().
 	 * @param	&stdClass	$query_stas	An object to fill with the result of the STAS parsing.
 	 * @return	array	An array of matching pages.
 	 */
@@ -892,16 +893,16 @@ class search
 	 * Extracts a context string (in HTML) given a search query that could be displayed
 	 * in a list of search results.
 	 * @param	string	$pagename	The name of the paget that this source belongs to. Used when consulting the inverted index.
-	 * @param	string	$query		The search queary to generate the context for.
+	 * @param	string	$query_parsed	The *parsed* search query to generate the context for (basically the output of search::stas_parse()).
 	 * @param	string	$source		The page source to extract the context from.
 	 * @return	string				The generated context string.
 	 */
-	public static function extract_context($pagename, $query, $source)
+	public static function extract_context($pagename, $query_parsed, $source)
 	{
 		global $settings;
 		
 		$pageid = ids::getid($pagename);
-		$nterms = self::stas_parse(self::stas_split($query))["terms"];
+		$nterms = $query_parsed["terms"];
 		
 		// Query the inverted index for offsets
 		$matches = [];
@@ -978,13 +979,13 @@ class search
 	
 	/**
 	 * Highlights the keywords of a context string.
-	 * @param	string	$query		The query  to use when highlighting.
+	 * @param	array	$query_parsed	The *parsed* query to use when highlighting (the output of search::stas_parse())
 	 * @param	string	$context	The context string to highlight.
 	 * @return	string				The highlighted (HTML) string.
 	 */
-	public static function highlight_context($query, $context)
+	public static function highlight_context($query_parsed, $context)
 	{
-		$qterms = self::stas_parse(self::stas_split($query))["terms"];
+		$qterms = $query_parsed["terms"];
 		
 		foreach($qterms as $qterm) {
 			// Stop words are marked by STAS

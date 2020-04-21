@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Search",
-	"version" => "0.13",
+	"version" => "0.13.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
@@ -141,7 +141,8 @@ register_module([
 			$env->perfdata->invindex_decode_time = round((microtime(true) - $time_start)*1000, 3);
 			
 			$time_start = microtime(true);
-			$results = search::invindex_query($_GET["query"]);
+			$query_parsed = null;
+			$results = search::invindex_query($_GET["query"], $query_parsed);
 			$resultCount = count($results);
 			$env->perfdata->invindex_query_time = round((microtime(true) - $time_start)*1000, 3);
 			
@@ -152,7 +153,7 @@ register_module([
 			foreach($results as &$result) {
 				$result["context"] = search::extract_context(
 					$result["pagename"],
-					$_GET["query"],
+					$query_parsed,
 					file_get_contents($env->storage_prefix . $result["pagename"] . ".md")
 				);
 			}
@@ -203,7 +204,7 @@ register_module([
 			$content .= "<br /><small><em>Pssst! Power users can make use of $settings->sitename's advanced query syntax. Learn about it <a href='?action=help#27-search'>here</a>!</em></small></p>";
 			
 			if(module_exists("page-list")) {
-				// TODO: Refactor ths to use STAS
+				// TODO: Refactor this to use STAS
 				$nterms = search::tokenize($query);
 				$nterms_regex = implode("|", array_map(function($nterm) {
 					return preg_quote(strtolower(trim($nterm)));
@@ -236,7 +237,7 @@ register_module([
 					$context = mb_substr($pagesource, 0, $settings->search_characters_context * 2);
 				//echo("'Generated search context for " . $result["pagename"] . ": $context'\n");
 				$context = search::highlight_context(
-					$_GET["query"],
+					$query_parsed,
 					preg_replace('/</u', '&lt;', $context)
 				);
 				/*if(strlen($context) == 0)

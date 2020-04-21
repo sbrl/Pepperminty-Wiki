@@ -47,6 +47,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Optimisation: Refactor `stas_split()` to be faster (informal testing shows ~18% faster → 4% total time)
  - [Module Api] Optimisation: Remove `search::transliterate` because it has a huge overhead. Use `search::$literator->transliterate()` instead.
  - [Module Api] Add new `absolute` and `html` optional boolean arguments to `render_timestamp()`
+ - [Module Api] `search::extract_context()` and `search::highlight_context()` now take in a _parsed_ query (with `search::stas_parse()`), not a raw string
 
  
 ## v0.20.3-hotfix3
