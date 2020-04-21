@@ -11,9 +11,11 @@
      * [Inter-wiki links](06.5-Interwiki-Links.md)
      * [Custom Themes](06.7-Custom-Themes.md)
      * [External Renderers](06.8-External-Renderers.md)
- * [Writing Modules](07-Writing-Modules.md)
+ * **Maintenance**
+     * [Command-Line Interface](20-cli.md)
+ * [Writing Modules](50-Writing-Modules.md)
  * **References**
 	 * [Configuration Settings](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php)
 	 * [HTTP API](https://starbeamrainbowlabs.com/labs/peppermint/docs/RestApi/)
 	 * [PHP Module API](https://starbeamrainbowlabs.com/labs/peppermint/docs/ModuleApi/)
- * [Making a Release](08-Making-A-Release.md)
+ * [Making a Release](99-Making-A-Release.md)
