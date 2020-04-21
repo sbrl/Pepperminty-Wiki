@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Uploader",
-	"version" => "0.6.2",
+	"version" => "0.6.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -117,7 +117,7 @@ register_module([
 					// Make sure that the user is logged in
 					if(!$env->is_logged_in)
 					{
-						if(!empty($_FILES["file"]))
+						if(!empty($_FILES["file"]) && file_exists($_FILES["file"]))
 							unlink($_FILES["file"]["tmp_name"]);
 						http_response_code(401);
 						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because you are not logged in.</p><p>Try <a href='?action=login&returnto=" . rawurlencode("?action=upload") . "'>logging in</a> first."));
@@ -126,7 +126,7 @@ register_module([
 					// Check for php upload errors
 					if($_FILES["file"]["error"] > 0)
 					{
-						if(!empty($_FILES["file"]))
+						if(!empty($_FILES["file"]) && file_exists($_FILES["file"]))
 							unlink($_FILES["file"]["tmp_name"]);
 						if($_FILES["file"]["error"] == 1 || $_FILES["file"]["error"] == 2)
 							http_response_code(413); // file is too large
@@ -216,7 +216,7 @@ register_module([
 					if($is_avatar && isset($pageindex->$new_pagepath) && $pageindex->$new_pagepath->uploadedfile)
 						unlink($pageindex->$new_pagepath->uploadedfilepath);
 
-					// Make sure that the palce we're uploading to exists
+					// Make sure that the place we're uploading to exists
 					if(!file_exists(dirname($env->storage_prefix . $new_filename)))
 						mkdir(dirname($env->storage_prefix . $new_filename), 0775, true);
 					
