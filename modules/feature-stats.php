@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Statistics",
-	"version" => "0.3",
+	"version" => "0.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
 	"id" => "feature-stats",
@@ -225,9 +225,36 @@ register_module([
 			}
 		]);
 		
-		// Perform an automatic recalculation of the statistics if needed
-		if($env->action !== "stats-update")
+		// Perform an automatic recalculation of the statistics if needed, but only if we're not on the CLI
+		if($env->action !== "stats-update" && !is_cli())
 			update_statistics(false);
+		
+		if(module_exists("feature-cli")) {
+			cli_register("stats", "Interact with and update the wiki statistics", function(array $args) : int {
+				global $settings, $env;
+				if(count($args) < 1) {
+					echo("stats: interact with an manipulate the wiki statistics
+Usage:
+	stats {subcommand}
+
+Subcommands:
+	recalculate     Recalculates the statistics
+");
+					return 0;
+				}
+				
+				switch($args[0]) {
+					case "recalculate":
+						echo("Updating statistics - ");
+						$start_time = microtime(true);
+						update_statistics(true, true);
+						echo("done in ".round((microtime(true) - $start_time) * 1000, 2)."ms\n");
+						echo("Recalculated {$env->perfdata->stats_recalcuated} statistics in {$env->perfdata->stats_calctime}ms (not including serialisation / saving to disk)\n");
+						break;
+				}
+				return 0;
+			});
+		}
 	}
 ]);
 
@@ -239,7 +266,7 @@ register_module([
  */
 function update_statistics($update_all = false, $force = false)
 {
-	global $settings, $paths, $statistic_calculators;
+	global $settings, $env, $paths, $statistic_calculators;
 	
 	$stats_mtime = filemtime($paths->statsindex);
 	
@@ -289,9 +316,14 @@ function update_statistics($update_all = false, $force = false)
 		}
 	}
 	
-	header("x-stats-recalculated: $stats_updated");
-	//round((microtime(true) - $pageindex_read_start)*1000, 3)
-	header("x-stats-calctime: " . round((microtime(true) - $start_time)*1000, 3) . "ms");
+	$env->perfdata->stats_recalcuated = $stats_updated;
+	$env->perfdata->stats_calctime = round((microtime(true) - $start_time)*1000, 3);
+	
+	if(!is_cli()) {
+		header("x-stats-recalculated: {$env->perfdata->stats_recalcuated}");
+		//round((microtime(true) - $pageindex_read_start)*1000, 3)
+		header("x-stats-calctime: {$env->perfdata->stats_calctime}ms");
+	}
 	
 	stats_save($stats);
 	// If we ran out of time, reset the mtime for performance reasons (see the 
