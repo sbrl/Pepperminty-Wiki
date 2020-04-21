@@ -677,7 +677,9 @@ class search
 				error_log("[stas_parse/didyoumean] Now looking at #$i:  ".var_export($result["terms"][$i], true)."(total count: $terms_count)");
 				if($result["terms"][$i]["exact"] || // Skip exact-only
 					$result["terms"][$i]["weight"] < 1 || // Skip stop & irrelevant words
-					self::invindex_term_exists($result["terms"][$i]["term"])) continue;
+					self::invindex_term_exists($result["terms"][$i]["term"])) {
+						$i++; continue;
+				}
 				
 				// It's not a stop word or in the index, try and correct it
 				// self::didyoumean_correct auto-loads the didyoumean index on-demand
@@ -685,7 +687,7 @@ class search
 				// Make a note if we fail to correct a term
 				if(!is_string($correction)) {
 					$result["terms"][$i]["corrected"] = false;
-					continue;
+					$i++; continue;
 				}
 				
 				$result["terms"][$i]["term_before"] = $result["terms"][$i]["term"];
