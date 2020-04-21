@@ -44,6 +44,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Newline characters (`\r` and `\n`) are now replaced with spaces in internal links (#186, thanks @SeanFromIT!)
  - Inbuilt help documentation corrections (#185, thanks @SeanFromIT!)
  - Fixed a warning message when a file fails to upload (thanks for the test file, @SeanFromIT)
+ - Really fix the dot problem from v0.20.3-hotfix3 that @SeanFromIT reported
 
 ### Changed
  - Improved the search indexing system performance - again
