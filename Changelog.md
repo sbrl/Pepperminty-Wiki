@@ -22,6 +22,11 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Wiki administrators with terminal/console access can now make use of a brand-new CLI by executing `php ./index.php` (warning: strange things will happen if the current working directory is not the directory that contains index.php and peppermint.json)
  - Added new `anoncomments` setting to control whether anonymous users are allowed to make comments (disabled by default) - thanks to @SeanFromIT for suggesting it in #181
  - Added markdown support for media captions (#184)
+ - Finally: *Experimental* didyoumean support. Ever made a typo in a search query? The new didyoumean engine can correct query terms that are up to 2 characters out!
+     - It's disabled by default (check out the new `search_didyoumean_enabled` setting), as it enabling it comes with a significant performance impact when typos are corrected (~0.8s-ish / typo is currently observed)
+     - Uses the words in the search index as a base for corrections (so if you have a typo on a page, then it will correct it to the typo)
+     - The index does _not_ currently update when you edit a page - this feature is still _very_ experimental (please report any issues)
+     - A typo is a search query term that is both not a stop word and not found in the search index
 
 ### Fixed
  - Fixed weighted word support on search query analysis debug page
@@ -49,6 +54,10 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - [Module Api] Optimisation: Remove `search::transliterate` because it has a huge overhead. Use `search::$literator->transliterate()` instead.
  - [Module Api] Add new `absolute` and `html` optional boolean arguments to `render_timestamp()`
  - [Module Api] `search::extract_context()` and `search::highlight_context()` now take in a _parsed_ query (with `search::stas_parse()`), not a raw string
+
+### Known bugs
+ - Wow, a new section! Haven't seen one of these before. Hopefully we don't see it too often.....
+ - The didyoumean search query typo correction engine does not currently update it's index when you save an edit to a page (the typo correction engine is still under development).
 
  
 ## v0.20.3-hotfix3

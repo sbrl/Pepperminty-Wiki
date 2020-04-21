@@ -3,7 +3,7 @@ register_module([
 	"name" => "Did you mean? support",
 	"version" => "0.1",
 	"author" => "Starbeamrainbowlabs",
-	"description" => "Ever searched for something but couldn't find it because you couldn't spell it correctly? This module is for you! It adds spelling correction for search queries based on the words in the inverted search index.",
+	"description" => "*Experimental* Ever searched for something but couldn't find it because you couldn't spell it correctly? This module is for you! It adds spelling correction for search queries based on the words in the inverted search index.",
 	"id" => "feature-search-didyoumean",
 	"depends" => [ "lib-search-engine", "lib-storage-box" ],
 	"code" => function() {
