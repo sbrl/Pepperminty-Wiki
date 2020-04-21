@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Uploader",
-	"version" => "0.6.3",
+	"version" => "0.6.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -138,7 +138,8 @@ register_module([
 					
 					// Calculate the target name, removing any characters we
 					// are unsure about.
-					$target_name = makepathsafe($_POST["name"] ?? "Users/$env->user/Avatar");
+					// Also trim off whitespace (from both ends), and full stops (from the end)
+					$target_name = rtrim(trim(makepathsafe($_POST["name"] ?? "Users/$env->user/Avatar")), ".");
 					$temp_filename = $_FILES["file"]["tmp_name"];
 					
 					$mimechecker = finfo_open(FILEINFO_MIME_TYPE);
@@ -183,18 +184,21 @@ register_module([
 					if(isset($settings->mime_mappings_overrides->$mime_type))
 						$file_extension = $settings->mime_mappings_overrides->$mime_type;
 					
-					if(in_array($file_extension, [ "php", ".htaccess", "asp", "aspx" ]))
+					if(in_array($file_extension, [ "phtml", "php5", "php", ".htaccess", "asp", "aspx" ]))
 					{
 						http_response_code(415);
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded appears to be dangerous and has been discarded. Please contact $settings->sitename's administrator for assistance.</p>
 						<p>Additional information: The file uploaded appeared to be of type <code>$mime_type</code>, which mapped onto the extension <code>$file_extension</code>. This file extension has the potential to be executed accidentally by the web server.</p>"));
 					}
 					
+					// Remove dots from both ends, just in case
+					$file_extension = trim($file_extension, ".");
+					
 					// Rewrite the name to include the _actual_ file extension we've cleverly calculated :D
 					
 					// The path to the place (relative to the wiki data root)
 					// that we're actually going to store the uploaded file itself
-					$new_filename = "$paths->upload_file_prefix$target_name$file_extension";
+					$new_filename = "$paths->upload_file_prefix$target_name.$file_extension";
 					// The path (relative, as before) to the description file
 					$new_description_filename = "$new_filename.md";
 					
