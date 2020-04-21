@@ -65,7 +65,7 @@ Subcommands:
 						}
 						$correction = search::didyoumean_correct($args[1]);
 						if($correction === null) $correction = "(nothing found)";
-						echo("Correction: $correction\n");
+						echo("$correction\n");
 						break;
 					case "lookup":
 						if(count($args) < 2) {
@@ -77,7 +77,8 @@ Subcommands:
 							$args[1],
 							$settings->search_didyoumean_editdistance
 						);
-						var_dump($results);
+						echo(implode("\n", $results));
+						echo("\n");
 						break;
 	 			}
 	 			
