@@ -42,8 +42,9 @@ Here's a list of things that I want to add at some point (please feel free to [s
          - Feel free to make one yourself!
          - I'm happy to help out if you need help with Pepperminty Wiki itself (e.g. making it more machine-readable (#138))
          - Message on Gitter (see above), or open an issue on this repository.
- - User watchlists
+ - ~~User watchlists~~ coming in v0.21!
  - ~~Theme gallery (#5 - coming soon in v0.20!)~~ done, as of v0.20-beta1
+ - Self-service user registration (#181)
  - (See more on the [issue tracker](https://github.com/sbrl/Pepperminty-Wiki/issues)!)
  - ...?
 
