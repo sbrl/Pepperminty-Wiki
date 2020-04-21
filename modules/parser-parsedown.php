@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.10.1",
+	"version" => "0.10.2",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation.",
 	"extra_data" => [
@@ -893,8 +893,8 @@ class PeppermintParsedown extends ParsedownExtreme
 			
 			if($param1 !== false && strtolower(trim($param1)) == "caption")
 				$imageCaption = true;
-				if($param2 !== false && strtolower(trim($param2)) == "caption")
-					$imageCaption = true;
+			if($param2 !== false && strtolower(trim($param2)) == "caption")
+				$imageCaption = true;
 			if($param3 !== false && strtolower(trim($param3)) == "caption")
 				$imageCaption = true;
 			
@@ -993,7 +993,8 @@ class PeppermintParsedown extends ParsedownExtreme
 						$result["element"],
 						[
 							"name" => "figcaption",
-							"text" => $altText
+							// rawHtml is fine here 'cause we're using the output of $this->text(), which is safe
+							"rawHtml" => $this->text($altText),
 						],
 					],
 					"handler" => "elements"

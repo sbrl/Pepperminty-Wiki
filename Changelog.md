@@ -21,6 +21,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - A command-line interface!
      - Wiki administrators with terminal/console access can now make use of a brand-new CLI by executing `php ./index.php` (warning: strange things will happen if the current working directory is not the directory that contains index.php and peppermint.json)
  - Added new `anoncomments` setting to control whether anonymous users are allowed to make comments (disabled by default) - thanks to @SeanFromIT for suggesting it in #181
+ - Added markdown support for media captions (#184)
 
 ### Fixed
  - Fixed weighted word support on search query analysis debug page
