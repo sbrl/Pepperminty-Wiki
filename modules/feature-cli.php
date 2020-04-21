@@ -81,7 +81,7 @@ function cli() {
 		
 		case "exec":
 			file_put_contents("php://stderr", "Executing {$args[1]}\n");
-			exit(cli_exec($args[1]) ? 0 : 1);
+			exit(cli_exec(array_slice($args, 1)) ? 0 : 1);
 			break;
 		
 		case "help":
@@ -144,14 +144,16 @@ Be warned that you are effectively the superuser for your wiki right now, with c
  * Executes a given Pepperminty Wiki shell command.
  * This function kill the process if the current execution environment is not the CLI.
  * The returned exit code functions as a normal shell process exit code does.
- * @param	string	$string		The shell command to execute.
- * @return	int		The exit code of the command executed.
+ * @param	string|array	$string		The shell command to execute.
+ * @return	int				The exit code of the command executed.
  */
-function cli_exec(string $string) : int {
+function cli_exec($string) : int {
 	global $settings, $cli_commands;
 	ensure_cli();
 	
-	$parts = preg_split("/\s+/", $string);
+	$parts = is_string($string) ? preg_split("/\s+/", $string) : $string;
+	if(!is_array($parts))
+		throw new Exception("Error: Invalid type. Expected an array of parts or a string to execute.");
 	
 	if(!isset($cli_commands->{$parts[0]})) {
 		echo("Error: The command with the name {$parts[0]} could not be found (try the help command instead).\n");
