@@ -9,6 +9,7 @@ register_module([
 		global $settings;
 		
 		cli_register("version", "Shows the current version of Pepperminty Wiki", function(array $_args) : int {
+			global $version, $commit;
 			echo("$version-".substr($commit, 0, 7)."\n");
 			return 0;
 		});
