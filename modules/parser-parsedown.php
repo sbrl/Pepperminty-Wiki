@@ -727,7 +727,7 @@ class PeppermintParsedown extends ParsedownExtreme
 		if(preg_match('/^\[\[([^\]]*)\]\]([^\s!?",;.()\[\]{}*=+\/]*)/u', $fragment["text"], $matches) === 1) {
 			// 1: Parse parameters out
 			// -------------------------------
-			$link_page = trim($matches[1]);
+			$link_page = str_replace(["\r", "\n"], [" ", " "], trim($matches[1]));
 			$display = $link_page . trim($matches[2]);
 			if(strpos($matches[1], "|") !== false || strpos($matches[1], "¦") !== false)
 			{
