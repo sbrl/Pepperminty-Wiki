@@ -12,7 +12,7 @@
      * [Custom Themes](06.7-Custom-Themes.md)
      * [External Renderers](06.8-External-Renderers.md)
  * **Maintenance**
-     * [Command-Line Interface](20-cli.md)
+     * [Command-Line Interface](20-Command-Line-Interface.md)
  * [Writing Modules](50-Writing-Modules.md)
  * **References**
 	 * [Configuration Settings](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php)
