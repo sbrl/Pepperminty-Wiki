@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Statistics",
-	"version" => "0.4",
+	"version" => "0.4.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
 	"id" => "feature-stats",
@@ -229,6 +229,14 @@ register_module([
 		if($env->action !== "stats-update" && !is_cli())
 			update_statistics(false);
 		
+		
+		/*
+		 *  ██████ ██      ██
+		 * ██      ██      ██
+		 * ██      ██      ██
+		 * ██      ██      ██
+		 *  ██████ ███████ ██
+		 */
 		if(module_exists("feature-cli")) {
 			cli_register("stats", "Interact with and update the wiki statistics", function(array $args) : int {
 				global $settings, $env;
@@ -239,6 +247,7 @@ Usage:
 
 Subcommands:
 	recalculate     Recalculates the statistics
+	show            Shows the current statistics
 ");
 					return 0;
 				}
@@ -250,6 +259,31 @@ Subcommands:
 						update_statistics(true, true);
 						echo("done in ".round((microtime(true) - $start_time) * 1000, 2)."ms\n");
 						echo("Recalculated {$env->perfdata->stats_recalcuated} statistics in {$env->perfdata->stats_calctime}ms (not including serialisation / saving to disk)\n");
+						break;
+					case "show":
+						$stats = stats_load();
+						foreach($stats as $name => $stat) {
+							$lastupdated = render_timestamp($stat->lastupdated, true, false);
+							if(is_object($stat->value)) {
+								echo("*** $stat->name *** (last updated $lastupdated)\n");
+								$i = 0;
+								foreach($stat->value as $key => $value) {
+									if($i >= 25) break;
+									echo("$key: $value\n");
+									$i++;
+								}
+							}
+							else if(is_array($stat->value)) {
+								// Display array differently, and truncate to 25 entries
+								echo("*** $stat->name *** (last updated $lastupdated)\n");
+								echo(implode("\n", array_slice($stat->value, 0, 25)));
+								echo("\n");
+							}
+							else
+								echo("$stat->name: ".var_export($stat->value, true)." (last updated $lastupdated)\n");
+							
+							echo("\n");
+						}
 						break;
 				}
 				return 0;
