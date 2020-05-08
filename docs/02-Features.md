@@ -10,7 +10,7 @@ Pepperminty Wiki has actually acquired a rather extensive feature set.
  - Page creation
 	 - Subpages fully supported
  - Markdown-powered syntax
-	 - Powered by [Parsedown Extra](https://github.com/erusev/parsedown-extra/), with additional extras
+	 - Powered by [Parsedown Extra](https://github.com/erusev/parsedown-extra/) (with [Parsedown Extreme](https://github.com/BenjaminHoegh/parsedown-extreme)), with additional extras
 	 - Short syntax for:
 		 - Referencing uploaded files
 		 - Internal Links - links to non-existent pages show up in red
