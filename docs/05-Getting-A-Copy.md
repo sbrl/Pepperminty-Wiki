@@ -12,10 +12,22 @@ Pepperminty Wiki has a downloader that you can use to select the modules you wan
 **Link:** [Online Downloader](https://starbeamrainbowlabs.com/labs/peppermint/download.php)
 
 ## Method 2.5: Using the downloader offline
-You can also you the downloader offline. Simply clone this repository to your web server and then point your web browser at `your.server.com/path/to/pepperminty/wiki/download.php`.
+You can also you the downloader offline. Simply clone this repository to your web server (or clone it locally and then upload):
+
+```bash
+git clone https://github.com/sbrl/Pepperminty-Wiki.git
+```
+
+Then, point your web browser at `your.server.com/path/to/pepperminty/wiki/download.php`.
 
 ## Method 3: Building from source
-Pepperminty Wiki can also be built from source (and I do this all the time when testing). Start by cloning the repository. Then go into the `modules` folder and append `.disabled` to the names of any modules you don't want to be included (e.g. `modules/page-edit.php` would become `modules/page-edit.php.disabled`). Then follow the instructions below. The resulting file will be located at `build/index.php`.
+Pepperminty Wiki can also be built from source (and I do this all the time when testing). Start by cloning the repository:
+
+```bash
+git clone https://github.com/sbrl/Pepperminty-Wiki.git
+```
+
+Then go into the `modules` folder and append `.disabled` to the names of any modules you don't want to be included (e.g. `modules/page-edit.php` would become `modules/page-edit.php.disabled`). Then follow the instructions below. The resulting file will be located at `build/index.php`.
 
 Run the following commands from the root of the repository in order, adjusting them for your specific platform if required:
 
