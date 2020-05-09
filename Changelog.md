@@ -7,6 +7,7 @@ _Currently there aren't any plans to make another beta release. These changes wi
 
 ### Fixed
  - Make `PEPPERMINT_THEME` environment variable work again when compiling on the command line
+ - Fixed invalid HTML that was causing layout issues on the master settings page
 
 
 ## v0.21-beta1
