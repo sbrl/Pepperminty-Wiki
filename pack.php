@@ -7,7 +7,8 @@ if(!isset($paths)) {
 	$paths = new stdClass();
 	$paths->extra_data_directory = "build/._extra_data";
 }
-$theme_id = $_ENV["PEPPERMINT_THEME"] ?? "default";
+$theme_id = getenv("PEPPERMINT_THEME");
+if(strlen($theme_id) == 0) $theme_id = "default";
 
 if(isset($_GET["determine-latest-version"])) {
 	header("content-type: application/json");
@@ -40,7 +41,7 @@ function log_str(string $line) {
 ██      ██    ██ ██   ██ ██   ██ ██ ██  ██ ██ ██    ██
 ███████  ██████  ██   ██ ██████  ██ ██   ████  ██████
 */
-	
+log_str("Building with theme '$theme_id'.\n");
 log_str("*** Beginning main build sequence ***\n");
 log_str("Reading in module index...\n");
 
