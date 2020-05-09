@@ -110,7 +110,8 @@ table				{ border-collapse: collapse;	}
 tr:nth-child(2n)	{ background: var(--bg-a);		}
 th, td				{ padding: 0.25em 0.45em;		}
 
-pre, code, input, textarea { font-size: 1rem; }
+pre, code, input, textarea	{ font-size: 1rem;	}
+img, video, audio			{ max-width: 100%;	}
 
 
 main label	{ font-weight: bold; display: inline-block; min-width: 12em; }
@@ -136,8 +137,9 @@ textarea, input:not([type=submit]):not([type=button]) {
 	box-shadow: inset 0 0 0.5em var(--shadow-a);
 }
 
+input[type=submit].large { width: 100%; }
 input[type=submit] {
-	width: 100%; box-sizing: border-box;
+	box-sizing: border-box;
 	margin: 0.25em 0;
 	padding: 0.1em 0.25em;
 	font-weight: bold;
@@ -188,6 +190,13 @@ input[type=submit] {
 	content: counter(search-results);
 	font-size: 1.25em; color: var(--text-b);
 }
+
+
+.grid-large { display: grid; grid-template-columns: repeat(auto-fit, minmax(20em, 1fr)); grid-auto-rows: min-content; grid-gap: 1em; justify-content: center;}
+
+.theme-item { justify-self: center; text-align: center; }
+.theme-item label { min-width: auto; }
+
 
 .stacked-bar { display: flex; }
 
