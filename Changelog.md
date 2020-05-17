@@ -2,8 +2,7 @@
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
 
-## v0.21-beta2
-_Currently there aren't any plans to make another beta release. These changes will be released in the main stable v0.21 release._
+## v0.21
 
 ### Fixed
  - Make `PEPPERMINT_THEME` environment variable work again when compiling on the command line
