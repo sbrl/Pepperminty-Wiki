@@ -371,9 +371,18 @@ class search
 	 * @param	array	$index	The index to sort.
 	 */
 	public static function index_sort(&$index) {
-		$sorter = new Collator("");
+		$sorter = self::$sorter;
 		uksort($index, function($a, $b) use($sorter) : int {
 			return $sorter->compare($a, $b);
+		});
+	}
+	/**
+	 * Sorts an index by frequency.
+	 * @param  array $index The index to sort.
+	 */
+	public static function index_sort_freq(&$index) {
+		uasort($index, function($a, $b) : int {
+			return $b["freq"] > $a["freq"];
 		});
 	}
 	
@@ -401,6 +410,8 @@ class search
 	 */
 	public static function invindex_load() {
 		global $env, $paths;
+		// If the inverted index is alreayd loaded, it doesn't need loading again
+		if(self::$invindex !== null) return;
 		$start_time = microtime(true);
 		self::$invindex = new StorageBox($paths->searchindex);
 		$env->perfdata->searchindex_load_time = round((microtime(true) - $start_time)*1000, 3);
@@ -414,6 +425,7 @@ class search
 		
 		$start_time = microtime(true);
 		self::$invindex->close();
+		self::$invindex = null;
 		$env->perfdata->searchindex_close_time = round((microtime(true) - $start_time)*1000, 3);
 	}
 	
@@ -715,9 +727,29 @@ class search
 	}
 	
 	/**
+	 * Returns the page ids that contain the given (transliterated) search term.
+	 * @param  string $term The search term to look for.
+	 * @return string[]       The list of page ids that contain the given term.
+	 */
+	public static function invindex_term_getpageids(string $term) {
+		return self::$invindex->get_arr_simple($term);
+	}
+	
+	/**
+	 * Gets the offsets object for a given term on a given page.
+	 * The return object is in the form { freq: 4, offsets: [2,3,4] }
+	 * @param	string	$term	The term to search for.
+	 * @param	int		$pageid	The id of the page to retrieve the offsets list for.
+	 * @return	object	The offsets object as described above.
+	 */
+	public static function invindex_term_getoffsets(string $term, int $pageid) {
+		return self::$invindex->get("$term|$pageid");
+	}
+	
+	/**
 	 * Searches the given inverted index for the specified search terms.
 	 * Note that this automatically pushes the query string through STAS which
-	 * can  be a fairly expensive operation, so use 2nd argument if you need
+	 * can be a fairly expensive operation, so use 2nd argument if you need
 	 * to debug the STAS parsing result if possible.
 	 * @param	string		$query		The search query. If an array is passed, it is assumed it has already been pre-parsed with search::stas_parse().
 	 * @param	&stdClass	$query_stas	An object to fill with the result of the STAS parsing.

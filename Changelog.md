@@ -2,6 +2,12 @@
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
 
+## v0.22-dev
+
+### Added
+ - [Module Api] Add new `search::invindex_term_getpageids`, and `search::invindex_term_getoffsets`, and `search::index_sort_freq` methods
+
+
 ## v0.21
 
 ### Fixed
