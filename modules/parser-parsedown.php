@@ -1390,7 +1390,7 @@ class PeppermintParsedown extends ParsedownExtra
 		// Indent? Don't even want to know
 		if($fragment["indent"] > 0) return;
 		// If it doesn't match, then we're not interested
-		if(preg_match('/\[_*(?:TOC|toc)_*\]/u', $fragment["text"], $matches) !== 1)
+		if(preg_match('/^\[_*(?:TOC|toc)_*\]$/u', $fragment["text"], $matches) !== 1)
 			return;
 		
 		$result = [
