@@ -386,6 +386,9 @@ register_module([
 			<tr><td><code>![Alt text](http://example.com/path/to/image.png | 256x256 | right)</code></td><td><img src='http://example.com/path/to/image.png' alt='Alt text' style='float: right; max-width: 256px; max-height: 256px;' /></td><td>An image floating to the right of the page that fits inside a 256px x 256px box, preserving aspect ratio.</td></tr>
 			<tr><td><code>![Alt text](http://example.com/path/to/image.png | 256x256 | caption)</code></td><td><figure><img src='http://example.com/path/to/image.png' alt='Alt text' style='max-width: 256px; max-height: 256px;' /><figcaption>Alt text</figcaption></figure></td><td>An image with a caption that fits inside a 256px x 256px box, preserving aspect ratio. The presence of the word <code>caption</code> in the regular braces causes the alt text to be taken and displayed below the image itself.</td></tr>
 			<tr><td><code>![Alt text](Files/Cheese.png)</code></td><td><img src='index.php?action=preview&page=Files/Cheese.png' alt='Alt text' style='' /></td><td>An example of the short url syntax for images. Simply enter the page name of an image (or video / audio file), and Pepperminty Wiki will sort out the url for you.</td></tr>
+			<tr><td><code>Some text ==marked text== more text</code></td><td>Some text <mark>marked text</mark> more text</td><td>Marked / highlighted text</td></tr>
+			<tr><td><code>[ ] Unticked checkbox</code></td><td>An unticked checkbox. Must be at the beginning of a line or directly after a list item (e.g. <code> - </code> or <code>1. </code>).</td></tr>
+			<tr><td><code>[x] Ticked checkbox</code></td><td>An ticked checkbox. The same rules as unticked checkboxes apply here too.</td></tr>
 		</table>
 		<p>Note that the all image image syntax above can be mixed and matched to your liking. The <code>caption</code> option in particular must come last or next to last.</p>
 		<h4>Templating</h4>
@@ -499,10 +502,13 @@ class PeppermintParsedown extends ParsedownExtra
 		// Prioritise our image parser over the regular image parser
 		array_unshift($this->InlineTypes["!"], "ExtendedImage");
 		
-		$this->inlineMarkerList .= "{";
+		$this->inlineMarkerList .= "{=";
 		if(!isset($this->InlineTypes["{"]) or !is_array($this->InlineTypes["{"]))
 			$this->InlineTypes["{"] = [];
+		if(!isset($this->InlineTypes["="]) or !is_array($this->InlineTypes["="]))
+			$this->InlineTypes["="] = [];
 		$this->InlineTypes["{"][] = "Template";
+		$this->InlineTypes["="][] = "Mark";
 	}
 	
 	/*
@@ -740,6 +746,41 @@ class PeppermintParsedown extends ParsedownExtra
 		
 		if($checkbox_content === "x")
 			$result["element"]["attributes"]["checked"] = "checked";
+		
+		return $result;
+	}
+	
+	
+	/*
+ 	 * ███    ███  █████  ██████  ██   ██ ███████ ██████
+ 	 * ████  ████ ██   ██ ██   ██ ██  ██  ██      ██   ██
+ 	 * ██ ████ ██ ███████ ██████  █████   █████   ██   ██
+ 	 * ██  ██  ██ ██   ██ ██   ██ ██  ██  ██      ██   ██
+ 	 * ██      ██ ██   ██ ██   ██ ██   ██ ███████ ██████
+ 	 * 
+ 	 * ████████ ███████ ██   ██ ████████
+ 	 *    ██    ██       ██ ██     ██
+ 	 *    ██    █████     ███      ██
+ 	 *    ██    ██       ██ ██     ██
+ 	 *    ██    ███████ ██   ██    ██
+ 	 */
+	protected function inlineMark($fragment) {
+		if(preg_match('/==([^=]+)==/', $fragment["text"], $matches) !== 1)
+			return;
+		
+		$marked_text = $matches[1];
+		
+		$result = [
+			"extent" => strlen($matches[0]),
+			"element" => [
+				"name" => "mark",
+				"handler" => [
+					"function" => "lineElements",
+					"argument" => $marked_text,
+					"destination" => "elements"
+				]
+			]
+		];
 		
 		return $result;
 	}

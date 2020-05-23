@@ -8,6 +8,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - [Module Api] Add new `search::invindex_term_getpageids`, and `search::invindex_term_getoffsets`, and `search::index_sort_freq` methods
  - Added new syntax features to PeppermintParsedown, inspired by ParsedownExtreme (which we couldn't get to work, and it wasn't working before as far as I can tell)
      - Checkboxes: `[ ]` and `[x]` after a bullet point or at the start of a line
+     - Marked / highlighted text: `Some text ==marked text== more text`
      - TODO: Update the help text in parser-parsedown
      - TODO: Look through the ParsedownExtreme / ParsedownExtended README and pick out the extra syntax we like and implement it
 
