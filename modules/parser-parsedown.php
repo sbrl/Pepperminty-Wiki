@@ -388,10 +388,10 @@ register_module([
 			<tr><td><code>![Alt text](Files/Cheese.png)</code></td><td><img src='index.php?action=preview&page=Files/Cheese.png' alt='Alt text' style='' /></td><td>An example of the short url syntax for images. Simply enter the page name of an image (or video / audio file), and Pepperminty Wiki will sort out the url for you.</td></tr>
 			<tr><td><code>Some text ==marked text== more text</code></td><td>Some text <mark>marked text</mark> more text</td><td>Marked / highlighted text</td></tr>
 			<tr><td><code>Some text^superscript^ more text</code></td><td>Some text<sup>superscript</sup> more text</td><td>Superscript</td></tr>
-			<tr><td><code>Some text^subscript^ more text</code></td><td>Some text<sub>subscript</sub> more text</td><td>Subscript</td></tr>
+			<tr><td><code>Some text~subscript~ more text</code></td><td>Some text<sub>subscript</sub> more text</td><td>Subscript (note that we use a single tilda <code>~</code> here - a double results in strikethrough text instead)</td></tr>
 			<tr><td><code>[ ] Unticked checkbox</code></td><td><input type='checkbox' disabled /> Unticked checkbox</td><td>An unticked checkbox. Must be at the beginning of a line or directly after a list item (e.g. <code> - </code> or <code>1. </code>).</td></tr>
 			<tr><td><code>[x] Ticked checkbox</code></td><td><input type='checkbox' checked='checked' disabled /> Ticked checkbox</td><td>An ticked checkbox. The same rules as unticked checkboxes apply here too.</td></tr>
-			<tr><td><code>some text &gt;!spoiler text!&lt; more text</code></td><td>some text <a class='spoiler' href='#spoiler-example' id='spoiler-example'>spoiler text</a> more text</td><td>A spoiler. Users much click it to reveal the content hidden beneath.</td></tr>
+			<tr><td><code>some text &gt;!spoiler text!&lt; more text</code></td><td>some text <a class='spoiler' href='#spoiler-example' id='spoiler-example'>spoiler text</a> more text</td><td>A spoiler. Users must click it to reveal the content hidden beneath.</td></tr>
 			<tr><td><code>some text ||spoiler text|| more text</code></td><td>some text <a class='spoiler' href='#spoiler-example-2' id='spoiler-example-2'>spoiler text</a> more text</td><td>Alternative spoiler syntax inspired by <a href='https://support.discord.com/hc/en-us/articles/360022320632-Spoiler-Tags-'>Discord</a>.</td></tr>
 			<tr><td><code>[__TOC__]</code></td><td></td><td>An automatic table of contents. Note that this must be on a line by itself with no text before or after it on that line for it to work.</td></tr>
 		</table>
