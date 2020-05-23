@@ -479,6 +479,14 @@ function parsedown_pagename_resolve($pagename) {
 class PeppermintParsedown extends ParsedownExtra
 {
 	/**
+	 * A long random and extremely unlikely string to identify where we want
+	 * to put a table of contents.
+	 * Hopefully nobody is unlucky enough to include this in a page...!
+	 * @var string
+	 */
+	private const TOC_ID = "█yyZiy9c9oHVExhVummYZId_dO9-fvaGFvgQirEapxOtaL-s7WnK34lF9ObBoQ0EH2kvtd6VKcAL2█";
+	
+	/**
 	 * The base directory with which internal links will be resolved.
 	 * @var string
 	 */
@@ -496,6 +504,8 @@ class PeppermintParsedown extends ParsedownExtra
 	function __construct()
 	{
         parent::__construct();
+		
+		array_unshift($this->BlockTypes["["], "TableOfContents");
 		
 		// Prioritise our internal link parsing over the regular link parsing
 		$this->addInlineType("[", "InternalLink", true);
@@ -533,6 +543,19 @@ class PeppermintParsedown extends ParsedownExtra
 		else
 			array_unshift($this->InlineTypes[$char], $function_id);
 	}
+	
+	/*
+	 * Override the text method here to insert the table of contents after
+	 * rendering has been completed
+	 */
+	public function text($text) {
+		$result = parent::text($text);
+		$toc_html = $this->generateTableOfContents();
+		$result = str_replace(self::TOC_ID, $toc_html, $result);
+		
+		return $result;
+	}
+	
 	
 	/*
 	 * ████████ ███████ ███    ███ ██████  ██       █████  ████████ ██ ███    ██  ██████
@@ -1251,6 +1274,84 @@ class PeppermintParsedown extends ParsedownExtra
 	 */
 	
 	private $headingIdsUsed = [];
+	private $tableOfContents = [];
+	
+	/**
+	 * Inserts an item into the table of contents.
+	 * @param int    $level The level to insert it at (valid values: 1 - 6)
+	 * @param string $id    The id of the item.
+	 * @param string $text  The text to display.
+	 */
+	protected function addTableOfContentsEntry(int $level, string $id, string $text) : void {
+		$new_obj = (object) [
+			"level" => $level,
+			"id" => $id,
+			"text" => $text,
+			"children" => []
+		];
+		
+		if(count($this->tableOfContents) == 0) {
+			$this->tableOfContents[] = $new_obj;
+			return;
+		}
+		
+		$lastEntry = end($this->tableOfContents);
+		if($level > $lastEntry->level) {
+			$this->insertTableOfContentsObject($new_obj, $lastEntry);
+			return;
+		}
+		$this->tableOfContents[] = $new_obj;
+		return;
+	}
+	private function insertTableOfContentsObject(object $obj, object $target) {
+		if($obj->level - 1 > $target->level && !empty($target->children)) {
+			$this->insertTableOfContentsObject($obj, end($target->children));
+		}
+		$target->children[] = $obj;
+	}
+	
+	protected function generateTableOfContents() : string {
+		global $settings;
+		$elements = [ $this->generateTableOfContentsElement($this->tableOfContents) ];
+		if($settings->parser_toc_heading_level > 1)
+			array_unshift(
+				$elements,
+				[ "name" => "h$settings->parser_toc_heading_level", "text" => "Table of Contents" ]
+			);
+		
+		return trim($this->elements($elements), "\n");
+	}
+	private function generateTableOfContentsElement($toc) : array {
+		$elements = [];
+		foreach($toc as $entry) {
+			$next = [
+				"name" => "li",
+				"attributes" => [
+					"data-level" => $entry->level
+				],
+				"elements" => [ [
+					"name" => "a",
+					"attributes" => [
+						"href" => "#$entry->id"
+					],
+					"handler" => [
+						"function" => "lineElements",
+						"argument" => $entry->text,
+						"destination" => "elements"
+					]
+				] ]
+			];
+			if(isset($entry->children))
+				$next["elements"][] = $this->generateTableOfContentsElement($entry->children);
+			
+			$elements[] = $next;
+		}
+		
+		return [
+			"name" => "ul",
+			"elements" => $elements
+		];
+	}
 	
 	protected function blockHeader($line) {
 		// This function overrides the header function defined in ParsedownExtra
@@ -1273,6 +1374,28 @@ class PeppermintParsedown extends ParsedownExtra
 			$this->headingIdsUsed[] = $result["element"]["attributes"]["id"];
 		}
 		
+		$this->addTableOfContentsEntry(
+			intval(strtr($result["element"]["name"], [ "h" => "" ])),
+			$result["element"]["attributes"]["id"],
+			$result["element"]["handler"]["argument"]
+		);
+		
+		return $result;
+	}
+	
+	/*
+	 * Inserts a special string to identify where we need to put the table of contents later
+	 */
+	protected function blockTableOfContents($fragment) {
+		// Indent? Don't even want to know
+		if($fragment["indent"] > 0) return;
+		// If it doesn't match, then we're not interested
+		if(preg_match('/\[_*(?:TOC|toc)_*\]/u', $fragment["text"], $matches) !== 1)
+			return;
+		
+		$result = [
+			"element" => [ "text" => self::TOC_ID ]
+		];
 		return $result;
 	}
 	
