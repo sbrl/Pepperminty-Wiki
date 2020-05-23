@@ -496,19 +496,37 @@ class PeppermintParsedown extends ParsedownExtra
         parent::__construct();
 		
 		// Prioritise our internal link parsing over the regular link parsing
-		array_unshift($this->InlineTypes["["], "InternalLink");
+		$this->addInlineType("[", "InternalLink", true);
 		// Prioritise the checkbox handling - this is fine 'cause it doesn't step on InternalLink's toes
-		array_unshift($this->InlineTypes["["], "Checkbox");
+		$this->addInlineType("[", "Checkbox", true);
 		// Prioritise our image parser over the regular image parser
-		array_unshift($this->InlineTypes["!"], "ExtendedImage");
+		$this->addInlineType("!", "ExtendedImage", true);
 		
-		$this->inlineMarkerList .= "{=";
-		if(!isset($this->InlineTypes["{"]) or !is_array($this->InlineTypes["{"]))
-			$this->InlineTypes["{"] = [];
-		if(!isset($this->InlineTypes["="]) or !is_array($this->InlineTypes["="]))
-			$this->InlineTypes["="] = [];
-		$this->InlineTypes["{"][] = "Template";
-		$this->InlineTypes["="][] = "Mark";
+		$this->addInlineType("{", "Template");
+		$this->addInlineType("=", "Mark");
+		$this->addInlineType("^", "Superscript");
+		$this->addInlineType("~", "Subscript");
+	}
+	
+	/**
+	 * Helper method to add an inline type.
+	 * @param string  $char          The char to match against.
+	 * @param string  $function_id   The name bit of the function to call.
+	 * @param boolean $before_others Whether to prioritise this function over other existing ones (default: false).
+	 */
+	protected function addInlineType(string $char, string $function_id, bool $before_others = false) {
+		if(mb_strlen($char) > 1)
+			throw new Exception("Error: '$char' is longer than a single character.");
+		if(!isset($this->InlineTypes[$char]) or !is_array($this->InlineTypes[$char]))
+			$this->InlineTypes[$char] = [];
+		
+		if(strpos($this->inlineMarkerList, $char) === false)
+			$this->inlineMarkerList .= $char;
+		
+		if(!$before_others)
+			$this->InlineTypes[$char][] = $function_id;
+		else
+			array_unshift($this->InlineTypes[$char], $function_id);
 	}
 	
 	/*
@@ -781,7 +799,59 @@ class PeppermintParsedown extends ParsedownExtra
 				]
 			]
 		];
+		return $result;
+	}
+	
+	
+	/*
+	 *  ██████ ██    ██ ██████      ██  ██████ ██    ██ ██████  ███████ ██████
+	 * ██      ██    ██ ██   ██    ██  ██      ██    ██ ██   ██ ██      ██   ██
+	 * ███████ ██    ██ ██████    ██   ███████ ██    ██ ██████  █████   ██████
+	 *      ██ ██    ██ ██   ██  ██         ██ ██    ██ ██      ██      ██   ██
+	 * ██████   ██████  ██████  ██     ██████   ██████  ██      ███████ ██   ██
+	 * 
+	 *  ██████  ██████ ██████  ██ ██████  ████████
+	 * ██      ██      ██   ██ ██ ██   ██    ██
+	 * ███████ ██      ██████  ██ ██████     ██
+	 *      ██ ██      ██   ██ ██ ██         ██
+	 * ██████   ██████ ██   ██ ██ ██         ██
+	 */
+	protected function inlineSuperscript($fragment) {
+		if(preg_match('/\^([^^]+)\^/', $fragment["text"], $matches) !== 1)
+			return;
 		
+		$superscript_text = $matches[1];
+		
+		$result = [
+			"extent" => strlen($matches[0]),
+			"element" => [
+				"name" => "sup",
+				"handler" => [
+					"function" => "lineElements",
+					"argument" => $superscript_text,
+					"destination" => "elements"
+				]
+			]
+		];
+		return $result;
+	}
+	protected function inlineSubscript($fragment) {
+		if(preg_match('/~([^~]+)~/', $fragment["text"], $matches) !== 1)
+			return;
+		
+		$subscript_text = $matches[1];
+		
+		$result = [
+			"extent" => strlen($matches[0]),
+			"element" => [
+				"name" => "sub",
+				"handler" => [
+					"function" => "lineElements",
+					"argument" => $subscript_text,
+					"destination" => "elements"
+				]
+			]
+		];
 		return $result;
 	}
 	
