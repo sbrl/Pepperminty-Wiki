@@ -1319,7 +1319,7 @@ class PeppermintParsedown extends ParsedownExtra
 		if($settings->parser_toc_heading_level > 1)
 			array_unshift(
 				$elements,
-				[ "name" => "h$settings->parser_toc_heading_level", "text" => "Table of Contents" ]
+				[ "name" => "h$settings->parser_toc_heading_level", "text" => "Table of Contents", "attributes" => [ "id" => "table-of-contents" ] ]
 			);
 		
 		return trim($this->elements($elements), "\n");
