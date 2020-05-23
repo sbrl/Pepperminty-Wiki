@@ -389,6 +389,8 @@ register_module([
 			<tr><td><code>Some text ==marked text== more text</code></td><td>Some text <mark>marked text</mark> more text</td><td>Marked / highlighted text</td></tr>
 			<tr><td><code>[ ] Unticked checkbox</code></td><td>An unticked checkbox. Must be at the beginning of a line or directly after a list item (e.g. <code> - </code> or <code>1. </code>).</td></tr>
 			<tr><td><code>[x] Ticked checkbox</code></td><td>An ticked checkbox. The same rules as unticked checkboxes apply here too.</td></tr>
+			<tr><td><code>some text &gt;!spoiler text!&lt; more text</code></td><td>A spoiler. Users much click it to reveal the content hidden beneath.</td></tr>
+			<tr><td><code>some text ||spoiler text|| more text</code></td><td>Alternative spoiler syntax inspired by <a href='https://support.discord.com/hc/en-us/articles/360022320632-Spoiler-Tags-'>Discord</a>.</td></tr>
 		</table>
 		<p>Note that the all image image syntax above can be mixed and matched to your liking. The <code>caption</code> option in particular must come last or next to last.</p>
 		<h4>Templating</h4>
@@ -506,6 +508,9 @@ class PeppermintParsedown extends ParsedownExtra
 		$this->addInlineType("=", "Mark");
 		$this->addInlineType("^", "Superscript");
 		$this->addInlineType("~", "Subscript");
+		
+		$this->addInlineType(">", "Spoiler", true);
+		$this->addInlineType("|", "Spoiler", true);
 	}
 	
 	/**
@@ -783,7 +788,9 @@ class PeppermintParsedown extends ParsedownExtra
  	 *    ██    ███████ ██   ██    ██
  	 */
 	protected function inlineMark($fragment) {
-		if(preg_match('/==([^=]+)==/', $fragment["text"], $matches) !== 1)
+		// A question mark makes the PCRE 1-or-more + there lazy instead of greedy.
+		// Ref https://www.rexegg.com/regex-quantifiers.html#greedytrap
+		if(preg_match('/==([^=]+?)==/', $fragment["text"], $matches) !== 1)
 			return;
 		
 		$marked_text = $matches[1];
@@ -817,7 +824,7 @@ class PeppermintParsedown extends ParsedownExtra
 	 * ██████   ██████ ██   ██ ██ ██         ██
 	 */
 	protected function inlineSuperscript($fragment) {
-		if(preg_match('/\^([^^]+)\^/', $fragment["text"], $matches) !== 1)
+		if(preg_match('/\^([^^]+?)\^/', $fragment["text"], $matches) !== 1)
 			return;
 		
 		$superscript_text = $matches[1];
@@ -836,7 +843,7 @@ class PeppermintParsedown extends ParsedownExtra
 		return $result;
 	}
 	protected function inlineSubscript($fragment) {
-		if(preg_match('/~([^~]+)~/', $fragment["text"], $matches) !== 1)
+		if(preg_match('/~([^~]+?)~/', $fragment["text"], $matches) !== 1)
 			return;
 		
 		$subscript_text = $matches[1];
@@ -854,6 +861,41 @@ class PeppermintParsedown extends ParsedownExtra
 		];
 		return $result;
 	}
+	
+	
+	/*
+	 * ███████ ██████   ██████  ██ ██      ███████ ██████
+	 * ██      ██   ██ ██    ██ ██ ██      ██      ██   ██
+	 * ███████ ██████  ██    ██ ██ ██      █████   ██████
+	 *      ██ ██      ██    ██ ██ ██      ██      ██   ██
+	 * ███████ ██       ██████  ██ ███████ ███████ ██   ██
+	 */
+	protected function inlineSpoiler($fragment) {
+		if(preg_match('/(?:\|\||>!)([^|]+?)(?:\|\||!<)/', $fragment["text"], $matches) !== 1)
+			return;
+		
+		$spoiler_text = $matches[1];
+		$id = "spoiler-".crypto_id(24);
+		
+		$result = [
+			"extent" => strlen($matches[0]),
+			"element" => [
+				"name" => "a",
+				"attributes" => [
+					"id" => $id,
+					"class" => "spoiler",
+					"href" => "#$id"
+				],
+				"handler" => [
+					"function" => "lineElements",
+					"argument" => $spoiler_text,
+					"destination" => "elements"
+				]
+			]
+		];
+		return $result;
+	}
+	
 	
 	/*
 	 * ██ ███    ██ ████████ ███████ ██████  ███    ██  █████  ██

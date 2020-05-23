@@ -182,6 +182,19 @@ a.interwiki_link { color: var(--accent-d1); }
 a.interwiki_link:visited { color: var(--accent-d2); }
 a.interwiki_link:active { color: var(--accent-d3); }
 
+.spoiler		{ background: var(--accent-a2); border: 0.1em dashed var(--accent-b1); border-radius: 0.2em; color: transparent !important; text-decoration: none; }
+.spoiler:target	{ color: inherit !important; }
+
+/* Ref https://devdocs.io/html/element/del#Accessibility_concerns it's better than nothing, but I'm not happy with it. How would a screen reader user skipt he spsoiler if they don't want to hear it? */
+.spoiler::before, .spoiler::after {
+	clip-path: inset(100%); clip: rect(1px, 1px, 1px, 1px);
+	position: absolute; width: 1px; height: 1px;
+	overflow: hidden; white-space: nowrap;
+}
+.spoiler::before	{ content: " [spoiler start] ";	}
+.spoiler::after		{ content: " [spoiler end] ";	}
+
+
 .matching-tags-display { display: flex; margin: 0 -2em; padding: 1em 2em; background: hsla(30, 84%, 72%, 0.75); }
 .matching-tags-display > label { flex: 0; font-weight: bold; color: var(--accent-a3); }
 .matching-tags-display > .tags { flex: 2; }
@@ -194,7 +207,7 @@ a.interwiki_link:active { color: var(--accent-d3); }
 .search-context { min-height: 3em; max-height: 20em; overflow: hidden; }
 
 .editform { position: relative; }
-textarea[name=content] { resize: none; }
+textarea[name=content] { resize: none; min-height: 75vh; }
 .fit-text-mirror { position: absolute; top: 0; left: -10000vw; word-wrap: break-word; white-space: pre-wrap; }
 
 .awesomplete { width: 100%; color: var(--text-dark); }

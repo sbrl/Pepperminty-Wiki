@@ -113,6 +113,18 @@ th, td				{ padding: 0.25em 0.45em;		}
 pre, code, input, textarea	{ font-size: 1rem;	}
 img, video, audio			{ max-width: 100%;	}
 
+.spoiler		{ background: #333333; border-radius: 0.2em; color: transparent; }
+.spoiler:target	{ background: transparent; color: inherit; }
+
+/* Ref https://devdocs.io/html/element/del#Accessibility_concerns it's better than nothing, but I'm not happy with it. How would a screen reader user skipt he spsoiler if they don't want to hear it? */
+.spoiler::before, .spoiler::after {
+	clip-path: inset(100%); clip: rect(1px, 1px, 1px, 1px);
+	position: absolute; width: 1px; height: 1px;
+	overflow: hidden; white-space: nowrap;
+}
+.spoiler::before	{ content: " [spoiler start] ";	}
+.spoiler::after		{ content: " [spoiler end] ";	}
+
 
 main label	{ font-weight: bold; display: inline-block; min-width: 12em; }
 textarea { min-height: 10em; }
