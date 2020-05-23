@@ -8,12 +8,15 @@ register_module([
 		/********** Parsedown versions **********
 		 * Parsedown Core:		1.8.0-beta-7	*
 		 * Parsedown Extra:		0.8.0-beta-1	*
-		 * Parsedown Extreme:	0.1.6			*
+		 * Parsedown Extreme:	0.1.6 *removed* *
 		 ****************************************/
-		"Parsedown.php" => "https://raw.githubusercontent.com/erusev/parsedown/3825db53a2be5d9ce54436a9cc557c6bdce1808a/Parsedown.php",
-		"ParsedownExtra.php" => "https://raw.githubusercontent.com/erusev/parsedown-extra/352d03d941fc801724e82e49424ff409175261fd/ParsedownExtra.php",
-		"ParsedownExtreme.php" => "https://raw.githubusercontent.com/BenjaminHoegh/parsedown-extreme/adae4136534ad1e4159fe04c74c4683681855b84/ParsedownExtreme.php"
-		// TODO: Add Parsedown Extreme support
+		"Parsedown.php" => "https://raw.githubusercontent.com/erusev/parsedown/1610e4747c88a53676f94f752b447f4eff03c28d/Parsedown.php",
+		// "ParsedownExtra.php" => "https://raw.githubusercontent.com/erusev/parsedown-extra/91ac3ff98f0cea243bdccc688df43810f044dcef/ParsedownExtra.php",
+		// "Parsedown.php" => "https://raw.githubusercontent.com/erusev/parsedown/3825db53a2be5d9ce54436a9cc557c6bdce1808a/Parsedown.php",
+		"ParsedownExtra.php" => "https://raw.githubusercontent.com/erusev/parsedown-extra/352d03d941fc801724e82e49424ff409175261fd/ParsedownExtra.php"
+		// Parsedown Extreme is causing PHP 7.4+ errors, and isn't rendering correctly with the security features we have turned on.
+		// "ParsedownExtended.php" => "https://raw.githubusercontent.com/BenjaminHoegh/ParsedownExtended/8e1224e61a199cb513c47398353a27f6ba822da6/ParsedownExtended.php"
+		// "ParsedownExtreme.php" => "https://raw.githubusercontent.com/BenjaminHoegh/parsedown-extreme/adae4136534ad1e4159fe04c74c4683681855b84/ParsedownExtreme.php"
 	],
 	"id" => "parser-parsedown",
 	"code" => function() {
@@ -428,7 +431,7 @@ Insert text here
 
 require_once("$paths->extra_data_directory/parser-parsedown/Parsedown.php");
 require_once("$paths->extra_data_directory/parser-parsedown/ParsedownExtra.php");
-require_once("$paths->extra_data_directory/parser-parsedown/ParsedownExtreme.php");
+// require_once("$paths->extra_data_directory/parser-parsedown/ParsedownExtended.php");
 
 /**
  * Attempts to 'auto-correct' a page name by trying different capitalisation
@@ -468,7 +471,7 @@ function parsedown_pagename_resolve($pagename) {
 /**
  * The Peppermint-flavoured Parsedown parser.
  */
-class PeppermintParsedown extends ParsedownExtreme
+class PeppermintParsedown extends ParsedownExtra
 {
 	/**
 	 * The base directory with which internal links will be resolved.
@@ -491,6 +494,8 @@ class PeppermintParsedown extends ParsedownExtreme
 		
 		// Prioritise our internal link parsing over the regular link parsing
 		array_unshift($this->InlineTypes["["], "InternalLink");
+		// Prioritise the checkbox handling - this is fine 'cause it doesn't step on InternalLink's toes
+		array_unshift($this->InlineTypes["["], "Checkbox");
 		// Prioritise our image parser over the regular image parser
 		array_unshift($this->InlineTypes["!"], "ExtendedImage");
 		
@@ -701,6 +706,42 @@ class PeppermintParsedown extends ParsedownExtreme
 				"class" => "template"
 			]
 		];
+	}
+	
+	
+	/*
+	 *  ██████ ██   ██ ███████  ██████ ██   ██ ██████   ██████  ██   ██
+	 * ██      ██   ██ ██      ██      ██  ██  ██   ██ ██    ██  ██ ██
+	 * ██      ███████ █████   ██      █████   ██████  ██    ██   ███
+	 * ██      ██   ██ ██      ██      ██  ██  ██   ██ ██    ██  ██ ██
+	 *  ██████ ██   ██ ███████  ██████ ██   ██ ██████   ██████  ██   ██
+	 */
+	protected function inlineCheckbox($fragment) {
+		// We're not interested if it's not at the beginning of a line
+		if(strpos($fragment["context"], $fragment["text"]) !== 0)
+			return;
+		
+		// If it doesn't match, then we're not interested
+		if(preg_match('/\[([ x])\]/u', $fragment["text"], $matches) !== 1)
+			return;
+		
+		$checkbox_content = $matches[1];
+		
+		$result = [
+			"extent" => 3,
+			"element" => [
+				"name" => "input",
+				"attributes" => [
+					"type" => "checkbox",
+					"disabled" => "disabled"
+				]
+			]
+		];
+		
+		if($checkbox_content === "x")
+			$result["element"]["attributes"]["checked"] = "checked";
+		
+		return $result;
 	}
 	
 	/*
