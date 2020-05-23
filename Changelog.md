@@ -9,14 +9,18 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Added new syntax features to PeppermintParsedown, inspired by ParsedownExtreme (which we couldn't get to work, and it wasn't working before as far as I can tell)
      - Checkboxes: `[ ]` and `[x]` after a bullet point or at the start of a line
      - Marked / highlighted text: `Some text ==marked text== more text`
-     - TODO: Update the help text in parser-parsedown
-     - TODO: Look through the ParsedownExtreme / ParsedownExtended README and pick out the extra syntax we like and implement it
-
+     - Spoiler text: `Some text >!spoiler!< more text` or `Some text ||spoiler|| more text`
+     - Superscript: `Some text^superscript^ more text`
+     - Subscript: `Some text~subscript~ more text`
+ - Added automatic table of contents! (#155)
+     - Put `[__TOC__]` on a line by itself to insert an automatic table of contents
+     - Note that the level of heading generated can be controlled (or even removed) by the new `parser_toc_heading_level` setting
 
 ### Changed
  - Fiddled with Parsedown & ParsedownExtra versions
  - Removed ParsedownExtreme, as it wasn't doing anything useful anyway
      - Don't worry, we've absorbed all the useful features (see above) 
+     - NOTE TO SELF: Don't forget to update wikimatrix.org when we next make a stable release!
 
 
 ## v0.21
