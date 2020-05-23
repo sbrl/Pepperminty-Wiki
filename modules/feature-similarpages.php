@@ -9,20 +9,26 @@ register_module([
 	"code" => function() {
 		global $settings;
 		/**
-		 * @api {get} ?action=raw&page={pageName} Get the raw source code of a page
-		 * @apiName RawSource
+		 * @api {get} ?action=suggest-similar&page={pageName} Get similar page suggestions
+		 * @apiName SuggestSimilar
 		 * @apiGroup Page
 		 * @apiPermission Anonymous
 		 * 
-		 * @apiParam {string}	page	The page to return the source of.
+		 * @apiParam {string}	page	The page to return suggestions for.
 		 */
 		
 		/*
-		 * ██████   █████  ██     ██ 
-		 * ██   ██ ██   ██ ██     ██ 
-		 * ██████  ███████ ██  █  ██ 
-		 * ██   ██ ██   ██ ██ ███ ██ 
-		 * ██   ██ ██   ██  ███ ███  
+		 * ███████ ██    ██  ██████   ██████  ███████ ███████ ████████
+		 * ██      ██    ██ ██       ██       ██      ██         ██
+		 * ███████ ██    ██ ██   ███ ██   ███ █████   ███████    ██
+		 *      ██ ██    ██ ██    ██ ██    ██ ██           ██    ██
+		 * ███████  ██████   ██████   ██████  ███████ ███████    ██
+		 * 
+		 * ███████ ██ ███    ███ ██ ██       █████  ██████
+		 * ██      ██ ████  ████ ██ ██      ██   ██ ██   ██
+		 * ███████ ██ ██ ████ ██ ██ ██      ███████ ██████
+		 *      ██ ██ ██  ██  ██ ██ ██      ██   ██ ██   ██
+		 * ███████ ██ ██      ██ ██ ███████ ██   ██ ██   ██
 		 */
 		add_action("suggest-similar", function() {
 			global $pageindex, $env;
