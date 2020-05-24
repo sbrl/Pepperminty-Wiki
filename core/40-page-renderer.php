@@ -18,6 +18,7 @@ class page_renderer
 		<title>{title}</title>
 		<meta name='viewport' content='width=device-width, initial-scale=1' />
 		<meta name='generator' content='Pepperminty Wiki {version}' />
+		<meta name='application-name' content='Pepperminty Wiki {version}' />
 		<link rel='shortcut-icon' href='{favicon-url}' />
 		<link rel='icon' href='{favicon-url}' />
 		{header-html}
@@ -265,6 +266,9 @@ class page_renderer
 		$result = self::$extraHeaderHTML;
 		$result .= self::get_css_as_html();
 		$result .= self::_get_js();
+		
+		if(!empty($settings->theme_colour))
+			$result .= "\t\t<meta name='theme-color' content='$settings->theme_colour' />\n";
 		
 		// We can't use module_exists here because sometimes global $modules
 		// hasn't populated yet when we get called O.o
