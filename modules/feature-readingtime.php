@@ -8,7 +8,7 @@ register_module([
 	"code" => function() {
 		
 		page_renderer::register_part_preprocessor(function(&$parts) {
-			global $env, $settings;;
+			global $env, $settings;
 			// Only insert for the view action
 			if($env->action !== $settings->readingtime_action || !$settings->readingtime_enabled)
 				return;
