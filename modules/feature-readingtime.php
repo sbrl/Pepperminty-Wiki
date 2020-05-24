@@ -26,7 +26,12 @@ register_module([
 				$insert = "<small><em>{$reading_time[0]} minute read</em></small>";
 			
 			// TODO: Create a canonical way to insert something just below the header - this might be tough though 'cause the that isn't handled by the page_renderer though
-			$parts["{content}"] = str_replace("</h1>", "</h1><p class='system-text-insert readingtime-estimate'>$insert</p>", $parts["{content}"]);
+			$replace_count = 1; // Without a temp variable we get "only variables can be passed by reference", ref PHP 7.4.6
+			$parts["{content}"] = str_replace(
+				"</h1>", "</h1><p class='system-text-insert readingtime-estimate'>$insert</p>",
+				$parts["{content}"],
+				$replace_count
+			);
 		});
 	}
 ]);
