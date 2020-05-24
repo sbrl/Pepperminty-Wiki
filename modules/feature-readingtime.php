@@ -9,17 +9,14 @@ register_module([
 		
 		page_renderer::register_part_preprocessor(function(&$parts) {
 			global $env, $settings;;
-			error_log("[readingtime] part_preprocessor, matching $settings->readingtime_action");
 			// Only insert for the view action
 			if($env->action !== $settings->readingtime_action || !$settings->readingtime_enabled)
 				return;
-			error_log("[readingtime] go ahead");
 			
 			$reading_time = estimate_reading_time(
 				file_get_contents($env->page_filename),
 				$settings->readingtime_language
 			);
-			error_log(var_export($reading_time, true));
 			
 			$insert = "<small><em>{$reading_time[0]} - {$reading_time[1]} minute read</em></small>";
 			if($reading_time[0] === $reading_time[1])
