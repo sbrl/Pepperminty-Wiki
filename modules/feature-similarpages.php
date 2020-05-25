@@ -68,6 +68,23 @@ register_module([
 					break;
 			}
 		});
+		
+		page_renderer::register_part_preprocessor(function(&$parts) {
+			global $env;
+			
+			$html = "<h2>Other pages to explore</h2>\n\t\t<ul class='similar-page-suggestions'>\n";
+			$start_time = microtime(true);
+			$suggestions = similar_suggest(
+				$env->page,
+				file_get_contents($env->page_filename)
+			);
+			$env->perfdata->similar_suggest = round((microtime(true) - $start_time) * 1000, 2);
+			foreach($suggestions as $suggested_pagename => $rank)
+				$html .= "<li data-rank='$rank'><a href='?page=".rawurlencode($suggested_pagename)."'>".htmlentities($suggested_pagename)."</a></li>\n";
+			$html .= "</ul>\n\t\t<!-- Took {$env->perfdata->similar_suggest}ms to compute similar page suggestions -->\n";
+			
+			$parts["{extra}"] = $html . $parts["{extra}"];
+		});
 	}
 ]);
 
@@ -95,7 +112,6 @@ function similar_suggest(string $pagename, string $content, bool $limit_output =
 	$max_count = -1;
 	$i = 0;
 	foreach($index as $term => $data) {
-		error_log("[similar_suggest] checking $term | {$data["freq"]}");
 		// Only search the top 20% most common words
 		// Stop words are skipped automagically
 		// if($i > $max_count * 0.2) break;
@@ -111,8 +127,6 @@ function similar_suggest(string $pagename, string $content, bool $limit_output =
 		
 		// Check is it's present just in case (todo figure out if it's necessary)
 		if(!search::invindex_term_exists($term)) continue;
-		
-		error_log("ok");
 		
 		$otherpages = search::invindex_term_getpageids($term);
 		foreach($otherpages as $pageid) {
@@ -133,7 +147,7 @@ function similar_suggest(string $pagename, string $content, bool $limit_output =
 	
 	$result = []; $i = 0;
 	foreach($pages as $pageid => $count) {
-		if($limit_output && $i > $settings->similarpages_count) break;
+		if($limit_output && $i >= $settings->similarpages_count) break;
 		$result[ids::getpagename($pageid)] = $count;
 		$i++;
 	}
