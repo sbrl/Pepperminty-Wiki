@@ -18,6 +18,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Add `<meta name="theme-color" content="value" />` support with the new `theme_colour` setting. More information: [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta/name/theme-color), [caniuse](https://caniuse.com/#feat=meta-theme-color). Also used by some platforms to customise embed accents when generating a rich snippet (e.g. Discord).
  - Added reading time estimate to the top of wiki pages - control it with the new `readingtime_enabled` setting (#172)
      - The algorithm used to estimate reading times is the as the one used in Firefox's reader mode
+ - Added similar page suggestions between the bottom of the page content and the comments - control it with the new `similarpages_enabled` and `similarpages_count` settings.
 
 ### Changed
  - Fiddled with Parsedown & ParsedownExtra versions
