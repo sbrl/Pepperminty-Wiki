@@ -47,10 +47,11 @@ body {
 	margin: 0;
 	display: grid;
 	grid-template-columns: 1fr 4fr 1fr;
-	grid-template-rows: repeat(6, auto);
+	grid-template-rows: repeat(7, auto);
 	grid-template-areas: "side-left header side-right"
 		"side-left nav-top side-right"
 		"side-left content side-right"
+		"side-left similar-suggestions side-right"
 		"side-left comments side-right"
 		"side-left footer side-right"
 		"side-left nav-bottom side-right";
@@ -62,7 +63,7 @@ body {
 	font-family: sans-serif;
 }
 
-body > nav, main, .comments, footer {
+body > nav, main, .similar-page-suggestions, .comments, footer {
 	margin: 1em 0;
 	background: var(--bg-a);
 	padding: var(--panel-padding);
@@ -212,8 +213,8 @@ input[type=submit] {
 
 .stacked-bar { display: flex; }
 
-/* TODO: Actually refine this properly
-.similar-page-suggestions { padding: 1em 2em; background: var(--bg-page-inset); /*box-shadow: 0 0.1rem 1rem 0.3rem var(--shadow);*/ }
+/* TODO: Actually refine this properly */
+.similar-page-suggestions { grid-area: similar-suggestions; }
 .similar-page-suggestions > h2 { text-align: center; }
 .similar-page-suggestions-list { list-style-type: none; display: flex; flex-wrap: wrap; justify-content: space-evenly; }
 
