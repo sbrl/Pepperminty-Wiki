@@ -72,7 +72,7 @@ register_module([
 		page_renderer::register_part_preprocessor(function(&$parts) {
 			global $env;
 			
-			$html = "<h2>Other pages to explore</h2>\n\t\t<ul class='similar-page-suggestions'>\n";
+			$html = "<aside class='similar-page-suggestions'><h2>Other pages to explore</h2>\n\t\t<ul class='similar-page-suggestions-list'>\n";
 			$start_time = microtime(true);
 			$suggestions = similar_suggest(
 				$env->page,
@@ -81,7 +81,7 @@ register_module([
 			$env->perfdata->similar_suggest = round((microtime(true) - $start_time) * 1000, 2);
 			foreach($suggestions as $suggested_pagename => $rank)
 				$html .= "<li data-rank='$rank'><a href='?page=".rawurlencode($suggested_pagename)."'>".htmlentities($suggested_pagename)."</a></li>\n";
-			$html .= "</ul>\n\t\t<!-- Took {$env->perfdata->similar_suggest}ms to compute similar page suggestions -->\n";
+			$html .= "</ul>\n\t\t<!-- Took {$env->perfdata->similar_suggest}ms to compute similar page suggestions -->\n\t\t</aside>\n";
 			
 			$parts["{extra}"] = $html . $parts["{extra}"];
 		});

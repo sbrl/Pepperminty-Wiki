@@ -212,6 +212,10 @@ input[type=submit] {
 
 .stacked-bar { display: flex; }
 
+/* TODO: Actually refine this properly
+.similar-page-suggestions { padding: 1em 2em; background: var(--bg-page-inset); /*box-shadow: 0 0.1rem 1rem 0.3rem var(--shadow);*/ }
+.similar-page-suggestions > h2 { text-align: center; }
+.similar-page-suggestions-list { list-style-type: none; display: flex; flex-wrap: wrap; justify-content: space-evenly; }
 
 .comments	{ grid-area: comments;	}
 

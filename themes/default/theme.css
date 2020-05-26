@@ -285,6 +285,10 @@ summary { cursor: pointer; }
 .new-comment::before { content: "\\1f4ac"; margin: 0 0.1em 0 -1.1em; }
 .reversion::before { content: "\\231b"; margin: 0 0.1em 0 -1.1em; }
 
+.similar-page-suggestions { padding: 1em 2em; background: var(--bg-page-inset); /*box-shadow: 0 0.1rem 1rem 0.3rem var(--shadow);*/ }
+.similar-page-suggestions > h2 { text-align: center; }
+.similar-page-suggestions-list { list-style-type: none; display: flex; flex-wrap: wrap; justify-content: space-evenly; }
+
 .comments { padding: 1em 2em; background: var(--bg-comments-1); box-shadow: 0 0.1rem 1rem 0.3rem var(--shadow); }
 .comments .not-logged-in { padding: 0.3em 0.65em; background: var(--bg-comments-2); border-radius: 0.2em; font-style: italic; }
 .comments textarea { resize: vertical; }
