@@ -46,3 +46,13 @@ Pepperminty Wiki has actually acquired a rather extensive feature set.
  - Should be fully accessible (screen readers etc) - [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) if you encounter any problems
  - Customisable module based system
 	 - Allows you to add or remove features at will
+
+
+## Compatibility
+Some users have imported existing wikis from other software. This is made possible because Pepperminty Wiki will automatically rebuild the page index from the existing files in a directory if it doesn't exist or is deleted.
+
+Notes about the import process are detailed below.
+
+ - Pepperminty Wiki's internal and external link syntax is [compatible with vimwiki](https://github.com/sbrl/Pepperminty-Wiki/issues/new) (thanks @RyanGreenup!).
+
+If you encounter any issues importing data from another wiki, please [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new). I'd love to know about it - it may be possible to automate any conversion steps to ease the import process.
