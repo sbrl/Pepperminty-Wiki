@@ -62,5 +62,12 @@ The recommended way of running Pepperminty Wiki is with a plain PHP-enabled web 
 docker run -d sqlatenwiki/peppermintywiki:stable
 ```
 
+
+## Contributing
+Contributions are very welcome - both issues and pull requests! Please mention in your pull request that you release your work under the MPL-2.0 (see below).
+
+If you're feeling that way inclined, the sponsor button at the top of the page (if you're on GitHub) will take you to my Liberapay profile if you'd like to donate to say an extra thank you :-)
+
+
 ## License
 Pepperminty Wiki is released under the Mozilla Public License 2.0. The full license text is included in the `LICENSE` file in this repository. Tldr legal have a [great summary](https://tldrlegal.com/license/mozilla-public-license-2.0-(mpl-2)) of the license if you're interested.
