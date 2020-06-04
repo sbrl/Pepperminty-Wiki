@@ -28,7 +28,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ### Fixed
  - Squashed a warning when using the fenced code block syntax
- - If a redirect page sends you to a page that doesn't exist, a link back to the redirect page itself is now displayed
+ - If a redirect page sends you to create a page that doesn't exist, a link back to the redirect page itself is now displayed
 
 
 ## v0.21
