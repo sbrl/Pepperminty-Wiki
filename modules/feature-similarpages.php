@@ -71,6 +71,8 @@ register_module([
 		
 		page_renderer::register_part_preprocessor(function(&$parts) {
 			global $env;
+			if($env->action !== "view")
+				return;
 			
 			$html = "<aside class='similar-page-suggestions'><h2>Other pages to explore</h2>\n\t\t<ul class='similar-page-suggestions-list'>\n";
 			$start_time = microtime(true);
