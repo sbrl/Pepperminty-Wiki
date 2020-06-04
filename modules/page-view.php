@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.16.8",
+	"version" => "0.16.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
@@ -40,8 +40,11 @@ register_module([
 				// TODO: make this intelligent so we only redirect if the user is actually able to create the page
 				if($settings->editing) {
 					// Editing is enabled, redirect to the editing page
+					$redirectUrl = "index.php?action=edit&newpage=yes&page=".rawurlencode($env->page);
+					if(isset($_GET["redirected_from"]))
+						$redirectUrl .= "&redirected_from=".rawurlencode($_GET["redirected_from"]);
 					http_response_code(307); // Temporary redirect
-					header("location: index.php?action=edit&newpage=yes&page=" . rawurlencode($env->page));
+					header("location: $redirectUrl");
 					exit();
 				} else {
 					// Editing is disabled, show an error message

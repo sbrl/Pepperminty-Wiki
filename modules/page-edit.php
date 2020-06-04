@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.17.7",
+	"version" => "0.17.8",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -72,8 +72,7 @@ register_module([
 				$isOtherUsersPage // this page actually belongs to another user
 			)
 			{
-				if(!$creatingpage)
-				{
+				if(!$creatingpage) {
 					// The page already exists - let the user view the page source
 					$sourceViewContent = "<p>$settings->sitename does not allow anonymous users to make edits. You can view the source of $env->page below, but you can't edit it. You could, however, try <a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.</p>\n";
 					
@@ -91,8 +90,7 @@ register_module([
 					
 					exit(page_renderer::render_main("Viewing source for $env->page", $sourceViewContent));
 				}
-				else
-				{
+				else {
 					$errorMessage = "<p>The page <code>$env->page</code> does not exist, but you do not have permission to create it.</p><p>If you haven't already, perhaps you should try <a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.</p>\n";
 					
 					if($isOtherUsersPage) {
@@ -110,6 +108,9 @@ register_module([
 			$page_tags = implode(", ", (!empty($pageindex->{$env->page}->tags)) ? $pageindex->{$env->page}->tags : []);
 			if(!$env->is_logged_in and $settings->anonedits) {
 				$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
+			}
+			if(isset($_GET["redirected_from"])) {
+				$content .= "<p><em>Redirected from <a href='?page=".rawurlencode($_GET["redirected_from"])."&amp;redirect=no'>".htmlentities($_GET["redirected_from"])."</a></em></p>\n";
 			}
 			
 			// Include preview, if set
