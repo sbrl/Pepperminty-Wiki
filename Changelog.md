@@ -26,6 +26,9 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Don't worry, we've absorbed all the useful features (see above) 
      - NOTE TO SELF: Don't forget to update wikimatrix.org when we next make a stable release!
 
+### Fixed
+ - Squashed a warning when using the fenced code block syntax
+
 
 ## v0.21
 

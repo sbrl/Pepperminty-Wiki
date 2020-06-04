@@ -1244,7 +1244,8 @@ class PeppermintParsedown extends ParsedownExtra
 		global $settings;
 		$result = parent::blockFencedCodeComplete($block);
 		
-		$language = preg_replace("/^language-/", "", $block["element"]["element"]["attributes"]["class"]);
+		// Default value: "text"
+		$language = preg_replace("/^language-/", "", $block["element"]["element"]["attributes"]["class"] ?? "language-text");
 		
 		if(!isset($settings->parser_ext_renderers->$language))
 			return $result;
