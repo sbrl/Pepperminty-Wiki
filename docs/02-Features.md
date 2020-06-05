@@ -49,7 +49,7 @@ Pepperminty Wiki has actually acquired a rather extensive feature set.
 
 
 ## Compatibility
-Some users have imported existing wikis from other software. This is made possible because Pepperminty Wiki will automatically rebuild the page index from the existing files in a directory if it doesn't exist or is deleted.
+Some users have imported existing wikis from other software. This is made possible because Pepperminty Wiki will automatically rebuild the page index from the existing files in a directory if the page index (`pageindex.json`) doesn't exist or is deleted.
 
 Notes about the import process are detailed below.
 
