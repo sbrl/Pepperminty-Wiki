@@ -39,6 +39,9 @@ register_module([
 				header("location: " . $_GET["returnto"]);
 			}
 			
+			page_renderer::add_header_html('<meta name="robots" content="noindex, nofollow" />');
+			
+			
 			$title = "Login to $settings->sitename";
 			$content = "<h1>Login to $settings->sitename</h1>\n";
 			if(isset($_GET["failed"]))

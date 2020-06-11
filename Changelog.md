@@ -29,6 +29,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ### Fixed
  - Squashed a warning when using the fenced code block syntax
  - If a redirect page sends you to create a page that doesn't exist, a link back to the redirect page itself is now displayed
+ - Really fix bots getting into infinite loops on the login page this time by marking all login pages as `noindex, nofollow` with a robots `<meta />` tag
 
 
 ## v0.21
