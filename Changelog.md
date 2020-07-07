@@ -25,12 +25,14 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Removed ParsedownExtreme, as it wasn't doing anything useful anyway
      - Don't worry, we've absorbed all the useful features (see above) 
      - NOTE TO SELF: Don't forget to update wikimatrix.org when we next make a stable release!
+ - Enabled horizontal resize handle on sidebar (but it doesn't persist yet)
 
 ### Fixed
  - Squashed a warning when using the fenced code block syntax
  - If a redirect page sends you to create a page that doesn't exist, a link back to the redirect page itself is now displayed
  - Really fix bots getting into infinite loops on the login page this time by marking all login pages as `noindex, nofollow` with a robots `<meta />` tag
  - Navigating to a redirect page from a page list will no longer cause you to automatically follow the redirect
+ - Limited sidebar size to 20% of the screen width at most
 
 
 ## v0.21
