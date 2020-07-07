@@ -43,6 +43,7 @@ if [[ "$#" -lt 1 ]]; then
 	echo -e "    ${CACTION}docs-livereload${RS} - Start the documentation livereload server";
 	echo -e "    ${CACTION}start-server${RS}    - Start a development server";
 	echo -e "    ${CACTION}stop-server${RS}     - Stop the development server";
+	echo -e "    ${CACTION}clean${RS}           - Delete all build outputs (WARNING: THIS WILL DELETE ALL WIKI DATA)";
 	echo -e "";
 	
 	exit 1;
@@ -293,6 +294,25 @@ task_stop-server() {
 	kill "$(cat "${server_pid_file}.themes")";
 	rm "${server_pid_file}.themes";
 	task_end "$?";
+}
+
+task_clean() {
+	task_begin "Clearing out build outputs";
+	
+	if [[ "${PEPPERMINT_REALLY_CLEAN}" != "yes" ]]; then
+		echo -e "Are you SURE you want to continue? This will delete ALL your wiki data!";
+		echo -e "Set the environment variable PEPPERMINT_REALLY_CLEAN to 'yes' (without quotes) to actually do the deletion.\n\n";
+		task_end 1 "Aborted.";
+		exit 1; # Just in case
+	fi
+	
+	echo "[PEPPERMINT_REALLY_CLEAN] I sure hope you know what you're doing.";
+	
+	rm -rf build module_index.json themes/themeindex.json node_modules __nightdocs ;
+	find themes -type f -name "preview_large.png" -delete;
+	find themes -type f -name "preview_small.png" -delete;
+	
+	task_end "$?" "Failed to completely clear out all build outputs";
 }
 ###############################################################################
 
