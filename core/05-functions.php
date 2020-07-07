@@ -61,7 +61,7 @@ function url_stem( $s = false, bool $use_forwarded_host = false) : string {
  */
 function human_filesize($bytes, $decimals = 2)
 {
-	$sz = ["b", "kb", "mb", "gb", "tb", "pb", "eb", "yb", "zb"];
+	$sz = ["b", "kib", "mib", "gib", "tib", "pib", "eib", "yib", "zib"];
 	$factor = floor((strlen($bytes) - 1) / 3);
 	$result = round($bytes / pow(1024, $factor), $decimals);
 	return $result . @$sz[$factor];

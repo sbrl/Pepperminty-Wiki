@@ -56,8 +56,11 @@ register_module([
 			header("last-modified: " . gmdate('D, d M Y H:i:s T', $pageindex->{$env->page}->lastmodified));
 			
 			// Perform a redirect if the requested page is a redirect page
-			if(isset($pageindex->$page->redirect) &&
-			   $pageindex->$page->redirect === true)
+			if(isset($pageindex->$page->redirect) && 
+			   $pageindex->$page->redirect === true && // If this is a redirect page.....
+			   (isset($pageindex->$page->redirect_absolute) &&
+			   $pageindex->$page->redirect_absolute == true && // ...and it's absolute....
+			   $settings->redirect_absolute_enable === true)) // ...and absolute reedirects are enabled
 			{
 				$send_redirect = true;
 				if(isset($_GET["redirect"]) && $_GET["redirect"] == "no")
@@ -81,6 +84,10 @@ register_module([
 						$redirectUrl .= "&redirect=no";
 					if(strlen($hashCode) > 0)
 						$redirectUrl .= "#$hashCode";
+					
+					// Support absolute redirect URLs
+					if(isset($pageindex->$page->redirect_absolute) && $pageindex->$page->redirect_absolute === true)
+						$redirectUrl = $pageindex->$page->redirect_target;
 					
 					header("location: $redirectUrl");
 					exit();

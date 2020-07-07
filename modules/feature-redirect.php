@@ -10,8 +10,11 @@ register_module([
 		
 		register_save_preprocessor("update_redirect_metadata");
 		
+		$help_html = "<p>$settings->sitename supports redirect pages. To create a redirect page, enter something like <code># REDIRECT [[pagename]]</code> on the first line of the redirect page's content. This <em>must</em> appear as the first line of the page, with no whitespace before it. You can include content beneath the redirect if you want, too (such as a reason for redirecting the page).</p>";
+		if($settings->redirect_absolute_enabled == true) $help_html .= "<p>$settings->sitename also has absolute redirects enabled (e.g. if you want to make your main page point to the all pages list). To make a page an absolute redirect page, enter the following on the first line: <code># REDIRECT [all pages](?action=list)</code>. This example will cause the page to become a redirect to the all pages list. Of course, you  can change the <code>?action=list</code> bit to be any regular URL you like (relative or absolute)</p>";
+		
 		// Register a help section
-		add_help_section("25-redirect", "Redirect Pages", "<p>$settings->sitename supports redirect pages. To create a redirect page, enter something like <code># REDIRECT [[pagename]]</code> on the first line of the redirect page's content. This <em>must</em> appear as the first line of the page, with no whitespace before it. You can include content beneath the redirect if you want, too (such as a reason for redirecting the page).</p>");
+		add_help_section("25-redirect", "Redirect Pages", $help_html);
 	}
 ]);
 
@@ -31,6 +34,13 @@ function update_redirect_metadata(&$index_entry, &$pagedata) {
 		// Update the metadata to reflect this.
 		$index_entry->redirect = true;
 		$index_entry->redirect_target = $matches[1];
+		$index_entry->redirect_absolute = false;
+	}
+	// We don't disable absolute redirects here, because it's the view action that processes them - we only register them here. Checking here would result in pages that are supposed to be redirects being missed if redirect_absolute_enabled is turned on after such a page is created.
+	elseif(preg_match("/^# ?REDIRECT ?\[[^\]]+\]\(([^)]+)\)/", $pagedata, $matches) === 1) {
+		$index_entry->redirect = true;
+		$index_entry->redirect_target = $matches[1];
+		$index_entry->redirect_absolute = true;
 	}
 	else
 	{
@@ -39,6 +49,8 @@ function update_redirect_metadata(&$index_entry, &$pagedata) {
 			unset($index_entry->redirect);
 		if(isset($index_entry->redirect_target))
 			unset($index_entry->redirect_target);
+		if(isset($index_entry->redirect_absolute))
+			unset($index_entry->redirect_absolute);
 	}
 }
 
