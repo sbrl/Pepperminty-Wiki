@@ -286,7 +286,11 @@ function generate_page_list($pagelist)
 			!empty($pageindex->$pagename->redirect))
 			$pageDisplayName = "<em>$pageDisplayName</em>";
 		
-		$result .= "<li><a href='index.php?page=" . rawurlencode($pagename) . "'>$pageDisplayName</a>
+		$url = "index.php?page=" . rawurlencode($pagename);
+		if(isset($pageindex->$pagename->redirect) && $pageindex->$pagename->redirect == true)
+			$url .= "&amp;redirect=no";
+		
+		$result .= "<li><a href='$url'>$pageDisplayName</a>
 		<em class='size'>(" . human_filesize($pageindex->$pagename->size) . ")</em>
 		<span class='editor'><span class='texticon cursor-query' title='Last editor'>&#9998;</span> " . $pageindex->$pagename->lasteditor . "</span>
 		<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $pageindex->$pagename->lastmodified) . "'>" . human_time_since($pageindex->$pagename->lastmodified) . "</time>
