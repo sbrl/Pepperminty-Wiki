@@ -36,7 +36,7 @@ function update_redirect_metadata(&$index_entry, &$pagedata) {
 		$index_entry->redirect_target = $matches[1];
 		$index_entry->redirect_absolute = false;
 	}
-	// We don't disable absolute redirects here, because it's the view action that processes them - we only register them here. Checking here would result in pages that are supposed to be redirects being missed if redirect_absolute_enabled is turned on after such a page is created.
+	// We don't disable absolute redirects here, because it's the view action that processes them - we only register them here. Checking here would result in pages that are supposed to be redirects being missed if redirect_absolute_enable is turned on after such a page is created.
 	elseif(preg_match("/^# ?REDIRECT ?\[[^\]]+\]\(([^)]+)\)/", $pagedata, $matches) === 1) {
 		$index_entry->redirect = true;
 		$index_entry->redirect_target = $matches[1];
