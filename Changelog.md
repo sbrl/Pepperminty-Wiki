@@ -21,6 +21,9 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Added similar page suggestions between the bottom of the page content and the comments - control it with the new `similarpages_enabled` and `similarpages_count` settings.
  - Added absolute redirect support - use it like this: `# REDIRECT [display text](INSERT_REDIRECT_URL_HERE)`
      - It's disabled by default due to potential security issues with untrusted editors - enable it with the new `redirect_absolute_enable` setting (default: : `false`)
+ - Added new settings to control the commenting system
+     - `comment_enabled` controls whether _anyone_ is allowed to comment at all or not
+     - `comment_hide_all` determines whether the commenting system displays anything at all (if disabled, it's (almost) like the `feature-comments` doesn't exist - consider using the downloader to exclude the commenting system instead of enabling this setting)
 
 ### Changed
  - Fiddled with Parsedown & ParsedownExtra versions

@@ -8,6 +8,10 @@ register_module([
 	"code" => function() {
 		global $env, $settings;
 		
+		// Don't do anything if we're not wanted
+		if($settings->comment_hide_all)
+			return;
+		
 		/**
 		 * @api {post} ?action=comment	Comment on a page
 		 * @apiName Comment
@@ -34,6 +38,12 @@ register_module([
 			
 			$reply_to = $_POST["replyto"] ?? null;
 			$message = $_POST["message"] ?? "";
+			
+			if(!$settings->comment_enabled) {
+				http_response_code(401);
+				exit(page_renderer::render_main("Commenting disabled - $settings->sitename", "<p>Your comment couldn't be posted because $settings->sitename currently has commenting disabled. Here's the comment you tried to post:</p>
+				<textarea readonly>".htmlentities($message)."</textarea>"));
+			}
 			
 			if(!$env->is_logged_in && !$settings->anoncomments) {
 				http_response_code(401);
@@ -238,7 +248,7 @@ register_module([
 		
 		if($env->action == "view") {
 			page_renderer::register_part_preprocessor(function(&$parts) {
-				global $env;
+				global $env, $settings;
 				$comments_filename = get_comment_filename($env->page);
 				$comments_data = file_exists($comments_filename) ? json_decode(file_get_contents($comments_filename)) : [];
 				
@@ -246,7 +256,7 @@ register_module([
 				$comments_html = "<aside class='comments'>" . 
 					"<h2 id='comments'>Comments</h2>\n";
 				
-				if($env->is_logged_in) {
+				if($env->is_logged_in && $settings->comment_enabled) {
 					$comments_html .= "<form class='comment-reply-form' method='post' action='?action=comment&page=" . rawurlencode($env->page) . "'>\n" . 
 						"<h3>Post a Comment</h3>\n" . 
 						"\t<textarea name='message' placeholder='Type your comment here. You can use the same syntax you use when writing pages.'></textarea>\n" . 
@@ -254,7 +264,7 @@ register_module([
 						"\t<input type='submit' value='Post Comment' />\n" . 
 						"</form>\n";
 				}
-				else {
+				elseif($settings->comment_enabled) {
 					$comments_html .= "<form class='comment-reply-form disabled no-login'>\n" . 
 					"\t<textarea disabled name='message' placeholder='Type your comment here. You can use the same syntax you use when writing pages.'></textarea>\n" . 
 					"\t<p class='not-logged-in'><a href='?action=login&returnto=" . rawurlencode("?action=view&page=" . rawurlencode($env->page) . "#comments") . "'>Login</a> to post a comment.</p>\n" . 

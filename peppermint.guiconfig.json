@@ -198,7 +198,9 @@
 			"index.php?action=help"
 		]
 	]},
-	"anoncomments": { "type": "checkbox", "description": "Whether to allow anonymous user to make comments. Note that anonymous users are not able to  delete their own comments (since they are not logged in, there's no way to know if they were the original poster or not)", "default": false },
+	"comment_enabled": { "type": "checkbox", "description": "Whether commenting is enabled or not. If disabled, nobody will be able to post new comments, but existing comments will still be shown (if the <code>feature-comments</code> module is installed, of course -  otherwise this setting will have no effect).", "default": true },
+	"comment_hide_all": { "type": "checkbox ", "description": "Whether to hide all comments, as if the commenting feature never existed. If you want to enable this setting, consider using the downloader (link in the docs) to exclude the <code>feature-comments</code> module instead.", "default": false },
+	"anoncomments": { "type": "checkbox", "description": "Whether to allow anonymous user to make comments. Note that anonymous users are not able to delete their own comments (since they are not logged in, there's no way to know if they were the original poster or not)", "default": false },
 	"comment_max_length": { "type": "number", "description": "The maximum allowed length, in characters, for comments", "default": 5000 },
 	"comment_min_length": { "type": "number", "description": "The minimum allowed length, in characters, for comments", "default": 10 },
 	"comment_time_icon": { "type": "text", "description": "The icon to show next to the time that a comment was posted.", "default": "&#x1f557;" },
