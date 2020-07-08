@@ -21,13 +21,33 @@ git clone https://github.com/sbrl/Pepperminty-Wiki.git
 Then, point your web browser at `your.server.com/path/to/pepperminty/wiki/download.php`.
 
 ## Method 3: Building from source
-Pepperminty Wiki can also be built from source (and I do this all the time when testing). Start by cloning the repository:
+Pepperminty Wiki can also be built from source (and I do this all the time when testing). Before we begin, ensure that the following dependencies are installed:
+
+ - [Node.js](https://nodejs.org/) and [npm](https://npmjs.org/)
+ - A recent version of [PHP](https://php.net/)
+ - All the PHP modules specified in [the documentation](https://starbeamrainbowlabs.com/labs/peppermint/__nightdocs/04-Getting-Started.html#getting-started)
+
+Start by cloning the repository:
 
 ```bash
 git clone https://github.com/sbrl/Pepperminty-Wiki.git
+cd Pepperminty-Wiki;
 ```
 
 Then go into the `modules` folder and append `.disabled` to the names of any modules you don't want to be included (e.g. `modules/page-edit.php` would become `modules/page-edit.php.disabled`). Then follow the instructions below. The resulting file will be located at `build/index.php`.
+
+If you have bash installed (i.e. Linux and macOS users), you can run that instead like this:
+
+```bash
+./build.sh setup build
+```
+
+The extra `build` is because the build script can do other things. Omit the `build` for a full list of tricks it has up its sleeve :D
+
+### Windows Users
+The primary author of Pepperminty Wiki does not possess a Windows computer to test on. Despite this, effort is made to avoid breaking support on Windows (please [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) if you discover any issues).
+
+You can try initially running the above commands in git bash (installed automatically when installing [git](https://git-scm.com/downloads)). If that doesn't work, keep reading.
 
 Run the following commands from the root of the repository in order, adjusting them for your specific platform if required:
 
@@ -35,14 +55,6 @@ Run the following commands from the root of the repository in order, adjusting t
 rm build/index.php
 php build.php
 ```
-
-These commands are also in `build.sh`. If you have bash installed (i.e. Linux and macOS users), you can run that instead like this:
-
-```bash
-./build.sh build
-```
-
-The extra `build` is because the build script can do other things. Omit the `build` for a full list of tricks it has up its sleeve :D
 
 Here's an explanation of what each command does:
 
