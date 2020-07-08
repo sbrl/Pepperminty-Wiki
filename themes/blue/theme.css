@@ -391,7 +391,9 @@ input.edit-page-button[type='submit']{
 }
 .page-tags-display li::before{
 	content:"\A";
+	color: transparent;
 	position:relative;
+	user-select: none;
 	top:0.03rem;
 	left:-0.9rem;
 	width:0;

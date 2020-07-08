@@ -244,7 +244,7 @@ input[type=submit].large { width: 100%; box-sizing: border-box; padding: 0.5em; 
 .page-tags-display { margin: 0.5rem 0 0 0; padding: 0; list-style-type: none; }
 .page-tags-display li { display: inline-block; margin: 0.5rem; padding: 0.5rem; background: var(--tag); white-space: nowrap; }
 .page-tags-display li a { color: var(--accent-b2); text-decoration: none; }
-.page-tags-display li::before { content: "\\A"; position: relative; top: 0.03rem; left: -0.9rem; width: 0; height: 0; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; border-right: 0.5rem solid var(--tag); }
+.page-tags-display li::before { content: "\\A"; color: transparent; user-select: none; position: relative; top: 0.03rem; left: -0.9rem; width: 0; height: 0; border-top: 0.6rem solid transparent; border-bottom: 0.6rem solid transparent; border-right: 0.5rem solid var(--tag); }
 
 .page-list { list-style-type: none; margin: 0.3rem; padding: 0.3rem; }
 .page-list li:not(.header) { margin: 0.3rem; padding: 0.3rem; }
