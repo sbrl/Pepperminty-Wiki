@@ -2,6 +2,10 @@
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
 
+## v0.21.1-hotfix1
+ - [security] Fix security issue in the debug action
+
+
 ## v0.21
 
 ### Fixed
@@ -417,7 +421,7 @@ _(No changes since v0.15-beta2)_
  - Fixed handling of pages and tags with single quotes in the name
  - Fixed weirdness on some pages rendered by the Pepperminty Wiki core
  - Fixed a few minor usability issues on the upload file page.
- - Removed some extra space at the bottom of some pages.
+ - Removed some extra  at the bottom of some pages.
  - The `raw` action now sends a 404 if the request page doesn't exist on the wiki.
 
 ### Changed
