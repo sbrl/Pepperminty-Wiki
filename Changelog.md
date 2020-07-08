@@ -19,12 +19,14 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Added reading time estimate to the top of wiki pages - control it with the new `readingtime_enabled` setting (#172)
      - The algorithm used to estimate reading times is the as the one used in Firefox's reader mode
  - Added similar page suggestions between the bottom of the page content and the comments - control it with the new `similarpages_enabled` and `similarpages_count` settings.
+ - Added absolute redirect support - use it like this: `# REDIRECT [display text](INSERT_REDIRECT_URL_HERE)`
+     - It's disabled by default due to potential security issues with untrusted editors - enable it with the new `redirect_absolute_enable` setting (default: : `false`)
 
 ### Changed
  - Fiddled with Parsedown & ParsedownExtra versions
  - Removed ParsedownExtreme, as it wasn't doing anything useful anyway
      - Don't worry, we've absorbed all the useful features (see above) 
-     - NOTE TO SELF: Don't forget to update wikimatrix.org when we next make a stable release!
+     - NOTE TO SELF: Don't forget to update wikimatrix.org when we next make a stable release! (if you are reading this in the release notes for a stable release, please get in touch)
  - Enabled horizontal resize handle on sidebar (but it doesn't persist yet)
 
 ### Fixed
