@@ -39,9 +39,9 @@ register_module([
 			echo("Powered by Pepperminty Wiki version $version+" . substr($commit, 0, 7) . ".\n");
 			echo("This report may contain personal information.\n\n");
 			echo("Environment: ");
-			echo(var_export($env, true));
+			echo(debug_mask_secrets(var_export($env, true)));
 			echo("\nPaths: ");
-			var_dump(var_export($paths, true));
+			echo(var_export($paths, true));
 			echo("\nServer information:\n");
 			echo("uname -a: " . php_uname() . "\n");
 			echo("Path: " . getenv("PATH") . "\n");
@@ -56,12 +56,7 @@ register_module([
 			echo("Storage directory permissions: " . substr(sprintf('%o', fileperms($env->storage_prefix)), -4) . "\n");
 			echo("Loaded extensions: " . implode(", ", get_loaded_extensions()) . "\n");
 			echo("Settings:\n-----\n");
-			$settings_export = explode("\n", var_export($settings, true));
-			foreach ($settings_export as &$row)
-			{
-				if(preg_match("/'(secret|sitesecret|email(?:Address)?|password)'/i", $row)) $row = "********* secret *********"; 
-			}
-			echo(implode("\n", $settings_export));
+			echo(debug_mask_secrets(var_export($settings, true)));
 			echo("\n-----\n");
 			exit();
 		});
@@ -72,5 +67,19 @@ register_module([
 		}
 	}
 ]);
+
+/**
+ * Masks secrets in debug output.
+ * @param  string $text The text to mask.
+ * @return string       The masked text.
+ */
+function debug_mask_secrets($text) {
+	$lines = explode("\n", $text);
+	foreach ($lines as &$line) {
+		if(preg_match("/'(secret|sitesecret|email(?:Address)?|password)'/i", $line)) $line = "********* secret *********"; 
+	}
+	
+	return implode("\n", $lines);
+}
 
 ?>
