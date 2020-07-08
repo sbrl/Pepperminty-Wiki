@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Debug Information",
-	"version" => "0.2",
+	"version" => "0.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a debug action for administrator use only that collects a load of useful information to make reporting bugs easier.",
 	"id" => "page-debug-info",
@@ -29,7 +29,7 @@ register_module([
 			global $settings, $env, $paths, $version, $commit;
 			header("content-type: text/plain");
 			
-			if(!$env->is_admin && (isset($_GET["secret"]) && $_GET["secret"] !== $settings->secret)) {
+			if(!$env->is_admin && (!isset($_GET["secret"]) && $_GET["secret"] !== $settings->secret)) {
 				exit("You must be logged in as an moderator in order to generate debugging information.");
 			}
 			
