@@ -40,6 +40,6 @@ You can update to this release simply by grabbing an updated copy of `index.php`
 
 For more information on the last 2 methods, please see [the documentation](https://starbeamrainbowlabs.com/labs/peppermint/__nightdocs/05-Getting-A-Copy.html) for more information.
 
-## VERSION_NUMBER_HERE
+## Since VERSION_NUMBER_HERE
 FULL_CHANGELOG_HERE
 ```
