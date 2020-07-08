@@ -37,7 +37,7 @@ function register_module($settings)
 	
 	// Prepare any extra files
 	if(!file_exists($paths->extra_data_directory))
-		mkdir($paths->extra_data_directory, 0750);
+		mkdir($paths->extra_data_directory, 0750, true);
 	
 	foreach($settings["extra_data"] ?? [] as $filename => $file_def) {
 		$destination_filename = "$paths->extra_data_directory/{$settings["id"]}/$filename";
