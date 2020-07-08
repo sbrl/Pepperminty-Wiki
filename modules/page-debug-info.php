@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Debug Information",
-	"version" => "0.3",
+	"version" => "0.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a debug action for administrator use only that collects a load of useful information to make reporting bugs easier.",
 	"id" => "page-debug-info",
@@ -59,7 +59,7 @@ register_module([
 			$settings_export = explode("\n", var_export($settings, true));
 			foreach ($settings_export as &$row)
 			{
-				if(preg_match("/(sitesecret|email)/i", $row)) $row = "********* secret *********"; 
+				if(preg_match("/'(secret|sitesecret|email(?:Address)?|password)'/i", $row)) $row = "********* secret *********"; 
 			}
 			echo(implode("\n", $settings_export));
 			echo("\n-----\n");

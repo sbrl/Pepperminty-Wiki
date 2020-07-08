@@ -40,6 +40,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Limited sidebar size to 20% of the screen width at most
  - Fix the [large blank space problem](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md#fixed-3) in all themes
  - Squashed the text `\A` appearing before tags at the bottom of pages for some users ([ref](https://gitter.im/Pepperminty-Wiki/Lobby?at=5f0632068342f4627401f145))
+ - [security] Fix security issue in the debug action
 
 
 ## v0.21
