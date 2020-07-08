@@ -287,12 +287,14 @@ a.redlink:visited{
 textarea[name=content]{
 	resize:none;
 }
-.fit-text-mirror{
-	position:absolute;
-	left:-10000vw;
-	word-wrap:break-word;
-	white-space:pre-wrap;
+.fit-text-mirror {
+	position: absolute;
+	top: 0;
+	left: -10000vw;
+	word-wrap: break-word;
+	white-space: pre-wrap;
 }
+
 main label:not(.link-display-label){
 	display:inline-block;
 	min-width:16rem;

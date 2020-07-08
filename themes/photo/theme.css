@@ -134,7 +134,7 @@ textarea, #tags, #search-box {
 	box-sizing: border-box;
 	
 }
-.fit-text-mirror { position: absolute; left: -1000000px; }
+.fit-text-mirror { position: absolute; top: 0; left: -10000vw; word-wrap: break-word; white-space: pre-wrap; }
 .awesomplete { width: 100%; }
 
 textarea, input:not([type=submit]):not([type=button]) {

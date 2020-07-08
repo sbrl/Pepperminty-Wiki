@@ -38,6 +38,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Really fix bots getting into infinite loops on the login page this time by marking all login pages as `noindex, nofollow` with a robots `<meta />` tag
  - Navigating to a redirect page from a page list will no longer cause you to automatically follow the redirect
  - Limited sidebar size to 20% of the screen width at most
+ - Fix the [large blank space problem](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md#fixed-3) in all themes
 
 
 ## v0.21
@@ -455,7 +456,7 @@ _(No changes since v0.15-beta2)_
  - Fixed handling of pages and tags with single quotes in the name
  - Fixed weirdness on some pages rendered by the Pepperminty Wiki core
  - Fixed a few minor usability issues on the upload file page.
- - Removed some extra space at the bottom of some pages.
+ - Removed some extra  at the bottom of some pages.
  - The `raw` action now sends a 404 if the request page doesn't exist on the wiki.
 
 ### Changed
