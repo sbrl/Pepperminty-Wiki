@@ -159,7 +159,7 @@ register_module([
 				$result["context"] = search::extract_context(
 					$result["pagename"],
 					$query_parsed,
-					file_get_contents()
+					file_get_contents($filepath)
 				);
 			}
 			$env->perfdata->context_generation_time = round((microtime(true) - $start)*1000, 3);
