@@ -231,7 +231,7 @@
 	"min_preview_size": { "type": "number", "description": "The minimum allowed size of generated preview images in pixels.", "default": 1 },
 	"max_preview_size": { "type": "number", "description": "The maximum allowed size of generated preview images in pixels.", "default": 2048 },
 	"avatars_show": { "type": "checkbox", "description": "Whether or not to show avatars requires the 'user-preferences' and 'upload' modules, though uploads themselves can be turned off so long as all avatars have already been uploaded - it's only the 'preview' action that's actually used.", "default": true },
-	"avatars_gravatar_enable": { "type": "checkbox", "description": "Whether gravatars should be displayed if an uploaded avatar is not found. If disabled, users without avatars will show a blank image instead.", "default": true },
+	"avatars_gravatar_enabled": { "type": "checkbox", "description": "Whether gravatars should be displayed if an uploaded avatar is not found. If disabled, users without avatars will show a blank image instead.", "default": true },
 	"avatars_size": { "type": "number", "description": "The image size to render avatars at. Does not affect the size they're stored at - only the inline rendered size (e.g. on the recent changes page etc.)", "default": 32},
 	"search_characters_context": { "type": "number", "description": "The number of characters that should be displayed either side of a matching term in the context below each search result.", "default": 75},
 	"search_characters_context_total": { "type": "number", "description": "The total number of characters that a search result context should display at most.", "default": 250 },
