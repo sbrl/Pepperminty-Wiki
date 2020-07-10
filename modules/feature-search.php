@@ -151,10 +151,15 @@ register_module([
 			
 			$start = microtime(true);
 			foreach($results as &$result) {
+				$filepath = $env->storage_prefix . $result["pagename"] . ".md";
+				if(!file_exists($filepath)) {
+					error_log("[pepperminty wiki/$settings->sitename/search] Search engine returned {$result["pagename"]} as a result (maps to $filepath), but it doesn't exist on disk (try rebuilding the search index).");
+					continue; // Something strange is happening
+				}
 				$result["context"] = search::extract_context(
 					$result["pagename"],
 					$query_parsed,
-					file_get_contents($env->storage_prefix . $result["pagename"] . ".md")
+					file_get_contents()
 				);
 			}
 			$env->perfdata->context_generation_time = round((microtime(true) - $start)*1000, 3);
