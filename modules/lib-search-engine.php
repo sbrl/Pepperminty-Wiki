@@ -834,15 +834,17 @@ class search
 				
 				$lit_title = self::$literator->transliterate($pagename);
 				$lit_tags = isset($pagedata->tags) ? self::$literator->transliterate(implode(" ", $pagedata->tags)) : null;
+				$pageid = null; // populated on-demand
 				
 				// Make sure that the title & tags don't contain a term we should exclude
 				$skip = false;
 				foreach($query_stas["exclude"] as $excl_term) {
 					if(mb_strpos($lit_title, $excl_term) !== false) {
 						$skip = true;
+						if($pageid === null) $pageid = ids::getid($pagename);
 						// Delete it from the candidate matches (it might be present in the tags / title but not the body)
-						if(isset($matching_pages[$excl_term]))
-							unset($matching_pages[$excl_term]);
+						if(isset($matching_pages[$pageid]))
+							unset($matching_pages[$pageid]);
 						break;
 					}
 				}
@@ -854,7 +856,7 @@ class search
 					$title_matches = mb_stripos_all($lit_title, $term_def["term"]);
 					$title_matches_count = $title_matches !== false ? count($title_matches) : 0;
 					if($title_matches_count > 0) {
-						$pageid = ids::getid($pagename); // Fetch the page id
+						if($pageid === null) $pageid = ids::getid($pagename);
 						// We found the qterm in the title
 						if(!isset($matching_pages[$pageid]))
 						$matching_pages[$pageid] = $match_template; // Assign by copy
@@ -875,8 +877,7 @@ class search
 				$tag_matches_count = $tag_matches !== false ? count($tag_matches) : 0;
 				
 				if($tag_matches_count > 0) {// And we found the qterm in the tags
-					if($pageid === null) // Fill out the page id if it hasn't been already
-						$pageid = ids::getid($pagename);
+					if($pageid === null) $pageid = ids::getid($pagename);
 					
 					if(!isset($matching_pages[$pageid]))
 						$matching_pages[$pageid] = $match_template; // Assign by copy
