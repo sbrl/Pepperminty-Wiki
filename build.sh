@@ -43,6 +43,7 @@ if [[ "$#" -lt 1 ]]; then
 	echo -e "    ${CACTION}docs-livereload${RS} - Start the documentation livereload server";
 	echo -e "    ${CACTION}start-server${RS}    - Start a development server";
 	echo -e "    ${CACTION}stop-server${RS}     - Stop the development server";
+	echo -e "    ${CACTION}sign${RS}            - Sign the current build with SHA256 & GPG";
 	echo -e "    ${CACTION}clean${RS}           - Delete all build outputs (WARNING: THIS WILL DELETE ALL WIKI DATA)";
 	echo -e "";
 	
@@ -294,6 +295,33 @@ task_stop-server() {
 	kill "$(cat "${server_pid_file}.themes")";
 	rm "${server_pid_file}.themes";
 	task_end "$?";
+}
+
+task_sign() {
+	task_begin "Preparing to sign release";
+	if [[ ! -f "build/index.php" ]]; then
+		task_end 1 "Error: build/index.php doesn't exist";
+	fi
+	
+	temp_dir="$(mktemp --tmpdir -d "pepperminty-wiki-XXXXXXX")";
+	cp "build/index.php" "${temp_dir}";
+	task_end "$?";
+	
+	task_begin "Signing release";
+	pushd "${temp_dir}" || { echo "Error: Failed to cd to temporary directory"; exit 1; };
+	# Generate hashes
+	find . -type f -not -name "*.SHA256" -print0 | xargs -0 -n1 -I{} -P"$(nproc)" sha256sum -b "{}" >HASHES.SHA256;
+	# Generate GPG signature
+	gpg --sign --detach-sign --armor HASHES.SHA256;
+	popd || { echo ""; exit 1; };
+	task_end "$?";
+	
+	task_begin "Finalising";
+	cp "${temp_dir}/HASHES.SHA256" "./build";
+	cp "${temp_dir}/HASHES.SHA256.asc" "./build";
+	echo -e "Written output files to ${HC}$(display_url "${PWD}/build/HASHES.SHA256" "HASHES.SHA256") ${RS}and ${HC}$(display_url "${PWD}/build/HASHES.SHA256.asc" "HASHES.SHA256.asc").${RS}";
+	rm -r "${temp_dir}";
+	task_end "$?" "Failed to finalise!";
 }
 
 task_clean() {

@@ -17,6 +17,7 @@ The following things need to be done to prepare for a release:
      - Pull down changes to update [online downloader](https://starbeamrainbowlabs.com/labs/peppermint/download.php)
      - Ensure docs are up-to-date
  - Update wikimatrix
+ - Generate the hashes & signature (see the `sign` build action)
  - Write & publish the release
 
 ## Release text template
@@ -29,6 +30,8 @@ INTRODUCTION_HERE
 Note that this is a maintenance release that backports some urgent bugfixes to LATEST_STABLE_VERSION. Current development efforts are focused on NEXT_VERSION. The work-in-progress changelog for NEXT_VERSION can be found [here](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md).
 
 Have you updated to this release? [Click this link to say hi](https://starbeamrainbowlabs.com/blog/viewtracker.php?action=record&format=text&post-id=pepperminty-wiki/PEPPERMINTY_WIKI_VERSION)!
+
+This release also has an experimental GPG and SHA256 hashes file attached. My GPG key is `AEBDEBC37E56742E9DFF782A1BE5172E637709C2` - please [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/) if you encounter any issues :slightly_smiling_face:
 
 ## Updating
 You can update to this release simply by grabbing an updated copy of `index.php` and replacing the version in your current wiki (don't forget to take backups! I make every effort to squash as many bugs as possible, but you can never be too certain). You can get an updated copy of `index.php` in a number of ways:
