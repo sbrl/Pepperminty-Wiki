@@ -150,7 +150,9 @@ register_module([
 			header("x-invindex-query-time: {$env->perfdata->invindex_query_time}ms");
 			
 			$start = microtime(true);
-			foreach($results as &$result) {
+			// FUTURE: When we implement $_GET["offset"] and $_GET["count"] or something we can optimise here
+			foreach($results as $key => &$result) {
+				error_log("[search/context extractor] pagename: {$result["pagename"]}");
 				$filepath = $env->storage_prefix . $result["pagename"] . ".md";
 				if(!file_exists($filepath)) {
 					error_log("[pepperminty wiki/$settings->sitename/search] Search engine returned {$result["pagename"]} as a result (maps to $filepath), but it doesn't exist on disk (try rebuilding the search index).");
@@ -162,17 +164,23 @@ register_module([
 					file_get_contents($filepath)
 				);
 			}
+			// This is absolutely *essential*, because otherwise we hit a very strange bug whereby PHP duplicates the value of the last iterated search result. Ref https://bugs.php.net/bug.php?id=70387 - apparently "documented behaviour"
+			unset($result);
 			$env->perfdata->context_generation_time = round((microtime(true) - $start)*1000, 3);
 			header("x-context-generation-time: {$env->perfdata->context_generation_time}ms");
 			
 			$env->perfdata->search_time = round((microtime(true) - $search_start)*1000, 3);
-			
 			header("x-search-time: {$env->perfdata->search_time}ms");
+			
+			error_log(var_export($results, true));
 			
 			if(!empty($_GET["format"]) && $_GET["format"] == "json") {
 				header("content-type: application/json");
 				$json_results = new stdClass();
-				foreach($results as $result) $json_results->{$result["pagename"]} = $result;
+				foreach($results as $key => $result) {
+					error_log("[search/json] id: $key, pagename: {$result["pagename"]}");
+					$json_results->{$result["pagename"]} = $result;
+				}
 				exit(json_encode($json_results));
 			}
 
@@ -230,9 +238,12 @@ register_module([
 				}
 			}
 			
+			var_dump($results);
+			
 			$i = 0; // todo use $_GET["offset"] and $_GET["result-count"] or something
 			foreach($results as $result)
 			{
+				error_log("[search] pagename: {$result["pagename"]}");
 				$link = "?page=" . rawurlencode($result["pagename"]);
 				$pagesource = file_get_contents($env->storage_prefix . $result["pagename"] . ".md");
 				
