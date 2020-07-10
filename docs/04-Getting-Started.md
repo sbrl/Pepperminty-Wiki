@@ -23,7 +23,7 @@
 
 
 ## Verifying Your Download
-Advanced and privacy-conscious users may want to verify the authenticity of their downloaded release. Since [v0.21.1-hotfix1](https://github.com/sbrl/Pepperminty-Wiki/releases/tag/v0.21.1-hotfix1), Pepperminty Wiki releases are now signed. This is done in the following fashion:
+Advanced and privacy-conscious users may want to verify the authenticity of their downloaded release. Since [v0.21.1-hotfix1](https://github.com/sbrl/Pepperminty-Wiki/releases/tag/v0.21.1-hotfix1), [Pepperminty Wiki releases on GitHub](https://github.com/sbrl/Pepperminty-Wiki/releases) are now signed. This is done in the following fashion:
 
  - The release `index.php` is hashed with SHA256 and saved to `HASHES.SHA256`
  - `HASHES.SHA256` is then signed via GPG, generating `HASHES.SHA256.asc` as the signature file
