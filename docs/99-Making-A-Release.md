@@ -31,7 +31,7 @@ Note that this is a maintenance release that backports some urgent bugfixes to L
 
 Have you updated to this release? [Click this link to say hi](https://starbeamrainbowlabs.com/blog/viewtracker.php?action=record&format=text&post-id=pepperminty-wiki/PEPPERMINTY_WIKI_VERSION)!
 
-This release also has an experimental GPG and SHA256 hashes file attached. My GPG key is `AEBDEBC37E56742E9DFF782A1BE5172E637709C2` - please [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/) if you encounter any issues :slightly_smiling_face:
+This release also has an experimental GPG and SHA256 hashes file attached. My GPG key is `C2F7843F9ADF9FEE264ACB9CC1C6C0BB001E1725` - please [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/) if you encounter any issues :slightly_smiling_face:
 
 ## Updating
 You can update to this release simply by grabbing an updated copy of `index.php` and replacing the version in your current wiki (don't forget to take backups! I make every effort to squash as many bugs as possible, but you can never be too certain). You can get an updated copy of `index.php` in a number of ways:
