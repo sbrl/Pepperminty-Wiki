@@ -253,7 +253,7 @@ register_module([
  		 * @apiParam	{string}	size			The preferred size of the avatar
  		 */
 		add_action("avatar", function() {
-			global $settings;
+			global $settings, $pageindex;
 			
 			$size = intval($_GET["size"] ?? 32);
 			
@@ -261,15 +261,26 @@ register_module([
 			
 			// No user specified
 			if(empty($_GET["user"])) {
-				http_response_code(307);
+				http_response_code(200);
 				header("x-reason: no-user-specified");
-				header("location: https://gravatar.com/avatar/?default=blank");
+				header("content-type: image/png");
+				header("content-length: 101");
+				exit(base64_decode("iVBORw0KGgoAAAANSUhEUgAAAFAAAABQAQMAAAC032DuAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAABBJREFUGBljGAWjYBTQDQAAA3AAATXTgHYAAAAASUVORK5CYII="));
 			}
 			
 			$requested_username = $_GET["user"];
+			$has_avatar = !empty($pageindex->{"Users/$requested_username/Avatar"}) && $pageindex->{"Users/$requested_username/Avatar"}->uploadedfile === true;
+			
+			if(!$settings->avatars_gravatar_enabled && !$has_avatar) {
+				http_response_code(404);
+				header("x-reason: no-avatar-found-gravatar-disabled");
+				header("content-type: image/png");
+				header("content-length: 101");
+				exit(base64_decode("iVBORw0KGgoAAAANSUhEUgAAAFAAAABQAQMAAAC032DuAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAABBJREFUGBljGAWjYBTQDQAAA3AAATXTgHYAAAAASUVORK5CYII=")); // TODO: Refactor out into a separate function
+			}
 			
 			// The user hasn't uploaded an avatar
-			if(empty($pageindex->{"User/$requested_username/Avatar"}) || !$pageindex->{"User/$requested_username/Avatar"}->uploadedfile) {
+			if(!$has_avatar) {
 				$user_fragment = !empty($settings->users->$requested_username->emailAddress) ? $settings->users->$requested_username->emailAddress : $requested_username;
 				
 				http_response_code(307);

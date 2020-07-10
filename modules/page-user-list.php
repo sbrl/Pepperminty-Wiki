@@ -8,7 +8,7 @@ register_module([
 	"code" => function() {
 		global $settings;
 		/**
-		 * @api {get} ?action=user-list[format=json] List all users
+		 * @api {get} ?action=user-list[&format=json] List all users
 		 * @apiName UserList
 		 * @apiGroup Utility
 		 * @apiPermission Anonymous
