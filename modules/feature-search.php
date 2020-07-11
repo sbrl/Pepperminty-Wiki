@@ -152,7 +152,6 @@ register_module([
 			$start = microtime(true);
 			// FUTURE: When we implement $_GET["offset"] and $_GET["count"] or something we can optimise here
 			foreach($results as $key => &$result) {
-				error_log("[search/context extractor] pagename: {$result["pagename"]}");
 				$filepath = $env->storage_prefix . $result["pagename"] . ".md";
 				if(!file_exists($filepath)) {
 					error_log("[pepperminty wiki/$settings->sitename/search] Search engine returned {$result["pagename"]} as a result (maps to $filepath), but it doesn't exist on disk (try rebuilding the search index).");
@@ -172,15 +171,11 @@ register_module([
 			$env->perfdata->search_time = round((microtime(true) - $search_start)*1000, 3);
 			header("x-search-time: {$env->perfdata->search_time}ms");
 			
-			error_log(var_export($results, true));
-			
 			if(!empty($_GET["format"]) && $_GET["format"] == "json") {
 				header("content-type: application/json");
 				$json_results = new stdClass();
-				foreach($results as $key => $result) {
-					error_log("[search/json] id: $key, pagename: {$result["pagename"]}");
+				foreach($results as $key => $result)
 					$json_results->{$result["pagename"]} = $result;
-				}
 				exit(json_encode($json_results));
 			}
 
@@ -238,12 +233,9 @@ register_module([
 				}
 			}
 			
-			var_dump($results);
-			
 			$i = 0; // todo use $_GET["offset"] and $_GET["result-count"] or something
 			foreach($results as $result)
 			{
-				error_log("[search] pagename: {$result["pagename"]}");
 				$link = "?page=" . rawurlencode($result["pagename"]);
 				$pagesource = file_get_contents($env->storage_prefix . $result["pagename"] . ".md");
 				

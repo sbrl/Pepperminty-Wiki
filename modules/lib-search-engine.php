@@ -913,6 +913,7 @@ class search
 			
 			// TODO: Remove items if the computed rank is below a threshold
 		}
+		unset($pagedata); // Ref https://bugs.php.net/bug.php?id=70387
 		
 		uasort($matching_pages, function($a, $b) {
 			if($a["rank"] == $b["rank"]) return 0;
