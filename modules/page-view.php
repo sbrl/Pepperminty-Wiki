@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.16.9",
+	"version" => "0.16.10",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
@@ -57,14 +57,16 @@ register_module([
 			
 			// Perform a redirect if the requested page is a redirect page
 			if(isset($pageindex->$page->redirect) && 
-			   $pageindex->$page->redirect === true && // If this is a redirect page.....
-			   (isset($pageindex->$page->redirect_absolute) &&
-			   $pageindex->$page->redirect_absolute == true && // ...and it's absolute....
-			   $settings->redirect_absolute_enable === true)) // ...and absolute reedirects are enabled
+			   $pageindex->$page->redirect === true) // If this is a redirect page.....
 			{
 				$send_redirect = true;
 				if(isset($_GET["redirect"]) && $_GET["redirect"] == "no")
 					$send_redirect = false;
+				if((isset($pageindex->$page->redirect_absolute) &&
+					$pageindex->$page->redirect_absolute == true && // ...and it's absolute....
+					$settings->redirect_absolute_enable === false)) // ...and absolute reedirects are enabled
+					$send_redirect = false;
+			   
 				
 				if($send_redirect) {
 					// TODO: Send an explanatory page along with the redirect

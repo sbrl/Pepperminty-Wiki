@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Redirect pages",
-	"version" => "0.3.1",
+	"version" => "0.3.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds support for redirect pages. Uses the same syntax that Mediawiki does.",
 	"id" => "feature-redirect",
