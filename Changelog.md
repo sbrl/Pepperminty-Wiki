@@ -44,6 +44,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Fixed an issue causing uploaded avatars not to render
  - Fixed an obscure bug in the search engine when excluding terms that appear both in a page's title and body
  - Squashed a warning at the top of search results (more insight is needed though to squash the inconsistencies in the search index that creep in though)
+ - Removed annoying scrollbars when editing long pages
 
 
 ## v0.21.1-hotfix1

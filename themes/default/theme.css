@@ -218,8 +218,8 @@ textarea[name=content] { resize: none; min-height: 75vh; }
 
 main label:not(.link-display-label) { display: inline-block; min-width: 16rem; }
 input[type=text]:not(.link-display), input[type=password], input[type=url], input[type=email], input[type=number], textarea { margin: 0.5rem 0; }
-input[type=text], input[type=password], input[type=url], input[type=email], input[type=number], textarea, textarea[name=content] + pre, #search-box { padding: 0.5rem 0.8rem; background: var(--accent-a4); border: 0; border-radius: 0.3rem; font-size: 1rem; color: var(--text-bright); }
-textarea { min-height: 10em; line-height: 1.3em; font-size: 1.25rem; }
+input[type=text], input[type=password], input[type=url], input[type=email], input[type=number], textarea, #search-box { padding: 0.5rem 0.8rem; background: var(--accent-a4); border: 0; border-radius: 0.3rem; font-size: 1rem; color: var(--text-bright); }
+textarea, .fit-text-mirror { min-height: 10em; line-height: 1.3em; font-size: 1.25rem; }
 textarea, textarea[name=content] + pre, textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); box-sizing: border-box; }
 textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: bolder; }
 .editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }

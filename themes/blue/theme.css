@@ -303,7 +303,7 @@ main label:not(.link-display-label){
 input[type=text]:not(.link-display), input[type=password], input[type=url], input[type=email], input[type=number], textarea{
 	margin:0.5rem 0;
 }
-input[type=text], input[type=password], input[type=url], input[type=email], input[type=number], textarea, textarea[name=content] + pre, #search-box{
+input[type=text], input[type=password], input[type=url], input[type=email], input[type=number], textarea, #search-box{
 	padding:0.5rem 0.8rem;
 	background:#93CCEF;
 	border:0;
@@ -311,7 +311,7 @@ input[type=text], input[type=password], input[type=url], input[type=email], inpu
 	font-size:1rem;
 	color:#1F2A7E;
 }
-textarea{
+textarea, .fit-text-mirror {
 	min-height:10em;
 	line-height:1.3em;
 	font-size:1.25rem;
