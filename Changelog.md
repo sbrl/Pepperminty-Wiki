@@ -32,7 +32,11 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Don't worry, we've absorbed all the useful features (see above) 
      - NOTE TO SELF: Don't forget to update wikimatrix.org when we next make a stable release! (if you are reading this in the release notes for a stable release, please get in touch)
  - Enabled horizontal resize handle on sidebar (but it doesn't persist yet)
- - `SameSite=Strict` is now set on all cookies in PHP 7.3+ to comply with the [new samesite cookies rules](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#SameSiteNone_requires_Secure). A warning is generated in PHP 7.2 and below = [please upgrade](https://www.php.net/supported-versions.php) to PHP 7.3+! (#200)
+ - `SameSite=Strict` is now set on all cookies in PHP 7.3+
+     - This prevents session-stealing attacks from third-party origins
+     - This complies with the [new samesite cookies rules](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#SameSiteNone_requires_Secure).
+     - A warning is generated in PHP 7.2 and below = [please upgrade](https://www.php.net/supported-versions.php) to PHP 7.3+! (#200)
+ - The `Secure` cookie flag is now automatically added when clients use HTTPS to prevent downgrade-based session stealing attacks (control this with the new `cookie_secure` setting)
 
 ### Fixed
  - Squashed a warning when using the fenced code block syntax

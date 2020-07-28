@@ -53,7 +53,7 @@ if($settings === null) {
 $settings_upgraded = false;
 foreach($guiConfig as $key => $propertyData) {
 	if(!property_exists($settings, $key)) {
-		error_log("[settings] Upgrading $key");
+		error_log("[PeppermintyWiki/$settings->sitename/settings] Upgrading $key");
 		$settings->$key = $propertyData->default;
 		$settings_upgraded = true;
 	}

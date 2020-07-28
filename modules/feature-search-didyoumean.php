@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Did you mean? support",
-	"version" => "0.1",
+	"version" => "0.1.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "*Experimental* Ever searched for something but couldn't find it because you couldn't spell it correctly? This module is for you! It adds spelling correction for search queries based on the words in the inverted search index.",
 	"id" => "feature-search-didyoumean",
@@ -252,9 +252,10 @@ class BkTree {
 	 * @return	bool	Whether the removal was successful.
 	 */
 	public function remove(string $string) : bool {
+		global $settings;
 		// Not allowed to remove the seed word
 		if($string == $this->seed_word) {
-			error_log("[PeppermintyWiki/DidYouMean-BkTree] Blocked an attempt to remove the seed word $this->seed_word");
+			error_log("[PeppermintyWiki/$settings->sitename/DidYouMean-BkTree] Blocked an attempt to remove the seed word $this->seed_word");
 			return false;
 		}
 		
@@ -349,7 +350,8 @@ class BkTree {
 	 * @return	array<string>			Similar resultant strings from the BK-Tree.
 	 */
 	public function lookup(string $string, int $max_distance = 1, int $count = 0) : array {
-		error_log("[BkTree/lookup]".var_export($string, true).", dist ".var_export($max_distance, true).", count:".var_export($count, true));
+		// global $settings;
+		// error_log("[PeppermintyWiki/$settings->sitename/BkTree/lookup]".var_export($string, true).", dist ".var_export($max_distance, true).", count:".var_export($count, true));
 		if($this->get_node_count() == 0) return null;
 		
 		$result = []; $result_count = 0;

@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Theme Gallery",
-	"version" => "0.4",
+	"version" => "0.4.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a theme gallery page and optional automatic theme updates. Contacts a remote server, where IP addresses are stored in automatic server logs for security and attack mitigation purposes.",
 	"id" => "feature-theme-gallery",
@@ -143,7 +143,7 @@ register_module([
 			foreach($gallery_urls as $url) {
 				$next_index = json_decode(@file_get_contents($url));
 				if(empty($next_index)) {
-					error_log("Error: Failed to download theme idnex file from '$url' when setting the wiki theme.");
+					error_log("[PeppermintyWiki/$settings->sitename/theme_gallery] Error: Failed to download theme index file from '$url' when setting the wiki theme.");
 					continue;
 				}
 				foreach($next_index as $next_theme) {
@@ -156,7 +156,7 @@ register_module([
 			}
 			if($theme_autoupdate_url === null) {
 				http_response_code(503);
-				exit(page_renderer::render_main("Failed to set theme - Error - $settings->sitename)", "<p>Oops! $settings->sitename couldn't find the theme you selected. Perhaps it has been changed or deleted, or perhaps there was an error during the download process.</p>
+				exit(page_renderer::render_main("[PeppermintyWiki/$settings->sitename/theme_gallery] Failed to set theme - Error - $settings->sitename)", "<p>Oops! $settings->sitename couldn't find the theme you selected. Perhaps it has been changed or deleted, or perhaps there was an error during the download process.</p>
 				<p>Try <a href='?action=theme-gallery'>heading back to the theme gallery</a> and trying again.</p>"));
 			}
 			$settings->css_theme_autoupdate_url = $theme_autoupdate_url;
@@ -204,7 +204,7 @@ function theme_update($force_update = false) : bool {
 	$new_css = @file_get_contents($settings->css_theme_autoupdate_url);
 	// Make sure it's valid
 	if(empty($new_css)) {
-		error_log("[Pepperminty Wiki/$settings->sitename] Error: Failed to update theme: Got an error while trying to download theme update from $settings->css_theme_autoupdate_url");
+		error_log("[PeppermintyWiki/$settings->sitename/theme_gallery] Error: Failed to update theme: Got an error while trying to download theme update from $settings->css_theme_autoupdate_url");
 		return false;
 	}
 	
@@ -213,7 +213,7 @@ function theme_update($force_update = false) : bool {
 	$min_version_loc = strpos($new_css, "@minversion") + strlen("@minversion");
 	$min_version = substr($new_css, $min_version_loc, strpos($new_css, "\n", $min_version_loc));
 	if(version_compare($version, $min_version) == -1) {
-		error_log("[Pepperminty Wiki/$settings->sitename] Error: Failed to update theme: $settings->css_theme_gallery_selected_id requires Pepperminty Wiki $min_version, but $version is installed.");
+		error_log("[PeppermintyWiki/$settings->sitename/theme_gallery] Error: Failed to update theme: $settings->css_theme_gallery_selected_id requires Pepperminty Wiki $min_version, but $version is installed.");
 		return false;
 	}
 	

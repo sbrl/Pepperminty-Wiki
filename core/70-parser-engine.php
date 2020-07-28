@@ -65,7 +65,7 @@ function parse_page_source($source, $untrusted = false, $use_cache = true) {
 		// If we should use the cache and we failed to write to it, warn the admin.
 		// It's not terribible if we can't write to the cache directory (so we shouldn't stop dead & refuse service), but it's still of concern.
 		if($use_cache && !file_put_contents($cache_file, $result))
-			error_log("[Pepperminty Wiki] Warning: Failed to write to cache file $cache_file.");
+			error_log("[PeppermintyWiki/$settings->sitename/parser_engine] Warning: Failed to write to cache file $cache_file.");
 		
 		$result .= "\n<!-- cache: " . ($use_cache ? "miss" : "n/a") . ", id: $cache_id, took: " . round((microtime(true) - $start_time)*1000, 5) . "ms -->\n";
 	}

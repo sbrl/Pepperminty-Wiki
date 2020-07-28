@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Search",
-	"version" => "0.13.1",
+	"version" => "0.13.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
@@ -154,7 +154,7 @@ register_module([
 			foreach($results as $key => &$result) {
 				$filepath = $env->storage_prefix . $result["pagename"] . ".md";
 				if(!file_exists($filepath)) {
-					error_log("[pepperminty wiki/$settings->sitename/search] Search engine returned {$result["pagename"]} as a result (maps to $filepath), but it doesn't exist on disk (try rebuilding the search index).");
+					error_log("[PeppermintyWiki/$settings->sitename/search] Search engine returned {$result["pagename"]} as a result (maps to $filepath), but it doesn't exist on disk (try rebuilding the search index).");
 					continue; // Something strange is happening
 				}
 				$result["context"] = search::extract_context(

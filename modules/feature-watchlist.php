@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "User watchlists",
-	"version" => "0.1.2",
+	"version" => "0.1.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds per-user watchlists. When a page on a user's watchlist is edited, a notification email is sent.",
 	"id" => "feature-watchlist",
@@ -215,7 +215,7 @@ register_module([
 		});
 		
 		if(!module_exists("page-edit")) {
-			error_log("[module/feature-watchlist] Note: Without the page-edit module, the feature-watchlist module doesn't make much sense. If you don't want anonymous people to edit your wiki, try the 'anonedits' setting.");
+			error_log("[PeppermintyWiki/$settings->sitename/feature-watchlist] Note: Without the page-edit module, the feature-watchlist module doesn't make much sense. If you don't want anonymous people to edit your wiki, try the 'anonedits' setting.");
 			return false;
 		}
 		

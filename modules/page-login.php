@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Login",
-	"version" => "0.9.4",
+	"version" => "0.9.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
@@ -133,7 +133,7 @@ register_module([
 					exit(page_renderer::render_main("Login Error - $settings->sitename", "<p>Your credentials were correct, but $settings->sitename was unable to log you in as an updated hash of your password couldn't be saved. Updating your password hash to the latest and strongest hashing algorithm is an important part of keeping your account secure.</p>
 					<p>Please contact $settings->admindetails_name, $settings->sitename's adminstrator, for assistance (their email address can be found at the bottom of every page, including this one).</p>"));
 				}
-				error_log("[Pepperminty Wiki] Updated password hash for $user.");
+				error_log("[PeppermintyWiki/$settings->sitename/login] Updated password hash for $user.");
 			}
 			
 			// If the email address is still in the old field, migrate it

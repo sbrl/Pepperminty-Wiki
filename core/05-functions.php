@@ -758,7 +758,7 @@ function email_user(string $username, string $subject, string $body, bool $ignor
 		$compiled_headers .= "$header: $value\r\n";
 	
 	if($settings->email_debug_dontsend) {
-		error_log("[email] Username: $username ({$settings->users->{$username}->emailAddress})
+		error_log("[PeppermintyWiki/$settings->sitename/email] Username: $username ({$settings->users->{$username}->emailAddress})
 Subject: $subject
 ----- Headers -----
 $compiled_headers

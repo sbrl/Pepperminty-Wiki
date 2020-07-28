@@ -2,7 +2,7 @@
 
 register_module([
 	"name" => "First run wizard",
-	"version" => "0.1",
+	"version" => "0.1.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Displays a special page to aid in setting up a new wiki for the first time.",
 	"id" => "feature-firstrun",
@@ -61,7 +61,7 @@ register_module([
 				}
 			}
 			else {
-				error_log("Warning: The public peppermint.json access check has been disabled (either manually or because you're using a local PHP development server with php -S ....). It's strongly recommended you ensure that access from outside is blocked to peppermint.json to avoid (many) security issues and other nastiness such as stealing of site secrets and password hashes.");
+				error_log("[PeppermintyWiki/firstrun] Warning: The public peppermint.json access check has been disabled (either manually or because you're using a local PHP development server with php -S ....). It's strongly recommended you ensure that access from outside is blocked to peppermint.json to avoid (many) security issues and other nastiness such as stealing of site secrets and password hashes.");
 			}
 			
 			// TODO: Check the environment here first
