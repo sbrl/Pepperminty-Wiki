@@ -27,7 +27,7 @@ $env->is_logged_in = false;
 /** Whether the user is an admin (moderator) @todo Refactor this to is_moderator, so that is_admin can be for the server owner. @var boolean */
 $env->is_admin = false;
 /** Whether the current request was made a secure connection or not. @var boolean */
-$env->is_secure = !empty( $s['HTTPS'] ) && $s['HTTPS'] !== 'off';
+$env->is_secure = !empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] !== 'off';
 /** The currently logged in user's data. Please see $settings->users->username if you need to edit this - this is here for convenience :-) */
 $env->user_data = new stdClass();
 /** The data storage directory. Page filenames should be prefixed with this if you want their content. */
