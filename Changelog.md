@@ -21,7 +21,7 @@ Make sure you have PHP 7.3+ when you update past this point! It isn't the end of
      - The algorithm used to estimate reading times is the as the one used in Firefox's reader mode
  - Added similar page suggestions between the bottom of the page content and the comments - control it with the new `similarpages_enabled` and `similarpages_count` settings.
  - Added absolute redirect support - use it like this: `# REDIRECT [display text](INSERT_REDIRECT_URL_HERE)`
-     - It's disabled by default due to potential security issues with untrusted editors - enable it with the new `redirect_absolute_enable` setting (default: : `false`)
+     - It's disabled by default due to potential security issues with untrusted editors - enable it with the new `redirect_absolute_enable` setting (default: `false`)
  - Added new settings to control various features more precisely
      - `comment_enabled` controls whether _anyone_ is allowed to comment at all or not
      - `comment_hide_all` determines whether the commenting system displays anything at all (if disabled, it's (almost) like the `feature-comments` doesn't exist - consider using the downloader to exclude the commenting system instead of enabling this setting)
@@ -39,7 +39,7 @@ Make sure you have PHP 7.3+ when you update past this point! It isn't the end of
      - This complies with the [new samesite cookies rules](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#SameSiteNone_requires_Secure).
      - A warning is generated in PHP 7.2 and below = [please upgrade](https://www.php.net/supported-versions.php) to PHP 7.3+! (#200)
  - [security] The `Secure` cookie flag is now automatically added when clients use HTTPS to prevent downgrade-based session stealing attacks (control this with the new `cookie_secure` setting)
- - Standardised prefixed to (most) `error_log()` calls to aid clarity in multi-wiki environments
+ - Standardised prefixes to (most) `error_log()` calls to aid clarity in multi-wiki environments
 
 ### Fixed
  - Squashed a warning when using the fenced code block syntax
