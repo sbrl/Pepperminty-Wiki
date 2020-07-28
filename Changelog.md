@@ -28,6 +28,7 @@ Make sure you have PHP 7.3+ when you update past this point! It isn't the end of
      - `avatars_gravatar_enabled` determines whether redirects to [gravatar.com](https://gravatar.com/) should be performed if a user hasn't yet uploaded an avatar (if disabled then a blank image is returned instead of a redirect).
 
 ### Changed
+ - **New policy:** Only [officially supported](https://www.php.net/supported-versions.php) versions of PHP are officially supported by Pepperminty Wiki.
  - Fiddled with Parsedown & ParsedownExtra versions
  - Removed ParsedownExtreme, as it wasn't doing anything useful anyway
      - Don't worry, we've absorbed all the useful features (see above) 
@@ -113,7 +114,6 @@ Make sure you have PHP 7.3+ when you update past this point! It isn't the end of
  - Really fix the dot problem from v0.20.3-hotfix3 that @SeanFromIT reported
 
 ### Changed
- - **New policy:** Only [officially supported](https://www.php.net/supported-versions.php) versions of PHP are officially supported by Pepperminty Wiki.
  - Improved the search indexing system performance - again
      - Another search index rebuild is required
  - Optimisation: Don't generate the list of pages for the datalist if it isn't going to be displayed (especially noticeable on wikis with lots of pages)
