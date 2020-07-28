@@ -3,6 +3,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 
 ## v0.22-dev
+Make sure you have PHP 7.3+ when you update past this point! It isn't the end of the world if you don't, but it will make you more secure if you do.
 
 ### Added
  - [Module Api] Add new `search::invindex_term_getpageids`, and `search::invindex_term_getoffsets`, and `search::index_sort_freq` methods
@@ -112,6 +113,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Really fix the dot problem from v0.20.3-hotfix3 that @SeanFromIT reported
 
 ### Changed
+ - **New policy:** Only [officially supported](https://www.php.net/supported-versions.php) versions of PHP are officially supported by Pepperminty Wiki.
  - Improved the search indexing system performance - again
      - Another search index rebuild is required
  - Optimisation: Don't generate the list of pages for the datalist if it isn't going to be displayed (especially noticeable on wikis with lots of pages)

@@ -1,7 +1,7 @@
 # Getting Started
 
 ## System Requirements
-- PHP-enabled web-server (must be PHP 7+)
+- PHP-enabled web-server (must be PHP 7+; only versions of PHP that are [officially supported](https://www.php.net/supported-versions.php) are supported by Pepperminty Wiki)
 - PHP session support (for logging in, see [here](https://php.net/manual/en/session.installation.php) for more information)
 - The following PHP extensions:
 	- `mbstring` (for utf8 string handling - currently **required**)
