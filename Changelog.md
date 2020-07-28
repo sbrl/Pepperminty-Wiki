@@ -37,6 +37,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - This complies with the [new samesite cookies rules](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#SameSiteNone_requires_Secure).
      - A warning is generated in PHP 7.2 and below = [please upgrade](https://www.php.net/supported-versions.php) to PHP 7.3+! (#200)
  - The `Secure` cookie flag is now automatically added when clients use HTTPS to prevent downgrade-based session stealing attacks (control this with the new `cookie_secure` setting)
+ - Standardised prefixed to (most) `error_log()` calls to aid clarity in multi-wiki environments
 
 ### Fixed
  - Squashed a warning when using the fenced code block syntax
