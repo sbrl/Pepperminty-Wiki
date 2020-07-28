@@ -627,7 +627,7 @@ function render_editor($editorName) {
  * @param	string	$css_str	The string of CSS to minify.
  * @return	string	The minified CSS string.
  */
-function minify_css($css_str) {
+function minify_css(string $css_str) : string {
 	// Remove comments
 	$result = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', "", $css_str);
 	// Cut down whitespace
@@ -635,10 +635,12 @@ function minify_css($css_str) {
 	// Remove whitespace after colons and semicolons
 	$result = str_replace([
 		" :", ": ", "; ",
-		" { ", " } ", "{ ", " {", "} ", " }"
+		" { ", " } ", "{ ", " {", "} ", " }",
+		", ", "0."
 	], [
 		":", ":", ";",
-		"{", "}", "{", "{", "}", "}"
+		"{", "}", "{", "{", "}", "}",
+		",", "."
 	], $result);
 	return $result;
 }
