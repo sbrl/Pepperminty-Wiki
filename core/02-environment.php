@@ -6,26 +6,28 @@ $commit = "{commit}";
 /// Environment ///
 /** Holds information about the current request environment. */
 $env = new stdClass();
-/** The action requested by the user. */
+/** The action requested by the user. @var string */
 $env->action = $settings->defaultaction;
-/** The page name requested by the remote client. */
+/** The page name requested by the remote client. @var string */
 $env->page = "";
-/** The filename that the page is stored in. */
+/** The filename that the page is stored in. @var string */
 $env->page_filename = "";
-/** Whether we are looking at a history revision. */
+/** Whether we are looking at a history revision or not. @var boolean */
 $env->is_history_revision = false;
 /** An object holding history revision information for the current request */
 $env->history = new stdClass();
-/** The revision number requested of the current page */
+/** The revision number requested of the current page @var int */
 $env->history->revision_number = -1;
 /** The revision data object from the page index for the requested revision */
 $env->history->revision_data = false;
 /** The user's name if they are logged in. Defaults to `$settings->anonymous_user_name` if the user isn't currently logged in. @var string */
 $env->user = $settings->anonymous_user_name;
-/** Whether the user is logged in */
+/** Whether the user is logged in @var boolean */
 $env->is_logged_in = false;
-/** Whether the user is an admin (moderator) @todo Refactor this to is_moderator, so that is_admin can be for the server owner. */
+/** Whether the user is an admin (moderator) @todo Refactor this to is_moderator, so that is_admin can be for the server owner. @var boolean */
 $env->is_admin = false;
+/** Whether the current request was made a secure connection or not. @var boolean */
+$env->is_secure = !empty( $s['HTTPS'] ) && $s['HTTPS'] !== 'off';
 /** The currently logged in user's data. Please see $settings->users->username if you need to edit this - this is here for convenience :-) */
 $env->user_data = new stdClass();
 /** The data storage directory. Page filenames should be prefixed with this if you want their content. */

@@ -9,8 +9,9 @@
  */
 function url_origin( $s = false, $use_forwarded_host = false )
 {
+	global $env;
 	if($s === false) $s = $_SERVER;
-	$ssl      = ( ! empty( $s['HTTPS'] ) && $s['HTTPS'] == 'on' );
+	$ssl      = $env->is_secure;
 	$sp       = strtolower( $s['SERVER_PROTOCOL'] );
 	$protocol = substr( $sp, 0, strpos( $sp, '/' ) ) . ( ( $ssl ) ? 's' : '' );
 	$port     = $s['SERVER_PORT'];
@@ -840,4 +841,41 @@ function metrics2servertiming(stdClass $perfdata) : string {
 		$result[] = str_replace("_", "", $key).";dur=$value";
 	}
 	return "foo, ".implode(", ", $result);
+}
+
+/**
+ * Sets a cookie on the client via the set-cookie header.
+ * Uses setcookie() under-the-hood.
+ * @param  string $key     The cookie name to set.
+ * @param  string $value   The cookie value to set.
+ * @param  int    $expires The expiry time to set on the cookie.
+ * @return void
+ */
+function send_cookie(string $key, $value, int $expires) : void {
+	global $env, $settings;
+	
+	$cookie_secure = true;
+	switch ($settings->cookie_secure) {
+		case "false":
+			$cookie_secure = false;
+			break;
+		case "auto":
+		default:
+			$cookie_secure = $env->is_secure;
+			break;
+	}
+	
+	if(version_compare(PHP_VERSION, "7.3.0") >= 0) {
+		// Phew! We're running PHP 7.3+, so we're ok to use the array syntax
+		setcookie($key, $value, [
+			"expires" => $expires,
+			"secure" => $cookie_secure,
+			"httponly" => true,
+			"samesite" => "Strict"
+		]);
+	}
+	else {
+		if(!$env->is_secure) error_log("[pepperminty_wiki/$settings->sitename] Warning: You are using a version of PHP that is less than 7.3. This is not recommended - as the samesite cookie flag can't be set in PHP 7.3-, and this is insecure - as it opens you to session stealing attacks. In addition, browsers have deprecated non-samesite cookies in insecure contexts. Please upgrade today!");
+		setcookie($key, $value, $expires, "", "", $cookie_secure, true);
+	}
 }

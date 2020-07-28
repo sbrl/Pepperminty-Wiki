@@ -2,7 +2,7 @@
 
 if(!is_cli()) session_start();
 // Make sure that the login cookie lasts beyond the end of the user's session
-setcookie(session_name(), session_id(), time() + $settings->sessionlifetime, "", "", false, true);
+send_cookie(session_name(), session_id(), time() + $settings->sessionlifetime);
 ///////// Login System /////////
 // Clear expired sessions
 if(isset($_SESSION[$settings->sessionprefix . "-expiretime"]) and

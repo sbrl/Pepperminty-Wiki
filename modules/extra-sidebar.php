@@ -20,7 +20,7 @@ register_module([
 		{
 			$show_sidebar = true;
 			// Set a cookie to persist the display of the sidebar
-			setcookie("sidebar_show", "true", time() + (60 * 60 * 24 * 30));
+			send_cookie("sidebar_show", "true", time() + (60 * 60 * 24 * 30));
 		}
 		
 		// Show the sidebar if the cookie is set
@@ -33,7 +33,7 @@ register_module([
 		{
 			$show_sidebar = false;
 			unset($_COOKIE["sidebar_show"]);
-			setcookie("sidebar_show", null, time() - 3600);
+			send_cookie("sidebar_show", null, time() - 3600);
 		}
 		
 		page_renderer::register_part_preprocessor(function(&$parts) use ($show_sidebar) {
