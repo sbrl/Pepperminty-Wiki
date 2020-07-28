@@ -147,7 +147,13 @@ class page_renderer
 	 */
 	public static function render($title, $content, $body_template = false)
 	{
-		global $settings, $start_time, $version;
+		global $settings, $env, $start_time, $version;
+		
+		// Hrm, we can't seem to get this working
+		// This example URL works: https://httpbin.org/response-headers?Server=httpbin&Content-Type=text%2Fplain%3B+charset%3DUTF-8&Server-Timing=sql-1%3Bdesc%3D%22MySQL%20lookup%20Server%22%3Bdur%3D100%2Csql-2%3Bdur%3D900%3Bdesc%3D%22MySQL%20shard%20Server%20%231%22%2Cfs%3Bdur%3D600%3Bdesc%3D%22FileSystem%22%2Ccache%3Bdur%3D300%3Bdesc%3D%22Cache%22%2Cother%3Bdur%3D200%3Bdesc%3D%22Database%20Write%22%2Cother%3Bdur%3D110%3Bdesc%3D%22Database%20Read%22%2Ccpu%3Bdur%3D1230%3Bdesc%3D%22Total%20CPU%22
+		// ..... but setting headers here doesn't (though we haven't tried sending an identical header to the above example yet)
+		// header("Server-Timing: foo;desc=\"Test\";dur=123");
+		// header("Server-Timing: ".metrics2servertiming($env->perfdata));
 
 		if($body_template === false)
 			$body_template = self::$main_content_template;

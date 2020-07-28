@@ -778,7 +778,7 @@ $body
  * @param  string	$body		The body of the email.
  * @return int					The number of emails sent successfully.
  */
-function email_users($usernames, $subject, $body)
+function email_users($usernames, string $subject, string $body) : int
 {
 	$emailsSent = 0;
 	foreach($usernames as $username)
@@ -828,8 +828,16 @@ function crypto_id(int $length) : string {
  * Returns whether we are both on the cli AND the cli is enabled.
  * @return boolean
  */
-function is_cli() {
+function is_cli() : bool {
 	global $settings;
 	return php_sapi_name() == "cli" &&
 		$settings->cli_enabled;
+}
+
+function metrics2servertiming(stdClass $perfdata) : string {
+	$result = [];
+	foreach($perfdata as $key => $value) {
+		$result[] = str_replace("_", "", $key).";dur=$value";
+	}
+	return "foo, ".implode(", ", $result);
 }
