@@ -216,7 +216,8 @@ input[type=submit] {
 /* TODO: Actually refine this properly */
 .similar-page-suggestions { grid-area: similar-suggestions; }
 .similar-page-suggestions > h2 { text-align: center; }
-.similar-page-suggestions-list { list-style-type: none; display: flex; flex-wrap: wrap; justify-content: space-evenly; }
+.similar-page-suggestions-list { list-style-type:none;
+padding: 0; display: grid; grid:auto / repeat(auto-fit, minmax(min(15em, 100%), 1fr)); justify-items: center; grid-gap: 1em; }
 
 .comments	{ grid-area: comments;	}
 
@@ -231,4 +232,14 @@ footer		{ grid-area: footer;	}
 	body { grid-template-columns: 1fr 16fr 1fr; }
 	nav { flex-direction: column !important; }
 	nav > span { padding: 0.5em; }
+	
+	.nav-more {
+		align-self: normal;
+	}
+	.nav-more > label { display: block; text-align: center; }
+	
+	input[type=checkbox]:checked ~ .nav-more-menu {
+		position: static;
+		margin-top: 1em; 
+	}
 }

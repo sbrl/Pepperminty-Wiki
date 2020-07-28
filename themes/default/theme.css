@@ -313,9 +313,12 @@ footer { padding: 2rem; }
 	body {
 		margin: 0;
 	}
-	nav.top {
+	nav.top, nav.bottom {
 		position: static;
 		flex-direction: column;
+	}
+	input[type=checkbox]:checked ~ .nav-more-menu {
+		position: static;
 	}
 	nav.mega-menu {
 		flex-direction: column;
