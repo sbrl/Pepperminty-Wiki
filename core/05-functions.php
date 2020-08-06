@@ -210,23 +210,26 @@ function get_subpages($pageindex, $pagename)
 /**
  * Makes sure that a subpage's parents exist.
  * Note this doesn't check the pagename itself.
- * @package core
- * @param string	$pagename	The pagename to check.
+ * @package	core
+ * @param	string	$pagename	The pagename to check.
+ * @param	bool	$create_dir	Whether to create an associated directory for subpages or not.
  */
-function check_subpage_parents(string $pagename)
+function check_subpage_parents(string $pagename, bool $create_dir = true)
 {
 	global $pageindex, $paths, $env;
 	// Save the new pageindex and return if there aren't any more parent pages to check
 	if(strpos($pagename, "/") === false)
 		return save_pageindex();
-
+	
+	$pagename = makepathsafe($pagename); // Just in case
+	
 	$parent_pagename = substr($pagename, 0, strrpos($pagename, "/"));
 	$parent_page_filename = "$parent_pagename.md";
 	if(!file_exists($env->storage_prefix . $parent_page_filename))
 	{
 		// This parent page doesn't exist! Create it and add it to the page index.
 		touch($env->storage_prefix . $parent_page_filename, 0);
-
+		
 		$newentry = new stdClass();
 		$newentry->filename = $parent_page_filename;
 		$newentry->size = 0;
@@ -234,8 +237,13 @@ function check_subpage_parents(string $pagename)
 		$newentry->lasteditor = "none";
 		$pageindex->$parent_pagename = $newentry;
 	}
+	if($create_dir) {
+		$dirname = $env->storage_prefix . $parent_pagename;
+		if(!file_exists($dirname))
+			mkdir($dirname, 0755, true);
+	}
 
-	check_subpage_parents($parent_pagename);
+	check_subpage_parents($parent_pagename, $create_dir);
 }
 
 /**

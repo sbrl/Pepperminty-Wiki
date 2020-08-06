@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page mover",
-	"version" => "0.9.4",
+	"version" => "0.9.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to move pages.",
 	"id" => "page-move",
@@ -72,21 +72,25 @@ register_module([
 			
 			if(isset($pageindex->$page->uploadedfile) and
 				file_exists($new_name))
-				exit(page_renderer::render_main("Moving $env->page - Error - $settings->sitename", "<p>Whilst moving the file associated with $env->page, $settings->sitename detected a pre-existing file on the server's file system. Because $settings->sitename can't determine whether the existing file is important to another component of $settings->sitename or it's host web server, the move have been aborted - just in case.</p>
+				exit(page_renderer::render_main("Moving $env->page - Error - $settings->sitename", "<p>Whilst moving the file associated with $env->page, $settings->sitename detected a pre-existing file on the server's file system. Because $settings->sitename can't determine whether the existing file is important to another component of $settings->sitename or it's host web server, the move has been aborted - just in case.</p>
 				<p>If you know that this move is actually safe, please get your site administrator (" . $settings->admindetails_name . ") to perform the move manually. Their contact address can be found at the bottom of every page (including this one).</p>"));
+				
+			// Make sure that the parent page exists
+			$do_create_dir = true;
+			if(strpos($new_name, "/", $do_create_dir) === false)
+				$do_create_dir = false;
+			check_subpage_parents($new_name, $do_create_dir);
 			
 			// Move the page in the page index
 			$pageindex->$new_name = new stdClass();
-			foreach($pageindex->$page as $key => $value)
-			{
+			foreach($pageindex->$page as $key => $value) {
 				$pageindex->$new_name->$key = $value;
 			}
 			unset($pageindex->$page);
 			$pageindex->$new_name->filename = "$new_name.md";
 			
 			// If this page has an associated file, then we should move that too
-			if(!empty($pageindex->$new_name->uploadedfile))
-			{
+			if(!empty($pageindex->$new_name->uploadedfile)) {
 				// Update the filepath to point to the description and not the image
 				$pageindex->$new_name->filename = $pageindex->$new_name->filename . ".md";
 				// Move the file in the pageindex
@@ -96,8 +100,7 @@ register_module([
 			}
 			
 			// Come to think about it, we should probably move the history while we're at it
-			foreach($pageindex->$new_name->history as &$revisionData)
-			{
+			foreach($pageindex->$new_name->history as &$revisionData) {
 				// We're only interested in edits
 				if($revisionData->type !== "edit") continue;
 				$newRevisionName = $pageindex->$new_name->filename . ".r$revisionData->rid";
