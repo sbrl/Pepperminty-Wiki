@@ -647,14 +647,21 @@ class PeppermintParsedown extends ParsedownExtra
 						$previewSize = 300;
 						$previewUrl = "?action=preview&size=$previewSize&page=" . rawurlencode($pagename);
 						
+						$previewType = substr($mime_type, 0, strpos($mime_type, "/"));
+						if($mime_type == "application/pdf")
+							$previewType = "pdf";
+						
 						$previewHtml = "";
-						switch(substr($mime_type, 0, strpos($mime_type, "/")))
+						switch($previewType)
 						{
 							case "video":
 								$previewHtml .= "<video src='$previewUrl' controls preload='metadata'>$pagename</video>\n";
 								break;
 							case "audio":
 								$previewHtml .= "<audio src='$previewUrl' controls preload='metadata'>$pagename</audio>\n";
+								break;
+							case "pdf":
+								$previewHtml .= "<object type='application/pdf' data='$previewUrl' style='width: {$previewStyle}px;'></object>";
 								break;
 							case "application":
 							case "image":
@@ -1124,7 +1131,11 @@ class PeppermintParsedown extends ParsedownExtra
 			{
 				// We have a short url! Expand it.
 				$shortImageUrl = $imageUrl;
-				$imageUrl = "index.php?action=preview&size=" . max($imageSize["x"], $imageSize["y"]) ."&page=" . rawurlencode($imageUrl);
+				$imageUrl = "index.php?action=preview";
+				if($imageSize !== false) $imageUrl .= "&size=" . max($imageSize["x"], $imageSize["y"]);
+				else $imageUrl .= "&size=original";
+				// This has to be last in order for the extension auto-detection to work correctly
+				$imageUrl .= "&page=" . rawurlencode($shortImageUrl);
 			}
 			
 			$style = "";
@@ -1135,9 +1146,30 @@ class PeppermintParsedown extends ParsedownExtra
 			
 			$urlExtension = pathinfo($imageUrl, PATHINFO_EXTENSION);
 			$urlType = system_extension_mime_type($urlExtension);
+			$embed_type = substr($urlType, 0, strpos($urlType, "/"));
+			if($urlType == "application/pdf") $embed_type = "pdf";
 			$result = [];
-			switch(substr($urlType, 0, strpos($urlType, "/")))
+			switch($embed_type)
 			{
+				case "pdf":
+					$imageUrl = preg_replace("/&size=[0-9]+/", "&size=original", $imageUrl);
+					if($imageSize === false) $style .= "width: 100%;";
+					else $style = str_replace("max-width", "width", $style);
+					
+					$result = [
+						"extent" => strlen($matches[0]),
+						"element" => [
+							"name" => "object",
+							"text" => "",
+							"attributes" => [
+								"type" => "application/pdf",
+								"data" => $imageUrl,
+								"style" => trim($style)
+							]
+						]
+					];
+					break;
+				
 				case "audio":
 					$result = [
 						"extent" => strlen($matches[0]),
@@ -1189,14 +1221,16 @@ class PeppermintParsedown extends ParsedownExtra
 			// ~ Image linker ~
 			
 			$imageHref = $shortImageUrl !== false ? "?page=" . rawurlencode($shortImageUrl) : $imageUrl;
-			$result["element"] = [
-				"name" => "a",
-				"attributes" => [
-					"href" => $imageHref
-				],
-				"text" => [$result["element"]],
-				"handler" => "elements"
-			];
+			if($embed_type !== "pdf") {
+				$result["element"] = [
+					"name" => "a",
+					"attributes" => [
+						"href" => $imageHref
+					],
+					"text" => [$result["element"]],
+					"handler" => "elements"
+				];
+			}
 			
 			// ~
 			

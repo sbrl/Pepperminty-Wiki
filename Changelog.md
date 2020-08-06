@@ -26,6 +26,7 @@ Make sure you have PHP 7.3+ when you update past this point! It isn't the end of
      - `comment_enabled` controls whether _anyone_ is allowed to comment at all or not
      - `comment_hide_all` determines whether the commenting system displays anything at all (if disabled, it's (almost) like the `feature-comments` doesn't exist - consider using the downloader to exclude the commenting system instead of enabling this setting)
      - `avatars_gravatar_enabled` determines whether redirects to [gravatar.com](https://gravatar.com/) should be performed if a user hasn't yet uploaded an avatar (if disabled then a blank image is returned instead of a redirect).
+ - PDF previews now show the browser's UI when embedded in pages with the `![alt text](File/somefile.png)` syntax
 
 ### Changed
  - **New policy:** Only [officially supported](https://www.php.net/supported-versions.php) versions of PHP are officially supported by Pepperminty Wiki.
@@ -53,6 +54,7 @@ Make sure you have PHP 7.3+ when you update past this point! It isn't the end of
  - Fixed an obscure bug in the search engine when excluding terms that appear both in a page's title and body
  - Squashed a warning at the top of search results (more insight is needed though to squash the inconsistencies in the search index that creep in though)
  - Removed annoying scrollbars when editing long pages
+ - Fixed an obscure warning when previewing PDFs
 
 
 ## v0.21.1-hotfix1

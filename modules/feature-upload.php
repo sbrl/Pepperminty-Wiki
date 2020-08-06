@@ -387,8 +387,7 @@ register_module([
 					break;
 				
 				case "application":
-					if($mime_type == "application/pdf")
-					{
+					if($mime_type == "application/pdf") {
 						$preview = new imagick();
 						$preview->readImage("{$filepath}[0]");
 						$preview->setResolution(300,300);
