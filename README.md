@@ -27,6 +27,7 @@ Pepperminty Wiki has been mentioned in a few places though:
 
  - [Twitter, by @flameborn](https://twitter.com/flameborn/status/1196916602953961472)
  - [Reddit, by u/flameborn](https://www.reddit.com/r/selfhosted/comments/d23mhx/yet_another_wiki/ezsu4rs?utm_source=share&utm_medium=web2x)
+ - @SeanFromIT has written an article describing their experience migrating from MediaWiki: [MediaWiki to Pepperminty Wiki Migration](https://feeney.mba/mediawikitopepperminty.html)
 
 ## Todo
 Here's a list of things that I want to add at some point (please feel free to [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls) and help out!).
