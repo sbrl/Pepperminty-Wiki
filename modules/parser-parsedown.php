@@ -566,6 +566,7 @@ class PeppermintParsedown extends ParsedownExtra
 	 *    ██    █████   ██ ████ ██ ██████  ██      ███████    ██    ██ ██ ██  ██ ██   ███
 	 *    ██    ██      ██  ██  ██ ██      ██      ██   ██    ██    ██ ██  ██ ██ ██    ██
 	 *    ██    ███████ ██      ██ ██      ███████ ██   ██    ██    ██ ██   ████  ██████
+	 * %templating
 	 */
 	/**
 	 * Parses templating definitions.
@@ -777,6 +778,7 @@ class PeppermintParsedown extends ParsedownExtra
 	 * ██      ███████ █████   ██      █████   ██████  ██    ██   ███
 	 * ██      ██   ██ ██      ██      ██  ██  ██   ██ ██    ██  ██ ██
 	 *  ██████ ██   ██ ███████  ██████ ██   ██ ██████   ██████  ██   ██
+	 * %checkbox
 	 */
 	protected function inlineCheckbox($fragment) {
 		// We're not interested if it's not at the beginning of a line
@@ -819,6 +821,7 @@ class PeppermintParsedown extends ParsedownExtra
  	 *    ██    █████     ███      ██
  	 *    ██    ██       ██ ██     ██
  	 *    ██    ███████ ██   ██    ██
+	 * %markedtext
  	 */
 	protected function inlineMark($fragment) {
 		// A question mark makes the PCRE 1-or-more + there lazy instead of greedy.
@@ -855,6 +858,7 @@ class PeppermintParsedown extends ParsedownExtra
 	 * ███████ ██      ██████  ██ ██████     ██
 	 *      ██ ██      ██   ██ ██ ██         ██
 	 * ██████   ██████ ██   ██ ██ ██         ██
+	 * %subsuperscript
 	 */
 	protected function inlineSuperscript($fragment) {
 		if(preg_match('/\^([^^]+?)\^/', $fragment["text"], $matches) !== 1)
@@ -902,6 +906,7 @@ class PeppermintParsedown extends ParsedownExtra
 	 * ███████ ██████  ██    ██ ██ ██      █████   ██████
 	 *      ██ ██      ██    ██ ██ ██      ██      ██   ██
 	 * ███████ ██       ██████  ██ ███████ ███████ ██   ██
+	 * %spoiler
 	 */
 	protected function inlineSpoiler($fragment) {
 		if(preg_match('/(?:\|\||>!)([^|]+?)(?:\|\||!<)/', $fragment["text"], $matches) !== 1)
@@ -942,6 +947,7 @@ class PeppermintParsedown extends ParsedownExtra
 	 * ██      ██ ██ ██  ██ █████   ███████
 	 * ██      ██ ██  ██ ██ ██  ██       ██
 	 * ███████ ██ ██   ████ ██   ██ ███████
+	 * %internallinks
 	 */
 	/**
 	 * Parses internal links
@@ -1058,6 +1064,7 @@ class PeppermintParsedown extends ParsedownExtra
 	 * ██ ██ ████ ██ ███████ ██   ███ █████   ███████
 	 * ██ ██  ██  ██ ██   ██ ██    ██ ██           ██
 	 * ██ ██      ██ ██   ██  ██████  ███████ ███████
+	 * %extendedimages
  	 */
  	/**
  	 * Parses the extended image syntax.
@@ -1272,6 +1279,7 @@ class PeppermintParsedown extends ParsedownExtra
 	 * ██    ██ ██████  ██   ███ ██████  ███████ ██   ██ █████
 	 * ██    ██ ██      ██    ██ ██   ██ ██   ██ ██   ██ ██
 	 *  ██████  ██       ██████  ██   ██ ██   ██ ██████  ███████
+	 * %codeblockupgrade
 	 */
 	
 	protected function blockFencedCodeComplete($block) {
@@ -1309,6 +1317,7 @@ class PeppermintParsedown extends ParsedownExtra
 	 * ███████ █████   ███████ ██   ██ █████   ██████
 	 * ██   ██ ██      ██   ██ ██   ██ ██      ██   ██
 	 * ██   ██ ███████ ██   ██ ██████  ███████ ██   ██
+	 * %header %toc
 	 */
 	
 	private $headingIdsUsed = [];
@@ -1485,6 +1494,7 @@ class PeppermintParsedown extends ParsedownExtra
 	 * ██    ██    ██    ██ ██      ██    ██    ██ █████   ███████
 	 * ██    ██    ██    ██ ██      ██    ██    ██ ██           ██
 	 *  ██████     ██    ██ ███████ ██    ██    ██ ███████ ███████
+	 * %utilities
 	 */
 	
 	/**
