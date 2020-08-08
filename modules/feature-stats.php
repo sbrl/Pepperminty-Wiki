@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Statistics",
-	"version" => "0.4.1",
+	"version" => "0.4.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
 	"id" => "feature-stats",
@@ -301,6 +301,10 @@ Subcommands:
 function update_statistics($update_all = false, $force = false)
 {
 	global $settings, $env, $paths, $statistic_calculators;
+	
+	// If the firstrun wizard isn't complete, then there's no point in updating the statistics index
+	if(isset($settings->firstrun_complete) && $settings->firstrun_complete == false)
+		return;
 	
 	$stats_mtime = filemtime($paths->statsindex);
 	

@@ -160,6 +160,30 @@ function path_resolve(string $path, string $basePath = null) {
 }
 
 /**
+ * Converts a filepath to a page name.
+ * @param  string $filepath The filepath to convert.
+ * @return string           The extracted pagename.
+ */
+function filepath_to_pagename(string $filepath) : string {
+	global $env;
+	// Strip the storage prefix, but only if it isn't a dot
+	if(starts_with($filepath, $env->storage_prefix) && $env->storage_prefix !== ".") {
+		$filepath = substr($filepath, strlen($env->storage_prefix));
+		// Strip the forward slash at the beginning
+		if($filepath[0] == "/" && $env->storage_prefix[-1] !== "/")
+			$filepath = substr($filepath, 1);
+	}
+	
+	if(preg_match("/\.r[0-9]+$/", $filepath) !== false)
+		$filepath = substr($filepath, 0, strrpos($filepath, ".r"));
+	
+	if(ends_with($filepath, ".md"))
+		$filepath = substr($filepath, 0, -3);
+	
+	return $filepath;
+}
+
+/**
  * Gets the name of the parent page to the specified page.
  * @apiVersion 0.15.0
  * @package core
@@ -303,9 +327,21 @@ function hide_email($str)
  *                        		of $haystack.
  * @return	bool	Whether $needle can be found at the beginning of $haystack.
  */
-function starts_with($haystack, $needle) {
+function starts_with(string $haystack, string $needle) : bool {
 	$length = strlen($needle);
 	return (substr($haystack, 0, $length) === $needle);
+}
+/**
+ * Checks to see if $hackstack ends with $needle.
+ * The matching bookend to starts_with.
+ * @package	core
+ * @param	string	$haystack	The haystack to search..
+ * @param	string	$needle		The needle to look for.
+ * @return	bool
+ */
+function ends_with(string $haystack, string $needle) : bool {
+	$length = strlen($needle);
+	return (substr($haystack, -$length) === $needle);
 }
 
 /**

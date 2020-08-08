@@ -7,6 +7,7 @@ Make sure you have PHP 7.3+ when you update past this point! It isn't the end of
 
 ### Added
  - [Module Api] Add new `search::invindex_term_getpageids`, and `search::invindex_term_getoffsets`, and `search::index_sort_freq` methods
+ - [Module Api] Add new `ends_with` and `filepath_to_pagename` core functions
  - Added new syntax features to PeppermintParsedown, inspired by ParsedownExtreme (which we couldn't get to work, and it wasn't working before as far as I can tell)
      - Checkboxes: `[ ]` and `[x]` after a bullet point or at the start of a line
      - Marked / highlighted text: `Some text ==marked text== more text`
@@ -42,6 +43,7 @@ Make sure you have PHP 7.3+ when you update past this point! It isn't the end of
      - A warning is generated in PHP 7.2 and below = [please upgrade](https://www.php.net/supported-versions.php) to PHP 7.3+! (#200)
  - [security] The `Secure` cookie flag is now automatically added when clients use HTTPS to prevent downgrade-based session stealing attacks (control this with the new `cookie_secure` setting)
  - Standardised prefixes to (most) `error_log()` calls to aid clarity in multi-wiki environments
+ - Improved pageindex rebuilder algorithm to search for and import history revisions - this helps when converting data from another wiki format
 
 ### Fixed
  - Squashed a warning when using the fenced code block syntax
@@ -58,6 +60,7 @@ Make sure you have PHP 7.3+ when you update past this point! It isn't the end of
  - Fixed an obscure warning when previewing PDFs (#202)
  - Ensure that the parent page exists when moving a page to be a child of a non-existent parent (#201)
  - Fixed templating (#203)
+ - Fixed warning from statistics engine during firstrun wizard
 
 
 ## v0.21.1-hotfix1

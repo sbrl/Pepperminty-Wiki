@@ -103,16 +103,45 @@ if(!file_exists($paths->pageindex))
 	
 	if(function_exists("history_add_revision")) {
 		$history_revs = glob_recursive($env->storage_prefix . "*.r*");
+		// It's very important that we read the history revisions in the right order and that we don't skip any
+		usort($history_revs, function($a, $b) {
+			preg_match("/[0-9]+$/", $a, $revid_a);
+			$revid_a = intval($revid_a[0]);
+			preg_match("/[0-9]+$/", $b, $revid_b);
+			$revid_b = intval($revid_b[0]);
+			return $revid_a - $revid_b;
+		});
+		$strlen_storageprefix = strlen($env->storage_prefix);
 		foreach($history_revs as $filename) {
-			preg_match("/[0-9]+$/", "Main Page.md.r0", $revid);
+			preg_match("/[0-9]+$/", $filename, $revid);
+			error_log("raw revid | ".var_export($revid, true));
 			if(count($revid) === 0) continue;
 			$revid = intval($revid[0]);
 			
-			// TODO: Extract the pagename here (maybe a function is worth implementing if we haven't already?)
+			$pagename = filepath_to_pagename($filename);
+			$filepath_stripped = substr($filename, $strlen_storageprefix);
 			
-			if($revid == 0 && ) {
-				
+			if(!isset($pageindex->$pagename->history))
+				$pageindex->$pagename->history = [];
+			
+			if(isset($pageindex->$pagename->history[$revid]))
+				continue;
+			
+			error_log("pagename: $pagename, revid: $revid, pageindex entry: ".var_export($pageindex->$pagename, true));
+			$newsize = filesize($filename);
+			$prevsize = 0;
+			if($revid > 0 && isset($pageindex->$pagename->history[$revid - 1])) {
+				$prevsize = filesize(end($pageindex->$pagename->history)->filename);
 			}
+			$pageindex->$pagename->history[$revid] = (object) [
+				"type" => "edit",
+				"rid" => $revid,
+				"timestamp" => filemtime($filename),
+				"filename" => $filepath_stripped,
+				"newsize" => $newsize,
+				"sizediff" => $newsize - $prevsize,
+				"editor" => "unknown"
+			];
 		}
 	}
 	
