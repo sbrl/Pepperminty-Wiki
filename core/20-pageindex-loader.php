@@ -8,6 +8,7 @@ if(!file_exists($paths->pageindex))
 {
 	$glob_str = $env->storage_prefix . "*.md";
 	$existingpages = glob_recursive($glob_str);
+	$existingpages_count = count($existingpages);
 	// Debug statements. Uncomment when debugging the pageindex regenerator.
 	// var_dump($env->storage_prefix);
 	// var_dump($glob_str);
@@ -15,7 +16,7 @@ if(!file_exists($paths->pageindex))
 	$pageindex = new stdClass();
 	// We use a for loop here because foreach doesn't loop over new values inserted
 	// while we were looping
-	for($i = 0; $i < count($existingpages); $i++)
+	for($i = 0; $i < $existingpages_count; $i++)
 	{
 		$pagefilename = $existingpages[$i];
 		
@@ -75,6 +76,19 @@ if(!file_exists($paths->pageindex))
 				// in order for it to be indexed
 				$existingpages[] = $subpage_parent_filename;
 			}
+		}
+		
+		if(function_exists("history_add_revision") && !file_exists("{$pagefilename}.r0")) { // Can't use module_exists - too early
+			copy($pagefilename, "{$pagefilename}.r0");
+			$newentry->history = [ (object) [
+				"type" => "edit",
+				"rid" => 0,
+				"timestamp" => $newentry->lastmodified,
+				"filename" => "{$pagefilename}.r0",
+				"newsize" => $newentry->size,
+				"sizediff" => $newentry->size,
+				"editor" => "unknown"
+			] ];
 		}
 
 		// Store the new entry in the new page index
