@@ -33,6 +33,12 @@ if(!file_exists($paths->pageindex))
 		$newentry->lastmodified = filemtime($pagefilename); // Store the date last modified
 		// Todo find a way to keep the last editor independent of the page index
 		$newentry->lasteditor = "unknown"; // Set the editor to "unknown"
+		
+		
+		
+		// POTENTIAL BUG: If $env->storage_prefix is not ., then this we need to be more intelligent here
+		
+		
 		// Extract the name of the (sub)page without the ".md"
 		$pagekey = mb_substr($newentry->filename, 0, -3);
 		
@@ -94,6 +100,22 @@ if(!file_exists($paths->pageindex))
 		// Store the new entry in the new page index
 		$pageindex->$pagekey = $newentry;
 	}
+	
+	if(function_exists("history_add_revision")) {
+		$history_revs = glob_recursive($env->storage_prefix . "*.r*");
+		foreach($history_revs as $filename) {
+			preg_match("/[0-9]+$/", "Main Page.md.r0", $revid);
+			if(count($revid) === 0) continue;
+			$revid = intval($revid[0]);
+			
+			// TODO: Extract the pagename here (maybe a function is worth implementing if we haven't already?)
+			
+			if($revid == 0 && ) {
+				
+			}
+		}
+	}
+	
 	save_pageindex();
 	unset($existingpages);
 }
