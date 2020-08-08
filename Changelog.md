@@ -57,6 +57,7 @@ Make sure you have PHP 7.3+ when you update past this point! It isn't the end of
  - Removed annoying scrollbars when editing long pages
  - Fixed an obscure warning when previewing PDFs (#202)
  - Ensure that the parent page exists when moving a page to be a child of a non-existent parent (#201)
+ - Fixed templating (#203)
 
 
 ## v0.21.1-hotfix1

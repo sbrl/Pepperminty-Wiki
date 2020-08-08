@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.11",
+	"version" => "0.11.1",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation.",
 	"extra_data" => [
@@ -420,7 +420,7 @@ Insert text here
 ";
 			
 			foreach($settings->parser_ext_renderers as $code => $renderer) {
-				$row = array_map("htmlentities", [
+				$row = array_map(function($value) { return htmlentities($value, ENT_COMPAT|ENT_HTML5); }, [
 					$renderer->name,
 					$code,
 					$renderer->description,
@@ -589,27 +589,24 @@ class PeppermintParsedown extends ParsedownExtra
 			$variableKey = trim($matches[1]);
 			
 			$variableValue = false;
-			switch ($variableKey)
-			{
+			switch ($variableKey) {
 				case "@": // Lists all variables and their values
 					if(!empty($params)) {
 						$variableValue = "<table>
 	<tr><th>Key</th><th>Value</th></tr>\n";
-						foreach($params as $key => $value)
-						{
+						foreach($params as $key => $value) {
 							$variableValue .= "\t<tr><td>" . $this->escapeText($key) . "</td><td>" . $this->escapeText($value) . "</td></tr>\n";
 						}
 						$variableValue .= "</table>";
 					}
 					else {
-						$variableValue = "<em>(no parameters have been specified)</em>";
+						$variableValue = "<em>(no variables are currently defined)</em>";
 					}
 					break;
 				case "#": // Shows a stack trace
 					$variableValue = "<ol start=\"0\">\n";
 					$variableValue .= "\t<li>$env->page</li>\n";
-					foreach($this->paramStack as $curStackEntry)
-					{
+					foreach($this->paramStack as $curStackEntry) {
 						$variableValue .= "\t<li>" . $curStackEntry["pagename"] . "</li>\n";
 					}
 					$variableValue .= "</ol>\n";
@@ -656,10 +653,10 @@ class PeppermintParsedown extends ParsedownExtra
 						switch($previewType)
 						{
 							case "video":
-								$previewHtml .= "<video src='$previewUrl' controls preload='metadata'>$pagename</video>\n";
+								$previewHtml .= "<video src='$previewUrl' controls preload='metadata'>".$this->escapeText($pagename)."</video>\n";
 								break;
 							case "audio":
-								$previewHtml .= "<audio src='$previewUrl' controls preload='metadata'>$pagename</audio>\n";
+								$previewHtml .= "<audio src='$previewUrl' controls preload='metadata'>".$this->escapeText($pagename)."</audio>\n";
 								break;
 							case "pdf":
 								$previewHtml .= "<object type='application/pdf' data='$previewUrl' style='width: {$previewStyle}px;'></object>";
@@ -682,16 +679,21 @@ class PeppermintParsedown extends ParsedownExtra
 					break;
 			}
 			if(isset($params[$variableKey]))
-			{
-				$variableValue = $params[$variableKey];
-				$variableValue = $this->escapeText($variableValue);
-			}
+				$variableValue = $this->escapeText($params[$variableKey]);
 			
 			if($variableValue !== false)
 			{
 				return [
 					"extent" => strlen($matches[0]),
-					"markup" => $variableValue
+					"element" => [
+						"name" => "span",
+						"attributes" => [
+							"class" => "template-var-value"
+						],
+						// rawHtml is fine here 'cause we escape above
+						// Note also that we *must* return some sort of element here: we can't just return rawHtml directly. It needs to be a property of an element.
+						"rawHtml" => $variableValue
+					]
 				];
 			}
 		}
