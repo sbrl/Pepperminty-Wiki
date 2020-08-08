@@ -22,25 +22,21 @@ if(!file_exists($paths->pageindex))
 		
 		// Create a new entry
 		$newentry = new stdClass();
-		$newentry->filename = substr( // Store the filename, whilst trimming the storage prefix
+		$newentry->filename = mb_substr( // Store the filename, whilst trimming the storage prefix
 			$pagefilename,
 			mb_strlen(preg_replace("/^\.\//iu", "", $env->storage_prefix)) // glob_recursive trim the ./ from returned filenames , so we need to as well
 		);
 		// Remove the `./` from the beginning if it's still hanging around
-		if(substr($newentry->filename, 0, 2) == "./")
-			$newentry->filename = substr($newentry->filename, 2);
+		if(mb_substr($newentry->filename, 0, 2) == "./")
+			$newentry->filename = mb_substr($newentry->filename, 2);
 		$newentry->size = filesize($pagefilename); // Store the page size
 		$newentry->lastmodified = filemtime($pagefilename); // Store the date last modified
 		// Todo find a way to keep the last editor independent of the page index
 		$newentry->lasteditor = "unknown"; // Set the editor to "unknown"
 		
-		
-		
-		// POTENTIAL BUG: If $env->storage_prefix is not ., then this we need to be more intelligent here
-		
-		
 		// Extract the name of the (sub)page without the ".md"
-		$pagekey = mb_substr($newentry->filename, 0, -3);
+		$pagekey = filepath_to_pagename($newentry->filename);
+		error_log("pagename '$newentry->filename' → filepath '$pagekey'");
 		
 		if(file_exists($env->storage_prefix . $pagekey) && // If it exists...
 			!is_dir($env->storage_prefix . $pagekey)) // ...and isn't a directory
@@ -84,6 +80,7 @@ if(!file_exists($paths->pageindex))
 			}
 		}
 		
+		// If the initial revision doesn't exist on disk, create it (if it does, then we handle that later)
 		if(function_exists("history_add_revision") && !file_exists("{$pagefilename}.r0")) { // Can't use module_exists - too early
 			copy($pagefilename, "{$pagefilename}.r0");
 			$newentry->history = [ (object) [
@@ -111,6 +108,7 @@ if(!file_exists($paths->pageindex))
 			$revid_b = intval($revid_b[0]);
 			return $revid_a - $revid_b;
 		});
+		// We can guarantee that the direcotry separator is present on the end - it's added explicitly earlier
 		$strlen_storageprefix = strlen($env->storage_prefix);
 		foreach($history_revs as $filename) {
 			preg_match("/[0-9]+$/", $filename, $revid);

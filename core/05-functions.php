@@ -167,18 +167,16 @@ function path_resolve(string $path, string $basePath = null) {
 function filepath_to_pagename(string $filepath) : string {
 	global $env;
 	// Strip the storage prefix, but only if it isn't a dot
-	if(starts_with($filepath, $env->storage_prefix) && $env->storage_prefix !== ".") {
-		$filepath = substr($filepath, strlen($env->storage_prefix));
-		// Strip the forward slash at the beginning
-		if($filepath[0] == "/" && $env->storage_prefix[-1] !== "/")
-			$filepath = substr($filepath, 1);
-	}
+	if(starts_with($filepath, $env->storage_prefix) && $env->storage_prefix !== ".")
+		$filepath = mb_substr($filepath, mb_strlen($env->storage_prefix));
 	
-	if(preg_match("/\.r[0-9]+$/", $filepath) !== false)
-		$filepath = substr($filepath, 0, strrpos($filepath, ".r"));
+	// If a revision number is detected, strip it
+	if(preg_match("/\.r[0-9]+$/", $filepath) > 0)
+		$filepath = mb_substr($filepath, 0, mb_strrpos($filepath, ".r"));
 	
+	// Strip the .md file extension
 	if(ends_with($filepath, ".md"))
-		$filepath = substr($filepath, 0, -3);
+		$filepath = mb_substr($filepath, 0, -3);
 	
 	return $filepath;
 }
