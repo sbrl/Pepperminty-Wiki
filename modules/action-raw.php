@@ -1,19 +1,20 @@
 <?php
 register_module([
 	"name" => "Raw page source",
-	"version" => "0.7",
+	"version" => "0.8",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a 'raw' action that shows you the raw source of a page.",
 	"id" => "action-raw",
 	"code" => function() {
 		global $settings;
 		/**
-		 * @api {get} ?action=raw&page={pageName} Get the raw source code of a page
+		 * @api {get} ?action=raw&page={pageName}[&typeheader={typeName}] Get the raw source code of a page
 		 * @apiName RawSource
 		 * @apiGroup Page
 		 * @apiPermission Anonymous
 		 * 
-		 * @apiParam {string}	page	The page to return the source of.
+		 * @apiParam	{string}	page		The page to return the source of.
+		 * @apiParam	{string}	typeheader	Optional; v0.22+. The content-type header to set on the response. If not set, defaults to text/markdown. Valid values: plaintext (returns text/plain). Does NOT change the content delivered. Useful for debugging if your browser doesn't display text returned with text/markdown.
 		 */
 		
 		/*
@@ -30,8 +31,11 @@ register_module([
 				http_response_code(404);
 				exit("Error: The page with the name $env->page could not be found.\n");
 			}
-			
-			header("content-type: text/markdown");
+			if(isset($_GET["typeheader"]) && $_GET["typeheader"] == "plaintext")
+				header("content-type: text/plain");
+			else
+				header("content-type: text/markdown");
+			header("content-disposition: inline");
 			header("content-length: " . filesize($env->page_filename));
 			exit(file_get_contents($env->page_filename));
 		});

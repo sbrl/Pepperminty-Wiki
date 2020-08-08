@@ -27,6 +27,7 @@ Make sure you have PHP 7.3+ when you update past this point! It isn't the end of
      - `comment_hide_all` determines whether the commenting system displays anything at all (if disabled, it's (almost) like the `feature-comments` doesn't exist - consider using the downloader to exclude the commenting system instead of enabling this setting)
      - `avatars_gravatar_enabled` determines whether redirects to [gravatar.com](https://gravatar.com/) should be performed if a user hasn't yet uploaded an avatar (if disabled then a blank image is returned instead of a redirect).
  - PDF previews now show the browser's UI when embedded in pages with the `![alt text](File/somefile.png)` syntax
+- [Rest API] Add new `typeheader` GET parameter to `raw` action (ref [Firefox bug 1319262](https://bugzilla.mozilla.org/show_bug.cgi?id=1319262))
 
 ### Changed
  - **New policy:** Only [officially supported](https://www.php.net/supported-versions.php) versions of PHP are officially supported by Pepperminty Wiki.
