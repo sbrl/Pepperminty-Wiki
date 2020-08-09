@@ -44,6 +44,7 @@ Make sure you have PHP 7.3+ when you update past this point! It isn't the end of
  - [security] The `Secure` cookie flag is now automatically added when clients use HTTPS to prevent downgrade-based session stealing attacks (control this with the new `cookie_secure` setting)
  - Standardised prefixes to (most) `error_log()` calls to aid clarity in multi-wiki environments
  - Improved pageindex rebuilder algorithm to search for and import history revisions - this helps when converting data from another wiki format
+ - Improved spam protection when hiding email addresses. Javascript is now required to decode email addresses - please [get in touch](https://github.com/sbrl/Pepperminty-Wiki/issues/new) if this is a problem for whatever reason. I take accessibility _very_ seriously.
 
 ### Fixed
  - Squashed a warning when using the fenced code block syntax
