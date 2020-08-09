@@ -289,6 +289,8 @@ function makepathsafe($string)
 	$string = preg_replace("/\.+/", ".", $string);
 	// Don't allow slashes at the beginning
 	$string = ltrim($string, "\\/");
+	// Don't allow dots on their own
+	$string = preg_replace(["/^\.\\/|\\/\.$/", "/\\/\.\\//"], ["", "/"], $string);
 	return $string;
 }
 
