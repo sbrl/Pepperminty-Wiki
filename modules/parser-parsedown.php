@@ -408,7 +408,8 @@ register_module([
 			<tr><td><code>{{{~}}}</code></td><td>Outputs the requested page's name.</td></tr>
 			<tr><td><code>{{{*}}}</code></td><td>Outputs a comma separated list of all the subpages of the current page.</td></tr>
 			<tr><td><code>{{{+}}}</code></td><td>Shows a gallery containing all the files that are sub pages of the current page.</td></tr>
-		</table>");
+		</table>
+		<p>Note that a page <em>doesn't not</em> need to be included as a template to use these variables.");
 		if($settings->parser_ext_renderers_enabled) {
 			$doc_help = "<p>$settings->sitename supports external renderers. External renderers take the content of a code fence block, like this:</p>
 			<pre><code>```language_code
