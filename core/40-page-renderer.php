@@ -128,8 +128,7 @@ class page_renderer
 		if(!is_callable($function))
 		{
 			http_response_code(500);
-			$admin_email = hide_email($settings->admindetails_email);
-			exit(page_renderer::render("$settings->sitename - Module Error", "<p>$settings->sitename has got a misbehaving module installed that tried to register an invalid HTML handler with the page renderer. Please contact $settings->sitename's administrator {$settings->admindetails_name} at <a href='mailto:$admin_email'>$admin_email</a>."));
+			exit(page_renderer::render("$settings->sitename - Module Error", "<p>$settings->sitename has got a misbehaving module installed that tried to register an invalid HTML handler with the page renderer. Please contact $settings->sitename's administrator {$settings->admindetails_name} at ".hide_email($settings->admindetails_email)."."));
 		}
 
 		self::$part_processors[] = $function;

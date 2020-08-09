@@ -295,30 +295,30 @@ function makepathsafe($string)
 }
 
 /**
- * Hides an email address from bots by adding random html entities.
- * @todo			Make this more clevererer :D
+ * Hides an email address from bots. Returns a fragment of HTML that contains the mangled email address.
  * @package core
- * @param	string	$str	The original email address
- * @return	string			The mangled email address.
+ * @param	string	$str			The original email address
+ * @param	string	$display_text	The display text for the resulting HTML - if null then the original email address is used.
+ * @return	string	The mangled email address.
  */
-function hide_email($str)
+function hide_email(string $email, string $display_text = null) : string
 {
-	$hidden_email = "";
-	for($i = 0; $i < strlen($str); $i++)
-	{
-		if($str[$i] == "@")
-		{
-			$hidden_email .= "&#" . ord("@") . ";";
-			continue;
-		}
-		if(rand(0, 1) == 0)
-			$hidden_email .= $str[$i];
-		else
-			$hidden_email .= "&#" . ord($str[$i]) . ";";
+	$enc = json_encode([ $email, $display_text ]);
+	$len = strlen($enc);
+	$pool = []; for($i = 0; $i < $len; $i++) $pool[] = $i;
+	$a = []; $b = [];
+	for($i = 0; $i < $len; $i++) {
+		$n = random_int(0, $len - $i - 1);
+		$j = array_splice($pool, $n, 1)[0]; $b[] = $j;
+		// echo("chose ".$enc[$j].", index $j, n $n\n");
+		$a[] = $enc[$j];
 	}
-
-	return $hidden_email;
+	$a = base64_encode(implode("|", $a));
+	$b = base64_encode(implode("|", $b));
+	$span_id = "he-".crypto_id(16);
+	return "<a href='#protected-with-javascript' id='$span_id'>[protected with javascript]</span><script>(() => {let c=\"$a|$b\".split('|').map(atob).map(s=>s.split('|'));let d=[],e=document.getElementById('$span_id');c[1].map((n,i)=>d[parseInt(n)]=c[0][i]);d=JSON.parse(d.join(''));e.textContent=d[1]==null?d[0]:d[1];e.setAttribute('href', 'mailto:'+d[0])})();</script>";
 }
+
 /**
  * Checks to see if $haystack starts with $needle.
  * @package	core

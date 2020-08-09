@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "User Preferences",
-	"version" => "0.4",
+	"version" => "0.4.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a user preferences page, letting people do things like change their email address and password.",
 	"id" => "feature-user-preferences",
@@ -135,7 +135,7 @@ register_module([
 			// Save the user's preferences
 			if(!save_userdata()) {
 				http_response_code(503);
-				exit(page_renderer::render_main("Error Saving Preferences - $settings->sitename", "<p>$settings->sitename had some trouble saving your preferences! Please contact $settings->admindetails_name, $settings->sitename's administrator and tell them about this error if it still occurs in 5 minutes. They can be contacted by email at this address: <a href='mailto:" . hide_email($settings->admindetails_email) . "'>" . hide_email($settings->admindetails_email) . "</a>.</p>"));
+				exit(page_renderer::render_main("Error Saving Preferences - $settings->sitename", "<p>$settings->sitename had some trouble saving your preferences! Please contact $settings->admindetails_name, $settings->sitename's administrator and tell them about this error if it still occurs in 5 minutes. They can be contacted by email at this address: ".hide_email($settings->admindetails_email).".</p>"));
 			}
 			
 			exit(page_renderer::render_main("Preferences Saved Successfully - $settings->sitename", "<p>Your preferences have been saved successfully! You could go back your <a href='?action=user-preferences'>preferences page</a>, or on to the <a href='?page=" . rawurlencode($settings->defaultpage) . "'>$settings->defaultpage</a>.</p>

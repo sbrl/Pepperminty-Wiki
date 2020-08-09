@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.3.2",
+	"version" => "0.3.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
@@ -67,7 +67,7 @@ register_module([
 			if(!file_exists($comment_filename)) {
 				if(file_put_contents($comment_filename, "[]\n") === false) {
 					http_response_code(503);
-					exit(page_renderer::renderer_main("Error posting comment - $settings->sitename", "<p>$settings->sitename ran into a problem whilst creating a file to save your comment to! Please contact <a href='mailto:" . hide_email($settings->admindetails_email) . "'>$settings->admindetails_name</a>, $settings->sitename's administrator and tell them about this problem.</p>"));
+					exit(page_renderer::renderer_main("Error posting comment - $settings->sitename", "<p>$settings->sitename ran into a problem whilst creating a file to save your comment to! Please contact " . hide_email($settings->admindetails_email, $settings->admindetails_name) . ", $settings->sitename's administrator and tell them about this problem.</p>"));
 				}
 			}
 			
@@ -120,7 +120,7 @@ register_module([
 			// Save the comments back to disk
 			if(file_put_contents($comment_filename, json_encode($comment_data, JSON_PRETTY_PRINT)) === false) {
 				http_response_code(503);
-				exit(page_renderer::renderer_main("Error posting comment - $settings->sitename", "<p>$settings->sitename ran into a problem whilst saving your comment to disk! Please contact <a href='mailto:" . hide_email($settings->admindetails_email) . "'>$settings->admindetails_name</a>, $settings->sitename's administrator and tell them about this problem.</p>"));
+				exit(page_renderer::renderer_main("Error posting comment - $settings->sitename", "<p>$settings->sitename ran into a problem whilst saving your comment to disk! Please contact " . hide_email($settings->admindetails_email, $settings->admindetails_name) . ", $settings->sitename's administrator and tell them about this problem.</p>"));
 			}
 			
 			// Add a recent change if the recent changes module is installed
@@ -198,7 +198,7 @@ register_module([
 			
 			if(!file_put_contents($comment_filename, json_encode($comments))) {
 				http_response_code(503);
-				exit(page_renderer::render_main("Server Error - Deleting Comment - $settings->sitename", "<p>While $settings->sitename was able to delete the comment with the id <code>" . htmlentities($target_id) . "</code> on the page <em>$env->page</em>, it couldn't save the changes back to disk. Please contact <a href='mailto:" . hide_email($settings->admindetails_email) . "'>$settings->admindetails_name</a>, $settings->sitename's local friendly administrator about this issue.</p>"));
+				exit(page_renderer::render_main("Server Error - Deleting Comment - $settings->sitename", "<p>While $settings->sitename was able to delete the comment with the id <code>" . htmlentities($target_id) . "</code> on the page <em>$env->page</em>, it couldn't save the changes back to disk. Please contact " . hide_email($settings->admindetails_email, $settings->admindetails_name) . ", $settings->sitename's local friendly administrator about this issue.</p>"));
 			}
 			
 			exit(page_renderer::render_main("Comment Deleted - $settings->sitename", "<p>The comment with the id <code>" . htmlentities($target_id) . "</code> on the page <em>$env->page</em> has been deleted successfully. <a href='?page=" . rawurlencode($env->page) . "&redirect=no'>Go back</a> to " . htmlentities($env->page) . ".</p>"));
