@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Reading time estimator",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Displays the approximate reading time for a page beneath it's title.",
 	"id" => "feature-readingtime",
@@ -44,7 +44,10 @@ register_module([
  * @return	array	An array in the form [ low_time, high_time ] in minutes
  */
 function estimate_reading_time(string $text, string $lang = "en") : array {
-	$chars_count = mb_strlen($text);
+	$chars_count = mb_strlen(preg_replace("/\s+?/", "", strtr($text, [
+		"[" => "", "]" => "", "(" => "", ")" => "",
+		"|" => "", "#" => "", "*" => ""
+	])));
 	$langs = [
 		"en" => (object) [ "cpm" => 987, "variance" => 118 ],
 		"ar" => (object) [ "cpm" => 612, "variance" => 88 ],
