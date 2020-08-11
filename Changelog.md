@@ -45,6 +45,7 @@ Make sure you have PHP 7.3+ when you update past this point! It isn't the end of
  - Standardised prefixes to (most) `error_log()` calls to aid clarity in multi-wiki environments
  - Improved pageindex rebuilder algorithm to search for and import history revisions - this helps when converting data from another wiki format
  - Improved spam protection when hiding email addresses. Javascript is now required to decode email addresses - please [get in touch](https://github.com/sbrl/Pepperminty-Wiki/issues/new) if this is a problem for whatever reason. I take accessibility _very_ seriously.
+ - Bump weighting of title and tag matches in search results (delete the `search_title_matches_weighting` and `search_tags_matches_weighting` settings to get the new weightings)
 
 ### Fixed
  - Squashed a warning when using the fenced code block syntax
