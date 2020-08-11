@@ -50,7 +50,7 @@ Make sure you have PHP 7.3+ when you update past this point! It isn't the end of
  - Squashed a warning when using the fenced code block syntax
  - If a redirect page sends you to create a page that doesn't exist, a link back to the redirect page itself is now displayed
  - Really fix bots getting into infinite loops on the login page this time by marking all login pages as `noindex, nofollow` with a robots `<meta />` tag
- - Navigating to a redirect page from a page list will no longer cause you to automatically follow the redirect
+ - Navigating to a redirect page from a page list or the recent changes list will no longer cause you to automatically follow the redirect
  - Limited sidebar size to 20% of the screen width at most
  - Fix the [large blank space problem](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Changelog.md#fixed-3) in all themes
  - Squashed the text `\A` appearing before tags at the bottom of pages for some users ([ref](https://gitter.im/Pepperminty-Wiki/Lobby?at=5f0632068342f4627401f145))
