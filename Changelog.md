@@ -2,7 +2,7 @@
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
 
-## v0.22-dev
+## v0.22-beta1
 Make sure you have PHP 7.3+ when you update past this point! It isn't the end of the world if you don't, but it will make you more secure if you do.
 
 ### Added
