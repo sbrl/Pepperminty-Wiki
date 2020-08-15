@@ -66,13 +66,15 @@
 		
 		<table class="main">
 			<colgroup>
+				<col span="1" style="width: 5%;" />
 				<col span="1" style="width: 20%;" />
 				<col span="1" style="width: 7%;" />
-				<col span="1" style="width: 43%;" />
-				<col span="1" style="width: 30%;" />
+				<col span="1" style="width: 41%;" />
+				<col span="1" style="width: 27%;" />
 			</colgroup>
 			<thead>
 				<tr>
+					<th>🔗</th>
 					<th>Key</th>
 					<th>Type</th>
 					<th>Description</th>
@@ -84,8 +86,9 @@
 			$config = json_decode(file_get_contents("peppermint.guiconfig.json"));
 			foreach($config as $config_key => $config_info) {
 				echo("<tr id='config_$config_key'>");
-				echo("<td><code>$config_key</code></td>");
-				echo("<td><code>$config_info->type</code></td>");
+				echo("<td class='centre'><a href='#config_".rawurlencode($config_key)."'>🔗</a></td>");
+				echo("<td><code>".htmlentities($config_key)."</code></td>");
+				echo("<td><code>".htmlentities($config_info->type)."</code></td>");
 				echo("<td>$config_info->description</td>");
 				echo("<td><pre><code>" . json_encode($config_info->default, true) . "</code></pre></td>");
 				echo("</tr>\n");
@@ -98,22 +101,40 @@
 		
 		<link rel="stylesheet" href="//starbeamrainbowlabs.com/theme/basic.css" />
 		<style>
-			body			{ padding: 1rem; color: #442772; background-colour: #eee8f2; } /* syntaxtic gets confused sometimes */
+			:root {
+				--bg-main: #eee8f2;
+				--bg-table-row: rgba(68, 39, 113, 0.25);
+				
+				--text-main: #442772;
+				--text-link: #9e7eb4;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--bg-main: hsl(270, 29%, 28%);
+					--bg-table-row: hsla(268, 72%, 42%, 0.3);
+					
+					--text-main: hsl(277, 38%, 89%);
+					
+				}
+			}
+			body			{ padding: 1rem; color: var(--text-main); background-color: var(--bg-main); } /* syntaxtic gets confused sometimes */
 			
 			h1				{ text-align: center;	}
-			h2				{ margin-top: 2em;	}
+			h2				{ margin-top: 2em;		}
 			
-			hr				{ margin: 3em 0;	}
-			table.main		{ width: 100%; table-layout: fixed; border-collapse: collapse;	}
+			hr				{ margin: 3em 0;		}
+			table			{ border-collapse: collapse;	}
+			table.main		{ width: 100%; table-layout: fixed;	}
 			tr:nth-child(even), thead
-							{ background: rgba(68, 39, 113, 0.25);	}
+							{ background: var(--bg-table-row);	}
 			
-			pre				{ white-space: pre-wrap; word-wrap: break-word;	}
+			pre, code		{ white-space: pre-wrap; word-wrap: break-word; font-size: 1.2em;	}
 			
-			a 				{ color: #9e7eb4;	}
+			a 				{ color: var(--text-link);	}
 			.largebutton	{ font-size: 2rem;	}
 			
 			.logo			{ max-width: 1.25em; vertical-align: middle;	}
+			.centre			{ text-align: center; }
 		</style>
 		
 	</body>

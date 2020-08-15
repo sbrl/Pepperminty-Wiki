@@ -4,8 +4,13 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## v0.22-beta2
 
+### Added
+ - Added dark theme via `prefers-color-scheme` to configuration guide (see the stable channel guide [here](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php) - will only be updated when v0.22 is released)
+ - Added link thingy you can click next to each setting to jump right to it
+
 ### Fixed
  - Hide the admin email address at the bottom of every page - we missed it in v0.22-beta1 (but got every other one though :P)
+
 
 ## v0.22-beta1
 Make sure you have PHP 7.3+ when you update past this point! It isn't the end of the world if you don't, but it will make you more secure if you do.
