@@ -45,7 +45,7 @@ function parse_page_source($source, $untrusted = false, $use_cache = true) {
 	if(!$settings->parser_cache || strlen($source) < $settings->parser_cache_min_size) $use_cache = false;
 	
 	if(!isset($parsers[$settings->parser]))
-		exit(page_renderer::render_main("Parsing error - $settings->sitename", "<p>Parsing some page source data failed. This is most likely because $settings->sitename has the parser setting set incorrectly. Please contact <a href='mailto:" . hide_email($settings->admindetails_email) . "'>" . $settings->admindetails_name . "</a>, your $settings->sitename Administrator."));
+		exit(page_renderer::render_main("Parsing error - $settings->sitename", "<p>Parsing some page source data failed. This is most likely because $settings->sitename has the parser setting set incorrectly. Please contact " . hide_email($settings->admindetails_email, $settings->admindetails_name) . ", $settings->sitename's Administrator."));
 	
 /* Not needed atm because escaping happens when saving, not when rendering *
 	if($settings->clean_raw_html)

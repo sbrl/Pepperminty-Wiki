@@ -160,6 +160,28 @@ function path_resolve(string $path, string $basePath = null) {
 }
 
 /**
+ * Converts a filepath to a page name.
+ * @param  string $filepath The filepath to convert.
+ * @return string           The extracted pagename.
+ */
+function filepath_to_pagename(string $filepath) : string {
+	global $env;
+	// Strip the storage prefix, but only if it isn't a dot
+	if(starts_with($filepath, $env->storage_prefix) && $env->storage_prefix !== ".")
+		$filepath = mb_substr($filepath, mb_strlen($env->storage_prefix));
+	
+	// If a revision number is detected, strip it
+	if(preg_match("/\.r[0-9]+$/", $filepath) > 0)
+		$filepath = mb_substr($filepath, 0, mb_strrpos($filepath, ".r"));
+	
+	// Strip the .md file extension
+	if(ends_with($filepath, ".md"))
+		$filepath = mb_substr($filepath, 0, -3);
+	
+	return $filepath;
+}
+
+/**
  * Gets the name of the parent page to the specified page.
  * @apiVersion 0.15.0
  * @package core
@@ -267,34 +289,36 @@ function makepathsafe($string)
 	$string = preg_replace("/\.+/", ".", $string);
 	// Don't allow slashes at the beginning
 	$string = ltrim($string, "\\/");
+	// Don't allow dots on their own
+	$string = preg_replace(["/^\.\\/|\\/\.$/", "/\\/\.\\//"], ["", "/"], $string);
 	return $string;
 }
 
 /**
- * Hides an email address from bots by adding random html entities.
- * @todo			Make this more clevererer :D
+ * Hides an email address from bots. Returns a fragment of HTML that contains the mangled email address.
  * @package core
- * @param	string	$str	The original email address
- * @return	string			The mangled email address.
+ * @param	string	$str			The original email address
+ * @param	string	$display_text	The display text for the resulting HTML - if null then the original email address is used.
+ * @return	string	The mangled email address.
  */
-function hide_email($str)
+function hide_email(string $email, string $display_text = null) : string
 {
-	$hidden_email = "";
-	for($i = 0; $i < strlen($str); $i++)
-	{
-		if($str[$i] == "@")
-		{
-			$hidden_email .= "&#" . ord("@") . ";";
-			continue;
-		}
-		if(rand(0, 1) == 0)
-			$hidden_email .= $str[$i];
-		else
-			$hidden_email .= "&#" . ord($str[$i]) . ";";
+	$enc = json_encode([ $email, $display_text ]);
+	$len = strlen($enc);
+	$pool = []; for($i = 0; $i < $len; $i++) $pool[] = $i;
+	$a = []; $b = [];
+	for($i = 0; $i < $len; $i++) {
+		$n = random_int(0, $len - $i - 1);
+		$j = array_splice($pool, $n, 1)[0]; $b[] = $j;
+		// echo("chose ".$enc[$j].", index $j, n $n\n");
+		$a[] = $enc[$j];
 	}
-
-	return $hidden_email;
+	$a = base64_encode(implode("|", $a));
+	$b = base64_encode(implode("|", $b));
+	$span_id = "he-".crypto_id(16);
+	return "<a href='#protected-with-javascript' id='$span_id'>[protected with javascript]</span><script>(() => {let c=\"$a|$b\".split('|').map(atob).map(s=>s.split('|'));let d=[],e=document.getElementById('$span_id');c[1].map((n,i)=>d[parseInt(n)]=c[0][i]);d=JSON.parse(d.join(''));e.textContent=d[1]==null?d[0]:d[1];e.setAttribute('href', 'mailto:'+d[0])})();</script>";
 }
+
 /**
  * Checks to see if $haystack starts with $needle.
  * @package	core
@@ -303,9 +327,21 @@ function hide_email($str)
  *                        		of $haystack.
  * @return	bool	Whether $needle can be found at the beginning of $haystack.
  */
-function starts_with($haystack, $needle) {
+function starts_with(string $haystack, string $needle) : bool {
 	$length = strlen($needle);
 	return (substr($haystack, 0, $length) === $needle);
+}
+/**
+ * Checks to see if $hackstack ends with $needle.
+ * The matching bookend to starts_with.
+ * @package	core
+ * @param	string	$haystack	The haystack to search..
+ * @param	string	$needle		The needle to look for.
+ * @return	bool
+ */
+function ends_with(string $haystack, string $needle) : bool {
+	$length = strlen($needle);
+	return (substr($haystack, -$length) === $needle);
 }
 
 /**

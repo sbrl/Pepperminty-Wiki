@@ -305,7 +305,7 @@ function render_recent_change($rchange)
 			if($rchange_type === "revert")
 				$resultClasses[] = "reversion";
 			
-			$result .= "<a href='?page=" . rawurlencode($rchange->page) . (!empty($revisionId) ? "&revision=$revisionId" : "") . "'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$size_title_display'>($size_display)</span>";
+			$result .= "<a href='?page=" . rawurlencode($rchange->page) . (!empty($revisionId) ? "&amp;revision=$revisionId" : "") . (!empty($pageindex->{$rchange->page}->redirect) ? "&amp;redirect=no" : "" ) . "'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml <span class='$size_display_class' title='$size_title_display'>($size_display)</span>";
 			break;
 			
 		case "deletion":

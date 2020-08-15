@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.11.1",
+	"version" => "0.11.2",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation.",
 	"extra_data" => [
@@ -375,7 +375,7 @@ register_module([
 		<h3>Tips</h3>
 		<ul>
 			<li>Put 2 spaces at the end of a line to add a soft line break. Leave a blank line to add a head line break (i.e. a new paragraph).</li>
-			<li>You can add an id to a header that you can link to. Put it in curly braces after the heading name like this: <code># Heading Name {#HeadingId}</code>. Then you can link to like like this: <code>[[Page name#HeadingId}]]</code>. You can also link to a heading id on the current page by omitting the page name: <code>[[#HeadingId]]</code>.</li>
+			<li>If you don't like the default id given to a header, you can add a custom one instead. Put it in curly braces after the heading name like this: <code># Heading Name {#HeadingId}</code>. Then you can link to like like this: <code>[[Page name#HeadingId}]]</code>. You can also link to a heading id on the current page by omitting the page name: <code>[[#HeadingId]]</code>. Finally, a heading id is automatically generated for every heading by default. Take the heading name, make it lowercase, and replace the spaces with dashes <code>.</code>, and that's the heading ID that you can link to (although sometimes some special characters are removed).</li>
 		</ul>
 		<h3>Extra Syntax</h3>
 		<p>$settings->sitename's editor also supports some extra custom syntax, some of which is inspired by <a href='https://mediawiki.org/'>Mediawiki</a>.
@@ -408,7 +408,8 @@ register_module([
 			<tr><td><code>{{{~}}}</code></td><td>Outputs the requested page's name.</td></tr>
 			<tr><td><code>{{{*}}}</code></td><td>Outputs a comma separated list of all the subpages of the current page.</td></tr>
 			<tr><td><code>{{{+}}}</code></td><td>Shows a gallery containing all the files that are sub pages of the current page.</td></tr>
-		</table>");
+		</table>
+		<p>Note that a page <em>doesn't not</em> need to be included as a template to use these variables.");
 		if($settings->parser_ext_renderers_enabled) {
 			$doc_help = "<p>$settings->sitename supports external renderers. External renderers take the content of a code fence block, like this:</p>
 			<pre><code>```language_code

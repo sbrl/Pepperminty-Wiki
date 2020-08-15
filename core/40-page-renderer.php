@@ -44,7 +44,7 @@ class page_renderer
 			<p>{footer-message}</p>
 			<p>Powered by Pepperminty Wiki {version}, which was built by <a href='//starbeamrainbowlabs.com/'>Starbeamrainbowlabs</a>. Send bugs to 'bugs at starbeamrainbowlabs dot com' or <a href='//github.com/sbrl/Pepperminty-Wiki' title='Github Issue Tracker'>open an issue</a>.</p>
 			<p>Your local friendly moderators are {admins-name-list}.</p>
-			<p>This wiki is managed by <a href='mailto:{admin-details-email}'>{admin-details-name}</a>.</p>
+			<p>This wiki is managed by {admin-details}.</p>
 		</footer>
 		{navigation-bar-bottom}
 		{all-pages-datalist}";
@@ -128,8 +128,7 @@ class page_renderer
 		if(!is_callable($function))
 		{
 			http_response_code(500);
-			$admin_email = hide_email($settings->admindetails_email);
-			exit(page_renderer::render("$settings->sitename - Module Error", "<p>$settings->sitename has got a misbehaving module installed that tried to register an invalid HTML handler with the page renderer. Please contact $settings->sitename's administrator {$settings->admindetails_name} at <a href='mailto:$admin_email'>$admin_email</a>."));
+			exit(page_renderer::render("$settings->sitename - Module Error", "<p>$settings->sitename has got a misbehaving module installed that tried to register an invalid HTML handler with the page renderer. Please contact $settings->sitename's administrator {$settings->admindetails_name} at ".hide_email($settings->admindetails_email)."."));
 		}
 
 		self::$part_processors[] = $function;
@@ -187,8 +186,8 @@ class page_renderer
 			"{navigation-bar}" => self::render_navigation_bar($settings->nav_links, $settings->nav_links_extra, "top"),
 			"{navigation-bar-bottom}" => self::render_navigation_bar($settings->nav_links_bottom, [], "bottom"),
 
+			"{admin-details}" => hide_email($settings->admindetails_email, $settings->admindetails_name),
 			"{admin-details-name}" => $settings->admindetails_name,
-			"{admin-details-email}" => $settings->admindetails_email,
 
 			"{admins-name-list}" => implode(", ", array_map(function($username) { return page_renderer::render_username($username); }, $settings->admins)),
 
