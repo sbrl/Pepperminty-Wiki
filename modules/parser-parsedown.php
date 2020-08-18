@@ -760,14 +760,18 @@ class PeppermintParsedown extends ParsedownExtra
 		
 		$templateFilePath = $env->storage_prefix . $pageindex->$templatePagename->filename;
 		
-		$parsedTemplateSource = $this->text(file_get_contents($templateFilePath));
+		// We use linesElements here to avoid resetting $this->DefinitionData (which is done in ->textElements)
+		// Consequently, we have to do what textElements does directly
+		$parsedTemplateSource = $this->linesElements(explode("\n",
+			trim(str_replace(["\r\n", "\r"], "\n", file_get_contents($templateFilePath)), "\n")
+		));
 		
 		// Remove the parsed parameters from the stack
 		array_pop($this->paramStack);
 		
 		return [
 			"name" => "div",
-			"rawHtml" => $parsedTemplateSource,
+			"elements" => $parsedTemplateSource,
 			"attributes" => [
 				"class" => "template"
 			]
@@ -1257,8 +1261,14 @@ class PeppermintParsedown extends ParsedownExtra
 						$result["element"],
 						[
 							"name" => "figcaption",
-							// rawHtml is fine here 'cause we're using the output of $this->text(), which is safe
-							"rawHtml" => $this->text($altText),
+							// We use lineElements here because of issue #209 - in short it makes it appear as part of the same document to avoid breaking footnotes
+							// Specifically ->text() calls ->textElements(), which resets $this->DefinitionData, which is used to hold information about footnotes
+							// lineElements = inline text, and linesElements = multiline text
+							"handler" => [
+								"function" => "lineElements",
+								"argument" => $altText,
+								"destination" => "elements"
+							]
 						],
 					],
 					"handler" => "elements"

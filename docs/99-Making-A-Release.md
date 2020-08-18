@@ -43,7 +43,7 @@ You can update to this release simply by grabbing an updated copy of `index.php`
 
 For more information on the last 2 methods, please see [the documentation](https://starbeamrainbowlabs.com/labs/peppermint/__nightdocs/05-Getting-A-Copy.html) for more information.
 
-For those who want to contribute financially as a thank you, I've recently [setup a Liberapay](https://liberapay.com/sbrl) to accept donations. It's certainly not required, but would definitely help me out :-)
+For those who want to contribute financially as a thank you, I've recently [setup a Liberapay](https://liberapay.com/sbrl) to accept donations. It's certainly not required, but would definitely help me out :-) If you want to contribute but Liberapay isn't for you, please let me know (e.g. open an issue, see [my website for more contact options](https://starbeamrainbowlabs.com/))
 
 ## Since VERSION_NUMBER_HERE
 FULL_CHANGELOG_HERE

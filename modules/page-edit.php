@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page editor",
-	"version" => "0.17.8",
+	"version" => "0.17.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -236,7 +236,7 @@ window.addEventListener("load", function(event) {
 		});
 		
 		/**
-		 * @api {post} ?action=preview-edit&page={pageName}[&newpage=yes]	Get a preview of the page
+		 * @api {post} ?action=preview-edit&page={pageName}[&newpage=yes]	Get a preview of an edit to a page
 		 * @apiDescription	Gets a preview of the current edit state of a given page
 		 * @apiName 		PreviewPage
 		 * @apiGroup		Editing
