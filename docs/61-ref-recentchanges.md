@@ -1,5 +1,10 @@
 # `recentchanges.json` Reference
 
+ - **Filename:** `recentchanges.json`
+ - **Index Type:** Primary
+ - **Location:** Data directory root
+ - **Purpose:** Storing a list of recent changes
+
 Like the page index stored in [`pageindex.json`](./60-ref-pageindex.md), `recentchanges.json` contains a list of all the recent changes on a wiki. It is located in the root of the data directory (along with the page index), and is formatted as JSON (as you might expect). It consists of an array of objects in reverse-chronological order - i.e. the most recent change is at the top of the file. Not _every_ change will be documented here however - as wikis may limit the number of recent changes stored (the default is currently `512` - this  is controlled by the `[max_recent_changes`](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_max_recent_changes) setting).
 
 Note that if you are writing a module, you should **NOT** write to the recent changes list directly. Instead, you should use the `add_recent_change()` method provided by the `feature-recent-changes` module.

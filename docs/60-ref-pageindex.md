@@ -1,4 +1,10 @@
 # `pageindex.json` Reference
+
+ - **Filename:** `pageindex.json`
+ - **Index Type:** Primary
+ - **Location:** Data directory root
+ - **Purpose:** Storing metadata about pages
+
 When working with Pepperminty Wiki, inevitably there will come a point when you'll be interested in the data structures that Pepperminty Wiki uses to store it's primary (i.e. doesn't exist elsewhere) data. Here, the structure of arguably the most important index is discussed - `pageindex.json`.
 
 As the name suggests, `pageindex.json` (henceforth called simply "the page index") contains an index of all the pages present in a wiki and their metadata. It's structure is 1 big JSON object, like this:
