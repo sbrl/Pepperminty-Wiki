@@ -10,7 +10,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - [docs] Documented the structure of `pageindex.json`
 
 ### Fixed
- - Hide the admin email address at the bottom of every page - we missed it in v0.22-beta1 (but got every other one though :P)
+ - Obfuscate the admin email address at the bottom of every page - we missed it in v0.22-beta1 (but got every other one though :P)
+ - Bugfix: Don't use `->text()` for recursion when parsing markdown - it resets `->DefinitionData`, which breaks footnotes
 
 ### Changed
  - Disable parser cache by default to avoid issues because said cache isn't invalidated when it should be (and doing so would take more of a performance hit than leaving it on)
