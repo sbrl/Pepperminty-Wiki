@@ -45,7 +45,7 @@ $paths->pageindex = "pageindex.json";
 /** The inverted index used for searching. Use the `search` class to interact with this - otherwise your brain might explode :P */
 $paths->searchindex = "invindex.sqlite";
 /** The didyoumean index for typo correction. Used by the search class - which also exposes an interface for interacting with it directly. */
-$paths->didyoumeanindex =  "didyoumeaninddex.sqlite";
+$paths->didyoumeanindex =  "didyoumeanindex.sqlite";
 /** The index that maps ids to page names. Use the `ids` class to interact with it :-) */
 $paths->idindex = "idindex.json";
 /** The cache of the most recently calculated statistics. */
