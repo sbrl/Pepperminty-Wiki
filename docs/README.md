@@ -16,6 +16,7 @@
  * **Development**
      * [Writing Modules](50-Writing-Modules.md)
      * [`pageindex.json` reference](60-ref-pageindex.md)
+     * [`recentchanges.json` reference](60-ref-recentchanges.md)
  * **References**
 	 * [Configuration Settings](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php)
 	 * [HTTP API](https://starbeamrainbowlabs.com/labs/peppermint/docs/RestApi/)
