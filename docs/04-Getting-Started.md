@@ -9,7 +9,7 @@
 	- `fileinfo` (for proper mime type checking of uploaded files)
 	- `zip` (for compressing exports)
 	- `intl` (for Unicode text normalization when searching and in the id index, and when sending emails when utf-8 mode is disabled)
-	- `sqlite` (for search index storage; uses [PDO](https://www.php.net/manual/en/ref.pdo-sqlite.php))
+	- `sqlite3` (for search index storage; uses [PDO](https://www.php.net/manual/en/ref.pdo-sqlite.php))
 - Write access to Pepperminty Wiki's own folder (only for editing)
 - Recommended: Block access to `peppermint.json`, where it stores it's settings
 
