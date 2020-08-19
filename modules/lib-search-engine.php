@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Library: Search engine",
-	"version" => "0.13.1",
+	"version" => "0.13.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "A library module that provides the backend to the search engine module.",
 	"id" => "lib-search-engine",
@@ -784,7 +784,7 @@ class search
 			if($term_def["weight"] == -1)
 				continue; // Skip stop words
 			
-			if(!in_array($term_def["location"], ["all", "inbody"]))
+			if(!in_array($term_def["location"], ["all", "body"]))
 				continue; // Skip terms we shouldn't search the page body for
 			
 			if(!self::$invindex->has($term_def["term"]))
