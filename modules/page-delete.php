@@ -44,7 +44,7 @@ register_module([
 			}
 			if(!isset($pageindex->{$env->page}))
 			{
-				exit(page_renderer::render_main("Error: Non-existent page - Deleting $env->page", "<p>You tried to delete $env->page, but that page doesn't appear to exist in the first page. <a href='?'>Go back</a> to the $settings->defaultpage.</p>"));
+				exit(page_renderer::render_main("Error: Non-existent page - Deleting $env->page", "<p>You tried to delete $env->page, but that page doesn't appear to exist in the first place. <a href='?'>Go back</a> to the $settings->defaultpage.</p>"));
 			}
 			
 			if(!isset($_GET["delete"]) or $_GET["delete"] !== "yes")
