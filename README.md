@@ -22,7 +22,7 @@ For everything you need to know (including how to get your own copy!), you proba
 
 ## Real World Usage
 
-* [WikiProject Paranormal](https://www.anomalyresponse.com) - An encyclopedia of the paranormal.
+* [WikiProject Paranormal](https://www.anomalyresponse.com) - An encyclopedia of allegedly unexplained events.
 
 Is your site using Pepperminty Wiki? Contact me or [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) and tell me about where you are using Pepperminty Wiki and I'll add you to this section :smiley_cat:
 
