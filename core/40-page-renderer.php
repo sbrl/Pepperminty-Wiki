@@ -174,7 +174,7 @@ class page_renderer
 		
 		// Push the logo via HTTP/2.0 if possible
 		if($settings->favicon[0] === "/") self::$http2_push_items[] = ["image", $settings->favicon];
-
+		
 		$parts = [
 			"{body}" => $body_template,
 
@@ -439,7 +439,11 @@ class page_renderer
 		foreach($nav_links as $item) {
 			if(!is_string($item)) {
 				// Output the item as a link to a url
-				$result .= "<span><a href='" . str_replace("{page}", rawurlencode($env->page), $item[1]) . "'>$item[0]</a></span>";
+				$result .= "<span><a href='" . str_replace(
+					[ "{page}", "&" ],
+					[ rawurlencode($env->page), "&amp;" ],
+					$item[1]
+				) . "'>$item[0]</a></span>";
 				continue;
 			}
 			
