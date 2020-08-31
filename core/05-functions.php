@@ -316,7 +316,7 @@ function hide_email(string $email, string $display_text = null) : string
 	$a = base64_encode(implode("|", $a));
 	$b = base64_encode(implode("|", $b));
 	$span_id = "he-".crypto_id(16);
-	return "<a href='#protected-with-javascript' id='$span_id'>[protected with javascript]</span><script>(() => {let c=\"$a|$b\".split('|').map(atob).map(s=>s.split('|'));let d=[],e=document.getElementById('$span_id');c[1].map((n,i)=>d[parseInt(n)]=c[0][i]);d=JSON.parse(d.join(''));e.textContent=d[1]==null?d[0]:d[1];e.setAttribute('href', 'mailto:'+d[0])})();</script>";
+	return "<a href='#protected-with-javascript' id='$span_id'>[protected with javascript]</a><script>(() => {let c=\"$a|$b\".split('|').map(atob).map(s=>s.split('|'));let d=[],e=document.getElementById('$span_id');c[1].map((n,i)=>d[parseInt(n)]=c[0][i]);d=JSON.parse(d.join(''));e.textContent=d[1]==null?d[0]:d[1];e.setAttribute('href', 'mailto:'+d[0])})();</script>";
 }
 
 /**
