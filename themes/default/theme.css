@@ -73,7 +73,7 @@
 		--text-bright: hsl(274, 75%, 81%);
 		/* --text-light: hsl(0, 0%, 6%); */
 		
-		--text-soft: hsla(0, 0%, 92%, 0.4);
+		--text-soft: hsla(0, 0%, 92%, 0.6);
 		--text-ultrasoft: hsla(0, 0%, 95%, 0.4);
 		
 		--shadow: rgba(20, 20, 20, 0.5);
@@ -84,9 +84,12 @@
 		--accent-a3: hsl(274, 40%, 41%);
 		--accent-a4: hsl(253, 49%, 20%);
 		
+		--accent-b2: hsl(22, 96%, 64%);
+		
 		--accent-c1: hsl(5, 100%, 76%);
 		--accent-c2: hsl(4, 95%, 68%); /*#8b1a1a*/
 		--accent-c3: hsl(2, 90%, 58%);
+		
 		--accent-d1: hsl(160, 73%, 46%);
 		
 		--tag: hsl(273, 46%, 27%);
