@@ -1,7 +1,7 @@
 <?php
 register_module([
 	"name" => "Page list",
-	"version" => "0.11.3",
+	"version" => "0.11.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that lists all the pages in the index along with their metadata.",
 	"id" => "page-list",
@@ -102,9 +102,8 @@ register_module([
 					case "html":
 						$content = "<h1>All tags</h1>
 						<ul class='tag-list'>\n";
-						foreach($all_tags as $tag)
-						{
-							$content .= "			<li><a href='?action=list-tags&tag=" . rawurlencode($tag) . "' class='mini-tag'>$tag</a></li>\n";
+						foreach($all_tags as $tag) {
+							$content .= "			<li><a href='?action=list-tags&amp;tag=" . rawurlencode($tag) . "' class='mini-tag'>$tag</a></li>\n";
 						}
 						$content .= "</ul>\n";
 						
@@ -276,7 +275,7 @@ function generate_page_list($pagelist)
 		{
 			foreach($pageindex->$pagename->tags as $tag)
 			{
-				$tags .= "<a href='?action=list-tags&tag=" . rawurlencode($tag) . "' class='mini-tag'>$tag</a>, ";
+				$tags .= "<a href='?action=list-tags&amp;tag=" . rawurlencode($tag) . "' class='mini-tag'>$tag</a>, ";
 			}
 			$tags = substr($tags, 0, -2); // Remove the last ", " from the tag list
 		}
