@@ -4,6 +4,10 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## v0.22-dev (unreleased)
 
+### Changed
+ - Don't emit custom CSS unless there's something to emit
+
+
 ### Fixed
  - Fixed `inbody:searchterm` advanced query syntax
  - Fixed inaccessible colours in the page list when using the dark theme

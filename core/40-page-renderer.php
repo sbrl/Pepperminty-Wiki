@@ -335,9 +335,11 @@ class page_renderer
 					self::add_server_push_indicator("style", $settings->css);
 				$result .= "<link rel='stylesheet' href='$settings->css_custom' />\n";
 			}
-			$css .= "\n/*** Custom CSS ***/\n";
-			$css .= !empty($settings->optimize_pages) ? minify_css($settings->css_custom) : $settings->css_custom;
-			$css .= "\n/******************/";
+			if(!empty(trim($settings->css_custom))) {
+				$css .= "\n/*** Custom CSS ***/\n";
+				$css .= !empty($settings->optimize_pages) ? minify_css($settings->css_custom) : $settings->css_custom;
+				$css .= "\n/******************/";
+			}
 		}
 		$result .= "<style>\n$css\n</style>\n";
 		
