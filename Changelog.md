@@ -2,7 +2,7 @@
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
 
-## v0.22-dev (unreleased)
+## v0.22-beta3
 
 ### Changed
  - Don't emit custom CSS unless there's something to emit
