@@ -43,12 +43,12 @@ Here's a list of things that I want to add at some point (please feel free to [s
      - Participate in the beta: https://play.google.com/apps/testing/com.sbrl.peppermint
      - Report issues [here](https://github.com/sbrl/Pepperminty-Wiki-Client-Android/issues/new)
      - An iOS app is not practical for the foreseeable future.
-         - It's too expensive.
+         - It's too expensive (dev license requires £££).
          - The ecosystem is very closed off, and I've no idea how to make an iOS app (nor do I own a device to test it on)
          - Feel free to make one yourself!
          - I'm happy to help out if you need help with Pepperminty Wiki itself (e.g. making it more machine-readable (#138))
          - Message on Gitter (see above), or open an issue on this repository.
- - ~~User watchlists~~ coming in v0.21!
+ - ~~User watchlists~~ done, as of v0.21!
  - ~~Theme gallery (#5 - coming soon in v0.20!)~~ done, as of v0.20-beta1
  - Self-service user registration (#181)
  - Packaging for [sandstorm](https://apps.sandstorm.io/)?
