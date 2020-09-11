@@ -2,6 +2,12 @@
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
 
+## v0.22
+_No changes were made since the last release_
+
+**Make sure you have PHP 7.3+ when you update past this point!** It isn't the end of the world if you don't, but it will make you more secure if you do.
+
+
 ## v0.22-beta3
 
 ### Changed
@@ -30,7 +36,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 
 ## v0.22-beta1
-Make sure you have PHP 7.3+ when you update past this point! It isn't the end of the world if you don't, but it will make you more secure if you do.
+**Make sure you have PHP 7.3+ when you update past this point!** It isn't the end of the world if you don't, but it will make you more secure if you do.
 
 ### Added
  - [Module Api] Add new `search::invindex_term_getpageids`, and `search::invindex_term_getoffsets`, and `search::index_sort_freq` methods
