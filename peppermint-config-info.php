@@ -63,6 +63,7 @@
 		
 		
 		<h2>Configuration Guide</h2>
+		<p>We have <?php echo(count(array_keys(json_decode(file_get_contents("peppermint.guiconfig.json"), true)))); ?> configurable settings so far!</p>
 		
 		<table class="main">
 			<colgroup>
