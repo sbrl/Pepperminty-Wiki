@@ -19,6 +19,7 @@ The following things need to be done to prepare for a release:
  - Update wikimatrix
  - Generate the hashes & signature (see the `sign` build action)
  - Write & publish the release
+ - Tweet link to new GitHub release (IFTTT are only allowing up to 3 'apps' without paying now :-/)
 
 ## Release text template
 The following template text can be used for releases:
