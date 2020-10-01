@@ -51,7 +51,7 @@ Here's a list of things that I want to add at some point (please feel free to [s
  - ~~User watchlists~~ done, as of v0.21!
  - ~~Theme gallery (#5 - coming soon in v0.20!)~~ done, as of v0.20-beta1
  - Self-service user registration (#181)
- - Packaging for [sandstorm](https://apps.sandstorm.io/)?
+ - Packaging for [sandstorm](https://apps.sandstorm.io/) / [Nextcloud](https://apps.nextcloud.com/)?
  - (See more on the [issue tracker](https://github.com/sbrl/Pepperminty-Wiki/issues)!)
  - ...?
 
