@@ -56,3 +56,19 @@ Notes about the import process are detailed below.
  - Pepperminty Wiki's internal and external link syntax is [compatible with vimwiki](https://github.com/sbrl/Pepperminty-Wiki/issues/new) (thanks @RyanGreenup!).
 
 If you encounter any issues importing data from another wiki, please [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new). I'd love to know about it - it may be possible to automate any conversion steps to ease the import process.
+
+
+## Features FAQ
+A few features that users request that aren't obvious on how to use or enable are documented here.
+
+### How do I add a "create new page" button?
+Since version v0.23, Pepperminty Wiki has API support for creating a new page without knowing it's name - see issue [#194](https://github.com/sbrl/Pepperminty-Wiki/issues/194). While a create new page button isn'tin the user interface by default, one may be added as a navigation link to either the [`nav_links`](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_nav_links), [`nav_links_extra`](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_nav_links_extra), or [`nav_links_bottom`](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_nav_links_bottom) configuration directives in `peppermint.json` (these must be edited directly - GUI support for these properties hasn't been implemented yet). An example navigation link to send a user to create a new page might look like this:
+
+```json
+[
+	"+",
+	"index.php?action=edit&unknownpagename=yes"
+]
+```
+
+See the [`nav_links` documentation for more information on the wider navigation link syntax](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_nav_links).
