@@ -1,11 +1,11 @@
 <?php
 /* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * License, v2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 register_module([
 	"name" => "Page editor",
-	"version" => "0.17.9",
+	"version" => "0.18",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -27,7 +27,8 @@ register_module([
 		 * @apiPermission	Anonymous
 		 * 
 		 * @apiUse PageParameter
-		 * @apiParam	{string}	newpage		Set to 'yes' if a new page is being created. Only affects a few bits of text here and there, and the HTTP response code recieved on success from the `save` action.
+		 * @apiParam	{string}	newpage		Optional. Set to 'yes' if a new page is being created. Only affects a few bits of text here and there, and the HTTP response code recieved on success from the `save` action.
+		 * @apiParam	{string}	unknownpagename	Optional. Set to 'yes' if the name of the page to be created is currently unknown. If set, a page name box will be shown too.
 		 */
 		
 		/*
@@ -41,18 +42,23 @@ register_module([
 		add_action("edit", function() {
 			global $pageindex, $settings, $env, $paths;
 			
+			$unknownpagename = isset($_GET["unknownpagename"]) && strlen(trim($_GET["unknownpagename"])) > 0;
 			$filename = "$env->storage_prefix$env->page.md";
 			$creatingpage = !isset($pageindex->{$env->page});
 			if((isset($_GET["newpage"]) and $_GET["newpage"] == "true") or $creatingpage)
 				$title = "Creating $env->page";
 			else if(isset($_POST['preview-edit']) && isset($_POST['content']))
 				$title = "Preview Edits for $env->page";
+			else if($unknownpagename)
+				$title = "Creating new page";
 			else
 				$title = "Editing $env->page";
 			
-			$pagetext = "";
-			if(isset($pageindex->{$env->page}))
+			$pagetext = ""; $page_tags = "";
+			if(isset($pageindex->{$env->page}) && !$unknownpagename)
 				$pagetext = file_get_contents($filename);
+			if(!$unknownpagename)
+				$page_tags = htmlentities(implode(", ", (!empty($pageindex->{$env->page}->tags)) ? $pageindex->{$env->page}->tags : []));
 			
 			$isOtherUsersPage = false;
 			if(
@@ -90,7 +96,7 @@ register_module([
 						$sourceViewContent = "<p>$env->page is a special user page which acutally belongs to " . extract_user_from_userpage($env->page) . ", another user on $settings->sitename. Because of this, you are not allowed to edit it (though you can always edit your own page and any pages under it if you're logged in). You can, however, vieww it's source below.</p>";
 					
 					// Append a view of the page's source
-					$sourceViewContent .= "<textarea name='content' readonly>$pagetext</textarea>";
+					$sourceViewContent .= "<textarea name='content' readonly>".htmlentities($pagetext)."</textarea>";
 					
 					exit(page_renderer::render_main("Viewing source for $env->page", $sourceViewContent));
 				}
@@ -109,7 +115,7 @@ register_module([
 			}
 			
 			$content = "<h1>$title</h1>\n";
-			$page_tags = implode(", ", (!empty($pageindex->{$env->page}->tags)) ? $pageindex->{$env->page}->tags : []);
+			
 			if(!$env->is_logged_in and $settings->anonedits) {
 				$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
 			}
@@ -136,8 +142,12 @@ register_module([
 
 			$content .= "<button class='smartsave-restore' title=\"Only works if you haven't changed the editor's content already!\">Restore Locally Saved Content</button>
 			<form method='post' name='edit-form' action='index.php?action=preview-edit&page=" . rawurlencode($env->page) . "' class='editform'>
-					<input type='hidden' name='prev-content-hash' value='" . generate_page_hash(isset($old_pagetext) ? $old_pagetext : $pagetext) . "' />
-					<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
+					<input type='hidden' name='prev-content-hash' value='" . generate_page_hash(isset($old_pagetext) ? $old_pagetext : $pagetext) . "' />";
+			if($unknownpagename)
+				$content .= "<div><label for='page'>Page Name:</label>
+					<input type='text' id='page' name='page' value='' placeholder='Enter the name of the page here.' title='Enter the name of the page here.' />
+					<input type='hidden' name='prevent_save_if_exists' value='yes' />";
+			$content .= "<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
 					<pre class='fit-text-mirror'></pre>
 					<input type='text' id='tags' name='tags' value='" . htmlentities($page_tags, ENT_HTML5 | ENT_QUOTES) . "' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
 					<p class='editing-message'>$settings->editing_message</p>
@@ -289,7 +299,9 @@ window.addEventListener("load", function(event) {
 		 * @apiPermission	Anonymous
 		 * 
 		 * @apiUse		PageParameter
-		 * @apiParam	{string}	format	The format ot return the edit key in. Possible values: text, json. Default: text.
+		 * @apiParam	{string}	format	The format to return the edit key in. Possible values: text, json. Default: text.
+		 * @apiParam	{string}	prevent_save_if_exists	Optional. If set to 'yes', then if a page exists with the specified page name the save is aborted and an error page returned instead.
+		 * @apiParam	{string}	page	The name of the page to save the edit to. Note that in this specific instance *only*, the page name can be specified over GET or POST (POST will override GET if both are present). 
 		 */
 		
 		/*
@@ -366,7 +378,10 @@ window.addEventListener("load", function(event) {
 		 *                %save%
 		 */
 		add_action("save", function() {
-			global $pageindex, $settings, $env, $save_preprocessors, $paths; 
+			global $pageindex, $settings, $env, $save_preprocessors, $paths;
+			// Update the page name in the main environment, since the page name may be submitted via the POST form
+			if(isset($_POST["page"]))
+				$env->page = $_POST["page"];
 			
 			if(!$settings->editing)
 			{
@@ -396,6 +411,16 @@ window.addEventListener("load", function(event) {
 				http_response_code(400);
 				header("refresh: 5; url=index.php?page=" . rawurlencode($env->page));
 				exit("Bad request: No content specified.");
+			}
+			if(isset($_POST["prevent_save_if_exists"]) && isset($pageindex->{$env->page})) {
+				http_response_code(409);
+				exit(page_renderer::render_main("Error saving new page - ".htmlentities($env->page)." - $settings->sitename", "<p>Error: A page with that name already exists. Things you can do:</p>
+				<ul>
+					<li>View the existing page here: <a target='_blank' href='?action={$settings->defaultaction}&page=".rawurlencode($env->page)."'>".htmlentities($env->page)."</a></li>
+					<li><a href='javascript:history.back();'>Go back to continu editing and change the page name</a></li>
+				</ul>
+				<p>For reference, the page content you attempted to submit is shown below:</p>
+				<textarea name='content'>".htmlentities($_POST["content"])."</textarea>"));
 			}
 			
 			// Make sure that the directory in which the page needs to be saved exists

@@ -123,7 +123,7 @@ nav:not(.nav-more-menu):not(.mega-menu) > span > a { font-weight: bolder; }
 .nav-divider { color: transparent; }
 
 .nav-more { position: relative; background-color: var(--accent-a3); min-width: 10em; }
-.nav-more > label { font-weight: bold; }
+label { font-weight: bold; }
 label { cursor: pointer; }
 .nav-more-menu { z-index: 10000; position: absolute; flex-direction: column; top: 2.6rem; right: 100000px; text-align: left; background-color: var(--accent-a2); border-top: 3px solid var(--accent-a3); border-bottom: 3px solid var(--accent-a3); }
 input[type=checkbox]:checked ~ .nav-more-menu { right: -0.2rem; box-shadow: 0.4rem 0.4rem 1rem 0 var(--shadow); }
@@ -225,10 +225,13 @@ input[type=text], input[type=password], input[type=url], input[type=email], inpu
 textarea, .fit-text-mirror { min-height: 10em; line-height: 1.3em; font-size: 1.25rem; }
 textarea, textarea[name=content] + pre, textarea ~ input[type=submit], #search-box { width: calc(100% - 0.3rem); box-sizing: border-box; }
 textarea ~ input[type=submit] { margin: 0.5rem 0; padding: 0.5rem; font-weight: bolder; }
-.editform input[type=text] { width: calc(100% - 0.3rem); box-sizing: border-box; }
+.editform input[type=text]	{ width: calc(100% - 0.3rem); box-sizing: border-box; }
+.editform label				{ margin-left: 1em;		}
 input.edit-page-button[type='submit'] { width: 49.5%; box-sizing: border-box; }
 input[type=radio] { transform: scale(2); }
 input[type=submit].large { width: 100%; box-sizing: border-box; padding: 0.5em; font-size: 1.25em; font-weight: bolder; }
+
+.smartsave-restore	{ margin-bottom: 1em;	}
 
 .preview-message { text-align: center; }
 @media (min-width: 800px) {

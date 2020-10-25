@@ -280,7 +280,8 @@ task_start-server() {
 	
 	if [[ -z "${NO_BROWSER}" ]]; then
 		task_begin "Opening Browser";
-		sensible-browser [::]:35623;
+		# sensible-browser isn't opening the right browser :-/
+		xdg-open "http://[::]:35623";
 		task_end $?;
 	fi
 }
