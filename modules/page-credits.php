@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Credits",
-	"version" => "0.7.12",
+	"version" => "0.8",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
@@ -25,7 +25,7 @@ register_module([
 		 *  ██████ ██   ██ ███████ ██████  ██    ██    ███████ 
 		 */
 		add_action("credits", function() {
-			global $settings, $version, $pageindex, $modules;
+			global $settings, $version, $env, $pageindex, $modules;
 			
 			$credits = [
 				"Code" => [
@@ -161,9 +161,15 @@ register_module([
 		<tr><th>Site name:</th><td>$settings->sitename (<a href='?action=update'>{$settings->admindisplaychar}Update</a>, <a href='?action=configure'>{$settings->admindisplaychar} &#x1f527; Edit master settings</a>, <a href='?action=user-table'>{$settings->admindisplaychar} &#x1f465; Edit user table</a>, <a href='?action=export'>&#x1f3db; Export as zip - Check for permission first</a>)</td></tr>
 		<tr><th>Pepperminty Wiki version:</th><td>$version</td></tr>
 		<tr><th>Number of pages:</th><td>" . count(get_object_vars($pageindex)) . "</td></tr>
-		<tr><th>Number of modules:</th><td>" . count($modules) . "</td></tr>
-	</table>
-	<h2>Installed Modules</h2>
+		<tr><th>Number of modules:</th><td>" . count($modules) . "</td></tr>\n";
+			if(module_exists("page-sitemap")) {
+				$content .= "<tr><th>Sitemap:</th><td><a href='?action=sitemap'>View</a>";
+				if($env->is_admin)
+					$content .= " | Don't forget to add <code>Sitemap: http://example.com/path/to/index.php?action=sitemap</code> to your <code>robots.txt</code>";
+				$content .= "</td></tr>";
+			}
+			$content .= "\t</table>
+		<h2>Installed Modules</h2>
 	$modules_html";
 			exit(page_renderer::render_main($title, $content));
 		});
