@@ -72,3 +72,14 @@ Since version v0.23, Pepperminty Wiki has API support for creating a new page wi
 ```
 
 See the [`nav_links` documentation for more information on the wider navigation link syntax](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_nav_links).
+
+### What's this about manual setup for the sitemap?
+If the `page-sitemap` module is enabled, Pepperminty Wiki will have support for generating an XML sitemap. However, since a sitemap is typically located at the root of your domain with the filename `sitemap.xml`, crawlers must be instructed as to where they can find the sitemap for your wiki. This can be done by editing (creating if it doesn't exist) a file called `robots.txt` _at the top-level root of your domain name_, and appending something like the following:
+
+```
+Sitemap: http://wiki.example.com/path/to/index.php?action=sitemap
+```
+
+This will properly instruct crawlers on where to find the sitemap.
+
+If you know of a way to do this via a `<meta />` tag or HTTP header instead, please [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) so that this extra manual step can be removed.
