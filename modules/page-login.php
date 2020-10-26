@@ -43,6 +43,7 @@ register_module([
 				header("location: " . $_GET["returnto"]);
 			}
 			
+			header("x-robots-tag: noindex, nofollow");
 			page_renderer::add_header_html('<meta name="robots" content="noindex, nofollow" />');
 			
 			

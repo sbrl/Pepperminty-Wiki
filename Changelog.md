@@ -11,6 +11,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## Changed
  - Updated the [configuration guide](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php) to include count of how many settings we have
+ - Also send a `x-robots-tag: noindex, nofollow` HTTP header for the login page (Semrush Bot, you better obey this one)
 
 
 ## Fixed
