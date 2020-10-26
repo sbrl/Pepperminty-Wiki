@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "API status",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Provides a basic JSON status action that provides a few useful bits of information for API consumption.",
 	"id" => "api-status",
@@ -41,6 +41,8 @@ register_module([
 			$result->available_actions = $action_names;
 			$result->wiki_name = $settings->sitename;
 			$result->logo_url = $settings->favicon;
+			if(module_exists("page-sitemap"))
+				$result->sitemap_url = url_stem()."?action=sitemap";
 			
 			header("content-type: application/json");
 			exit($minified ? json_encode($result) : json_encode($result, JSON_PRETTY_PRINT) . "\n");
