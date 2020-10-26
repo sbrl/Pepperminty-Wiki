@@ -7,6 +7,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ## Added
  - Added HTTP API support for creating pages that don't yet have a name (#194)
      - This allows for having a "create new page" button in your navigation links - e.g. edit `nav_links`, `nav_links_extra`, or `nav_links_bottom` in your `peppermint.json` and add something like `[ "+", "index.php?action=edit&unknownpagename=yes" ]`.
+ - XML sitemap support with the new `page-sitemap` module (manual setup required for crawlers to notice it: see [the documentation](https://github.com/sbrl/Pepperminty-Wiki/blob/master/docs/02-Features.md#whats-this-about-manual-setup-for-the-sitemap))
 
 ## Changed
  - Updated the [configuration guide](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php) to include count of how many settings we have
