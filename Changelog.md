@@ -16,6 +16,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## Fixed
  - [security] Fixed some potential XSS attacks in the page editor
+ - Fixed a weird bug in the `stats-update` action causing warnings
 
 
 ## v0.22

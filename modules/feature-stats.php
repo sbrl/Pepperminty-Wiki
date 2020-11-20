@@ -130,7 +130,8 @@ register_module([
 				exit(page_renderer::render_main("Error - Recalculating Statistics - $settings->sitename", "<p>You need to be logged in as a moderator or better to get $settings->sitename to recalculate it's statistics. If you're logged in, try <a href='?action=logout'>logging out</a> and logging in again as a moderator. If you aren't logged in, try <a href='?action=login&returnto=%3Faction%3Dstats-update'>logging in</a>.</p>"));
 			
 			// Delete the old stats cache
-			unlink($paths->statsindex);
+			if(file_exists($paths->statsindex))
+				unlink($paths->statsindex);
 			
 			update_statistics(true, ($_GET["force"] ?? "no") == "yes");
 			header("content-type: application/json");
@@ -310,7 +311,7 @@ function update_statistics($update_all = false, $force = false)
 	if(isset($settings->firstrun_complete) && $settings->firstrun_complete == false)
 		return;
 	
-	$stats_mtime = filemtime($paths->statsindex);
+	$stats_mtime = file_exists($paths->statsindex) ? filemtime($paths->statsindex) : 0;
 	
 	// Clear the existing statistics if we are asked to recalculate them all
 	if($force)
