@@ -5,7 +5,7 @@
 
 
 /// Finish setting up the environment object ///
-$env->page = $_GET["page"];
+$env->page = $_GET["page"] ?? $_POST["page"];
 if(isset($_GET["revision"]) and is_numeric($_GET["revision"]))
 {
 	// We have a revision number!
