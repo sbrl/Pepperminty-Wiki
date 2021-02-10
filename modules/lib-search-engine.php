@@ -865,7 +865,7 @@ class search
 						if(!isset($matching_pages[$pageid]))
 						$matching_pages[$pageid] = $match_template; // Assign by copy
 						
-						$matching_pages[$pageid]["rank_title"] += $title_matches_count * $term_def["weight"];
+						$matching_pages[$pageid]["rank_title"] += $title_matches_count * $term_def["weight"] * $settings->search_title_matches_weighting;
 					}
 				}
 				
@@ -886,7 +886,7 @@ class search
 					if(!isset($matching_pages[$pageid]))
 						$matching_pages[$pageid] = $match_template; // Assign by copy
 					
-					$matching_pages[$pageid]["rank_tags"] += $tag_matches_count * $term_def["weight"];
+					$matching_pages[$pageid]["rank_tags"] += $tag_matches_count * $term_def["weight"] * $settings->search_tags_matches_weighting;
 				}
 			}
 		}
