@@ -42,8 +42,9 @@ _No changes were made since the last release_
 
 ### Added
  - Added dark theme via `prefers-color-scheme` to configuration guide (see the stable channel guide [here](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php) - will only be updated when v0.22 is released)
- - Added link thingy you can click next to each setting to jump right to it
+     - Added link thingy you can click next to each setting to jump right to it
  - [docs] Documented the structure of `pageindex.json` and `recentchanges.json`
+ - Experimental support for transparent handling of `[display text](./Page Name.md)` style internal links (disabled by default: enable the `parser_mangle_external_links` setting and delete the `._cache` directory to enable)
 
 ### Fixed
  - Obfuscate the admin email address at the bottom of every page - we missed it in v0.22-beta1 (but got every other one though :P) (#205)

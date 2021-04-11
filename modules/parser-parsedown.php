@@ -449,6 +449,7 @@ require_once("$paths->extra_data_directory/parser-parsedown/ParsedownExtra.php")
 /**
  * Attempts to 'auto-correct' a page name by trying different capitalisation
  * combinations.
+ * 
  * @param	string	$pagename	The page name to auto-correct.
  * @return	string	The auto-corrected page name.
  */
@@ -1061,6 +1062,44 @@ class PeppermintParsedown extends ParsedownExtra
 			
 			return $result;
 		}
+	}
+	
+	/*
+	███  █████  ███  ██        ██ ██████     ███    ███ ██████  ██
+	██  ██   ██  ██ ██        ██  ██   ██    ████  ████ ██   ██  ██
+	██  ███████  ██ ██       ██   ██████     ██ ████ ██ ██   ██  ██
+	██  ██   ██  ██ ██      ██    ██   ██    ██  ██  ██ ██   ██  ██
+	███ ██   ██ ███  ██ ██ ██     ██████  ██ ██      ██ ██████  ██
+	*/
+	// This wraps the native [display text](url) syntax
+	protected function inlineLink($fragment) {
+		global $settings;
+		
+		// If this feature is disabled, defer to the parent implementation unconditionally
+		if(!$settings->parser_mangle_external_links)
+			return parent::inlineLink($fragment);
+		
+		// Extract the URL from the internal link. If it fails defer to the parent function
+		// 1 = display text, 2 = url
+		if(preg_match("/^\[([^[\]]+?)\]\(\s*([^()]+)\s*\)/", $fragment["text"], $matches) !== 1)
+			return parent::inlineLink($fragment);
+		
+		// Check the URL. If it doesn't match our *exact* format, then it doesn't happen.
+		if(!is_string($matches[2]) || preg_match("/^\.\/(.+)\.md$/", $matches[2], $matches_url) !== 1)
+			return parent::inlineLink($fragment);
+		
+		// The page name is made safe when Pepperminty Wiki does initial consistency checks (if it's unsafe it results in a 301 redirect)
+		$page_name = parsedown_pagename_resolve($matches_url[1]);
+		
+		$internal_link_text = "[[${page_name}]]";
+		if(!empty($matches[1])) // If the display text isn't empty, then respect it
+			$internal_link_text = "[[${page_name}¦{$matches[1]}]]";
+		
+		$result = $this->inlineInternalLink([
+			"text" => $internal_link_text
+		]);
+		$result["extent"] = strlen($fragment["text"]); // Parsedown isn't mb_ friendly
+		return $result;
 	}
 	
 	/*
