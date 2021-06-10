@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Command-line interface",
-	"version" => "0.1.1",
+	"version" => "0.1.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows interaction with Pepperminty Wiki on the command line.",
 	"id" => "feature-cli",
@@ -63,7 +63,7 @@ function ensure_cli() {
 	
 	header("content-type: text/plain");
 	exit("Oops! Somewhere along the way Pepperminty Wiki's command-line interface was invoked by accident.
-This is unfortunately an unrecoverable fatal error. Please get in touch with $settings->admindetails_name, $settings->sitename's administrator (their email address si $settings->admindetails_email).
+This is unfortunately an unrecoverable fatal error. Please get in touch with $settings->admindetails_name, $settings->sitename's administrator (their email address is $settings->admindetails_email).
 ");
 }
 
