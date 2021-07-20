@@ -274,5 +274,6 @@
 	"css_custom": { "type": "textarea", "description": "A string of custom CSS to include on top of the base theme css. Allows for theme customisations while still enabling automatic updates :D Just like the css setting, this one can also be a url.", "default": "/* Enter your custom css here. */" },
 	"cli_enabled": { "type": "checkbox", "description": "Whether the Pepperminty Wiki CLI is enabled or not.", "default": true },
 	"cli_prompt": { "type": "text", "description": "The string to use as the prompt in the CLI shell.", "default": "\u0001\u001b[1m\u001b[31m\u0002#\u0001\u001b[0m\u0002 " },
-	"sidebar_show": { "type": "checkbox", "description": "Whether to show the sidebar by default to all users or not.", "default": false }
+	"sidebar_show": { "type": "checkbox", "description": "Whether to show the sidebar by default to all users or not.", "default": false },
+	"sidebar_maxdepth": { "type": "number", "description": "The maximum depth of pages to show in the sidebar. Top-level pages are of depth 0, subpages thereof are of depth 1, etc. Defaults to a depth of 1, which indicates to display both top-level pages and their subpages.", "default": 1 }
 }

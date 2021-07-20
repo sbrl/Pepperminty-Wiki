@@ -25,6 +25,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Add `sidebar_show` to the settings GUI and the [configuration guide](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php)
  - Fix crash when using the search bar with PHP 8.0+
  - Prefix the default value of the `logo_url` setting with `https:`
+ - Fix display of subpages in the sidebar, and also wrap subpage lists in a `<details />` element to  allow collapsing them
 
 
 ## v0.22

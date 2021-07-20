@@ -77,7 +77,7 @@ register_module([
 			}
 		});
 		
-		add_help_section("50-sidebar", "Sidebar", "<p>$settings->sitename has an optional sidebar which displays a list of all the current pages (but not subpages) that it is currently hosting. It may or may not be enabled.</p>
+		add_help_section("50-sidebar", "Sidebar", "<p>$settings->sitename has an optional sidebar which displays a list of all the current pages and their respective subpages that it is currently hosting in a tree like structure. It may or may not be enabled.</p>
 		<p>If it isn't enabled, it can be enabled for your current browser only by appending <code>sidebar=yes</code> to the current page's query string.</p>
 		<p>If it is enabled, it can be disabled for your current browser only by appending <code>nosidebar</code> to the current page's query string.</p>");
 	}
@@ -90,14 +90,20 @@ register_module([
  * @param	string		$root_pagename	The pagename that should be considered the root of the rendering. You don't usually need to use this, it is used by the algorithm itself since it is recursive.
  * @return	string		A HTML rendering of the sidebar for the given pageindex.
  */
-function render_sidebar($pageindex, $root_pagename = "")
+function render_sidebar($pageindex, $root_pagename = "", $depth = 0)
 {
 	global $settings;
+	
+	if($depth > $settings->sidebar_maxdepth)
+		return null;
+	
+	if(mb_strlen($root_pagename) > 0) $root_pagename .= "/";
 	
 	$result = "<ul";
 	// If this is the very root of the tree, add an extra class to it
 	if($root_pagename == "") $result .= " class='sidebar-tree'";
 	$result .=">";
+	$subpages_added = 0;
 	foreach ($pageindex as $pagename => $details)
 	{
 		// If we have a valid root pagename, and it isn't present at the
@@ -110,19 +116,32 @@ function render_sidebar($pageindex, $root_pagename = "")
 			continue;
 
 		// If the page already appears on the sidebar, skip it
-		if(preg_match("/>$pagename<\a>/m", $result) === 1)
-			continue;		
+		if(strpos($result, ">$pagename<\a>") !== false)
+			continue;
+		
+		$pagename_relative = substr($pagename, strlen($root_pagename));
 		
 		// If the part of the current pagename that comes after the root
 		// pagename has a slash in it, skip it as it is a sub-sub page.
-		if(strpos(substr($pagename, strlen($root_pagename)), "/") !== false)
+		if(strpos($pagename_relative, "/") !== false)
 			continue;
 		
-		$result .= "<li><a href='?action=$settings->defaultaction&page=$pagename'>$pagename</a>\n";
-		$result .= render_sidebar($pageindex, $pagename);
-		$result .= "</li>\n";
+		$subpage_sidebar = render_sidebar($pageindex, $pagename, $depth + 1);
+		
+		if($subpage_sidebar === null) {
+			$result .= "<li><a href='?action=$settings->defaultaction&page=$pagename'>$pagename_relative</a></li>";
+		}
+		else {
+			$result .= "<li><details open>
+				<summary><a href='?action=$settings->defaultaction&page=$pagename'>$pagename_relative</a></summary>
+					$subpage_sidebar
+				</details></li>\n";
+		}
+		$subpages_added++;
 	}
 	$result .= "</ul>\n";
+	
+	if($subpages_added === 0) return null;
 	
 	return $result == "<ul></ul>\n" ? "" : $result;
 }
