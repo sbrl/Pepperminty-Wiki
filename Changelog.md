@@ -23,6 +23,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Improved error handling on first run where the PHP Zip extension is not installed
  - Also extract to `._extra_data` if the directory is empty
  - Add `sidebar_show` to the settings GUI and the [configuration guide](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php)
+ - Fix crash when using the search bar with PHP 8.0+
 
 
 ## v0.22

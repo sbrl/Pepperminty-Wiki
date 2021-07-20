@@ -533,7 +533,7 @@ class search
 	 * Example I used when writing this: https://www.php.net/manual/en/function.strtok.php#94463
 	 * @param	string	$query	The query string to split.
 	 */
-	public function stas_split($query) {
+	public static function stas_split($query) {
 		$query = self::$literator->transliterate($query);
 		
 		$terms = [];
@@ -561,7 +561,7 @@ class search
 
 	 * @param	string[]	$tokens	The array of query tokens to parse.
 	 */
-	public function stas_parse($tokens) {
+	public static function stas_parse($tokens) {
 		global $settings;
 		
 		/* Supported Syntax *
