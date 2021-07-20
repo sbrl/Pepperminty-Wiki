@@ -164,6 +164,24 @@ function path_resolve(string $path, string $basePath = null) {
 }
 
 /**
+ * Determines if a directory is empty or not.
+ * @ref https://stackoverflow.com/a/7497848/1460422
+ * @param	string	$dir	The path to the directory to check.
+ * @return	boolean	True if the directory is empty, or false if it is not empty.
+ */
+function is_directory_empty(string $dir) : bool {
+	$handle = opendir($dir);
+	while (false !== ($entry = readdir($handle))) {
+		if ($entry != "." && $entry != "..") {
+			closedir($handle);
+			return false;
+		}
+	}
+	closedir($handle);
+	return true;
+}
+
+/**
  * Converts a filepath to a page name.
  * @param  string $filepath The filepath to convert.
  * @return string           The extracted pagename.

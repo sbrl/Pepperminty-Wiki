@@ -20,6 +20,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - [security] Fixed some potential XSS attacks in the page editor
  - Fixed a weird bug in the `stats-update` action causing warnings
  - search: Properly apply weightings of matches in page titles and tags
+ - Improved error handling on first run where the PHP Zip extension is not installed
+ - Also extract to `._extra_data` if the directory is empty
 
 
 ## v0.22
