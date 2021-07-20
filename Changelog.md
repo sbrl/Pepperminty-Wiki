@@ -22,6 +22,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - search: Properly apply weightings of matches in page titles and tags
  - Improved error handling on first run where the PHP Zip extension is not installed
  - Also extract to `._extra_data` if the directory is empty
+ - Add `sidebar_show` to the settings GUI and the [configuration guide](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php)
 
 
 ## v0.22
