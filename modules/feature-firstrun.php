@@ -6,7 +6,7 @@
 
 register_module([
 	"name" => "First run wizard",
-	"version" => "0.1.1",
+	"version" => "0.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Displays a special page to aid in setting up a new wiki for the first time.",
 	"id" => "feature-firstrun",
@@ -75,11 +75,27 @@ register_module([
 			
 			// TODO: Add option to configure theme auto-update here - make sure it doesn't do anything until configuration it complete!
 			
+			$system_checks = implode("\n\t\t\t", array_map(function($check) {
+				$result = "<li>";
+				if(!$check[0]) $result .= "<strong>";
+				$result .= $check[0] ? "&#x2705;" : ($check[2] === "optional" ? "&#x26a0;&#xfe0f;" : "&#x274c;");
+				$result .= " {$check[1]}";
+				if(!$check[0]) $result .= "</strong>";
+				return $result;
+			}, do_system_checks()));
+			
 			$result = "<h1>Welcome!</h1>
 <p>Welcome to Pepperminty Wiki.</p>
 <p>Fill out the below form to get your wiki up and running!</p>
 <p>Optionally, <a target='_blank' href='https://starbeamrainbowlabs.com/blog/viewtracker.php?action=record&post-id=pepperminty-wiki/$version&format=text'>click this link</a> to say hi and let Starbeamrainbowlabs know that you're setting up a new Pepperminty Wiki $version instance.</p>
 <form method='post' action='?action=firstrun-complete'>
+	<fieldset>
+		<legend>System requirements</legend>
+		
+		<ul>
+			$system_checks
+		</ul>
+	</fieldset>
 	<fieldset>
 		<legend>Authorisation</legend>
 		
@@ -104,7 +120,7 @@ register_module([
 		<input type='password' id='password-again' name='password-again' required />
 	</fieldset>
 	<fieldset>
-		<legend>Wiki Details</legend>
+		<legend>Wiki details</legend>
 		
 		<label for='wiki-name'>Wiki Name:</label>
 		<input type='text' id='wiki-name' name='wiki-name' placeholder=\"e.g. Bob's Rockets Compendium\" required />
@@ -203,3 +219,33 @@ register_module([
 		});
 	}
 ]);
+
+
+function do_system_checks() {
+	$checks = [
+		function_exists("mb_strpos")
+			? [true, "php-mbstring is installed"]
+			: [false, "php-mbstring is not installed"],
+		class_exists("Transliterator") && class_exists("Collator")
+			? [true, "php-intl is installed for item sorting, search indexing, and sending non-utf8 emails"]
+			: [false, "php-intl is not installed (needed for item sorting, search indexing, and sending non-utf8 emails)"]
+	];
+	if(module_exists("feature-upload")) {
+		$checks[] = class_exists("Imagick") 
+			? [true, "php-imagick is installed for preview generation"]
+			: [false, "php-imagick is not installed (needed for image preview generation)", "optional"];
+		$checks[] = function_exists("finfo_file") 
+			? [true, "php-fileinfo is installed for upload file type checking"]
+			: [false, "php-fileinfo is not installed (needed for file type checking on uploads)", "optional"];
+	}
+	if(module_exists("page-export"))
+		$checks[] = class_exists("ZipArchive")
+			? [true, "php-zip is installed for compressing exports"]
+			: [false, "php-zip is not install (needed for compressing exports)", "optional"];
+	if(module_exists("lib-search-engine") or module_exists("feature-search-didyoumean"))
+		$checks[] = extension_loaded("sqlite3")
+			? [true, "php-sqlite3 is installed for search indexing"]
+			: [false, "php-sqlite3 is not installed (needed for search indexing)", "optional"];
+	
+	return $checks;
+}

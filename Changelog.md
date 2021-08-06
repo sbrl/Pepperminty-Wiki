@@ -9,6 +9,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - This allows for having a "create new page" button in your navigation links - e.g. edit `nav_links`, `nav_links_extra`, or `nav_links_bottom` in your `peppermint.json` and add something like `[ "+", "index.php?action=edit&unknownpagename=yes" ]`.
  - XML sitemap support with the new `page-sitemap` module (manual setup required for crawlers to notice it: see [the documentation](https://github.com/sbrl/Pepperminty-Wiki/blob/master/docs/02-Features.md#whats-this-about-manual-setup-for-the-sitemap))
  - Experimental support for transparent handling of `[display text](./Page Name.md)` style internal links (disabled by default: enable the `parser_mangle_external_links` setting and delete the `._cache` directory to enable)
+ - Added automatic system requirements indicator to first run (checks for various PHP extensions required for various different functions) - does not block you from proceeding, but does assist in first-time system configuration
 
 ## Changed
  - Updated the [configuration guide](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php) to include count of how many settings we have
