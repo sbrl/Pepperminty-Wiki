@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Uploader",
-	"version" => "0.7",
+	"version" => "0.7.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -138,6 +138,11 @@ register_module([
 							http_response_code(500); // something else went wrong
 						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because " . (($_FILES["file"]["error"] == 1 || $_FILES["file"]["error"] == 2) ? "the file is too large" : "an error occurred") . ".</p><p>Please contact $settings->admindetails_name, $settings->sitename's administrator for help.</p>"));
 
+					}
+					
+					if(!function_exists("finfo_file")) {
+						http_response_code(503);
+						exit(page_renderer::render("Upload failed - Server error - $settings->sitename", "<p>Your upload couldn't be processed because <code>fileinfo</code> is not installed on the server. This is required to properly check the file type of uploaded files.</p>><p>Please contact $settings->admindetails_name, $settings->sitename's administrator for help.</p>"));
 					}
 					
 					// Calculate the target name, removing any characters we
@@ -382,6 +387,13 @@ register_module([
 				
 			}
 			*/
+			
+			
+			if(!class_exists("Imagick")) {
+				http_response_code(503);
+				header("content-type: text/plain");
+				exit("Error: The PHP Imagick extension is required to perform this operation but is not installed. Please contact the system administrator.");
+			}
 			
 			$preview = new Imagick();
 			switch(substr($mime_type, 0, strpos($mime_type, "/")))

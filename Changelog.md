@@ -14,6 +14,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Updated the [configuration guide](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php) to include count of how many settings we have
  - Also send a `x-robots-tag: noindex, nofollow` HTTP header for the login page (Semrush Bot, you better obey this one)
  - Support `page` as either a GET parameter or a POST parameter (GET takes precedence over POST)
+ - Preview generation: If php-imagick is not installed but required for a particular operation, return a proper error message
+ - File upload: If fileinfo is not installed, return a proper error message when someone attempts to upload a file
 
 
 ## Fixed
