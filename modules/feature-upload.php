@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Uploader",
-	"version" => "0.7.1",
+	"version" => "0.7.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -130,7 +130,7 @@ register_module([
 					// Check for php upload errors
 					if($_FILES["file"]["error"] > 0)
 					{
-						if(!empty($_FILES["file"]) && file_exists($_FILES["file"]))
+						if(!empty($_FILES["file"]) && !empty($_FILES["file"]["tmp_name"]) && file_exists($_FILES["file"]["tmp_name"]))
 							unlink($_FILES["file"]["tmp_name"]);
 						if($_FILES["file"]["error"] == 1 || $_FILES["file"]["error"] == 2)
 							http_response_code(413); // file is too large
