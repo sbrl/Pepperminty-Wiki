@@ -17,6 +17,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Support `page` as either a GET parameter or a POST parameter (GET takes precedence over POST)
  - Preview generation: If php-imagick is not installed but required for a particular operation, return a proper error message
  - File upload: If fileinfo is not installed, return a proper error message when someone attempts to upload a file
+ - Add `image/avif` (AVIF image), `image/jxl` (JPEG XL image), and `image/heif`/`image/heic` to `upload_allowed_file_types` (you'll need to delete your entry in `peppermint.json` to get the new updated list) 
 
 
 ## Fixed
