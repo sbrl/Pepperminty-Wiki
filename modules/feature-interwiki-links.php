@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Interwiki links",
-	"version" => "0.1.1",
+	"version" => "0.1.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds interwiki link support. Set the interwiki_index_location setting at an index file to activate support.",
 	"id" => "feature-interwiki-links",
@@ -20,7 +20,7 @@ register_module([
 				$env->interwiki_index = json_decode(file_get_contents($paths->interwiki_index));
 		}
 		
-		$doc_help = "<p>$settings->sitename doesn't currently support interwiki links, but if you'd like it to, please contact $settings->admindetails_name ($settings->sitename's administrator) through their contact details at the bottom of every page and point them at <a href='https://starbeamrainbowlabs.com/labs/peppermint/_docpress/06.5-Interwiki-Links.html'>the documentation on how to set it up</a>. It's really easy, and they can always <a href='https://github.com/sbrl/Pepperminty-Wiki/issues/new'>open an issue</a> if they get stuck :-)</p>\n";
+		$doc_help = "<p>$settings->sitename doesn't currently support interwiki links, but if you'd like it to, please contact ".htmlentities($settings->admindetails_name)." ($settings->sitename's administrator) through their contact details at the bottom of every page and point them at <a href='https://starbeamrainbowlabs.com/labs/peppermint/_docpress/06.5-Interwiki-Links.html'>the documentation on how to set it up</a>. It's really easy, and they can always <a href='https://github.com/sbrl/Pepperminty-Wiki/issues/new'>open an issue</a> if they get stuck :-)</p>\n";
 		if(!empty($env->interwiki_index)) {
 			$doc_help = <<<HELP_BLOCK
 <p>$settings->sitename supports inter-wiki links. Such a link sends the user elsewhere on the internet. By prefixing a page name with a prefix, the convenience of the internal link syntax described above can be exploited to send users elsewhere without having to type out full urls! Here are few examples (note that these prefixes are only examples, and probably aren't available on $settings->sitename - check the list below for supported prefixes):</p>
@@ -40,7 +40,7 @@ HELP_BLOCK;
 
 			$doc_help_insert = "<table><tr><th>Name</th><th>Prefix</th>\n";
 			foreach($env->interwiki_index as $interwiki_def)
-				$doc_help_insert .= "<tr><td>$interwiki_def->name</td><td><code>$interwiki_def->prefix</code></td></tr>\n";
+				$doc_help_insert .= "<tr><td>".htmlentities($interwiki_def->name)."</td><td><code>$interwiki_def->prefix</code></td></tr>\n";
 			$doc_help_insert .= "</table>";
 			
 			$doc_help = str_replace("{supported_interwikis}", $doc_help_insert, $doc_help);
