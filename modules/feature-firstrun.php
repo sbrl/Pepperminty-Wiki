@@ -204,7 +204,7 @@ register_module([
 			
 			// Apply the settings
 			$settings->firstrun_complete = true;
-			$settings->sitename = $_POST["wiki-name"];
+			$settings->sitename = htmlentities($_POST["wiki-name"]);
 			$settings->data_storage_dir = $_POST["data-dir"];
 			
 			if(!save_settings()) {
