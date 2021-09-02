@@ -35,7 +35,7 @@ register_module([
 			
 			switch($format) {
 				case "html":
-					$content = "<h1>History for $env->page</h1>\n";
+					$content = "<h1>History for $env->page_safe</h1>\n";
 					if(!empty($pageindex->{$env->page}->history))
 					{
 						$content .= "\t\t<ul class='page-list'>\n";
@@ -163,11 +163,11 @@ register_module([
 			
 			if($result === false) {
 				http_response_code(503);
-				exit(page_renderer::render_main("Server Error - Revert - $settings->sitename", "<p>A server error occurred when $settings->sitename tried to save the reversion of <code>" . htmlentities($env->page) . "</code>. Please contact $settings->sitename's administrator $settings->admindetails_name, whose email address can be found at the bottom of every page (including this one).</p>"));
+				exit(page_renderer::render_main("Server Error - Revert - $settings->sitename", "<p>A server error occurred when $settings->sitename tried to save the reversion of <code>$env->page_safe</code>. Please contact $settings->sitename's administrator $settings->admindetails_name, whose email address can be found at the bottom of every page (including this one).</p>"));
 			}
 			
 			http_response_code(201);
-			exit(page_renderer::render_main("Reverting " . htmlentities($env->page) . " - $settings->sitename", "<p>" . htmlentities($env->page) . " has been reverted back to revision {$env->history->revision_number} successfully.</p>
+			exit(page_renderer::render_main("Reverting $env->page - $settings->sitename", "<p>$env->page_safe has been reverted back to revision {$env->history->revision_number} successfully.</p>
 			<p><a href='?page=" . rawurlencode($env->page) . "'>Go back</a> to the page, or continue <a href='?action=history&page = " . rawurlencode($env->page) . "'>reviewing its history</a>.</p>"));
 			
 			// $env->page_filename
