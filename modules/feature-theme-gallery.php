@@ -10,7 +10,7 @@ register_module([
 	"description" => "Adds a theme gallery page and optional automatic theme updates. Contacts a remote server, where IP addresses are stored in automatic server logs for security and attack mitigation purposes.",
 	"id" => "feature-theme-gallery",
 	"code" => function() {
-		global $settings;
+		global $settings, $env;
 		/**
 		 * @api {get} ?action=theme-gallery Display the theme gallery
 		 * @apiName ThemeGallery
@@ -40,7 +40,7 @@ register_module([
 					$result .= "<li><a href='".htmlentities($url)."'>".htmlentities($url)."</a></li>\n";
 				}
 				$result .= "</ul>
-				<p>...with the following user agent string: <code>".ini_get("user_agent")."</code></p>
+				<p>...with the following user agent string: <code>".htmlentities (ini_get("user_agent"))."</code></p>
 				<p>No external HTTP requests will be made without your consent.</p>
 				<p><a href='?action=theme-gallery&load=yes'>Ok, load the gallery</a>.</p>
 				<p> <a href='javascript:history.back();'>Actually, take me back</a>.</p>";
@@ -178,12 +178,13 @@ register_module([
 			}
 			
 			http_response_code(200);
-			exit(page_renderer::render_main("Theme Changed - $settings->sitename", "<p>$settings->sitename's theme was changed successfully to $settings->css_theme_gallery_selected_id.</p>
+			exit(page_renderer::render_main("Theme Changed - $settings->sitename", "<p>$settings->sitename's theme was changed successfully to ".htmlentities($settings->css_theme_gallery_selected_id).".</p>
 			<p>Go to the <a href='?action=$settings->defaultaction'>homepage</a>.</p>"));
 		});
 		
-		// TODO: Fill this in properly
-		add_help_section("26-random-redirect", "Jumping to a random page", "<p>$settings->sitename has a function that can send you to a random page. To use it, click <a href='?action=random'>here</a>. $settings->admindetails_name ($settings->sitename's adminstrator) may have added it to one of the menus.</p>");
+		if($env->is_admin) add_help_section("945-theme-gallery", "Changing the theme", "<p>$settings->sitename allows you to change the theme by selecting a theme from the public theme gallery. You can <a href='?action=theme-gallery'>visit the theme gallery</a> to take a look. The theme gallery does make a remote HTTP request, but a warning is displayed before this is performed. Once a theme is downloaded, occasional (but infrequent) HTTP requests are made to make sure it is up to date.</p>
+		<p>Note that when using a theme from the  theme gallery, the internal theme is disabled. There is a button to disable any loaded theme gallery theme though.</p>
+		<p>The default theme has support for the <a href='https://starbeamrainbowlabs.com/blog/article.php?article=posts/353-prefers-color-scheme.html'><code>prefers-color-scheme</code></a> CSS media query, enabling it to be dark or light depending on your operating system preference.</p>");
 	}
 ]);
 
