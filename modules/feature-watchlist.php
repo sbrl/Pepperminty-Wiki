@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "User watchlists",
-	"version" => "0.1.3",
+	"version" => "0.1.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds per-user watchlists. When a page on a user's watchlist is edited, a notification email is sent.",
 	"id" => "feature-watchlist",
@@ -145,7 +145,7 @@ register_module([
 				http_response_code(401);
 				header("x-status: failed");
 				header("x-problem: not-logged-in");
-				exit(page_renderer::render_main("Not logged in - $settings->sitename", "<p>Only logged in users can have watchlists. Try <a href='?action=login&amp;returnto=".rawurlencode("?action=watchlist-edit&do=$do&returnto=$returnto")."'>logging in</a>.</p>"));
+				exit(page_renderer::render_main("Not logged in - $settings->sitename", "<p>Only logged in users can have watchlists. Try <a href='?action=login&amp;returnto=".rawurlencode("?action=watchlist-edit&do=$do&returnto=".htmlentities($returnto))."'>logging in</a>.</p>"));
 			}
 			
 			if(empty($env->user_data->emailAddress)) {

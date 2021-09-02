@@ -317,6 +317,16 @@ function makepathsafe($string)
 }
 
 /**
+ * Slugifies a given string such that it can only contain a-z0-9-_.
+ * Also automatically makes it lowercase.
+ * @param	string	$text	The text to operate on.
+ * @return	string	The slugified string.
+ */
+function slugify(string $text) : string {
+	return preg_replace("/[^a-zA-Z0-9\-_]", "", $text);
+}
+
+/**
  * Hides an email address from bots. Returns a fragment of HTML that contains the mangled email address.
  * @package core
  * @param	string	$str			The original email address

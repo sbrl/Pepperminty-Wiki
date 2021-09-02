@@ -22,7 +22,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ## Fixed
  - [security] Fixed some potential XSS attacks in the page editor
  - [security] Fix stored XSS attack in the wiki name via the first  run wizard [CVE-2021-38600](https://github.com/hmaverickadams/CVE-2021-38600); low severity since it requires the site secret to do the initial setup & said initial setup can only be performed once
- - [security] Fix reflected XSS attack (arbitrary code execution in the user's browser) via the `action` GET parameter.
+ - [security] Fix reflected XSS attack (arbitrary code execution in the user's browser) via the `action` & `action=watchlist&return=blah` GET parameters.
  - Fixed a weird bug in the `stats-update` action causing warnings
  - search: Properly apply weightings of matches in page titles and tags
  - Improved error handling on first run where the PHP Zip extension is not installed

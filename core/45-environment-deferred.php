@@ -28,4 +28,4 @@ if($env->is_history_revision)
 else if(isset($pageindex->{$env->page}))
 	$env->page_filename .= $pageindex->{$env->page}->filename;
 
-$env->action = preg_replace("/[^a-z0-9\-_]/", "", strtolower($_GET["action"]));
+$env->action = slugify($_GET["action"]);
