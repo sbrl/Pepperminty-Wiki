@@ -42,7 +42,7 @@ register_module([
 				exit(hash_password($_GET["string"]));
 			}
 			else {
-				exit(page_renderer::render_main("Hashed string", "<p>Algorithm: <code>$settings->password_algorithm</code></p>\n<p><code>" . $_GET["string"] . "</code> → <code>" . hash_password($_GET["string"]) . "</code></p>"));
+				exit(page_renderer::render_main("Hashed string", "<p>Algorithm: <code>$settings->password_algorithm</code></p>\n<p><code>" . htmlentities($_GET["string"]) . "</code> → <code>" . hash_password($_GET["string"]) . "</code></p>"));
 			}
 		});
 	}
