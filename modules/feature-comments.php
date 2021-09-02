@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.3.3",
+	"version" => "0.3.4",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
@@ -58,12 +58,12 @@ register_module([
 			$message_length = strlen($message);
 			if($message_length < $settings->comment_min_length) {
 				http_response_code(422);
-				exit(page_renderer::render_main("Error posting comment - $settings->sitename", "<p>Your comment couldn't be posted because it was too short. $settings->sitename needs at $settings->comment_min_length characters in a comment in order to post it.</p>"));
+				exit(page_renderer::render_main("Error posting comment - $settings->sitename", "<p>Your comment couldn't be posted because it was too short. $settings->sitename needs at ".htmlentities($settings->comment_min_length)." characters in a comment in order to post it.</p>"));
 			}
 			if($message_length > $settings->comment_max_length) {
 				http_response_code(422);
-				exit(page_renderer::renderer_main("Error posting comment - $settings->sitename", "<p>Your comment couldn't be posted because it was too long. $settings->sitenamae can only post comments that are up to $settings->comment_max_length characters in length, and yours was $message_length characters. Try splitting it up into multiple comments! Here's the comment you tried to post:</p>
-				<textarea readonly>$message</textarea>"));
+				exit(page_renderer::renderer_main("Error posting comment - $settings->sitename", "<p>Your comment couldn't be posted because it was too long. $settings->sitename can only post comments that are up to ".htmlentities($settings->comment_max_length)." characters in length, and yours was $message_length characters. Try splitting it up into multiple comments! Here's the comment you tried to post:</p>
+				<textarea readonly>".htmlentities($message)."</textarea>"));
 			}
 			
 			// Figure out where the comments are stored
@@ -92,7 +92,7 @@ register_module([
 				if($parent_comment === false) {
 					http_response_code(422);
 					exit(page_renderer::render_main("Error posting comment - $settings->sitename", "<p>$settings->sitename couldn't post your comment because it couldn't find the parent comment you replied to. It's possible that $settings->admindetails_name, $settings->sitename's administrator, deleted the comment. Here's the comment you tried to post:</p>
-					<textarea readonly>$message</textarea>"));
+					<textarea readonly>".htmlentities($message)."</textarea>"));
 				}
 				
 				$parent_comment->replies[] = $new_comment;
@@ -141,7 +141,7 @@ register_module([
 			
 			http_response_code(307);
 			header("location: ?action=view&page=" . rawurlencode($env->page) . "&commentsuccess=yes#comment-$new_comment->id");
-			exit(page_renderer::render_main("Comment posted successfully - $settings->sitename", "<p>Your comment on $env->page was posted successfully. If your browser doesn't redirect you automagically, please <a href='?action=view&page=" . rawurlencode($env->page) . "commentsuccess=yes#comment-$new_comment->id'>click here</a> to go to the comment you posted on the page you were viewing.</p>"));
+			exit(page_renderer::render_main("Comment posted successfully - $settings->sitename", "<p>Your comment on $env->page_safe was posted successfully. If your browser doesn't redirect you automagically, please <a href='?action=view&page=".rawurlencode($env->page)."commentsuccess=yes#comment-$new_comment->id'>click here</a> to go to the comment you posted on the page you were viewing.</p>"));
 		});
 		
 		
@@ -192,20 +192,20 @@ register_module([
 			$comment_to_delete = find_comment($comments, $target_id);
 			if($comment_to_delete->username !== $env->user && !$env->is_admin) {
 				http_response_code(401);
-				exit(page_renderer::render_main("Error - Deleting Comment - $settings->sitename", "<p>You can't delete the comment with the id <code>" . htmlentities($target_id) . "</code> on the page <em>$env->page</em> because you're logged in as " . page_renderer::render_username($env->user) . ", and " . page_renderer::render_username($comment_to_delete->username) . " made that comment. Try <a href='?action=logout'>Logging out</a> and then logging in again as " . page_renderer::render_username($comment_to_delete->username) . ", or as a moderator or better."));
+				exit(page_renderer::render_main("Error - Deleting Comment - $settings->sitename", "<p>You can't delete the comment with the id <code>" . htmlentities($target_id) . "</code> on the page <em>$env->page_safe</em> because you're logged in as " . page_renderer::render_username($env->user) . ", and " . page_renderer::render_username($comment_to_delete->username) . " made that comment. Try <a href='?action=logout'>Logging out</a> and then logging in again as " . page_renderer::render_username($comment_to_delete->username) . ", or as a moderator or better."));
 			}
 			
 			if(!delete_comment($comments, $_GET["delete_id"])) {
 				http_response_code(404);
-				exit(page_renderer::render_main("Comment not found - Deleting Comment - $settings->sitename", "<p>The comment with the id <code>" . htmlentities($_GET["delete_id"]) . "</code> on the page <em>$env->page</em> wasn't found. Perhaps it was already deleted?</p>"));
+				exit(page_renderer::render_main("Comment not found - Deleting Comment - $settings->sitename", "<p>The comment with the id <code>" . htmlentities($_GET["delete_id"]) . "</code> on the page <em>$env->page_safe</em> wasn't found. Perhaps it was already deleted?</p>"));
 			}
 			
 			if(!file_put_contents($comment_filename, json_encode($comments))) {
 				http_response_code(503);
-				exit(page_renderer::render_main("Server Error - Deleting Comment - $settings->sitename", "<p>While $settings->sitename was able to delete the comment with the id <code>" . htmlentities($target_id) . "</code> on the page <em>$env->page</em>, it couldn't save the changes back to disk. Please contact " . hide_email($settings->admindetails_email, $settings->admindetails_name) . ", $settings->sitename's local friendly administrator about this issue.</p>"));
+				exit(page_renderer::render_main("Server Error - Deleting Comment - $settings->sitename", "<p>While $settings->sitename was able to delete the comment with the id <code>" . htmlentities($target_id) . "</code> on the page <em>$env->page_safe</em>, it couldn't save the changes back to disk. Please contact " . hide_email($settings->admindetails_email, $settings->admindetails_name) . ", $settings->sitename's local friendly administrator about this issue.</p>"));
 			}
 			
-			exit(page_renderer::render_main("Comment Deleted - $settings->sitename", "<p>The comment with the id <code>" . htmlentities($target_id) . "</code> on the page <em>$env->page</em> has been deleted successfully. <a href='?page=" . rawurlencode($env->page) . "&redirect=no'>Go back</a> to " . htmlentities($env->page) . ".</p>"));
+			exit(page_renderer::render_main("Comment Deleted - $settings->sitename", "<p>The comment with the id <code>" . htmlentities($target_id) . "</code> on the page <em>$env->page_safe</em> has been deleted successfully. <a href='?page=" . rawurlencode($env->page) . "&redirect=no'>Go back</a> to $env->page_safe.</p>"));
 		});
 		/**
 		 * @api {post} ?action=comments-fetch&page={page_name}	Fetch the comments for a page
@@ -238,7 +238,7 @@ register_module([
 			if(!file_exists($comments_filename)) {
 				http_response_code(404);
 				header("content-type: text/plain");
-				exit("Error: No comments file was found for the page '$env->page'.");
+				exit("Error: No comments file was found for the page '$env->page_safe'.");
 			}
 			
 			$comments_data = json_decode(file_get_contents($comments_filename));
