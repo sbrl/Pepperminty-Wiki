@@ -53,7 +53,7 @@ register_module([
 				
 				$state = ($pageindex->$page->protect ? "enabled" : "disabled");
 				$title = "Page protection $state.";
-				exit(page_renderer::render_main($title, "<p>Page protection for $env->page has been $state.</p><p><a href='?action=$settings->defaultaction&page=$env->page'>Go back</a>."));
+				exit(page_renderer::render_main($title, "<p>Page protection for $env->page_safe has been $state.</p><p><a href='?action=$settings->defaultaction&page=".rawurlencode($env->page)."'>Go back</a>."));
 			}
 			else
 			{
