@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Recent Changes",
-	"version" => "0.5.1",
+	"version" => "0.5.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds recent changes. Access through the 'recent-changes' action.",
 	"id" => "feature-recent-changes",
@@ -101,7 +101,7 @@ register_module([
 					http_response_code(406);
 					header("content-type: text/plain");
 					header("content-length: 42");
-					exit("Error: That format code wasnot recognised.");
+					exit("Error: That format code was not recognised.");
 			}
 			
 			
