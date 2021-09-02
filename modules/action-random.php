@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Random Page",
-	"version" => "0.3",
+	"version" => "0.3.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action called 'random' that redirects you to a random page.",
 	"id" => "action-random",
@@ -23,7 +23,7 @@ register_module([
 		add_action("random", function() {
 			global $pageindex;
 			
-			$mode = preg_replace("/[^a-z-_]/i", "", $_GET["mode"] ?? "");
+			$mode = slugify($_GET["mode"] ?? "");
 			
 			$pageNames = array_keys(get_object_vars($pageindex));
 			
