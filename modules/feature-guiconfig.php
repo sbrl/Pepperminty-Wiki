@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Settings GUI",
-	"version" => "0.1.7",
+	"version" => "0.1.8",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
 	"id" => "feature-guiconfig",
@@ -100,10 +100,10 @@ SCRIPT;
 					case "email":
 					case "number":
 					case "text":
-						$inputControl = "<input type='$configData->type' id='$configKey' name='$configKey' value='{$settings->$configKey}' />";
+						$inputControl = "<input type='$configData->type' id='$configKey' name='$configKey' value='".htmlentities($settings->$configKey)."' />";
 						break;
 					case "textarea":
-						$inputControl = "<textarea id='$configKey' name='$configKey'>{$settings->$configKey}</textarea>";
+						$inputControl = "<textarea id='$configKey' name='$configKey'>".htmlentities($settings->$configKey)."</textarea>";
 						break;
 					case "checkbox":
 						$reverse = true;
@@ -118,7 +118,7 @@ SCRIPT;
 						break;
 					default:
 						$label = "";
-						$inputControl = "<p><em>Sorry! The <code>$configKey</code> setting isn't editable yet through the gui. Please try editing <code>peppermint.json</code> for the time being.</em></p>";
+						$inputControl = "<p><em>Sorry! The <code>".htmlentities($configKey)."</code> setting isn't editable yet through the gui. Please try editing <code>peppermint.json</code> for the time being.</em></p>";
 						break;
 				}
 				
