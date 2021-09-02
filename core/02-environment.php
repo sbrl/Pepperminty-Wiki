@@ -14,6 +14,8 @@ $env = new stdClass();
 $env->action = $settings->defaultaction;
 /** The page name requested by the remote client. @var string */
 $env->page = "";
+/** The page name, but run through htmlentities(), thus making it safe to display in an output document. */
+$env->page_safe = "";
 /** The filename that the page is stored in. @var string */
 $env->page_filename = "";
 /** Whether we are looking at a history revision or not. @var boolean */

@@ -205,7 +205,7 @@ class page_renderer
 
 			"{content}" => $content,
 			"{extra}" => "",
-			"{title}" => $title,
+			"{title}" => htmlentities($title),
 		];
 
 		// Pass the parts through the part processors

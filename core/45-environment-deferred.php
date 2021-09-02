@@ -6,6 +6,7 @@
 
 /// Finish setting up the environment object ///
 $env->page = $_GET["page"] ?? $_POST["page"];
+$env->page_safe = htmlentities($env->page);
 if(isset($_GET["revision"]) and is_numeric($_GET["revision"]))
 {
 	// We have a revision number!

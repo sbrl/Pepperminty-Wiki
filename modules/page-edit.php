@@ -380,8 +380,10 @@ window.addEventListener("load", function(event) {
 		add_action("save", function() {
 			global $pageindex, $settings, $env, $save_preprocessors, $paths;
 			// Update the page name in the main environment, since the page name may be submitted via the POST form
-			if(isset($_POST["page"]))
+			if(isset($_POST["page"])) {
 				$env->page = $_POST["page"];
+				$env->page_safe = htmlentities($env->page);
+			}
 			
 			if(!$settings->editing)
 			{
