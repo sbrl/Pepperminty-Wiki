@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Search",
-	"version" => "0.13.2",
+	"version" => "0.13.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds proper search functionality to Pepperminty Wiki using an inverted index to provide a full text search engine. If pages don't show up, then you might have hit a stop word. If not, try requesting the `invindex-rebuild` action to rebuild the inverted index from scratch.",
 	"id" => "feature-search",
@@ -198,11 +198,11 @@ register_module([
 			
 			$query = $_GET["query"];
 			if(isset($pageindex->$query)) {
-				$content .= "There's a page on $settings->sitename called <a href='?page=" . rawurlencode($query) . "'>$query</a>.";
+				$content .= "There's a page on $settings->sitename called <a href='?page=" . rawurlencode($query) . "'>".htmlentities($query)."</a>.";
 			}
 			else
 			{
-				$content .= "There isn't a page called $query on $settings->sitename, but you ";
+				$content .= "There isn't a page called ".htmlentities($query)." on $settings->sitename, but you ";
 				if((!$settings->anonedits && !$env->is_logged_in) || !$settings->editing) {
 					$content .= "do not have permission to create it.";
 					if(!$env->is_logged_in) {
@@ -240,6 +240,7 @@ register_module([
 			$i = 0; // todo use $_GET["offset"] and $_GET["result-count"] or something
 			foreach($results as $result)
 			{
+				$pagename_display = htmlentities($result["pagename"]);
 				$link = "?page=" . rawurlencode($result["pagename"]);
 				$pagesource = file_get_contents($env->storage_prefix . $result["pagename"] . ".md");
 				
@@ -260,17 +261,17 @@ register_module([
 				}*/
 				
 				$tag_list = "<span class='tags'>";
-				foreach($pageindex->{$result["pagename"]}->tags ?? [] as $tag) $tag_list .= "<a href='?action=list-tags&tag=" . rawurlencode($tag) . "' class='mini-tag'>$tag</a>";
+				foreach($pageindex->{$result["pagename"]}->tags ?? [] as $tag) $tag_list .= "<a href='?action=list-tags&tag=" . rawurlencode($tag) . "' class='mini-tag'>".htmlentities($tag)."</a>";
 				$tag_list .= "</span>\n";
 				
 				// Make redirect pages italics
 				if(!empty($pageindex->{$result["pagename"]}->redirect))
-					$result["pagename"] = "<em>{$result["pagename"]}</em>";
+					$pagename_display = "<em>$pagename_display</em>";
 				
 				// We add 1 to $i here to convert it from an index to a result
 				// number as people expect it to start from 1
 				$content .= "<div class='search-result' data-result-number='" . ($i + 1) . "' data-rank='" . $result["rank"] . "'>\n";
-				$content .= "	<h2><a href='$link'>" . $result["pagename"] . "</a> <span class='search-result-badges'>$tag_list</span></h2>\n";
+				$content .= "	<h2><a href='$link'>$pagename_display</a> <span class='search-result-badges'>$tag_list</span></h2>\n";
 				$content .= "	<p class='search-context'>$context</p>\n";
 				$content .= "</div>\n";
 				
@@ -365,7 +366,7 @@ register_module([
 			$result = "";
 			foreach($tokens as $token) {
 				if(in_array(substr($token, 1), $stas_query["exclude"])) {
-					$result .= "<span title='explicit exclude' style='color: red; text-decoration: dotted line-through;'>" . substr($token, 1) . "</span> ";
+					$result .= "<span title='explicit exclude' style='color: red; text-decoration: dotted line-through;'>" . htmlentities(substr($token, 1)) . "</span> ";
 					continue;
 				}
 				
@@ -381,7 +382,7 @@ register_module([
 					}
 				}
 				if($term == null) {
-					$result .= "<span title='unknown' style='color: black; text-decoration: wavy underline;'>$token</span> ";
+					$result .= "<span title='unknown' style='color: black; text-decoration: wavy underline;'>".htmlentities($token)."</span> ";
 					continue;
 				}
 				
@@ -405,7 +406,7 @@ register_module([
 				}
 				$title .= ", weight: {$term["weight"]}";
 				
-				$result .= "<span title='$title' style='$style'>$token</span> ";
+				$result .= "<span title='$title' style='$style'>".htmlentities($token)."</span> ";
 			}
 			
 			exit(page_renderer::render_main("STAS Query Analysis - $settings->sitename", "<p>$settings->sitename understood your query to mean the following:</p>
@@ -427,7 +428,7 @@ register_module([
 		 */
 		add_action("opensearch-description", function () {
 			global $settings;
-			$siteRoot = full_url() . "/index.php";
+			$siteRoot = htmlentities(full_url() . "/index.php", ENT_XML1);
 			if(!isset($_GET["debug"]))
 				header("content-type: application/opensearchdescription+xml");
 			else
@@ -478,6 +479,7 @@ register_module([
 			
 			if(!in_array($type, ["json", "opensearch"])) {
 				http_response_code(406);
+				header("content-type: text/plain");
 				exit("Error: The type '$type' is not one of the supported output types. Available values: json, opensearch. Default: json");
 			}
 			
