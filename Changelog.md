@@ -27,6 +27,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - `action=watchlist-edit`: `returnto`, `do`
      - `action=watchlist`: `format`
      - `action=hash`: `string`
+ - [security] Automatically run page titles through `htmlentities()`
  - Fixed a weird bug in the `stats-update` action causing warnings
  - search: Properly apply weightings of matches in page titles and tags
  - Improved error handling on first run where the PHP Zip extension is not installed
