@@ -65,7 +65,7 @@ register_module([
 					
 					if($is_avatar) {
 						exit(page_renderer::render("Upload avatar - $settings->sitename", "<h1>Upload avatar</h1>
-			<p>Select an image below, and then press upload. $settings->sitename currently supports the following file types (though not all of them may be suitable for an avatar): " . implode(", ", $settings->upload_allowed_file_types) . "</p>
+			<p>Select an image below, and then press upload. $settings->sitename currently supports the following file types (though not all of them may be suitable for an avatar): " . htmlentities(implode(", ", $settings->upload_allowed_file_types)) . "</p>
 			<form method='post' action='?action=upload' enctype='multipart/form-data'>
 				<label for='file'>Select a file to upload.</label>
 				<input type='file' name='file' id='file-upload-selector' tabindex='1' />
@@ -106,7 +106,7 @@ register_module([
 					// Receive file
 					
 					if(!$settings->editing) {
-						exit(page_renderer::render_main("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because editing is currently disabled on $settings->sitename. Please contact $settings->admindetails_name, $settings->sitename's administrator for more information - their contact details can be found at the bottom of this page. <a href='index.php'>Go back to the main page</a>."));
+						exit(page_renderer::render_main("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because editing is currently disabled on $settings->sitename. Please contact ".htmlentities($settings->admindetails_name).", $settings->sitename's administrator for more information - their contact details can be found at the bottom of this page. <a href='index.php'>Go back to the main page</a>."));
 					}
 					
 					// Make sure uploads are enabled
@@ -136,13 +136,13 @@ register_module([
 							http_response_code(413); // file is too large
 						else
 							http_response_code(500); // something else went wrong
-						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because " . (($_FILES["file"]["error"] == 1 || $_FILES["file"]["error"] == 2) ? "the file is too large" : "an error occurred") . ".</p><p>Please contact $settings->admindetails_name, $settings->sitename's administrator for help.</p>"));
+						exit(page_renderer::render("Upload failed - $settings->sitename", "<p>Your upload couldn't be processed because " . (($_FILES["file"]["error"] == 1 || $_FILES["file"]["error"] == 2) ? "the file is too large" : "an error occurred") . ".</p><p>Please contact ".htmlentities($settings->admindetails_name).", $settings->sitename's administrator for help.</p>"));
 
 					}
 					
 					if(!function_exists("finfo_file")) {
 						http_response_code(503);
-						exit(page_renderer::render("Upload failed - Server error - $settings->sitename", "<p>Your upload couldn't be processed because <code>fileinfo</code> is not installed on the server. This is required to properly check the file type of uploaded files.</p>><p>Please contact $settings->admindetails_name, $settings->sitename's administrator for help.</p>"));
+						exit(page_renderer::render("Upload failed - Server error - $settings->sitename", "<p>Your upload couldn't be processed because <code>fileinfo</code> is not installed on the server. This is required to properly check the file type of uploaded files.</p>><p>Please contact ".htmlentities($settings->admindetails_name).", $settings->sitename's administrator for help.</p>"));
 					}
 					
 					// Calculate the target name, removing any characters we
@@ -159,14 +159,14 @@ register_module([
 					{
 						http_response_code(415);
 						exit(page_renderer::render("Unknown file type - Upload error - $settings->sitename", "<p>$settings->sitename recieved the file you tried to upload successfully, but detected that the type of file you uploaded is not in the allowed file types list. The file has been discarded.</p>
-						<p>The file you tried to upload appeared to be of type <code>$mime_type</code>, but $settings->sitename currently only allows the uploading of the following file types: <code>" . implode("</code>, <code>", $settings->upload_allowed_file_types) . "</code>.</p>
+						<p>The file you tried to upload appeared to be of type <code>$mime_type</code>, but $settings->sitename currently only allows the uploading of the following file types: <code>" . htmlentities(implode("</code>, <code>", $settings->upload_allowed_file_types)) . "</code>.</p>
 						<p><a href='?action=$settings->defaultaction'>Go back</a> to the Main Page.</p>"));
 					}
 					
 					// Perform appropriate checks based on the *real* filetype
 					if($is_avatar && substr($mime_type, 0, strpos($mime_type, "/")) !== "image") {
 						http_response_code(415);
-						exit(page_renderer::render_main("Error uploading avatar - $settings->sitename", "<p>That file appears to be unsuitable as an avatar, as $settings->sitename has detected it to be of type <code>$mime_type</code>, which doesn't appear to be an image. Please try <a href='?action=upload&avatar=yes'>uploading a different file</a> to use as your avatar.</p>"));
+						exit(page_renderer::render_main("Error uploading avatar - $settings->sitename", "<p>That file appears to be unsuitable as an avatar, as $settings->sitename has detected it to be of type <code>".htmlentities($mime_type)."</code>, which doesn't appear to be an image. Please try <a href='?action=upload&avatar=yes'>uploading a different file</a> to use as your avatar.</p>"));
 					}
 					
 					switch(substr($mime_type, 0, strpos($mime_type, "/")))
@@ -197,7 +197,7 @@ register_module([
 					{
 						http_response_code(415);
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded appears to be dangerous and has been discarded. Please contact $settings->sitename's administrator for assistance.</p>
-						<p>Additional information: The file uploaded appeared to be of type <code>$mime_type</code>, which mapped onto the extension <code>$file_extension</code>. This file extension has the potential to be executed accidentally by the web server.</p>"));
+						<p>Additional information: The file uploaded appeared to be of type <code>".htmlentities($mime_type)."</code>, which mapped onto the extension <code>".htmlentities($file_extension)."</code>. This file extension has the potential to be executed accidentally by the web server.</p>"));
 					}
 					
 					// Remove dots from both ends, just in case
@@ -221,7 +221,7 @@ register_module([
 					}
 					
 					if(isset($pageindex->$new_pagepath) && !$is_avatar)
-						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>A page or file has already been uploaded with the name '$new_filename'. Try deleting it first. If you do not have permission to delete things, try contacting one of the moderators.</p>"));
+						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>A page or file has already been uploaded with the name '".htmlentities($new_filename)."'. Try deleting it first. If you do not have permission to delete things, try contacting one of the moderators.</p>"));
 					
 					// Delete the previously uploaded avatar, if it exists
 					// In the future we _may_ not need this once we have
@@ -236,7 +236,7 @@ register_module([
 					if(!move_uploaded_file($temp_filename, $env->storage_prefix . $new_filename))
 					{
 						http_response_code(409);
-						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that either is a configuration error, or that $settings->sitename has been attacked. Please contact " . $settings->admindetails_name . ", your $settings->sitename Administrator.</p>"));
+						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded was valid, but $settings->sitename couldn't verify that it was tampered with during the upload process. This probably means that either is a configuration error, or that $settings->sitename has been attacked. Please contact ".htmlentities($settings->admindetails_name).", your $settings->sitename Administrator.</p>"));
 					}
 					
 					$description = $_POST["description"] ?? "_(No description provided)_\n";
@@ -284,7 +284,7 @@ register_module([
 						]);
 					}
 					
-					header("location: ?action=view&page=$new_pagepath&upload=success");
+					header("location: ?action=view&page=".rawurlencode($new_pagepath)."&upload=success");
 					
 					break;
 			}
@@ -315,7 +315,7 @@ register_module([
 			
 			if(empty($pageindex->{$env->page}->uploadedfilepath))
 			{
-				$im = errorimage("The page '$env->page' doesn't have an associated file.");
+				$im = errorimage("The page '$env->page_safe' doesn't have an associated file.");
 				header("content-type: image/png");
 				imagepng($im);
 				exit();
@@ -323,7 +323,7 @@ register_module([
 			
 			$filepath = realpath($env->storage_prefix . $pageindex->{$env->page}->uploadedfilepath);
 			$mime_type = $pageindex->{$env->page}->uploadedfilemime;
-			$shortFilename = substr($filepath, 1 + (strrpos($filepath, '/') !== false ? strrpos($filepath, '/') : -1));
+			$shortFilename = str_replace(["\r", "\n", "\""], "", substr($filepath, 1 + (strrpos($filepath, '/') !== false ? strrpos($filepath, '/') : -1)));
 			
 			header("content-disposition: inline; filename=\"$shortFilename\"");
 			header("last-modified: " . gmdate('D, d M Y H:i:s T', $pageindex->{$env->page}->lastmodified));
@@ -485,9 +485,9 @@ register_module([
 				$filepath = $pageindex->{$env->page}->uploadedfilepath;
 				$mime_type = $pageindex->{$env->page}->uploadedfilemime;
 				$dimensions = $mime_type !== "image/svg+xml" ? getimagesize($env->storage_prefix . $filepath) : getsvgsize($env->storage_prefix . $filepath);
-				$fileTypeDisplay = substr($mime_type, 0, strpos($mime_type, "/"));
-				$previewUrl = "?action=preview&size=$settings->default_preview_size&page=" . rawurlencode($env->page);
-				$originalUrl = $env->storage_prefix == "./" ? $filepath : "?action=preview&size=original&page=" . rawurlencode($env->page);
+				$fileTypeDisplay = slugify(substr($mime_type, 0, strpos($mime_type, "/")));
+				$previewUrl = htmlentities("?action=preview&size=$settings->default_preview_size&page=" . rawurlencode($env->page));
+				$originalUrl = htmlentities($env->storage_prefix == "./" ? $filepath : "?action=preview&size=original&page=" . rawurlencode($env->page));
 				if($mime_type == "application/pdf")
 					$fileTypeDisplay = "pdf";
 				
@@ -534,8 +534,8 @@ register_module([
 				}
 				
 				$fileInfo = [];
-				$fileInfo["Name"] = str_replace("Files/", "", $filepath);
-				$fileInfo["Type"] = $mime_type;
+				$fileInfo["Name"] = htmlentities(str_replace("Files/", "", $filepath));
+				$fileInfo["Type"] = htmlentities($mime_type);
 				$fileInfo["Size"] = human_filesize(filesize($env->storage_prefix . $filepath));
 				switch($fileTypeDisplay)
 				{
@@ -551,7 +551,7 @@ register_module([
 			<table>";
 				foreach ($fileInfo as $displayName => $displayValue)
 				{
-					$preview_html .= "<tr><th>$displayName</th><td>$displayValue</td></tr>\n";
+					$preview_html .= "<tr><th>".htmlentities($displayName)."</th><td>$displayValue</td></tr>\n";
 				}
 				$preview_html .= "</table>";
 				
