@@ -33,6 +33,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Prefix the default value of the `logo_url` setting with `https:`
  - Fix display of subpages in the sidebar, and also wrap subpage lists in a `<details />` element to allow collapsing them
  - Fix file upload error handling logic - a proper error page is now sent to the client
+ - Create theme gallery help section instead of overwriting the one entitled "Jumping to a random page".
 
 
 ## v0.22
