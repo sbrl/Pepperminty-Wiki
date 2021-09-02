@@ -130,7 +130,7 @@ register_module([
 			global $settings, $env, $pageindex;
 			
 			// The thing we should do.
-			$do = $_GET["do"] ?? "null";
+			$do = slugify($_GET["do"] ?? "null");
 			// The location we should redirect to after doing it successfully, if anywhere
 			$returnto = empty($_GET["returnto"]) ? null : $_GET["returnto"];
 			
