@@ -679,7 +679,7 @@ function render_timestamp($timestamp, $absolute = false, $html = true) {
  */
 function render_pagename($rchange) {
 	global $pageindex;
-	$pageDisplayName = $rchange->page;
+	$pageDisplayName = htmlentities($rchange->page);
 	if(isset($pageindex->$pageDisplayName) and !empty($pageindex->$pageDisplayName->redirect))
 		$pageDisplayName = "<em>$pageDisplayName</em>";
 	$pageDisplayLink = "<a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayName</a>";
@@ -692,7 +692,7 @@ function render_pagename($rchange) {
  * @return string             HTML representing the given editor's name.
  */
 function render_editor($editorName) {
-	return "<span class='editor'>&#9998; $editorName</span>";
+	return "<span class='editor'>&#9998; ".htmlentities($editorName)."</span>";
 }
 
 /**
