@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Page protection",
-	"version" => "0.2.1",
+	"version" => "0.2.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Exposes Pepperminty Wiki's new page protection mechanism and makes the protect button in the 'More...' menu on the top bar work.",
 	"id" => "action-protect",
