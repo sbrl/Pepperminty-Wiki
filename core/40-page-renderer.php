@@ -190,7 +190,10 @@ class page_renderer
 			"{navigation-bar}" => self::render_navigation_bar($settings->nav_links, $settings->nav_links_extra, "top"),
 			"{navigation-bar-bottom}" => self::render_navigation_bar($settings->nav_links_bottom, [], "bottom"),
 
-			"{admin-details}" => hide_email($settings->admindetails_email, $settings->admindetails_name),
+			"{admin-details}" => hide_email(
+				$settings->admindetails_email,
+				htmlentities($settings->admindetails_name)
+			),
 			"{admin-details-name}" => $settings->admindetails_name,
 
 			"{admins-name-list}" => implode(", ", array_map(function($username) { return page_renderer::render_username($username); }, $settings->admins)),
