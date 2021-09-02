@@ -51,7 +51,7 @@ register_module([
 				exit(page_renderer::render_main("No email address specified -$settings->sitename", "<p>You are logged in, but have not specified an email address to send notifications to. Try specifying one in your <a href='?action=user-preferences'>user preferences</a> and then coming back here.</p>"));
 			}
 			
-			$format = $_GET["format"] ?? "html";
+			$format = slugify($_GET["format"] ?? "html");
 			
 			$watchlist = [];
 			if(!empty($env->user_data->watchlist))
