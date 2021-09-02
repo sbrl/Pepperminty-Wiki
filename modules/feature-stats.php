@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Statistics",
-	"version" => "0.4.4",
+	"version" => "0.4.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "An extensible statistics calculation system. Comes with a range of built-in statistics, but can be extended by other modules too.",
 	"id" => "feature-stats",
@@ -62,7 +62,7 @@ register_module([
 				switch($stat_calculator["type"]) {
 					case "page-list":
 						if(!module_exists("page-list")) {
-							$content .= "<p>$settings->sitename doesn't current have the page listing module installed, so HTML rendering of this statistic is currently unavailable. Try " . hide_email($settings->admindetails_email, "contacting $settings->admindetails_name") . ", $settings->sitename's administrator and asking then to install the <code>page-list</code> module.</p>";
+							$content .= "<p>$settings->sitename doesn't current have the page listing module installed, so HTML rendering of this statistic is currently unavailable. Try " . hide_email($settings->admindetails_email, "contacting ".htmlentities($settings->admindetails_name)) . ", $settings->sitename's administrator and asking then to install the <code>page-list</code> module.</p>";
 							break;
 						}
 						$content .= "<p><strong>Count:</strong> " . count($stats->{$_GET["stat"]}->value) . "</p>\n";
