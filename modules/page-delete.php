@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Page deleter",
-	"version" => "0.10.2",
+	"version" => "0.10.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to delete pages.",
 	"id" => "page-delete",
@@ -36,26 +36,26 @@ register_module([
 			global $pageindex, $settings, $env, $paths, $modules;
 			if(!$settings->editing)
 			{
-				exit(page_renderer::render_main("Error: Editing disabled - Deleting $env->page", "<p>You tried to delete $env->page, but editing is disabled on this wiki.</p>
+				exit(page_renderer::render_main("Error: Editing disabled - Deleting $env->page", "<p>You tried to delete $env->page_safe, but editing is disabled on this wiki.</p>
 				<p>If you wish to delete this page, please re-enable editing on this wiki first.</p>
-				<p><a href='index.php?page=$env->page'>Go back to $env->page</a>.</p>
+				<p><a href='index.php?page=".rawurlencode($env->page)."'>Go back to $env->page_safe</a>.</p>
 				<p>Nothing has been changed.</p>"));
 			}
 			if(!$env->is_admin)
 			{
-				exit(page_renderer::render_main("Error: Insufficient permissions - Deleting $env->page", "<p>You tried to delete $env->page, but you as aren't a moderator you don't have permission to do that.</p>
-				<p>You could try <a href='index.php?action=login'>logging in</a> as an admin, or asking one of $settings->sitename's friendly moderators (find their names at the bottom of every page!) to delete it for you.</p>"));
+				exit(page_renderer::render_main("Error: Insufficient permissions - Deleting $env->page", "<p>You tried to delete $env->page_safe, but you as aren't a moderator you don't have permission to do that.</p>
+				<p>You could try <a href='index.php?action=login&returnto=".rawurlencode("?action=delete&page=".rawurlencode($env->page))."'>logging in</a> as an admin, or asking one of $settings->sitename's friendly moderators (find their names at the bottom of every page!) to delete it for you.</p>"));
 			}
 			if(!isset($pageindex->{$env->page}))
 			{
-				exit(page_renderer::render_main("Error: Non-existent page - Deleting $env->page", "<p>You tried to delete $env->page, but that page doesn't appear to exist in the first place. <a href='?'>Go back</a> to the $settings->defaultpage.</p>"));
+				exit(page_renderer::render_main("Error: Non-existent page - Deleting $env->page", "<p>You tried to delete $env->page_safe, but that page doesn't appear to exist in the first place. <a href='?'>Go back</a> to the $settings->defaultpage.</p>"));
 			}
 			
 			if(!isset($_GET["delete"]) or $_GET["delete"] !== "yes")
 			{
-				exit(page_renderer::render_main("Deleting $env->page", "<p>You are about to <strong>delete</strong> <em>$env->page</em>" . (module_exists("feature-history")?" and all its revisions":"") . (module_exists("feature-comments")?" and all its comments":"") . ". You can't undo this!</p>
-				<p><a href='index.php?action=delete&page=$env->page&delete=yes'>Click here to delete $env->page.</a></p>
-				<p><a href='index.php?action=view&page=$env->page'>Click here to go back.</a>"));
+				exit(page_renderer::render_main("Deleting $env->page", "<p>You are about to <strong>delete</strong> <em>$env->page_safe</em>" . (module_exists("feature-history")?" and all its revisions":"") . (module_exists("feature-comments")?" and all its comments":"") . ". You can't undo this!</p>
+				<p><a href='index.php?action=delete&amp;page=".rawurlencode($env->page)."&amp;delete=yes'>Click here to delete $env->page_safe.</a></p>
+				<p><a href='index.php?action=view&amp;page=".rawurlencode($env->page)."'>Click here to go back and view the page.</a>"));
 			}
 			$page = $env->page;
 			// Delete the associated file if it exists
@@ -111,7 +111,7 @@ register_module([
 				]);
 			}
 			
-			exit(page_renderer::render_main("Deleting $env->page - $settings->sitename", "<p>$env->page has been deleted. <a href='index.php'>Go back to the main page</a>.</p>"));
+			exit(page_renderer::render_main("Deleting $env->page - $settings->sitename", "<p>$env->page_safe has been deleted. <a href='index.php'>Go back to the main page</a>.</p>"));
 		});
 		
 		// Register a help section
