@@ -138,7 +138,7 @@ register_module([
 				http_response_code(403);
 				header("x-status: failed");
 				header("x-problem: watchlists-disabled");
-				exit(page_renderer::render_main("Watchlists disabled - $settings->sitename", "<p>Sorry, but watchlists are currently disabled on $settings->sitename. Contact your moderators to learn - their details are at the bottom of every page.</p>"));
+				exit(page_renderer::render_main("Watchlists disabled - $settings->sitename", "<p>Sorry, but watchlists are currently disabled on $settings->sitename. Contact your moderators to ask about this - their details are at the bottom of every page (including this one).</p>"));
 			}
 			
 			if(!$env->is_logged_in) {
@@ -188,7 +188,7 @@ register_module([
 						http_response_code(400);
 						header("x-status: failed");
 						header("x-problem: watchlist-item-not-found");
-						exit(page_renderer::render_main("Watchlist item not found - Error - $settings->sitename", "<p>Oops! The page with the name <em>".htmlentities($env->page)."</em> isn't currently on your watchlist, so it couldn't be removed. Perhaps you already removed it?</p>
+						exit(page_renderer::render_main("Watchlist item not found - Error - $settings->sitename", "<p>Oops! The page with the name <em>$env->page_safe</em> isn't currently on your watchlist, so it couldn't be removed. Perhaps you already removed it?</p>
 						<p>Try going <a href='?action=watchlist'>back to your watchlist</a>.</p>"));
 					}
 					array_splice($env->user_data->watchlist, $index, 1);
