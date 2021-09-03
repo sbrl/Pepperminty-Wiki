@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Page editor",
-	"version" => "0.18",
+	"version" => "0.18.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -84,16 +84,16 @@ register_module([
 			{
 				if(!$creatingpage) {
 					// The page already exists - let the user view the page source
-					$sourceViewContent = "<p>$settings->sitename does not allow anonymous users to make edits. You can view the source of $env->page below, but you can't edit it. You could, however, try <a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.</p>\n";
+					$sourceViewContent = "<p>$settings->sitename does not allow anonymous users to make edits. You can view the source of $env->page_safe below, but you can't edit it. You could, however, try <a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.</p>\n";
 					
 					if($env->is_logged_in)
-						$sourceViewContent = "<p>$env->page is protected, and you aren't an administrator or moderator. You can view the source of $env->page below, but you can't edit it.</p>\n";
+						$sourceViewContent = "<p>$env->page_safe is protected, and you aren't an administrator or moderator. You can view the source of $env->page_safe below, but you can't edit it.</p>\n";
 					
 					if(!$settings->editing)
-						$sourceViewContent = "<p>$settings->sitename currently has editing disabled, so you can't make changes to this page at this time. Please contact $settings->admindetails_name, $settings->sitename's administrator for more information - their contact details can be found at the bottom of this page. Even so, you can still view the source of this page. It's disabled below:</p>";
+						$sourceViewContent = "<p>$settings->sitename currently has editing disabled, so you can't make changes to this page at this time. Please contact ".htmlentities($settings->admindetails_name).", $settings->sitename's administrator for more information - their contact details can be found at the bottom of this page. Even so, you can still view the source of this page. It's disabled below:</p>";
 					
 					if($isOtherUsersPage)
-						$sourceViewContent = "<p>$env->page is a special user page which acutally belongs to " . extract_user_from_userpage($env->page) . ", another user on $settings->sitename. Because of this, you are not allowed to edit it (though you can always edit your own page and any pages under it if you're logged in). You can, however, vieww it's source below.</p>";
+						$sourceViewContent = "<p>$env->page_safe is a special user page which acutally belongs to " . htmlentities(extract_user_from_userpage($env->page)) . ", another user on $settings->sitename. Because of this, you are not allowed to edit it (though you can always edit your own page and any pages under it if you're logged in). You can, however, vieww it's source below.</p>";
 					
 					// Append a view of the page's source
 					$sourceViewContent .= "<textarea name='content' readonly>".htmlentities($pagetext)."</textarea>";
@@ -101,12 +101,12 @@ register_module([
 					exit(page_renderer::render_main("Viewing source for $env->page", $sourceViewContent));
 				}
 				else {
-					$errorMessage = "<p>The page <code>$env->page</code> does not exist, but you do not have permission to create it.</p><p>If you haven't already, perhaps you should try <a href='index.php?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.</p>\n";
+					$errorMessage = "<p>The page <code>$env->page_safe</code> does not exist, but you do not have permission to create it.</p><p>If you haven't already, perhaps you should try <a href='index.php?action=login&amp;returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.</p>\n";
 					
 					if($isOtherUsersPage) {
-						$errorMessage = "<p>The page <code>" . htmlentities($env->page) . "</code> doesn't exist, but you can't create it because it's a page belonging to another user.</p>\n";
+						$errorMessage = "<p>The page <code>$env->page_safe</code> doesn't exist, but you can't create it because it's a page belonging to another user.</p>\n";
 						if(!$env->is_logged_in)
-							$errorMessage .= "<p>You could try <a href='?action=login&returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.</p>\n";
+							$errorMessage .= "<p>You could try <a href='?action=login&amp;returnto=" . rawurlencode($_SERVER["REQUEST_URI"]) . "'>logging in</a>.</p>\n";
 					}
 						
 					http_response_code(404);
@@ -114,7 +114,7 @@ register_module([
 				}
 			}
 			
-			$content = "<h1>$title</h1>\n";
+			$content = "<h1>".htmlentities($title)."</h1>\n";
 			
 			if(!$env->is_logged_in and $settings->anonedits) {
 				$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
@@ -141,13 +141,13 @@ register_module([
 			}
 
 			$content .= "<button class='smartsave-restore' title=\"Only works if you haven't changed the editor's content already!\">Restore Locally Saved Content</button>
-			<form method='post' name='edit-form' action='index.php?action=preview-edit&page=" . rawurlencode($env->page) . "' class='editform'>
+			<form method='post' name='edit-form' action='index.php?action=preview-edit&amp;page=" . rawurlencode($env->page) . "' class='editform'>
 					<input type='hidden' name='prev-content-hash' value='" . generate_page_hash(isset($old_pagetext) ? $old_pagetext : $pagetext) . "' />";
 			if($unknownpagename)
 				$content .= "<div><label for='page'>Page Name:</label>
 					<input type='text' id='page' name='page' value='' placeholder='Enter the name of the page here.' title='Enter the name of the page here.' />
 					<input type='hidden' name='prevent_save_if_exists' value='yes' />";
-			$content .= "<textarea name='content' autofocus tabindex='1'>$pagetext</textarea>
+			$content .= "<textarea name='content' autofocus tabindex='1'>".htmlentities($pagetext)."</textarea>
 					<pre class='fit-text-mirror'></pre>
 					<input type='text' id='tags' name='tags' value='" . htmlentities($page_tags, ENT_HTML5 | ENT_QUOTES) . "' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
 					<p class='editing-message'>$settings->editing_message</p>
@@ -462,14 +462,14 @@ window.addEventListener("load", function(event) {
 				{
 					$existingPageData = htmlentities(file_get_contents($env->storage_prefix . $env->storage_prefix . $pageindex->{$env->page}->filename));
 					// An edit conflict has occurred! We should get the user to fix it.
-					$content = "<h1>Resolving edit conflict - $env->page</h1>";
+					$content = "<h1>Resolving edit conflict - $env->page_safe</h1>";
 					if(!$env->is_logged_in and $settings->anonedits)
 					{
 						$content .= "<p><strong>Warning: You are not logged in! Your IP address <em>may</em> be recorded.</strong></p>";
 					}
-					$content .= "<p>An edit conflict has arisen because someone else has saved an edit to " . htmlentities($env->page) . " since you started editing it. Both texts are shown below, along the differences between the 2 conflicting revisions. To continue, please merge your changes with the existing content. Note that only the text in the existing content box will be kept when you press the \"Resolve Conflict\" button at the bottom of the page.</p>
+					$content .= "<p>An edit conflict has arisen because someone else has saved an edit to $env->page_safe since you started editing it. Both texts are shown below, along the differences between the 2 conflicting revisions. To continue, please merge your changes with the existing content. Note that only the text in the existing content box will be kept when you press the \"Resolve Conflict\" button at the bottom of the page.</p>
 					
-					<form method='post' action='index.php?action=save&page=" . rawurlencode($env->page) . "&action=save' class='editform'>
+					<form method='post' action='index.php?action=save&amp;page=" . rawurlencode($env->page) . "&amp;action=save' class='editform'>
 					<h2>Existing content</h2>
 					<textarea id='original-content' name='content' autofocus tabindex='1'>$existingPageData</textarea>
 					
@@ -478,7 +478,7 @@ window.addEventListener("load", function(event) {
 					<!--<pre class='highlighted-diff-wrapper'><code id='highlighted-diff'></code></pre>-->
 					
 					<h2>Your content</h2>
-					<textarea id='new-content'>$pagedata</textarea>
+					<textarea id='new-content'>".htmlentities($pagedata)."</textarea>
 					<input type='text' name='tags' value='" . htmlentities($_POST["tags"]) . "' placeholder='Enter some tags for the page here. Separate them with commas.' title='Enter some tags for the page here. Separate them with commas.' tabindex='2' />
 					<p class='editing_message'>$settings->editing_message</p>
 					<input name='submit-edit' type='submit' value='Resolve Conflict' tabindex='3' />
@@ -533,6 +533,7 @@ DIFFSCRIPT;
 				// Save the inverted index back to disk
 				search::invindex_close();
 			}
+			
 			// -----~~~==~~~-----
 			
 			if(file_put_contents("$env->storage_prefix$env->page.md", $pagedata) !== false)
@@ -582,7 +583,7 @@ DIFFSCRIPT;
 				header("x-failure-reason: server-error");
 				http_response_code(507);
 				exit(page_renderer::render_main("Error saving page - $settings->sitename", "<p>$settings->sitename failed to write your changes to the server's disk. Your changes have not been saved, but you might be able to recover your edit by pressing the back button in your browser.</p>
-				<p>Please tell the administrator of this wiki (" . $settings->admindetails_name . ") about this problem.</p>"));
+				<p>Please tell the administrator of this wiki (" . htmlentities($settings->admindetails_name) . ") about this problem.</p>"));
 			}
 		});
 		
