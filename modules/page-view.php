@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.16.10",
+	"version" => "0.16.11",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
@@ -53,7 +53,7 @@ register_module([
 				} else {
 					// Editing is disabled, show an error message
 					http_response_code(404);
-					exit(page_renderer::render_main("404: Page not found - $env->page - $settings->sitename", "<p>$env->page does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator.</p>"));
+					exit(page_renderer::render_main("404: Page not found - $env->page - $settings->sitename", "<p>$env->page_safe does not exist.</p><p>Since editing is currently disabled on this wiki, you may not create this page. If you feel that this page should exist, try contacting this wiki's Administrator (see the bottom of this page for their contact details).</p>"));
 				}
 			}
 			
@@ -89,7 +89,7 @@ register_module([
 					if(!empty($pageindex->$newPage->redirect))
 						$redirectUrl .= "&redirect=no";
 					if(strlen($hashCode) > 0)
-						$redirectUrl .= "#$hashCode";
+						$redirectUrl .= "#".htmlentities($hashCode);
 					
 					// Support absolute redirect URLs
 					if(isset($pageindex->$page->redirect_absolute) && $pageindex->$page->redirect_absolute === true)
@@ -107,8 +107,8 @@ register_module([
 			if(!$env->is_history_revision)
 				$content .= "<h1>$env->page</h1>\n";
 			else {
-				$content .= "<h1>Revision #{$env->history->revision_number} of $env->page</h1>\n";
-				$content .= "<p class='system-text-insert revision-note'><em>(Revision saved by {$env->history->revision_data->editor} " . render_timestamp($env->history->revision_data->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a> or see a <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of all revisions</a> for this page.)</em></p>\n";
+				$content .= "<h1>Revision #{$env->history->revision_number} of $env->page_safe</h1>\n";
+				$content .= "<p class='system-text-insert revision-note'><em>(Revision saved by ".htmlentities($env->history->revision_data->editor)." " . render_timestamp($env->history->revision_data->timestamp) . ". <a href='?page=" . rawurlencode($env->page) . "'>Jump to the current revision</a> or see a <a href='?action=history&page=" . rawurlencode($env->page) . "'>list of all revisions</a> for this page.)</em></p>\n";
 			}
 			
 			// Add a visit parent page link if we're a subpage
@@ -117,7 +117,7 @@ register_module([
 			
 			// Add an extra message if the requester was redirected from another page
 			if(isset($_GET["redirected_from"]))
-				$content .= "<p class='system-text-insert'><em>Redirected from <a href='?page=" . rawurlencode($_GET["redirected_from"]) . "&redirect=no'>" . $_GET["redirected_from"] . "</a>.</em></p>\n";
+				$content .= "<p class='system-text-insert'><em>Redirected from <a href='?page=" . rawurlencode($_GET["redirected_from"]) . "&redirect=no'>" . htmlentities($_GET["redirected_from"]) . "</a>.</em></p>\n";
 			
 			$parsing_start = microtime(true);
 			
@@ -127,7 +127,7 @@ register_module([
 			if(!empty($pageindex->$page->tags)) {
 				$content .= "<ul class='page-tags-display'>\n";
 				foreach($pageindex->$page->tags as $tag)
-					$content .= "<li><a href='?action=list-tags&tag=" . rawurlencode($tag) . "'>$tag</a></li>\n";
+					$content .= "<li><a href='?action=list-tags&tag=" . rawurlencode($tag) . "'>".htmlentities($tag)."</a></li>\n";
 				$content .= "\n</ul>\n";
 			}
 			/*else
@@ -143,7 +143,7 @@ register_module([
 					$content .= "Subpages: ";
 					foreach($subpages as $subpage => $times_removed) {
 						if($times_removed <= $settings->subpages_display_depth) {
-							$content .= "<a href='?action=view&page=" . rawurlencode($subpage) . "'>$subpage</a>, ";
+							$content .= "<a href='?action=view&page=" . rawurlencode($subpage) . "'>".htmlentities($subpage)."</a>, ";
 						}
 					}
 					// Remove the last comma from the content
@@ -159,7 +159,7 @@ register_module([
 				time() - $pageindex->{$env->page}->lastmodified < $settings->delayed_indexing_time)
 				header("x-robots-tag: noindex");
 			
-			$settings->footer_message = "$env->page was last edited by {$pageindex->{$env->page}->lasteditor} at " . date('h:ia T \o\n j F Y', $pageindex->{$env->page}->lastmodified) . ".</p>\n<p>" . $settings->footer_message; // Add the last edited time to the footer
+			$settings->footer_message = "$env->page_safe was last edited by {$pageindex->{$env->page}->lasteditor} at " . date('h:ia T \o\n j F Y', $pageindex->{$env->page}->lastmodified) . ".</p>\n<p>" . $settings->footer_message; // Add the last edited time to the footer
 			
 			$mode = isset($_GET["mode"]) ? strtolower(trim($_GET["mode"])) : "normal";
 			switch($mode) {
