@@ -122,10 +122,10 @@ register_module([
 			foreach($credits as $thing => $author_details)
 			{
 				$credits_html .= "	<li>";
-				$credits_html .= "<a href='" . $author_details["thing_url"] . "'>$thing</a> by ";
+				$credits_html .= "<a href='" . htmlentities($author_details["thing_url"]) . "'>".htmlentities($thing)."</a> by ";
 				if(isset($author_details["icon"]))
-				$credits_html .= "<img class='logo small' style='vertical-align: middle;' src='" . $author_details["icon"] . "' /> ";
-				$credits_html .= "<a href='" . $author_details["author_url"] . "'>" . $author_details["author"] . "</a>";
+				$credits_html .= "<img class='logo small' style='vertical-align: middle;' src='" . htmlentities($author_details["icon"]) . "' /> ";
+				$credits_html .= "<a href='" . htmlentities($author_details["author_url"]) . "'>" . $author_details["author"] . "</a>";
 				$credits_html .= "</li>\n";
 			}
 			$credits_html .= "</ul>";
