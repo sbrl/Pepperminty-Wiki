@@ -330,8 +330,8 @@ function slugify(string $text) : string {
  * Hides an email address from bots. Returns a fragment of HTML that contains the mangled email address.
  * @package core
  * @param	string	$str			The original email address
- * @param	string	$display_text	The display text for the resulting HTML - if null then the original email address is used.
- * @return	string	The mangled email address.
+ * @param	string	$display_text	The display text for the resulting HTML - if null then the original email address is used. Note that because it's base64 encoded and then textContent is used, one does not need to run either htmlentities() or rawurlencode() over this value as it's completely safe.
+ * @return	string	The mangled email address as a fragment of HTML.
  */
 function hide_email(string $email, string $display_text = null) : string
 {

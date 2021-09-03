@@ -279,7 +279,7 @@ function generate_page_list($pagelist)
 		{
 			foreach($pageindex->$pagename->tags as $tag)
 			{
-				$tags .= "<a href='?action=list-tags&amp;tag=" . rawurlencode($tag) . "' class='mini-tag'>$tag</a>, ";
+				$tags .= "<a href='?action=list-tags&amp;tag=" . rawurlencode($tag) . "' class='mini-tag'>".htmlentities($tag)."</a>, ";
 			}
 			$tags = substr($tags, 0, -2); // Remove the last ", " from the tag list
 		}
