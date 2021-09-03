@@ -323,7 +323,7 @@ function makepathsafe($string)
  * @return	string	The slugified string.
  */
 function slugify(string $text) : string {
-	return preg_replace("/[^a-zA-Z0-9\-_]", "", $text);
+	return preg_replace("/[^a-zA-Z0-9\-_]/", "", $text);
 }
 
 /**
