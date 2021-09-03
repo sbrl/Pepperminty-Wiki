@@ -311,7 +311,7 @@ task_sign() {
 	task_begin "Signing release";
 	pushd "${temp_dir}" || { echo "Error: Failed to cd to temporary directory"; exit 1; };
 	# Generate hashes
-	find . -type f -not -name "*.SHA256" -print0 | xargs -0 -n1 -I{} -P"$(nproc)" sha256sum -b "{}" >HASHES.SHA256;
+	find . -type f -not -name "*.SHA256" -print0 | xargs -0 -I{} -P"$(nproc)" sha256sum -b "{}" >HASHES.SHA256;
 	# Generate GPG signature
 	gpg --sign --detach-sign --armor HASHES.SHA256;
 	popd || { echo ""; exit 1; };
