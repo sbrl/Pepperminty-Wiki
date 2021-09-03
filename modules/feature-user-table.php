@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "User Organiser",
-	"version" => "0.1.1",
+	"version" => "0.1.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a organiser page that lets moderators (or better) control the reegistered user accounts, and perform adminstrative actions such as password resets, and adding / removing accounts.",
 	"id" => "feature-user-table",
@@ -129,7 +129,7 @@ register_module([
 			
 			if(!save_settings()) {
 				http_response_code(503);
-				exit(page_renderer::render_main("Error: Failed to save settings - Add User - $settings->sitename", "<p>$settings->sitename failed to save the new user's data to disk. Please contact $settings->admindetails_name for assistance (their email address can be found at the bottom of this page).</p>"));
+				exit(page_renderer::render_main("Error: Failed to save settings - Add User - $settings->sitename", "<p>$settings->sitename failed to save the new user's data to disk. Please contact ".htmlentities($settings->admindetails_name)." for assistance (their email address can be found at the bottom of this page).</p>"));
 			}
 			
 			
@@ -153,9 +153,9 @@ https://github.com/sbrl/Pepperminty-Wiki/
 			<ul>
 				<li>Username: <code>$new_username</code></li>";
 			if(!empty($new_email))
-				$content .= "	<li>Email Address: <code>$new_email</code></li>\n";
+				$content .= "	<li>Email Address: <code>".htmlentities($new_email)."</code></li>\n";
 			if(!$welcome_email_result)
-				$content .= "	<li>Password: <code>$new_password</code></li>\n";
+				$content .= "	<li>Password: <code>".htmlentities($new_password)."</code></li>\n";
 			$content .= "</ul>\n";
 			if($welcome_email_result)
 				$content .= "<p>An email has been sent to the email address given above containing their login details.</p>\n";
@@ -208,13 +208,13 @@ https://github.com/sbrl/Pepperminty-Wiki/
 			
 			if(empty($settings->users->{$_POST["user"]})) {
 				http_response_code(404);
-				exit(page_renderer::render_main("User not found - Set Password - $settings->sitename", "<p>Error: No user called {$_POST["user"]} was found, so their password can't be set. Perhaps you forgot to create the user first?</p>"));
+				exit(page_renderer::render_main("User not found - Set Password - $settings->sitename", "<p>Error: No user called '".htmlentities($_POST["user"])."' was found, so their password can't be set. Perhaps you forgot to create the user first?</p>"));
 			}
 			
 			$settings->users->{$_POST["user"]}->password = hash_password($_POST["new-pass"]);
 			if(!save_settings()) {
 				http_response_code(503);
-				exit(page_renderer::render_main("Server Error - Set Password - $settings->sitename", "<p>Error: $settings->sitename couldn't save the settings back to disk! Nothing has been changed. Please context $settings->admindetails_name, whose email address can be found at the bottom of this page.</p>"));
+				exit(page_renderer::render_main("Server Error - Set Password - $settings->sitename", "<p>Error: $settings->sitename couldn't save the settings back to disk! Nothing has been changed. Please context ".htmlentities($settings->admindetails_name).", whose email address can be found at the bottom of this page.</p>"));
 			}
 			
 			exit(page_renderer::render_main("Set Password - $settings->sitename", "<p>" . htmlentities($_POST["user"]) . "'s password has been set successfully. <a href='?action=user-table'>Go back</a> to the user table.</p>"));
@@ -256,12 +256,12 @@ https://github.com/sbrl/Pepperminty-Wiki/
 			}
 			if(empty($settings->users->{$_GET["user"]})) {
 				http_response_code(404);
-				exit(page_renderer::render_main("User not found - Delete User - $settings->sitename", "<p>Error: No user called {$_GET["user"]} was found, so their account can't be delete. Perhaps you spelt their account name incorrectly?</p>"));
+				exit(page_renderer::render_main("User not found - Delete User - $settings->sitename", "<p>Error: No user called ".htmlentities($_GET["user"])." was found, so their account can't be delete. Perhaps you spelt their account name incorrectly?</p>"));
 			}
 			
 			email_user($_GET["user"], "Account Deletion", "Hello, {$_GET["user"]}!
 
-This is a notification email from $settings->sitename, to let you know that $env->user has deleted your user account, so you won't be able to log in to your account anymore.
+This is a notification email from $settings->sitename to let you know that $env->user has deleted your user account, so you won't be able to log in to your account anymore.
 
 If this was done in error, then please contact a moderator, or $settings->admindetails_name ($settings->sitename's Administrator) - whose email address can be found at the bottom of every page on $settings->sitename.
 
@@ -275,7 +275,7 @@ Powered by Pepperminty Wiki
 			
 			if(!save_settings()) {
 				http_response_code(503);
-				exit(page_renderer::render_main("Server Error - Delete User - $settings->sitename", "<p>Error: $settings->sitename couldn't save the settings back to disk! Nothing has been changed. Please context $settings->admindetails_name, whose email address can be found at the bottom of this page.</p>"));
+				exit(page_renderer::render_main("Server Error - Delete User - $settings->sitename", "<p>Error: $settings->sitename couldn't save the settings back to disk! Nothing has been changed. Please context ".htmlentities($settings->admindetails_name).", whose email address can be found at the bottom of this page.</p>"));
 			}
 			
 			exit(page_renderer::render_main("Delete User - $settings->sitename", "<p>" . htmlentities($_GET["user"]) . "'s account has been deleted successfully. <a href='?action=user-table'>Go back</a> to the user table.</p>"));
