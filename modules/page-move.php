@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Page mover",
-	"version" => "0.9.5",
+	"version" => "0.9.6",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to move pages.",
 	"id" => "page-move",
@@ -38,23 +38,23 @@ register_module([
 			global $pageindex, $settings, $env, $paths;
 			if(!$settings->editing)
 			{
-				exit(page_renderer::render_main("Moving $env->page - error", "<p>You tried to move $env->page, but editing is disabled on this wiki.</p>
+				exit(page_renderer::render_main("Moving $env->page - error", "<p>You tried to move $env->page_safe, but editing is disabled on this wiki.</p>
 				<p>If you wish to move this page, please re-enable editing on this wiki first.</p>
-				<p><a href='index.php?page=$env->page'>Go back to $env->page</a>.</p>
+				<p><a href='index.php?page=".rawurlencode($env->page)."'>Go back to $env->page_safe</a>.</p>
 				<p>Nothing has been changed.</p>"));
 			}
 			if(!$env->is_admin)
 			{
-				exit(page_renderer::render_main("Moving $env->page - Error", "<p>You tried to move $env->page, but you do not have permission to do that.</p>
-				<p>You should try <a href='index.php?action=login'>logging in</a> as an admin.</p>"));
+				exit(page_renderer::render_main("Moving $env->page - Error", "<p>You tried to move $env->page_safe, but you do not have permission to do that.</p>
+				<p>You should try <a href='index.php?action=login&amp;returnto=".rawurlencode("?action=move&page=".rawurlencode($env->page))."'>logging in</a> as an admin.</p>"));
 			}
 			
 			if(!isset($_GET["new_name"]) or strlen($_GET["new_name"]) == 0)
-				exit(page_renderer::render_main("Moving $env->page", "<h2>Moving $env->page</h2>
+				exit(page_renderer::render_main("Moving $env->page", "<h2>Moving $env->page_safe</h2>
 				<form method='get' action='index.php'>
 					<input type='hidden' name='action' value='move' />
 					<label for='old_name'>Old Name:</label>
-					<input type='text' name='page' value='$env->page' readonly />
+					<input type='text' name='page' value='$env->page_safe' readonly />
 					<br />
 					<label for='new_name'>New Name:</label>
 					<input type='text' name='new_name' />
@@ -66,18 +66,18 @@ register_module([
 			
 			$page = $env->page;
 			if(!isset($pageindex->$page))
-				exit(page_renderer::render_main("Moving $env->page - Error", "<p>You tried to move $env->page to $new_name, but the page with the name $env->page does not exist in the first place.</p>
+				exit(page_renderer::render_main("Moving $env->page - Error", "<p>You tried to move $env->page_safe to ".htmlentities($new_name).", but the page with the name $env->page_safe does not exist in the first place.</p>
 				<p>Nothing has been changed.</p>"));
 			
 			if($env->page == $new_name)
-				exit(page_renderer::render_main("Moving $env->page - Error", "<p>You tried to move $page, but the new name you gave is the same as it's current name.</p>
+				exit(page_renderer::render_main("Moving $env->page - Error", "<p>You tried to move $env->page_safe, but the new name you gave is the same as it's current name.</p>
 				<p>It is possible that you tried to use some characters in the new name that are not allowed and were removed.</p>
-				<p>Page names may not contain any of these characters: <code>?%*:|\"&gt;&lt;()[]</code></p>"));
+				<p>Page names may <em>not</em> contain any of these characters: <code>?%*:|\"&gt;&lt;()[]</code></p>"));
 			
 			if(isset($pageindex->$page->uploadedfile) and
 				file_exists($new_name))
-				exit(page_renderer::render_main("Moving $env->page - Error - $settings->sitename", "<p>Whilst moving the file associated with $env->page, $settings->sitename detected a pre-existing file on the server's file system. Because $settings->sitename can't determine whether the existing file is important to another component of $settings->sitename or it's host web server, the move has been aborted - just in case.</p>
-				<p>If you know that this move is actually safe, please get your site administrator (" . $settings->admindetails_name . ") to perform the move manually. Their contact address can be found at the bottom of every page (including this one).</p>"));
+				exit(page_renderer::render_main("Moving $env->page - Error - $settings->sitename", "<p>Whilst moving the file associated with $env->page_safe, $settings->sitename detected a pre-existing file on the server's file system. Because $settings->sitename can't determine whether the existing file is important to another component of $settings->sitename or it's host web server, the move has been aborted - just in case.</p>
+				<p>If you know that this move is actually safe, please get your site administrator (" . htmlentities($settings->admindetails_name) . ") to perform the move manually. Their contact address can be found at the bottom of every page (including this one).</p>"));
 				
 			// Make sure that the parent page exists
 			$do_create_dir = true;
