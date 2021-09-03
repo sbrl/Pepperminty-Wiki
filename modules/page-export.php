@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Export",
-	"version" => "0.5.1",
+	"version" => "0.5.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that you can use to export your wiki as a .zip file. Uses \$settings->export_only_allow_admins, which controls whether only admins are allowed to export the wiki.",
 	"id" => "page-export",
@@ -37,7 +37,7 @@ register_module([
 			if($settings->export_allow_only_admins && !$env->is_admin)
 			{
 				http_response_code(401);
-				exit(page_renderer::render("Export error - $settings->sitename", "Only administrators of $settings->sitename are allowed to export the wiki as a zip. <a href='?action=$settings->defaultaction&page='>Return to the $settings->defaultpage</a>."));
+				exit(page_renderer::render("Export error - $settings->sitename", "Only administrators of $settings->sitename are allowed to export the wiki as a zip. <a href='?action=$settings->defaultaction&page='>Return to the ".htmlentities($settings->defaultpage)."</a>."));
 			}
 			
 			$tmpfilename = tempnam(sys_get_temp_dir(), "pepperminty-wiki-");
@@ -46,7 +46,7 @@ register_module([
 			
 			if($zip->open($tmpfilename, ZipArchive::CREATE) !== true) {
 				http_response_code(507);
-				exit(page_renderer::render("Export error - $settings->sitename", "Pepperminty Wiki was unable to open a temporary file to store the exported data in. Please contact $settings->sitename's administrator (" . $settings->admindetails_name . " at " . hide_email($settings->admindetails_email) . ") for assistance."));
+				exit(page_renderer::render("Export error - $settings->sitename", "Pepperminty Wiki was unable to open a temporary file to store the exported data in. Please contact $settings->sitename's administrator (" . htmlentities($settings->admindetails_name) . " at " . hide_email($settings->admindetails_email) . ") for assistance."));
 			}
 			
 			foreach($pageindex as $entry) {
@@ -57,11 +57,11 @@ register_module([
 			
 			if($zip->close() !== true) {
 				http_response_code(500);
-				exit(page_renderer::render("Export error - $settings->sitename", "Pepperminty wiki was unable to close the temporary zip file after creating it. Please contact $settings->sitename's administrator (" . $settings->admindetails_name . " at " . hide_email($settings->admindetails_email) . ") for assistance (this might be a bug)."));
+				exit(page_renderer::render("Export error - $settings->sitename", "Pepperminty wiki was unable to close the temporary zip file after creating it. Please contact $settings->sitename's administrator (" . htmlentities($settings->admindetails_name) . " at " . hide_email($settings->admindetails_email) . ") for assistance (this might be a bug)."));
 			}
 			
 			header("content-type: application/zip");
-			header("content-disposition: attachment; filename=$settings->sitename-export.zip");
+			header("content-disposition: attachment; filename=".str_replace(["\r", "\n", "\""], "", $settings->sitename)."-export.zip");
 			header("content-length: " . filesize($tmpfilename));
 			
 			$zip_handle = fopen($tmpfilename, "rb");
