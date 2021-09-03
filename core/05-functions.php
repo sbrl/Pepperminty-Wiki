@@ -688,11 +688,11 @@ function render_pagename($rchange) {
 /**
  * Renders an editor's or a group of editors name(s) in HTML.
  * @package core
- * @param  string $editorName The name of the editor to render.
+ * @param  string $editorName The name of the editor to render. Note that this may contain ARBITRARY HTML! In other words, make sure that the editor name(s) are sanitized (e.g. htmlentities()'d) before padding to this function.
  * @return string             HTML representing the given editor's name.
  */
 function render_editor($editorName) {
-	return "<span class='editor'>&#9998; ".htmlentities($editorName)."</span>";
+	return "<span class='editor'>&#9998; $editorName</span>";
 }
 
 /**
