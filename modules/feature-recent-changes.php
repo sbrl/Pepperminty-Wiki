@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Recent Changes",
-	"version" => "0.5.2",
+	"version" => "0.5.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds recent changes. Access through the 'recent-changes' action.",
 	"id" => "feature-recent-changes",
@@ -319,7 +319,7 @@ function render_recent_change($rchange)
 		
 		case "move":
 			$resultClasses[] = "move";
-			$result .= "$rchange->oldpage &#11106; <a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml";
+			$result .= "$rchange->oldpage &rarr; <a href='?page=" . rawurlencode($rchange->page) . "'>$pageDisplayHtml</a> $editorDisplayHtml $timeDisplayHtml";
 			break;
 		
 		case "upload":
