@@ -21,6 +21,25 @@
 4. See the [Configuring](06-Configuration.html) section for information on how to customise your installation, including the default login credentials.
 5. Ensure you configure your web server to block access to `peppermint.json`, as this contains all your account details (including your hashed password!)
 
+For those running Nginx, this configuration snippet should block access to `peppermint.json`:
+
+```nginx
+location /peppermint.json {
+	deny all;
+}
+```
+
+If you are running Apache, then the following configuration snippet should block access to `peppermint.json` (credit: [@viradpt](https://github.com/sbrl/Pepperminty-Wiki/issues/224#issuecomment-912683114)):
+
+```htaccess
+<Files "peppermint.json">
+    Order Allow,Deny
+    Deny from all
+</Files>
+```
+
+If you aren't running either of these web servers and have a configuration snippet to share for your web server, please [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) to get in touch - and then we can add your configuration snippet to improve this documentation for everyone.
+
 
 ## Verifying Your Download
 Advanced and privacy-conscious users may want to verify the authenticity of their downloaded release. Since [v0.21.1-hotfix1](https://github.com/sbrl/Pepperminty-Wiki/releases/tag/v0.21.1-hotfix1), [Pepperminty Wiki releases on GitHub](https://github.com/sbrl/Pepperminty-Wiki/releases) are now signed. This is done in the following fashion:
