@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Help page",
-	"version" => "0.10.1",
+	"version" => "0.10.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a rather useful help page. Access through the 'help' action. This module also exposes help content added to Pepperminty Wiki's inbuilt invisible help section system.",
 	"id" => "page-help",
@@ -95,10 +95,11 @@ register_module([
 					else if(in_array($extension, ["json", "sqlite"])) // It's an index
 						$wikiSize->indexes += $nextFilesize;
 					else if(in_array($extension, [ // It's an uploaded image
-						"jpg", "jpeg", "png", "gif", "webp", "svg"
+						"jpg", "jpeg", "png", "gif", "webp", "svg",
+						"jxl", "avif", "hiec", "hief"
 					]))
 						$wikiSize->images += $nextFilesize;
-					else if(in_array($extension, [ "mp3", "ogg", "wav", "aac", "m4a" ])) // It's an audio file
+					else if(in_array($extension, [ "flac", "mp3", "ogg", "wav", "aac", "m4a" ])) // It's an audio file
 						$wikiSize->audio += $nextFilesize;
 					else if(in_array($extension, [ "avi", "mp4", "m4v", "webm" ])) // It's a video file
 						$wikiSize->videos += $nextFilesize;
