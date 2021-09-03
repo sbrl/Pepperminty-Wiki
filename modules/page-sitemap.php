@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Sitemap",
-	"version" => "0.1",
+	"version" => "0.1.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds XML sitemap generation. Additional manual setup is required to notify search engines about the sitemap. See the Features FAQ in the documentation (or your wiki's credits page) for more information.",
 	"id" => "page-sitemap",
