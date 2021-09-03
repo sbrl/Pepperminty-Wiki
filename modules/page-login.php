@@ -35,7 +35,7 @@ register_module([
 			// Build the action url that will actually perform the login
 			$login_form_action_url = "index.php?action=checklogin";
 			if(isset($_GET["returnto"]))
-				$login_form_action_url .= "&returnto=" . rawurlencode($_GET["returnto"]);
+				$login_form_action_url .= "&amp;returnto=" . rawurlencode($_GET["returnto"]);
 			
 			if($env->is_logged_in && !empty($_GET["returnto"]))
 			{
@@ -136,7 +136,7 @@ register_module([
 				if(!save_userdata()) {
 					http_response_code(503);
 					exit(page_renderer::render_main("Login Error - $settings->sitename", "<p>Your credentials were correct, but $settings->sitename was unable to log you in as an updated hash of your password couldn't be saved. Updating your password hash to the latest and strongest hashing algorithm is an important part of keeping your account secure.</p>
-					<p>Please contact $settings->admindetails_name, $settings->sitename's adminstrator, for assistance (their email address can be found at the bottom of every page, including this one).</p>"));
+					<p>Please contact ".htmlentities($settings->admindetails_name).", $settings->sitename's adminstrator, for assistance (their email address can be found at the bottom of every page, including this one).</p>"));
 				}
 				error_log("[PeppermintyWiki/$settings->sitename/login] Updated password hash for $user.");
 			}
@@ -169,6 +169,7 @@ register_module([
 			
 			if(!$env->is_logged_in || !$env->is_admin) {
 				http_response_code(401);
+				header("content-type: text/plain");
 				exit("Error: Only moderators are allowed to use this action.");
 			}
 			
