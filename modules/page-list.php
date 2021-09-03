@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Page list",
-	"version" => "0.11.4",
+	"version" => "0.11.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that lists all the pages in the index along with their metadata.",
 	"id" => "page-list",
@@ -60,7 +60,7 @@ register_module([
 				
 				default:
 					http_response_code(400);
-					exit(page_renderer::render_main("Format error - $settings->sitename", "<p>Error: The format '$format' is not currently supported by this action on $settings->sitename. Supported formats: " . implode(", ", $supported_formats) . "."));
+					exit(page_renderer::render_main("Format error - $settings->sitename", "<p>Error: The format '".htmlentities($format)."' is not currently supported by this action on $settings->sitename. Supported formats: " . htmlentities(implode(", ", $supported_formats)) . "."));
 			}
 			
 		});
@@ -91,7 +91,7 @@ register_module([
 			
 			if(!in_array($format, $supported_formats)) {
 				http_response_code(400);
-				exit(page_renderer::render_main("Format error - $settings->sitename", "<p>Error: The format '$format' is not currently supported by this action on $settings->sitename. Supported formats: " . implode(", ", $supported_formats) . "."));
+				exit(page_renderer::render_main("Format error - $settings->sitename", "<p>Error: The format '".htmlentities($format)."' is not currently supported by this action on $settings->sitename. Supported formats: " . htmlentities(implode(", ", $supported_formats)) . "."));
 			}
 			
 			if(!isset($_GET["tag"]))
@@ -107,7 +107,7 @@ register_module([
 						$content = "<h1>All tags</h1>
 						<ul class='tag-list'>\n";
 						foreach($all_tags as $tag) {
-							$content .= "			<li><a href='?action=list-tags&amp;tag=" . rawurlencode($tag) . "' class='mini-tag'>$tag</a></li>\n";
+							$content .= "			<li><a href='?action=list-tags&amp;tag=" . rawurlencode($tag) . "' class='mini-tag'>".htmlentities($tag)."</a></li>\n";
 						}
 						$content .= "</ul>\n";
 						
@@ -139,7 +139,7 @@ register_module([
 			switch($format)
 			{
 				case "html":
-					$content = "<h1>Tag List: $tag</h1>\n";
+					$content = "<h1>Tag List: ".htmlentities($tag)."</h1>\n";
 					$content .= generate_page_list($pagelist);
 					
 					$content .= "<p>(<a href='?action=list-tags'>All tags</a>)</p>\n";
@@ -284,7 +284,7 @@ function generate_page_list($pagelist)
 			$tags = substr($tags, 0, -2); // Remove the last ", " from the tag list
 		}
 		
-		$pageDisplayName = $pagename;
+		$pageDisplayName = htmlentities($pagename);
 		if(isset($pageindex->$pagename) and
 			!empty($pageindex->$pagename->redirect))
 			$pageDisplayName = "<em>$pageDisplayName</em>";
@@ -295,7 +295,7 @@ function generate_page_list($pagelist)
 		
 		$result .= "<li><a href='$url'>$pageDisplayName</a>
 		<em class='size'>(" . human_filesize($pageindex->$pagename->size) . ")</em>
-		<span class='editor'><span class='texticon cursor-query' title='Last editor'>&#9998;</span> " . $pageindex->$pagename->lasteditor . "</span>
+		<span class='editor'><span class='texticon cursor-query' title='Last editor'>&#9998;</span> " . htmlentities($pageindex->$pagename->lasteditor) . "</span>
 		<time class='cursor-query' title='" . date("l jS \of F Y \a\\t h:ia T", $pageindex->$pagename->lastmodified) . "'>" . human_time_since($pageindex->$pagename->lastmodified) . "</time>
 		<span class='tags'>$tags</span></li>";
 	}
