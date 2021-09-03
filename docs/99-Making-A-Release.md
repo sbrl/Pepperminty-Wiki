@@ -21,6 +21,18 @@ The following things need to be done to prepare for a release:
  - Write & publish the release
  - Tweet link to new GitHub release (IFTTT are only allowing up to 3 'apps' without paying now :-/)
 
+
+## Tweet text template
+The following template text can be used for tweeting about Pepperminty Wiki releases:
+
+```markdown
+Pepperminty Wiki VERSION_NUMBER_HERE has been released!
+
+URL_TO_RELEASE_HERE
+
+#wiki #updates #wikisoftware
+```
+
 ## Release text template
 The following template text can be used for releases:
 
