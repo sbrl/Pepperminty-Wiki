@@ -57,8 +57,6 @@ Here's a list of things that I want to add at some point (please feel free to [s
 
 Is the feature you want to see not on this list or not implemented yet? [Open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) or [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls) - contributions welcome!
 
-If you've found a security issue, please don't open an issue. Instead, get in touch privately - e.g. via [Keybase](https://keybase.io/sbrl) or by email (`security [at sign] starbeamrainbowlabs [replace me with a dot] com`), and I'll try to respond ASAP.
-
 
 ## Docker
 The recommended way of running Pepperminty Wiki is with a plain PHP-enabled web server. However, a docker container is generously provided by @SQL-enwiki. You can run it like so:
@@ -66,6 +64,12 @@ The recommended way of running Pepperminty Wiki is with a plain PHP-enabled web 
 ```bash
 docker run -d sqlatenwiki/peppermintywiki:stable
 ```
+
+
+## Security
+If you've found a security issue, please don't open an issue. Instead, get in touch privately - e.g. via [Keybase](https://keybase.io/sbrl) or by email (`security [at sign] starbeamrainbowlabs [replace me with a dot] com`), and I'll try to respond ASAP.
+
+If you would like to encrypt any communications with me, you can find my GPG key [here](https://starbeamrainbowlabs.com/sbrl.asc).
 
 
 ## Contributing
