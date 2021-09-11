@@ -178,7 +178,7 @@ AWK
 			old_hash="$(jq --raw-output --arg theme_id "${theme_id}" '.[] | select(.id == $theme_id).hash' <"themes/themeindex.json")";
 			
 			# If the hash is the same as last time, don't bother to retake the screenshot
-			if [[ "${hash}" = "${hash_old}" ]]; then
+			if [[ "${hash}" = "${old_hash}" ]]; then
 				continue;
 			fi
 		fi
