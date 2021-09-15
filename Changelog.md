@@ -2,16 +2,21 @@
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
 
+## v0.24-dev
+
+(none yet! More improvements coming soon :D)
+
+
 ## v0.23
 
-## Added
+### Added
  - Added HTTP API support for creating pages that don't yet have a name (#194)
      - This allows for having a "create new page" button in your navigation links - e.g. edit `nav_links`, `nav_links_extra`, or `nav_links_bottom` in your `peppermint.json` and add something like `[ "+", "index.php?action=edit&unknownpagename=yes" ]`.
  - XML sitemap support with the new `page-sitemap` module (manual setup required for crawlers to notice it: see [the documentation](https://github.com/sbrl/Pepperminty-Wiki/blob/master/docs/02-Features.md#whats-this-about-manual-setup-for-the-sitemap))
  - Experimental support for transparent handling of `[display text](./Page Name.md)` style internal links (disabled by default: enable the `parser_mangle_external_links` setting and delete the `._cache` directory to enable)
  - Added automatic system requirements indicator to first run (checks for various PHP extensions required for various different functions) - does not block you from proceeding, but does assist in first-time system configuration
 
-## Changed
+### Changed
  - Updated the [configuration guide](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php) to include count of how many settings we have
  - Also send a `x-robots-tag: noindex, nofollow` HTTP header for the login page (Semrush Bot, you better obey this one)
  - Support `page` as either a GET parameter or a POST parameter (GET takes precedence over POST)
@@ -21,7 +26,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
      - Also added these and `flac` (which was already allowed as an upload by default) to the data size calculator on `?action=help&dev=yes`
 
 
-## Fixed
+### Fixed
  - [security] Fixed some potential XSS attacks in the page editor
  - [security] Fix stored XSS attack in the wiki name via the first run wizard [CVE-2021-38600](https://github.com/hmaverickadams/CVE-2021-38600); low severity since it requires the site secret to do the initial setup & said initial setup can only be performed once (#222)
  - [security] Fix reflected XSS attacks ([CVE-2021-386001](https://github.com/hmaverickadams/CVE-2021-38600); arbitrary code execution in the user's browser due to unsanitized data) via the many different GET parameters in many different modules (#222)
@@ -664,7 +669,7 @@ _(No changes since v0.15-beta2)_
 
 ## v0.12.1
 
-## Fixed
+### Fixed
  - Added error detection to the code that loads `peppermint.json`.
 
 ## v0.12.1-beta1
@@ -683,7 +688,7 @@ _(No changes since v0.15-beta2)_
  - Suggest an appropriate filename when saving an automatically generated preview (#105)
  - When using the default theme images will now not flow beyond the edge of the page.
 
-## Changed
+### Changed
  - Made the background of tags slightly lighter (#91)
  - Improved the appearance of the search context below each result.
  - Tweaked display of result numbers in the search results.
@@ -738,7 +743,7 @@ _(No changes since v0.15-beta2)_
 
 ## v0.11
 
-## Changed
+### Changed
  - Set title of image to alt text
 
 ## v0.11-beta2
@@ -785,7 +790,7 @@ _(No changes since v0.15-beta2)_
 	- A number of things that were not compatible with PHP 7 have been updated to ensure compatibility.
  - Conflict resolution. If someone saves an edit to a page  after you started editing, you will get a conflict resolution page.
 
-# Notes
+### Notes
  - Test the etag code!
 
 ## v0.10
@@ -799,7 +804,7 @@ _(No changes since v0.15-beta2)_
 
 ## v0.10-beta2
 
-## Fixed
+### Fixed
  - Added the moderator diamond next to the link to the update page in the credits.
  - Corrected the version numbers of a large number of modules that I forgot to change.
 
