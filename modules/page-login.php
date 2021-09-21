@@ -152,6 +152,14 @@ register_module([
 			$_SESSION["$settings->sessionprefix-pass"] = $new_password_hash ?? hash_password($pass);
 			$_SESSION["$settings->sessionprefix-expiretime"] = time() + 60*60*24*30; // 30 days from now
 			
+			$returnto_redirect = $_GET["returnto"];
+			if(strpos($returnto_redirect, "?") === false) {
+				http_response_code(400);
+				exit(page_renderer::render_main("Login error - $settings->sitename", "<p>Your credentials were correct, but the 'returnto' URL specified (in the <code>returnto</code> GET parameter) did not contain a question mark. To protect you from being redirected to another site, $settings->sitename only allows redirects that do not leave $settings->sitename.</p>"));
+			}
+			// Ensure that this redirect takes to only somewhere else in this site
+			$returnto_redirect = substr($returnto_redirect, strpos($returnto_redirect, "?"));
+			
 			// Redirect to wherever the user was going
 			http_response_code(302);
 			header("x-login-success: yes");

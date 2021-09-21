@@ -6,6 +6,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ### Fixed
  - [security] Fixed an XSS vulnerability in the `format` GET parameter of the `stats` action (thanks, @JamieSlome)
+ - [security] Ensured that the `returnto` GET parameter leads you only to another place on your Pepperminty Wiki instance (thanks, @JamieSlome)
 
 
 ## v0.23
