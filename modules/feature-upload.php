@@ -313,6 +313,10 @@ register_module([
 		add_action("preview", function() {
 			global $settings, $env, $pageindex, $start_time;
 			
+			// Disable Javascript in all SVGs
+			// Doesn't hurt to serve it for other images too just in case some wacky new format supports Javascript for some crazy reason
+			header("Content-Security-Policy: default-src *; script-src 'none'; script-src-elem 'none'; script-src-attr 'none'");
+			
 			if(empty($pageindex->{$env->page}->uploadedfilepath))
 			{
 				$im = errorimage("The page '$env->page_safe' doesn't have an associated file.");
@@ -487,7 +491,7 @@ register_module([
 				$dimensions = $mime_type !== "image/svg+xml" ? getimagesize($env->storage_prefix . $filepath) : getsvgsize($env->storage_prefix . $filepath);
 				$fileTypeDisplay = slugify(substr($mime_type, 0, strpos($mime_type, "/")));
 				$previewUrl = htmlentities("?action=preview&size=$settings->default_preview_size&page=" . rawurlencode($env->page));
-				$originalUrl = htmlentities($env->storage_prefix == "./" ? $filepath : "?action=preview&size=original&page=" . rawurlencode($env->page));
+				$originalUrl = htmlentities($env->storage_prefix == "./" && $mime_type !== "image/svg+xml" ? $filepath : "?action=preview&size=original&page=" . rawurlencode($env->page));
 				if($mime_type == "application/pdf")
 					$fileTypeDisplay = "pdf";
 				
@@ -546,6 +550,9 @@ register_module([
 				}
 				$fileInfo["Uploaded by"] = $pageindex->{$env->page}->lasteditor;
 				$fileInfo["Short markdown embed code"] = "<input type='text' class='short-embed-markdown-code' value='![" . htmlentities($fileInfo["Name"], ENT_QUOTES | ENT_HTML5) . "](" . htmlentities($filepath, ENT_QUOTES | ENT_HTML5) . " | right | 350x350)' readonly /> <button class='short-embed-markdown-button'>Copy</button>";
+				
+				if($mime_type == "image/svg+xml")
+					$fileInfo["Warning"] = "Warning: SVG images may contain Javascript. Although $settings->sitename disables execution of Javascript in SVGs, if you download an SVG and view it in your browser directly the Javascript may execute. <strong>Make sure you trust the source of this SVG before downloading!</strong>";
 				
 				$preview_html .= "\t\t\t<h2>File Information</h2>
 			<table>";
