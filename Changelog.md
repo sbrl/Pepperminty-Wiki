@@ -4,7 +4,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## v0.24-dev
 
-(none yet! More improvements coming soon :D)
+### Fixed
+ - [security] Fixed an XSS vulnerability in the `format` GET parameter of the `stats` action (thanks, @JamieSlome)
 
 
 ## v0.23
