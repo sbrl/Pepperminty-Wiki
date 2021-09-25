@@ -47,11 +47,10 @@ if(!isset($pageindex->{$env->page}) and isset($_GET["search-redirect"]))
 
 
 // Perform the appropriate action
-$action_name = $env->action;
-if(isset($actions->$action_name)) {
-	$req_action_data = $actions->$action_name;
+if(isset($actions->{$env->action})) {
+	$req_action_data = $actions->{$env->action};
 	$req_action_data();
 }
 else {
-	exit(page_renderer::render_main("Error - $settings->sitename", "<p>No action called " . strtolower($_GET["action"]) ." has been registered. Perhaps you are missing a module?</p>"));
+	exit(page_renderer::render_main("Error - $settings->sitename", "<p>No action called $env->action has been registered. Perhaps you are missing a module?</p>"));
 }
