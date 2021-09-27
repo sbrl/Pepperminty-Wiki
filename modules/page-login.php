@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Login",
-	"version" => "0.9.6",
+	"version" => "0.9.7",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a pair of actions (login and checklogin) that allow users to login. You need this one if you want your users to be able to login.",
 	"id" => "page-login",
@@ -125,6 +125,11 @@ register_module([
 			
 			// Success! :D
 			
+			// Avoid a session fixation attack
+			// Ref https://guides.codepath.com/websecurity/Session-Fixation
+			session_regenerate_id(true);
+			
+			
 			// Update the environment
 			$env->is_logged_in = true;
 			$env->user = $user;
@@ -155,12 +160,11 @@ register_module([
 			$_SESSION["$settings->sessionprefix-expiretime"] = time() + 60*60*24*30; // 30 days from now
 			
 			$returnto_redirect = $_GET["returnto"];
-			if(strpos($returnto_redirect, "?") === false) {
-				http_response_code(400);
-				exit(page_renderer::render_main("Login error - $settings->sitename", "<p>Your credentials were correct, but the 'returnto' URL specified (in the <code>returnto</code> GET parameter) did not contain a question mark. To protect you from being redirected to another site, $settings->sitename only allows redirects that do not leave $settings->sitename.</p>"));
-			}
+			
+			$returnto_parsed = parse_url($returnto_redirect);
+			
 			// Ensure that this redirect takes to only somewhere else in this site
-			$returnto_redirect = substr($returnto_redirect, strpos($returnto_redirect, "?"));
+			$returnto_redirect = "?{$returnto_parsed["query"]}";
 			
 			// Redirect to wherever the user was going
 			http_response_code(302);
