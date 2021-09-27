@@ -53,6 +53,8 @@ register_module([
 				$content .= "\t\t<p><em>Login failed.</em></p>\n";
 			if(isset($_GET["required"]))
 				$content .= "\t\t<p><em>$settings->sitename requires that you login before continuing.</em></p>\n";
+			if(isset($_GET["returnto"]))
+				$content .= "\t\t<p>Login to be redirected to <code>".htmlentities($_GET["returnto"])."</code>.</p>";
 			$content .= "\t\t<form method='post' action='$login_form_action_url'>
 				<label for='user'>Username:</label>
 				<input type='text' name='user' id='user' autofocus />
