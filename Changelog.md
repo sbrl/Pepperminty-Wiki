@@ -6,14 +6,12 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ### Changed
  - Display returnto URL above the login form if present to further mitigate CSRF issues
- - Improve `returnto` sanitisation to be more intelligent
 
 ### Fixed
  - [security] Fixed an XSS vulnerability in the `format` GET parameter of the `stats` action (thanks, @JamieSlome)
  - [security] Ensured that the `returnto` GET parameter leads you only to another place on your Pepperminty Wiki instance (thanks, @JamieSlome)
  - [security] Ensure that Javascript in SVGs never gets executed (it's too challenging to strip it, since it could be lurking in many different places - according to [this answer](https://stackoverflow.com/a/68505306/1460422) even Inkscape doesn't strip all Javascript when asked to)
  - [security] Fixed XSS when the `action` GET param doesn't match a known action
- - [security] Further avoid session fixation attacks by regenerating session ids after login (session cookies are already marked as `HttpOnly`)
 
 
 ## v0.23
