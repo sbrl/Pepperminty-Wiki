@@ -129,6 +129,8 @@ register_module([
 			// Ref https://guides.codepath.com/websecurity/Session-Fixation
 			session_regenerate_id(true);
 			
+			send_cookie(session_name(), session_id(), time() + $settings->sessionlifetime);
+			
 			
 			// Update the environment
 			$env->is_logged_in = true;
