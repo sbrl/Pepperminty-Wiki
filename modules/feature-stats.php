@@ -33,7 +33,7 @@ register_module([
 			global $settings, $statistic_calculators;
 			
 			$allowed_formats = [ "html", "json" ];
-			$format = slugify($_GET["format"]) ?? "html";
+			$format = slugify($_GET["format"] ?? "html");
 			
 			if(!in_array($format, $allowed_formats)) {
 				http_response_code(400);
