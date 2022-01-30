@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.11.3",
+	"version" => "0.11.4",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation.",
 	"extra_data" => [
@@ -413,7 +413,7 @@ register_module([
 			<tr><td><code>{{{*}}}</code></td><td>Outputs a comma separated list of all the subpages of the current page.</td></tr>
 			<tr><td><code>{{{+}}}</code></td><td>Shows a gallery containing all the files that are sub pages of the current page.</td></tr>
 		</table>
-		<p>Note that a page <em>doesn't not</em> need to be included as a template to use these variables.");
+		<p>Note that a page <em>does not</em> need to be included as a template to use these variables.");
 		if($settings->parser_ext_renderers_enabled) {
 			$doc_help = "<p>$settings->sitename supports external renderers. External renderers take the content of a code fence block, like this:</p>
 			<pre><code>```language_code
