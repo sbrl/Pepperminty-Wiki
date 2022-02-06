@@ -9,6 +9,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ### Fixed
  - Stats: Fix crash when loading the stats page
+ - Fix crash when leaving a top-level comment
  - [security] Fixed an XSS vulnerability in the `format` GET parameter of the `stats` action (thanks, @JamieSlome)
  - [security] Ensured that the `returnto` GET parameter leads you only to another place on your Pepperminty Wiki instance (thanks, @JamieSlome)
  - [security] Ensure that Javascript in SVGs never gets executed (it's too challenging to strip it, since it could be lurking in many different places - according to [this answer](https://stackoverflow.com/a/68505306/1460422) even Inkscape doesn't strip all Javascript when asked to)

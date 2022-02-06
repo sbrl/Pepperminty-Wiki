@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.3.4",
+	"version" => "0.3.5",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
@@ -134,7 +134,7 @@ register_module([
 					"timestamp" => time(),
 					"page" => $env->page,
 					"user" => $env->user,
-					"reply_depth" => count($comment_thread),
+					"reply_depth" => $comment_thread !== null ? count($comment_thread) : 0,
 					"comment_id" => $new_comment->id
 				]);
 			}
