@@ -176,7 +176,7 @@ input[type=button], input[type=submit]{
 .link-display{
 	margin-left:0.5rem;
 }
-audio, video, img{
+audio, video, img, iframe{
 	max-width:100%;
 }
 object {
