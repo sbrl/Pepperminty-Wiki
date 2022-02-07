@@ -1205,6 +1205,11 @@ class PeppermintParsedown extends ParsedownExtra
 			$urlType = system_extension_mime_type($urlExtension);
 			$embed_type = substr($urlType, 0, strpos($urlType, "/"));
 			if($urlType == "application/pdf") $embed_type = "pdf";
+			
+			// Check if the URL is a recognised external provider
+			$ext_provider_result = $this->__make_embed($imageUrl, $altText);
+			if($ext_provider_result !== null) $embed_type = "ext_provider";
+			
 			$result = [];
 			switch($embed_type)
 			{
@@ -1226,7 +1231,12 @@ class PeppermintParsedown extends ParsedownExtra
 						]
 					];
 					break;
-				
+				case "ext_provider":
+					$result = [
+						"extent" => strlen($matches[0]),
+						"element" => $ext_provider_result
+					];
+					break;
 				case "audio":
 					$result = [
 						"extent" => strlen($matches[0]),
@@ -1319,6 +1329,64 @@ class PeppermintParsedown extends ParsedownExtra
 				$result["element"]["text"][0]["attributes"]["style"] = $mediaStyle;
 			}
 			return $result;
+		}
+	}
+	
+	/**
+	 * Makes an embed HTML tree for a given URL.
+	 * Example URLs include YouTube links, Vimeo, etc.
+	 * @param  string $url	The URL to generate an embed for.
+	 * @return array|null	The embed HTML tree, or null if generation failed (e.g. if the URL wasn't recognised).
+	 */
+	protected function __make_embed(string $url_text, string $alt_text) {
+		// 1: URL parsing
+		$url = parse_url($url_text);
+		$url["host"] = preg_replace("/^www\./", "", $url["host"] ?? "");
+		parse_str($url["query"] ?? "", $query);
+		// 2: Pre-generation transforms
+		switch($url["host"]) {
+			case "player.vimeo.com":
+				$url["host"] = "vimeo.com";
+				$url["path"] = preg_replace("/^\/video/", "", $url["path"]);
+				break;
+			case "youtu.be":
+				$query["v"] = preg_replace("/^\//", "", $url["path"]);
+				$url["host"] = "youtube.com";
+				$url["path"] = "/watch";
+				break;
+		}
+		// 3: Actual embed generation
+		switch ($url["host"]) {
+			case "youtube.com":
+				if($url["path"] !== "/watch" || empty($query["v"]))
+					return null;
+				
+				return [
+					"name" => "iframe",
+					"attributes" => [
+						"src" => "https://www.youtube.com/embed/{$query["v"]}",
+						"frameborder" => "0",
+						"allow" => "fullscreen; encrypted-media; picture-in-picture"
+					],
+					"text" => "YouTube: $alt_text"
+				];
+				break;
+			
+			case "vimeo.com":
+				if(strlen($url["path"]) <= 1 || preg_match("/[^0-9\/]/", $url["path"]) === 1) return null;
+				return [
+					"name" => "iframe",
+					"attributes" => [
+						"src" => "https://player.vimeo.com/video{$url["path"]}",
+						"frameborder" => "0",
+						"allow" => "fullscreen; picture-in-picture"
+					],
+					"text" => "Vimeo: $alt_text"
+				];
+				break;
+			
+			default:
+				return null;
 		}
 	}
 	

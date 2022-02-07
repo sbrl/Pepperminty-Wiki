@@ -4,6 +4,11 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ## v0.24-dev
 
+### Added
+ - Added support for embedding external YouTube and Vimeo videos (e.g. `![alt text](https://youtube.com/watch?v=pID0xQ2qnrQ)`)
+     - If you know of a cool service that should be supported, please open an issue - YouTube and Vimeo were just the only 2 I could think of
+     - Known issue: specifying the size (i.e. with ` | 500x400` inside the brackets `()` there) doesn't currently work because iframes are weird
+
 ### Changed
  - Display returnto URL above the login form if present to further mitigate CSRF issues
 
