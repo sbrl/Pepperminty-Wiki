@@ -112,7 +112,8 @@ tr:nth-child(2n)	{ background: var(--bg-a);		}
 th, td				{ padding: 0.25em 0.45em;		}
 
 pre, code, input, textarea	{ font-size: 1rem;	}
-img, video, audio			{ max-width: 100%;	}
+img, video, audio, iframe	{ max-width: 100%;	}
+object { width: 100%; height: 90vh; }
 
 .spoiler		{ background: #333333; border-radius: 0.2em; color: transparent; }
 .spoiler:target	{ background: transparent; color: inherit; }
