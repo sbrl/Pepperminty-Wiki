@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.11.4",
+	"version" => "0.11.5",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation.",
 	"extra_data" => [
@@ -1477,12 +1477,14 @@ class PeppermintParsedown extends ParsedownExtra
 	private function insertTableOfContentsObject(object $obj, object $target) {
 		if($obj->level - 1 > $target->level && !empty($target->children)) {
 			$this->insertTableOfContentsObject($obj, end($target->children));
+			return;
 		}
 		$target->children[] = $obj;
 	}
 	
 	protected function generateTableOfContents() : string {
 		global $settings;
+		error_log(var_export($this->tableOfContents, true));
 		$elements = [ $this->generateTableOfContentsElement($this->tableOfContents) ];
 		if($settings->parser_toc_heading_level > 1)
 			array_unshift(

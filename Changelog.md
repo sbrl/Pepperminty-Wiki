@@ -20,6 +20,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - [security] Ensure that Javascript in SVGs never gets executed (it's too challenging to strip it, since it could be lurking in many different places - according to [this answer](https://stackoverflow.com/a/68505306/1460422) even Inkscape doesn't strip all Javascript when asked to)
  - [security] Fixed XSS when the `action` GET param doesn't match a known action
  - StorageBox: create SQLite DB ifi it doesn't exist explicitly with `touch()`, because some systems are weird
+ - Fixed erroneous additional entries in complex tables of contents
 
 
 ## v0.23
