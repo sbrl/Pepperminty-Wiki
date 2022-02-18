@@ -44,6 +44,7 @@ Open an elevated (administrator) Command Prompt and run the following.
 Change the "installdir" variable to the directory where you've placed the Pepperminty index.php file.
 This assumes your IIS website is named "Default Web Site" and that you want to create a "pepperminty" application under it. If yours is different, change the variables appropriately.
 
+```
 SETLOCAL
 SET installdir=c:\inetpub\wwwroot\pepperminty\
 SET iissitename="Default Web Site"
@@ -56,6 +57,7 @@ appcmd set config %iisappfull% -section:system.webServer/security/requestFilteri
 cd /d %installdir%
 icacls . /grant IIS_IUSRS:(OI)(CI)RXWM
 ENDLOCAL
+```
 
 If you aren't running any of these web servers and have a configuration snippet to share for your web server, please [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) to get in touch - and then we can add your configuration snippet to improve this documentation for everyone.
 
