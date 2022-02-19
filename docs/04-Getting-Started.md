@@ -38,7 +38,28 @@ If you are running Apache, then the following configuration snippet should block
 </Files>
 ```
 
-If you aren't running either of these web servers and have a configuration snippet to share for your web server, please [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) to get in touch - and then we can add your configuration snippet to improve this documentation for everyone.
+For those running IIS, the following will grant the appropriate read and write permissions to the IIS_IUSRS group, and prevent the peppermint.json file from being retrieved.
+
+Open an elevated (administrator) Command Prompt and run the following.
+Change the "installdir" variable to the directory where you've placed the Pepperminty index.php file.
+This assumes your IIS website is named "Default Web Site" and that you want to create a "pepperminty" application under it. If yours is different, change the variables appropriately.
+
+```
+SETLOCAL
+SET installdir=c:\inetpub\wwwroot\pepperminty\
+SET iissitename="Default Web Site"
+SET iisappfull="Default Web Site/pepperminty"
+SET iisapppath="/pepperminty"
+
+cd /d %WINDIR%\system32\inetsrv\
+appcmd add app /site.name:%iissitename% /path:%iisapppath% /physicalPath:%installdir%
+appcmd set config %iisappfull% -section:system.webServer/security/requestFiltering /+"hiddenSegments.[segment='peppermint.json']"
+cd /d %installdir%
+icacls . /grant IIS_IUSRS:(OI)(CI)RXWM
+ENDLOCAL
+```
+
+If you aren't running any of these web servers and have a configuration snippet to share for your web server, please [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) to get in touch - and then we can add your configuration snippet to improve this documentation for everyone.
 
 
 ## Verifying Your Download
