@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Credits",
-	"version" => "0.8",
+	"version" => "0.8.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
@@ -114,6 +114,12 @@ register_module([
 					"author_url" => "https://www.nivex.net/",
 					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/pull/179",
 					"icon" => "https://avatars3.githubusercontent.com/u/3833404?s=24&v=4"
+				],
+				"IIS web server documentation" => [
+					"author" => "Nathan Nance",
+					"author_url" => "https://github.com/npnance",
+					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/pull/229",
+					"icon" => "https://avatars.githubusercontent.com/u/975340?s=24"
 				]
 			];
 			
