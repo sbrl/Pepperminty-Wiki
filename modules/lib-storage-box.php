@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Library: Storage box",
-	"version" => "0.13",
+	"version" => "0.13.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "A library module that provides a fast cached key-value store backed by SQLite. Used by the search engine.",
 	"id" => "lib-storage-box",
@@ -59,7 +59,7 @@ class StorageBox {
 		$this->db = new \PDO("sqlite:$filename_db"); // HACK: This might not work on some systems, because it depends on the current working directory
 		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if($firstrun) {
-			$this->query("CREATE TABLE store (key TEXT UNIQUE NOT NULL, value TEXT)");
+			$this->query("CREATE TABLE IF NOT EXISTS store (key TEXT UNIQUE NOT NULL, value TEXT)");
 		}
 	}
 	/**
