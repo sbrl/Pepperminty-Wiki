@@ -132,7 +132,7 @@ function glob_recursive($pattern, $flags = 0)
 
 /**
  * Resolves a relative path against a given base directory.
- * @apiVersion	0.20.0
+ * @since 0.20.0
  * @source	https://stackoverflow.com/a/44312137/1460422
  * @param	string		$path		The relative path to resolve.
  * @param	string|null	$basePath	The base directory to resolve against.
@@ -205,7 +205,7 @@ function filepath_to_pagename(string $filepath) : string {
 
 /**
  * Gets the name of the parent page to the specified page.
- * @apiVersion 0.15.0
+ * @since 0.15.0
  * @package core
  * @param  string		$pagename	The child page to get the parent
  * 									page name for.
@@ -699,7 +699,7 @@ function render_editor($editorName) {
  * Minifies CSS. Uses simple computationally-cheap optimisations to reduce size.
  * CSS Minification ideas by Jean from catswhocode.com
  * @source	http://www.catswhocode.com/blog/3-ways-to-compress-css-files-using-php
- * @apiVersion		0.20.0
+ * @since	0.20.0
  * @param	string	$css_str	The string of CSS to minify.
  * @return	string	The minified CSS string.
  */

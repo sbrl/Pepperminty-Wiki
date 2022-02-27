@@ -305,7 +305,7 @@ class page_renderer
 	 * Figures out whether $settings->css is a url, or a string of css.
 	 * A url is something starting with "protocol://" or simply a "/".
 	 * Before v0.20, this method took no arguments and checked $settings->css directly.
-	 * @apiVerion		0.20.0
+	 * @since	0.20.0
 	 * @param	string	$str	The CSS string to check.
 	 * @return	bool	True if it's a url - false if we assume it's a string of css.
 	 */

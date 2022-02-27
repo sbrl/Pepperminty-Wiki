@@ -223,7 +223,7 @@ AWK
 
 task_docs() {
 	task_begin "Building HTTP API Docs";
-	node_modules/apidoc/bin/apidoc -o './docs/RestApi/' --config apidoc.json -f '.*\.php' -e 'index.php|ModuleApi'
+	node_modules/apidoc/bin/apidoc -o './docs/RestApi/' --config apidoc.json --input . -f '.*\.php' -e 'index.php|ModuleApi'
 	exit_code="$?";
 	rm -rf doc/;
 	task_end "${exit_code}";

@@ -5,7 +5,7 @@
 
 /**
  * Resolves a relative path against a given base directory.
- * @apiVersion	0.20.0
+ * @since	0.20.0
  * @source	https://stackoverflow.com/a/44312137/1460422
  * @param	string		$path		The relative path to resolve.
  * @param	string|null	$basePath	The base directory to resolve against.
