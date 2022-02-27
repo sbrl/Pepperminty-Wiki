@@ -54,9 +54,8 @@ class StorageBox {
 	 */
 	function __construct(string $filename) {
 		$firstrun = !file_exists($filename);
-		$filename_db = path_resolve($filename, __DIR__);
-		if(!file_exists($filename_db)) touch($filename_db);
-		$this->db = new \PDO("sqlite:$filename_db"); // HACK: This might not work on some systems, because it depends on the current working directory
+		if(!file_exists($filename)) touch($filename);
+		$this->db = new \PDO("sqlite:$filename"); // HACK: This might not work on some systems, because it depends on the current working directory
 		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if($firstrun) {
 			$this->query("CREATE TABLE IF NOT EXISTS store (key TEXT UNIQUE NOT NULL, value TEXT)");
