@@ -445,6 +445,11 @@ input.edit-page-button[type='submit']{
 	color:#fb701a;
 	text-decoration:none;
 }
+
+.onebox { display: flex; flex-direction: column;
+	background: var(--tag); border: 0.2em solid var(--accent-b1); padding: 0.5em; text-decoration: none; }
+.onebox-header { font-weight: bolder; font-size: 125%; border-bottom: 0.1em solid var(--accent-b1); }
+
 .help-section-header::after{
 	content:"#" attr(id);
 	float:right;
