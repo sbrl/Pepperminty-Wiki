@@ -261,6 +261,10 @@ input[type=submit].large { width: 100%; box-sizing: border-box; padding: 0.5em; 
 .tag-list li { display: inline-block; margin: 1rem; }
 .mini-tag { background: var(--tag); margin: 0 0.4em; padding: 0.2rem 0.4rem; color: var(--accent-b2); text-decoration: none; }
 
+.onebox { display: flex; flex-direction: column;
+	border: 0.2em solid var(--tag); padding: 0.5em; text-decoration: none; }
+.onebox-header { font-weight: bolder; font-size: 125%; border-bottom: 0.1em solid var(--tag); }
+
 .grid-large { display: grid; grid-template-columns: repeat(auto-fit, minmax(25em, 1fr)); grid-auto-rows: min-content; grid-gap: 1em; justify-content: center;}
 
 .theme-item { justify-self: center; text-align: center; }

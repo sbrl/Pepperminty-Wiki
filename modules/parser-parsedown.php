@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.11.5",
+	"version" => "0.12",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation.",
 	"extra_data" => [
@@ -515,6 +515,7 @@ class PeppermintParsedown extends ParsedownExtra
         parent::__construct();
 		
 		array_unshift($this->BlockTypes["["], "TableOfContents");
+		array_unshift($this->BlockTypes["["], "OneBox");
 		
 		// Prioritise our internal link parsing over the regular link parsing
 		$this->addInlineType("[", "InternalLink", true);
@@ -1484,7 +1485,7 @@ class PeppermintParsedown extends ParsedownExtra
 	
 	protected function generateTableOfContents() : string {
 		global $settings;
-		error_log(var_export($this->tableOfContents, true));
+		
 		$elements = [ $this->generateTableOfContentsElement($this->tableOfContents) ];
 		if($settings->parser_toc_heading_level > 1)
 			array_unshift(
@@ -1568,6 +1569,52 @@ class PeppermintParsedown extends ParsedownExtra
 		
 		$result = [
 			"element" => [ "text" => self::TOC_ID ]
+		];
+		return $result;
+	}
+	
+	
+	protected function blockOneBox($fragment) {
+		global $env, $settings, $pageindex;
+		
+		if($fragment["indent"] > 0 || !$settings->parser_onebox_enabled) return;
+		if(preg_match('/^\[\[([^\]]*?)\]\]$/u', $fragment["text"], $matches) !== 1)
+			return;
+		
+		// 1: Parse parameters out
+		// -------------------------------
+		$link_page = trim(str_replace(["\r", "\n"], [" ", " "], $matches[1]));
+		
+		if(empty($pageindex->$link_page)) return;
+		
+		$link_page_content = file_get_contents($env->storage_prefix.$pageindex->$link_page->filename);
+		
+		$preview = $link_page_content;
+		if(mb_strlen($preview) > $settings->parser_onebox_preview_length)
+			$preview = mb_substr($preview, 0, $settings->parser_onebox_preview_length) . "…";
+		
+		// 2: Generate onebox
+		// -------------------------------
+		$result = [
+			"element" => [
+				"name" => "a",
+				"attributes" => [
+					"class" => "onebox",
+					"href" => "?page=".rawurlencode($link_page)
+				],
+				"elements" => [
+					[
+						"name" => "div",
+						"attributes" => [ "class" => "onebox-header" ],
+						"text" => $link_page
+					],
+					[
+						"name" => "div",
+						"attributes" => [ "class" => "onebox-preview" ],
+						"text" => $preview
+					]
+				]
+			]
 		];
 		return $result;
 	}

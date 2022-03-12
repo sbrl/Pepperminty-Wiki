@@ -8,6 +8,9 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Added support for embedding external YouTube and Vimeo videos (e.g. `![alt text](https://youtube.com/watch?v=pID0xQ2qnrQ)`)
      - If you know of a cool service that should be supported, please open an issue - YouTube and Vimeo were just the only 2 I could think of
      - Known issue: specifying the size (i.e. with ` | 500x400` inside the brackets `()` there) doesn't currently work because iframes are weird
+ - Added [oneboxing](https://meta.discourse.org/t/rich-link-previews-with-onebox/98088): rich previews for internal links. If an internal link is on it's own with nothing before or after it on a line, then it'll be turned into a onebox
+     - 2 new settings have also been added to control it: `parser_onebox_enabled` and `parser_onebox_preview_length`
+     - TODO: Update the dynamic help page for this.
 
 ### Changed
  - Display returnto URL above the login form if present to further mitigate CSRF issues
