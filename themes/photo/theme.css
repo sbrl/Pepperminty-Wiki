@@ -177,6 +177,10 @@ input[type=submit] {
 .tag-list li { display: inline-block; margin: 1rem; }
 .mini-tag { background: var(--bg-b); padding: 0.2rem 0.4rem; text-decoration: none; }
 
+.onebox { display: flex; flex-direction: column;
+	background: var(--bg-a); box-shadow: 0.5em 0.5em 0.5em var(--shadow-a); padding: 0.5em; text-decoration: none; }
+.onebox-header { font-weight: bolder; font-size: 125%; border-bottom: 0.1em solid var(--bg-colour); }
+
 .larger { color: var(--addition); }
 .smaller, .deletion { color: var(--deletion); }
 .nochange { color: var(--nochange); font-style: italic; }
