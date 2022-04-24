@@ -262,7 +262,6 @@ register_module([
 					$page_content = file_get_contents($env->storage_prefix . $pagedata->filename);
 					
 					$page_links = PeppermintParsedown::extract_page_names($page_content);
-					
 					foreach($page_links as $linked_page) {
 						// We're only interested in pages that don't exist
 						if(!empty($pageindex->$linked_page)) continue;
@@ -1640,17 +1639,14 @@ class PeppermintParsedown extends ParsedownExtra
 	 */
 	public static function extract_page_names($page_text) {
 		global $pageindex;
-		preg_match_all("/\[\[([^\]]+)\]\]/", $page_text, $linked_pages);
+		preg_match_all("/\[\[([^\]]+)\]\]/u", $page_text, $linked_pages);
 		if(count($linked_pages[1]) === 0)
 			return []; // No linked pages here
 		
 		$result = [];
 		foreach($linked_pages[1] as $linked_page) {
 			// Strip everything after the | and the #
-			if(strpos($linked_page, "|") !== false)
-				$linked_page = substr($linked_page, 0, strpos($linked_page, "|"));
-			if(strpos($linked_page, "#") !== false)
-				$linked_page = substr($linked_page, 0, strpos($linked_page, "#"));
+			$linked_page = preg_replace("/[|¦#].*/u", "", $linked_page);
 			if(strlen($linked_page) === 0)
 				continue;
 			// Make sure we try really hard to find this page in the

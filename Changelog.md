@@ -25,6 +25,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - StorageBox: Create SQLite DB if it doesn't exist explicitly with `touch()`, because some systems are weird
  - StorageBox: Fix crash when `index.php` is a symbolic link
  - Fixed erroneous additional entries in complex tables of contents
+ - Make `PeppermintParsedown::extract_page_names` more multibyte safe to avoid empty statistics
 
 
 ## v0.23
