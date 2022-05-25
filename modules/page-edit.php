@@ -503,6 +503,7 @@ DIFFSCRIPT;
 					page_renderer::add_js_link("$paths->extra_data_directory/page-edit/diff.min.js");
 					page_renderer::add_js_snippet($diff_script);
 					
+					http_response_code(409);
 					header("x-failure-reason: edit-conflict");
 					exit(page_renderer::render_main("Edit Conflict - $env->page - $settings->sitename", $content));
 				}
