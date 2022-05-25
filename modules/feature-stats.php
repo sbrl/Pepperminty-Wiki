@@ -397,11 +397,5 @@ function stats_load()
 function stats_save($stats)
 {
 	global $paths;
-	echo("STATS_SAVE BEGIN, CONTENT_DUMP:\n");
-	var_dump($stats);
-	echo("\nCONTENT_JSON:\n");
-	var_dump(json_encode($stats, JSON_PRETTY_PRINT, 10));
-	echo("\nLAST_ERROR: ".json_last_error()."\n");
-	echo("\nSTATS_SAVE END to $paths->statsindex\n");
 	return file_put_contents($paths->statsindex, json_encode($stats, JSON_PRETTY_PRINT) . "\n");
 }
