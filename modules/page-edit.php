@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Page editor",
-	"version" => "0.18.1",
+	"version" => "0.19",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -60,16 +60,11 @@ register_module([
 			if(!$unknownpagename)
 				$page_tags = htmlentities(implode(", ", (!empty($pageindex->{$env->page}->tags)) ? $pageindex->{$env->page}->tags : []));
 			
-			$isOtherUsersPage = false;
-			if(
-				$settings->user_page_prefix == mb_substr($env->page, 0, mb_strlen($settings->user_page_prefix)) and // The current page is a user page of some sort
+			$isOtherUsersPage = $settings->user_page_prefix == mb_substr($env->page, 0, mb_strlen($settings->user_page_prefix)) and // The current page is a user page of some sort
 				(
 					!$env->is_logged_in or // the user isn't logged in.....
 					extract_user_from_userpage($env->page) !== $env->user // ...or it's not under this user's own name
-				)
-			) {
-				$isOtherUsersPage = true;
-			}
+				);
 			
 			if((!$env->is_logged_in and !$settings->anonedits) or // if we aren't logged in and anonymous edits are disabled
 				!$settings->editing or // or editing is disabled
@@ -387,6 +382,7 @@ window.addEventListener("load", function(event) {
 			
 			if(!$settings->editing)
 			{
+				http_response_code(403);
 				header("x-failure-reason: editing-disabled");
 				header("location: index.php?page=" . rawurlencode($env->page));
 				exit(page_renderer::render_main("Error saving edit", "<p>Editing is currently disabled on this wiki.</p>"));
@@ -406,12 +402,27 @@ window.addEventListener("load", function(event) {
 			{
 				http_response_code(403);
 				header("refresh: 5; url=index.php?page=" . rawurlencode($env->page));
+				header("x-failure-reason: protected-page");
 				exit(htmlentities($env->page) . " is protected, and you aren't logged in as an administrator or moderator. Your edit was not saved. Redirecting in 5 seconds...");
+			}
+			if($settings->user_page_prefix == mb_substr($env->page, 0, mb_strlen($settings->user_page_prefix)) and ( // The current page is a user page of some sort
+				!$env->is_logged_in or // the user isn't logged in.....
+				(
+					extract_user_from_userpage($env->page) !== $env->user and // ...or it's not under this user's own name
+					!$env->is_admin // ....and the user is not an admin/moderator
+				)
+			) ) {
+				http_response_code(403);
+				header("x-failure-reason: permissions-other-user-page");
+				header("content-type: text-plain");
+				exit("Error: The page {$env->page} is a user page. You must be logged in as either that user or a moderator in order to edit it.");
 			}
 			if(!isset($_POST["content"]))
 			{
 				http_response_code(400);
 				header("refresh: 5; url=index.php?page=" . rawurlencode($env->page));
+				header("x-failure-reason: no-content");
+				header("content-type: text-plain");
 				exit("Bad request: No content specified.");
 			}
 			if(isset($_POST["prevent_save_if_exists"]) && isset($pageindex->{$env->page})) {
