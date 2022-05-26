@@ -14,7 +14,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 ### Changed
  - Display returnto URL above the login form if present to further mitigate CSRF issues
- - [Rest API] Return a 409 Conflict instead of a 200 OK on an edit conflict when saving a page in the `save` action
+ - [Rest API] Return a 409 Conflict instead of a 200 OK on an edit conflict when saving a page in the `save` action, and add `x-failure-reason` for more errors
 
 ### Fixed
  - Stats: Fix crash when loading the stats page
