@@ -415,6 +415,7 @@ window.addEventListener("load", function(event) {
 				http_response_code(403);
 				header("x-failure-reason: permissions-other-user-page");
 				header("content-type: text-plain");
+				header("refresh: 5; url=index.php?page=" . rawurlencode($env->page));
 				exit("Error: The page {$env->page} is a user page. You must be logged in as either that user or a moderator in order to edit it.");
 			}
 			if(!isset($_POST["content"]))
