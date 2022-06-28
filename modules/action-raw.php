@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Raw page source",
-	"version" => "0.8",
+	"version" => "0.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a 'raw' action that shows you the raw source of a page.",
 	"id" => "action-raw",
@@ -41,6 +41,8 @@ register_module([
 				header("content-type: text/markdown");
 			header("content-disposition: inline");
 			header("content-length: " . filesize($env->page_filename));
+			header("x-tags: " . str_replace(["\n", ":"], "", $pageindex->$page->tags));
+			
 			exit(file_get_contents($env->page_filename));
 		});
 		
