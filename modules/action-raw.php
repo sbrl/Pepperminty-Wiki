@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Raw page source",
-	"version" => "0.9",
+	"version" => "0.9.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a 'raw' action that shows you the raw source of a page.",
 	"id" => "action-raw",
@@ -19,6 +19,14 @@ register_module([
 		 * 
 		 * @apiParam	{string}	page		The page to return the source of.
 		 * @apiParam	{string}	typeheader	Optional; v0.22+. The content-type header to set on the response. If not set, defaults to text/markdown. Valid values: plaintext (returns text/plain). Does NOT change the content delivered. Useful for debugging if your browser doesn't display text returned with text/markdown.
+		 *
+		 * @apiSuccessExample Example response:
+		 * HTTP/1.1 200 OK
+		 * content-type: text/markdown
+		 * content-disposition: inline
+		 * x-tags: foo, bar, baz
+		 *
+		 * Some text here
 		 */
 		
 		/*
