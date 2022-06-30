@@ -49,10 +49,10 @@ register_module([
 				header("content-type: text/markdown");
 			header("content-disposition: inline");
 			header("content-length: " . filesize($env->page_filename));
-			header("x-tags: " . str_replace(
+			header("x-tags: " . implode(", ", str_replace(
 				["\n", ":"], "",
 				$pageindex->{$env->page}->tags
-			));
+			)));
 			exit(file_get_contents($env->page_filename));
 		});
 		
