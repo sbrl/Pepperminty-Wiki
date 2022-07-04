@@ -11,7 +11,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
  - Added [oneboxing](https://meta.discourse.org/t/rich-link-previews-with-onebox/98088): rich previews for internal links. If an internal link with 3 square brackets (e.g. `[[[example]]]`) is on it's own with nothing before or after it on a line, then it'll be turned into a onebox
      - 2 new settings have also been added to control it: `parser_onebox_enabled` and `parser_onebox_preview_length`
      - TODO: Update the dynamic help page for this.
- - [Rest API] Add new `x-tags` HTTP header to `raw` action
+ - [Rest API] Add new `x-tags` HTTP header to `raw` action (**required** for v2.2 of the android client app to edit pages!)
 
 ### Changed
  - Display returnto URL above the login form if present to further mitigate CSRF issues
