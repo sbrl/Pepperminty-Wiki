@@ -1,6 +1,6 @@
 {
 	"name": "pepperminty-wiki",
-	"version": "0.23.0",
+	"version": "0.24.0",
 	"description": "A wiki in a box",
 	"main": "index.js",
 	"directories": {
@@ -20,7 +20,7 @@
 	},
 	"homepage": "https://github.com/sbrl/Pepperminty-Wiki#readme",
 	"devDependencies": {
-		"apidoc": "^0.50.4",
+		"apidoc": "^0.51.1",
 		"nightdocs": "^1.1.0"
 	},
 	"docpress": {
