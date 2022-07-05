@@ -2,7 +2,7 @@
 This file holds the changelog for Pepperminty Wiki. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
 
-## v0.24-dev
+## v0.24-beta1
 
 ### Added
  - Added support for embedding external YouTube and Vimeo videos (e.g. `![alt text](https://youtube.com/watch?v=pID0xQ2qnrQ)`)
