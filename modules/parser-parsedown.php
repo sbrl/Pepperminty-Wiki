@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.12.1",
+	"version" => "0.12.2",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation.",
 	"extra_data" => [
@@ -1581,9 +1581,7 @@ class PeppermintParsedown extends ParsedownExtra
 	 */
 	protected function blockOneBox($fragment, $current_block) {
 		global $env, $settings, $pageindex;
-		error_log("FRAGMENT ".var_export($fragment, true));
-		error_log("CBLOCK ".var_export($current_block, true));
-		error_log("***********");
+		// error_log("FRAGMENT ".var_export($fragment, true));
 		
 		if($fragment["indent"] > 0 || !$settings->parser_onebox_enabled) return;
 		if(preg_match('/^\[\[\[([^\]]*?)\]\]\]$/u', $fragment["text"], $matches) !== 1)
