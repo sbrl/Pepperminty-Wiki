@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Page list",
-	"version" => "0.11.5",
+	"version" => "0.12",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a page that lists all the pages in the index along with their metadata.",
 	"id" => "page-list",
@@ -20,6 +20,7 @@ register_module([
 		 * @apiPermission	Anonymous
 		 *
 		 * @apiParam	{string}	format	The format to return the page list in. Default: html. Other foramts available: json, text
+		 * @apiParam	{string}	filter	Since Pepperminty Wiki v0.24, optional. If specified, returns only the page names that contain the given substring.
 		 */
 		
 		/*
@@ -34,10 +35,19 @@ register_module([
 			
 			$supported_formats = [ "html", "json", "text" ];
 			$format = $_GET["format"] ?? "html";
+			$filter = $_GET["filter"] ?? null;
 			
-			$sorted_pageindex = get_object_vars($pageindex);
+			
+			$array_pageindex = get_object_vars($pageindex);
+			$transformed_pageindex = $filter == null ? $array_pageindex : [];
+			if($filter !== null) {
+				foreach($array_pageindex as $pagename => $entry) {
+					if(mb_strpos($pagename, $filter) === false) continue;
+					$transformed_pageindex[$pagename] = $entry;
+				}
+			}
 			$sorter = new Collator("");
-			uksort($sorted_pageindex, function($a, $b) use($sorter) : int {
+			uksort($transformed_pageindex, function($a, $b) use($sorter) : int {
 				return $sorter->compare($a, $b);
 			});
 			
@@ -45,18 +55,19 @@ register_module([
 				case "html":
 					$title = "All Pages";
 					$content = "	<h1>$title on $settings->sitename</h1>";
-					
-					$content .= generate_page_list(array_keys($sorted_pageindex));
+					if($filter !== null)
+						$content .= "	<p><em>Listing pages containing the text \"$filter\". <a href='?action=list'>List all pages</a>.</em></p>";
+					$content .= generate_page_list(array_keys($transformed_pageindex));
 					exit(page_renderer::render_main("$title - $settings->sitename", $content));
 					break;
 					
 				case "json":
 					header("content-type: application/json");
-					exit(json_encode(array_keys($sorted_pageindex), JSON_PRETTY_PRINT));
+					exit(json_encode(array_keys($transformed_pageindex), JSON_PRETTY_PRINT));
 				
 				case "text":
 					header("content-type: text/plain");
-					exit(implode("\n", array_keys($sorted_pageindex)));
+					exit(implode("\n", array_keys($transformed_pageindex)));
 				
 				default:
 					http_response_code(400);
@@ -156,6 +167,10 @@ register_module([
 			}
 			
 		});
+		
+		
+		
+		
 		
 		statistic_add([
 			"id" => "tag-count",
