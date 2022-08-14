@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Page viewer",
-	"version" => "0.16.11",
+	"version" => "0.16.12",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to view pages. You really should include this one.",
 	"id" => "page-view",
@@ -23,6 +23,8 @@ register_module([
 		 * @apiUse PageParameter
 		 * @apiParam	{number}	revision	The revision number to display.
 		 * @apiParam	{string}	mode		Optional. The display mode to use. Can hold the following values: 'normal' - The default. Sends a normal page. 'printable' - Sends a printable version of the page. 'contentonly' - Sends only the content of the page, not the extra stuff around it. 'parsedsourceonly' - Sends only the raw rendered source of the page, as it appears just after it has come out of the page parser. Useful for writing external tools (see also the `raw` action).
+		 * @apiParam	{string}	redirect	Optional. If set to 'no' (without quotes), causes the specified page to be shown - even if it would normally result in a redirect.
+		 * @apiParam	{string}	redirected_from	Optional. Cosmetic parameter that displays the name of the page that was redirected from. You will not normally need to use this.
 		 *
 		 * @apiError	NonExistentPageError	The page doesn't exist and editing is disabled in the wiki's settings. If editing isn't disabled, you will be redirected to the edit page instead.
 		 * @apiError	NonExistentRevisionError	The specified revision was not found.
