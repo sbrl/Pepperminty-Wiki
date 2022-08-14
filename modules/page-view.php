@@ -70,7 +70,7 @@ register_module([
 					$send_redirect = false;
 				if((isset($pageindex->$page->redirect_absolute) &&
 					$pageindex->$page->redirect_absolute == true && // ...and it's absolute....
-					$settings->redirect_absolute_enable === false)) // ...and absolute reedirects are enabled
+					$settings->redirect_absolute_enable === false)) // ...and absolute redirects are enabled
 					$send_redirect = false;
 			   
 				
