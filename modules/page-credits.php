@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Credits",
-	"version" => "0.8.1",
+	"version" => "0.8.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the credits page. You *must* have this module :D",
 	"id" => "page-credits",
@@ -31,7 +31,7 @@ register_module([
 				"Code" => [
 					"author" => "Starbeamrainbowlabs",
 					"author_url" => "https://starbeamrainbowlabs.com/",
-					"thing_url" => "https://github.com/sbrl/Pepprminty-Wiki",
+					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/",
 					"icon" => "https://avatars0.githubusercontent.com/u/9929737?v=3&s=24"
 				],
 				"Mime type to file extension mapper" => [
