@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Parsedown",
-	"version" => "0.12.2",
+	"version" => "0.12.3",
 	"author" => "Emanuil Rusev & Starbeamrainbowlabs",
 	"description" => "An upgraded (now default!) parser based on Emanuil Rusev's Parsedown Extra PHP library (https://github.com/erusev/parsedown-extra), which is licensed MIT. Please be careful, as this module adds some weight to your installation.",
 	"extra_data" => [
@@ -589,7 +589,7 @@ class PeppermintParsedown extends ParsedownExtra
 			if(!empty($this->paramStack))
 			{
 				$stackEntry = array_slice($this->paramStack, -1)[0];
-				$params = !empty($stackEntry) ? $stackEntry["params"] : false;
+				$params = !empty($stackEntry) ? $stackEntry["params"] : null;
 			}
 			
 			$variableKey = trim($matches[1]);
@@ -732,7 +732,7 @@ class PeppermintParsedown extends ParsedownExtra
 		
 		// Extract the name of the template page
 		$templatePagename = array_shift($parts);
-		// If the page that we are supposed to use as the tempalte doesn't
+		// If the page that we are supposed to use as the template doesn't
 		// exist, then there's no point in continuing.
 		if(empty($pageindex->$templatePagename))
 			return false;
@@ -770,13 +770,23 @@ class PeppermintParsedown extends ParsedownExtra
 		$parsedTemplateSource = $this->linesElements(explode("\n",
 			trim(str_replace(["\r\n", "\r"], "\n", file_get_contents($templateFilePath)), "\n")
 		));
+		// Render it out. Important to preserve scope.
+		$parsedTemplateSource = $this->elements($parsedTemplateSource);
+		
+		// HACK: Find/replace to ensure variables are inserted inside HTML. Note this does NOTE support special variables inside HTML - only simple ones.
+		// This would cause issues if we later allow variables to be unset.
+		foreach($params as $param_key => $param_value) {
+			$parsedTemplateSource = str_replace("{{{".$param_key."}}}", $param_value, $parsedTemplateSource);
+		}
 		
 		// Remove the parsed parameters from the stack
 		array_pop($this->paramStack);
 		
 		return [
 			"name" => "div",
-			"elements" => $parsedTemplateSource,
+			"element" => [
+				"rawHtml" => $parsedTemplateSource,
+			],
 			"attributes" => [
 				"class" => "template"
 			]

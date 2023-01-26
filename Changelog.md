@@ -5,6 +5,7 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ## v0.24-beta2
  - **Added:** `filter` GET parameter to the `list` action, which filters the list of pages to contain only those containing the specified substring.
  - **Fixed:** [Rest API] Documented `redirect` and `redirected_from` GET params to the `view` action.
+ - **Fixed:** Fixed bug where templating variables were not populated under some circumstances.
  - **Fixed:** Typo on credits page
 
 ## v0.24-beta1
