@@ -1,3 +1,4 @@
+*.pdf
 enable1*.txt
 *.dot
 experiments/bktree/*.png
