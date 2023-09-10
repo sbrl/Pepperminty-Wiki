@@ -3,7 +3,9 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 
 ## v0.25-dev (unreleased)
-This is the next release of Pepperminty Wiki. We'll list changes here as we work on them.
+This is the next release of Pepperminty Wiki, that hasn't been released yet.
+
+- **Fixed:** Fixed link to the interwiki links documentation on the help page if interwiki links have not yet been setup.
 
 
 ## v0.24
