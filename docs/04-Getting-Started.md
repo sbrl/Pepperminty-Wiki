@@ -58,7 +58,7 @@ $HTTP["url"] =~ "^/peppermint.json" {
 ```
 
 #### Caddy
-The Caddy web server makes it easy to block files. Add this to your `server` block if you have one, or if not just to the end of your file:
+The Caddy web server makes it easy to block files. Add this to your `server` block if you have one, or if not just to the end of your Caddyfile:
 
 ```caddy
 @blocked {
