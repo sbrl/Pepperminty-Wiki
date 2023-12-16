@@ -21,6 +21,9 @@
 4. See the [Configuring](06-Configuration.html) section for information on how to customise your installation, including the default login credentials.
 5. Ensure you configure your web server to block access to `peppermint.json`, as this contains all your account details (including your hashed password!)
 
+### Blocking access to pepppermint.json
+
+#### Nginx
 For those running Nginx, this configuration snippet should block access to `peppermint.json`:
 
 ```nginx
@@ -29,6 +32,7 @@ location /peppermint.json {
 }
 ```
 
+#### Apache
 If you are running Apache, then the following configuration snippet should block access to `peppermint.json` (credit: [@viradpt](https://github.com/sbrl/Pepperminty-Wiki/issues/224#issuecomment-912683114)):
 
 ```htaccess
@@ -38,6 +42,22 @@ If you are running Apache, then the following configuration snippet should block
 </Files>
 ```
 
+#### Lighttpd
+If you're running lighttpd, then you need to load the `mod_access` module:
+
+```lighttpd
+server.modules += ( "mod_access" )
+```
+
+If you already have a `server.modules` directive, simply add `mod_access` to the list if you haven't already. Then, just block access like so:
+
+```lighttpd
+$HTTP["url"] =~ "^/peppermint.json" {
+     url.access-deny = ("")
+}
+```
+
+#### Microsoft IIS
 For those running IIS, the following will grant the appropriate read and write permissions to the IIS_IUSRS group, and prevent the peppermint.json file from being retrieved.
 
 Open an elevated (administrator) Command Prompt and run the following.
@@ -59,6 +79,7 @@ icacls . /grant IIS_IUSRS:(OI)(CI)RXWM
 ENDLOCAL
 ```
 
+#### Other web servers
 If you aren't running any of these web servers and have a configuration snippet to share for your web server, please [open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) to get in touch - and then we can add your configuration snippet to improve this documentation for everyone.
 
 
