@@ -57,6 +57,16 @@ $HTTP["url"] =~ "^/peppermint.json" {
 }
 ```
 
+#### Caddy
+The Caddy web server makes it easy to block files. Add this to your `server` block if you have one, or if not just to the end of your file:
+
+```caddy
+@blocked {
+    path *peppermint.json
+}
+respond @blocked 403
+```
+
 #### Microsoft IIS
 For those running IIS, the following will grant the appropriate read and write permissions to the IIS_IUSRS group, and prevent the peppermint.json file from being retrieved.
 
