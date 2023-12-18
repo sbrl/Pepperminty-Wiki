@@ -13,6 +13,7 @@ This is the next release of Pepperminty Wiki, that hasn't been released yet.
  - **Fixed:** [Rest API] Documented `redirect` and `redirected_from` GET params to the `view` action.
  - **Fixed:** Fixed bug where templating variables were not populated under some circumstances.
  - **Fixed:** Typo on credits page
+ - **Fixed:** Typos in user table
 
 ## v0.24-beta1
 
