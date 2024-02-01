@@ -76,6 +76,8 @@ If you would like to encrypt any communications with me, you can find my GPG key
 ## Contributing
 Contributions are very welcome - both issues and pull requests! Please mention in your pull request that you release your work under the MPL-2.0 (see below).
 
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for a guide on what to expect when submitting a pull request or issue to this project.
+
 If you're feeling that way inclined, the sponsor button at the top of the page (if you're on GitHub) will take you to my [Liberapay profile](https://liberapay.com/sbrl) if you'd like to donate to say an extra thank you :-)
 
 
