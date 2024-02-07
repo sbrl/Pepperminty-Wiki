@@ -1,7 +1,7 @@
 # Contributors guide
 Contributions are very welcome - both issues and pull requests! Please mention in your pull request that you release your work under the MPL-2.0 (see below).
 
-While Pepperminty Wiki is a huge long-time passion of mine, it may take up to 2 weeks at times for me to respond to issues and pull requests. If it has been a few days and you have not received a reply, consider joining [the Gitter/Matrix chat](https://app.gitter.im/#/room/#Pepperminty-Wiki_Lobby:gitter.im) and poking me on there.
+While Pepperminty Wiki is a huge long-time passion of mine, at times it may take up to 2 weeks at times for me to respond to issues and pull requests. If it has been a few days and you have not received a reply, consider joining [the Gitter/Matrix chat](https://app.gitter.im/#/room/#Pepperminty-Wiki_Lobby:gitter.im) and poking me on there.
 
 I recommend checking on your pull request or issue every few days for a reply.
 
