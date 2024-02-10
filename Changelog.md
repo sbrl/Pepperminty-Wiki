@@ -6,7 +6,9 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 This is the next release of Pepperminty Wiki, that hasn't been released yet.
 
 - **Fixed:** Fixed link to the interwiki links documentation on the help page if interwiki links have not yet been setup.
+- **Fixed:** Fixed typos in system text
 - **Changed:** Catch and deal with more unpacking issues on first run (thanks, @daveschroeter in [#249](https://github.com/sbrl/Pepperminty-Wiki/issues/249))
+
 
 ## v0.24
  - **Added:** `filter` GET parameter to the `list` action, which filters the list of pages to contain only those containing the specified substring.
