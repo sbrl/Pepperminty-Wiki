@@ -131,6 +131,31 @@ function glob_recursive($pattern, $flags = 0)
 }
 
 /**
+ * Normalize file name & path.
+ * Used to convert filenames returned by glob_recursive() to a format used in pageindex.
+ *
+ * @package core
+ * @author	Alx84
+ * @param	string	$filename	A filename with storage prefix as retuned by glob_recursive()
+ * @return	string	Normalized filename
+ */
+function normalize_filename($filename)
+{
+	global $env;
+	// glob_recursive() returns values like "./storage_prefix/folder/filename.md"
+	// in the pageindex we save them as "folder/filename.md"
+	$result = mb_substr( // Store the filename, whilst trimming the storage prefix
+		$filename,
+		mb_strlen(preg_replace("/^\.\//iu", "", $env->storage_prefix)) // glob_recursive trim the ./ from returned filenames , so we need to as well
+	);
+	// Remove the `./` from the beginning if it's still hanging around
+	if(mb_substr($result, 0, 2) == "./")
+		$result = mb_substr($result, 2);
+
+	return $result;
+}
+
+/**
  * Resolves a relative path against a given base directory.
  * @since 0.20.0
  * @source	https://stackoverflow.com/a/44312137/1460422
