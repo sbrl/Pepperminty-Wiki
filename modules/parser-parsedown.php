@@ -1101,9 +1101,9 @@ class PeppermintParsedown extends ParsedownExtra
 		// The page name is made safe when Pepperminty Wiki does initial consistency checks (if it's unsafe it results in a 301 redirect)
 		$page_name = parsedown_pagename_resolve($matches_url[1]);
 		
-		$internal_link_text = "[[${page_name}]]";
+		$internal_link_text = "[[{$page_name}]]";
 		if(!empty($matches[1])) // If the display text isn't empty, then respect it
-			$internal_link_text = "[[${page_name}¦{$matches[1]}]]";
+			$internal_link_text = "[[{$page_name}¦{$matches[1]}]]";
 		
 		$result = $this->inlineInternalLink([
 			"text" => $internal_link_text

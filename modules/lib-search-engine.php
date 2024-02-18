@@ -831,8 +831,9 @@ class search
 				continue; // Skip terms we shouldn't search the page body for
 			
 			// Loop over the pageindex and search the titles / tags
-			reset($pageindex); // Reset array/object pointer
-			foreach($pageindex as $pagename => $pagedata) {
+			$obj = new ArrayObject($pageindex);
+			$it = $obj->getIterator();
+			foreach($it as $pagename => $pagedata) {
 				// Setup a variable to hold the current page's id
 				$pageid = null; // Cache the page id
 				
