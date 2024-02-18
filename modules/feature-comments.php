@@ -134,7 +134,7 @@ register_module([
 					"timestamp" => time(),
 					"page" => $env->page,
 					"user" => $env->user,
-					"reply_depth" => $comment_thread !== null ? count($comment_thread) : 0,
+					"reply_depth" => isset($comment_thread) ? count($comment_thread) : 0,
 					"comment_id" => $new_comment->id
 				]);
 			}
