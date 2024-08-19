@@ -6,7 +6,7 @@
 
 register_module([
 	"name" => "First run wizard",
-	"version" => "0.2",
+	"version" => "0.2.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Displays a special page to aid in setting up a new wiki for the first time.",
 	"id" => "feature-firstrun",
@@ -243,7 +243,7 @@ function do_system_checks() {
 			? [true, "php-zip is installed for compressing exports"]
 			: [false, "php-zip is not install (needed for compressing exports)", "optional"];
 	if(module_exists("lib-search-engine") or module_exists("feature-search-didyoumean"))
-		$checks[] = extension_loaded("sqlite3")
+		$checks[] = extension_loaded("pdo_sqlite")
 			? [true, "php-sqlite3 is installed for search indexing"]
 			: [false, "php-sqlite3 is not installed (needed for search indexing)", "optional"];
 	

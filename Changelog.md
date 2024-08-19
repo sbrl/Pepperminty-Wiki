@@ -8,6 +8,7 @@ This is the next release of Pepperminty Wiki, that hasn't been released yet.
 - **Fixed:** Fixed link to the interwiki links documentation on the help page if interwiki links have not yet been setup.
 - **Fixed:** Fixed typos in system text
 - **Fixed:** Fixed handling of [`firstrun_complete`](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_firstrun_complete) setting if `peppermint.json` is prefilled with a `firstrun_complete` directive but the Wiki hasn't been initialised for the first time yet - useful for installations inside Docker 
+- **Changed:** Correctly check for `pdo_sqlite3` instead of `sqlite3` in `feature-firstrun` 
 - **Changed:** Catch and deal with more unpacking issues on first run (thanks, @daveschroeter in [#249](https://github.com/sbrl/Pepperminty-Wiki/issues/249))
 
 
