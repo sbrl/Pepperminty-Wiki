@@ -6,7 +6,7 @@
 
 register_module([
 	"name" => "First run wizard",
-	"version" => "0.2.1",
+	"version" => "0.2.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Displays a special page to aid in setting up a new wiki for the first time.",
 	"id" => "feature-firstrun",
@@ -125,7 +125,7 @@ register_module([
 		<label for='wiki-name'>Wiki Name:</label>
 		<input type='text' id='wiki-name' name='wiki-name' placeholder=\"e.g. Bob's Rockets Compendium\" required />
 		<!-- FUTURE: Have a logo url box here? -->
-		<p><em>The location on the server's disk to store the wiki data. Relative paths are ok - the default is <code>.</code> (i.e. the current directory).</em></p>
+		<p><em>The location on the server's disk to store the wiki data. Relative paths are ok - the default is <code>.</code> (i.e. the current directory that <code>index.php</code> is stored in).</em></p>
 		<label for='data-dir'>Data Storage Directory:</label>
 		<input type='text' id='data-dir' name='data-dir' value='.' required />
 	</fieldset>
