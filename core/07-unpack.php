@@ -13,7 +13,7 @@ if(!file_exists($paths->extra_data_directory) ||
 	filemtime(__FILE__) > filemtime($paths->extra_data_directory)
 	|| is_directory_empty($paths->extra_data_directory)) {
 	
-	$error_message_help = "<p>Have you checked that PHP has write access to the directory that <code>index.php</code> is located in (and all it's contents and subdirectories)? Try <code>sudo chown USERNAME:USERNAME -R path/to/directory</code> and <code>sudo chmod -R 0644 path/to/directory; sudo chmod -R +X path/too/directory</code>, where <code>USERNAME</code> is the username that the PHP process is running under.</p>";
+	$error_message_help = "<p>Have you checked that PHP has write access to the directory that <code>index.php</code> is located in (and all it's contents and subdirectories)? Try <code>sudo chown USERNAME:USERNAME -R path/to/directory</code> and <code>sudo chmod -R 0644 path/to/directory; sudo chmod -R +X path/to/directory</code>, where <code>USERNAME</code> is the username that the PHP process is running under.</p>";
 	
 	if(file_exists($paths->extra_data_directory))
 		delete_recursive($paths->extra_data_directory, false);
