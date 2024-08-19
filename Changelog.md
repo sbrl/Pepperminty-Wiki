@@ -5,6 +5,8 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 ## v0.25-dev (unreleased)
 This is the next release of Pepperminty Wiki, that hasn't been released yet.
 
+- **Added:** Added official (experimental) Docker support via [a Dockerfile](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Dockerfile)! Check out the [*Docker* section in Getting Started page of the docs](https://starbeamrainbowlabs.com/labs/peppermint/__nightdocs/04-Getting-Started.html#docker) (`docs/04-Getting-Started.md`) for more information.
+	- Community assistance is requested to a) check this documentation works for you and b) add documentation for other setups - e.g. Docker Compose, Kubernetes, Docker Swarm, etc. Please [open those pull requests](https://github.com/sbrl/Pepperminty-Wiki/pulls) :-)
 - **Fixed:** Fixed link to the interwiki links documentation on the help page if interwiki links have not yet been setup.
 - **Fixed:** Fixed typos in system text
 - **Fixed:** Fixed handling of [`firstrun_complete`](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_firstrun_complete) setting if `peppermint.json` is prefilled with a `firstrun_complete` directive but the Wiki hasn't been initialised for the first time yet - useful for installations inside Docker

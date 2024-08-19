@@ -1,0 +1,13 @@
+{
+	admin off
+}
+
+:80 {
+	@blocked {
+		path *peppermint.json
+	}
+	root * /srv/app
+	respond @blocked 403
+	file_server
+	php_fastcgi 127.0.0.1:9000
+}

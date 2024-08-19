@@ -38,6 +38,7 @@ if [[ "$#" -lt 1 ]]; then
 	echo -e "${CSECTION}Available actions${RS}";
 	echo -e "    ${CACTION}setup${RS}           - Perform initial setup, check the environment (skip if only building Pepperminty Wiki itself)";
 	echo -e "    ${CACTION}build${RS}           - Build Pepperminty Wiki";
+	echo -e "    ${CACTION}docker${RS}          - Build the Docker image";
 	echo -e "    ${CACTION}themes${RS}          - Rebuild the theme index";
 	echo -e "    ${CACTION}docs${RS}            - Build the documentation";
 	echo -e "    ${CACTION}docs-livereload${RS} - Start the documentation livereload server";
@@ -117,6 +118,18 @@ task_build() {
 	task_begin "Building";
 	php build.php
 	task_end $?;
+}
+
+task_docker() {
+	task_build;
+	
+	task_begin "Building Docker image";
+	if [[ -n "${DO_DOCKER_SUDO}" ]]; then
+		sudo docker build --tag pepperminty-wiki .;
+	else
+		docker build --tag pepperminty-wiki .;
+	fi
+	task_end "$?" "Failed to build Docker image";
 }
 
 task_themes() {
