@@ -9,6 +9,7 @@ This is the next release of Pepperminty Wiki, that hasn't been released yet.
 - **Fixed:** Fixed typos in system text
 - **Fixed:** Fixed handling of [`firstrun_complete`](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_firstrun_complete) setting if `peppermint.json` is prefilled with a `firstrun_complete` directive but the Wiki hasn't been initialised for the first time yet - useful for installations inside Docker
 - **Fixed:** Fill in `secret` with a secrely random value inside `peppermint.json` if it doesn't exist.... even if `peppermint.json` already exists. Also useful for Docker users.
+- **Fixed:** Clarify that `peppermint.json` is NOT covered by the [`data_storage_dir` configuration directive](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_data_storage_dir)
 - **Changed:** Correctly check for `pdo_sqlite3` instead of `sqlite3` in `feature-firstrun`
 - **Changed:** Catch and deal with more unpacking issues on first run (thanks, @daveschroeter in [#249](https://github.com/sbrl/Pepperminty-Wiki/issues/249))
 
