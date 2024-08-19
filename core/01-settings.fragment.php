@@ -64,8 +64,10 @@ foreach($guiConfig as $key => $propertyData) {
 	}
 }
 // Generate a random secret if it doesn't already exist
-if(!property_exists($settings, "secret"))
+if(!property_exists($settings, "secret")) {
 	$settings->secret = bin2hex(random_bytes(16));
+	$settings_upgraded = true;
+}
 if($settings_upgraded)
 	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
 
