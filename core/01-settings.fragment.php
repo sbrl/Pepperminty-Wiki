@@ -37,8 +37,6 @@ if(!file_exists($settingsFilename)) {
 	// Copy the default settings over to the main settings array
 	foreach ($guiConfig as $key => $value)
 		$settings->$key = $value->default;
-	// Generate a random secret
-	$settings->secret = bin2hex(random_bytes(16));
 	if(file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT)) === false) {
 		http_response_code(503);
 		header("content-type: text/plain");
@@ -65,6 +63,9 @@ foreach($guiConfig as $key => $propertyData) {
 			$did_upgrade_firstrun_key = true;
 	}
 }
+// Generate a random secret if it doesn't already exist
+if(!property_exists($settings, "secret"))
+	$settings->secret = bin2hex(random_bytes(16));
 if($settings_upgraded)
 	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
 
