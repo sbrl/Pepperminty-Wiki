@@ -299,3 +299,23 @@ Fill this out as normal:
 - Fill in all other fields as your needs require.
 
 Finally, press the "Create Wiki!" button to finish the first run wizard, and now use your wiki as normal.
+
+
+### FAQ
+
+#### I get a "peppermint.json.compromised" exists on disk error
+The error message may look like this:
+
+> Error: peppermint.json.compromised exists on disk, so it's likely you need to block access to 'peppermint.json' from the internet. If you've done this already, please delete peppermint.json.compromised and reload this page.
+> 
+> If you've done this check manually, please set the disable_peppermint_access_check setting to false.
+> 
+> This check was done as part of the first run wizard.
+
+....try restarting the container. The container is designed to block access to `peppermint.json` automatically.
+
+If you do encounter this bug, please do get in touch so we can track it down  and fix it.
+
+
+#### I get an "Error: Failed to decode the settings file! Does it contain a syntax error?" message
+Check the permissions on your `peppermint.json`. It should be owned by UID 10801 and GID 10801. It should also be a file containing some JSON, and not a directory.
