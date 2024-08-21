@@ -253,6 +253,55 @@ services:
 
 Note that this Docker Compose file is untested. If this doesn't work for you, please open a pull request.
 
+#### Alternate docker-compose file
+This file HAS been tested (on a raspberry pi), but has additional settings that are not strictly neccesary.
+
+These settings are:
+- Traefik integration (volumes and labels settings, can be omitted if not needed)
+- Named volumes (allows you to skip the file structure creation steps above. May or may not need the driver and driver-opts sections, has not been tested without them.)
+
+```yaml
+version: "3"
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy
+
+services:
+  tribblewiki:
+    image: pepperminty-wiki
+    container_name: wiki
+    restart: unless-stopped
+    networks:
+      - traefik_proxy
+    volumes: 
+      - wiki-app:/srv/app
+      - wiki-data:/srv/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wiki.rule=Host(`wiki.example.com`)"
+      - "traefik.http.routers.wiki.entrypoints=websecure"
+      - "traefik.http.routers.wiki.tls.certresolver=letsencrypt"
+      - "traefik.docker.network=traefik_proxy"
+
+volumes:
+  wiki-app:
+    name: "WikiAppFolder"
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './app'
+  wiki-data:
+    name: "WikiDataFolder"
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './data'
+```
+
 ### Completing the first run wizrd
 Now that your Docker container is started, you should be able to navigate to it in your web browser to complete the first run wizard.
 
