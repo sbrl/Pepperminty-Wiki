@@ -254,36 +254,25 @@ services:
 Note that this Docker Compose file is untested. If this doesn't work for you, please open a pull request.
 
 #### Alternate docker-compose file
-This file HAS been tested (on a raspberry pi), but has additional settings that are not strictly neccesary.
+This file HAS been tested (on a raspberry pi), but uses named volumes, which are not strictly neccesary.
 
 These settings are:
-- Traefik integration (volumes and labels settings, can be omitted if not needed)
-- Named volumes (allows you to skip the file structure creation steps above. May or may not need the driver and driver-opts sections, has not been tested without them.)
+- Named volumes (They may or may not need the driver and driver-opts sections, has not been tested without them. They definitely work with them in.)
+- **NB:** You must add the named volume folders to the same directory as your docker-compose file _before you run it_. Weird stuff happens if you don't.
+- Relative filepaths work fine with docker-compose, as long as they're relative to the location of the docker-compose file.
+- However, absolute filepaths are always the safest option.
 
 ```yaml
 version: "3"
-
-networks:
-  traefik_proxy:
-    external:
-      name: traefik_proxy
 
 services:
   tribblewiki:
     image: pepperminty-wiki
     container_name: wiki
     restart: unless-stopped
-    networks:
-      - traefik_proxy
     volumes: 
       - wiki-app:/srv/app
       - wiki-data:/srv/data
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.wiki.rule=Host(`wiki.example.com`)"
-      - "traefik.http.routers.wiki.entrypoints=websecure"
-      - "traefik.http.routers.wiki.tls.certresolver=letsencrypt"
-      - "traefik.docker.network=traefik_proxy"
 
 volumes:
   wiki-app:
@@ -301,6 +290,53 @@ volumes:
       o: 'bind'
       device: './data'
 ```
+
+#### How to use the alternate docker-compose file.
+This guide is for Linux. Windows machines will need different commands etc.
+
+1. Build the container (see above) on the machine you want to run the container on.
+	- Building it on the machine itself means you don't need to worry about motherboard/kernal type, it will build the correct one for that machine.
+	- If you need to install Apache in order to install PHP so you can build it, remember to turn the 'start on boot' setting off. (Also just turn it off straight away, you don't need it to build.)
+		`sudo systemctl disable apache2`
+2. Set up the directory you want your docker-compose to live in.
+	- You need your docker-compose file, plus the directories that the named volumes will be living in, all in the same folder.
+	- ``` -Directory-|- app
+                     |- data
+                     |- docker-compose.yaml```
+ 3. OPTIONAL - If you want to be able to edit your peppermint.json file without using sudo (eg. using some kind of GUI):
+	- Create a new group (eg. pepperminty) with the gid 10801 (or, if you've changed it, to whatever gid is used by pepperminty wiki)
+		`sudo groupadd pepperminty -g GID`
+	- Add your editing user (eg. wikiadmin) to the pepperminty group
+		`sudo usermod -a -G pepperminty wikiadmin`
+	- Assuming the install went as planned, this should allow you to edit peppermint.json.
+	- However, if you're still getting access denied problems...
+		- Reboot your computer. Usergroup stuff likes a reboot.
+		- Make sure that peppermint.json has 'User and Group' write access. If for some reason it doesn't, you'll need to set it.
+			`chmod 664 /path/to/peppermint.json`
+		- Remember to reboot after you do this, too! Just in case.
+		- Double check the user you're using is in the pepperminty group.
+	- If you want to edit other files, you can also use this method! However, you'll have to change the write access permissions first; all files other than peppermint.json are likely to be created with 'Only User' write permissions.
+		`chmod 664 /path/to/file_to_edit.md`
+4. Start the container
+	`docker-compose up -d`
+5. First run wiki time! (See below)
+
+#### Troubleshooting
+
+__I can't connect to the wiki!__
+
+Did you make sure to turn Apache off? If you've recently rebooted and suddenly have this problem, make sure it's not set to start on boot.
+
+Otherwise, it's likely a networking issue (are you using a reverse proxy, like Traefik? It's pretty easy to typo in the labels section of a docker-compose...)
+
+__I get a white screen when I try and save a page__
+
+You probably have some kind of permissions mismatch somewhere. :(  
+Suggestion: back up everything before you try and fix it, it may be easiest to nuke the entire container and start again.
+
+__I can't edit peppermint.json__
+
+Take a look at Step 3 above, it's probably a permissions issue. If all else fails, you can edit it with sudo on a terminal.
 
 ### Completing the first run wizrd
 Now that your Docker container is started, you should be able to navigate to it in your web browser to complete the first run wizard.
