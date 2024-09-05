@@ -136,7 +136,7 @@ function glob_recursive($pattern, $flags = 0)
  *
  * @package core
  * @author	Alx84
- * @param	string	$filename	A filename with storage prefix as retuned by glob_recursive()
+ * @param	string	$filename	A filename with storage prefix as returned by glob_recursive()
  * @return	string	Normalized filename
  */
 function normalize_filename($filename)
