@@ -877,7 +877,7 @@ _(No changes since v0.15-beta2)_
 
 ### Changed
  - Improved appearance of the all pages list.
- - Improved apparence of the tag list page.
+ - Improved appearance of the tag list page.
  - Added a link back to the list of tags on the list of pages with a particular tag.
  - Upgraded help page. Modules can now register their own sections on a wiki's help page.
  - Optimised search queries a bit.
