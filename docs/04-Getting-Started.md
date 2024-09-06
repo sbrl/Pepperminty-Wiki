@@ -295,7 +295,7 @@ volumes:
 This guide is for Linux. Windows machines will need different commands etc.
 
 1. Build the container (see above) on the machine you want to run the container on.
-	- Building it on the machine itself means you don't need to worry about motherboard/kernal type, it will build the correct one for that machine.
+	- Building it on the machine itself means you don't need to worry about the motherboard/kernel type - it will build the correct one for that machine automatically.
 	- If you need to install Apache in order to install PHP so you can build it, remember to turn the 'start on boot' setting off. (Also just turn it off straight away, you don't need it to build.)
 		`sudo systemctl disable apache2`
 2. Set up the directory you want your docker-compose to live in.
