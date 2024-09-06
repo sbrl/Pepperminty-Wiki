@@ -120,6 +120,12 @@ register_module([
 					"author_url" => "https://github.com/npnance",
 					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/pull/229",
 					"icon" => "https://avatars.githubusercontent.com/u/975340?s=24"
+				],
+				"Bugfix pull requests" => [
+					"author" => "Ben Spiegel",
+					"author_url" => "https://github.com/neapsix",
+					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/pull/247",
+					"icon" => "https://avatars.githubusercontent.com/u/120674?s=24"
 				]
 			];
 			
