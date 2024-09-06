@@ -145,7 +145,7 @@ register_module([
 				if(!save_userdata()) {
 					http_response_code(503);
 					exit(page_renderer::render_main("Login Error - $settings->sitename", "<p>Your credentials were correct, but $settings->sitename was unable to log you in as an updated hash of your password couldn't be saved. Updating your password hash to the latest and strongest hashing algorithm is an important part of keeping your account secure.</p>
-					<p>Please contact ".htmlentities($settings->admindetails_name).", $settings->sitename's adminstrator, for assistance (their email address can be found at the bottom of every page, including this one).</p>"));
+					<p>Please contact ".htmlentities($settings->admindetails_name).", $settings->sitename's administrator, for assistance (their email address can be found at the bottom of every page, including this one).</p>"));
 				}
 				error_log("[PeppermintyWiki/$settings->sitename/login] Updated password hash for $user.");
 			}
@@ -205,7 +205,7 @@ register_module([
 		});
 		
 		// Register a section on logging in on the help page.
-		add_help_section("30-login", "Logging in", "<p>In order to edit $settings->sitename and have your edit attributed to you, you need to be logged in. Depending on the settings, logging in may be a required step if you want to edit at all. Thankfully, loggging in is not hard. Simply click the &quot;Login&quot; link in the top left, type your username and password, and then click login.</p>
+		add_help_section("30-login", "Logging in", "<p>In order to edit $settings->sitename and have your edit attributed to you, you need to be logged in. Depending on the settings, logging in may be a required step if you want to edit at all. Thankfully, logging in is not hard. Simply click the &quot;Login&quot; link in the top left, type your username and password, and then click login.</p>
 		<p>If you do not have an account yet and would like one, try contacting " . hide_email($settings->admindetails_email, $settings->admindetails_name) . ", $settings->sitename's administrator and ask them nicely to see if they can create you an account.</p>");
 		
 		// Re-check the password hashing cost, if necessary

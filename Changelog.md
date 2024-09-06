@@ -19,6 +19,7 @@ This is the next release of Pepperminty Wiki, that hasn't been released yet.
 - Fixed typos in system text
 - Fixed handling of [`firstrun_complete`](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_firstrun_complete) setting if `peppermint.json` is prefilled with a `firstrun_complete` directive but the Wiki hasn't been initialised for the first time yet - useful for installations inside Docker
 - Fill in `secret` with a secrely random value inside `peppermint.json` if it doesn't exist.... even if `peppermint.json` already exists. Also useful for Docker users.
+- Fixed missing / wrong help sections for `page-sitemap` (shown only to mods) and `page-user-list`
 - Clarify that `peppermint.json` is NOT covered by the [`data_storage_dir` configuration directive](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_data_storage_dir)
 - Fix PHP warning when posting new comments ([#247](https://github.com/sbrl/Pepperminty-Wiki/pull/247) - thanks, @neapsix!)
 - Fix PHP 8.2 deprecation warnings ([#248](https://github.com/sbrl/Pepperminty-Wiki/pull/248) - thanks, @neapsix!)
