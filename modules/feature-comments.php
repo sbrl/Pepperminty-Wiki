@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.3.5",
+	"version" => "0.3.6",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
