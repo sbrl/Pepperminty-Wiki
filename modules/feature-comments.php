@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Page Comments",
-	"version" => "0.3.6",
+	"version" => "0.3.7",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds threaded comments to the bottom of every page.",
 	"id" => "feature-comments",
@@ -308,9 +308,9 @@ function display_reply_form(event)
 	// Set the comment we're replying to
 	replyForm.querySelector("[name=replyto]").value = event.target.parentElement.parentElement.parentElement.dataset.commentId;
 	// Display the newly-cloned commenting form
-	var replyBoxContiner = event.target.parentElement.parentElement.parentElement.querySelector(".reply-box-container");
-	replyBoxContiner.classList.add("active");
-	replyBoxContiner.appendChild(replyForm);
+	var replyBoxContainer = event.target.parentElement.parentElement.parentElement.querySelector(".reply-box-container");
+	replyBoxContainer.classList.add("active");
+	replyBoxContainer.appendChild(replyForm);
 	// Hide the reply button so it can't be pressed more than once - that could
 	// be awkward :P
 	event.target.parentElement.removeChild(event.target);
