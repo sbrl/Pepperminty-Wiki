@@ -874,6 +874,8 @@ _(No changes since v0.15-beta2)_
  - Added more information to the dev help page.
  - Added templating! It works the way you'd expect it to in Mediawiki.
  - Help section ids now show to the right of the help section headers by default.
+ - Added [`peppermint_json_perms` setting](https://github.com/sbrl/Pepperminty-Wiki/blob/c245ea44c225153c234bc6902761064a9f5221a8/peppermint.guiconfig.json#L273) to automatically `chmod` `peppermint.json` on save - please heed warnings in the description!
+	- TODO update this link to online config page on release
 
 ### Changed
  - Improved appearance of the all pages list.
