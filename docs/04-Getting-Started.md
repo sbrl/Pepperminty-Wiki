@@ -258,7 +258,7 @@ This file HAS been tested (on a raspberry pi), but uses named volumes, which are
 
 These settings are:
 - Named volumes (They may or may not need the driver and driver-opts sections, has not been tested without them. They definitely work with them in.)
-- **NB:** You must add the named volume folders to the same directory as your docker-compose file _before you run it_. Weird stuff happens if you don't.
+- **Note:** You must add the named volume folders to the same directory as your docker-compose file _before you run it_. Weird stuff happens if you don't.
 - Relative filepaths work fine with docker-compose, as long as they're relative to the location of the docker-compose file.
 - However, absolute filepaths are always the safest option.
 
