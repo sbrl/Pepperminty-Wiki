@@ -37,7 +37,8 @@ if(!file_exists($settingsFilename)) {
 	// Copy the default settings over to the main settings array
 	foreach ($guiConfig as $key => $value)
 		$settings->$key = $value->default;
-	if(file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT)) === false) {
+	// From below if statement: file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT))
+	if(save_settings() === false) {
 		http_response_code(503);
 		header("content-type: text/plain");
 		exit("Oops! It looks like $settings->sitename wasn't able to write peppermint.json to disk.\nThis file contains all of $settings->sitename's settings, so it's really important!\nHave you checked that PHP has write access to the directory that index.php is located in (and all it's contents and subdirectories)? Try\n\nsudo chown USERNAME:USERNAME -R path/to/directory\n\nand\n\nsudo chmod -R 0644 path/to/directory;\nsudo chmod -R +X path/to/directory\n\n....where USERNAME is the username that the PHP process is running under.");
@@ -68,8 +69,10 @@ if(!property_exists($settings, "secret")) {
 	$settings->secret = bin2hex(random_bytes(16));
 	$settings_upgraded = true;
 }
-if($settings_upgraded)
-	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
+if($settings_upgraded) {
+	save_settings();
+	// file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
+}
 
 // If:
 // * The first-run wizard hasn't been completed
@@ -80,7 +83,8 @@ if($settings_upgraded)
 // Note we added this additional specific check because in Docker containers we recommend that firstrun_complete be manually preset to false, which would previously get autset to true as we thought it was a pre-existing wiki when it isn't! Note also we don't yet have access to the pageindex at this stage, so we can't check that either.
 if(!$settings->firstrun_complete && $settings_upgraded && $did_upgrade_firstrun_key) {
 	$settings->firstrun_complete = true;
-	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
+	save_settings();
+	// file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
 }
 
 // Insert the default CSS if requested

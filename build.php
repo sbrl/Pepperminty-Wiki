@@ -27,7 +27,7 @@ $modules = glob("modules/*.php");
 $module_index = [];
 // Defined just in case a module needs to reference them when we require() them
 // to gain information
-$env = $paths = new stdClass();
+$env = new stdClass(); $paths = new stdClass();
 $paths->extra_data_directory = "build/._extra_data";
 
 /**

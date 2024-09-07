@@ -196,7 +196,8 @@ SCRIPT;
 			// Take a backup of the current settings file
 			rename($paths->settings_file, "$paths->settings_file.bak");
 			// Save the new settings file
-			file_put_contents($paths->settings_file, json_encode($newSettings, JSON_PRETTY_PRINT));
+			save_settings($newSettings);
+			// file_put_contents($paths->settings_file, json_encode($newSettings, JSON_PRETTY_PRINT));
 			
 			$content = "<h1>Master settings updated successfully</h1>\n";
 			$content .= "<p>$settings->sitename's master settings file has been updated successfully. A backup of the original settings has been created under the name <code>peppermint.json.bak</code>, just in case. You can <a href='?action=configure'>go back</a> and continue editing the master settings file, or you can go to the <a href='?action=view&page=" . rawurlencode($settings->defaultpage) . "'>" . htmlentities($settings->defaultpage) . "</a>.</p>\n";

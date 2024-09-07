@@ -238,7 +238,7 @@ function do_password_hash_code_update() {
 		$settings->password_cost = $new_cost;
 	// Save the current time in the settings
 	$settings->password_cost_time_lastcheck = time();
-	file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT));
+	save_settings();
 }
 
 /**

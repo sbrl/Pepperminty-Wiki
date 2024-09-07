@@ -724,11 +724,23 @@ function minify_css(string $css_str) : string {
 /**
  * Saves the settings file back to peppermint.json.
  * @package	core
+ * @param	stdObject	[$new_settings=null]	A new settings object to REPLACE the old one with - use with extreme care! A value of null (default) indicates that the existing global $settings object will be saved.
  * @return	bool	Whether the settings were saved successfully.
  */
-function save_settings() {
+function save_settings($new_settings=null, $filepath=null) {
 	global $paths, $settings;
-	return file_put_contents($paths->settings_file, json_encode($settings, JSON_PRETTY_PRINT)) !== false;
+	$result = file_put_contents(
+		isset($paths->settings_file) ? $paths->settings_file : "peppermint.json",
+		json_encode(
+			$new_settings == null ? $settings : $new_settings,
+		JSON_PRETTY_PRINT)
+	) !== false;
+	if($settings->peppermint_json_perms !== null) {
+		$perms = octdec($settings->peppermint_json_perms);
+		if(!chmod($paths->settings_file, $perms))
+			error_log("Warning: Failed to chmod peppermint.json at {$paths->settings_file}"); // Complain about inability to chmod but don't claim we can't save
+	}
+	return $result;
 }
 /**
  * Save the page index back to disk, respecting $settings->minify_pageindex
