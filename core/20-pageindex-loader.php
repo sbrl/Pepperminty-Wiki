@@ -38,38 +38,38 @@ function pageindex_rebuild(bool $output = true) : void {
 	for($i = 0; $i < $existingpages_count; $i++)
 	{
 		$pagefilename = $existingpages[$i];
-
+		
 		// Create a new entry for each md file we found
 		$newentry = new stdClass();
-
+		
 		// glob_recursive() returns values like "./storage_prefix/folder/filename.md"
 		// in the pageindex we save them as "folder/filename.md"
 		$newentry->filename = normalize_filename($pagefilename);
-
+		
 		$newentry->size = filesize($pagefilename); // Store the page size
 		$newentry->lastmodified = filemtime($pagefilename); // Store the date last modified
-
+		
 		// Extract the name of the (sub)page without the ".md"
 		$pagekey = filepath_to_pagename($newentry->filename);
 		error_log("pagename '$newentry->filename' → filepath '$pagekey'");
-
+		
 		if(file_exists($env->storage_prefix . $pagekey) && // If it exists...
 			!is_dir($env->storage_prefix . $pagekey)) // ...and isn't a directory
 		{
 			// This page (potentially) has an associated file!
 			// Let's investigate.
-            
+			
 			// Blindly add the file to the pageindex for now.
 			// Future We might want to do a security check on the file later on.
 			// File a bug if you think we should do this.
 			$newentry->uploadedfile = true; // Yes this page does have an uploaded file associated with it
 			$newentry->uploadedfilepath = $pagekey; // It's stored here
-
+			
 			// Work out what kind of file it really is
 			$mimechecker = finfo_open(FILEINFO_MIME_TYPE);
 			$newentry->uploadedfilemime = finfo_file($mimechecker, $env->storage_prefix . $pagekey);
 		}
-
+		
 		// Subpage parent checker
 		if(strpos($pagekey, "/") !== false)
 		{
@@ -88,15 +88,15 @@ function pageindex_rebuild(bool $output = true) : void {
 				$existingpages[] = $subpage_parent_filename;
 			}
 		}
-
+		
         // Attempt to salvage tags and lasteditor from the previous pageindex
         if (@$old_pageindex->$pagekey->tags)
 		  $newentry->tags = $old_pageindex->$pagekey->tags;
 		$newentry->lasteditor = "unknown";
 		if (@$old_pageindex->$pagekey->lasteditor)
 		  $newentry->lasteditor = $old_pageindex->$pagekey->lasteditor;
-
-
+		
+		
 		// If the initial revision doesn't exist on disk, create it (if it does, then we handle that later)
 		if(function_exists("history_add_revision") && !file_exists("{$pagefilename}.r0")) { // Can't use module_exists - too early
 			copy($pagefilename, "{$pagefilename}.r0");
@@ -110,10 +110,10 @@ function pageindex_rebuild(bool $output = true) : void {
 				"editor" => $newentry->lasteditor
 			] ];
 		}
-
+		
 		// Store the new entry in the new page index
 		$pageindex->$pagekey = $newentry;
-
+		
 		if($output) {
 				$message = "[" . ($i + 1) . " / $existingpages_count] Added $pagefilename to the pageindex.";
 				if(!is_cli()) $message = "data: $message\n\n";
@@ -122,12 +122,12 @@ function pageindex_rebuild(bool $output = true) : void {
 				flush();
 			}
 	}
-
+	
 	if(function_exists("history_add_revision")) {
-
+		
 		// collect from the filesystem what revision files we have
 		$history_revs = glob_recursive($env->storage_prefix . "*.md.r*");
-
+		
 		// sort them in the ascending order of their revision numbers - it's very important for further processing
 		usort($history_revs, function($a, $b) {
 			preg_match("/[0-9]+$/", $a, $revid_a);
@@ -136,30 +136,29 @@ function pageindex_rebuild(bool $output = true) : void {
 			$revid_b = intval($revid_b[0]);
 			return $revid_a - $revid_b;
 		});
-
-
+		
 		foreach($history_revs as $filename) {
 			preg_match("/[0-9]+$/", $filename, $revid);
 			error_log("raw revid | ".var_export($revid, true));
 			if(count($revid) === 0) continue;
 			$revid = intval($revid[0]);
-
+			
 			$pagename = filepath_to_pagename($filename);
 			$filepath_stripped = normalize_filename($filename);
-
+			
 			if(!isset($pageindex->$pagename->history))
 				$pageindex->$pagename->history = [];
-
+			
 			if(isset($pageindex->$pagename->history[$revid]))
 				continue;
-
+			
 			error_log("pagename: $pagename, revid: $revid, pageindex entry: ".var_export($pageindex->$pagename, true));
 			$newsize = filesize($filename);
 			$prevsize = 0;
 			if($revid > 0 && isset($pageindex->$pagename->history[$revid - 1])) {
 				$prevsize = filesize(end($pageindex->$pagename->history)->filename);
 			}
-
+			
 			// Let's attempt to salvage the editor for this revision from the old pageindex
 			// For that we walk through history of edits from old pageindex to find what editor was set for this specific file
 			$revision_editor = "unknown";
@@ -168,7 +167,7 @@ function pageindex_rebuild(bool $output = true) : void {
 					if ($revision->filename == $filepath_stripped && isset($revision->editor))
 						$revision_editor = $revision->editor;
 			}
-
+			
 			// save the revision into history
 			$pageindex->$pagename->history[$revid] = (object) [
 				"type" => "edit",
@@ -181,11 +180,11 @@ function pageindex_rebuild(bool $output = true) : void {
 			];
 		}
 	}
-
+	
 	save_pageindex();
 	unset($existingpages);
-
-
+	
+	
 	if($output && !is_cli()) {
 		echo("data: Done! \n\n");
 		flush();
