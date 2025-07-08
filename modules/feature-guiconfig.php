@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Settings GUI",
-	"version" => "0.1.8",
+	"version" => "0.1.9",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "The module everyone has been waiting for! Adds a web based gui that lets mods change the wiki settings.",
 	"id" => "feature-guiconfig",
@@ -226,9 +226,10 @@ SCRIPT;
 			// Take a backup of the current settings file
 			rename($paths->settings_file, "$paths->settings_file.bak");
 			// Save the new settings file
-			file_put_contents($paths->settings_file, json_encode($newSettings, JSON_PRETTY_PRINT));
+			save_settings($newSettings);
+			// file_put_contents($paths->settings_file, json_encode($newSettings, JSON_PRETTY_PRINT));
 			
-			$content = "<h1>Master settings updated sucessfully</h1>\n";
+			$content = "<h1>Master settings updated successfully</h1>\n";
 			$content .= "<p>$settings->sitename's master settings file has been updated successfully. A backup of the original settings has been created under the name <code>peppermint.json.bak</code>, just in case. You can <a href='?action=configure'>go back</a> and continue editing the master settings file, or you can go to the <a href='?action=view&page=" . rawurlencode($settings->defaultpage) . "'>" . htmlentities($settings->defaultpage) . "</a>.</p>\n";
 			$content .= "<p>For reference, the newly generated master settings file is as follows:</p>\n";
 			$content .= "<textarea name='content'>";
@@ -272,7 +273,7 @@ SCRIPT;
 		});
 
 		
-		add_help_section("800-raw-page-content", "Viewing Raw Page Content", "<p>Although you can use the edit page to view a page's source, you can also ask $settings->sitename to send you the raw page source and nothing else. This feature is intented for those who want to automate their interaction with $settings->sitename.</p>
+		add_help_section("800-raw-page-content", "Viewing Raw Page Content", "<p>Although you can use the edit page to view a page's source, you can also ask $settings->sitename to send you the raw page source and nothing else. This feature is intended for those who want to automate their interaction with $settings->sitename.</p>
 		<p>To use this feature, navigate to the page for which you want to see the source, and then alter the <code>action</code> parameter in the url's query string to be <code>raw</code>. If the <code>action</code> parameter doesn't exist, add it. Note that when used on an file's page this action will return the source of the description and not the file itself.</p>");
 	}
 ]);

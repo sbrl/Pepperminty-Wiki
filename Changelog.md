@@ -3,7 +3,26 @@ This file holds the changelog for Pepperminty Wiki. This is the master list of t
 
 
 ## v0.25-dev (unreleased)
-This is the next release of Pepperminty Wiki. We'll list changes here as we work on them.
+This is the next release of Pepperminty Wiki, that hasn't been released yet.
+
+
+- **Added:** Added official (experimental) Docker support via [a Dockerfile](https://github.com/sbrl/Pepperminty-Wiki/blob/master/Dockerfile)! Check out the [*Docker* section in Getting Started page of the docs](https://starbeamrainbowlabs.com/labs/peppermint/__nightdocs/04-Getting-Started.html#docker) (`docs/04-Getting-Started.md`) for more information.
+	- Community assistance is requested to a) check this documentation works for you and b) add documentation for other setups - e.g. Docker Compose, Kubernetes, Docker Swarm, etc. Please [open those pull requests](https://github.com/sbrl/Pepperminty-Wiki/pulls) :-)
+
+### Changed
+- Correctly check for `pdo_sqlite3` instead of `sqlite3` in `feature-firstrun`
+- Catch and deal with more unpacking issues on first run (thanks, @daveschroeter in [#249](https://github.com/sbrl/Pepperminty-Wiki/issues/249))
+
+
+### Fixed
+- Fixed link to the interwiki links documentation on the help page if interwiki links have not yet been setup.
+- Fixed typos in system text
+- Fixed handling of [`firstrun_complete`](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_firstrun_complete) setting if `peppermint.json` is prefilled with a `firstrun_complete` directive but the Wiki hasn't been initialised for the first time yet - useful for installations inside Docker
+- Fill in `secret` with a secrely random value inside `peppermint.json` if it doesn't exist.... even if `peppermint.json` already exists. Also useful for Docker users.
+- Fixed missing / wrong help sections for `page-sitemap` (shown only to mods) and `page-user-list`
+- Clarify that `peppermint.json` is NOT covered by the [`data_storage_dir` configuration directive](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_data_storage_dir)
+- Fix PHP warning when posting new comments ([#247](https://github.com/sbrl/Pepperminty-Wiki/pull/247) - thanks, @neapsix!)
+- Fix PHP 8.2 deprecation warnings ([#248](https://github.com/sbrl/Pepperminty-Wiki/pull/248) - thanks, @neapsix!)
 
 
 ## v0.24
@@ -11,6 +30,7 @@ This is the next release of Pepperminty Wiki. We'll list changes here as we work
  - **Fixed:** [Rest API] Documented `redirect` and `redirected_from` GET params to the `view` action.
  - **Fixed:** Fixed bug where templating variables were not populated under some circumstances.
  - **Fixed:** Typo on credits page
+ - **Fixed:** Typos in user table
 
 ## v0.24-beta1
 
@@ -854,10 +874,12 @@ _(No changes since v0.15-beta2)_
  - Added more information to the dev help page.
  - Added templating! It works the way you'd expect it to in Mediawiki.
  - Help section ids now show to the right of the help section headers by default.
+ - Added [`peppermint_json_perms` setting](https://github.com/sbrl/Pepperminty-Wiki/blob/c245ea44c225153c234bc6902761064a9f5221a8/peppermint.guiconfig.json#L273) to automatically `chmod` `peppermint.json` on save - please heed warnings in the description!
+	- TODO update this link to online config page on release
 
 ### Changed
  - Improved appearance of the all pages list.
- - Improved apparence of the tag list page.
+ - Improved appearance of the tag list page.
  - Added a link back to the list of tags on the list of pages with a particular tag.
  - Upgraded help page. Modules can now register their own sections on a wiki's help page.
  - Optimised search queries a bit.

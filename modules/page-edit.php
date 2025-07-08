@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Page editor",
-	"version" => "0.19",
+	"version" => "0.19.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Allows you to edit pages by adding the edit and save actions. You should probably include this one.",
 	"id" => "page-edit",
@@ -27,7 +27,7 @@ register_module([
 		 * @apiPermission	Anonymous
 		 * 
 		 * @apiUse PageParameter
-		 * @apiParam	{string}	newpage		Optional. Set to 'yes' if a new page is being created. Only affects a few bits of text here and there, and the HTTP response code recieved on success from the `save` action.
+		 * @apiParam	{string}	newpage		Optional. Set to 'yes' if a new page is being created. Only affects a few bits of text here and there, and the HTTP response code received on success from the `save` action.
 		 * @apiParam	{string}	unknownpagename	Optional. Set to 'yes' if the name of the page to be created is currently unknown. If set, a page name box will be shown too.
 		 */
 		
@@ -88,7 +88,7 @@ register_module([
 						$sourceViewContent = "<p>$settings->sitename currently has editing disabled, so you can't make changes to this page at this time. Please contact ".htmlentities($settings->admindetails_name).", $settings->sitename's administrator for more information - their contact details can be found at the bottom of this page. Even so, you can still view the source of this page. It's disabled below:</p>";
 					
 					if($isOtherUsersPage)
-						$sourceViewContent = "<p>$env->page_safe is a special user page which acutally belongs to " . htmlentities(extract_user_from_userpage($env->page)) . ", another user on $settings->sitename. Because of this, you are not allowed to edit it (though you can always edit your own page and any pages under it if you're logged in). You can, however, vieww it's source below.</p>";
+						$sourceViewContent = "<p>$env->page_safe is a special user page which actually belongs to " . htmlentities(extract_user_from_userpage($env->page)) . ", another user on $settings->sitename. Because of this, you are not allowed to edit it (though you can always edit your own page and any pages under it if you're logged in). You can, however, view it's source below.</p>";
 					
 					// Append a view of the page's source
 					$sourceViewContent .= "<textarea name='content' readonly>".htmlentities($pagetext)."</textarea>";
@@ -356,12 +356,12 @@ window.addEventListener("load", function(event) {
 		 * @apiPermission	Anonymous
 		 * 
 		 * @apiUse	PageParameter
-		 * @apiParam	{string}	newpage		GET only. Set to 'yes' to indicate that this is a new page that is being saved. Only affects the HTTP response code you recieve upon success.
+		 * @apiParam	{string}	newpage		GET only. Set to 'yes' to indicate that this is a new page that is being saved. Only affects the HTTP response code you receive upon success.
 		 * @apiParam	{string}	content		POST only. The new content to save to the given filename.
 		 * @apiParam	{string}	tags		POST only. A comma-separated list of tags to assign to the current page. Will replace the existing list of tags, if any are present.
-		 * @apiParam	{string}	prev-content-hash	POST only. The hash of the original content before editing. If this hash is found to be different to a hash computed of the currentl saved content, a conflict resolution page will be returned instead of saving the provided content.
+		 * @apiParam	{string}	prev-content-hash	POST only. The hash of the original content before editing. If this hash is found to be different to a hash computed of the currently saved content, a conflict resolution page will be returned instead of saving the provided content.
 		 * 
-		 * @apiError	UnsufficientPermissionError	You don't currently have sufficient permissions to save an edit.
+		 * @apiError	InsufficientPermissionError	You don't currently have sufficient permissions to save an edit.
 		 */
 		
 		/*

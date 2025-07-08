@@ -56,25 +56,23 @@ Here's a list of things that I want to add at some point (please feel free to [s
  - (See more on the [issue tracker](https://github.com/sbrl/Pepperminty-Wiki/issues)!)
  - ...?
 
-Is the feature you want to see not on this list or not implemented yet? [Open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) or [send a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls) - contributions welcome!
+Is the feature you want to see not on this list or not implemented yet? [Open an issue](https://github.com/sbrl/Pepperminty-Wiki/issues/new) or [open a pull request](https://github.com/sbrl/Pepperminty-Wiki/pulls) - contributions welcome!
 
 
 ## Docker
-The recommended way of running Pepperminty Wiki is with a plain PHP-enabled web server. However, a docker container is generously provided by @SQL-enwiki. You can run it like so:
-
-```bash
-docker run -d sqlatenwiki/peppermintywiki:stable
-```
+The recommended way of running Pepperminty Wiki is with a plain PHP-enabled web server. However, a Dockerfile is available in this repository. Instructions for building it are available on the [Getting Started page](https://starbeamrainbowlabs.com/labs/peppermint/__nightdocs/04-Getting-Started.html#Docker) in the official documentation (see above).
 
 
 ## Security
-If you've found a security issue, please don't open an issue. Instead, get in touch privately - e.g. via [Keybase](https://keybase.io/sbrl) or by email (`security [at sign] starbeamrainbowlabs [replace me with a dot] com`), and I'll try to respond ASAP.
+If you've found a security issue, please don't open an issue. Instead, get in touch privately - e.g. via email (`security [at sign] starbeamrainbowlabs [replace me with a dot] com`), and I'll try to respond ASAP.
 
 If you would like to encrypt any communications with me, you can find my GPG key [here](https://starbeamrainbowlabs.com/sbrl.asc).
 
 
 ## Contributing
 Contributions are very welcome - both issues and pull requests! Please mention in your pull request that you release your work under the MPL-2.0 (see below).
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for a guide on what to expect when submitting a pull request or issue to this project.
 
 If you're feeling that way inclined, the sponsor button at the top of the page (if you're on GitHub) will take you to my [Liberapay profile](https://liberapay.com/sbrl) if you'd like to donate to say an extra thank you :-)
 

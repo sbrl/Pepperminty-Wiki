@@ -20,7 +20,7 @@
 	},
 	"homepage": "https://github.com/sbrl/Pepperminty-Wiki#readme",
 	"devDependencies": {
-		"apidoc": "^0.54.0",
+		"apidoc": "^1.2.0",
 		"nightdocs": "^1.1.0"
 	},
 	"docpress": {

@@ -37,12 +37,11 @@ if(!file_exists($settingsFilename)) {
 	// Copy the default settings over to the main settings array
 	foreach ($guiConfig as $key => $value)
 		$settings->$key = $value->default;
-	// Generate a random secret
-	$settings->secret = bin2hex(random_bytes(16));
-	if(file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT)) === false) {
+	// From below if statement: file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT))
+	if(save_settings() === false) {
 		http_response_code(503);
 		header("content-type: text/plain");
-		exit("Oops! It looks like $settings->sitename wasn't able to write peppermint.json to disk.\nThis file contains all of $settings->sitename's settings, so it's really important!\nHave you checked that PHP has write access to the directory that index.php is located in (and all it's contents and subdirectories)? Try\n\nsudo chown USERNAME:USERNAME -R path/to/directory\n\nand\n\nsudo chmod -R 0644 path/to/directory;\nsudo chmod -R +X path/too/directory\n\n....where USERNAME is the username that the PHP process is running under.");
+		exit("Oops! It looks like $settings->sitename wasn't able to write peppermint.json to disk.\nThis file contains all of $settings->sitename's settings, so it's really important!\nHave you checked that PHP has write access to the directory that index.php is located in (and all it's contents and subdirectories)? Try\n\nsudo chown USERNAME:USERNAME -R path/to/directory\n\nand\n\nsudo chmod -R 0644 path/to/directory;\nsudo chmod -R +X path/to/directory\n\n....where USERNAME is the username that the PHP process is running under.");
 	}
 }
 else
@@ -55,20 +54,37 @@ if($settings === null) {
 
 // Fill in any missing properties
 $settings_upgraded = false;
+$did_upgrade_firstrun_key = false;
 foreach($guiConfig as $key => $propertyData) {
 	if(!property_exists($settings, $key)) {
 		error_log("[PeppermintyWiki/$settings->sitename/settings] Upgrading $key");
 		$settings->$key = $propertyData->default;
 		$settings_upgraded = true;
+		if($key == "firstrun_complete")
+			$did_upgrade_firstrun_key = true;
 	}
 }
-if($settings_upgraded)
-	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
+// Generate a random secret if it doesn't already exist
+if(!property_exists($settings, "secret")) {
+	$settings->secret = bin2hex(random_bytes(16));
+	$settings_upgraded = true;
+}
+if($settings_upgraded) {
+	save_settings();
+	// file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
+}
 
-// If the first-run wizard hasn't been completed but we've filled in 1 or more new settings, then we must be a pre-existing wiki upgrading from a previous version. We can guarantee this because of the new firstrun_complete setting	
-if(!$settings->firstrun_complete && $settings_upgraded) {
+// If:
+// * The first-run wizard hasn't been completed
+// * We've filled in 1 or more new settings
+// * One of those new settings was firstrun_complete
+// ...then we must be a pre-existing wiki upgrading from a previous version. We can guarantee this because if the firstrun_complete setting didn't exist before but it was added to an EXISTING peppermint.json (creating a NEW peppermint.json would add firstrun_complete to a new peppermint.json file, which is handled separately above)
+// This is very important for when a Pepperminty Wiki instance didn't have the firstrun wizard previously but does now. This avoids the first run wizard running when it shouldn't.
+// Note we added this additional specific check because in Docker containers we recommend that firstrun_complete be manually preset to false, which would previously get autset to true as we thought it was a pre-existing wiki when it isn't! Note also we don't yet have access to the pageindex at this stage, so we can't check that either.
+if(!$settings->firstrun_complete && $settings_upgraded && $did_upgrade_firstrun_key) {
 	$settings->firstrun_complete = true;
-	file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
+	save_settings();
+	// file_put_contents("peppermint.json", json_encode($settings, JSON_PRETTY_PRINT));
 }
 
 // Insert the default CSS if requested

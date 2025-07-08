@@ -5,12 +5,12 @@
 
 register_module([
 	"name" => "Sitemap",
-	"version" => "0.1.1",
+	"version" => "0.1.2",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds XML sitemap generation. Additional manual setup is required to notify search engines about the sitemap. See the Features FAQ in the documentation (or your wiki's credits page) for more information.",
 	"id" => "page-sitemap",
 	"code" => function() {
-		global $settings;
+		global $settings, $env;
 		/**
 		 * @api {get} ?action=sitemap	Get an XML sitemap
 		 * @apiName Sitemap
@@ -56,8 +56,12 @@ register_module([
 			exit($sitemap);
 		});
 		
-		add_help_section("800-raw-page-content", "Viewing Raw Page Content", "<p>Although you can use the edit page to view a page's source, you can also ask $settings->sitename to send you the raw page source and nothing else. This feature is intented for those who want to automate their interaction with $settings->sitename.</p>
-		<p>To use this feature, navigate to the page for which you want to see the source, and then alter the <code>action</code> parameter in the url's query string to be <code>raw</code>. If the <code>action</code> parameter doesn't exist, add it. Note that when used on an file's page this action will return the source of the description and not the file itself.</p>");
+		if($env->is_admin) {
+			add_help_section("947-sitemap", "Sitemap", "<p>$settings->sitename has a sitemap. You can find it here: <a href='?action=sitemap'>sitemap</a>.</p>
+			<p>In order for crawlers to discover this sitemap however, you must update your <code>robots.txt</code> file for the domain $settings->sitename is hosted on to add a line like so:</p>
+			<pre><code>Sitemap: http://example.com/path/to/index.php?action=sitemap</code></pre>
+			<p>....replacing the relevant parts of the URL as appropriate. Note that more than one <code>Sitemap:</code> directive is allowed in a single <code>robots.txt</code> file.</p>");
+		}
 	}
 ]);
 

@@ -9,4 +9,3 @@ Additional methods of contact:
 
  - The email address attached to my commits
  - My various profiles listed on my website: <https://starbeamrainbowlabs.com/>
- - Twitter: <https://twitter.com/SBRLabs>

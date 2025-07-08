@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "User list",
-	"version" => "0.1",
+	"version" => "0.1.1",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds a 'user-list' action that generates a list of users. Supports json output with 'format=json' in the queyr string.",
 	"id" => "page-user-list",
@@ -44,8 +44,7 @@ register_module([
 			exit(page_renderer::render_main("User List - $settings->sitename", $content));
 		});
 		
-		add_help_section("800-raw-page-content", "Viewing Raw Page Content", "<p>Although you can use the edit page to view a page's source, you can also ask $settings->sitename to send you the raw page source and nothing else. This feature is intented for those who want to automate their interaction with $settings->sitename.</p>
-		<p>To use this feature, navigate to the page for which you want to see the source, and then alter the <code>action</code> parameter in the url's query string to be <code>raw</code>. If the <code>action</code> parameter doesn't exist, add it. Note that when used on an file's page this action will return the source of the description and not the file itself.</p>");
+		add_help_section("18-user-list", "User list", "<p>$settings->sitename has a page that lists all the users on the site. You can access it here: <a href='?action=user-list'>user list</a>.</p>");
 	}
 ]);
 

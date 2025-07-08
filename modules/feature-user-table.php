@@ -5,9 +5,9 @@
 
 register_module([
 	"name" => "User Organiser",
-	"version" => "0.1.2",
+	"version" => "0.1.3",
 	"author" => "Starbeamrainbowlabs",
-	"description" => "Adds a organiser page that lets moderators (or better) control the reegistered user accounts, and perform adminstrative actions such as password resets, and adding / removing accounts.",
+	"description" => "Adds a organiser page that lets moderators (or better) control the registered user accounts, and perform administrative actions such as password resets, and adding / removing accounts.",
 	"id" => "feature-user-table",
 	"code" => function() {
 		global $settings, $env;
@@ -149,7 +149,7 @@ https://github.com/sbrl/Pepperminty-Wiki/
 ");
 			
 			$content = "<h2>Add User</h2>
-			<p>The new user was added to $settings->sitename sucessfully! Their details are as follows:</p>
+			<p>The new user was added to $settings->sitename successfully! Their details are as follows:</p>
 			<ul>
 				<li>Username: <code>$new_username</code></li>";
 			if(!empty($new_email))
@@ -282,7 +282,7 @@ Powered by Pepperminty Wiki
 		});
 		
 		
-		if($env->is_admin) add_help_section("949-user-table", "Managing User Accounts", "<p>As a moderator on $settings->sitename, you can use the <a href='?action=user-table'>User Table</a> to adminstrate the user accounts on $settings->sitename. It allows you to perform actions such as adding and removing accounts, and resetting passwords.</p>");
+		if($env->is_admin) add_help_section("949-user-table", "Managing User Accounts", "<p>As a moderator on $settings->sitename, you can use the <a href='?action=user-table'>User Table</a> to administrate the user accounts on $settings->sitename. It allows you to perform actions such as adding and removing accounts, and resetting passwords.</p>");
 	}
 ]);
 /**
