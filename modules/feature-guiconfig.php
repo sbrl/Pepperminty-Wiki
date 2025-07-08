@@ -47,10 +47,10 @@ register_module([
 			$content .= "<p>You're currently running Pepperminty Wiki $version+" . substr($commit, 0, 7) . ".</p>\n";
 			$content .= "<h2>Actions</h2>";
 			
+			// rebuild search index button
 			$content .= "<button class='action-invindex-rebuild' title='Rebuilds the index that is consulted when searching the wiki. Hit this button if some pages are not showing up.'>Rebuild Search Index</button>\n";
 			$content .= "<progress class='action-invindex-rebuild-progress' min='0' max='100' value='0' style='display: none;'></progress><br />\n";
 			$content .= "<output class='action-invindex-rebuild-latestmessage'></output><br />\n";
-			
 			$invindex_rebuild_script = <<<SCRIPT
 window.addEventListener("load", function(event) {
 	document.querySelector(".action-invindex-rebuild").addEventListener("click", function(event) {
@@ -76,8 +76,38 @@ window.addEventListener("load", function(event) {
 	});
 });
 SCRIPT;
-
 			page_renderer::add_js_snippet($invindex_rebuild_script);
+
+			// rebuild page index button
+			$content .= "<button class='action-pageindex-rebuild' title='Rebuilds the page index that contains information (tags, author, dates, filename) about all wiki pages. Hit this button if MD files were changed externally.'>Rebuild Page Index</button>\n";
+			$content .= "<progress class='action-pageindex-rebuild-progress' min='0' max='100' value='0' style='display: none;'></progress><br />\n";
+			$content .= "<output class='action-pageindex-rebuild-latestmessage'></output><br />\n";
+			$pageindex_rebuild_script = <<<SCRIPT
+window.addEventListener("load", function(event) {
+	document.querySelector(".action-pageindex-rebuild").addEventListener("click", function(event) {
+		var rebuildActionEvents = new EventSource("?action=pageindex-rebuild");
+		var latestMessageElement = document.querySelector(".action-pageindex-rebuild-latestmessage");
+		var progressElement = document.querySelector(".action-pageindex-rebuild-progress");
+		rebuildActionEvents.addEventListener("message", function(event) {
+			console.log(event);
+			let message = event.data;
+			latestMessageElement.value = event.data;
+			let parts = message.match(/^\[\s*(\d+)\s+\/\s+(\d+)\s*\]/);
+			if(parts != null) {
+				progressElement.style.display = "";
+				progressElement.min = 0;
+				progressElement.max = parseInt(parts[2]);
+				progressElement.value = parseInt(parts[1]);
+			}
+			if(message.startsWith("Done!"))
+				rebuildActionEvents.close();
+		});
+		// Close the connection on error & don't try again
+		rebuildActionEvents.addEventListener("error", (_event) => rebuildActionEvents.close());
+	});
+});
+SCRIPT;
+			page_renderer::add_js_snippet($pageindex_rebuild_script);
 			
 			$content .= "<h2>Settings</h2>";
 			$content .= "<p>Mouse over the name of each setting to see a description of what it does.</p>\n";
@@ -207,6 +237,41 @@ SCRIPT;
 			$content .= "</textarea>\n";
 			exit(page_renderer::render_main("Master Settings Updated - $settings->sitename", $content));
 		});
+
+		/**
+		 * @api {get} ?action=pageindex-rebuild[&format=json] Rebuilds the page index
+		 * @apiName UserList
+		 * @apiGroup Utility
+		 * @apiPermission Anonymous
+		 */
+
+
+		/*                                 _               _                                        _               _   _       _
+         *                                (_)             | |                                      | |             (_) | |     | |
+         *  _ __     __ _    __ _    ___   _   _ __     __| |   ___  __  __  ______   _ __    ___  | |__    _   _   _  | |   __| |
+         * | '_ \   / _` |  / _` |  / _ \ | | | '_ \   / _` |  / _ \ \ \/ / |______| | '__|  / _ \ | '_ \  | | | | | | | |  / _` |
+         * | |_) | | (_| | | (_| | |  __/ | | | | | | | (_| | |  __/  >  <           | |    |  __/ | |_) | | |_| | | | | | | (_| |
+         * | .__/   \__,_|  \__, |  \___| |_| |_| |_|  \__,_|  \___| /_/\_\          |_|     \___| |_.__/   \__,_| |_| |_|  \__,_|
+         * | |               __/ |
+         * |_|              |___/
+         *
+         */
+		add_action("pageindex-rebuild", function() {
+			global $env, $settings;
+			if($env->is_admin ||
+				(
+					!empty($_POST["secret"]) &&
+					$_POST["secret"] === $settings->secret
+				)
+			)
+				pageindex_rebuild();
+			else
+			{
+				http_response_code(401);
+				exit(page_renderer::render_main("Error - Page index regenerator - $settings->sitename", "<p>Error: You aren't allowed to regenerate the page index. Try logging in as an admin, or setting the <code>secret</code> POST parameter to $settings->sitename's secret - which can be found in $settings->sitename's <code>peppermint.json</code> file.</p>"));
+			}
+		});
+
 		
 		add_help_section("800-raw-page-content", "Viewing Raw Page Content", "<p>Although you can use the edit page to view a page's source, you can also ask $settings->sitename to send you the raw page source and nothing else. This feature is intended for those who want to automate their interaction with $settings->sitename.</p>
 		<p>To use this feature, navigate to the page for which you want to see the source, and then alter the <code>action</code> parameter in the url's query string to be <code>raw</code>. If the <code>action</code> parameter doesn't exist, add it. Note that when used on an file's page this action will return the source of the description and not the file itself.</p>");
