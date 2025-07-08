@@ -58,7 +58,7 @@ function pageindex_rebuild(bool $output = true) : void {
 		{
 			// This page (potentially) has an associated file!
 			// Let's investigate.
-
+            
 			// Blindly add the file to the pageindex for now.
 			// Future We might want to do a security check on the file later on.
 			// File a bug if you think we should do this.
