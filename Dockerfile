@@ -9,13 +9,23 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
 COPY docker/Caddyfile /etc/caddy/Caddyfile
 COPY build/index.php /srv/app/
 COPY docker/run.sh /srv/
+COPY docker/peppermint.json /srv/app/
+RUN mkdir -p /srv/data &&\
+chown 10801:10801 /srv/data &&\
+chown 10801:10801 /srv/app/peppermint.json &&\
+chmod 664 /srv/app/peppermint.json
 
 # /srv/app/peppermint.json needs to be your peppermint.json file.
+# This dockerfile uses a basic temporary peppermint.json, 
+# to ensure the file is created with the right permissions. 
+# On first run, Pepperminty Wiki will fill out the rest of the missing settings.
+#
+# Alternatively, you can generate a full peppermint.json, and replace the temporary file. 
+# To do so, you'll have to setup a temporary instance of Pepperminty Wiki 
+# (even just using e.g. php -S [::]:35623 -t build after cloning the git repository.)
+
 # IMPORTANT: Set data_storage_dir to /srv/data!
 # See also https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_data_storage_dir
-# To generate the peppermint.json file in the first place, you'll have to setup a temporary instance of Pepperminty Wiki (even just using e.g. php -S [::]:35623 -t build after cloning the git repository.)
-# 
-# Alternatively, you can fill peppermint.json with simply e.g. '{ "data_storage_dir": "/srv/data", "firstrun_complete": false }' (omit single quotes), and then mount that writably, and Pepperminty Wiki will fill out the rest of the missing settings.
 VOLUME [ "/srv/data" ]
 
 EXPOSE 80
