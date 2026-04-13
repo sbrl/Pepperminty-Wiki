@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Page mover",
-	"version" => "0.9.6",
+	"version" => "0.9.7",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds an action to allow administrators to move pages.",
 	"id" => "page-move",
@@ -74,11 +74,16 @@ register_module([
 				<p>It is possible that you tried to use some characters in the new name that are not allowed and were removed.</p>
 				<p>Page names may <em>not</em> contain any of these characters: <code>?%*:|\"&gt;&lt;()[]</code></p>"));
 			
-			if(isset($pageindex->$page->uploadedfile) and
-				file_exists($new_name))
-				exit(page_renderer::render_main("Moving $env->page - Error - $settings->sitename", "<p>Whilst moving the file associated with $env->page_safe, $settings->sitename detected a pre-existing file on the server's file system. Because $settings->sitename can't determine whether the existing file is important to another component of $settings->sitename or it's host web server, the move has been aborted - just in case.</p>
-				<p>If you know that this move is actually safe, please get your site administrator (" . htmlentities($settings->admindetails_name) . ") to perform the move manually. Their contact address can be found at the bottom of every page (including this one).</p>"));
+			if(isset($pageindex->$page->uploadedfile) {
+				if (file_exists($new_name))
+					exit(page_renderer::render_main("Moving $env->page - Error - $settings->sitename", "<p>Whilst moving the file associated with $env->page_safe, $settings->sitename detected a pre-existing file on the server's file system. Because $settings->sitename can't determine whether the existing file is important to another component of $settings->sitename or it's host web server, the move has been aborted - just in case.</p>
+					<p>If you know that this move is actually safe, please get your site administrator (" . htmlentities($settings->admindetails_name) . ") to perform the move manually. Their contact address can be found at the bottom of every page (including this one).</p>"));
 				
+				if(!is_extension_safe($new_name)) {
+					exit(page_renderer::render_main("Moving $env->page - Error - $settings->sitename", "<p>Whilst moving the file associated with $env->page_safe, $settings->sitename detected that the new filename <code>".htmlentities($new_name)."</code> was potentially unsafe, as it contained an unsafe file extension that might get executed accidentally by the web server in some configurations.</p>"))
+				}
+			}
+			
 			// Make sure that the parent page exists
 			$do_create_dir = true;
 			if(strpos($new_name, "/", $do_create_dir) === false)

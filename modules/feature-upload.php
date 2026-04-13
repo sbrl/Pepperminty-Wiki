@@ -5,7 +5,7 @@
 
 register_module([
 	"name" => "Uploader",
-	"version" => "0.7.2",
+	"version" => "0.7.3",
 	"author" => "Starbeamrainbowlabs",
 	"description" => "Adds the ability to upload files to Pepperminty Wiki. Uploaded files act as pages and have the special 'File/' prefix.",
 	"id" => "feature-upload",
@@ -193,7 +193,7 @@ register_module([
 					if(isset($settings->mime_mappings_overrides->$mime_type))
 						$file_extension = $settings->mime_mappings_overrides->$mime_type;
 					
-					if(in_array($file_extension, [ "phtml", "php5", "php", ".htaccess", "asp", "aspx" ]))
+					if(!is_extension_safe(".{$file_extension}"))
 					{
 						http_response_code(415);
 						exit(page_renderer::render("Upload Error - $settings->sitename", "<p>The file you uploaded appears to be dangerous and has been discarded. Please contact $settings->sitename's administrator for assistance.</p>

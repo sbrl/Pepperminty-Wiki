@@ -306,7 +306,7 @@ function makepathsafe($string)
 	// Old restrictive system
 	//$string = preg_replace("/[^0-9a-zA-Z\_\-\ \/\.]/i", "", $string);
 	// Remove reserved characters
-	$string = preg_replace("/[?%*:|\"><()\\[\\]]/i", "", $string);
+	$string = preg_replace("/[?%*:.|\"><()\\[\\]]/i", "", $string);
 	// Collapse multiple dots into a single dot
 	$string = preg_replace("/\.+/", ".", $string);
 	// Don't allow slashes at the beginning
@@ -522,6 +522,17 @@ function system_extension_mime_type($ext) {
 		$types = system_extension_mime_types();
 	$ext = strtolower($ext);
 	return isset($types[$ext]) ? $types[$ext] : null;
+}
+
+function is_extension_safe(string $filepath) {
+	$filepath = strtolower($filepath);
+	
+	$unsafe = [".php", ".php5", ".phtml", ".htaccess", ".asp", ".aspx"];
+	foreach ($unsafe as $check_next) {
+		if(endsWith($filepath, $check_next))
+			return true;
+	}
+	return false;
 }
 
 /**
