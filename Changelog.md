@@ -24,6 +24,7 @@ This is the next release of Pepperminty Wiki, that hasn't been released yet.
 - Fix PHP warning when posting new comments ([#247](https://github.com/sbrl/Pepperminty-Wiki/pull/247) - thanks, @neapsix!)
 - Fix PHP 8.2 deprecation warnings ([#248](https://github.com/sbrl/Pepperminty-Wiki/pull/248) - thanks, @neapsix!)
 - Fix `is_css_url` handling with custom css and the *photo* CSS theme
+- [security] Fix an authenticated remote code execution attack in page moving logic (only affects users who don't set [`data_storage_dir`](https://starbeamrainbowlabs.com/labs/peppermint/peppermint-config-info.php#config_data_storage_dir) to a different directory)
 
 
 ## v0.24
