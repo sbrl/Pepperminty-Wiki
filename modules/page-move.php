@@ -80,7 +80,7 @@ register_module([
 					<p>If you know that this move is actually safe, please get your site administrator (" . htmlentities($settings->admindetails_name) . ") to perform the move manually. Their contact address can be found at the bottom of every page (including this one).</p>"));
 				
 				if(!is_extension_safe($new_name)) {
-					exit(page_renderer::render_main("Moving $env->page - Error - $settings->sitename", "<p>Whilst moving the file associated with $env->page_safe, $settings->sitename detected that the new filename <code>".htmlentities($new_name)."</code> was potentially unsafe, as it contained an unsafe file extension that might get executed accidentally by the web server in some configurations.</p>"))
+					exit(page_renderer::render_main("Moving $env->page - Error - $settings->sitename", "<p>Whilst moving the file associated with $env->page_safe, $settings->sitename detected that the new filename <code>".htmlentities($new_name)."</code> was potentially unsafe, as it contained an unsafe file extension that might get executed accidentally by the web server in some configurations.</p>"));
 				}
 			}
 			
