@@ -126,6 +126,12 @@ register_module([
 					"author_url" => "https://github.com/neapsix",
 					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/pull/247",
 					"icon" => "https://avatars.githubusercontent.com/u/120674?s=24"
+				],
+				"Better page index logic" => [
+					"author" => "kha84",
+					"author_url" => "https://github.com/kha84",
+					"thing_url" => "https://github.com/sbrl/Pepperminty-Wiki/pull/243",
+					"icon" => "https://avatars.githubusercontent.com/u/110789576?v=4"
 				]
 			];
 			
